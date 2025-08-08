@@ -1,245 +1,4 @@
-<script>
-        // Inizializzazione pagina
-        let currentUser = null;
-        let currentProfile = null;
-
-        // Aspetta che APP_CONFIG sia pronto
-        window.addEventListener('appConfigReady', initHomePage);
-
-        // Fallback per inizializzazione diretta
-        document.addEventListener('DOMContentLoaded', () => {
-            // Se APP_CONFIG è già disponibile
-            if (window.APP_CONFIG && window.APP_CONFIG.SUPABASE.client) {
-                initHomePage();
-            } else {
-                // Attendi un po' di più
-                setTimeout(() => {
-                    if (window.APP_CONFIG) {
-                        initHomePage();
-                    } else {
-                        console.error('❌ APP_CONFIG non disponibile');
-                        showToast('Errore di configurazione. Ricarica la pagina.', 'error');
-                    }
-                }, 1000);
-            }
-        });
-
-        async function initHomePage() {
-            try {
-                showLoader();
-                console.log('🏠 Inizializzazione Home Dashboard MyApp');
-
-                // Verifica che APP_CONFIG sia disponibile
-                if (!window.APP_CONFIG) {
-                    throw new Error('APP_CONFIG non disponibile');
-                }
-
-                // Controlla autenticazione
-                await APP_CONFIG.AUTH.protectPage();
-
-                // Carica dati utente
-                await loadUserData();
-                
-                // Carica contenuti in parallelo
-                await Promise.all([
-                    loadTesseraPreview(),
-                    loadNews(),
-                    loadConvenzioni(),
-                    loadRichieste()
-                ]);
-
-                // Setup eventi
-                setupEventListeners();
-
-                console.log('✅ Home Dashboard inizializzata con successo');
-
-            } catch (error) {
-                console.error('Errore inizializzazione:', error);
-                APP_CONFIG.NOTIFICATIONS.showToast('Errore di caricamento: ' + (error.message || 'Errore sconosciuto'), 'error');
-            } finally {
-                hideLoader();
-            }
-        }
-
-        // Gestione loader
-        function showLoader() {
-            const loader = document.getElementById('pageLoader');
-            if (loader) loader.style.display = 'flex';
-        }
-
-        function hideLoader() {
-            const loader = document.getElementById('pageLoader');
-            if (loader) loader.style.display = 'none';
-        }
-
-        // Caricamento dati utente
-        async function loadUserData() {
-            try {
-                currentUser = await APP_CONFIG.AUTH.getCurrentUser();
-                currentProfile = await APP_CONFIG.AUTH.getUserProfile();
-
-                if (!currentProfile) {
-                    throw new Error('Impossibile caricare il profilo utente');
-                }
-
-                // Aggiorna UI
-                document.getElementById('userName').textContent = currentProfile.nome || 'Utente';
-                const initials = APP_CONFIG.UTILS.getInitials(currentProfile.nome, currentProfile.cognome);
-                document.getElementById('userInitials').textContent = initials;
-                
-                // Badge ruolo
-                const badge = document.getElementById('userRoleBadge');
-                badge.innerHTML = getRoleBadgeHTML(currentProfile.role);
-                badge.classList.remove('hidden');
-
-            } catch (error) {
-                console.error('Errore caricamento dati utente:', error);
-                throw error;
-            }
-        }
-
-        // Caricamento tessera preview
-        async function loadTesseraPreview() {
-            const container = document.getElementById('tesseraPreview');
-            
-            try {
-                const tessera = await APP_CONFIG.TESSERA.getCurrentUserTessera();
-
-                if (!tessera) {
-                    container.innerHTML = `<div class="text-center text-primary text-sm p-4">Nessuna tessera trovata</div>`;
-                    return;
-                }
-
-                container.innerHTML = `
-                    <div class="relative flex flex-col items-center">
-                        <div class="text-3xl font-bold text-primary mb-2">${tessera.numero_tessera || '---'}</div>
-                        <div class="text-primary font-semibold mb-4">${tessera.nome || ''} ${tessera.cognome || ''}</div>
-                        <canvas id="qrPreview" class="mb-4"></canvas>
-                        <div class="text-xs text-gray-600">Emessa il ${APP_CONFIG.UTILS.formatDate(tessera.data_creazione)}</div>
-                    </div>`;
-
-                // Genera QR Code
-                if (window.QRCode && tessera.numero_tessera) {
-                    QRCode.toCanvas(document.getElementById('qrPreview'), tessera.numero_tessera, { 
-                        width: 100, 
-                        margin: 1,
-                        color: {
-                            dark: '#1a1a2e',
-                            light: '#ffffff'
-                        }
-                    });
-                }
-
-            } catch (error) {
-                console.error('Errore caricamento tessera:', error);
-                container.innerHTML = `<div class="text-center text-red-500 text-sm p-4">Errore caricamento tessera</div>`;
-            }
-        }
-
-        // Caricamento news
-        async function loadNews() {
-            const container = document.getElementById('newsContainer');
-            
-            try {
-                const client = APP_CONFIG.SUPABASE.getClient();
-                const { data: news, error } = await client
-                    .from(APP_CONFIG.TABLES.NEWS)
-                    .select('*')
-                    .eq('stato', 'pubblicata')
-                    .order('created_at', { ascending: false })
-                    .limit(3);
-
-                if (error) throw error;
-
-                container.innerHTML = '';
-
-                if (!news || news.length === 0) {
-                    container.innerHTML = `
-                        <div class="glass-morphism rounded-3xl p-6 col-span-3 text-white text-center">
-                            Nessuna news disponibile al momento
-                        </div>`;
-                    return;
-                }
-
-                news.forEach(n => {
-                    const date = APP_CONFIG.UTILS.formatDate(n.created_at);
-                    const excerpt = (n.contenuto || '').slice(0, 150) + (n.contenuto?.length > 150 ? '…' : '');
-                    
-                    const card = document.createElement('div');
-                    card.className = 'news-card';
-                    card.innerHTML = `
-                        <div class="p-6">
-                            <div class="text-white/70 text-sm mb-2">${date}</div>
-                            <h3 class="text-white text-lg font-bold mb-2">${n.titolo || '-'}</h3>
-                            <p class="text-white/90 mb-3">${excerpt}</p>
-                            <a href="news-detail.html?id=${n.id}" class="text-cyan font-semibold hover:underline">Leggi tutto</a>
-                        </div>`;
-                    container.appendChild(card);
-                });
-
-            } catch (error) {
-                console.error('Errore caricamento news:', error);
-                container.innerHTML = `
-                    <div class="glass-morphism rounded-3xl p-6 col-span-3 text-white text-center">
-                        Errore nel caricamento delle news
-                    </div>`;
-            }
-        }
-
-        // Caricamento convenzioni
-        async function loadConvenzioni() {
-            const container = document.getElementById('convenzioniContainer');
-            
-            try {
-                const client = APP_CONFIG.SUPABASE.getClient();
-                const { data: convenzioni, error } = await client
-                    .from(APP_CONFIG.TABLES.CONVENZIONI)
-                    .select('*')
-                    .eq('active', true)
-                    .order('created_at', { ascending: false })
-                    .limit(3);
-
-                if (error) throw error;
-
-                container.innerHTML = '';
-
-                if (!convenzioni || convenzioni.length === 0) {
-                    container.innerHTML = `
-                        <div class="glass-morphism rounded-3xl p-6 col-span-3 text-white text-center">
-                            Nessuna convenzione disponibile al momento
-                        </div>`;
-                    return;
-                }
-
-                convenzioni.forEach(c => {
-                    const excerpt = (c.descrizione || '').slice(0, 100) + (c.descrizione?.length > 100 ? '…' : '');
-                    
-                    const card = document.createElement('div');
-                    card.className = 'glass-morphism rounded-3xl p-6 card-hover';
-                    card.innerHTML = `
-                        <div class="mb-4">
-                            <h3 class="text-white text-xl font-bold mb-2">${c.nome || '-'}</h3>
-                            <p class="text-white/80">${excerpt}</p>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            ${c.sito_web ? `<a href="${c.sito_web}" target="_blank" class="text-cyan hover:underline">Visita sito</a>` : '<span></span>'}
-                            <span class="text-white/70 text-sm">
-                                ${c.data_scadenza ? 'Scade il ' + APP_CONFIG.UTILS.formatDate(c.data_scadenza) : 'Sempre valida'}
-                            </span>
-                        </div>`;
-                    container.appendChild(card);
-                });
-
-            } catch (error) {
-                console.error('Errore caricamento convenzioni:', error);
-                container.innerHTML = `
-                    <div class="glass-morphism rounded-3xl p-6 col-span-3 text-white text-center">
-                        Errore nel caricamento delle convenzioni
-                    </div>`;
-            }
-        }
-
-        // Caricamento richi<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -251,9 +10,6 @@
     
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- APP CONFIG - CARICA PER PRIMO -->
-    <script src="app-config.js"></script>
     
     <!-- QR Code -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
@@ -613,48 +369,112 @@
         </div>
     </nav>
 
+    <!-- CONFIGURAZIONE APP INCORPORATA -->
     <script>
-        // Configurazione Supabase
+        // ========================================
+        // MyApp - CONFIGURAZIONE INCORPORATA v4.0
+        // ========================================
+
         const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
 
-        let supabaseClient;
+        // Configurazione globale dell'app
+        window.APP_CONFIG = {
+            SUPABASE: {
+                getClient: function() {
+                    if (!this.client) {
+                        this.client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    }
+                    return this.client;
+                }
+            },
+            TABLES: {
+                NEWS: 'news',
+                CONVENZIONI: 'convenzioni',
+                RICHIESTE: 'richieste',
+                USER_PROFILES: 'user_profiles',
+                TESSERE: 'tessere'
+            },
+            AUTH: {
+                async getCurrentUser() {
+                    const client = APP_CONFIG.SUPABASE.getClient();
+                    const { data, error } = await client.auth.getUser();
+                    if (error) throw error;
+                    return data?.user || null;
+                },
+                async getUserProfile() {
+                    const user = await this.getCurrentUser();
+                    if (!user) return null;
+                    const client = APP_CONFIG.SUPABASE.getClient();
+                    const { data, error } = await client
+                        .from('user_profiles')
+                        .select('*')
+                        .eq('user_id', user.id)
+                        .single();
+                    if (error) throw error;
+                    return data;
+                },
+                async protectPage() {
+                    const { data: { session } } = await APP_CONFIG.SUPABASE.getClient().auth.getSession();
+                    if (!session) {
+                        window.location.replace('auth.html');
+                        throw new Error('Utente non autenticato');
+                    }
+                    return true;
+                },
+                async logout() {
+                    await APP_CONFIG.SUPABASE.getClient().auth.signOut();
+                    window.location.replace('auth.html');
+                }
+            },
+            TESSERA: {
+                async getCurrentUserTessera() {
+                    const user = await APP_CONFIG.AUTH.getCurrentUser();
+                    if (!user) return null;
+                    const client = APP_CONFIG.SUPABASE.getClient();
+                    const { data, error } = await client
+                        .from('tessere')
+                        .select('*')
+                        .eq('user_id', user.id)
+                        .order('created_at', { ascending: false })
+                        .limit(1)
+                        .single();
+                    if (error) {
+                        console.warn('Nessuna tessera:', error.message);
+                        return null;
+                    }
+                    return data;
+                }
+            },
+            NOTIFICATIONS: {
+                showToast: function(msg, type='info') {
+                    console.log(`[${type.toUpperCase()}] ${msg}`);
+                    const toast = document.createElement('div');
+                    toast.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 ${
+                        type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500'
+                    } text-white font-semibold`;
+                    toast.textContent = msg;
+                    document.body.appendChild(toast);
+                    setTimeout(() => {
+                        toast.style.opacity = '0';
+                        setTimeout(() => {
+                            if (document.body.contains(toast)) {
+                                document.body.removeChild(toast);
+                            }
+                        }, 300);
+                    }, 3000);
+                }
+            }
+        };
+
+        console.log('✅ APP_CONFIG incorporato e pronto');
+    </script>
+
+    <!-- LOGICA PAGINA HOME -->
+    <script>
         let currentUser = null;
         let currentProfile = null;
 
-        // Inizializzazione
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                showLoader();
-                console.log('🏠 Inizializzazione Home Dashboard MyApp');
-
-                // Inizializza Supabase
-                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-                // Controlla autenticazione
-                await checkAuth();
-
-                // Carica dati
-                await loadUserData();
-                await Promise.all([
-                    loadTesseraPreview(),
-                    loadNews(),
-                    loadConvenzioni(),
-                    loadRichieste()
-                ]);
-
-                // Setup eventi
-                setupEventListeners();
-
-            } catch (error) {
-                console.error('Errore inizializzazione:', error);
-                showToast('Errore di caricamento: ' + (error.message || 'Errore sconosciuto'), 'error');
-            } finally {
-                hideLoader();
-            }
-        });
-
-        // Gestione loader
         function showLoader() {
             document.getElementById('pageLoader').style.display = 'flex';
         }
@@ -663,66 +483,43 @@
             document.getElementById('pageLoader').style.display = 'none';
         }
 
-        // Controllo autenticazione
-        async function checkAuth() {
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (!session) {
-                window.location.href = 'auth.html';
-                throw new Error('Utente non autenticato');
-            }
-            currentUser = session.user;
-            return true;
-        }
-
-        // Caricamento dati utente
-        async function loadUserData() {
-            if (!currentUser) return;
-
-            const { data: profile, error } = await supabaseClient
-                .from('user_profiles')
-                .select('*')
-                .eq('user_id', currentUser.id)
-                .single();
-
-            if (error) {
-                console.error('Errore caricamento profilo:', error);
-                throw new Error('Impossibile caricare il profilo utente');
-            }
-
-            currentProfile = profile;
-
-            // Aggiorna UI
-            document.getElementById('userName').textContent = profile.nome || 'Utente';
-            const initials = (profile.nome?.[0] || '-') + (profile.cognome?.[0] || '-');
-            document.getElementById('userInitials').textContent = initials.toUpperCase();
-            
-            // Badge ruolo
-            const badge = document.getElementById('userRoleBadge');
-            badge.innerHTML = getRoleBadgeHTML(profile.role);
-            badge.classList.remove('hidden');
-        }
-
-        // Genera HTML per badge ruolo
         function getRoleBadgeHTML(role) {
             let className = 'role-user';
             if (role === 'ADMIN') className = 'role-admin';
             else if (role === 'DIRIGENTE') className = 'role-dirigente';
-            
             return `<span class="role-badge ${className}">${role || 'USER'}</span>`;
         }
 
-        // Caricamento tessera preview
+        async function loadUserData() {
+            try {
+                currentUser = await APP_CONFIG.AUTH.getCurrentUser();
+                currentProfile = await APP_CONFIG.AUTH.getUserProfile();
+
+                if (!currentProfile) {
+                    throw new Error('Impossibile caricare il profilo utente');
+                }
+
+                document.getElementById('userName').textContent = currentProfile.nome || 'Utente';
+                const initials = (currentProfile.nome?.[0] || '-') + (currentProfile.cognome?.[0] || '-');
+                document.getElementById('userInitials').textContent = initials.toUpperCase();
+                
+                const badge = document.getElementById('userRoleBadge');
+                badge.innerHTML = getRoleBadgeHTML(currentProfile.role);
+                badge.classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Errore caricamento dati utente:', error);
+                throw error;
+            }
+        }
+
         async function loadTesseraPreview() {
             const container = document.getElementById('tesseraPreview');
             
             try {
-                const { data: tessera, error } = await supabaseClient
-                    .from('tessere')
-                    .select('*')
-                    .eq('user_id', currentUser.id)
-                    .single();
+                const tessera = await APP_CONFIG.TESSERA.getCurrentUserTessera();
 
-                if (error) {
+                if (!tessera) {
                     container.innerHTML = `<div class="text-center text-primary text-sm p-4">Nessuna tessera trovata</div>`;
                     return;
                 }
@@ -735,30 +532,27 @@
                         <div class="text-xs text-gray-600">Emessa il ${tessera.data_creazione ? new Date(tessera.data_creazione).toLocaleDateString('it-IT') : '-'}</div>
                     </div>`;
 
-                // Genera QR Code
                 if (window.QRCode && tessera.numero_tessera) {
                     QRCode.toCanvas(document.getElementById('qrPreview'), tessera.numero_tessera, { 
                         width: 100, 
                         margin: 1,
-                        color: {
-                            dark: '#1a1a2e',
-                            light: '#ffffff'
-                        }
+                        color: { dark: '#1a1a2e', light: '#ffffff' }
                     });
                 }
+
             } catch (error) {
                 console.error('Errore caricamento tessera:', error);
                 container.innerHTML = `<div class="text-center text-red-500 text-sm p-4">Errore caricamento tessera</div>`;
             }
         }
 
-        // Caricamento news
         async function loadNews() {
             const container = document.getElementById('newsContainer');
             
             try {
-                const { data: news, error } = await supabaseClient
-                    .from('news')
+                const client = APP_CONFIG.SUPABASE.getClient();
+                const { data: news, error } = await client
+                    .from(APP_CONFIG.TABLES.NEWS)
                     .select('*')
                     .eq('stato', 'pubblicata')
                     .order('created_at', { ascending: false })
@@ -805,13 +599,13 @@
             }
         }
 
-        // Caricamento convenzioni
         async function loadConvenzioni() {
             const container = document.getElementById('convenzioniContainer');
             
             try {
-                const { data: convenzioni, error } = await supabaseClient
-                    .from('convenzioni')
+                const client = APP_CONFIG.SUPABASE.getClient();
+                const { data: convenzioni, error } = await client
+                    .from(APP_CONFIG.TABLES.CONVENZIONI)
                     .select('*')
                     .eq('active', true)
                     .order('created_at', { ascending: false })
@@ -857,13 +651,13 @@
             }
         }
 
-        // Caricamento richieste
         async function loadRichieste() {
             const container = document.getElementById('richiesteContainer');
             
             try {
-                const { data: richieste, error } = await supabaseClient
-                    .from('richieste')
+                const client = APP_CONFIG.SUPABASE.getClient();
+                const { data: richieste, error } = await client
+                    .from(APP_CONFIG.TABLES.RICHIESTE)
                     .select('*')
                     .eq('user_id', currentUser.id)
                     .order('created_at', { ascending: false })
@@ -923,46 +717,51 @@
             }
         }
 
-        // Setup event listeners
         function setupEventListeners() {
-            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                APP_CONFIG.AUTH.logout();
+            });
+            
             document.getElementById('newRequestBtn').addEventListener('click', () => {
-                window.location.href = 'richieste.html';
+                APP_CONFIG.NOTIFICATIONS.showToast('Pagina richieste in sviluppo', 'info');
             });
         }
 
-        // Logout
-        async function handleLogout() {
+        // Inizializzazione principale
+        document.addEventListener('DOMContentLoaded', async () => {
             try {
-                await supabaseClient.auth.signOut();
-                window.location.href = 'auth.html';
-            } catch (error) {
-                console.error('Errore logout:', error);
-                showToast('Errore durante il logout', 'error');
-            }
-        }
+                showLoader();
+                console.log('🏠 HOME PAGE LOADED - MyApp Dashboard');
 
-        // Toast notifications
-        function showToast(message, type = 'info') {
-            console.log(`[${type.toUpperCase()}] ${message}`);
-            
-            // Crea toast element
-            const toast = document.createElement('div');
-            toast.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 ${
-                type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500'
-            } text-white font-semibold`;
-            toast.textContent = message;
-            
-            document.body.appendChild(toast);
-            
-            // Rimuovi dopo 3 secondi
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => {
-                    document.body.removeChild(toast);
-                }, 300);
-            }, 3000);
-        }
+                // Aspetta che Supabase sia disponibile
+                if (typeof supabase === 'undefined') {
+                    throw new Error('Supabase SDK non caricato');
+                }
+
+                // Controlla autenticazione
+                await APP_CONFIG.AUTH.protectPage();
+
+                // Carica dati
+                await loadUserData();
+                await Promise.all([
+                    loadTesseraPreview(),
+                    loadNews(),
+                    loadConvenzioni(),
+                    loadRichieste()
+                ]);
+
+                // Setup eventi
+                setupEventListeners();
+
+                console.log('✅ Dashboard caricata con successo');
+
+            } catch (error) {
+                console.error('Errore inizializzazione home:', error);
+                APP_CONFIG.NOTIFICATIONS.showToast('Errore: ' + (error?.message || 'inizializzazione'), 'error');
+            } finally {
+                hideLoader();
+            }
+        });
     </script>
 </body>
 </html>
