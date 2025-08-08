@@ -1,486 +1,968 @@
-<!DOCTYPE html>
+<script>
+        // Inizializzazione pagina
+        let currentUser = null;
+        let currentProfile = null;
+
+        // Aspetta che APP_CONFIG sia pronto
+        window.addEventListener('appConfigReady', initHomePage);
+
+        // Fallback per inizializzazione diretta
+        document.addEventListener('DOMContentLoaded', () => {
+            // Se APP_CONFIG è già disponibile
+            if (window.APP_CONFIG && window.APP_CONFIG.SUPABASE.client) {
+                initHomePage();
+            } else {
+                // Attendi un po' di più
+                setTimeout(() => {
+                    if (window.APP_CONFIG) {
+                        initHomePage();
+                    } else {
+                        console.error('❌ APP_CONFIG non disponibile');
+                        showToast('Errore di configurazione. Ricarica la pagina.', 'error');
+                    }
+                }, 1000);
+            }
+        });
+
+        async function initHomePage() {
+            try {
+                showLoader();
+                console.log('🏠 Inizializzazione Home Dashboard MyApp');
+
+                // Verifica che APP_CONFIG sia disponibile
+                if (!window.APP_CONFIG) {
+                    throw new Error('APP_CONFIG non disponibile');
+                }
+
+                // Controlla autenticazione
+                await APP_CONFIG.AUTH.protectPage();
+
+                // Carica dati utente
+                await loadUserData();
+                
+                // Carica contenuti in parallelo
+                await Promise.all([
+                    loadTesseraPreview(),
+                    loadNews(),
+                    loadConvenzioni(),
+                    loadRichieste()
+                ]);
+
+                // Setup eventi
+                setupEventListeners();
+
+                console.log('✅ Home Dashboard inizializzata con successo');
+
+            } catch (error) {
+                console.error('Errore inizializzazione:', error);
+                APP_CONFIG.NOTIFICATIONS.showToast('Errore di caricamento: ' + (error.message || 'Errore sconosciuto'), 'error');
+            } finally {
+                hideLoader();
+            }
+        }
+
+        // Gestione loader
+        function showLoader() {
+            const loader = document.getElementById('pageLoader');
+            if (loader) loader.style.display = 'flex';
+        }
+
+        function hideLoader() {
+            const loader = document.getElementById('pageLoader');
+            if (loader) loader.style.display = 'none';
+        }
+
+        // Caricamento dati utente
+        async function loadUserData() {
+            try {
+                currentUser = await APP_CONFIG.AUTH.getCurrentUser();
+                currentProfile = await APP_CONFIG.AUTH.getUserProfile();
+
+                if (!currentProfile) {
+                    throw new Error('Impossibile caricare il profilo utente');
+                }
+
+                // Aggiorna UI
+                document.getElementById('userName').textContent = currentProfile.nome || 'Utente';
+                const initials = APP_CONFIG.UTILS.getInitials(currentProfile.nome, currentProfile.cognome);
+                document.getElementById('userInitials').textContent = initials;
+                
+                // Badge ruolo
+                const badge = document.getElementById('userRoleBadge');
+                badge.innerHTML = getRoleBadgeHTML(currentProfile.role);
+                badge.classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Errore caricamento dati utente:', error);
+                throw error;
+            }
+        }
+
+        // Caricamento tessera preview
+        async function loadTesseraPreview() {
+            const container = document.getElementById('tesseraPreview');
+            
+            try {
+                const tessera = await APP_CONFIG.TESSERA.getCurrentUserTessera();
+
+                if (!tessera) {
+                    container.innerHTML = `<div class="text-center text-primary text-sm p-4">Nessuna tessera trovata</div>`;
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="relative flex flex-col items-center">
+                        <div class="text-3xl font-bold text-primary mb-2">${tessera.numero_tessera || '---'}</div>
+                        <div class="text-primary font-semibold mb-4">${tessera.nome || ''} ${tessera.cognome || ''}</div>
+                        <canvas id="qrPreview" class="mb-4"></canvas>
+                        <div class="text-xs text-gray-600">Emessa il ${APP_CONFIG.UTILS.formatDate(tessera.data_creazione)}</div>
+                    </div>`;
+
+                // Genera QR Code
+                if (window.QRCode && tessera.numero_tessera) {
+                    QRCode.toCanvas(document.getElementById('qrPreview'), tessera.numero_tessera, { 
+                        width: 100, 
+                        margin: 1,
+                        color: {
+                            dark: '#1a1a2e',
+                            light: '#ffffff'
+                        }
+                    });
+                }
+
+            } catch (error) {
+                console.error('Errore caricamento tessera:', error);
+                container.innerHTML = `<div class="text-center text-red-500 text-sm p-4">Errore caricamento tessera</div>`;
+            }
+        }
+
+        // Caricamento news
+        async function loadNews() {
+            const container = document.getElementById('newsContainer');
+            
+            try {
+                const client = APP_CONFIG.SUPABASE.getClient();
+                const { data: news, error } = await client
+                    .from(APP_CONFIG.TABLES.NEWS)
+                    .select('*')
+                    .eq('stato', 'pubblicata')
+                    .order('created_at', { ascending: false })
+                    .limit(3);
+
+                if (error) throw error;
+
+                container.innerHTML = '';
+
+                if (!news || news.length === 0) {
+                    container.innerHTML = `
+                        <div class="glass-morphism rounded-3xl p-6 col-span-3 text-white text-center">
+                            Nessuna news disponibile al momento
+                        </div>`;
+                    return;
+                }
+
+                news.forEach(n => {
+                    const date = APP_CONFIG.UTILS.formatDate(n.created_at);
+                    const excerpt = (n.contenuto || '').slice(0, 150) + (n.contenuto?.length > 150 ? '…' : '');
+                    
+                    const card = document.createElement('div');
+                    card.className = 'news-card';
+                    card.innerHTML = `
+                        <div class="p-6">
+                            <div class="text-white/70 text-sm mb-2">${date}</div>
+                            <h3 class="text-white text-lg font-bold mb-2">${n.titolo || '-'}</h3>
+                            <p class="text-white/90 mb-3">${excerpt}</p>
+                            <a href="news-detail.html?id=${n.id}" class="text-cyan font-semibold hover:underline">Leggi tutto</a>
+                        </div>`;
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error('Errore caricamento news:', error);
+                container.innerHTML = `
+                    <div class="glass-morphism rounded-3xl p-6 col-span-3 text-white text-center">
+                        Errore nel caricamento delle news
+                    </div>`;
+            }
+        }
+
+        // Caricamento convenzioni
+        async function loadConvenzioni() {
+            const container = document.getElementById('convenzioniContainer');
+            
+            try {
+                const client = APP_CONFIG.SUPABASE.getClient();
+                const { data: convenzioni, error } = await client
+                    .from(APP_CONFIG.TABLES.CONVENZIONI)
+                    .select('*')
+                    .eq('active', true)
+                    .order('created_at', { ascending: false })
+                    .limit(3);
+
+                if (error) throw error;
+
+                container.innerHTML = '';
+
+                if (!convenzioni || convenzioni.length === 0) {
+                    container.innerHTML = `
+                        <div class="glass-morphism rounded-3xl p-6 col-span-3 text-white text-center">
+                            Nessuna convenzione disponibile al momento
+                        </div>`;
+                    return;
+                }
+
+                convenzioni.forEach(c => {
+                    const excerpt = (c.descrizione || '').slice(0, 100) + (c.descrizione?.length > 100 ? '…' : '');
+                    
+                    const card = document.createElement('div');
+                    card.className = 'glass-morphism rounded-3xl p-6 card-hover';
+                    card.innerHTML = `
+                        <div class="mb-4">
+                            <h3 class="text-white text-xl font-bold mb-2">${c.nome || '-'}</h3>
+                            <p class="text-white/80">${excerpt}</p>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            ${c.sito_web ? `<a href="${c.sito_web}" target="_blank" class="text-cyan hover:underline">Visita sito</a>` : '<span></span>'}
+                            <span class="text-white/70 text-sm">
+                                ${c.data_scadenza ? 'Scade il ' + APP_CONFIG.UTILS.formatDate(c.data_scadenza) : 'Sempre valida'}
+                            </span>
+                        </div>`;
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error('Errore caricamento convenzioni:', error);
+                container.innerHTML = `
+                    <div class="glass-morphism rounded-3xl p-6 col-span-3 text-white text-center">
+                        Errore nel caricamento delle convenzioni
+                    </div>`;
+            }
+        }
+
+        // Caricamento richi<!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Home - MyApp</title>
-
-  <!-- Tailwind CSS (ok per test; in produzione meglio via build) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Tailwind config (palette) -->
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#1a1a2e',
-            secondary: '#16213e',
-            accent: '#0f3460',
-            aurora: '#e94560',
-            cyan: '#00d4ff',
-            magenta: '#ff006e',
-            gold: '#ffd700',
-            teal: '#03dac6',
-            dark: '#0a0a23',
-            light: '#f8fafc',
-            textDark: '#1C1C1E',
-            backgroundLight: '#F4F4F8',
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - MyApp</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- APP CONFIG - CARICA PER PRIMO -->
+    <script src="app-config.js"></script>
+    
+    <!-- QR Code -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    
+    <!-- Configurazione colori -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1a1a2e',
+                        secondary: '#16213e',
+                        accent: '#0f3460',
+                        aurora: '#e94560',
+                        cyan: '#00d4ff',
+                        magenta: '#ff006e',
+                        gold: '#ffd700',
+                        teal: '#03dac6',
+                        dark: '#0a0a23',
+                        light: '#f8fafc',
+                        textDark: '#1C1C1E',
+                        backgroundLight: '#F4F4F8',
+                    }
+                }
+            }
         }
-      }
-    }
-  </script>
+    </script>
+    
+    <style>
+        :root {
+            --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
+            --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
+            --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
+        }
 
-  <!-- Supabase + QRCode -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+        body {
+            background: var(--gradient-aurora);
+            background-size: 400% 400%;
+            animation: aurora 20s ease infinite;
+            min-height: 100vh;
+        }
 
-  <!-- Stili inline -->
-  <style>
-    :root{
-      --gradient-aurora: linear-gradient(135deg,#1a1a2e 0%,#16213e 25%,#0f3460 50%,#e94560 75%,#00d4ff 100%);
-      --gradient-cyber: linear-gradient(135deg,#0a0a23 0%,#1a1a2e 50%,#00d4ff 100%);
-      --gradient-magic: linear-gradient(135deg,#ff006e 0%,#e94560 50%,#03dac6 100%);
-    }
-    body{
-      background:var(--gradient-aurora);
-      background-size:400% 400%;
-      animation:aurora 20s ease infinite;
-      min-height:100vh;
-    }
-    @keyframes aurora{
-      0%,100%{background-position:0% 50%}
-      25%{background-position:100% 50%}
-      50%{background-position:100% 100%}
-      75%{background-position:0% 100%}
-    }
-    .text-ultra-visible{color:#fff;text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1);font-weight:800}
-    .glass-morphism{background:rgba(255,255,255,.08);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.18);box-shadow:0 8px 32px 0 rgba(31,38,135,.37)}
-    .glass-strong{background:rgba(255,255,255,.12);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.25)}
-    .glass-card,.glass-effect{background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.3)}
-    .btn-aurora{background:var(--gradient-magic);color:#fff;border:2px solid rgba(233,69,96,.3);transition:all .4s cubic-bezier(.4,0,.2,1);font-weight:700}
-    .btn-aurora:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 20px 40px rgba(233,69,96,.4);border-color:rgba(233,69,96,.8)}
-    .btn-cyber{background:var(--gradient-cyber);border:2px solid rgba(0,212,255,.3);color:#fff;font-weight:700}
-    .btn-cyber:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 20px 40px rgba(0,212,255,.4);border-color:rgba(0,212,255,.8)}
-    .card-hover{transition:all .4s cubic-bezier(.4,0,.2,1)}
-    .card-hover:hover{transform:translateY(-8px) scale(1.02);box-shadow:0 25px 50px rgba(0,0,0,.25)}
-    .loading-skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:12px}
-    @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
-    .role-badge{display:inline-block;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;border:2px solid;transition:all .3s ease}
-    .role-user{background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;border-color:rgba(59,130,246,.3)}
-    .role-dirigente{background:linear-gradient(135deg,#10b981,#047857);color:#fff;border-color:rgba(16,185,129,.3)}
-    .role-admin{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border-color:rgba(245,158,11,.3)}
-    #logoutBtn{background:var(--gradient-magic)!important;border:2px solid rgba(233,69,96,.3);transition:all .4s cubic-bezier(.4,0,.2,1);font-weight:700}
-    #logoutBtn:hover{transform:translateY(-2px) scale(1.05);box-shadow:0 15px 30px rgba(233,69,96,.4);border-color:rgba(233,69,96,.8)}
-    .news-card{background:rgba(255,255,255,.08);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.18);border-radius:24px;overflow:hidden;transition:all .4s cubic-bezier(.4,0,.2,1)}
-    .news-card:hover{transform:translateY(-5px);box-shadow:0 20px 40px rgba(0,0,0,.3)}
-    /* loader */
-    #pageLoader{position:fixed;inset:0;background:rgba(10,10,35,.6);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:60}
-    .spinner{width:48px;height:48px;border-radius:50%;border:4px solid rgba(255,255,255,.35);border-top-color:#e94560;animation:spin 1s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
-  </style>
+        @keyframes aurora {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .text-ultra-visible {
+            color: #ffffff;
+            text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
+            font-weight: 800;
+        }
+
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-aurora {
+            background: var(--gradient-magic);
+            color: white;
+            border: 2px solid rgba(233, 69, 96, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 700;
+        }
+
+        .btn-aurora:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(233, 69, 96, 0.4);
+            border-color: rgba(233, 69, 96, 0.8);
+        }
+
+        .btn-cyber {
+            background: var(--gradient-cyber);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            color: white;
+            font-weight: 700;
+        }
+
+        .btn-cyber:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.4);
+            border-color: rgba(0, 212, 255, 0.8);
+        }
+
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+        }
+
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 12px;
+        }
+
+        .news-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid;
+            transition: all 0.3s ease;
+        }
+
+        .role-user {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .role-dirigente {
+            background: linear-gradient(135deg, #10b981, #047857);
+            color: white;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .role-admin {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.35);
+            border-top-color: #e94560;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        #pageLoader {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 35, 0.6);
+            backdrop-filter: blur(2px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 60;
+        }
+    </style>
 </head>
 
 <body class="flex flex-col min-h-screen font-sans">
-  <!-- Loader a schermo intero -->
-  <div id="pageLoader">
-    <div class="glass-card p-6 rounded-2xl flex items-center gap-4">
-      <div class="spinner"></div>
-      <div class="text-white text-lg font-semibold">Caricamento dashboard…</div>
+    <!-- Loader -->
+    <div id="pageLoader">
+        <div class="glass-card p-6 rounded-2xl flex items-center gap-4">
+            <div class="spinner"></div>
+            <div class="text-white text-lg font-semibold">Caricamento dashboard...</div>
+        </div>
     </div>
-  </div>
 
-  <!-- HEADER -->
-  <header class="py-4 px-6 sticky top-0 z-50">
-    <div class="container mx-auto flex justify-between items-center">
-      <div class="flex items-center">
-        <a href="/app/home.html" class="text-white text-2xl font-bold">MyApp</a>
-        <span id="userRoleBadge" class="ml-4 hidden md:inline-block"></span>
-      </div>
-      <div class="flex items-center gap-4">
-        <button id="logoutBtn" class="text-white py-2 px-4 rounded-full">Logout</button>
-      </div>
-    </div>
-  </header>
-
-  <main class="flex-grow container mx-auto px-4 py-8">
-    <!-- Welcome Section -->
-    <section class="mb-12">
-      <div class="glass-morphism rounded-3xl p-8 md:p-12">
-        <div class="flex flex-col md:flex-row items-center justify-between gap-8">
-          <div>
-            <h1 class="text-ultra-visible text-4xl md:text-5xl font-black mb-4">
-              Benvenuto, <span id="userName">Utente</span>!
-            </h1>
-            <p class="text-white text-lg mb-6">
-              Accedi ai servizi e alle informazioni dedicate ai nostri associati.
-            </p>
-            <div class="flex flex-wrap gap-4">
-              <a href="/app/tessera.html" class="btn-aurora py-3 px-6 rounded-xl inline-flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                La tua Tessera
-              </a>
-              <a href="/app/profilo.html" class="btn-cyber py-3 px-6 rounded-xl inline-flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-                Profilo
-              </a>
+    <!-- Header -->
+    <header class="py-4 px-6 sticky top-0 z-50 glass-morphism">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="home.html" class="text-white text-2xl font-bold">MyApp</a>
+                <span id="userRoleBadge" class="ml-4 hidden md:inline-block"></span>
             </div>
-          </div>
-
-          <div class="flex-shrink-0">
-            <div class="relative w-48 h-48 bg-primary rounded-full flex items-center justify-center border-4 border-aurora shadow-lg animate-pulse">
-              <span id="userInitials" class="text-white text-5xl font-bold">--</span>
+            <div class="flex items-center gap-4">
+                <button id="logoutBtn" class="btn-aurora py-2 px-4 rounded-full">Logout</button>
             </div>
-          </div>
         </div>
-      </div>
-    </section>
+    </header>
 
-    <!-- Tessera Preview Section -->
-    <section class="mb-12">
-      <h2 class="text-ultra-visible text-3xl font-black mb-6">La Tua Tessera</h2>
-      <div class="glass-morphism rounded-3xl p-6 card-hover">
-        <div class="flex flex-col md:flex-row items-center gap-8">
-          <div class="flex-shrink-0 w-full md:w-1/3 lg:w-1/4">
-            <div id="tesseraPreview" class="glass-card rounded-2xl p-6 text-center w-full mx-auto max-w-[300px]">
-              <div class="loading-skeleton h-48 mb-4"></div>
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <!-- Welcome Section -->
+        <section class="mb-12">
+            <div class="glass-morphism rounded-3xl p-8 md:p-12">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+                    <div>
+                        <h1 class="text-ultra-visible text-4xl md:text-5xl font-black mb-4">
+                            Benvenuto, <span id="userName">Utente</span>!
+                        </h1>
+                        <p class="text-white text-lg mb-6">
+                            Accedi ai servizi e alle informazioni dedicate ai nostri associati.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="tessera.html" class="btn-aurora py-3 px-6 rounded-xl inline-flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                La tua Tessera
+                            </a>
+                            <a href="profilo.html" class="btn-cyber py-3 px-6 rounded-xl inline-flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                Profilo
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="flex-shrink-0">
+                        <div class="relative w-48 h-48 bg-primary rounded-full flex items-center justify-center border-4 border-aurora shadow-lg animate-pulse">
+                            <span id="userInitials" class="text-white text-5xl font-bold">--</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="flex-grow">
-            <h3 class="text-white text-xl font-bold mb-3">Tessera Digitale</h3>
-            <p class="text-white opacity-90 mb-6">
-              La tua tessera digitale è sempre con te. Mostrala quando richiesto per accedere a servizi e convenzioni dedicate.
-            </p>
-            <div class="flex flex-wrap gap-4">
-              <a href="/app/tessera.html" class="btn-aurora py-2 px-4 rounded-xl inline-flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                Visualizza Completa
-              </a>
+        </section>
+
+        <!-- Tessera Preview Section -->
+        <section class="mb-12">
+            <h2 class="text-ultra-visible text-3xl font-black mb-6">La Tua Tessera</h2>
+            <div class="glass-morphism rounded-3xl p-6 card-hover">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-shrink-0 w-full md:w-1/3 lg:w-1/4">
+                        <div id="tesseraPreview" class="glass-card rounded-2xl p-6 text-center w-full mx-auto max-w-[300px]">
+                            <div class="loading-skeleton h-48 mb-4"></div>
+                        </div>
+                    </div>
+                    <div class="flex-grow">
+                        <h3 class="text-white text-xl font-bold mb-3">Tessera Digitale</h3>
+                        <p class="text-white opacity-90 mb-6">
+                            La tua tessera digitale è sempre con te. Mostrala quando richiesto per accedere a servizi e convenzioni dedicate.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="tessera.html" class="btn-aurora py-2 px-4 rounded-xl inline-flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                Visualizza Completa
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+        </section>
+
+        <!-- News Section -->
+        <section class="mb-12">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-ultra-visible text-3xl font-black">Ultime Notizie</h2>
+                <a href="news.html" class="text-white opacity-80 hover:opacity-100 transition-opacity">Vedi tutte</a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="newsContainer">
+                <div class="loading-skeleton h-64"></div>
+                <div class="loading-skeleton h-64"></div>
+                <div class="loading-skeleton h-64"></div>
+            </div>
+        </section>
+
+        <!-- Convenzioni Section -->
+        <section class="mb-12">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-ultra-visible text-3xl font-black">Convenzioni</h2>
+                <a href="convenzioni.html" class="text-white opacity-80 hover:opacity-100 transition-opacity">Vedi tutte</a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="convenzioniContainer">
+                <div class="loading-skeleton h-64"></div>
+                <div class="loading-skeleton h-64"></div>
+                <div class="loading-skeleton h-64"></div>
+            </div>
+        </section>
+
+        <!-- Richieste Section -->
+        <section class="mb-12">
+            <h2 class="text-ultra-visible text-3xl font-black mb-6">Le Tue Richieste</h2>
+            <div class="glass-morphism rounded-3xl p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-white text-xl font-bold">Richieste Recenti</h3>
+                    <button id="newRequestBtn" class="btn-aurora py-2 px-4 rounded-xl inline-flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Nuova Richiesta
+                    </button>
+                </div>
+                <div id="richiesteContainer" class="space-y-4">
+                    <div class="loading-skeleton h-20"></div>
+                    <div class="loading-skeleton h-20"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Navigazione -->
+    <nav class="py-4 px-6 sticky bottom-0 z-40 glass-morphism">
+        <div class="container mx-auto">
+            <div class="flex justify-between items-center">
+                <a href="home.html" class="flex flex-col items-center text-aurora">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    <span class="text-xs mt-1 text-white">Home</span>
+                </a>
+                <a href="profilo.html" class="flex flex-col items-center text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    <span class="text-xs mt-1">Profilo</span>
+                </a>
+                <a href="tessera.html" class="flex flex-col items-center text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span class="text-xs mt-1">Tessera</span>
+                </a>
+                <a href="convenzioni.html" class="flex flex-col items-center text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span class="text-xs mt-1">Convenzioni</span>
+                </a>
+            </div>
         </div>
-      </div>
-    </section>
+    </nav>
 
-    <!-- News Section -->
-    <section class="mb-12">
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-ultra-visible text-3xl font-black">Ultime Notizie</h2>
-        <a href="#" class="text-white opacity-80 hover:opacity-100 transition-opacity">Vedi tutte</a>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="newsContainer">
-        <div class="loading-skeleton h-64"></div>
-        <div class="loading-skeleton h-64"></div>
-        <div class="loading-skeleton h-64"></div>
-      </div>
-    </section>
+    <script>
+        // Configurazione Supabase
+        const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
 
-    <!-- Convenzioni Section -->
-    <section class="mb-12">
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-ultra-visible text-3xl font-black">Convenzioni</h2>
-        <a href="/convenzioni.html" class="text-white opacity-80 hover:opacity-100 transition-opacity">Vedi tutte</a>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="convenzioniContainer">
-        <div class="loading-skeleton h-64"></div>
-        <div class="loading-skeleton h-64"></div>
-        <div class="loading-skeleton h-64"></div>
-      </div>
-    </section>
+        let supabaseClient;
+        let currentUser = null;
+        let currentProfile = null;
 
-    <!-- Richieste Section -->
-    <section class="mb-12">
-      <h2 class="text-ultra-visible text-3xl font-black mb-6">Le Tue Richieste</h2>
-      <div class="glass-morphism rounded-3xl p-6">
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="text-white text-xl font-bold">Richieste Recenti</h3>
-          <button id="newRequestBtn" class="btn-aurora py-2 px-4 rounded-xl inline-flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Nuova Richiesta
-          </button>
-        </div>
-        <div id="richiesteContainer" class="space-y-4">
-          <div class="loading-skeleton h-20"></div>
-          <div class="loading-skeleton h-20"></div>
-        </div>
-      </div>
-    </section>
-  </main>
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                showLoader();
+                console.log('🏠 Inizializzazione Home Dashboard MyApp');
 
-  <!-- Footer con navigazione -->
-  <nav class="py-4 px-6 sticky bottom-0 z-40">
-    <div class="container mx-auto">
-      <div class="flex justify-between items-center">
-        <a href="/app/home.html" class="flex flex-col items-center text-aurora">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-          </svg>
-          <span class="text-xs mt-1">Home</span>
-        </a>
-        <a href="/app/profilo.html" class="flex flex-col items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-          <span class="text-xs mt-1">Profilo</span>
-        </a>
-        <a href="/app/tessera.html" class="flex flex-col items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 9a2 2 0 10-4 0v5a2 2 0 104 0V9z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9h.01M15 9h.01M9 15h.01M15 15h.01M9 12h.01M15 12h.01M9 6h6M9 18h6" />
-          </svg>
-          <span class="text-xs mt-1">Tessera</span>
-        </a>
-        <a href="/convenzioni.html" class="flex flex-col items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span class="text-xs mt-1">Convenzioni</span>
-        </a>
-      </div>
-    </div>
-  </nav>
+                // Inizializza Supabase
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  <!-- APP_CONFIG inline (minimo necessario per far funzionare la pagina) -->
-  <script>
-    (function(){
-      const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
-      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
+                // Controlla autenticazione
+                await checkAuth();
 
-      const { createClient } = supabase;
-      const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                // Carica dati
+                await loadUserData();
+                await Promise.all([
+                    loadTesseraPreview(),
+                    loadNews(),
+                    loadConvenzioni(),
+                    loadRichieste()
+                ]);
 
-      function toast(msg, type='info'){
-        console[type==='error'?'error':'log']('[Toast]', msg);
-        // minimal fallback
-        if(type==='error') console.error(msg);
-      }
+                // Setup eventi
+                setupEventListeners();
 
-      window.APP_CONFIG = {
-        SUPABASE: {
-          getClient: () => client
-        },
-        TABLES: {
-          NEWS: 'news',
-          CONVENZIONI: 'convenzioni',
-          RICHIESTE: 'richieste',
-          USER_PROFILES: 'user_profiles',
-          TESSERE: 'tessere'
-        },
-        NOTIFICATIONS: { showToast: toast },
-        AUTH: {
-          async getCurrentUser(){
-            const { data } = await client.auth.getUser();
-            return data?.user || null;
-          },
-          async getUserProfile(){
-            const user = await this.getCurrentUser();
-            if(!user) return null;
-            const { data, error } = await client
-              .from('user_profiles')
-              .select('*')
-              .eq('user_id', user.id)
-              .single();
-            if(error){ console.error(error); return null; }
-            return data;
-          },
-          async protectPage(){
-            const { data:{ session } } = await client.auth.getSession();
-            if(!session){
-              // non autenticato → vai al login
-              window.location.replace('/login.html');
-              throw new Error('Utente non autenticato');
+            } catch (error) {
+                console.error('Errore inizializzazione:', error);
+                showToast('Errore di caricamento: ' + (error.message || 'Errore sconosciuto'), 'error');
+            } finally {
+                hideLoader();
             }
-            return true;
-          },
-          async logout(){
-            await client.auth.signOut();
-            window.location.replace('/login.html');
-          }
-        },
-        TESSERA: {
-          async getCurrentUserTessera(){
-            const user = await APP_CONFIG.AUTH.getCurrentUser();
-            if(!user) return null;
-            const { data, error } = await client
-              .from('tessere')
-              .select('*')
-              .eq('user_id', user.id)
-              .order('created_at', { ascending:false })
-              .limit(1)
-              .single();
-            if(error){ console.warn('Nessuna tessera:', error.message); return null; }
-            return data;
-          }
+        });
+
+        // Gestione loader
+        function showLoader() {
+            document.getElementById('pageLoader').style.display = 'flex';
         }
-      };
-      console.log('✅ Home Dashboard con APP_CONFIG Ready');
-    })();
-  </script>
 
-  <!-- Logica pagina -->
-  <script>
-    const loader = document.getElementById('pageLoader');
-    const showLoader = () => loader.style.display = 'flex';
-    const hideLoader = () => loader.style.display = 'none';
+        function hideLoader() {
+            document.getElementById('pageLoader').style.display = 'none';
+        }
 
-    function getRoleBadgeHTML(role){
-      let cls = 'role-user';
-      if((role||'').toUpperCase()==='ADMIN') cls='role-admin';
-      else if((role||'').toUpperCase()==='DIRIGENTE') cls='role-dirigente';
-      return `<span class="role-badge ${cls}">${role||'USER'}</span>`;
-    }
+        // Controllo autenticazione
+        async function checkAuth() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                window.location.href = 'auth.html';
+                throw new Error('Utente non autenticato');
+            }
+            currentUser = session.user;
+            return true;
+        }
 
-    async function loadUserData(){
-      const profile = await APP_CONFIG.AUTH.getUserProfile();
-      if(!profile) throw new Error('Impossibile caricare il profilo utente');
+        // Caricamento dati utente
+        async function loadUserData() {
+            if (!currentUser) return;
 
-      document.getElementById('userName').textContent = profile.nome || 'Utente';
-      const initials = (profile.nome?.[0]||'-') + (profile.cognome?.[0]||'-');
-      document.getElementById('userInitials').textContent = initials.toUpperCase();
-      const badge = document.getElementById('userRoleBadge');
-      badge.innerHTML = getRoleBadgeHTML(profile.role);
-      badge.classList.remove('hidden');
-    }
+            const { data: profile, error } = await supabaseClient
+                .from('user_profiles')
+                .select('*')
+                .eq('user_id', currentUser.id)
+                .single();
 
-    async function loadTesseraPreview(){
-      const cont = document.getElementById('tesseraPreview');
-      const tessera = await APP_CONFIG.TESSERA.getCurrentUserTessera();
-      if(!tessera){
-        cont.innerHTML = `<div class="text-center text-primary text-sm">Nessuna tessera trovata</div>`;
-        return;
-      }
-      cont.innerHTML = `
-        <div class="relative flex flex-col items-center">
-          <div class="text-3xl font-bold text-primary mb-2">${tessera.numero_tessera||'---'}</div>
-          <div class="text-primary font-semibold mb-4">${tessera.nome||''} ${tessera.cognome||''}</div>
-          <canvas id="qrPreview" class="mb-4"></canvas>
-          <div class="text-xs text-gray-600">Emessa il ${tessera.data_creazione ? new Date(tessera.data_creazione).toLocaleDateString('it-IT') : '-'}</div>
-        </div>`;
-      QRCode.toCanvas(document.getElementById('qrPreview'), tessera.numero_tessera||'----', { width: 100, margin: 1 });
-    }
+            if (error) {
+                console.error('Errore caricamento profilo:', error);
+                throw new Error('Impossibile caricare il profilo utente');
+            }
 
-    async function loadNews(){
-      const supa = APP_CONFIG.SUPABASE.getClient();
-      const box = document.getElementById('newsContainer');
-      const { data, error } = await supa
-        .from(APP_CONFIG.TABLES.NEWS)
-        .select('*')
-        .eq('stato','pubblicata')
-        .order('created_at',{ascending:false})
-        .limit(3);
-      if(error){ box.innerHTML = `<div class="glass-morphism rounded-3xl p-6 col-span-3 text-white">Errore nel caricamento delle news</div>`; return; }
-      if(!data?.length){ box.innerHTML = `<div class="glass-morphism rounded-3xl p-6 col-span-3 text-white">Nessuna news disponibile</div>`; return; }
-      box.innerHTML = '';
-      data.forEach(n=>{
-        const d = new Date(n.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'});
-        const excerpt = (n.contenuto||'').slice(0,150)+(n.contenuto?.length>150?'…':'');
-        const card = document.createElement('div');
-        card.className = 'news-card';
-        card.innerHTML = `
-          <div class="p-6">
-            <div class="text-white/70 text-sm mb-2">${d}</div>
-            <h3 class="text-white text-lg font-bold mb-2">${n.titolo||'-'}</h3>
-            <p class="text-white/90 mb-3">${excerpt}</p>
-            <a class="text-cyan font-semibold" href="#">Leggi tutto</a>
-          </div>`;
-        box.appendChild(card);
-      });
-    }
+            currentProfile = profile;
 
-    async function loadConvenzioni(){
-      const supa = APP_CONFIG.SUPABASE.getClient();
-      const box = document.getElementById('convenzioniContainer');
-      const { data, error } = await supa
-        .from(APP_CONFIG.TABLES.CONVENZIONI)
-        .select('*')
-        .eq('active', true)
-        .order('created_at',{ascending:false})
-        .limit(3);
-      if(error){ box.innerHTML = `<div class="glass-morphism rounded-3xl p-6 col-span-3 text-white">Errore nel caricamento delle convenzioni</div>`; return; }
-      if(!data?.length){ box.innerHTML = `<div class="glass-morphism rounded-3xl p-6 col-span-3 text-white">Nessuna convenzione disponibile</div>`; return; }
-      box.innerHTML = '';
-      data.forEach(c=>{
-        const excerpt = (c.descrizione||'').slice(0,100)+(c.descrizione?.length>100?'…':'');
-        const card = document.createElement('div');
-        card.className = 'glass-morphism rounded-3xl p-6 card-hover';
-        card.innerHTML = `
-          <div class="mb-4">
-            <h3 class="text-white text-xl font-bold mb-2">${c.nome||'-'}</h3>
-            <p class="text-white/80">${excerpt}</p>
-          </div>
-          <div class="flex justify-between items-center">
-            ${c.sito_web ? `<a href="${c.sito_web}" target="_blank" class="text-cyan hover:underline">Visita sito</a>` : '<span></span>'}
-            <span class="text-white/70 text-sm">${c.data_scadenza ? 'Scade il '+new Date(c.data_scadenza).toLocaleDateString('it-IT') : 'Sempre valida'}</span>
-          </div>`;
-        box.appendChild(card);
-      });
-    }
+            // Aggiorna UI
+            document.getElementById('userName').textContent = profile.nome || 'Utente';
+            const initials = (profile.nome?.[0] || '-') + (profile.cognome?.[0] || '-');
+            document.getElementById('userInitials').textContent = initials.toUpperCase();
+            
+            // Badge ruolo
+            const badge = document.getElementById('userRoleBadge');
+            badge.innerHTML = getRoleBadgeHTML(profile.role);
+            badge.classList.remove('hidden');
+        }
 
-    async function loadRichieste(){
-      const supa = APP_CONFIG.SUPABASE.getClient();
-      const user = await APP_CONFIG.AUTH.getCurrentUser();
-      const box = document.getElementById('richiesteContainer');
-      if(!user){ box.innerHTML = `<div class="glass-strong rounded-xl p-4 text-white">Utente non trovato</div>`; return; }
-      const { data, error } = await supa
-        .from(APP_CONFIG.TABLES.RICHIESTE)
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at',{ascending:false})
-        .limit(5);
-      if(error){ box.innerHTML = `<div class="glass-strong rounded-xl p-4 text-white">Errore nel caricamento delle richieste</div>`; return; }
-      if(!data?.length){ box.innerHTML = `<div class="glass-strong rounded-xl p-4 text-white">Nessuna richiesta effettuata</div>`; return; }
-      box.innerHTML = '';
-      const color = s => s==='aperta'?'bg-blue-500':(s==='in_elaborazione'?'bg-yellow-500':(s==='risolta'?'bg-green-500':'bg-gray-500'));
-      data.forEach(r=>{
-        const item = document.createElement('div');
-        item.className = 'glass-strong rounded-xl p-4';
-        const stato = (r.stato||'aperta').replace('_',' ');
-        const when = new Date(r.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'});
-        item.innerHTML = `
-          <div class="flex justify-between items-center">
-            <div>
-              <h4 class="text-white font-bold">${r.titolo||'-'}</h4>
-              <p class="text-white/70 text-sm">${when}</p>
-            </div>
-            <span class="px-3 py-1 rounded-full text-xs font-medium text-white ${color(r.stato)}">${stato.charAt(0).toUpperCase()+stato.slice(1)}</span>
-          </div>`;
-        box.appendChild(item);
-      });
-    }
+        // Genera HTML per badge ruolo
+        function getRoleBadgeHTML(role) {
+            let className = 'role-user';
+            if (role === 'ADMIN') className = 'role-admin';
+            else if (role === 'DIRIGENTE') className = 'role-dirigente';
+            
+            return `<span class="role-badge ${className}">${role || 'USER'}</span>`;
+        }
 
-    function bindUI(){
-      document.getElementById('logoutBtn').addEventListener('click', ()=>APP_CONFIG.AUTH.logout());
-      document.getElementById('newRequestBtn').addEventListener('click', ()=>APP_CONFIG.NOTIFICATIONS.showToast('Form richieste non incluso in questa pagina demo','info'));
-    }
+        // Caricamento tessera preview
+        async function loadTesseraPreview() {
+            const container = document.getElementById('tesseraPreview');
+            
+            try {
+                const { data: tessera, error } = await supabaseClient
+                    .from('tessere')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .single();
 
-    // Boot
-    document.addEventListener('DOMContentLoaded', async () => {
-      try{
-        showLoader();
-        console.log('🏠 HOME PAGE LOADED - MyApp Dashboard');
-        await APP_CONFIG.AUTH.protectPage();                // redirecta a /login.html se non autenticato
-        await loadUserData();
-        await Promise.all([ loadTesseraPreview(), loadNews(), loadConvenzioni(), loadRichieste() ]);
-        bindUI();
-      }catch(err){
-        console.error('Errore auth/init:', err);
-        // se APP_CONFIG non fosse caricato, almeno non blocchiamo la UI:
-        try{ APP_CONFIG.NOTIFICATIONS.showToast('Errore: '+(err?.message||'init'), 'error'); }catch(_){}
-      }finally{
-        hideLoader();
-      }
-    });
-  </script>
+                if (error) {
+                    container.innerHTML = `<div class="text-center text-primary text-sm p-4">Nessuna tessera trovata</div>`;
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="relative flex flex-col items-center">
+                        <div class="text-3xl font-bold text-primary mb-2">${tessera.numero_tessera || '---'}</div>
+                        <div class="text-primary font-semibold mb-4">${tessera.nome || ''} ${tessera.cognome || ''}</div>
+                        <canvas id="qrPreview" class="mb-4"></canvas>
+                        <div class="text-xs text-gray-600">Emessa il ${tessera.data_creazione ? new Date(tessera.data_creazione).toLocaleDateString('it-IT') : '-'}</div>
+                    </div>`;
+
+                // Genera QR Code
+                if (window.QRCode && tessera.numero_tessera) {
+                    QRCode.toCanvas(document.getElementById('qrPreview'), tessera.numero_tessera, { 
+                        width: 100, 
+                        margin: 1,
+                        color: {
+                            dark: '#1a1a2e',
+                            light: '#ffffff'
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Errore caricamento tessera:', error);
+                container.innerHTML = `<div class="text-center text-red-500 text-sm p-4">Errore caricamento tessera</div>`;
+            }
+        }
+
+        // Caricamento news
+        async function loadNews() {
+            const container = document.getElementById('newsContainer');
+            
+            try {
+                const { data: news, error } = await supabaseClient
+                    .from('news')
+                    .select('*')
+                    .eq('stato', 'pubblicata')
+                    .order('created_at', { ascending: false })
+                    .limit(3);
+
+                if (error) throw error;
+
+                container.innerHTML = '';
+
+                if (!news || news.length === 0) {
+                    container.innerHTML = `
+                        <div class="glass-morphism rounded-3xl p-6 col-span-3 text-white text-center">
+                            Nessuna news disponibile al momento
+                        </div>`;
+                    return;
+                }
+
+                news.forEach(n => {
+                    const date = new Date(n.created_at).toLocaleDateString('it-IT', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    });
+                    const excerpt = (n.contenuto || '').slice(0, 150) + (n.contenuto?.length > 150 ? '…' : '');
+                    
+                    const card = document.createElement('div');
+                    card.className = 'news-card';
+                    card.innerHTML = `
+                        <div class="p-6">
+                            <div class="text-white/70 text-sm mb-2">${date}</div>
+                            <h3 class="text-white text-lg font-bold mb-2">${n.titolo || '-'}</h3>
+                            <p class="text-white/90 mb-3">${excerpt}</p>
+                            <a href="news-detail.html?id=${n.id}" class="text-cyan font-semibold hover:underline">Leggi tutto</a>
+                        </div>`;
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error('Errore caricamento news:', error);
+                container.innerHTML = `
+                    <div class="glass-morphism rounded-3xl p-6 col-span-3 text-white text-center">
+                        Errore nel caricamento delle news
+                    </div>`;
+            }
+        }
+
+        // Caricamento convenzioni
+        async function loadConvenzioni() {
+            const container = document.getElementById('convenzioniContainer');
+            
+            try {
+                const { data: convenzioni, error } = await supabaseClient
+                    .from('convenzioni')
+                    .select('*')
+                    .eq('active', true)
+                    .order('created_at', { ascending: false })
+                    .limit(3);
+
+                if (error) throw error;
+
+                container.innerHTML = '';
+
+                if (!convenzioni || convenzioni.length === 0) {
+                    container.innerHTML = `
+                        <div class="glass-morphism rounded-3xl p-6 col-span-3 text-white text-center">
+                            Nessuna convenzione disponibile al momento
+                        </div>`;
+                    return;
+                }
+
+                convenzioni.forEach(c => {
+                    const excerpt = (c.descrizione || '').slice(0, 100) + (c.descrizione?.length > 100 ? '…' : '');
+                    
+                    const card = document.createElement('div');
+                    card.className = 'glass-morphism rounded-3xl p-6 card-hover';
+                    card.innerHTML = `
+                        <div class="mb-4">
+                            <h3 class="text-white text-xl font-bold mb-2">${c.nome || '-'}</h3>
+                            <p class="text-white/80">${excerpt}</p>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            ${c.sito_web ? `<a href="${c.sito_web}" target="_blank" class="text-cyan hover:underline">Visita sito</a>` : '<span></span>'}
+                            <span class="text-white/70 text-sm">
+                                ${c.data_scadenza ? 'Scade il ' + new Date(c.data_scadenza).toLocaleDateString('it-IT') : 'Sempre valida'}
+                            </span>
+                        </div>`;
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error('Errore caricamento convenzioni:', error);
+                container.innerHTML = `
+                    <div class="glass-morphism rounded-3xl p-6 col-span-3 text-white text-center">
+                        Errore nel caricamento delle convenzioni
+                    </div>`;
+            }
+        }
+
+        // Caricamento richieste
+        async function loadRichieste() {
+            const container = document.getElementById('richiesteContainer');
+            
+            try {
+                const { data: richieste, error } = await supabaseClient
+                    .from('richieste')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+
+                if (error) throw error;
+
+                container.innerHTML = '';
+
+                if (!richieste || richieste.length === 0) {
+                    container.innerHTML = `
+                        <div class="glass-morphism rounded-xl p-4 text-white text-center">
+                            Nessuna richiesta effettuata
+                        </div>`;
+                    return;
+                }
+
+                const getStatusColor = (stato) => {
+                    switch (stato) {
+                        case 'aperta': return 'bg-blue-500';
+                        case 'in_elaborazione': return 'bg-yellow-500';
+                        case 'risolta': return 'bg-green-500';
+                        case 'chiusa': return 'bg-gray-500';
+                        default: return 'bg-gray-500';
+                    }
+                };
+
+                richieste.forEach(r => {
+                    const item = document.createElement('div');
+                    item.className = 'glass-morphism rounded-xl p-4';
+                    const stato = (r.stato || 'aperta').replace('_', ' ');
+                    const when = new Date(r.created_at).toLocaleDateString('it-IT', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric'
+                    });
+                    
+                    item.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="text-white font-bold">${r.titolo || '-'}</h4>
+                                <p class="text-white/70 text-sm">${when}</p>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-xs font-medium text-white ${getStatusColor(r.stato)}">
+                                ${stato.charAt(0).toUpperCase() + stato.slice(1)}
+                            </span>
+                        </div>`;
+                    container.appendChild(item);
+                });
+
+            } catch (error) {
+                console.error('Errore caricamento richieste:', error);
+                container.innerHTML = `
+                    <div class="glass-morphism rounded-xl p-4 text-white text-center">
+                        Errore nel caricamento delle richieste
+                    </div>`;
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+            document.getElementById('newRequestBtn').addEventListener('click', () => {
+                window.location.href = 'richieste.html';
+            });
+        }
+
+        // Logout
+        async function handleLogout() {
+            try {
+                await supabaseClient.auth.signOut();
+                window.location.href = 'auth.html';
+            } catch (error) {
+                console.error('Errore logout:', error);
+                showToast('Errore durante il logout', 'error');
+            }
+        }
+
+        // Toast notifications
+        function showToast(message, type = 'info') {
+            console.log(`[${type.toUpperCase()}] ${message}`);
+            
+            // Crea toast element
+            const toast = document.createElement('div');
+            toast.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 ${
+                type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500'
+            } text-white font-semibold`;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            // Rimuovi dopo 3 secondi
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
