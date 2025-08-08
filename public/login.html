@@ -255,7 +255,13 @@
             console.log('✅ Supabase inizializzato');
 
             // Controlla se l'utente è già autenticato
-            checkExistingSession();
+            await checkExistingSession();
+
+            // Se esiste una sessione, aggiungi anche l'opzione di logout
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                addLogoutOption();
+            }
 
             // Setup event listeners
             setupTabs();
@@ -297,14 +303,66 @@
             try {
                 const { data: { session } } = await supabaseClient.auth.getSession();
                 if (session) {
+                    // 🔥 CAMBIO IMPORTANTE: Non reindirizzare automaticamente
+                    // Mostra solo un messaggio che l'utente è già connesso
                     const profile = await getUserProfile(session.user.id);
                     if (profile) {
-                        redirectBasedOnRole(profile.role);
+                        showMessage('loginMessage', 
+                            `Sei già connesso come ${profile.nome}. Clicca "Vai alla Dashboard" per continuare.`, 
+                            'success');
+                        
+                        // Aggiungi bottone per andare alla dashboard
+                        addDashboardButton(profile.role);
                     }
                 }
             } catch (error) {
                 console.error('Errore controllo sessione:', error);
+                // Ignora errori di sessione - lascia che l'utente faccia login normalmente
             }
+        }
+
+        // Aggiungi bottone per andare alla dashboard
+        function addDashboardButton(role) {
+            const loginForm = document.getElementById('loginForm');
+            
+            // Rimuovi bottone esistente se presente
+            const existingBtn = document.getElementById('dashboardBtn');
+            if (existingBtn) existingBtn.remove();
+            
+            // Crea nuovo bottone
+            const dashboardBtn = document.createElement('button');
+            dashboardBtn.id = 'dashboardBtn';
+            dashboardBtn.type = 'button';
+            dashboardBtn.className = 'btn-aurora w-full py-4 rounded-xl text-lg font-bold mt-4';
+            dashboardBtn.textContent = '🏠 Vai alla Dashboard';
+            
+            dashboardBtn.addEventListener('click', () => {
+                redirectBasedOnRole(role);
+            });
+            
+            // Inserisci dopo il form di login
+            loginForm.parentNode.insertBefore(dashboardBtn, loginForm.nextSibling);
+        }
+
+        // Aggiungi anche un bottone logout per sessioni esistenti
+        function addLogoutOption() {
+            const container = document.querySelector('.glass-card');
+            
+            const logoutBtn = document.createElement('button');
+            logoutBtn.type = 'button';
+            logoutBtn.className = 'w-full py-2 px-4 mt-4 text-center text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors';
+            logoutBtn.textContent = '🚪 Disconnetti e accedi con altro account';
+            
+            logoutBtn.addEventListener('click', async () => {
+                try {
+                    await supabaseClient.auth.signOut();
+                    location.reload(); // Ricarica la pagina per pulire tutto
+                } catch (error) {
+                    console.error('Errore logout:', error);
+                }
+            });
+            
+            container.appendChild(logoutBtn);
         }
 
         // Login
