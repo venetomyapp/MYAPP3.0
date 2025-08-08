@@ -1,27 +1,13 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - MyApp</title>
+    <title>Home - MyApp</title>
     
-    <!-- PWA Meta Tags -->
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#1a1a2e">
-    <meta name="background-color" content="#1a1a2e">
-
-    <!-- Icone -->
-    <link rel="icon" type="image/png" sizes="32x32" href="/public/icons/favicon-32x32.png">
-    <link rel="apple-touch-icon" href="/public/icons/apple-touch-icon.png">
-
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Supabase Client -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- App Configuration -->
-    <script src="/assets/js/app-config.js"></script>
     
     <!-- CONFIGURAZIONE COLORI TAILWIND -->
     <script>
@@ -29,32 +15,45 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#1a1a2e',
-                        secondary: '#16213e',
-                        accent: '#0f3460',
-                        aurora: '#e94560',
-                        cyan: '#00d4ff',
-                        magenta: '#ff006e',
-                        gold: '#ffd700',
-                        teal: '#03dac6',
-                        dark: '#0a0a23',
-                        light: '#f8fafc',
+                        // Aurora Boreale 2025 Palette
+                        primary: '#1a1a2e',      // Blu notte profondo
+                        secondary: '#16213e',     // Blu oceano
+                        accent: '#0f3460',        // Blu acciaio
+                        aurora: '#e94560',        // Rosa aurora
+                        cyan: '#00d4ff',          // Cyan elettrico
+                        magenta: '#ff006e',       // Magenta vibrante
+                        gold: '#ffd700',          // Oro elegante
+                        teal: '#03dac6',          // Teal premium
+                        dark: '#0a0a23',          // Nero cyber
+                        light: '#f8fafc',         // Bianco ghiaccio
                         textDark: '#1C1C1E',
                         backgroundLight: '#F4F4F8',
+                    },
+                    screens: {
+                        'xs': '320px',
+                        'sm': '640px',
+                        'md': '768px',
+                        'lg': '1024px',
+                        'xl': '1280px',
+                        '2xl': '1536px',
+                        '3xl': '1920px',
+                        '4xl': '2560px',
                     }
                 }
             }
         }
     </script>
     
-    <!-- STILI CSS -->
+    <!-- STILI CSS COMPLETI -->
     <style>
+        /* === VARIABILI CSS === */
         :root {
             --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
             --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
             --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
         }
 
+        /* === SFONDO PRINCIPALE === */
         body {
             background: var(--gradient-aurora);
             background-size: 400% 400%;
@@ -62,6 +61,7 @@
             min-height: 100vh;
         }
 
+        /* === ANIMAZIONI === */
         @keyframes aurora {
             0%, 100% { background-position: 0% 50%; }
             25% { background-position: 100% 50%; }
@@ -74,17 +74,28 @@
             50% { transform: translateY(-10px); }
         }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
 
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(233, 69, 96, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(0, 212, 255, 0.8); }
+        }
+
+        /* === TIPOGRAFIA ULTRA-VISIBILE === */
         .text-ultra-visible {
             color: #ffffff;
             text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
             font-weight: 800;
         }
 
+        .text-white {
+            text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
+        }
+
+        /* === GLASSMORPHISM === */
         .glass-morphism {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(12px);
@@ -92,13 +103,25 @@
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         }
 
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
         .glass-card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            animation: slideIn 0.5s ease-out;
         }
 
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* === BOTTONI === */
         .btn-aurora {
             background: var(--gradient-magic);
             color: white;
@@ -113,40 +136,41 @@
             border-color: rgba(233, 69, 96, 0.8);
         }
 
-        .service-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
+        .btn-cyber {
+            background: var(--gradient-cyber);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            color: white;
+            font-weight: 700;
         }
 
-        .service-card:hover {
+        .btn-cyber:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.4);
+            border-color: rgba(0, 212, 255, 0.8);
+        }
+
+        .btn-primary {
+            background: var(--gradient-aurora);
+            color: white;
+            border: 2px solid rgba(26, 26, 46, 0.3);
+            font-weight: 700;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(26, 26, 46, 0.4);
+            border-color: rgba(26, 26, 46, 0.8);
+        }
+
+        /* === CARDS === */
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
             transform: translateY(-8px) scale(1.02);
             box-shadow: 0 25px 50px rgba(0,0,0,0.25);
-        }
-
-        .tessera-digitale {
-            background: linear-gradient(135deg, #1a1a2e, #0f3460);
-            border-radius: 20px;
-            padding: 2rem;
-            color: white;
-            position: relative;
-            overflow: hidden;
-            min-height: 250px;
-        }
-
-        .tessera-digitale::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0,212,255,0.1) 0%, transparent 70%);
-            animation: float 6s ease-in-out infinite;
         }
 
         .stat-card {
@@ -154,7 +178,6 @@
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 20px;
-            padding: 1.5rem;
             transition: all 0.3s ease;
         }
 
@@ -164,28 +187,129 @@
             box-shadow: 0 15px 30px rgba(0,0,0,0.2);
         }
 
-        /* Bottom Navigation */
-        .bottom-nav {
+        /* === FORM ELEMENTS === */
+        .search-box {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 16px 20px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #e94560;
+            box-shadow: 0 0 0 4px rgba(233, 69, 96, 0.2);
+            transform: scale(1.02);
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 14px 18px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #e94560;
+            box-shadow: 0 0 0 4px rgba(233, 69, 96, 0.2);
+            transform: scale(1.02);
+        }
+
+        /* === FILTER TABS === */
+        .filter-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            padding: 4px;
+        }
+
+        .filter-tab {
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: 2px solid;
+        }
+
+        .filter-tab:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .filter-tab:not(.active):hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .filter-tab.active {
+            background: rgba(255, 255, 255, 0.95);
+            color: #1a1a2e;
+            border-color: #e94560;
+            box-shadow: 0 8px 25px rgba(233, 69, 96, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* === HEADER E NAVIGATION === */
+        header {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        nav {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-top: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .nav-item {
-            color: #6b7280;
+        /* === ROLE BADGES === */
+        .role-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid;
             transition: all 0.3s ease;
-            padding: 0.5rem;
         }
 
-        .nav-item:hover {
-            color: #1a1a2e;
-            transform: translateY(-2px);
+        .role-user {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border-color: rgba(59, 130, 246, 0.3);
         }
 
-        .nav-item.active {
-            color: #e94560;
+        .role-dirigente {
+            background: linear-gradient(135deg, #10b981, #047857);
+            color: white;
+            border-color: rgba(16, 185, 129, 0.3);
         }
 
+        .role-admin {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        /* === LOADING SKELETON === */
         .loading-skeleton {
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
             background-size: 200% 100%;
@@ -193,878 +317,772 @@
             border-radius: 12px;
         }
 
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
+        /* === EMPTY STATE === */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
         }
 
+        /* === LOGOUT BUTTON === */
+        #logoutBtn {
+            background: var(--gradient-magic) !important;
+            border: 2px solid rgba(233, 69, 96, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 700;
+        }
+
+        #logoutBtn:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(233, 69, 96, 0.4);
+            border-color: rgba(233, 69, 96, 0.8);
+        }
+
+        /* === NEWS CARD === */
+        .news-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .news-content {
+            padding: 24px;
+        }
+
+        .news-date {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+        }
+
+        .news-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .news-excerpt {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .read-more {
+            color: #00d4ff;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .read-more:hover {
+            transform: translateX(5px);
+        }
+
+        /* === REDUCED MOTION === */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* === RESPONSIVE BREAKPOINTS === */
         @media (max-width: 640px) {
-            .service-card {
-                padding: 1rem;
-            }
-            
-            .tessera-digitale {
-                padding: 1.5rem;
-            }
+            .hero-title { font-size: 2.25rem; line-height: 2.5rem; }
+            .contact-button { font-size: 13px; padding: 8px 14px; }
+        }
+
+        @media (min-width: 641px) and (max-width: 1024px) {
+            .hero-title { font-size: 3rem; line-height: 3.5rem; }
+        }
+
+        @media (min-width: 1025px) {
+            .max-w-md { max-width: 48rem; }
         }
     </style>
+    
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- QR Code Generator -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    
+    <!-- App Config -->
+    <script src="../assets/js/app-config.js"></script>
 </head>
 <body class="flex flex-col min-h-screen font-sans">
-
-    <!-- Loading State -->
-    <div id="loadingState" class="fixed inset-0 bg-primary bg-opacity-90 flex items-center justify-center z-50">
-        <div class="text-center">
-            <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-aurora mx-auto mb-4"></div>
-            <p class="text-white text-lg font-semibold">Caricamento dashboard...</p>
-        </div>
-    </div>
-
-    <!-- Header -->
-    <header class="w-full px-4 py-6 relative z-10 glass-morphism">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-black text-ultra-visible">MyApp</h1>
-                <p class="text-cyan text-sm font-semibold" id="welcomeMessage">Bentornuto</p>
+    <!-- HEADER -->
+    <header class="py-4 px-6 sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="../app/home.html" class="text-white text-2xl font-bold">MyApp</a>
+                <span id="userRoleBadge" class="ml-4 hidden md:inline-block"></span>
             </div>
-            <button id="logoutBtn" class="btn-aurora px-6 py-2 rounded-full text-sm">
-                🚪 Esci
-            </button>
+            
+            <div class="flex items-center gap-4">
+                <button id="logoutBtn" class="text-white py-2 px-4 rounded-full">Logout</button>
+            </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="flex-1 px-4 py-6 max-w-6xl mx-auto w-full">
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <!-- Welcome Section -->
+        <section class="mb-12">
+            <div class="glass-morphism rounded-3xl p-8 md:p-12">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+                    <div>
+                        <h1 class="text-ultra-visible text-4xl md:text-5xl font-black mb-4">
+                            Benvenuto, <span id="userName">Utente</span>!
+                        </h1>
+                        <p class="text-white text-lg mb-6">
+                            Accedi ai servizi e alle informazioni dedicate ai nostri associati.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="../app/tessera.html" class="btn-aurora py-3 px-6 rounded-xl inline-flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 9a2 2 0 10-4 0v5a2 2 0 104 0V9z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9h.01M15 9h.01M9 15h.01M15 15h.01M9 12h.01M15 12h.01M9 6h6M9 18h6" />
+                                </svg>
+                                La tua Tessera
+                            </a>
+                            <a href="../app/profilo.html" class="btn-cyber py-3 px-6 rounded-xl inline-flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                Profilo
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-shrink-0">
+                        <div class="relative w-48 h-48 bg-primary rounded-full flex items-center justify-center border-4 border-aurora shadow-lg animate-pulse">
+                            <span id="userInitials" class="text-white text-5xl font-bold">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
         
-        <!-- Tessera Digitale -->
-        <div class="mb-8">
-            <h2 class="text-xl font-bold text-white mb-4">La tua Tessera Digitale</h2>
-            <div class="tessera-digitale" id="tesseraContainer">
-                <div class="relative z-10">
-                    <div class="flex justify-between items-start mb-6">
-                        <div>
-                            <p class="text-cyan text-sm font-semibold mb-1">TESSERA ASSOCIATIVA</p>
-                            <h3 class="text-2xl font-bold" id="tesseraNome">Caricamento...</h3>
-                        </div>
-                        <div class="text-right">
-                            <span class="inline-block px-3 py-1 bg-green-500 rounded-full text-xs font-bold">ATTIVA</span>
+        <!-- Tessera Preview Section -->
+        <section class="mb-12">
+            <h2 class="text-ultra-visible text-3xl font-black mb-6">La Tua Tessera</h2>
+            
+            <div class="glass-morphism rounded-3xl p-6 card-hover">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-shrink-0 w-full md:w-1/3 lg:w-1/4">
+                        <div id="tesseraPreview" class="glass-card rounded-2xl p-6 text-center w-full mx-auto max-w-[300px]">
+                            <!-- Tessera dinamica qui -->
+                            <div class="loading-skeleton h-48 mb-4"></div>
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-2 gap-4 mb-6">
-                        <div>
-                            <p class="text-cyan text-xs mb-1">NUMERO TESSERA</p>
-                            <p class="font-mono text-lg" id="tesseraNumero">--------</p>
+                    <div class="flex-grow">
+                        <h3 class="text-white text-xl font-bold mb-3">Tessera Digitale</h3>
+                        <p class="text-white opacity-90 mb-6">
+                            La tua tessera digitale è sempre con te. Mostrala quando richiesto per accedere a servizi e convenzioni dedicate.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="../app/tessera.html" class="btn-aurora py-2 px-4 rounded-xl inline-flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                Visualizza Completa
+                            </a>
                         </div>
-                        <div>
-                            <p class="text-cyan text-xs mb-1">SCADENZA</p>
-                            <p class="font-mono text-lg" id="tesseraScadenza">--/--/----</p>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-between items-end">
-                        <div>
-                            <p class="text-cyan text-xs mb-1">TIPO</p>
-                            <p class="font-semibold" id="tesseraTipo">STANDARD</p>
-                        </div>
-                        <div class="text-4xl">🛡️</div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Stats Grid -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div class="stat-card text-center">
-                <div class="text-3xl mb-2">📢</div>
-                <div class="text-2xl font-bold text-white" id="newsCount">0</div>
-                <div class="text-cyan text-sm">Nuovi Avvisi</div>
-            </div>
-            
-            <div class="stat-card text-center">
-                <div class="text-3xl mb-2">📄</div>
-                <div class="text-2xl font-bold text-white" id="docsCount">0</div>
-                <div class="text-cyan text-sm">Documenti</div>
-            </div>
-            
-            <div class="stat-card text-center">
-                <div class="text-3xl mb-2">🎯</div>
-                <div class="text-2xl font-bold text-white" id="convenzioniCount">0</div>
-                <div class="text-cyan text-sm">Convenzioni</div>
-            </div>
-            
-            <div class="stat-card text-center">
-                <div class="text-3xl mb-2">💬</div>
-                <div class="text-2xl font-bold text-white" id="richiesteCount">0</div>
-                <div class="text-cyan text-sm">Richieste</div>
-            </div>
-        </div>
-
-        <!-- Services Grid -->
-        <div class="mb-8">
-            <h2 class="text-xl font-bold text-white mb-4">Servizi Rapidi</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <a href="profilo.html" class="service-card">
-                    <div class="text-center">
-                        <div class="text-4xl mb-3">👤</div>
-                        <h3 class="font-bold text-primary">Il Mio Profilo</h3>
-                        <p class="text-sm text-gray-600 mt-1">Gestisci i tuoi dati</p>
-                    </div>
-                </a>
-                
-                <a href="convenzioni.html" class="service-card">
-                    <div class="text-center">
-                        <div class="text-4xl mb-3">🎁</div>
-                        <h3 class="font-bold text-primary">Convenzioni</h3>
-                        <p class="text-sm text-gray-600 mt-1">Sconti esclusivi</p>
-                    </div>
-                </a>
-                
-                <a href="documenti.html" class="service-card">
-                    <div class="text-center">
-                        <div class="text-4xl mb-3">📚</div>
-                        <h3 class="font-bold text-primary">Documenti</h3>
-                        <p class="text-sm text-gray-600 mt-1">Area download</p>
-                    </div>
-                </a>
-                
-                <a href="assistenza.html" class="service-card">
-                    <div class="text-center">
-                        <div class="text-4xl mb-3">🆘</div>
-                        <h3 class="font-bold text-primary">Assistenza</h3>
-                        <p class="text-sm text-gray-600 mt-1">Richiedi supporto</p>
-                    </div>
-                </a>
-                
-                <a href="news.html" class="service-card">
-                    <div class="text-center">
-                        <div class="text-4xl mb-3">📰</div>
-                        <h3 class="font-bold text-primary">News</h3>
-                        <p class="text-sm text-gray-600 mt-1">Ultime notizie</p>
-                    </div>
-                </a>
-                
-                <a href="dirigenti.html" class="service-card">
-                    <div class="text-center">
-                        <div class="text-4xl mb-3">👥</div>
-                        <h3 class="font-bold text-primary">Dirigenti</h3>
-                        <p class="text-sm text-gray-600 mt-1">I nostri referenti</p>
-                    </div>
-                </a>
-            </div>
-        </div>
-
+        </section>
+        
         <!-- News Section -->
-        <div class="mb-8">
-            <h2 class="text-xl font-bold text-white mb-4">Ultime News</h2>
-            <div id="newsContainer" class="space-y-4">
-                <!-- News items will be loaded here -->
-                <div class="glass-card rounded-xl p-4">
-                    <p class="text-gray-600 text-center">Caricamento news...</p>
+        <section class="mb-12">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-ultra-visible text-3xl font-black">Ultime Notizie</h2>
+                <a href="#" class="text-white opacity-80 hover:opacity-100 transition-opacity">Vedi tutte</a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="newsContainer">
+                <!-- News cards will be loaded here -->
+                <div class="loading-skeleton h-64"></div>
+                <div class="loading-skeleton h-64"></div>
+                <div class="loading-skeleton h-64"></div>
+            </div>
+        </section>
+        
+        <!-- Convenzioni Section -->
+        <section class="mb-12">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-ultra-visible text-3xl font-black">Convenzioni</h2>
+                <a href="../public/convenzioni.html" class="text-white opacity-80 hover:opacity-100 transition-opacity">Vedi tutte</a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="convenzioniContainer">
+                <!-- Convenzioni cards will be loaded here -->
+                <div class="loading-skeleton h-64"></div>
+                <div class="loading-skeleton h-64"></div>
+                <div class="loading-skeleton h-64"></div>
+            </div>
+        </section>
+        
+        <!-- Richieste Section -->
+        <section class="mb-12">
+            <h2 class="text-ultra-visible text-3xl font-black mb-6">Le Tue Richieste</h2>
+            
+            <div class="glass-morphism rounded-3xl p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-white text-xl font-bold">Richieste Recenti</h3>
+                    <button id="newRequestBtn" class="btn-aurora py-2 px-4 rounded-xl inline-flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Nuova Richiesta
+                    </button>
+                </div>
+                
+                <div id="richiesteContainer" class="space-y-4">
+                    <!-- Le richieste saranno caricate qui -->
+                    <div class="loading-skeleton h-20"></div>
+                    <div class="loading-skeleton h-20"></div>
                 </div>
             </div>
-        </div>
-
+        </section>
     </main>
-
-    <!-- Bottom Navigation -->
-    <nav class="bottom-nav fixed bottom-0 left-0 right-0 px-4 py-3">
-        <div class="flex justify-around items-center max-w-md mx-auto">
-            <a href="home.html" class="nav-item active flex flex-col items-center text-xs">
-                <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 12 2-2m0 0 7-7 7 7M5 10v10a1 1 0 0 0 1 1h3m10-11 2 2m-2-2v10a1 1 0 0 1-1 1h-3m-6 0a1 1 0 0 0 1-1v-4a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1m-6 0h6"></path>
-                </svg>
-                Home
-            </a>
-            <a href="convenzioni.html" class="nav-item flex flex-col items-center text-xs">
-                <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                Convenzioni
-            </a>
-            <a href="tessera.html" class="nav-item flex flex-col items-center text-xs">
-                <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
-                </svg>
-                Tessera
-            </a>
-            <a href="profilo.html" class="nav-item flex flex-col items-center text-xs">
-                <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                </svg>
-                Profilo
-            </a>
+    
+    <!-- Footer con navigazione -->
+    <nav class="py-4 px-6 sticky bottom-0 z-40">
+        <div class="container mx-auto">
+            <div class="flex justify-between items-center">
+                <a href="../app/home.html" class="flex flex-col items-center text-aurora">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    <span class="text-xs mt-1">Home</span>
+                </a>
+                
+                <a href="../app/profilo.html" class="flex flex-col items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    <span class="text-xs mt-1">Profilo</span>
+                </a>
+                
+                <a href="../app/tessera.html" class="flex flex-col items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 9a2 2 0 10-4 0v5a2 2 0 104 0V9z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9h.01M15 9h.01M9 15h.01M15 15h.01M9 12h.01M15 12h.01M9 6h6M9 18h6" />
+                    </svg>
+                    <span class="text-xs mt-1">Tessera</span>
+                </a>
+                
+                <a href="../public/convenzioni.html" class="flex flex-col items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span class="text-xs mt-1">Convenzioni</span>
+                </a>
+            </div>
         </div>
     </nav>
+    
+    <!-- Modal Nuova Richiesta -->
+    <div id="newRequestModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="glass-effect rounded-3xl p-6 w-full max-w-lg mx-4">
+            <h3 class="text-primary text-2xl font-bold mb-4">Nuova Richiesta</h3>
+            
+            <form id="newRequestForm">
+                <div class="mb-4">
+                    <label class="block text-primary text-sm font-bold mb-2">Titolo</label>
+                    <input type="text" id="requestTitle" class="input-field w-full" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-primary text-sm font-bold mb-2">Descrizione</label>
+                    <textarea id="requestDescription" class="input-field w-full h-32" required></textarea>
+                </div>
+                
+                <div class="flex justify-end gap-3 mt-6">
+                    <button type="button" id="cancelRequestBtn" class="py-2 px-4 rounded-xl border border-gray-300">Annulla</button>
+                    <button type="submit" class="btn-aurora py-2 px-4 rounded-xl">Invia Richiesta</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script>
-        // Variabili globali
-        let currentUser = null;
-        let userProfile = null;
-        let userTessera = null;
-
-        // 🔒 Verifica autenticazione
-        async function checkAuth() {
+        // Protezione della pagina per utenti autenticati
+        document.addEventListener('DOMContentLoaded', async function() {
             try {
-                const session = await APP_CONFIG.AuthManager.checkAuth();
+                // Verifica autenticazione
+                await APP_CONFIG.AUTH.protectPage();
                 
-                if (!session) {
-                    console.log('❌ Nessuna sessione trovata');
-                    APP_CONFIG.APP_PATHS.navigate('login');
-                    return null;
-                }
+                // Carica i dati dell'utente
+                loadUserData();
                 
-                currentUser = session.user;
-                console.log('✅ Utente autenticato:', currentUser.email);
+                // Carica anteprima tessera
+                loadTesseraPreview();
                 
-                // Carica profilo utente
-                userProfile = await APP_CONFIG.AuthManager.getUserProfile(currentUser.id);
+                // Carica news
+                loadNews();
                 
-                // Se non esiste profilo, crealo
+                // Carica convenzioni
+                loadConvenzioni();
+                
+                // Carica richieste
+                loadRichieste();
+                
+                // Inizializza handler eventi
+                initEventHandlers();
+                
+            } catch (error) {
+                console.error('Errore di inizializzazione:', error);
+                APP_CONFIG.NOTIFICATIONS.showToast('Errore di accesso: ' + error.message, 'error');
+            }
+        });
+        
+        // Carica i dati dell'utente
+        async function loadUserData() {
+            try {
+                // Ottieni dati utente
+                const userProfile = await APP_CONFIG.AUTH.getUserProfile();
+                
                 if (!userProfile) {
-                    await createUserProfile();
+                    throw new Error('Impossibile caricare il profilo');
                 }
                 
-                // Verifica ruolo e redirect se necessario
-                if (userProfile && (userProfile.role === 'DIRIGENTE' || userProfile.role === 'ADMIN')) {
-                    console.log('👑 Utente dirigente/admin, redirect...');
-                    APP_CONFIG.APP_PATHS.navigate('homeDirigenti');
-                    return null;
+                // Nome utente
+                document.getElementById('userName').textContent = userProfile.nome || 'Utente';
+                
+                // Iniziali
+                const initials = userProfile.nome && userProfile.cognome 
+                    ? (userProfile.nome.charAt(0) + userProfile.cognome.charAt(0)).toUpperCase() 
+                    : '--';
+                document.getElementById('userInitials').textContent = initials;
+                
+                // Badge ruolo
+                const userRoleBadge = document.getElementById('userRoleBadge');
+                if (userRoleBadge) {
+                    userRoleBadge.innerHTML = getRoleBadgeHTML(userProfile.role);
                 }
                 
-                // Aggiorna messaggio di benvenuto
-                const welcomeMsg = document.getElementById('welcomeMessage');
-                if (welcomeMsg && userProfile) {
-                    welcomeMsg.textContent = `Bentornato, ${userProfile.full_name || userProfile.nome || 'Utente'}!`;
-                }
-                
-                return currentUser;
             } catch (error) {
-                console.error('Errore auth:', error);
-                APP_CONFIG.APP_PATHS.navigate('login');
-                return null;
+                console.error('Errore nel caricamento dei dati utente:', error);
+                APP_CONFIG.NOTIFICATIONS.showToast('Errore nel caricamento dei dati utente', 'error');
             }
         }
-
-        // 🆕 Crea profilo se non esiste
-        async function createUserProfile() {
-            try {
-                const supabaseClient = APP_CONFIG.getSupabaseClient();
-                const userData = currentUser.user_metadata || {};
-                
-                const profileData = {
-                    user_id: currentUser.id,
-                    email: currentUser.email,
-                    full_name: userData.full_name || '',
-                    nome: userData.nome || '',
-                    cognome: userData.cognome || '',
-                    telefono: userData.telefono || '',
-                    role: userData.role || 'USER',
-                    stato: 'ATTIVO'
-                };
-                
-                const { data, error } = await supabaseClient
-                    .from('user_profiles')
-                    .insert([profileData])
-                    .select()
-                    .single();
-                
-                if (!error) {
-                    userProfile = data;
-                    console.log('✅ Profilo creato:', userProfile);
-                }
-            } catch (error) {
-                console.error('Errore creazione profilo:', error);
+        
+        // Funzione per generare il badge HTML del ruolo
+        function getRoleBadgeHTML(role) {
+            let badgeClass = '';
+            
+            switch(role.toUpperCase()) {
+                case 'ADMIN':
+                    badgeClass = 'role-admin';
+                    break;
+                case 'DIRIGENTE':
+                    badgeClass = 'role-dirigente';
+                    break;
+                default:
+                    badgeClass = 'role-user';
             }
+            
+            return `<span class="role-badge ${badgeClass}">${role}</span>`;
         }
-
-        // 🎫 Carica tessera
-        async function loadTessera() {
+        
+        // Carica anteprima tessera
+        async function loadTesseraPreview() {
             try {
-                const supabaseClient = APP_CONFIG.getSupabaseClient();
-                const { data, error } = await supabaseClient
-                    .from('tessere')
-                    .select('*')
-                    .eq('user_id', currentUser.id)
-                    .eq('stato', 'ATTIVA')
-                    .single();
+                const tesseraContainer = document.getElementById('tesseraPreview');
                 
-                if (error) {
-                    console.log('Tessera non trovata, creazione...');
-                    await createTessera();
+                // Ottieni la tessera dell'utente
+                const tessera = await APP_CONFIG.TESSERA.getCurrentUserTessera();
+                
+                if (!tessera) {
+                    tesseraContainer.innerHTML = `
+                        <div class="empty-state">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <p class="text-primary text-sm">Nessuna tessera trovata</p>
+                        </div>
+                    `;
                     return;
                 }
                 
-                userTessera = data;
-                displayTessera();
-                
-            } catch (error) {
-                console.error('Errore caricamento tessera:', error);
-            }
-        }
-
-        // 🆕 Crea tessera
-        async function createTessera() {
-            try {
-                const supabaseClient = APP_CONFIG.getSupabaseClient();
-                const tesseraData = {
-                    user_id: currentUser.id,
-                    numero_tessera: APP_CONFIG.Utils.generateTessera(),
-                    nome_completo: userProfile?.full_name || `${userProfile?.nome} ${userProfile?.cognome}` || 'Nome Cognome',
-                    email: currentUser.email,
-                    telefono: userProfile?.telefono || '',
-                    stato: 'ATTIVA',
-                    tipo: 'STANDARD'
-                };
-                
-                const { data, error } = await supabaseClient
-                    .from('tessere')
-                    .insert([tesseraData])
-                    .select()
-                    .single();
-                
-                if (!error) {
-                    userTessera = data;
-                    displayTessera();
-                }
-            } catch (error) {
-                console.error('Errore creazione tessera:', error);
-            }
-        }
-
-        // 🎨 Mostra tessera
-        function displayTessera() {
-            if (!userTessera) return;
-            
-            document.getElementById('tesseraNome').textContent = userTessera.nome_completo;
-            document.getElementById('tesseraNumero').textContent = userTessera.numero_tessera;
-            document.getElementById('tesseraTipo').textContent = userTessera.tipo;
-            
-            // Formatta data scadenza
-            if (userTessera.data_scadenza) {
-                const formattedDate = APP_CONFIG.Utils.formatDate(userTessera.data_scadenza);
-                document.getElementById('tesseraScadenza').textContent = formattedDate;
-            }
-        }
-
-        // 📊 Carica statistiche
-        async function loadStats() {
-            try {
-                const supabaseClient = APP_CONFIG.getSupabaseClient();
-                
-                // Conta news non lette
-                const { count: newsCount } = await supabaseClient
-                    .from('news')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('pubblicato', true)
-                    .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
-                
-                document.getElementById('newsCount').textContent = newsCount || 0;
-                
-                // Conta convenzioni attive
-                const { count: convenzioniCount } = await supabaseClient
-                    .from('convenzioni')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('attiva', true);
-                
-                document.getElementById('convenzioniCount').textContent = convenzioniCount || 0;
-                
-                // Conta richieste aperte
-                const { count: richiesteCount } = await supabaseClient
-                    .from('richieste')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('user_id', currentUser.id)
-                    .eq('stato', 'APERTA');
-                
-                document.getElementById('richiesteCount').textContent = richiesteCount || 0;
-                
-                // Conta documenti
-                const { count: docsCount } = await supabaseClient
-                    .from('documenti')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('pubblico', true);
-                
-                document.getElementById('docsCount').textContent = docsCount || 0;
-                
-            } catch (error) {
-                console.error('Errore caricamento statistiche:', error);
-            }
-        }
-
-        // 📰 Carica ultime news
-        async function loadLatestNews() {
-            try {
-                const supabaseClient = APP_CONFIG.getSupabaseClient();
-                const { data: news, error } = await supabaseClient
-                    .from('news')
-                    .select('*')
-                    .eq('pubblicato', true)
-                    .order('data_pubblicazione', { ascending: false })
-                    .limit(3);
-                
-                if (error) throw error;
-                
-                const newsContainer = document.getElementById('newsContainer');
-                
-                if (news && news.length > 0) {
-                    newsContainer.innerHTML = news.map(item => `
-                        <div class="glass-card rounded-xl p-4 cursor-pointer hover:scale-[1.02] transition-transform">
-                            <div class="flex items-start gap-4">
-                                <div class="text-3xl">${getCategoryIcon(item.categoria)}</div>
-                                <div class="flex-1">
-                                    <h3 class="font-bold text-primary">${item.titolo}</h3>
-                                    <p class="text-sm text-gray-600 mt-1">${item.sottotitolo || ''}</p>
-                                    <p class="text-xs text-gray-500 mt-2">
-                                        ${APP_CONFIG.Utils.formatDate(item.data_pubblicazione)}
-                                    </p>
-                                </div>
-                            </div>
+                // Crea anteprima della tessera
+                tesseraContainer.innerHTML = `
+                    <div class="relative flex flex-col items-center">
+                        <div class="text-3xl font-bold text-primary mb-2">${tessera.numero_tessera}</div>
+                        <div class="text-primary font-semibold mb-4">${tessera.nome} ${tessera.cognome}</div>
+                        
+                        <div id="qrPreview" class="mb-4"></div>
+                        
+                        <div class="text-xs text-gray-600">
+                            Emessa il ${new Date(tessera.data_creazione).toLocaleDateString('it-IT')}
                         </div>
-                    `).join('');
-                } else {
-                    newsContainer.innerHTML = `
-                        <div class="glass-card rounded-xl p-8 text-center">
-                            <div class="text-4xl mb-3">📭</div>
-                            <p class="text-gray-600">Nessuna news disponibile</p>
-                        </div>
-                    `;
-                }
+                    </div>
+                `;
+                
+                // Genera QR code
+                const qrContainer = document.getElementById('qrPreview');
+                QRCode.toCanvas(qrContainer, tessera.numero_tessera, {
+                    width: 100,
+                    margin: 1,
+                    color: {
+                        dark: '#1a1a2e',
+                        light: '#ffffff'
+                    }
+                });
                 
             } catch (error) {
-                console.error('Errore caricamento news:', error);
-                document.getElementById('newsContainer').innerHTML = `
-                    <div class="glass-card rounded-xl p-4 text-center">
-                        <p class="text-red-600">Errore nel caricamento delle news</p>
+                console.error('Errore nel caricamento della tessera:', error);
+                document.getElementById('tesseraPreview').innerHTML = `
+                    <div class="empty-state">
+                        <p class="text-primary text-sm">Errore nel caricamento della tessera</p>
                     </div>
                 `;
             }
         }
-
-        // 🎯 Ottieni icona categoria
-        function getCategoryIcon(categoria) {
-            const icons = {
-                'GENERALE': '📢',
-                'SINDACALE': '🤝',
-                'LEGALE': '⚖️',
-                'EVENTI': '📅',
-                'FORMAZIONE': '📚',
-                'CONVENZIONI': '🎁'
-            };
-            return icons[categoria] || '📰';
-        }
-
-        // 🚀 Inizializzazione
-        async function initDashboard() {
-            // Verifica autenticazione
-            const user = await checkAuth();
-            if (!user) return; // Se non autenticato o è dirigente, stop
-            
-            // Nascondi loading
-            document.getElementById('loadingState').style.display = 'none';
-            
-            // Carica tutti i dati
-            await Promise.all([
-                loadTessera(),
-                loadStats(),
-                loadLatestNews()
-            ]);
-            
-            console.log('✅ Dashboard caricata completamente');
-        }
-
-        // 📝 Event Listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🏠 HOME PAGE LOADED - MyApp Dashboard');
-            
-            // Inizializza dashboard
-            initDashboard();
-            
-            // Logout button
-            document.getElementById('logoutBtn').addEventListener('click', () => {
-                APP_CONFIG.AuthManager.logout();
-            });
-            
-            // Update service links with correct paths
-            const serviceLinks = {
-                'profilo': document.querySelector('a[href="profilo.html"]'),
-                'convenzioni': document.querySelector('a[href="convenzioni.html"]'),
-                'documenti': document.querySelector('a[href="documenti.html"]'),
-                'assistenza': document.querySelector('a[href="assistenza.html"]'),
-                'news': document.querySelector('a[href="news.html"]'),
-                'dirigenti': document.querySelector('a[href="dirigenti.html"]')
-            };
-            
-            // Update hrefs with APP_CONFIG paths
-            if (serviceLinks.profilo) serviceLinks.profilo.href = APP_CONFIG.APP_PATHS.getPath('profilo');
-            if (serviceLinks.convenzioni) serviceLinks.convenzioni.href = APP_CONFIG.APP_PATHS.getPath('convenzioni');
-            if (serviceLinks.dirigenti) serviceLinks.dirigenti.href = APP_CONFIG.APP_PATHS.getPath('dirigenti');
-            
-            // Update bottom nav links
-            const bottomNavLinks = {
-                'home': document.querySelector('nav a[href="home.html"]'),
-                'convenzioni': document.querySelector('nav a[href="convenzioni.html"]'),
-                'tessera': document.querySelector('nav a[href="tessera.html"]'),
-                'profilo': document.querySelector('nav a[href="profilo.html"]')
-            };
-            
-            if (bottomNavLinks.home) bottomNavLinks.home.href = APP_CONFIG.APP_PATHS.getPath('home');
-            if (bottomNavLinks.convenzioni) bottomNavLinks.convenzioni.href = APP_CONFIG.APP_PATHS.getPath('convenzioni');
-            if (bottomNavLinks.tessera) bottomNavLinks.tessera.href = APP_CONFIG.APP_PATHS.getPath('tessera');
-            if (bottomNavLinks.profilo) bottomNavLinks.profilo.href = APP_CONFIG.APP_PATHS.getPath('profilo');
-        });
-
-        // 🔄 Auto-refresh ogni 5 minuti
-        setInterval(() => {
-            if (currentUser) {
-                loadStats();
-                loadLatestNews();
-            }
-        }, 5 * 60 * 1000);
-
-        console.log('✅ Home Dashboard con APP_CONFIG Ready');
-    </script>
-
-        // Variabili globali
-        let currentUser = null;
-        let userProfile = null;
-        let userTessera = null;
-
-        // 🔒 Verifica autenticazione
-        async function checkAuth() {
+        
+        // Carica news
+        async function loadNews() {
             try {
-                const { data: { session } } = await supabaseClient.auth.getSession();
+                const newsContainer = document.getElementById('newsContainer');
+                const supabase = APP_CONFIG.SUPABASE.getClient();
                 
-                if (!session) {
-                    console.log('❌ Nessuna sessione trovata');
-                    window.location.href = 'login.html';
-                    return null;
-                }
-                
-                currentUser = session.user;
-                console.log('✅ Utente autenticato:', currentUser.email);
-                
-                // Carica profilo utente
-                await loadUserProfile();
-                
-                // Verifica ruolo e redirect se necessario
-                if (userProfile && (userProfile.role === 'DIRIGENTE' || userProfile.role === 'ADMIN')) {
-                    console.log('👑 Utente dirigente/admin, redirect...');
-                    window.location.href = 'home_dirigenti.html';
-                    return null;
-                }
-                
-                return currentUser;
-            } catch (error) {
-                console.error('Errore auth:', error);
-                window.location.href = 'login.html';
-                return null;
-            }
-        }
-
-        // 👤 Carica profilo utente
-        async function loadUserProfile() {
-            try {
-                const { data, error } = await supabaseClient
-                    .from('user_profiles')
+                // Ottieni ultime 3 news
+                const { data: news, error } = await supabase
+                    .from(APP_CONFIG.TABLES.NEWS)
                     .select('*')
-                    .eq('user_id', currentUser.id)
-                    .single();
-                
+                    .eq('stato', 'pubblicata')
+                    .order('created_at', { ascending: false })
+                    .limit(3);
+                    
                 if (error) throw error;
                 
-                userProfile = data;
-                console.log('✅ Profilo caricato:', userProfile);
+                // Svuota il container
+                newsContainer.innerHTML = '';
                 
-                // Aggiorna messaggio di benvenuto
-                const welcomeMsg = document.getElementById('welcomeMessage');
-                if (welcomeMsg) {
-                    welcomeMsg.textContent = `Bentornato, ${userProfile.full_name || userProfile.nome || 'Utente'}!`;
-                }
-                
-            } catch (error) {
-                console.error('Errore caricamento profilo:', error);
-                // Se il profilo non esiste, crealo
-                await createUserProfile();
-            }
-        }
-
-        // 🆕 Crea profilo se non esiste
-        async function createUserProfile() {
-            try {
-                const userData = currentUser.user_metadata || {};
-                
-                const profileData = {
-                    user_id: currentUser.id,
-                    email: currentUser.email,
-                    full_name: userData.full_name || '',
-                    nome: userData.nome || '',
-                    cognome: userData.cognome || '',
-                    telefono: userData.telefono || '',
-                    role: userData.role || 'USER',
-                    stato: 'ATTIVO'
-                };
-                
-                const { data, error } = await supabaseClient
-                    .from('user_profiles')
-                    .insert([profileData])
-                    .select()
-                    .single();
-                
-                if (!error) {
-                    userProfile = data;
-                    console.log('✅ Profilo creato:', userProfile);
-                }
-            } catch (error) {
-                console.error('Errore creazione profilo:', error);
-            }
-        }
-
-        // 🎫 Carica tessera
-        async function loadTessera() {
-            try {
-                const { data, error } = await supabaseClient
-                    .from('tessere')
-                    .select('*')
-                    .eq('user_id', currentUser.id)
-                    .eq('stato', 'ATTIVA')
-                    .single();
-                
-                if (error) {
-                    console.log('Tessera non trovata, creazione...');
-                    await createTessera();
+                // Se non ci sono news
+                if (!news || news.length === 0) {
+                    newsContainer.innerHTML = `
+                        <div class="col-span-1 md:col-span-3 glass-morphism rounded-3xl p-6">
+                            <div class="empty-state">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                                </svg>
+                                <p class="text-white">Nessuna news disponibile</p>
+                            </div>
+                        </div>
+                    `;
                     return;
                 }
                 
-                userTessera = data;
-                displayTessera();
-                
-            } catch (error) {
-                console.error('Errore caricamento tessera:', error);
-            }
-        }
-
-        // 🆕 Crea tessera
-        async function createTessera() {
-            try {
-                const tesseraData = {
-                    user_id: currentUser.id,
-                    numero_tessera: generateNumeroTessera(),
-                    nome_completo: userProfile?.full_name || `${userProfile?.nome} ${userProfile?.cognome}` || 'Nome Cognome',
-                    email: currentUser.email,
-                    telefono: userProfile?.telefono || '',
-                    stato: 'ATTIVA',
-                    tipo: 'STANDARD'
-                };
-                
-                const { data, error } = await supabaseClient
-                    .from('tessere')
-                    .insert([tesseraData])
-                    .select()
-                    .single();
-                
-                if (!error) {
-                    userTessera = data;
-                    displayTessera();
-                }
-            } catch (error) {
-                console.error('Errore creazione tessera:', error);
-            }
-        }
-
-        // 🎲 Genera numero tessera
-        function generateNumeroTessera() {
-            const year = new Date().getFullYear();
-            const random = Math.floor(Math.random() * 100000).toString().padStart(5, '0');
-            return `MA${year}${random}`;
-        }
-
-        // 🎨 Mostra tessera
-        function displayTessera() {
-            if (!userTessera) return;
-            
-            document.getElementById('tesseraNome').textContent = userTessera.nome_completo;
-            document.getElementById('tesseraNumero').textContent = userTessera.numero_tessera;
-            document.getElementById('tesseraTipo').textContent = userTessera.tipo;
-            
-            // Formatta data scadenza
-            if (userTessera.data_scadenza) {
-                const scadenza = new Date(userTessera.data_scadenza);
-                const formattedDate = `${scadenza.getDate().toString().padStart(2, '0')}/${(scadenza.getMonth() + 1).toString().padStart(2, '0')}/${scadenza.getFullYear()}`;
-                document.getElementById('tesseraScadenza').textContent = formattedDate;
-            }
-        }
-
-        // 📊 Carica statistiche
-        async function loadStats() {
-            try {
-                // Conta news non lette
-                const { count: newsCount } = await supabaseClient
-                    .from('news')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('pubblicato', true)
-                    .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
-                
-                document.getElementById('newsCount').textContent = newsCount || 0;
-                
-                // Conta convenzioni attive
-                const { count: convenzioniCount } = await supabaseClient
-                    .from('convenzioni')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('attiva', true);
-                
-                document.getElementById('convenzioniCount').textContent = convenzioniCount || 0;
-                
-                // Conta richieste aperte
-                const { count: richiesteCount } = await supabaseClient
-                    .from('richieste')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('user_id', currentUser.id)
-                    .eq('stato', 'APERTA');
-                
-                document.getElementById('richiesteCount').textContent = richiesteCount || 0;
-                
-                // Conta documenti
-                const { count: docsCount } = await supabaseClient
-                    .from('documenti')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('pubblico', true);
-                
-                document.getElementById('docsCount').textContent = docsCount || 0;
-                
-            } catch (error) {
-                console.error('Errore caricamento statistiche:', error);
-            }
-        }
-
-        // 📰 Carica ultime news
-        async function loadLatestNews() {
-            try {
-                const { data: news, error } = await supabaseClient
-                    .from('news')
-                    .select('*')
-                    .eq('pubblicato', true)
-                    .order('data_pubblicazione', { ascending: false })
-                    .limit(3);
-                
-                if (error) throw error;
-                
-                const newsContainer = document.getElementById('newsContainer');
-                
-                if (news && news.length > 0) {
-                    newsContainer.innerHTML = news.map(item => `
-                        <div class="glass-card rounded-xl p-4 cursor-pointer hover:scale-[1.02] transition-transform">
-                            <div class="flex items-start gap-4">
-                                <div class="text-3xl">${getCategoryIcon(item.categoria)}</div>
-                                <div class="flex-1">
-                                    <h3 class="font-bold text-primary">${item.titolo}</h3>
-                                    <p class="text-sm text-gray-600 mt-1">${item.sottotitolo || ''}</p>
-                                    <p class="text-xs text-gray-500 mt-2">
-                                        ${formatDate(item.data_pubblicazione)}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('');
-                } else {
-                    newsContainer.innerHTML = `
-                        <div class="glass-card rounded-xl p-8 text-center">
-                            <div class="text-4xl mb-3">📭</div>
-                            <p class="text-gray-600">Nessuna news disponibile</p>
+                // Aggiungi news al container
+                news.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'news-card';
+                    
+                    // Formatta data
+                    const date = new Date(item.created_at);
+                    const formattedDate = date.toLocaleDateString('it-IT', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    });
+                    
+                    // Limita il contenuto a ~150 caratteri
+                    const excerpt = item.contenuto.length > 150 
+                        ? item.contenuto.substring(0, 150) + '...' 
+                        : item.contenuto;
+                    
+                    card.innerHTML = `
+                        <div class="news-content">
+                            <div class="news-date">${formattedDate}</div>
+                            <h3 class="news-title">${item.titolo}</h3>
+                            <p class="news-excerpt">${excerpt}</p>
+                            <a href="#" class="read-more" data-news-id="${item.id}">
+                                Leggi tutto
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </a>
                         </div>
                     `;
-                }
+                    
+                    newsContainer.appendChild(card);
+                });
                 
             } catch (error) {
-                console.error('Errore caricamento news:', error);
+                console.error('Errore nel caricamento delle news:', error);
                 document.getElementById('newsContainer').innerHTML = `
-                    <div class="glass-card rounded-xl p-4 text-center">
-                        <p class="text-red-600">Errore nel caricamento delle news</p>
+                    <div class="col-span-1 md:col-span-3 glass-morphism rounded-3xl p-6">
+                        <div class="empty-state">
+                            <p class="text-white">Errore nel caricamento delle news</p>
+                        </div>
                     </div>
                 `;
             }
         }
-
-        // 📅 Formatta data
-        function formatDate(dateString) {
-            if (!dateString) return '';
-            const date = new Date(dateString);
-            const options = { day: '2-digit', month: 'long', year: 'numeric' };
-            return date.toLocaleDateString('it-IT', options);
-        }
-
-        // 🎯 Ottieni icona categoria
-        function getCategoryIcon(categoria) {
-            const icons = {
-                'GENERALE': '📢',
-                'SINDACALE': '🤝',
-                'LEGALE': '⚖️',
-                'EVENTI': '📅',
-                'FORMAZIONE': '📚',
-                'CONVENZIONI': '🎁'
-            };
-            return icons[categoria] || '📰';
-        }
-
-        // 🚪 Logout
-        async function handleLogout() {
+        
+        // Carica convenzioni
+        async function loadConvenzioni() {
             try {
-                const { error } = await supabaseClient.auth.signOut();
+                const convenzioniContainer = document.getElementById('convenzioniContainer');
+                const supabase = APP_CONFIG.SUPABASE.getClient();
+                
+                // Ottieni ultime 3 convenzioni attive
+                const { data: convenzioni, error } = await supabase
+                    .from(APP_CONFIG.TABLES.CONVENZIONI)
+                    .select('*')
+                    .eq('active', true)
+                    .order('created_at', { ascending: false })
+                    .limit(3);
+                    
                 if (error) throw error;
                 
-                console.log('✅ Logout effettuato');
-                window.location.href = 'index.html';
+                // Svuota il container
+                convenzioniContainer.innerHTML = '';
+                
+                // Se non ci sono convenzioni
+                if (!convenzioni || convenzioni.length === 0) {
+                    convenzioniContainer.innerHTML = `
+                        <div class="col-span-1 md:col-span-3 glass-morphism rounded-3xl p-6">
+                            <div class="empty-state">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <p class="text-white">Nessuna convenzione disponibile</p>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Aggiungi convenzioni al container
+                convenzioni.forEach(convenzione => {
+                    const card = document.createElement('div');
+                    card.className = 'glass-morphism rounded-3xl p-6 card-hover';
+                    
+                    // Limita la descrizione a ~100 caratteri
+                    const excerpt = convenzione.descrizione.length > 100 
+                        ? convenzione.descrizione.substring(0, 100) + '...' 
+                        : convenzione.descrizione;
+                    
+                    card.innerHTML = `
+                        <div class="mb-4">
+                            <h3 class="text-white text-xl font-bold mb-2">${convenzione.nome}</h3>
+                            <p class="text-white opacity-80">${excerpt}</p>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            ${convenzione.sito_web ? `<a href="${convenzione.sito_web}" target="_blank" class="text-cyan hover:underline">Visita sito</a>` : ''}
+                            <span class="text-white opacity-70 text-sm">
+                                ${convenzione.data_scadenza ? `Scade il ${new Date(convenzione.data_scadenza).toLocaleDateString('it-IT')}` : 'Sempre valida'}
+                            </span>
+                        </div>
+                    `;
+                    
+                    convenzioniContainer.appendChild(card);
+                });
+                
             } catch (error) {
-                console.error('Errore logout:', error);
-                // Forza redirect anche in caso di errore
-                window.location.href = 'index.html';
+                console.error('Errore nel caricamento delle convenzioni:', error);
+                document.getElementById('convenzioniContainer').innerHTML = `
+                    <div class="col-span-1 md:col-span-3 glass-morphism rounded-3xl p-6">
+                        <div class="empty-state">
+                            <p class="text-white">Errore nel caricamento delle convenzioni</p>
+                        </div>
+                    </div>
+                `;
             }
         }
-
-        // 🚀 Inizializzazione
-        async function initDashboard() {
-            // Verifica autenticazione
-            const user = await checkAuth();
-            if (!user) return; // Se non autenticato o è dirigente, stop
-            
-            // Nascondi loading
-            document.getElementById('loadingState').style.display = 'none';
-            
-            // Carica tutti i dati
-            await Promise.all([
-                loadTessera(),
-                loadStats(),
-                loadLatestNews()
-            ]);
-            
-            console.log('✅ Dashboard caricata completamente');
+        
+        // Carica richieste dell'utente
+        async function loadRichieste() {
+            try {
+                const richiesteContainer = document.getElementById('richiesteContainer');
+                const supabase = APP_CONFIG.SUPABASE.getClient();
+                const currentUser = await APP_CONFIG.AUTH.getCurrentUser();
+                
+                if (!currentUser) {
+                    throw new Error('Utente non trovato');
+                }
+                
+                // Ottieni ultime 5 richieste dell'utente
+                const { data: richieste, error } = await supabase
+                    .from(APP_CONFIG.TABLES.RICHIESTE)
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+                    
+                if (error) throw error;
+                
+                // Svuota il container
+                richiesteContainer.innerHTML = '';
+                
+                // Se non ci sono richieste
+                if (!richieste || richieste.length === 0) {
+                    richiesteContainer.innerHTML = `
+                        <div class="empty-state py-10">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                            </svg>
+                            <p class="text-white">Nessuna richiesta effettuata</p>
+                            <p class="text-white opacity-70 text-sm mt-2">Clicca su "Nuova Richiesta" per inviare una richiesta di assistenza</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Aggiungi richieste al container
+                richieste.forEach(richiesta => {
+                    const item = document.createElement('div');
+                    item.className = 'glass-strong rounded-xl p-4';
+                    
+                    // Ottieni classe e testo per lo stato
+                    let statusClass = '';
+                    switch(richiesta.stato) {
+                        case 'aperta':
+                            statusClass = 'bg-blue-500';
+                            break;
+                        case 'in_elaborazione':
+                            statusClass = 'bg-yellow-500';
+                            break;
+                        case 'risolta':
+                            statusClass = 'bg-green-500';
+                            break;
+                        case 'chiusa':
+                            statusClass = 'bg-gray-500';
+                            break;
+                        default:
+                            statusClass = 'bg-blue-500';
+                    }
+                    
+                    // Formatta stato
+                    const statoFormattato = richiesta.stato.replace('_', ' ').charAt(0).toUpperCase() + richiesta.stato.replace('_', ' ').slice(1);
+                    
+                    // Formatta data
+                    const data = new Date(richiesta.created_at).toLocaleDateString('it-IT', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric'
+                    });
+                    
+                    item.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="text-white font-bold">${richiesta.titolo}</h4>
+                                <p class="text-white opacity-70 text-sm">${data}</p>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="px-3 py-1 rounded-full text-xs font-medium text-white ${statusClass}">
+                                    ${statoFormattato}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    richiesteContainer.appendChild(item);
+                });
+                
+            } catch (error) {
+                console.error('Errore nel caricamento delle richieste:', error);
+                document.getElementById('richiesteContainer').innerHTML = `
+                    <div class="empty-state">
+                        <p class="text-white">Errore nel caricamento delle richieste</p>
+                    </div>
+                `;
+            }
         }
-
-        // 📝 Event Listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🏠 HOME PAGE LOADED - MyApp Dashboard');
+        
+        // Inizializza i gestori degli eventi
+        function initEventHandlers() {
+            // Gestore per logout
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                APP_CONFIG.AUTH.logout();
+            });
             
-            // Inizializza dashboard
-            initDashboard();
+            // Gestore per nuova richiesta
+            const newRequestBtn = document.getElementById('newRequestBtn');
+            const newRequestModal = document.getElementById('newRequestModal');
+            const newRequestForm = document.getElementById('newRequestForm');
+            const cancelRequestBtn = document.getElementById('cancelRequestBtn');
             
-            // Logout button
-            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+            newRequestBtn.addEventListener('click', function() {
+                newRequestModal.classList.remove('hidden');
+            });
             
-            // Listen for auth state changes
-            supabaseClient.auth.onAuthStateChange((event, session) => {
-                if (event === 'SIGNED_OUT') {
-                    window.location.href = 'index.html';
+            cancelRequestBtn.addEventListener('click', function() {
+                newRequestModal.classList.add('hidden');
+                newRequestForm.reset();
+            });
+            
+            newRequestForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                try {
+                    const titolo = document.getElementById('requestTitle').value;
+                    const descrizione = document.getElementById('requestDescription').value;
+                    const currentUser = await APP_CONFIG.AUTH.getCurrentUser();
+                    
+                    if (!currentUser) {
+                        throw new Error('Utente non trovato');
+                    }
+                    
+                    const supabase = APP_CONFIG.SUPABASE.getClient();
+                    
+                    // Crea la richiesta
+                    const { error } = await supabase
+                        .from(APP_CONFIG.TABLES.RICHIESTE)
+                        .insert([
+                            {
+                                user_id: currentUser.id,
+                                titolo,
+                                descrizione,
+                                stato: 'aperta'
+                            }
+                        ]);
+                        
+                    if (error) throw error;
+                    
+                    // Chiudi modal e reset form
+                    newRequestModal.classList.add('hidden');
+                    newRequestForm.reset();
+                    
+                    // Aggiorna lista richieste
+                    loadRichieste();
+                    
+                    // Mostra notifica
+                    APP_CONFIG.NOTIFICATIONS.showToast('Richiesta inviata con successo', 'success');
+                    
+                } catch (error) {
+                    console.error('Errore nell\'invio della richiesta:', error);
+                    APP_CONFIG.NOTIFICATIONS.showToast('Errore nell\'invio della richiesta: ' + error.message, 'error');
                 }
             });
-        });
-
-        // 🔄 Auto-refresh ogni 5 minuti
-        setInterval(() => {
-            if (currentUser) {
-                loadStats();
-                loadLatestNews();
-            }
-        }, 5 * 60 * 1000);
-
-        console.log('✅ Home Dashboard System Ready');
+            
+            // Chiusura del modal cliccando fuori
+            newRequestModal.addEventListener('click', function(e) {
+                if (e.target === newRequestModal) {
+                    newRequestModal.classList.add('hidden');
+                    newRequestForm.reset();
+                }
+            });
+        }
     </script>
 </body>
 </html>
