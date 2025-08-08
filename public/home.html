@@ -14,37 +14,51 @@
     <!-- QR Code -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     
-    <!-- Configurazione colori -->
+    <!-- CONFIGURAZIONE COLORI TAILWIND -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#1a1a2e',
-                        secondary: '#16213e',
-                        accent: '#0f3460',
-                        aurora: '#e94560',
-                        cyan: '#00d4ff',
-                        magenta: '#ff006e',
-                        gold: '#ffd700',
-                        teal: '#03dac6',
-                        dark: '#0a0a23',
-                        light: '#f8fafc',
+                        // Aurora Boreale 2025 Palette
+                        primary: '#1a1a2e',      // Blu notte profondo
+                        secondary: '#16213e',     // Blu oceano
+                        accent: '#0f3460',        // Blu acciaio
+                        aurora: '#e94560',        // Rosa aurora
+                        cyan: '#00d4ff',          // Cyan elettrico
+                        magenta: '#ff006e',       // Magenta vibrante
+                        gold: '#ffd700',          // Oro elegante
+                        teal: '#03dac6',          // Teal premium
+                        dark: '#0a0a23',          // Nero cyber
+                        light: '#f8fafc',         // Bianco ghiaccio
                         textDark: '#1C1C1E',
                         backgroundLight: '#F4F4F8',
+                    },
+                    screens: {
+                        'xs': '320px',
+                        'sm': '640px',
+                        'md': '768px',
+                        'lg': '1024px',
+                        'xl': '1280px',
+                        '2xl': '1536px',
+                        '3xl': '1920px',
+                        '4xl': '2560px',
                     }
                 }
             }
         }
     </script>
     
+    <!-- STILI CSS COMPLETI -->
     <style>
+        /* === VARIABILI CSS === */
         :root {
             --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
             --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
             --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
         }
 
+        /* === SFONDO PRINCIPALE === */
         body {
             background: var(--gradient-aurora);
             background-size: 400% 400%;
@@ -52,6 +66,7 @@
             min-height: 100vh;
         }
 
+        /* === ANIMAZIONI === */
         @keyframes aurora {
             0%, 100% { background-position: 0% 50%; }
             25% { background-position: 100% 50%; }
@@ -59,27 +74,38 @@
             75% { background-position: 0% 100%; }
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
         @keyframes shimmer {
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
         }
 
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* === TIPOGRAFIA ULTRA-VISIBILE === */
         .text-ultra-visible {
             color: #ffffff;
             text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
             font-weight: 800;
         }
 
+        .text-white {
+            text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
+        }
+
+        /* === GLASSMORPHISM === */
         .glass-morphism {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.18);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
         }
 
         .glass-card {
@@ -88,6 +114,7 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
+        /* === BOTTONI === */
         .btn-aurora {
             background: var(--gradient-magic);
             color: white;
@@ -115,6 +142,7 @@
             border-color: rgba(0, 212, 255, 0.8);
         }
 
+        /* === CARDS === */
         .card-hover {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -122,13 +150,6 @@
         .card-hover:hover {
             transform: translateY(-8px) scale(1.02);
             box-shadow: 0 25px 50px rgba(0,0,0,0.25);
-        }
-
-        .loading-skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 12px;
         }
 
         .news-card {
@@ -145,6 +166,7 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
+        /* === ROLE BADGES === */
         .role-badge {
             display: inline-block;
             padding: 8px 16px;
@@ -175,6 +197,15 @@
             border-color: rgba(245, 158, 11, 0.3);
         }
 
+        /* === LOADING SKELETON === */
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 12px;
+        }
+
+        /* === SPINNER === */
         .spinner {
             width: 48px;
             height: 48px;
@@ -184,10 +215,7 @@
             animation: spin 1s linear infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
+        /* === PAGE LOADER === */
         #pageLoader {
             position: fixed;
             inset: 0;
@@ -198,6 +226,16 @@
             justify-content: center;
             z-index: 60;
         }
+
+        /* === RESPONSIVE TYPOGRAPHY === */
+        .hero-title {
+            font-size: clamp(3rem, 12vw, 6rem);
+            font-weight: 900;
+        }
+
+        @media (max-width: 640px) {
+            .hero-title { font-size: 2.25rem; line-height: 2.5rem; }
+        }
     </style>
 </head>
 
@@ -206,7 +244,7 @@
     <div id="pageLoader">
         <div class="glass-card p-6 rounded-2xl flex items-center gap-4">
             <div class="spinner"></div>
-            <div class="text-white text-lg font-semibold">Caricamento dashboard...</div>
+            <div class="text-dark text-lg font-semibold">Caricamento dashboard...</div>
         </div>
     </div>
 
@@ -381,9 +419,11 @@
         // Configurazione globale dell'app
         window.APP_CONFIG = {
             SUPABASE: {
+                client: null,
                 getClient: function() {
                     if (!this.client) {
                         this.client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                        console.log('✅ Supabase client inizializzato');
                     }
                     return this.client;
                 }
@@ -423,8 +463,12 @@
                     return true;
                 },
                 async logout() {
-                    await APP_CONFIG.SUPABASE.getClient().auth.signOut();
-                    window.location.replace('auth.html');
+                    try {
+                        await APP_CONFIG.SUPABASE.getClient().auth.signOut();
+                        window.location.replace('auth.html');
+                    } catch (error) {
+                        console.error('Errore logout:', error);
+                    }
                 }
             },
             TESSERA: {
@@ -440,7 +484,7 @@
                         .limit(1)
                         .single();
                     if (error) {
-                        console.warn('Nessuna tessera:', error.message);
+                        console.warn('Nessuna tessera trovata:', error.message);
                         return null;
                     }
                     return data;
@@ -449,12 +493,17 @@
             NOTIFICATIONS: {
                 showToast: function(msg, type='info') {
                     console.log(`[${type.toUpperCase()}] ${msg}`);
+                    
+                    // Crea toast visuale
                     const toast = document.createElement('div');
-                    toast.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 ${
+                    toast.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 max-w-sm font-semibold ${
                         type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500'
-                    } text-white font-semibold`;
+                    } text-white`;
                     toast.textContent = msg;
+                    
                     document.body.appendChild(toast);
+                    
+                    // Auto-remove
                     setTimeout(() => {
                         toast.style.opacity = '0';
                         setTimeout(() => {
@@ -476,11 +525,13 @@
         let currentProfile = null;
 
         function showLoader() {
-            document.getElementById('pageLoader').style.display = 'flex';
+            const loader = document.getElementById('pageLoader');
+            if (loader) loader.style.display = 'flex';
         }
 
         function hideLoader() {
-            document.getElementById('pageLoader').style.display = 'none';
+            const loader = document.getElementById('pageLoader');
+            if (loader) loader.style.display = 'none';
         }
 
         function getRoleBadgeHTML(role) {
@@ -529,7 +580,7 @@
                         <div class="text-3xl font-bold text-primary mb-2">${tessera.numero_tessera || '---'}</div>
                         <div class="text-primary font-semibold mb-4">${tessera.nome || ''} ${tessera.cognome || ''}</div>
                         <canvas id="qrPreview" class="mb-4"></canvas>
-                        <div class="text-xs text-gray-600">Emessa il ${tessera.data_creazione ? new Date(tessera.data_creazione).toLocaleDateString('it-IT') : '-'}</div>
+                        <div class="text-xs text-gray-600">Emessa il ${tessera.created_at ? new Date(tessera.created_at).toLocaleDateString('it-IT') : '-'}</div>
                     </div>`;
 
                 if (window.QRCode && tessera.numero_tessera) {
@@ -552,49 +603,48 @@
             try {
                 const client = APP_CONFIG.SUPABASE.getClient();
                 const { data: news, error } = await client
-                    .from(APP_CONFIG.TABLES.NEWS)
+                    .from('news')
                     .select('*')
-                    .eq('stato', 'pubblicata')
+                    .eq('pubblicata', true)
                     .order('created_at', { ascending: false })
                     .limit(3);
 
-                if (error) throw error;
-
-                container.innerHTML = '';
+                if (error && error.code !== 'PGRST116') {
+                    throw error;
+                }
 
                 if (!news || news.length === 0) {
                     container.innerHTML = `
-                        <div class="glass-morphism rounded-3xl p-6 col-span-3 text-white text-center">
-                            Nessuna news disponibile al momento
+                        <div class="col-span-full text-center py-12">
+                            <div class="text-white text-xl mb-4">📰</div>
+                            <div class="text-white text-lg font-semibold mb-2">Nessuna notizia disponibile</div>
+                            <div class="text-white opacity-80">Le ultime notizie appariranno qui</div>
                         </div>`;
                     return;
                 }
 
-                news.forEach(n => {
-                    const date = new Date(n.created_at).toLocaleDateString('it-IT', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric'
-                    });
-                    const excerpt = (n.contenuto || '').slice(0, 150) + (n.contenuto?.length > 150 ? '…' : '');
-                    
-                    const card = document.createElement('div');
-                    card.className = 'news-card';
-                    card.innerHTML = `
-                        <div class="p-6">
-                            <div class="text-white/70 text-sm mb-2">${date}</div>
-                            <h3 class="text-white text-lg font-bold mb-2">${n.titolo || '-'}</h3>
-                            <p class="text-white/90 mb-3">${excerpt}</p>
-                            <a href="news-detail.html?id=${n.id}" class="text-cyan font-semibold hover:underline">Leggi tutto</a>
-                        </div>`;
-                    container.appendChild(card);
-                });
+                container.innerHTML = news.map(item => `
+                    <div class="news-card p-6">
+                        <div class="mb-4">
+                            <h3 class="text-white font-bold text-lg mb-2">${item.titolo || 'Titolo non disponibile'}</h3>
+                            <p class="text-white opacity-90 text-sm line-clamp-3">${item.contenuto ? item.contenuto.substring(0, 150) + '...' : 'Contenuto non disponibile'}</p>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-white opacity-70 text-xs">
+                                ${item.created_at ? new Date(item.created_at).toLocaleDateString('it-IT') : 'Data non disponibile'}
+                            </span>
+                            <a href="news.html?id=${item.id}" class="text-aurora hover:text-cyan transition-colors text-sm font-semibold">
+                                Leggi tutto →
+                            </a>
+                        </div>
+                    </div>
+                `).join('');
 
             } catch (error) {
                 console.error('Errore caricamento news:', error);
                 container.innerHTML = `
-                    <div class="glass-morphism rounded-3xl p-6 col-span-3 text-white text-center">
-                        Errore nel caricamento delle news
+                    <div class="col-span-full text-center py-8">
+                        <div class="text-red-400 text-sm">Errore nel caricamento delle notizie</div>
                     </div>`;
             }
         }
@@ -605,48 +655,48 @@
             try {
                 const client = APP_CONFIG.SUPABASE.getClient();
                 const { data: convenzioni, error } = await client
-                    .from(APP_CONFIG.TABLES.CONVENZIONI)
+                    .from('convenzioni')
                     .select('*')
-                    .eq('active', true)
+                    .eq('attiva', true)
                     .order('created_at', { ascending: false })
                     .limit(3);
 
-                if (error) throw error;
-
-                container.innerHTML = '';
+                if (error && error.code !== 'PGRST116') {
+                    throw error;
+                }
 
                 if (!convenzioni || convenzioni.length === 0) {
                     container.innerHTML = `
-                        <div class="glass-morphism rounded-3xl p-6 col-span-3 text-white text-center">
-                            Nessuna convenzione disponibile al momento
+                        <div class="col-span-full text-center py-12">
+                            <div class="text-white text-xl mb-4">🤝</div>
+                            <div class="text-white text-lg font-semibold mb-2">Nessuna convenzione disponibile</div>
+                            <div class="text-white opacity-80">Le convenzioni attive appariranno qui</div>
                         </div>`;
                     return;
                 }
 
-                convenzioni.forEach(c => {
-                    const excerpt = (c.descrizione || '').slice(0, 100) + (c.descrizione?.length > 100 ? '…' : '');
-                    
-                    const card = document.createElement('div');
-                    card.className = 'glass-morphism rounded-3xl p-6 card-hover';
-                    card.innerHTML = `
+                container.innerHTML = convenzioni.map(item => `
+                    <div class="news-card p-6">
                         <div class="mb-4">
-                            <h3 class="text-white text-xl font-bold mb-2">${c.nome || '-'}</h3>
-                            <p class="text-white/80">${excerpt}</p>
+                            <h3 class="text-white font-bold text-lg mb-2">${item.nome || 'Convenzione'}</h3>
+                            <p class="text-white opacity-90 text-sm line-clamp-3">${item.descrizione ? item.descrizione.substring(0, 150) + '...' : 'Descrizione non disponibile'}</p>
                         </div>
                         <div class="flex justify-between items-center">
-                            ${c.sito_web ? `<a href="${c.sito_web}" target="_blank" class="text-cyan hover:underline">Visita sito</a>` : '<span></span>'}
-                            <span class="text-white/70 text-sm">
-                                ${c.data_scadenza ? 'Scade il ' + new Date(c.data_scadenza).toLocaleDateString('it-IT') : 'Sempre valida'}
+                            <span class="text-teal text-xs font-semibold px-2 py-1 bg-teal bg-opacity-20 rounded-full">
+                                ${item.categoria || 'Generale'}
                             </span>
-                        </div>`;
-                    container.appendChild(card);
-                });
+                            <a href="convenzioni.html?id=${item.id}" class="text-aurora hover:text-cyan transition-colors text-sm font-semibold">
+                                Dettagli →
+                            </a>
+                        </div>
+                    </div>
+                `).join('');
 
             } catch (error) {
                 console.error('Errore caricamento convenzioni:', error);
                 container.innerHTML = `
-                    <div class="glass-morphism rounded-3xl p-6 col-span-3 text-white text-center">
-                        Errore nel caricamento delle convenzioni
+                    <div class="col-span-full text-center py-8">
+                        <div class="text-red-400 text-sm">Errore nel caricamento delle convenzioni</div>
                     </div>`;
             }
         }
@@ -657,92 +707,94 @@
             try {
                 const client = APP_CONFIG.SUPABASE.getClient();
                 const { data: richieste, error } = await client
-                    .from(APP_CONFIG.TABLES.RICHIESTE)
+                    .from('richieste')
                     .select('*')
                     .eq('user_id', currentUser.id)
                     .order('created_at', { ascending: false })
                     .limit(5);
 
-                if (error) throw error;
-
-                container.innerHTML = '';
+                if (error && error.code !== 'PGRST116') {
+                    throw error;
+                }
 
                 if (!richieste || richieste.length === 0) {
                     container.innerHTML = `
-                        <div class="glass-morphism rounded-xl p-4 text-white text-center">
-                            Nessuna richiesta effettuata
+                        <div class="text-center py-8">
+                            <div class="text-white text-lg mb-2">📋 Nessuna richiesta</div>
+                            <div class="text-white opacity-80 text-sm">Le tue richieste appariranno qui</div>
                         </div>`;
                     return;
                 }
 
-                const getStatusColor = (stato) => {
-                    switch (stato) {
-                        case 'aperta': return 'bg-blue-500';
-                        case 'in_elaborazione': return 'bg-yellow-500';
-                        case 'risolta': return 'bg-green-500';
-                        case 'chiusa': return 'bg-gray-500';
-                        default: return 'bg-gray-500';
-                    }
-                };
+                container.innerHTML = richieste.map(richiesta => {
+                    const statusColor = {
+                        'IN_ATTESA': 'bg-yellow-500',
+                        'APPROVATA': 'bg-green-500',
+                        'RIFIUTATA': 'bg-red-500',
+                        'IN_LAVORAZIONE': 'bg-blue-500'
+                    }[richiesta.stato] || 'bg-gray-500';
 
-                richieste.forEach(r => {
-                    const item = document.createElement('div');
-                    item.className = 'glass-morphism rounded-xl p-4';
-                    const stato = (r.stato || 'aperta').replace('_', ' ');
-                    const when = new Date(r.created_at).toLocaleDateString('it-IT', {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric'
-                    });
-                    
-                    item.innerHTML = `
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <h4 class="text-white font-bold">${r.titolo || '-'}</h4>
-                                <p class="text-white/70 text-sm">${when}</p>
+                    return `
+                        <div class="glass-card p-4 rounded-xl">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-dark font-semibold">${richiesta.titolo || 'Richiesta'}</h4>
+                                <span class="text-xs px-2 py-1 rounded-full text-white ${statusColor}">
+                                    ${richiesta.stato || 'IN_ATTESA'}
+                                </span>
                             </div>
-                            <span class="px-3 py-1 rounded-full text-xs font-medium text-white ${getStatusColor(r.stato)}">
-                                ${stato.charAt(0).toUpperCase() + stato.slice(1)}
-                            </span>
+                            <p class="text-gray-600 text-sm mb-2">${richiesta.descrizione ? richiesta.descrizione.substring(0, 100) + '...' : ''}</p>
+                            <div class="text-xs text-gray-500">
+                                ${richiesta.created_at ? new Date(richiesta.created_at).toLocaleDateString('it-IT') : ''}
+                            </div>
                         </div>`;
-                    container.appendChild(item);
-                });
+                }).join('');
 
             } catch (error) {
                 console.error('Errore caricamento richieste:', error);
                 container.innerHTML = `
-                    <div class="glass-morphism rounded-xl p-4 text-white text-center">
-                        Errore nel caricamento delle richieste
+                    <div class="text-center py-8">
+                        <div class="text-red-400 text-sm">Errore nel caricamento delle richieste</div>
                     </div>`;
             }
         }
 
-        function setupEventListeners() {
-            document.getElementById('logoutBtn').addEventListener('click', () => {
-                APP_CONFIG.AUTH.logout();
-            });
-            
-            document.getElementById('newRequestBtn').addEventListener('click', () => {
-                APP_CONFIG.NOTIFICATIONS.showToast('Pagina richieste in sviluppo', 'info');
-            });
+        // Event handlers
+        function setupEventHandlers() {
+            // Logout button
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async () => {
+                    try {
+                        showLoader();
+                        await APP_CONFIG.AUTH.logout();
+                    } catch (error) {
+                        console.error('Errore logout:', error);
+                        hideLoader();
+                    }
+                });
+            }
+
+            // New request button
+            const newRequestBtn = document.getElementById('newRequestBtn');
+            if (newRequestBtn) {
+                newRequestBtn.addEventListener('click', () => {
+                    window.location.href = 'richieste.html?new=true';
+                });
+            }
         }
 
         // Inizializzazione principale
-        document.addEventListener('DOMContentLoaded', async () => {
+        async function initializePage() {
             try {
                 showLoader();
-                console.log('🏠 HOME PAGE LOADED - MyApp Dashboard');
 
-                // Aspetta che Supabase sia disponibile
-                if (typeof supabase === 'undefined') {
-                    throw new Error('Supabase SDK non caricato');
-                }
-
-                // Controlla autenticazione
+                // Proteggi la pagina (controlla autenticazione)
                 await APP_CONFIG.AUTH.protectPage();
 
-                // Carica dati
+                // Carica dati utente
                 await loadUserData();
+
+                // Carica contenuti in parallelo
                 await Promise.all([
                     loadTesseraPreview(),
                     loadNews(),
@@ -750,18 +802,39 @@
                     loadRichieste()
                 ]);
 
-                // Setup eventi
-                setupEventListeners();
+                // Setup event handlers
+                setupEventHandlers();
 
-                console.log('✅ Dashboard caricata con successo');
-
+                console.log('✅ Pagina home inizializzata correttamente');
+                
             } catch (error) {
-                console.error('Errore inizializzazione home:', error);
-                APP_CONFIG.NOTIFICATIONS.showToast('Errore: ' + (error?.message || 'inizializzazione'), 'error');
+                console.error('❌ Errore inizializzazione:', error);
+                APP_CONFIG.NOTIFICATIONS.showToast('Errore nel caricamento della pagina', 'error');
+                
+                // Redirect to auth se non autenticato
+                if (error.message === 'Utente non autenticato') {
+                    window.location.replace('auth.html');
+                }
             } finally {
                 hideLoader();
             }
-        });
+        }
+
+        // Avvia l'app quando il DOM è pronto
+        document.addEventListener('DOMContentLoaded', initializePage);
+
+        // Service Worker per PWA (opzionale)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then((registration) => {
+                        console.log('✅ SW registrato:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('❌ SW registrazione fallita:', error);
+                    });
+            });
+        }
     </script>
 </body>
 </html>
