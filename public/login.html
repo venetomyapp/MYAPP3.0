@@ -755,8 +755,8 @@
                     
                     // Redirect based on role
                     const redirectUrl = (profile?.role === 'ADMIN' || profile?.role === 'DIRIGENTE') 
- ? 'app/home_dirigenti.html' 
-    : 'app/home.html';                    
+ ? 'home_dirigenti.html' 
+    : 'home.html';                    
                     Utils.safeRedirect(redirectUrl);
                     
                 } catch (error) {
@@ -888,8 +888,8 @@
                     // Redirect automatico
                     AuthManager.getUserProfile(session.user.id).then(profile => {
                         const redirectUrl = (profile?.role === 'ADMIN' || profile?.role === 'DIRIGENTE') 
- ? 'app/home_dirigenti.html' 
-    : 'app/home.html';                       
+ ? 'home_dirigenti.html' 
+    : 'home.html';                       
  Utils.safeRedirect(redirectUrl, 500);
                     });
                 }
