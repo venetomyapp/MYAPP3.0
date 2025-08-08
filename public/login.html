@@ -228,22 +228,27 @@
         let supabaseClient;
 
         document.addEventListener('DOMContentLoaded', async () => {
+            console.log("Pagina caricata, inizializzo interfaccia...");
+            setupTabs(); // sempre attivata
+            setupForms();
+
             if (typeof supabase === 'undefined') {
-                showMessage('loginMessage', 'Errore: Impossibile caricare Supabase', 'error');
+                console.error("Supabase non caricato, i tab funzionano ma il login non potrà essere eseguito");
                 return;
             }
             supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            setupTabs();
-            setupForms();
+            console.log("Supabase inizializzato");
             await checkExistingSession();
         });
 
         function setupTabs() {
+            console.log("Attivazione tab");
             const loginTab = document.getElementById('loginTab');
             const registerTab = document.getElementById('registerTab');
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
             loginTab.addEventListener('click', () => {
+                console.log("Clic su tab Accedi");
                 loginTab.className = 'flex-1 py-3 px-4 rounded-lg font-semibold transition-all bg-white text-primary shadow-sm';
                 registerTab.className = 'flex-1 py-3 px-4 rounded-lg font-semibold transition-all text-gray-600';
                 loginForm.classList.remove('hidden');
@@ -251,6 +256,7 @@
                 clearMessages();
             });
             registerTab.addEventListener('click', () => {
+                console.log("Clic su tab Registrati");
                 registerTab.className = 'flex-1 py-3 px-4 rounded-lg font-semibold transition-all bg-white text-primary shadow-sm';
                 loginTab.className = 'flex-1 py-3 px-4 rounded-lg font-semibold transition-all text-gray-600';
                 registerForm.classList.remove('hidden');
@@ -369,7 +375,7 @@
             document.getElementById('registerMessage').innerHTML = '';
         }
 
-        function setLoading(button, loading) {
+               function setLoading(button, loading) {
             if (loading) {
                 button.classList.add('loading');
                 button.textContent = 'Caricamento...';
