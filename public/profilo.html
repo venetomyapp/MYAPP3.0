@@ -140,6 +140,16 @@
             cursor: not-allowed;
         }
 
+        .input-field.editable {
+            background: rgba(255, 255, 255, 0.98);
+            border-color: rgba(0, 212, 255, 0.5);
+        }
+
+        .input-field.editable:focus {
+            border-color: #00d4ff;
+            box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.2);
+        }
+
         .role-badge {
             display: inline-block;
             padding: 8px 16px;
@@ -282,6 +292,24 @@
             position: relative;
         }
 
+        .field-status {
+            font-size: 12px;
+            margin-top: 4px;
+            min-height: 16px;
+        }
+
+        .field-modified {
+            color: #00d4ff;
+        }
+
+        .field-required {
+            color: #e94560;
+        }
+
+        .field-optional {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
         @media (max-width: 640px) {
             .avatar-upload {
                 width: 120px;
@@ -327,19 +355,6 @@
                             <div id="avatarPlaceholder" class="w-full h-full bg-primary flex items-center justify-center">
                                 <span id="avatarInitials" class="text-white text-4xl font-bold">--</span>
                             </div>
-
-                    <div>
-                        <label class="block text-white text-sm font-semibold mb-2">Luogo di Nascita *</label>
-                        <input 
-                            type="text" 
-                            id="inputLuogoNascita" 
-                            name="luogo_nascita"
-                            class="input-field w-full" 
-                            disabled
-                            required
-                        >
-                        <small class="text-white opacity-70 text-xs">Il luogo di nascita non può essere modificato</small>
-                    </div>
                             <div class="avatar-upload-overlay">
                                 <div>
                                     📷<br>
@@ -397,143 +412,206 @@
                 </div>
 
                 <form id="profileForm" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-white text-sm font-semibold mb-2">Nome *</label>
-                            <input 
-                                type="text" 
-                                id="inputNome" 
-                                name="nome"
-                                class="input-field w-full" 
-                                disabled
-                                required
-                            >
-                            <small class="text-white opacity-70 text-xs">Il nome non può essere modificato</small>
-                        </div>
-                        <div>
-                            <label class="block text-white text-sm font-semibold mb-2">Cognome *</label>
-                            <input 
-                                type="text" 
-                                id="inputCognome" 
-                                name="cognome"
-                                class="input-field w-full" 
-                                disabled
-                                required
-                            >
-                            <small class="text-white opacity-70 text-xs">Il cognome non può essere modificato</small>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-white text-sm font-semibold mb-2">Email *</label>
-                        <input 
-                            type="email" 
-                            id="inputEmail" 
-                            name="email"
-                            class="input-field w-full" 
-                            disabled
-                            required
-                        >
-                        <small class="text-white opacity-70 text-xs">L'email non può essere modificata</small>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-white text-sm font-semibold mb-2">Telefono</label>
-                            <input 
-                                type="tel" 
-                                id="inputTelefono" 
-                                name="telefono"
-                                class="input-field w-full" 
-                                disabled
-                            >
-                        </div>
-                        <div>
-                            <label class="block text-white text-sm font-semibold mb-2">Data di Nascita *</label>
-                            <input 
-                                type="date" 
-                                id="inputDataNascita" 
-                                name="data_nascita"
-                                class="input-field w-full" 
-                                disabled
-                                required
-                            >
-                            <small class="text-white opacity-70 text-xs">La data di nascita non può essere modificata</small>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-white text-sm font-semibold mb-2">Codice Fiscale</label>
-                        <input 
-                            type="text" 
-                            id="inputCodiceFiscale" 
-                            name="codice_fiscale"
-                            class="input-field w-full" 
-                            placeholder="RSSMRA85M01H501Z"
-                            maxlength="16"
-                            disabled
-                        >
-                    </div>
-
-                    <div>
-                        <label class="block text-white text-sm font-semibold mb-2">Indirizzo</label>
-                        <input 
-                            type="text" 
-                            id="inputIndirizzo" 
-                            name="indirizzo"
-                            class="input-field w-full" 
-                            placeholder="Via Roma, 123"
-                            disabled
-                        >
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div>
-                            <label class="block text-white text-sm font-semibold mb-2">Città</label>
-                            <input 
-                                type="text" 
-                                id="inputCitta" 
-                                name="citta"
-                                class="input-field w-full" 
-                                placeholder="Roma"
-                                disabled
-                            >
-                        </div>
-                        <div>
-                            <label class="block text-white text-sm font-semibold mb-2">CAP</label>
-                            <input 
-                                type="text" 
-                                id="inputCap" 
-                                name="cap"
-                                class="input-field w-full" 
-                                placeholder="00100"
-                                maxlength="5"
-                                disabled
-                            >
-                        </div>
-                        <div>
-                            <label class="block text-white text-sm font-semibold mb-2">Provincia</label>
-                            <input 
-                                type="text" 
-                                id="inputProvincia" 
-                                name="provincia"
-                                class="input-field w-full" 
-                                placeholder="RM"
-                                maxlength="2"
-                                disabled
-                            >
+                    <!-- Sezione Dati Non Modificabili -->
+                    <div class="bg-black/20 rounded-2xl p-6 border border-white/10">
+                        <h3 class="text-white text-xl font-bold mb-4 flex items-center gap-2">
+                            🔒 Dati Non Modificabili
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-white text-sm font-semibold mb-2">Nome *</label>
+                                <input 
+                                    type="text" 
+                                    id="inputNome" 
+                                    name="nome"
+                                    class="input-field w-full" 
+                                    disabled
+                                    required
+                                >
+                                <div class="field-status text-white opacity-60">
+                                    🚫 Il nome non può essere modificato
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-white text-sm font-semibold mb-2">Cognome *</label>
+                                <input 
+                                    type="text" 
+                                    id="inputCognome" 
+                                    name="cognome"
+                                    class="input-field w-full" 
+                                    disabled
+                                    required
+                                >
+                                <div class="field-status text-white opacity-60">
+                                    🚫 Il cognome non può essere modificato
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-white text-sm font-semibold mb-2">Data di Nascita *</label>
+                                <input 
+                                    type="date" 
+                                    id="inputDataNascita" 
+                                    name="data_nascita"
+                                    class="input-field w-full" 
+                                    disabled
+                                    required
+                                >
+                                <div class="field-status text-white opacity-60">
+                                    🚫 La data di nascita non può essere modificata
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-white text-sm font-semibold mb-2">Luogo di Nascita *</label>
+                                <input 
+                                    type="text" 
+                                    id="inputLuogoNascita" 
+                                    name="luogo_nascita"
+                                    class="input-field w-full" 
+                                    disabled
+                                    required
+                                >
+                                <div class="field-status text-white opacity-60">
+                                    🚫 Il luogo di nascita non può essere modificato
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-white text-sm font-semibold mb-2">Bio / Descrizione</label>
-                        <textarea 
-                            id="inputBio" 
-                            name="bio"
-                            class="input-field w-full h-24 resize-none" 
-                            placeholder="Raccontaci qualcosa di te..."
-                            disabled
-                        ></textarea>
+                    <!-- Sezione Contatti (Modificabile) -->
+                    <div class="bg-cyan/10 rounded-2xl p-6 border border-cyan/20">
+                        <h3 class="text-white text-xl font-bold mb-4 flex items-center gap-2">
+                            📧 Informazioni di Contatto
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-white text-sm font-semibold mb-2">Email *</label>
+                                <input 
+                                    type="email" 
+                                    id="inputEmail" 
+                                    name="email"
+                                    class="input-field w-full" 
+                                    disabled
+                                    required
+                                >
+                                <div id="emailStatus" class="field-status field-optional">
+                                    📧 Email principale del tuo account
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-white text-sm font-semibold mb-2">Telefono *</label>
+                                <input 
+                                    type="tel" 
+                                    id="inputTelefono" 
+                                    name="telefono"
+                                    class="input-field w-full" 
+                                    placeholder="+39 123 456 7890"
+                                    disabled
+                                >
+                                <div id="telefonoStatus" class="field-status field-optional">
+                                    📱 Numero di telefono principale
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sezione Informazioni Personali (Modificabile) -->
+                    <div class="bg-aurora/10 rounded-2xl p-6 border border-aurora/20">
+                        <h3 class="text-white text-xl font-bold mb-4 flex items-center gap-2">
+                            👤 Informazioni Personali
+                        </h3>
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-white text-sm font-semibold mb-2">Codice Fiscale</label>
+                                <input 
+                                    type="text" 
+                                    id="inputCodiceFiscale" 
+                                    name="codice_fiscale"
+                                    class="input-field w-full" 
+                                    placeholder="RSSMRA85M01H501Z"
+                                    maxlength="16"
+                                    disabled
+                                >
+                                <div id="codiceFiscaleStatus" class="field-status field-optional">
+                                    🆔 Codice fiscale italiano
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-white text-sm font-semibold mb-2">Indirizzo Completo</label>
+                                <input 
+                                    type="text" 
+                                    id="inputIndirizzo" 
+                                    name="indirizzo"
+                                    class="input-field w-full" 
+                                    placeholder="Via Roma, 123"
+                                    disabled
+                                >
+                                <div id="indirizzoStatus" class="field-status field-optional">
+                                    🏠 Indirizzo di residenza
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div>
+                                    <label class="block text-white text-sm font-semibold mb-2">Città</label>
+                                    <input 
+                                        type="text" 
+                                        id="inputCitta" 
+                                        name="citta"
+                                        class="input-field w-full" 
+                                        placeholder="Roma"
+                                        disabled
+                                    >
+                                    <div id="cittaStatus" class="field-status field-optional">
+                                        🏙️ Città di residenza
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-white text-sm font-semibold mb-2">CAP</label>
+                                    <input 
+                                        type="text" 
+                                        id="inputCap" 
+                                        name="cap"
+                                        class="input-field w-full" 
+                                        placeholder="00100"
+                                        maxlength="5"
+                                        disabled
+                                    >
+                                    <div id="capStatus" class="field-status field-optional">
+                                        📮 Codice avviamento postale
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-white text-sm font-semibold mb-2">Provincia</label>
+                                    <input 
+                                        type="text" 
+                                        id="inputProvincia" 
+                                        name="provincia"
+                                        class="input-field w-full" 
+                                        placeholder="RM"
+                                        maxlength="2"
+                                        disabled
+                                    >
+                                    <div id="provinciaStatus" class="field-status field-optional">
+                                        🗺️ Sigla provincia (es. RM, MI)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-white text-sm font-semibold mb-2">Bio / Descrizione</label>
+                                <textarea 
+                                    id="inputBio" 
+                                    name="bio"
+                                    class="input-field w-full h-24 resize-none" 
+                                    placeholder="Raccontaci qualcosa di te..."
+                                    disabled
+                                ></textarea>
+                                <div id="bioStatus" class="field-status field-optional">
+                                    📝 Breve descrizione personale (opzionale)
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Save/Cancel Buttons (hidden initially) -->
@@ -798,6 +876,7 @@
         let currentProfile = null;
         let isEditing = false;
         let originalData = {};
+        let modifiedFields = new Set();
 
         function showLoader() {
             const loader = document.getElementById('pageLoader');
@@ -889,6 +968,67 @@
         }
 
         // ========================================
+        // GESTIONE TRACKING MODIFICHE
+        // ========================================
+
+        function updateFieldStatus(fieldId, isModified = false) {
+            const statusElement = document.getElementById(fieldId + 'Status');
+            if (!statusElement) return;
+
+            if (isModified) {
+                statusElement.textContent = '✏️ Campo modificato - ricorda di salvare';
+                statusElement.className = 'field-status field-modified';
+                modifiedFields.add(fieldId);
+            } else {
+                // Reset to original status
+                const field = document.getElementById(fieldId);
+                if (field && field.disabled) {
+                    if (fieldId === 'inputEmail') {
+                        statusElement.textContent = '📧 Email principale del tuo account';
+                    } else if (fieldId === 'inputTelefono') {
+                        statusElement.textContent = '📱 Numero di telefono principale';
+                    } else {
+                        statusElement.textContent = getOriginalFieldDescription(fieldId);
+                    }
+                    statusElement.className = 'field-status field-optional';
+                }
+                modifiedFields.delete(fieldId);
+            }
+        }
+
+        function getOriginalFieldDescription(fieldId) {
+            const descriptions = {
+                'inputCodiceFiscale': '🆔 Codice fiscale italiano',
+                'inputIndirizzo': '🏠 Indirizzo di residenza',
+                'inputCitta': '🏙️ Città di residenza',
+                'inputCap': '📮 Codice avviamento postale',
+                'inputProvincia': '🗺️ Sigla provincia (es. RM, MI)',
+                'inputBio': '📝 Breve descrizione personale (opzionale)'
+            };
+            return descriptions[fieldId] || '';
+        }
+
+        function setupFieldTracking() {
+            const editableFields = [
+                'inputEmail', 'inputTelefono', 'inputCodiceFiscale', 'inputIndirizzo', 
+                'inputCitta', 'inputCap', 'inputProvincia', 'inputBio'
+            ];
+
+            editableFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    field.addEventListener('input', function() {
+                        if (isEditing) {
+                            const originalValue = originalData[field.name] || '';
+                            const currentValue = field.value.trim();
+                            updateFieldStatus(fieldId, currentValue !== originalValue);
+                        }
+                    });
+                }
+            });
+        }
+
+        // ========================================
         // CARICAMENTO DATI
         // ========================================
 
@@ -917,24 +1057,25 @@
         }
 
         function updateProfileDisplay() {
-            // Header - usa i campi corretti delle tue tabelle
-            const fullName = currentProfile.full_name || `${currentProfile.nome || ''} ${currentProfile.cognome || ''}`.trim();
-            document.getElementById('userFullName').textContent = fullName || 'Utente';
+            // Header - usa i campi corretti della TUA tabella
+            const fullName = currentProfile.full_name || `${currentProfile.nome || ''} ${currentProfile.cognome || ''}`.trim() || 'Utente';
+            document.getElementById('userFullName').textContent = fullName;
             document.getElementById('userEmail').textContent = currentProfile.email || '';
             
-            // Role badge
+            // Role badge - usa i valori della constraint check
             const roleBadge = document.getElementById('userRoleBadge');
             roleBadge.className = getRoleBadgeHTML(currentProfile.role);
             roleBadge.textContent = currentProfile.role || 'USER';
             
-            // Status
-            document.getElementById('userStatus').textContent = currentProfile.stato || 'ATTIVO';
+            // Status - usa i valori della constraint check (ATTIVO, SOSPESO, INATTIVO)
+            const statusText = currentProfile.stato || 'ATTIVO';
+            document.getElementById('userStatus').textContent = statusText;
             
-            // Avatar e iniziali - usa avatar di default o iniziali
+            // Avatar e iniziali
             const initials = (currentProfile.nome?.[0] || '') + (currentProfile.cognome?.[0] || '');
-            document.getElementById('avatarInitials').textContent = initials.toUpperCase() || '--';
+            document.getElementById('avatarInitials').textContent = initials.toUpperCase() || '??';
             
-            // Implementa avatar di default o da database
+            // Gestione avatar
             if (currentProfile.avatar_url) {
                 const avatarImage = document.getElementById('avatarImage');
                 const avatarPlaceholder = document.getElementById('avatarPlaceholder');
@@ -943,7 +1084,7 @@
                 avatarImage.style.display = 'block';
                 avatarPlaceholder.style.display = 'none';
             } else {
-                // Mostra sempre le iniziali come avatar di default
+                // Mostra iniziali come avatar di default
                 const avatarImage = document.getElementById('avatarImage');
                 const avatarPlaceholder = document.getElementById('avatarPlaceholder');
                 
@@ -951,7 +1092,7 @@
                 avatarPlaceholder.style.display = 'flex';
             }
 
-            // Form fields - mappati su TUTTI i campi del database user_profiles
+            // Form fields - mappati esattamente sui campi della tua tabella
             document.getElementById('inputNome').value = currentProfile.nome || '';
             document.getElementById('inputCognome').value = currentProfile.cognome || '';
             document.getElementById('inputEmail').value = currentProfile.email || '';
@@ -964,6 +1105,14 @@
             document.getElementById('inputCap').value = currentProfile.cap || '';
             document.getElementById('inputProvincia').value = currentProfile.provincia || '';
             document.getElementById('inputBio').value = currentProfile.bio || '';
+
+            console.log('✅ Profilo visualizzato:', {
+                nome: currentProfile.nome,
+                cognome: currentProfile.cognome,
+                email: currentProfile.email,
+                role: currentProfile.role,
+                stato: currentProfile.stato
+            });
         }
 
         async function loadUserStats() {
@@ -985,17 +1134,26 @@
                     console.warn('Tabella richieste non trovata');
                 }
 
-                // Calcola completamento profilo - usa TUTTI i campi obbligatori del database
+                // Calcola completamento profilo - basato sui campi EFFETTIVI della tua tabella
+                // Campi essenziali per un profilo completo
                 const completionFields = [
                     'nome', 'cognome', 'email', 'telefono', 'data_nascita', 
                     'luogo_nascita', 'codice_fiscale', 'indirizzo', 'citta', 'cap', 'provincia'
                 ];
-                const completedFields = completionFields.filter(field => currentProfile[field]);
+                
+                // Conta i campi compilati (non null e non vuoti)
+                const completedFields = completionFields.filter(field => {
+                    const value = currentProfile[field];
+                    return value && value.toString().trim() !== '';
+                });
+                
                 const completionPercentage = Math.round((completedFields.length / completionFields.length) * 100);
 
                 // Aggiorna interfaccia
                 document.getElementById('totalRequests').textContent = totalRequests;
                 document.getElementById('profileCompletion').textContent = `${completionPercentage}%`;
+
+                console.log(`📊 Profilo completato: ${completedFields.length}/${completionFields.length} campi (${completionPercentage}%)`);
 
             } catch (error) {
                 console.error('Errore caricamento statistiche:', error);
@@ -1034,9 +1192,10 @@
         function toggleEditMode() {
             isEditing = !isEditing;
             
-            // Campi modificabili secondo le tue specifiche (tutti tranne nome, cognome, email, data_nascita, luogo_nascita)
+            // Campi modificabili secondo le tue specifiche
+            // NUOVA IMPLEMENTAZIONE: email e telefono modificabili + altri campi
             const editableFields = [
-                'inputTelefono', 'inputCodiceFiscale', 'inputIndirizzo', 
+                'inputEmail', 'inputTelefono', 'inputCodiceFiscale', 'inputIndirizzo', 
                 'inputCitta', 'inputCap', 'inputProvincia', 'inputBio'
             ];
             const editBtn = document.getElementById('editProfileBtn');
@@ -1046,6 +1205,15 @@
                 const field = document.getElementById(fieldId);
                 if (field) {
                     field.disabled = !isEditing;
+                    if (isEditing) {
+                        field.classList.add('editable');
+                        // Per email e telefono, mostra indicazione speciale
+                        if (fieldId === 'inputEmail' || fieldId === 'inputTelefono') {
+                            updateFieldStatus(fieldId.replace('input', '').toLowerCase() + 'Status', false);
+                        }
+                    } else {
+                        field.classList.remove('editable');
+                    }
                 }
             });
             
@@ -1060,11 +1228,13 @@
                 
                 // Reset ai valori originali
                 resetForm();
+                modifiedFields.clear();
             }
         }
 
         function resetForm() {
             // Reset tutti i campi modificabili
+            document.getElementById('inputEmail').value = originalData.email || '';
             document.getElementById('inputTelefono').value = originalData.telefono || '';
             document.getElementById('inputCodiceFiscale').value = originalData.codice_fiscale || '';
             document.getElementById('inputIndirizzo').value = originalData.indirizzo || '';
@@ -1072,6 +1242,11 @@
             document.getElementById('inputCap').value = originalData.cap || '';
             document.getElementById('inputProvincia').value = originalData.provincia || '';
             document.getElementById('inputBio').value = originalData.bio || '';
+            
+            // Reset status dei campi
+            ['Email', 'Telefono', 'CodiceFiscale', 'Indirizzo', 'Citta', 'Cap', 'Provincia', 'Bio'].forEach(field => {
+                updateFieldStatus('input' + field, false);
+            });
             
             // Reset avatar se era stato cambiato
             if (originalData.avatar_url) {
@@ -1102,8 +1277,9 @@
 
                 const client = APP_CONFIG.SUPABASE.getClient();
                 
-                // Prepara dati per l'aggiornamento - TUTTI i campi modificabili secondo database
+                // Prepara dati per l'aggiornamento - MAPPATI sulla tua tabella esatta
                 const updateData = {
+                    email: document.getElementById('inputEmail').value.trim(),
                     telefono: document.getElementById('inputTelefono').value.trim(),
                     codice_fiscale: document.getElementById('inputCodiceFiscale').value.trim().toUpperCase(),
                     indirizzo: document.getElementById('inputIndirizzo').value.trim(),
@@ -1114,25 +1290,62 @@
                     updated_at: new Date().toISOString()
                 };
 
-                // Aggiorna anche full_name se necessario
+                // Aggiorna full_name se nome e cognome esistono
                 if (currentProfile.nome && currentProfile.cognome) {
                     updateData.full_name = `${currentProfile.nome} ${currentProfile.cognome}`;
                 }
 
-                // Validazioni specifiche
+                // Validazioni specifiche per la tua tabella
                 const cap = updateData.cap;
-                if (cap && !/^\d{5}$/.test(cap)) {
+                if (cap && cap !== '' && !/^\d{5}$/.test(cap)) {
                     throw new Error('Il CAP deve essere composto da 5 cifre');
                 }
 
                 const provincia = updateData.provincia;
-                if (provincia && !/^[A-Z]{2}$/.test(provincia)) {
+                if (provincia && provincia !== '' && !/^[A-Z]{2}$/.test(provincia)) {
                     throw new Error('La provincia deve essere composta da 2 lettere maiuscole (es. RM)');
                 }
 
                 const codiceFiscale = updateData.codice_fiscale;
-                if (codiceFiscale && !/^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$/.test(codiceFiscale)) {
+                if (codiceFiscale && codiceFiscale !== '' && !/^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$/.test(codiceFiscale)) {
                     throw new Error('Formato codice fiscale non valido');
+                }
+
+                const email = updateData.email;
+                if (!email || email === '') {
+                    throw new Error('L\'email è obbligatoria');
+                }
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    throw new Error('Formato email non valido');
+                }
+
+                const telefono = updateData.telefono;
+                if (telefono && telefono !== '' && !/^[\+]?[0-9\s\-\(\)]{8,15}$/.test(telefono)) {
+                    throw new Error('Formato telefono non valido');
+                }
+
+                // Rimuovi campi vuoti per evitare di sovrascrivere con stringhe vuote
+                Object.keys(updateData).forEach(key => {
+                    if (updateData[key] === '' && key !== 'email') {
+                        updateData[key] = null;
+                    }
+                });
+
+                console.log('💾 Dati da aggiornare:', updateData);
+
+                // IMPORTANTE: Se email è cambiata, aggiorna anche l'auth di Supabase
+                if (updateData.email !== originalData.email && updateData.email) {
+                    console.log('🔄 Aggiornamento email nell\'autenticazione...');
+                    
+                    const { error: authError } = await client.auth.updateUser({
+                        email: updateData.email
+                    });
+
+                    if (authError) {
+                        throw new Error('Errore aggiornamento email: ' + authError.message);
+                    }
+
+                    APP_CONFIG.NOTIFICATIONS.showToast('Email aggiornata! Controlla la nuova email per confermare.', 'warning');
                 }
 
                 // Aggiorna profilo
@@ -1151,6 +1364,11 @@
                 
                 // Ricalcola completamento
                 await loadUserStats();
+                
+                // Aggiorna display header se email è cambiata
+                if (updateData.email !== document.getElementById('userEmail').textContent) {
+                    document.getElementById('userEmail').textContent = updateData.email;
+                }
                 
                 toggleEditMode(); // Disabilita modalità modifica
 
@@ -1380,6 +1598,9 @@
             
             // Delete account
             document.getElementById('deleteAccountBtn').addEventListener('click', requestAccountDeletion);
+
+            // Setup field tracking for modifications
+            setupFieldTracking();
         }
 
         // ========================================
