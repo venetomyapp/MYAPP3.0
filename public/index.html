@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyApp - La tua app di riferimento</title>
+    <title>MyApp - Benvenuto</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Configurazione colori Tailwind -->
+    <!-- CONFIGURAZIONE COLORI TAILWIND -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#1a1a2e',
-                        secondary: '#16213e',
-                        accent: '#0f3460',
-                        aurora: '#e94560',
-                        cyan: '#00d4ff',
-                        magenta: '#ff006e',
-                        gold: '#ffd700',
-                        teal: '#03dac6',
-                        dark: '#0a0a23',
-                        light: '#f8fafc',
+                        // Aurora Boreale 2025 Palette
+                        primary: '#1a1a2e',      // Blu notte profondo
+                        secondary: '#16213e',     // Blu oceano
+                        accent: '#0f3460',        // Blu acciaio
+                        aurora: '#e94560',        // Rosa aurora
+                        cyan: '#00d4ff',          // Cyan elettrico
+                        magenta: '#ff006e',       // Magenta vibrante
+                        gold: '#ffd700',          // Oro elegante
+                        teal: '#03dac6',          // Teal premium
+                        dark: '#0a0a23',          // Nero cyber
+                        light: '#f8fafc',         // Bianco ghiaccio
                         textDark: '#1C1C1E',
                         backgroundLight: '#F4F4F8',
                     },
@@ -42,14 +43,16 @@
         }
     </script>
     
-    <!-- Stili personalizzati -->
+    <!-- STILI CSS COMPLETI -->
     <style>
+        /* === VARIABILI CSS === */
         :root {
             --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
             --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
             --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
         }
 
+        /* === SFONDO PRINCIPALE === */
         body {
             background: var(--gradient-aurora);
             background-size: 400% 400%;
@@ -57,6 +60,7 @@
             min-height: 100vh;
         }
 
+        /* === ANIMAZIONI === */
         @keyframes aurora {
             0%, 100% { background-position: 0% 50%; }
             25% { background-position: 100% 50%; }
@@ -69,17 +73,44 @@
             50% { transform: translateY(-10px); }
         }
 
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(233, 69, 96, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(0, 212, 255, 0.8); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .7; }
+        }
+
+        /* === TIPOGRAFIA ULTRA-VISIBILE === */
         .text-ultra-visible {
             color: #ffffff;
             text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
             font-weight: 800;
         }
 
+        .text-white {
+            text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
+        }
+
+        /* === GLASSMORPHISM === */
         .glass-morphism {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.18);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
         }
 
         .glass-card {
@@ -88,6 +119,7 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
+        /* === BOTTONI === */
         .btn-aurora {
             background: var(--gradient-magic);
             color: white;
@@ -102,183 +134,362 @@
             border-color: rgba(233, 69, 96, 0.8);
         }
 
-        .feature-card {
+        .btn-cyber {
+            background: var(--gradient-cyber);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            color: white;
+            font-weight: 700;
+        }
+
+        .btn-cyber:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.4);
+            border-color: rgba(0, 212, 255, 0.8);
+        }
+
+        /* === CARDS === */
+        .card-hover {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .feature-card:hover {
+        .card-hover:hover {
             transform: translateY(-8px) scale(1.02);
             box-shadow: 0 25px 50px rgba(0,0,0,0.25);
         }
 
+        .feature-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            background: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.15));
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        /* === HERO SECTION === */
         .hero-title {
             font-size: clamp(3rem, 12vw, 6rem);
             font-weight: 900;
+            line-height: 1.1;
         }
 
         .hero-subtitle {
             font-size: clamp(1.5rem, 6vw, 2.5rem);
             font-weight: 800;
         }
+
+        /* === STATUS INDICATORS === */
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #22c55e;
+            animation: pulse 2s infinite;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .status-offline {
+            background: #ef4444;
+        }
+
+        /* === LOADING STATES === */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid transparent;
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 640px) {
+            .hero-title { font-size: 2.25rem; line-height: 2.5rem; }
+            .hero-subtitle { font-size: 1.25rem; line-height: 1.75rem; }
+        }
+
+        /* === FLOATING HELP === */
+        .floating-help {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            z-index: 1000;
+            animation: float 3s ease-in-out infinite;
+        }
     </style>
 </head>
+<body class="flex flex-col min-h-screen font-sans">
 
-<body class="font-sans">
-    <!-- Header -->
-    <header class="relative z-50 py-6">
-        <div class="container mx-auto px-6">
-            <nav class="flex justify-between items-center">
-                <div class="text-white text-2xl font-bold">MyApp</div>
-                <div class="flex gap-4">
-                    <a href="login.html" class="btn-aurora py-2 px-6 rounded-xl">Accedi</a>
+    <!-- HEADER -->
+    <header class="glass-morphism">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-aurora to-cyan rounded-xl flex items-center justify-center">
+                        <span class="text-white font-black text-xl">M</span>
+                    </div>
+                    <span class="text-ultra-visible text-2xl font-black">MyApp</span>
                 </div>
-            </nav>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center text-white text-sm">
+                        <span class="status-indicator" id="statusIndicator"></span>
+                        <span id="statusText">Sistema Online</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <main>
-        <section class="relative py-20">
-            <div class="container mx-auto px-6 text-center">
-                <div class="mb-12">
-                    <h1 class="hero-title text-ultra-visible mb-6">
-                        Benvenuto in MyApp
-                    </h1>
-                    <p class="hero-subtitle text-white mb-8 max-w-3xl mx-auto">
-                        La piattaforma digitale moderna per gestire i tuoi servizi e tessere
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                        <a href="login.html" class="btn-aurora py-4 px-8 rounded-xl text-lg">
-                            Inizia Ora
-                        </a>
-                        <a href="#features" class="btn-aurora py-4 px-8 rounded-xl text-lg bg-opacity-50 hover:bg-opacity-100">
-                            Scopri di più
-                        </a>
-                    </div>
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 flex items-center justify-center px-4 py-12">
+        <div class="text-center max-w-4xl">
+            <!-- HERO SECTION -->
+            <div class="mb-12">
+                <h1 class="hero-title text-ultra-visible mb-6">
+                    Benvenuto in MyApp
+                </h1>
+                <p class="hero-subtitle text-white mb-8">
+                    La tua piattaforma digitale per la gestione moderna
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button onclick="goToLogin()" class="btn-aurora px-8 py-4 rounded-2xl text-xl font-bold">
+                        🚀 Accedi alla Piattaforma
+                    </button>
+                    <button onclick="scrollToFeatures()" class="btn-cyber px-8 py-4 rounded-2xl text-xl font-bold">
+                        📖 Scopri di più
+                    </button>
                 </div>
             </div>
-        </section>
 
-        <!-- Features Section -->
-        <section id="features" class="py-20">
-            <div class="container mx-auto px-6">
-                <h2 class="text-ultra-visible text-4xl font-black text-center mb-16">
-                    Le Tue Funzionalità
-                </h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Tessera Digitale -->
-                    <div class="glass-morphism rounded-3xl p-8 feature-card">
-                        <div class="text-6xl mb-6 text-center">📱</div>
-                        <h3 class="text-white text-2xl font-bold mb-4 text-center">Tessera Digitale</h3>
-                        <p class="text-white opacity-90 text-center">
-                            La tua tessera sempre con te, accessibile da qualsiasi dispositivo
-                        </p>
-                    </div>
+            <!-- FEATURES GRID -->
+            <div id="features" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
+                <div class="feature-card card-hover p-8">
+                    <div class="text-4xl mb-4">🔐</div>
+                    <h3 class="text-ultra-visible text-xl font-bold mb-3">Accesso Sicuro</h3>
+                    <p class="text-white">Sistema di autenticazione avanzato con Supabase</p>
+                </div>
 
-                    <!-- Gestione Profilo -->
-                    <div class="glass-morphism rounded-3xl p-8 feature-card">
-                        <div class="text-6xl mb-6 text-center">👤</div>
-                        <h3 class="text-white text-2xl font-bold mb-4 text-center">Gestione Profilo</h3>
-                        <p class="text-white opacity-90 text-center">
-                            Aggiorna facilmente i tuoi dati personali in totale sicurezza
-                        </p>
-                    </div>
+                <div class="feature-card card-hover p-8">
+                    <div class="text-4xl mb-4">📱</div>
+                    <h3 class="text-ultra-visible text-xl font-bold mb-3">Multi-Dispositivo</h3>
+                    <p class="text-white">Interfaccia responsive per desktop, tablet e mobile</p>
+                </div>
 
-                    <!-- Notifiche -->
-                    <div class="glass-morphism rounded-3xl p-8 feature-card">
-                        <div class="text-6xl mb-6 text-center">🔔</div>
-                        <h3 class="text-white text-2xl font-bold mb-4 text-center">Notifiche</h3>
-                        <p class="text-white opacity-90 text-center">
-                            Rimani aggiornato su news, convenzioni e comunicazioni importanti
-                        </p>
-                    </div>
+                <div class="feature-card card-hover p-8">
+                    <div class="text-4xl mb-4">⚡</div>
+                    <h3 class="text-ultra-visible text-xl font-bold mb-3">Prestazioni</h3>
+                    <p class="text-white">Tecnologie moderne per un'esperienza fluida</p>
+                </div>
 
-                    <!-- Convenzioni -->
-                    <div class="glass-morphism rounded-3xl p-8 feature-card">
-                        <div class="text-6xl mb-6 text-center">💰</div>
-                        <h3 class="text-white text-2xl font-bold mb-4 text-center">Convenzioni</h3>
-                        <p class="text-white opacity-90 text-center">
-                            Accedi a sconti esclusivi e convenzioni riservate
-                        </p>
-                    </div>
+                <div class="feature-card card-hover p-8">
+                    <div class="text-4xl mb-4">🎫</div>
+                    <h3 class="text-ultra-visible text-xl font-bold mb-3">Tessera Digitale</h3>
+                    <p class="text-white">Gestione completa del tuo profilo e tessera</p>
+                </div>
 
-                    <!-- Sicurezza -->
-                    <div class="glass-morphism rounded-3xl p-8 feature-card">
-                        <div class="text-6xl mb-6 text-center">🔒</div>
-                        <h3 class="text-white text-2xl font-bold mb-4 text-center">Sicurezza</h3>
-                        <p class="text-white opacity-90 text-center">
-                            I tuoi dati sono protetti con i più alti standard di sicurezza
-                        </p>
-                    </div>
+                <div class="feature-card card-hover p-8">
+                    <div class="text-4xl mb-4">👥</div>
+                    <h3 class="text-ultra-visible text-xl font-bold mb-3">Gestione Ruoli</h3>
+                    <p class="text-white">Sistema avanzato per utenti e dirigenti</p>
+                </div>
 
-                    <!-- Mobile First -->
-                    <div class="glass-morphism rounded-3xl p-8 feature-card">
-                        <div class="text-6xl mb-6 text-center">📲</div>
-                        <h3 class="text-white text-2xl font-bold mb-4 text-center">Mobile First</h3>
-                        <p class="text-white opacity-90 text-center">
-                            Progettata per smartphone, tablet e desktop
-                        </p>
-                    </div>
+                <div class="feature-card card-hover p-8">
+                    <div class="text-4xl mb-4">🔄</div>
+                    <h3 class="text-ultra-visible text-xl font-bold mb-3">Aggiornamenti Real-time</h3>
+                    <p class="text-white">Dati sempre sincronizzati e aggiornati</p>
                 </div>
             </div>
-        </section>
-
-        <!-- CTA Section -->
-        <section class="py-20">
-            <div class="container mx-auto px-6 text-center">
-                <div class="glass-morphism rounded-3xl p-12 max-w-4xl mx-auto">
-                    <h2 class="text-ultra-visible text-4xl font-black mb-6">
-                        Inizia Subito
-                    </h2>
-                    <p class="text-white text-xl mb-8 max-w-2xl mx-auto">
-                        Unisciti a migliaia di utenti che già utilizzano MyApp per semplificare la gestione dei propri servizi
-                    </p>
-                    <a href="login.html" class="btn-aurora py-4 px-8 rounded-xl text-lg inline-flex items-center gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                        Registrati Gratuitamente
-                    </a>
-                </div>
-            </div>
-        </section>
+        </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="py-12">
-        <div class="container mx-auto px-6">
-            <div class="glass-morphism rounded-3xl p-8">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div>
-                        <h3 class="text-white text-xl font-bold mb-4">MyApp</h3>
-                        <p class="text-white opacity-80">
-                            La piattaforma digitale moderna per la gestione dei tuoi servizi
-                        </p>
+    <!-- FOOTER -->
+    <footer class="glass-morphism mt-16">
+        <div class="container mx-auto px-4 py-8">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-3 mb-4">
+                    <div class="w-8 h-8 bg-gradient-to-r from-aurora to-cyan rounded-lg flex items-center justify-center">
+                        <span class="text-white font-black text-sm">M</span>
                     </div>
-                    <div>
-                        <h4 class="text-white font-bold mb-4">Link Utili</h4>
-                        <ul class="space-y-2">
-                            <li><a href="login.html" class="text-white opacity-80 hover:opacity-100">Accedi</a></li>
-                            <li><a href="#features" class="text-white opacity-80 hover:opacity-100">Funzionalità</a></li>
-                            <li><a href="https://form.jotform.com/250396120847357" target="_blank" class="text-white opacity-80 hover:opacity-100">Supporto</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="text-white font-bold mb-4">Contatti</h4>
-                        <p class="text-white opacity-80 text-sm">
-                            Email: info@myapp.it<br>
-                            Telefono: +39 06 123 456 789
-                        </p>
-                    </div>
+                    <span class="text-white text-lg font-bold">MyApp</span>
                 </div>
-                <div class="border-t border-white border-opacity-20 mt-8 pt-8 text-center">
-                    <p class="text-white opacity-70 text-sm">
-                        © 2025 MyApp. Tutti i diritti riservati.
-                    </p>
+                <p class="text-white text-sm mb-4">
+                    Piattaforma digitale moderna per la gestione professionale
+                </p>
+                <div class="flex justify-center space-x-6 text-sm text-white">
+                    <span>© 2025 MyApp</span>
+                    <span>•</span>
+                    <span>Versione 4.1</span>
+                    <span>•</span>
+                    <span>Powered by Supabase</span>
                 </div>
             </div>
         </div>
     </footer>
+
+    <!-- FLOATING HELP BUTTON -->
+    <div class="floating-help">
+        <button onclick="showHelp()" class="btn-aurora w-14 h-14 rounded-full flex items-center justify-center text-2xl">
+            ❓
+        </button>
+    </div>
+
+    <!-- HELP MODAL -->
+    <div id="helpModal" class="fixed inset-0 hidden items-center justify-center bg-black/60 z-50">
+        <div class="glass-card w-full max-w-md rounded-2xl p-6 m-4">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-textDark">Aiuto - MyApp</h2>
+                <button onclick="closeHelp()" class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+            </div>
+            <div class="space-y-4 text-textDark">
+                <div>
+                    <h3 class="font-semibold mb-2">🚀 Come iniziare</h3>
+                    <p class="text-sm">Clicca su "Accedi alla Piattaforma" per effettuare il login o registrarti.</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-2">🔐 Primo accesso</h3>
+                    <p class="text-sm">Se è la prima volta, registrati con i tuoi dati. Riceverai una email di conferma.</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-2">📱 Compatibilità</h3>
+                    <p class="text-sm">MyApp funziona su tutti i dispositivi: desktop, tablet e smartphone.</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-2">❓ Supporto</h3>
+                    <p class="text-sm">Per assistenza, contatta il supporto tecnico dalla tua dashboard.</p>
+                </div>
+            </div>
+            <div class="mt-6">
+                <button onclick="closeHelp()" class="btn-aurora w-full py-3 rounded-xl font-bold">
+                    Ho capito
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // === CONFIGURATION ===
+        let systemStatus = 'online';
+        
+        // === NAVIGATION FUNCTIONS ===
+        function goToLogin() {
+            // Semplice redirect senza controlli di sessione
+            window.location.href = 'login.html';
+        }
+
+        function scrollToFeatures() {
+            const featuresSection = document.getElementById('features');
+            if (featuresSection) {
+                featuresSection.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }
+
+        // === HELP MODAL ===
+        function showHelp() {
+            const modal = document.getElementById('helpModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeHelp() {
+            const modal = document.getElementById('helpModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        // === STATUS MANAGEMENT ===
+        function updateSystemStatus() {
+            const indicator = document.getElementById('statusIndicator');
+            const text = document.getElementById('statusText');
+            
+            if (systemStatus === 'online') {
+                indicator.classList.remove('status-offline');
+                text.textContent = 'Sistema Online';
+            } else {
+                indicator.classList.add('status-offline');
+                text.textContent = 'Sistema Offline';
+            }
+        }
+
+        // === INITIALIZATION ===
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 MyApp Index Page Loaded v4.1');
+            
+            // Update status
+            updateSystemStatus();
+            
+            // Check system status every 30 seconds
+            setInterval(() => {
+                // Qui potresti aggiungere una vera verifica dello stato del sistema
+                updateSystemStatus();
+            }, 30000);
+            
+            // Add smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Press 'L' to go to login
+                if (e.key.toLowerCase() === 'l' && !e.ctrlKey && !e.altKey) {
+                    goToLogin();
+                }
+                // Press 'H' to show help
+                if (e.key.toLowerCase() === 'h' && !e.ctrlKey && !e.altKey) {
+                    showHelp();
+                }
+                // Press Escape to close help
+                if (e.key === 'Escape') {
+                    closeHelp();
+                }
+            });
+            
+            console.log('✅ Index page fully initialized');
+        });
+
+        // === PERFORMANCE MONITORING ===
+        window.addEventListener('load', function() {
+            const loadTime = performance.now();
+            console.log(`⚡ Page loaded in ${Math.round(loadTime)}ms`);
+        });
+    </script>
 </body>
 </html>
