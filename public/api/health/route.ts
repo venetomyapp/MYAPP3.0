@@ -7,8 +7,8 @@ export const runtime = "nodejs";
 export async function GET() {
   try {
     const okEnv = [
-      !!process.env.NEXT_PUBLIC_SUPABASE_URL,
-      !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      process.env.NEXT_PUBLIC_SUPABASE_URL === "https://pvzdilkozpspsnepedqc.supabase.co",
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY === "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk",
       !!process.env.SUPABASE_SERVICE_ROLE_KEY,
       !!process.env.OPENAI_API_KEY,
     ].every(Boolean);
