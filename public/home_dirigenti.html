@@ -525,11 +525,11 @@
                     <p class="card-description">Amministra membri e iscrizioni</p>
                 </div>
                 
-                <!-- Gestione Notizie -->
-                <div onclick="window.location.href='gestione-notizie.html'" class="action-card">
+                <!-- Gestione News -->
+                <div onclick="window.location.href='gestione-news.html'" class="action-card">
                     <span class="card-icon">📰</span>
-                    <h3 class="card-title">Gestione Notizie</h3>
-                    <p class="card-description">Pubblica e gestisci comunicazioni</p>
+                    <h3 class="card-title">Gestione News</h3>
+                    <p class="card-description">Pubblica e gestisci news aggiornate</p>
                 </div>
                 
                 <!-- Gestione Convenzioni -->
@@ -703,10 +703,15 @@
         const TABLES = {
             user_profiles: 'user_profiles',  // ✅ Nome corretto della tabella
             tessere: 'tessere',
-            notizie: 'notizie',
+            news: 'news',                    // ✅ Tabella news corretta
             convenzioni: 'convenzioni',
             richieste: 'richieste'
         };
+        
+        let supabaseClient;
+        let currentUser = null;
+        let adminProfile = null;
+        let statsData = {};  // ✅ Oggetto per memorizzare statistiche
         
         let supabaseClient;
         let currentUser = null;
@@ -839,8 +844,9 @@
                 // Carica statistiche di base
                 await Promise.all([
                     loadUsersStats(),
-                    loadRequestsStats(),
-                    loadTessereStats()
+                    loadRequestsStats(), 
+                    loadTessereStats(),
+                    loadNewsStats()     // ✅ Aggiunto caricamento notizie
                 ]);
                 
                 console.log('✅ Statistiche dashboard caricate');
