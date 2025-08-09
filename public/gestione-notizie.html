@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestione Notizie - Aurora</title>
+    <title>Gestione News - MyApp</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS Ottimizzato -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.0/tailwind.min.css">
+    
     <script>
         tailwind.config = {
             theme: {
@@ -124,9 +126,9 @@
             opacity: 0.8;
         }
 
-        .news-card.urgent {
-            border-left-color: #dc2626;
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(254, 242, 242, 0.95));
+        .news-card.featured {
+            border-left-color: #ffd700;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 248, 220, 0.95));
         }
 
         .btn-aurora {
@@ -195,7 +197,7 @@
             border-color: rgba(239, 68, 68, 0.6);
         }
 
-        .priority-badge {
+        .category-badge {
             display: inline-block;
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
@@ -204,18 +206,33 @@
             margin: 0.125rem;
         }
 
-        .priority-badge.normale {
+        .category-badge.generale {
             background: linear-gradient(135deg, #6b7280, #4b5563);
             color: white;
         }
 
-        .priority-badge.alta {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
+        .category-badge.sindacale {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
             color: white;
         }
 
-        .priority-badge.urgente {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
+        .category-badge.legale {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+        }
+
+        .category-badge.eventi {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+        }
+
+        .category-badge.formazione {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .category-badge.convenzioni {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
             color: white;
         }
 
@@ -236,6 +253,11 @@
         .status-badge.draft {
             background: linear-gradient(135deg, #6b7280, #4b5563);
             color: white;
+        }
+
+        .status-badge.featured {
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            color: #1a1a2e;
         }
 
         .modal {
@@ -261,7 +283,7 @@
             backdrop-filter: blur(20px);
             border-radius: 20px;
             padding: 2rem;
-            max-width: 800px;
+            max-width: 900px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
@@ -298,6 +320,36 @@
             border-radius: 12px;
             border: 2px solid rgba(233, 69, 96, 0.2);
             margin-top: 1rem;
+        }
+
+        .tag-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+            min-height: 44px;
+            padding: 0.5rem;
+        }
+
+        .tag-item {
+            background: linear-gradient(135deg, #e94560, #f59e0b);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tag-remove {
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .tag-remove:hover {
+            color: #ffd700;
         }
 
         .loading {
@@ -358,9 +410,9 @@
             <div class="w-20 h-20 bg-gradient-to-br from-aurora to-cyan rounded-full mx-auto mb-6 flex items-center justify-center shadow-2xl">
                 <span class="text-3xl text-white">📰</span>
             </div>
-            <h1 class="hero-title text-ultra-visible mb-4">Gestione Notizie</h1>
+            <h1 class="hero-title text-ultra-visible mb-4">Gestione News</h1>
             <p class="text-lg text-ultra-visible opacity-90 max-w-2xl mx-auto font-semibold">
-                Crea, modifica e pubblica notizie per la community Aurora
+                Crea, modifica e pubblica news per la community MyApp
             </p>
         </div>
 
@@ -370,7 +422,7 @@
                 <div class="flex items-center gap-4">
                     <button id="newNewsBtn" class="btn-aurora">
                         <span class="mr-2">➕</span>
-                        Nuova Notizia
+                        Nuova News
                     </button>
                     <button id="refreshBtn" class="btn-secondary">
                         <span class="mr-2">🔄</span>
@@ -383,12 +435,16 @@
                         <option value="all">Tutte</option>
                         <option value="published">Pubblicate</option>
                         <option value="draft">Bozze</option>
+                        <option value="featured">In Evidenza</option>
                     </select>
-                    <select id="filterPriority" class="text-sm">
-                        <option value="all">Tutte le priorità</option>
-                        <option value="normale">Normale</option>
-                        <option value="alta">Alta</option>
-                        <option value="urgente">Urgente</option>
+                    <select id="filterCategory" class="text-sm">
+                        <option value="all">Tutte le categorie</option>
+                        <option value="GENERALE">Generale</option>
+                        <option value="SINDACALE">Sindacale</option>
+                        <option value="LEGALE">Legale</option>
+                        <option value="EVENTI">Eventi</option>
+                        <option value="FORMAZIONE">Formazione</option>
+                        <option value="CONVENZIONI">Convenzioni</option>
                     </select>
                 </div>
             </div>
@@ -396,22 +452,22 @@
 
         <!-- News List -->
         <div class="glass-card p-6 fade-in">
-            <h3 class="section-title text-primary mb-6">📋 Lista Notizie</h3>
+            <h3 class="section-title text-primary mb-6">📋 Lista News</h3>
             <div id="newsContainer">
                 <div class="text-center py-8">
                     <div class="spinner mx-auto mb-4"></div>
-                    <p class="text-gray-600 font-semibold">Caricamento notizie...</p>
+                    <p class="text-gray-600 font-semibold">Caricamento news...</p>
                 </div>
             </div>
         </div>
 
     </main>
 
-    <!-- Modal Notizia -->
+    <!-- Modal News -->
     <div id="newsModal" class="modal">
         <div class="modal-content">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-bold text-primary" id="modalTitle">📰 Nuova Notizia</h3>
+                <h3 class="text-xl font-bold text-primary" id="modalTitle">📰 Nuova News</h3>
                 <button id="closeModalBtn" class="text-gray-500 hover:text-aurora text-3xl font-bold transition-colors" aria-label="Chiudi">&times;</button>
             </div>
 
@@ -424,41 +480,46 @@
                         <input type="text" id="newsTitolo" placeholder="Inserisci il titolo..." required maxlength="200">
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-primary mb-2">Icona</label>
-                        <select id="newsIcona">
-                            <option value="📢">📢 Annuncio</option>
-                            <option value="📰">📰 Notizia</option>
-                            <option value="🎉">🎉 Evento</option>
-                            <option value="⚠️">⚠️ Importante</option>
-                            <option value="💡">💡 Informazione</option>
-                            <option value="🏆">🏆 Successo</option>
-                            <option value="📅">📅 Scadenza</option>
-                            <option value="🚨">🚨 Urgente</option>
+                        <label class="block text-sm font-bold text-primary mb-2">Categoria</label>
+                        <select id="newsCategoria">
+                            <option value="GENERALE">📋 Generale</option>
+                            <option value="SINDACALE">🏛️ Sindacale</option>
+                            <option value="LEGALE">⚖️ Legale</option>
+                            <option value="EVENTI">🎉 Eventi</option>
+                            <option value="FORMAZIONE">📚 Formazione</option>
+                            <option value="CONVENZIONI">🤝 Convenzioni</option>
                         </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-primary mb-2">Sottotitolo</label>
+                    <input type="text" id="newsSottotitolo" placeholder="Sottotitolo opzionale..." maxlength="300">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-primary mb-2">Contenuto *</label>
+                    <textarea id="newsContenuto" placeholder="Scrivi il contenuto della news..." required rows="6"></textarea>
+                    <div class="text-xs text-gray-500 mt-1">
+                        <span id="charCount">0</span> caratteri
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-bold text-primary mb-2">Priorità</label>
-                        <select id="newsPriorita">
-                            <option value="normale">Normale</option>
-                            <option value="alta">Alta</option>
-                            <option value="urgente">Urgente</option>
-                        </select>
+                        <label class="block text-sm font-bold text-primary mb-2">Data Pubblicazione</label>
+                        <input type="datetime-local" id="newsDataPubblicazione">
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-primary mb-2">Data Pubblicazione</label>
-                        <input type="date" id="newsDataPubblicazione">
+                        <label class="block text-sm font-bold text-primary mb-2">Data Scadenza (opzionale)</label>
+                        <input type="datetime-local" id="newsDataScadenza">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-bold text-primary mb-2">Contenuto *</label>
-                    <textarea id="newsContenuto" placeholder="Scrivi il contenuto della notizia..." required rows="6"></textarea>
-                    <div class="text-xs text-gray-500 mt-1">
-                        <span id="charCount">0</span> caratteri
-                    </div>
+                    <label class="block text-sm font-bold text-primary mb-2">Tags (separati da virgola)</label>
+                    <input type="text" id="newsTags" placeholder="tag1, tag2, tag3...">
+                    <div id="tagsPreview" class="mt-2 flex flex-wrap gap-2"></div>
                 </div>
 
                 <div>
@@ -467,17 +528,21 @@
                     <div id="imagePreview"></div>
                 </div>
 
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-6">
                     <label class="flex items-center">
                         <input type="checkbox" id="newsPubblicata" class="mr-2">
                         <span class="font-semibold">Pubblica immediatamente</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="newsInEvidenza" class="mr-2">
+                        <span class="font-semibold">Metti in evidenza</span>
                     </label>
                 </div>
 
                 <div class="flex gap-4 pt-4 border-t">
                     <button type="submit" class="flex-1 btn-success" id="saveNewsBtn">
                         <span class="mr-2">💾</span>
-                        Salva Notizia
+                        Salva News
                     </button>
                     <button type="button" id="cancelBtn" class="btn-secondary">
                         <span class="mr-2">❌</span>
@@ -497,12 +562,12 @@
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
         
         const supabase = createClient(
-            'https://lycrgzptkdkksukcwrld.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5Y3JnenB0a2Rra3N1a2N3cmxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3ODQyMzAsImV4cCI6MjA2ODM2MDIzMH0.ZJGOXAMC3hKKrnwXHKEa2_Eh7ZpOKeLYvYlYneBiEfk'
+            'https://pvzdilkozpspsnepedqc.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk'
         );
 
         let currentUser = null;
-        let currentUserRoles = [];
+        let currentUserRole = 'USER';
         let allNews = [];
         let editingNewsId = null;
         let uploadedImageUrl = null;
@@ -512,7 +577,7 @@
             try {
                 const { data: { user } } = await supabase.auth.getUser();
                 if (!user) {
-                    window.location.href = '../login.html';
+                    window.location.href = 'auth.html';
                     return;
                 }
 
@@ -522,7 +587,9 @@
                 setupEventListeners();
                 
                 // Set today's date as default
-                document.getElementById('newsDataPubblicazione').value = new Date().toISOString().split('T')[0];
+                const now = new Date();
+                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                document.getElementById('newsDataPubblicazione').value = now.toISOString().slice(0, 16);
 
             } catch (error) {
                 console.error('Errore inizializzazione:', error);
@@ -533,17 +600,17 @@
         async function loadUserProfile() {
             try {
                 const { data: profile } = await supabase
-                    .from('profiles')
-                    .select('nome, email, ruoli')
-                    .eq('id', currentUser.id)
+                    .from('user_profiles')  // ✅ Tabella corretta
+                    .select('role')
+                    .eq('user_id', currentUser.id)
                     .single();
 
                 if (!profile) throw new Error('Profilo non trovato');
 
-                currentUserRoles = profile.ruoli || ['USER'];
+                currentUserRole = profile.role || 'USER';
 
                 // Check if user has required permissions (DIRIGENTE or ADMIN)
-                if (!currentUserRoles.includes('DIRIGENTE') && !currentUserRoles.includes('ADMIN')) {
+                if (currentUserRole !== 'DIRIGENTE' && currentUserRole !== 'ADMIN') {
                     window.location.href = 'home.html';
                     return;
                 }
@@ -560,33 +627,35 @@
             refreshBtn.disabled = true;
 
             try {
-                // Load from 'notizie' table without foreign key relationship
+                // Load from 'news' table ✅ Tabella corretta
                 let { data: news, error } = await supabase
-                    .from('notizie')
+                    .from('news')
                     .select('*')
-                    .order('id', { ascending: false });
+                    .order('created_at', { ascending: false });
 
                 if (error) throw error;
 
                 // Filter bozze for USER role - only show published news to regular users
-                if (currentUserRoles.includes('USER') && !currentUserRoles.includes('DIRIGENTE') && !currentUserRoles.includes('ADMIN')) {
+                if (currentUserRole === 'USER') {
                     news = news.filter(n => n.pubblicata === true);
                 }
 
-                // Get author names separately if needed
+                // Get author names separately
                 if (news && news.length > 0) {
                     const authorIds = [...new Set(news.map(n => n.autore_id).filter(Boolean))];
                     
                     if (authorIds.length > 0) {
                         const { data: authors } = await supabase
-                            .from('profiles')
-                            .select('id, nome')
-                            .in('id', authorIds);
+                            .from('user_profiles')  // ✅ Tabella corretta
+                            .select('user_id, full_name, nome, cognome')
+                            .in('user_id', authorIds);
 
                         // Add author names to news
                         news.forEach(newsItem => {
-                            const author = authors?.find(a => a.id === newsItem.autore_id);
-                            newsItem.author_name = author?.nome || 'Autore sconosciuto';
+                            const author = authors?.find(a => a.user_id === newsItem.autore_id);
+                            newsItem.author_name = author?.full_name || 
+                                                  (author ? `${author.nome} ${author.cognome}`.trim() : null) || 
+                                                  'Autore sconosciuto';
                         });
                     }
                 }
@@ -600,8 +669,8 @@
                 }, 2000);
 
             } catch (error) {
-                console.error('Errore caricamento notizie:', error);
-                showNotification('❌ Errore nel caricamento delle notizie', 'error');
+                console.error('Errore caricamento news:', error);
+                showNotification('❌ Errore nel caricamento delle news', 'error');
                 refreshBtn.innerHTML = '<span class="mr-2">⚠️</span>Errore';
             } finally {
                 refreshBtn.disabled = false;
@@ -615,11 +684,11 @@
                 container.innerHTML = `
                     <div class="text-center py-12">
                         <div class="text-6xl mb-4">📰</div>
-                        <h3 class="text-xl font-bold text-primary mb-2">Nessuna notizia trovata</h3>
-                        <p class="text-gray-600 mb-6">Inizia creando la tua prima notizia</p>
+                        <h3 class="text-xl font-bold text-primary mb-2">Nessuna news trovata</h3>
+                        <p class="text-gray-600 mb-6">Inizia creando la tua prima news</p>
                         <button id="createFirstNewsBtn" class="btn-aurora">
                             <span class="mr-2">➕</span>
-                            Crea Prima Notizia
+                            Crea Prima News
                         </button>
                     </div>
                 `;
@@ -634,7 +703,7 @@
                 container.innerHTML = `
                     <div class="text-center py-8">
                         <div class="text-4xl mb-4">🔍</div>
-                        <p class="text-gray-600 font-semibold">Nessuna notizia corrisponde ai filtri selezionati</p>
+                        <p class="text-gray-600 font-semibold">Nessuna news corrisponde ai filtri selezionati</p>
                     </div>
                 `;
                 return;
@@ -643,35 +712,46 @@
             container.innerHTML = filteredNews.map(news => {
                 const authorName = news.author_name || 'Autore sconosciuto';
                 const isOwner = news.autore_id === currentUser.id;
-                const canEdit = isOwner || currentUserRoles.includes('ADMIN');
+                const canEdit = isOwner || currentUserRole === 'ADMIN';
                 
                 return `
-                    <div class="news-card ${news.pubblicata ? '' : 'draft'} ${news.priorita === 'urgente' ? 'urgent' : ''}">
+                    <div class="news-card ${news.pubblicata ? '' : 'draft'} ${news.in_evidenza ? 'featured' : ''}">
                         <div class="flex justify-between items-start mb-4">
                             <div class="flex items-start gap-3 flex-1">
-                                <div class="text-2xl flex-shrink-0">${news.icona || '📰'}</div>
+                                ${news.immagine_url ? `
+                                    <img src="${news.immagine_url}" alt="Immagine news" class="w-20 h-20 object-cover rounded-lg flex-shrink-0">
+                                ` : `
+                                    <div class="w-20 h-20 bg-gradient-to-br from-aurora to-cyan rounded-lg flex items-center justify-center text-2xl text-white flex-shrink-0">📰</div>
+                                `}
+                                
                                 <div class="flex-1">
-                                    <h4 class="font-bold text-primary text-lg mb-2">${news.titolo}</h4>
-                                    <p class="text-gray-700 mb-3 leading-relaxed">${news.contenuto.slice(0, 200)}${news.contenuto.length > 200 ? '...' : ''}</p>
+                                    <h4 class="font-bold text-primary text-lg mb-1">${news.titolo}</h4>
+                                    ${news.sottotitolo ? `<p class="text-gray-600 text-sm mb-2 italic">${news.sottotitolo}</p>` : ''}
+                                    <p class="text-gray-700 mb-3 leading-relaxed">${news.contenuto.slice(0, 150)}${news.contenuto.length > 150 ? '...' : ''}</p>
                                     
                                     <div class="flex flex-wrap items-center gap-2 mb-3">
-                                        <span class="priority-badge ${news.priorita}">${getPriorityIcon(news.priorita)} ${news.priorita.toUpperCase()}</span>
+                                        <span class="category-badge ${news.categoria?.toLowerCase() || 'generale'}">${getCategoryIcon(news.categoria)} ${news.categoria || 'GENERALE'}</span>
+                                        
                                         <span class="status-badge ${news.pubblicata ? 'published' : 'draft'}">
                                             ${news.pubblicata ? '✅ Pubblicata' : '📝 Bozza'}
                                         </span>
-                                        <span class="text-xs text-gray-500">
-                                            📅 ${new Date(news.data_pubblicazione).toLocaleDateString('it-IT')}
-                                        </span>
-                                        <span class="text-xs text-gray-500">
-                                            👤 ${authorName}
-                                        </span>
+                                        
+                                        ${news.in_evidenza ? '<span class="status-badge featured">⭐ In Evidenza</span>' : ''}
+                                        
+                                        ${news.visualizzazioni ? `<span class="text-xs text-gray-500">👁️ ${news.visualizzazioni} visualizzazioni</span>` : ''}
                                     </div>
 
-                                    ${news.immagine_url ? `
-                                        <div class="mb-3">
-                                            <img src="${news.immagine_url}" alt="Immagine notizia" class="image-preview">
+                                    ${news.tags && news.tags.length > 0 ? `
+                                        <div class="flex flex-wrap gap-1 mb-3">
+                                            ${news.tags.map(tag => `<span class="bg-gray-200 text-gray-700 px-2 py-1 rounded-lg text-xs">#${tag}</span>`).join('')}
                                         </div>
                                     ` : ''}
+                                    
+                                    <div class="flex items-center gap-4 text-sm text-gray-500">
+                                        <span>📅 ${new Date(news.data_pubblicazione || news.created_at).toLocaleDateString('it-IT')}</span>
+                                        ${news.data_scadenza ? `<span>⏰ Scade: ${new Date(news.data_scadenza).toLocaleDateString('it-IT')}</span>` : ''}
+                                        <span>👤 ${authorName}</span>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -690,6 +770,17 @@
                                         <button class="unpublish-news-btn btn-secondary text-sm px-3 py-2" data-id="${news.id}">
                                             <span class="mr-1">📝</span>
                                             Bozza
+                                        </button>
+                                    `}
+                                    ${!news.in_evidenza ? `
+                                        <button class="feature-news-btn btn-aurora text-sm px-3 py-2" data-id="${news.id}">
+                                            <span class="mr-1">⭐</span>
+                                            Evidenza
+                                        </button>
+                                    ` : `
+                                        <button class="unfeature-news-btn btn-secondary text-sm px-3 py-2" data-id="${news.id}">
+                                            <span class="mr-1">⭐</span>
+                                            Rimuovi
                                         </button>
                                     `}
                                 </div>
@@ -727,36 +818,56 @@
                     unpublishNews(newsId);
                 });
             });
+
+            // Feature buttons
+            document.querySelectorAll('.feature-news-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const newsId = e.target.closest('.feature-news-btn').dataset.id;
+                    featureNews(newsId);
+                });
+            });
+
+            // Unfeature buttons
+            document.querySelectorAll('.unfeature-news-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const newsId = e.target.closest('.unfeature-news-btn').dataset.id;
+                    unfeatureNews(newsId);
+                });
+            });
         }
 
         function getFilteredNews() {
             const statusFilter = document.getElementById('filterStatus').value;
-            const priorityFilter = document.getElementById('filterPriority').value;
+            const categoryFilter = document.getElementById('filterCategory').value;
             
             return allNews.filter(news => {
                 const statusMatch = statusFilter === 'all' || 
                     (statusFilter === 'published' && news.pubblicata) ||
-                    (statusFilter === 'draft' && !news.pubblicata);
+                    (statusFilter === 'draft' && !news.pubblicata) ||
+                    (statusFilter === 'featured' && news.in_evidenza);
                 
-                const priorityMatch = priorityFilter === 'all' || news.priorita === priorityFilter;
+                const categoryMatch = categoryFilter === 'all' || news.categoria === categoryFilter;
                 
-                return statusMatch && priorityMatch;
+                return statusMatch && categoryMatch;
             });
         }
 
-        function getPriorityIcon(priority) {
+        function getCategoryIcon(category) {
             const icons = {
-                'normale': '📋',
-                'alta': '🔶',
-                'urgente': '🚨'
+                'GENERALE': '📋',
+                'SINDACALE': '🏛️',
+                'LEGALE': '⚖️',
+                'EVENTI': '🎉',
+                'FORMAZIONE': '📚',
+                'CONVENZIONI': '🤝'
             };
-            return icons[priority] || '📋';
+            return icons[category] || '📋';
         }
 
         // Modal functions
         function openNewsModal() {
             resetForm();
-            document.getElementById('modalTitle').textContent = '📰 Nuova Notizia';
+            document.getElementById('modalTitle').textContent = '📰 Nuova News';
             document.getElementById('deleteNewsBtn').style.display = 'none';
             document.getElementById('newsModal').classList.add('active');
         }
@@ -772,8 +883,12 @@
             document.getElementById('newsForm').reset();
             document.getElementById('newsId').value = '';
             document.getElementById('imagePreview').innerHTML = '';
+            document.getElementById('tagsPreview').innerHTML = '';
             document.getElementById('charCount').textContent = '0';
-            document.getElementById('newsDataPubblicazione').value = new Date().toISOString().split('T')[0];
+            
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('newsDataPubblicazione').value = now.toISOString().slice(0, 16);
         }
 
         function editNews(newsId) {
@@ -782,16 +897,35 @@
 
             editingNewsId = newsId;
             
-            document.getElementById('modalTitle').textContent = '✏️ Modifica Notizia';
+            document.getElementById('modalTitle').textContent = '✏️ Modifica News';
             document.getElementById('deleteNewsBtn').style.display = 'inline-flex';
             
             document.getElementById('newsId').value = news.id;
-            document.getElementById('newsTitolo').value = news.titolo;
-            document.getElementById('newsIcona').value = news.icona || '📢';
-            document.getElementById('newsPriorita').value = news.priorita;
-            document.getElementById('newsDataPubblicazione').value = news.data_pubblicazione;
-            document.getElementById('newsContenuto').value = news.contenuto;
-            document.getElementById('newsPubblicata').checked = news.pubblicata;
+            document.getElementById('newsTitolo').value = news.titolo || '';
+            document.getElementById('newsSottotitolo').value = news.sottotitolo || '';
+            document.getElementById('newsCategoria').value = news.categoria || 'GENERALE';
+            document.getElementById('newsContenuto').value = news.contenuto || '';
+            document.getElementById('newsPubblicata').checked = news.pubblicata || false;
+            document.getElementById('newsInEvidenza').checked = news.in_evidenza || false;
+            
+            // Handle dates
+            if (news.data_pubblicazione) {
+                const pubDate = new Date(news.data_pubblicazione);
+                pubDate.setMinutes(pubDate.getMinutes() - pubDate.getTimezoneOffset());
+                document.getElementById('newsDataPubblicazione').value = pubDate.toISOString().slice(0, 16);
+            }
+            
+            if (news.data_scadenza) {
+                const scadDate = new Date(news.data_scadenza);
+                scadDate.setMinutes(scadDate.getMinutes() - scadDate.getTimezoneOffset());
+                document.getElementById('newsDataScadenza').value = scadDate.toISOString().slice(0, 16);
+            }
+            
+            // Handle tags
+            if (news.tags && news.tags.length > 0) {
+                document.getElementById('newsTags').value = news.tags.join(', ');
+                updateTagsPreview();
+            }
             
             updateCharCount();
             
@@ -813,14 +947,21 @@
             saveBtn.disabled = true;
 
             try {
+                const tagsValue = document.getElementById('newsTags').value.trim();
+                const tags = tagsValue ? tagsValue.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
+                
                 const formData = {
                     titolo: document.getElementById('newsTitolo').value.trim(),
+                    sottotitolo: document.getElementById('newsSottotitolo').value.trim() || null,
                     contenuto: document.getElementById('newsContenuto').value.trim(),
-                    icona: document.getElementById('newsIcona').value,
-                    priorita: document.getElementById('newsPriorita').value,
-                    data_pubblicazione: document.getElementById('newsDataPubblicazione').value,
+                    categoria: document.getElementById('newsCategoria').value,
+                    data_pubblicazione: document.getElementById('newsDataPubblicazione').value || null,
+                    data_scadenza: document.getElementById('newsDataScadenza').value || null,
                     pubblicata: document.getElementById('newsPubblicata').checked,
-                    immagine_url: uploadedImageUrl
+                    in_evidenza: document.getElementById('newsInEvidenza').checked,
+                    immagine_url: uploadedImageUrl,
+                    tags: tags,
+                    updated_at: new Date().toISOString()
                 };
 
                 if (!formData.titolo || !formData.contenuto) {
@@ -831,37 +972,39 @@
                 if (editingNewsId) {
                     // Update existing news
                     const { data, error } = await supabase
-                        .from('notizie')
+                        .from('news')
                         .update(formData)
                         .eq('id', editingNewsId)
                         .select();
                     
                     if (error) throw error;
                     result = data;
-                    showNotification('✅ Notizia aggiornata con successo!', 'success');
+                    showNotification('✅ News aggiornata con successo!', 'success');
                 } else {
                     // Create new news
                     const { data, error } = await supabase
-                        .from('notizie')
+                        .from('news')
                         .insert({
                             ...formData,
-                            autore_id: currentUser.id
+                            autore_id: currentUser.id,
+                            visualizzazioni: 0,
+                            created_at: new Date().toISOString()
                         })
                         .select();
 
                     if (error) throw error;
                     result = data;
-                    showNotification('✅ Notizia creata con successo!', 'success');
+                    showNotification('✅ News creata con successo!', 'success');
                 }
 
                 closeNewsModal();
                 await loadNews();
 
             } catch (error) {
-                console.error('Errore salvataggio notizia:', error);
+                console.error('Errore salvataggio news:', error);
                 showNotification(`❌ ${error.message}`, 'error');
             } finally {
-                saveBtn.innerHTML = '<span class="mr-2">💾</span>Salva Notizia';
+                saveBtn.innerHTML = '<span class="mr-2">💾</span>Salva News';
                 saveBtn.disabled = false;
             }
         }
@@ -869,31 +1012,29 @@
         async function deleteNews() {
             if (!editingNewsId) return;
             
-            // Doppia conferma per eliminazione definitiva
-            if (!confirm('⚠️ ATTENZIONE: Stai per eliminare definitivamente questa notizia.\n\nQuesta azione è IRREVERSIBILE e rimuoverà completamente il record dal database.\n\nSei sicuro di voler procedere?')) return;
+            if (!confirm('⚠️ ATTENZIONE: Stai per eliminare definitivamente questa news.\n\nQuesta azione è IRREVERSIBILE.\n\nSei sicuro di voler procedere?')) return;
             
-            if (!confirm('🗑️ CONFERMA FINALE: Eliminare definitivamente la notizia?\n\nNON sarà più possibile recuperarla.')) return;
+            if (!confirm('🗑️ CONFERMA FINALE: Eliminare definitivamente la news?')) return;
 
             const deleteBtn = document.getElementById('deleteNewsBtn');
             deleteBtn.innerHTML = '<div class="spinner"></div>Eliminando...';
             deleteBtn.disabled = true;
 
             try {
-                // Elimina definitivamente il record dal database
                 const { error } = await supabase
-                    .from('notizie')
+                    .from('news')
                     .delete()
                     .eq('id', editingNewsId);
 
                 if (error) throw error;
 
-                showNotification('✅ Notizia eliminata definitivamente dal database!', 'success');
+                showNotification('✅ News eliminata definitivamente!', 'success');
                 closeNewsModal();
-                await loadNews(); // Ricarica la lista
+                await loadNews();
 
             } catch (error) {
-                console.error('Errore eliminazione notizia:', error);
-                showNotification('❌ Errore nell\'eliminazione della notizia', 'error');
+                console.error('Errore eliminazione news:', error);
+                showNotification('❌ Errore nell\'eliminazione della news', 'error');
             } finally {
                 deleteBtn.innerHTML = '<span class="mr-2">🗑️</span>Elimina';
                 deleteBtn.disabled = false;
@@ -903,17 +1044,21 @@
         async function publishNews(newsId) {
             try {
                 const { error } = await supabase
-                    .from('notizie')
-                    .update({ pubblicata: true })
+                    .from('news')
+                    .update({ 
+                        pubblicata: true,
+                        data_pubblicazione: new Date().toISOString(),
+                        updated_at: new Date().toISOString()
+                    })
                     .eq('id', newsId);
 
                 if (error) throw error;
 
-                showNotification('✅ Notizia pubblicata!', 'success');
+                showNotification('✅ News pubblicata!', 'success');
                 await loadNews();
 
             } catch (error) {
-                console.error('Errore pubblicazione notizia:', error);
+                console.error('Errore pubblicazione news:', error);
                 showNotification('❌ Errore nella pubblicazione', 'error');
             }
         }
@@ -921,18 +1066,63 @@
         async function unpublishNews(newsId) {
             try {
                 const { error } = await supabase
-                    .from('notizie')
-                    .update({ pubblicata: false })
+                    .from('news')
+                    .update({ 
+                        pubblicata: false,
+                        updated_at: new Date().toISOString()
+                    })
                     .eq('id', newsId);
 
                 if (error) throw error;
 
-                showNotification('✅ Notizia trasformata in bozza!', 'success');
+                showNotification('✅ News trasformata in bozza!', 'success');
                 await loadNews();
 
             } catch (error) {
                 console.error('Errore modifica pubblicazione:', error);
                 showNotification('❌ Errore nella modifica', 'error');
+            }
+        }
+
+        async function featureNews(newsId) {
+            try {
+                const { error } = await supabase
+                    .from('news')
+                    .update({ 
+                        in_evidenza: true,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', newsId);
+
+                if (error) throw error;
+
+                showNotification('✅ News messa in evidenza!', 'success');
+                await loadNews();
+
+            } catch (error) {
+                console.error('Errore messa in evidenza:', error);
+                showNotification('❌ Errore nella messa in evidenza', 'error');
+            }
+        }
+
+        async function unfeatureNews(newsId) {
+            try {
+                const { error } = await supabase
+                    .from('news')
+                    .update({ 
+                        in_evidenza: false,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', newsId);
+
+                if (error) throw error;
+
+                showNotification('✅ News rimossa dall\'evidenza!', 'success');
+                await loadNews();
+
+            } catch (error) {
+                console.error('Errore rimozione evidenza:', error);
+                showNotification('❌ Errore nella rimozione', 'error');
             }
         }
 
@@ -942,7 +1132,7 @@
             try {
                 const fileExt = file.name.split('.').pop();
                 const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-                const filePath = `notizie/${fileName}`;
+                const filePath = `news/${fileName}`;
 
                 const { error: uploadError } = await supabase.storage
                     .from('images')
@@ -1003,6 +1193,32 @@
             document.getElementById('charCount').textContent = content.length;
         }
 
+        function updateTagsPreview() {
+            const tagsInput = document.getElementById('newsTags').value;
+            const tagsPreview = document.getElementById('tagsPreview');
+            
+            if (!tagsInput.trim()) {
+                tagsPreview.innerHTML = '';
+                return;
+            }
+            
+            const tags = tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag);
+            tagsPreview.innerHTML = tags.map(tag => `
+                <span class="tag-item">
+                    #${tag}
+                    <span class="tag-remove" onclick="removeTag('${tag}')">&times;</span>
+                </span>
+            `).join('');
+        }
+
+        function removeTag(tagToRemove) {
+            const tagsInput = document.getElementById('newsTags');
+            const currentTags = tagsInput.value.split(',').map(tag => tag.trim()).filter(tag => tag);
+            const newTags = currentTags.filter(tag => tag !== tagToRemove);
+            tagsInput.value = newTags.join(', ');
+            updateTagsPreview();
+        }
+
         function filterNews() {
             displayNews();
         }
@@ -1031,9 +1247,12 @@
             // Text area character count
             document.getElementById('newsContenuto').addEventListener('input', updateCharCount);
             
+            // Tags preview
+            document.getElementById('newsTags').addEventListener('input', updateTagsPreview);
+            
             // Filters
             document.getElementById('filterStatus').addEventListener('change', filterNews);
-            document.getElementById('filterPriority').addEventListener('change', filterNews);
+            document.getElementById('filterCategory').addEventListener('change', filterNews);
             
             // Close modal on click outside
             document.addEventListener('click', function(e) {
@@ -1070,6 +1289,9 @@
                 setTimeout(() => notification.remove(), 500);
             }, 4000);
         }
+
+        // Expose functions globally
+        window.removeTag = removeTag;
 
         // Initialize app
         init();
