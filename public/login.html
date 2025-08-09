@@ -89,6 +89,20 @@
             border-color: rgba(233, 69, 96, 0.8);
         }
 
+        .btn-secondary {
+            background: var(--gradient-cyber);
+            color: white;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 700;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.4);
+            border-color: rgba(0, 212, 255, 0.8);
+        }
+
         .input-field {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(16px);
@@ -132,11 +146,93 @@
             margin-top: 8px;
             font-size: 14px;
         }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            margin: 0 8px;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background: var(--gradient-magic);
+            color: white;
+            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.3);
+        }
+
+        .step.completed {
+            background: #22c55e;
+            color: white;
+        }
+
+        .step.inactive {
+            background: rgba(255, 255, 255, 0.3);
+            color: #6b7280;
+        }
+
+        .form-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            color: #1a1a2e;
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .register-container {
+            max-height: 80vh;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .register-container::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .register-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+
+        .register-container::-webkit-scrollbar-thumb {
+            background: rgba(233, 69, 96, 0.5);
+            border-radius: 2px;
+        }
+
+        .field-required {
+            color: #ef4444;
+        }
+
+        .field-optional {
+            color: #6b7280;
+            font-size: 0.75rem;
+        }
     </style>
 </head>
 
 <body class="flex items-center justify-center min-h-screen p-4">
-    <div class="w-full max-w-md">
+    <div class="w-full max-w-lg">
         <!-- Logo e Titolo -->
         <div class="text-center mb-8">
             <h1 class="text-ultra-visible text-4xl font-black mb-2">MyApp</h1>
@@ -173,47 +269,199 @@
             </form>
 
             <!-- Register Form -->
-            <form id="registerForm" class="space-y-6 hidden">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-textDark font-semibold mb-2">Nome</label>
-                        <input type="text" id="registerNome" class="input-field" required>
-                    </div>
-                    <div>
-                        <label class="block text-textDark font-semibold mb-2">Cognome</label>
-                        <input type="text" id="registerCognome" class="input-field" required>
-                    </div>
+            <div id="registerFormContainer" class="hidden">
+                <!-- Step Indicator -->
+                <div class="step-indicator">
+                    <div class="step active" id="step1">1</div>
+                    <div class="step inactive" id="step2">2</div>
+                    <div class="step inactive" id="step3">3</div>
                 </div>
-                <div>
-                    <label class="block text-textDark font-semibold mb-2">Email</label>
-                    <input type="email" id="registerEmail" class="input-field" required>
+
+                <div class="register-container">
+                    <form id="registerForm" class="space-y-6">
+                        <!-- Step 1: Dati Personali -->
+                        <div id="step1Content" class="form-step">
+                            <div class="form-section">
+                                <h3 class="section-title">
+                                    👤 Dati Personali
+                                </h3>
+                                
+                                <div class="space-y-4">
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-textDark font-semibold mb-2">
+                                                Nome <span class="field-required">*</span>
+                                            </label>
+                                            <input type="text" id="registerNome" class="input-field" required>
+                                        </div>
+                                        <div>
+                                            <label class="block text-textDark font-semibold mb-2">
+                                                Cognome <span class="field-required">*</span>
+                                            </label>
+                                            <input type="text" id="registerCognome" class="input-field" required>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-textDark font-semibold mb-2">
+                                            Email <span class="field-required">*</span>
+                                        </label>
+                                        <input type="email" id="registerEmail" class="input-field" required>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-textDark font-semibold mb-2">
+                                            Telefono <span class="field-optional">(opzionale)</span>
+                                        </label>
+                                        <input type="tel" id="registerTelefono" class="input-field" placeholder="+39 123 456 7890">
+                                    </div>
+
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-textDark font-semibold mb-2">
+                                                Data di Nascita <span class="field-required">*</span>
+                                            </label>
+                                            <input type="date" id="registerDataNascita" class="input-field" required>
+                                        </div>
+                                        <div>
+                                            <label class="block text-textDark font-semibold mb-2">
+                                                Luogo di Nascita <span class="field-required">*</span>
+                                            </label>
+                                            <input type="text" id="registerLuogoNascita" class="input-field" placeholder="Roma" required>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-textDark font-semibold mb-2">
+                                            Codice Fiscale <span class="field-optional">(opzionale)</span>
+                                        </label>
+                                        <input type="text" id="registerCodiceFiscale" class="input-field" placeholder="RSSMRA85M01H501Z" maxlength="16" style="text-transform: uppercase;">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-end">
+                                <button type="button" class="btn-aurora py-3 px-8 rounded-xl" onclick="nextStep(2)">
+                                    Avanti →
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Indirizzo -->
+                        <div id="step2Content" class="form-step hidden">
+                            <div class="form-section">
+                                <h3 class="section-title">
+                                    🏠 Informazioni di Residenza
+                                </h3>
+                                
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-textDark font-semibold mb-2">
+                                            Indirizzo <span class="field-optional">(opzionale)</span>
+                                        </label>
+                                        <input type="text" id="registerIndirizzo" class="input-field" placeholder="Via Roma, 123">
+                                    </div>
+
+                                    <div class="grid grid-cols-3 gap-4">
+                                        <div class="col-span-2">
+                                            <label class="block text-textDark font-semibold mb-2">
+                                                Città <span class="field-optional">(opzionale)</span>
+                                            </label>
+                                            <input type="text" id="registerCitta" class="input-field" placeholder="Roma">
+                                        </div>
+                                        <div>
+                                            <label class="block text-textDark font-semibold mb-2">
+                                                CAP <span class="field-optional">(opzionale)</span>
+                                            </label>
+                                            <input type="text" id="registerCap" class="input-field" placeholder="00100" maxlength="5">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-textDark font-semibold mb-2">
+                                            Provincia <span class="field-optional">(opzionale)</span>
+                                        </label>
+                                        <input type="text" id="registerProvincia" class="input-field" placeholder="RM" maxlength="2" style="text-transform: uppercase;">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-textDark font-semibold mb-2">
+                                            Bio / Descrizione <span class="field-optional">(opzionale)</span>
+                                        </label>
+                                        <textarea id="registerBio" class="input-field h-24 resize-none" placeholder="Racconta qualcosa di te..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between">
+                                <button type="button" class="btn-secondary py-3 px-8 rounded-xl" onclick="previousStep(1)">
+                                    ← Indietro
+                                </button>
+                                <button type="button" class="btn-aurora py-3 px-8 rounded-xl" onclick="nextStep(3)">
+                                    Avanti →
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Password e Conferma -->
+                        <div id="step3Content" class="form-step hidden">
+                            <div class="form-section">
+                                <h3 class="section-title">
+                                    🔐 Sicurezza Account
+                                </h3>
+                                
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-textDark font-semibold mb-2">
+                                            Password <span class="field-required">*</span>
+                                        </label>
+                                        <div class="relative">
+                                            <input type="password" id="registerPassword" class="input-field pr-12" required>
+                                            <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" onclick="togglePassword('registerPassword')">👁️</button>
+                                        </div>
+                                        <div class="text-xs text-gray-600 mt-1">Minimo 8 caratteri, almeno una maiuscola e un numero</div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-textDark font-semibold mb-2">
+                                            Conferma Password <span class="field-required">*</span>
+                                        </label>
+                                        <div class="relative">
+                                            <input type="password" id="registerPasswordConfirm" class="input-field pr-12" required>
+                                            <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" onclick="togglePassword('registerPasswordConfirm')">👁️</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                        <h4 class="font-semibold text-blue-800 mb-2">📋 Riepilogo Dati</h4>
+                                        <div id="dataSummary" class="text-sm text-blue-700 space-y-1">
+                                            <!-- I dati verranno popolati dinamicamente -->
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center space-x-2">
+                                        <input type="checkbox" id="termsAccept" class="rounded border-gray-300" required>
+                                        <label for="termsAccept" class="text-sm text-textDark">
+                                            Accetto i <a href="#" class="text-aurora font-semibold">Termini e Condizioni</a> e la <a href="#" class="text-aurora font-semibold">Privacy Policy</a>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between">
+                                <button type="button" class="btn-secondary py-3 px-8 rounded-xl" onclick="previousStep(2)">
+                                    ← Indietro
+                                </button>
+                                <button type="submit" class="btn-aurora py-3 px-8 rounded-xl">
+                                    🚀 Registrati
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="registerMessage"></div>
+                    </form>
                 </div>
-                <div>
-                    <label class="block text-textDark font-semibold mb-2">Telefono</label>
-                    <input type="tel" id="registerTelefono" class="input-field">
-                </div>
-                <div>
-                    <label class="block text-textDark font-semibold mb-2">Data di Nascita</label>
-                    <input type="date" id="registerDataNascita" class="input-field" required>
-                </div>
-                <div>
-                    <label class="block text-textDark font-semibold mb-2">Password</label>
-                    <div class="relative">
-                        <input type="password" id="registerPassword" class="input-field pr-12" required>
-                        <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" onclick="togglePassword('registerPassword')">👁️</button>
-                    </div>
-                    <div class="text-xs text-gray-600 mt-1">Minimo 6 caratteri</div>
-                </div>
-                <div>
-                    <label class="block text-textDark font-semibold mb-2">Conferma Password</label>
-                    <div class="relative">
-                        <input type="password" id="registerPasswordConfirm" class="input-field pr-12" required>
-                        <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" onclick="togglePassword('registerPasswordConfirm')">👁️</button>
-                    </div>
-                </div>
-                <div id="registerMessage"></div>
-                <button type="submit" class="btn-aurora w-full py-4 rounded-xl text-lg font-bold">Registrati</button>
-            </form>
+            </div>
         </div>
 
         <!-- Link alla home -->
@@ -226,48 +474,198 @@
         const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
         let supabaseClient;
+        let currentStep = 1;
 
         document.addEventListener('DOMContentLoaded', async () => {
-            console.log("Pagina caricata, inizializzo interfaccia...");
-            setupTabs(); // sempre attivata
-            setupForms();
-
             if (typeof supabase === 'undefined') {
-                console.error("Supabase non caricato, i tab funzionano ma il login non potrà essere eseguito");
+                showMessage('loginMessage', 'Errore: Impossibile caricare Supabase', 'error');
                 return;
             }
             supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            console.log("Supabase inizializzato");
+            setupTabs();
+            setupForms();
+            setupValidation();
             await checkExistingSession();
         });
 
         function setupTabs() {
-            console.log("Attivazione tab");
             const loginTab = document.getElementById('loginTab');
             const registerTab = document.getElementById('registerTab');
             const loginForm = document.getElementById('loginForm');
-            const registerForm = document.getElementById('registerForm');
+            const registerFormContainer = document.getElementById('registerFormContainer');
+
             loginTab.addEventListener('click', () => {
-                console.log("Clic su tab Accedi");
                 loginTab.className = 'flex-1 py-3 px-4 rounded-lg font-semibold transition-all bg-white text-primary shadow-sm';
                 registerTab.className = 'flex-1 py-3 px-4 rounded-lg font-semibold transition-all text-gray-600';
                 loginForm.classList.remove('hidden');
-                registerForm.classList.add('hidden');
+                registerFormContainer.classList.add('hidden');
                 clearMessages();
             });
+
             registerTab.addEventListener('click', () => {
-                console.log("Clic su tab Registrati");
                 registerTab.className = 'flex-1 py-3 px-4 rounded-lg font-semibold transition-all bg-white text-primary shadow-sm';
                 loginTab.className = 'flex-1 py-3 px-4 rounded-lg font-semibold transition-all text-gray-600';
-                registerForm.classList.remove('hidden');
+                registerFormContainer.classList.remove('hidden');
                 loginForm.classList.add('hidden');
                 clearMessages();
+                resetRegistrationForm();
             });
         }
 
         function setupForms() {
             document.getElementById('loginForm').addEventListener('submit', handleLogin);
             document.getElementById('registerForm').addEventListener('submit', handleRegister);
+        }
+
+        function setupValidation() {
+            // Validazione in tempo reale per codice fiscale
+            document.getElementById('registerCodiceFiscale').addEventListener('input', function(e) {
+                e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            });
+
+            // Validazione CAP - solo numeri
+            document.getElementById('registerCap').addEventListener('input', function(e) {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            });
+
+            // Validazione Provincia - solo lettere maiuscole
+            document.getElementById('registerProvincia').addEventListener('input', function(e) {
+                e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
+            });
+
+            // Validazione telefono - formato italiano
+            document.getElementById('registerTelefono').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/[^\d+\s]/g, '');
+                if (value && !value.startsWith('+') && !value.startsWith('0') && !value.startsWith('3')) {
+                    value = '+39 ' + value;
+                }
+                e.target.value = value;
+            });
+        }
+
+        function nextStep(step) {
+            // Valida step corrente
+            if (!validateCurrentStep()) return;
+
+            // Aggiorna step corrente
+            currentStep = step;
+            
+            // Nascondi tutti gli step
+            document.querySelectorAll('.form-step').forEach(s => s.classList.add('hidden'));
+            
+            // Mostra step corrente
+            document.getElementById(`step${step}Content`).classList.remove('hidden');
+            
+            // Aggiorna indicatori
+            updateStepIndicators();
+            
+            // Se siamo allo step 3, genera il riepilogo
+            if (step === 3) {
+                generateDataSummary();
+            }
+        }
+
+        function previousStep(step) {
+            currentStep = step;
+            document.querySelectorAll('.form-step').forEach(s => s.classList.add('hidden'));
+            document.getElementById(`step${step}Content`).classList.remove('hidden');
+            updateStepIndicators();
+        }
+
+        function updateStepIndicators() {
+            for (let i = 1; i <= 3; i++) {
+                const stepEl = document.getElementById(`step${i}`);
+                if (i < currentStep) {
+                    stepEl.className = 'step completed';
+                    stepEl.innerHTML = '✓';
+                } else if (i === currentStep) {
+                    stepEl.className = 'step active';
+                    stepEl.innerHTML = i;
+                } else {
+                    stepEl.className = 'step inactive';
+                    stepEl.innerHTML = i;
+                }
+            }
+        }
+
+        function validateCurrentStep() {
+            if (currentStep === 1) {
+                const required = ['registerNome', 'registerCognome', 'registerEmail', 'registerDataNascita', 'registerLuogoNascita'];
+                for (let fieldId of required) {
+                    const field = document.getElementById(fieldId);
+                    if (!field.value.trim()) {
+                        field.focus();
+                        showMessage('registerMessage', `Il campo ${field.previousElementSibling.textContent} è obbligatorio`, 'error');
+                        return false;
+                    }
+                }
+
+                // Valida email
+                const email = document.getElementById('registerEmail').value;
+                if (!isValidEmail(email)) {
+                    showMessage('registerMessage', 'Inserisci un indirizzo email valido', 'error');
+                    return false;
+                }
+
+                // Valida codice fiscale se inserito
+                const cf = document.getElementById('registerCodiceFiscale').value;
+                if (cf && !isValidCodiceFiscale(cf)) {
+                    showMessage('registerMessage', 'Codice fiscale non valido', 'error');
+                    return false;
+                }
+            }
+
+            if (currentStep === 2) {
+                // Valida CAP se inserito
+                const cap = document.getElementById('registerCap').value;
+                if (cap && !/^\d{5}$/.test(cap)) {
+                    showMessage('registerMessage', 'Il CAP deve essere composto da 5 cifre', 'error');
+                    return false;
+                }
+
+                // Valida provincia se inserita
+                const provincia = document.getElementById('registerProvincia').value;
+                if (provincia && !/^[A-Z]{2}$/.test(provincia)) {
+                    showMessage('registerMessage', 'La provincia deve essere di 2 lettere (es. RM)', 'error');
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function generateDataSummary() {
+            const summary = document.getElementById('dataSummary');
+            const nome = document.getElementById('registerNome').value;
+            const cognome = document.getElementById('registerCognome').value;
+            const email = document.getElementById('registerEmail').value;
+            const telefono = document.getElementById('registerTelefono').value;
+            const dataNascita = document.getElementById('registerDataNascita').value;
+            const luogoNascita = document.getElementById('registerLuogoNascita').value;
+            const codFiscale = document.getElementById('registerCodiceFiscale').value;
+            const indirizzo = document.getElementById('registerIndirizzo').value;
+            const citta = document.getElementById('registerCitta').value;
+            const cap = document.getElementById('registerCap').value;
+            const provincia = document.getElementById('registerProvincia').value;
+
+            summary.innerHTML = `
+                <div><strong>Nome:</strong> ${nome} ${cognome}</div>
+                <div><strong>Email:</strong> ${email}</div>
+                ${telefono ? `<div><strong>Telefono:</strong> ${telefono}</div>` : ''}
+                <div><strong>Nato il:</strong> ${new Date(dataNascita).toLocaleDateString('it-IT')} a ${luogoNascita}</div>
+                ${codFiscale ? `<div><strong>Codice Fiscale:</strong> ${codFiscale}</div>` : ''}
+                ${indirizzo ? `<div><strong>Indirizzo:</strong> ${indirizzo}</div>` : ''}
+                ${citta ? `<div><strong>Città:</strong> ${citta} ${cap || ''} ${provincia ? `(${provincia})` : ''}</div>` : ''}
+            `;
+        }
+
+        function resetRegistrationForm() {
+            currentStep = 1;
+            document.querySelectorAll('.form-step').forEach(s => s.classList.add('hidden'));
+            document.getElementById('step1Content').classList.remove('hidden');
+            updateStepIndicators();
+            document.getElementById('registerForm').reset();
+            clearMessages();
         }
 
         async function checkExistingSession() {
@@ -283,15 +681,20 @@
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             const button = e.target.querySelector('button[type="submit"]');
+            
             setLoading(button, true);
             clearMessages();
+            
             try {
                 const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
                 if (error) throw error;
+                
                 const profile = await getUserProfile(data.user.id);
                 if (!profile) throw new Error('Profilo utente non trovato');
+                
                 showMessage('loginMessage', 'Accesso effettuato con successo!', 'success');
                 setTimeout(() => redirectBasedOnRole(profile.role), 1000);
+                
             } catch (error) {
                 showMessage('loginMessage', getErrorMessage(error), 'error');
             } finally {
@@ -301,52 +704,191 @@
 
         async function handleRegister(e) {
             e.preventDefault();
-            const nome = document.getElementById('registerNome').value;
-            const cognome = document.getElementById('registerCognome').value;
-            const email = document.getElementById('registerEmail').value;
-            const telefono = document.getElementById('registerTelefono').value;
-            const dataNascita = document.getElementById('registerDataNascita').value;
+            
+            // Valida password
             const password = document.getElementById('registerPassword').value;
             const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
+            
+            if (password !== passwordConfirm) {
+                showMessage('registerMessage', 'Le password non coincidono', 'error');
+                return;
+            }
+            
+            if (!isValidPassword(password)) {
+                showMessage('registerMessage', 'La password deve contenere almeno 8 caratteri, una maiuscola e un numero', 'error');
+                return;
+            }
+
+            // Verifica accettazione termini
+            if (!document.getElementById('termsAccept').checked) {
+                showMessage('registerMessage', 'Devi accettare i termini e condizioni', 'error');
+                return;
+            }
+            
             const button = e.target.querySelector('button[type="submit"]');
             setLoading(button, true);
             clearMessages();
-            if (password !== passwordConfirm) {
-                showMessage('registerMessage', 'Le password non coincidono', 'error');
-                setLoading(button, false);
-                return;
-            }
-            if (password.length < 6) {
-                showMessage('registerMessage', 'La password deve essere di almeno 6 caratteri', 'error');
-                setLoading(button, false);
-                return;
-            }
+            
             try {
-                const { data: authData, error: authError } = await supabaseClient.auth.signUp({ email, password });
+                // Raccogli tutti i dati del form
+                const userData = {
+                    // Dati obbligatori
+                    nome: document.getElementById('registerNome').value.trim(),
+                    cognome: document.getElementById('registerCognome').value.trim(),
+                    email: document.getElementById('registerEmail').value.trim().toLowerCase(),
+                    data_nascita: document.getElementById('registerDataNascita').value,
+                    luogo_nascita: document.getElementById('registerLuogoNascita').value.trim(),
+                    
+                    // Dati opzionali
+                    telefono: document.getElementById('registerTelefono').value.trim() || null,
+                    codice_fiscale: document.getElementById('registerCodiceFiscale').value.trim().toUpperCase() || null,
+                    indirizzo: document.getElementById('registerIndirizzo').value.trim() || null,
+                    citta: document.getElementById('registerCitta').value.trim() || null,
+                    cap: document.getElementById('registerCap').value.trim() || null,
+                    provincia: document.getElementById('registerProvincia').value.trim().toUpperCase() || null,
+                    bio: document.getElementById('registerBio').value.trim() || null
+                };
+
+                // 1. Registra utente in Supabase Auth
+                const { data: authData, error: authError } = await supabaseClient.auth.signUp({
+                    email: userData.email,
+                    password: password
+                });
+
                 if (authError) throw authError;
+
+                // 2. Crea profilo completo nella tabella user_profiles
                 const profileData = {
                     user_id: authData.user.id,
-                    email, nome, cognome,
-                    full_name: `${nome} ${cognome}`,
-                    telefono: telefono || null,
-                    data_nascita: dataNascita,
+                    email: userData.email,
+                    nome: userData.nome,
+                    cognome: userData.cognome,
+                    full_name: `${userData.nome} ${userData.cognome}`,
+                    telefono: userData.telefono,
+                    data_nascita: userData.data_nascita,
+                    luogo_nascita: userData.luogo_nascita,
+                    codice_fiscale: userData.codice_fiscale,
+                    indirizzo: userData.indirizzo,
+                    citta: userData.citta,
+                    cap: userData.cap,
+                    provincia: userData.provincia,
+                    bio: userData.bio,
                     role: 'USER',
                     stato: 'ATTIVO',
-                    created_at: new Date().toISOString()
+                    settings: {},
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
                 };
-                const { error: profileError } = await supabaseClient.from('user_profiles').insert([profileData]);
+
+                const { error: profileError } = await supabaseClient
+                    .from('user_profiles')
+                    .insert([profileData]);
+
                 if (profileError) throw profileError;
-                showMessage('registerMessage', 'Registrazione completata! Accesso in corso...', 'success');
-                setTimeout(() => redirectBasedOnRole('USER'), 1500);
+
+                // 3. Opzionalmente crea anche la tessera
+                await createUserTessera(authData.user.id, userData);
+
+                showMessage('registerMessage', '🎉 Registrazione completata con successo! Accesso in corso...', 'success');
+                setTimeout(() => redirectBasedOnRole('USER'), 2000);
+                
             } catch (error) {
+                console.error('Errore registrazione:', error);
                 showMessage('registerMessage', getErrorMessage(error), 'error');
             } finally {
                 setLoading(button, false);
             }
         }
 
+        async function createUserTessera(userId, userData) {
+            try {
+                // Genera numero tessera unico
+                const numeroTessera = await generateUniqueNumeroTessera();
+                
+                const tesseraData = {
+                    user_id: userId,
+                    numero_tessera: numeroTessera,
+                    nome_completo: `${userData.nome} ${userData.cognome}`,
+                    email: userData.email,
+                    telefono: userData.telefono,
+                    data_emissione: new Date().toISOString().split('T')[0],
+                    data_scadenza: getDataScadenza(),
+                    stato: 'ATTIVA',
+                    tipo: 'STANDARD',
+                    qr_code_data: generateQRData(numeroTessera, userData),
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                };
+
+                const { error } = await supabaseClient
+                    .from('tessere')
+                    .insert([tesseraData]);
+
+                if (error) {
+                    console.warn('Avviso: Impossibile creare tessera automaticamente:', error);
+                    // Non blocchiamo la registrazione se la tessera fallisce
+                } else {
+                    console.log('✅ Tessera creata con numero:', numeroTessera);
+                }
+                
+            } catch (error) {
+                console.warn('Avviso: Errore creazione tessera:', error);
+                // Non blocchiamo la registrazione
+            }
+        }
+
+        async function generateUniqueNumeroTessera() {
+            const year = new Date().getFullYear();
+            let numeroTentativo;
+            let tentativi = 0;
+            const maxTentativi = 10;
+
+            do {
+                const random = Math.floor(Math.random() * 100000).toString().padStart(5, '0');
+                numeroTentativo = `MA${year}${random}`;
+                
+                // Verifica se il numero esiste già
+                const { data: existing } = await supabaseClient
+                    .from('tessere')
+                    .select('numero_tessera')
+                    .eq('numero_tessera', numeroTentativo)
+                    .single();
+                
+                if (!existing) {
+                    return numeroTentativo;
+                }
+                
+                tentativi++;
+            } while (tentativi < maxTentativi);
+
+            // Fallback con timestamp
+            return `MA${year}${Date.now().toString().slice(-5)}`;
+        }
+
+        function getDataScadenza() {
+            const oggi = new Date();
+            const scadenza = new Date(oggi);
+            scadenza.setFullYear(oggi.getFullYear() + 1);
+            return scadenza.toISOString().split('T')[0];
+        }
+
+        function generateQRData(numeroTessera, userData) {
+            return JSON.stringify({
+                app: 'MyApp',
+                tessera: numeroTessera,
+                nome: `${userData.nome} ${userData.cognome}`,
+                email: userData.email,
+                generato: new Date().toISOString()
+            });
+        }
+
         async function getUserProfile(userId) {
-            const { data, error } = await supabaseClient.from('user_profiles').select('*').eq('user_id', userId).single();
+            const { data, error } = await supabaseClient
+                .from('user_profiles')
+                .select('*')
+                .eq('user_id', userId)
+                .single();
+            
             if (error) return null;
             return data;
         }
@@ -361,7 +903,15 @@
 
         function togglePassword(inputId) {
             const input = document.getElementById(inputId);
-            input.type = input.type === 'password' ? 'text' : 'password';
+            const button = input.nextElementSibling;
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                button.textContent = '👁️';
+            }
         }
 
         function showMessage(containerId, message, type) {
@@ -375,15 +925,45 @@
             document.getElementById('registerMessage').innerHTML = '';
         }
 
-               function setLoading(button, loading) {
+        function setLoading(button, loading) {
             if (loading) {
                 button.classList.add('loading');
-                button.textContent = 'Caricamento...';
+                button.disabled = true;
+                const originalText = button.textContent;
+                button.setAttribute('data-original-text', originalText);
+                button.innerHTML = `
+                    <div class="flex items-center justify-center gap-2">
+                        <div class="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                        Caricamento...
+                    </div>
+                `;
             } else {
                 button.classList.remove('loading');
-                const isLogin = button.closest('#loginForm');
-                button.textContent = isLogin ? 'Accedi' : 'Registrati';
+                button.disabled = false;
+                const originalText = button.getAttribute('data-original-text');
+                button.textContent = originalText || 'Accedi';
             }
+        }
+
+        // ========================================
+        // VALIDAZIONI
+        // ========================================
+
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function isValidPassword(password) {
+            // Almeno 8 caratteri, una maiuscola e un numero
+            const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+            return passwordRegex.test(password);
+        }
+
+        function isValidCodiceFiscale(cf) {
+            // Validazione base codice fiscale italiano
+            const cfRegex = /^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$/;
+            return cfRegex.test(cf);
         }
 
         function getErrorMessage(error) {
@@ -391,9 +971,14 @@
                 'Invalid login credentials': 'Email o password non corretti',
                 'Email not confirmed': 'Conferma la tua email prima di accedere',
                 'User already registered': 'Email già registrata',
-                'Password should be at least 6 characters': 'La password deve essere di almeno 6 caratteri'
+                'Password should be at least 6 characters': 'La password deve essere di almeno 6 caratteri',
+                'Email already in use': 'Questa email è già registrata',
+                'Invalid email': 'Indirizzo email non valido',
+                'Password too weak': 'Password troppo debole',
+                'duplicate key value violates unique constraint': 'Email già registrata'
             };
-            return msgs[error.message] || error.message || 'Si è verificato un errore';
+            
+            return msgs[error.message] || error.message || 'Si è verificato un errore durante l\'operazione';
         }
     </script>
 </body>
