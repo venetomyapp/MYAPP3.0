@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Dirigenti - MyApp</title>
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS - VERSIONE OTTIMIZZATA PER PRODUZIONE -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.0/tailwind.min.css">
+    
+    <!-- Se preferisci, sostituisci con build locale per produzione -->
+    <!-- <link rel="stylesheet" href="./css/tailwind-build.css"> -->
     
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -696,6 +699,15 @@
         const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
         
+        // === TABELLE DATABASE ===
+        const TABLES = {
+            user_profiles: 'user_profiles',  // ✅ Nome corretto della tabella
+            tessere: 'tessere',
+            notizie: 'notizie',
+            convenzioni: 'convenzioni',
+            richieste: 'richieste'
+        };
+        
         let supabaseClient;
         let currentUser = null;
         let adminProfile = null;
@@ -750,9 +762,9 @@
         async function checkAdminPrivileges() {
             try {
                 const { data: profile, error } = await supabaseClient
-                    .from('profiles')
-                    .select('nome, cognome, ruoli')
-                    .eq('id', currentUser.id)
+                    .from(TABLES.user_profiles)  // ✅ Usa user_profiles
+                    .select('full_name, nome, cognome, role')  // ✅ Usa 'role' non 'ruoli'
+                    .eq('user_id', currentUser.id)  // ✅ Usa 'user_id' non 'id'
                     .single();
 
                 if (error) {
@@ -761,14 +773,14 @@
                 }
 
                 adminProfile = profile;
-                const userRoles = profile.ruoli || ['USER'];
+                const userRole = profile.role || 'USER';  // ✅ Campo singolo 'role'
                 
                 console.log('👤 Profilo caricato:', profile);
-                console.log('🔑 Ruoli utente:', userRoles);
+                console.log('🔑 Ruolo utente:', userRole);
                 
                 // Verifica se l'utente ha privilegi dirigenti o admin
-                if (!userRoles.includes('DIRIGENTE') && !userRoles.includes('ADMIN')) {
-                    console.log('❌ Privilegi insufficienti:', userRoles);
+                if (userRole !== 'DIRIGENTE' && userRole !== 'ADMIN') {
+                    console.log('❌ Privilegi insufficienti:', userRole);
                     throw new Error('Privilegi insufficienti per accedere a questa area');
                 }
                 
@@ -785,8 +797,10 @@
 
         function updateAdminInfo() {
             if (adminProfile) {
-                const fullName = [adminProfile.nome, adminProfile.cognome].filter(Boolean).join(' ') || 'Amministratore';
-                const userRoles = adminProfile.ruoli || ['USER'];
+                const fullName = adminProfile.full_name || 
+                                [adminProfile.nome, adminProfile.cognome].filter(Boolean).join(' ') || 
+                                'Amministratore';
+                const userRole = adminProfile.role || 'USER';
                 
                 // Aggiorna nome admin
                 const adminNameDisplay = document.getElementById('adminNameDisplay');
@@ -803,14 +817,14 @@
                 // Aggiorna ruolo
                 const adminRole = document.getElementById('adminRole');
                 if (adminRole) {
-                    const isAdmin = userRoles.includes('ADMIN');
+                    const isAdmin = userRole === 'ADMIN';
                     adminRole.textContent = isAdmin ? 'Amministratore' : 'Dirigente';
                 }
                 
                 // Aggiorna avatar
                 const adminAvatar = document.getElementById('adminAvatar');
                 if (adminAvatar) {
-                    adminAvatar.textContent = userRoles.includes('ADMIN') ? '👑' : '🎯';
+                    adminAvatar.textContent = userRole === 'ADMIN' ? '👑' : '🎯';
                 }
                 
                 console.log('✅ Info admin aggiornate nell\'UI');
@@ -840,7 +854,7 @@
         async function loadUsersStats() {
             try {
                 const { count, error } = await supabaseClient
-                    .from('profiles')
+                    .from(TABLES.user_profiles)  // ✅ Usa user_profiles
                     .select('*', { count: 'exact', head: true });
 
                 if (!error && count !== null) {
