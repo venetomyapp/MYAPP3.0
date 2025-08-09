@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strumenti</title>
+    <title>MyApp Strumenti</title>
     
     <!-- PWA Meta Tags -->
     <link rel="manifest" href="/manifest.json">
@@ -34,7 +34,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://cdn.tailwindcss.com">
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
-    <link rel="preconnect" href="https://lycrgzptkdkksukcwrld.supabase.co">
+    <link rel="preconnect" href="https://pvzdilkozpspsnepedqc.supabase.co">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -608,7 +608,7 @@
         
         <!-- Back Button -->
         <div class="mb-6">
-            <button onclick="history.back()" class="flex items-center gap-3 text-ultra-visible hover:text-cyan transition-all duration-300 transform hover:scale-110 group">
+            <button onclick="navigateBack()" class="flex items-center gap-3 text-ultra-visible hover:text-cyan transition-all duration-300 transform hover:scale-110 group">
                 <svg class="w-8 h-8 group-hover:translate-x-[-2px] transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path>
                 </svg>
@@ -631,16 +631,16 @@
         <div class="glass-strong rounded-3xl p-6 md:p-8 mb-8 fade-in">
             <!-- Navigation Tabs -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8">
-                <button onclick="showTool('turni')" class="tool-nav-btn active p-4 md:p-6 rounded-2xl font-black text-base md:text-lg">
+                <button onclick="showTool('turni', this)" class="tool-nav-btn active p-4 md:p-6 rounded-2xl font-black text-base md:text-lg">
                     🗓️ Turni
                 </button>
-                <button onclick="showTool('licenze')" class="tool-nav-btn p-4 md:p-6 rounded-2xl font-black text-base md:text-lg">
+                <button onclick="showTool('licenze', this)" class="tool-nav-btn p-4 md:p-6 rounded-2xl font-black text-base md:text-lg">
                     🏖️ Licenze
                 </button>
-                <button onclick="showTool('recuperi')" class="tool-nav-btn p-4 md:p-6 rounded-2xl font-black text-base md:text-lg">
+                <button onclick="showTool('recuperi', this)" class="tool-nav-btn p-4 md:p-6 rounded-2xl font-black text-base md:text-lg">
                     🔄 Recuperi
                 </button>
-                <button onclick="showTool('utilita')" class="tool-nav-btn p-4 md:p-6 rounded-2xl font-black text-base md:text-lg">
+                <button onclick="showTool('utilita', this)" class="tool-nav-btn p-4 md:p-6 rounded-2xl font-black text-base md:text-lg">
                     ⚙️ Utilità
                 </button>
             </div>
@@ -977,8 +977,8 @@
         // ========================================================================
         //                    CONFIGURAZIONE SUPABASE
         // ========================================================================
-        const SUPABASE_URL = "https://lycrgzptkdkksukcwrld.supabase.co";
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5Y3JnenB0a2Rra3N1a2N3cmxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3ODQyMzAsImV4cCI6MjA2ODM2MDIzMH0.ZJGOXAMC3hKKrnwXHKEa2_Eh7ZpOKeLYvYlYneBiEfk";
+        const SUPABASE_URL = "https://pvzdilkozpspsnepedqc.supabase.co";
+        const SUPABASE_ANON_KEY = "public:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk";
         
         let supabase;
         try {
@@ -1006,7 +1006,7 @@
         //                    GESTIONE NAVIGAZIONE STRUMENTI
         // ========================================================================
         
-        function showTool(toolName) {
+        function showTool(toolName, btn) {
             // Nasconde tutte le sezioni
             document.querySelectorAll('.tool-section').forEach(section => {
                 section.classList.remove('active');
@@ -1021,7 +1021,7 @@
             document.getElementById(toolName + '-section').classList.add('active');
             
             // Attiva il pulsante corrispondente
-            event.target.classList.add('active');
+            if (btn) { btn.classList.add('active'); }
             
             // Se è la sezione turni, carica i dati
             if (toolName === 'turni') {
@@ -1033,7 +1033,49 @@
         //                          INIZIALIZZAZIONE UTENTE
         // ========================================================================
         
-        async function initializeUser() {
+        
+        // ========================================================================
+        //                      NAVIGAZIONE INDIETRO BASATA SU RUOLO
+        // ========================================================================
+        async function getUserRole() {
+            try {
+                if (!currentUser) {
+                    const { data: { session } } = await supabase.auth.getSession();
+                    if (!session) return null;
+                    currentUser = session.user;
+                }
+                // prova user_profiles.ruolo
+                const { data: prof, error } = await supabase
+                    .from('user_profiles')
+                    .select('ruolo')
+                    .eq('user_id', currentUser.id)
+                    .single();
+                if (!error && prof && prof.ruolo) return ('' + prof.ruolo).toUpperCase();
+            } catch (e) {
+                console.warn('Ruolo da user_profiles non disponibile:', e);
+            }
+            // fallback: metadata
+            try {
+                const roleMeta = currentUser?.user_metadata?.role || currentUser?.app_metadata?.role;
+                if (roleMeta) return ('' + roleMeta).toUpperCase();
+            } catch (e) {}
+            return null;
+        }
+
+        async function navigateBack() {
+            try {
+                const role = await getUserRole();
+                if (role === 'DIRIGENTE' || role === 'ADMIN') {
+                    window.location.href = '/home_dirigenti.html';
+                } else {
+                    window.location.href = '/home.html';
+                }
+            } catch (e) {
+                console.error('Errore navigazione back:', e);
+                window.location.href = '/home.html';
+            }
+        }
+async function initializeUser() {
             try {
                 const { data: { session } } = await supabase.auth.getSession();
                 if (!session) {
@@ -1113,13 +1155,7 @@
                     // Crea nuovo turno
                     const { data, error } = await supabase
                         .from('turni')
-                        .upsert({
-                            user_id: currentUser.id,
-                            data_turno: turnoData.data,
-                            tipo_turno: turnoData.tipo,
-                            note: turnoData.note || ''
-                        })
-                        .select();
+                        .upsert({ user_id: currentUser.id, data_turno: turnoData.data, tipo_turno: turnoData.tipo, note: turnoData.note || '' }, { onConflict: 'user_id,data_turno' }).select();
 
                     if (error) throw error;
                     result = data;
@@ -1894,6 +1930,7 @@
             
             // Carica i dati se l'utente è autenticato
             if (currentUser) {
+                updateCalendar();
                 await loadUserData();
             }
             
@@ -2042,7 +2079,7 @@
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
         
         const supabase = createClient(
-            'https://lycrgzptkdkksukcwrld.supabase.co',
+            'https://pvzdilkozpspsnepedqc.supabase.co',
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5Y3JnenB0a2Rra3N1a2N3cmxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3ODQyMzAsImV4cCI6MjA2ODM2MDIzMH0.ZJGOXAMC3hKKrnwXHKEa2_Eh7ZpOKeLYvYlYneBiEfk'
         );
 
