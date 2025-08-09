@@ -1,34 +1,40 @@
-import pdfParse from 'pdf-parse';
-import mammoth from 'mammoth';
+// lib/parse.ts
+import pdfParse from "pdf-parse";
+import mammoth from "mammoth";
 
-export async function parseBufferToText(buf: Buffer, mime: string, filename: string): Promise<string> {
+export async function parseBufferToText(
+  buf: Buffer,
+  mimeType?: string,
+  filename?: string
+): Promise<string> {
+  const name = (filename || "").toLowerCase();
+  const mime = (mimeType || "").toLowerCase();
   try {
-    if (mime === 'application/pdf' || filename.toLowerCase().endsWith('.pdf')) {
+    if (mime.includes("application/pdf") || name.endsWith(".pdf")) {
       const data = await pdfParse(buf);
-      return data.text || '';
+      return (data.text || "").replace(/\s+/g, " ").trim();
     }
     if (
-      mime === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-      filename.toLowerCase().endsWith('.docx')
+      mime.includes("application/vnd.openxmlformats-officedocument.wordprocessingml.document") ||
+      name.endsWith(".docx")
     ) {
       const { value } = await mammoth.extractRawText({ buffer: buf });
-      return value || '';
+      return (value || "").replace(/\s+/g, " ").trim();
     }
-    // fallback TXT
-    return buf.toString('utf8');
-  } catch (e) {
-    return '';
+    return buf.toString("utf8").replace(/\s+/g, " ").trim();
+  } catch {
+    return "";
   }
 }
 
-export function chunkText(text: string, chunkSize = 1200, overlap = 200) {
-  const clean = text.replace(/\s+/g, ' ').trim();
-  const chunks: { content: string; index: number }[] = [];
-  let i = 0, start = 0;
+export function chunkText(text: string, chunkSize = 1200, overlap = 200): string[] {
+  const clean = text.replace(/\s+/g, " ").trim();
+  if (!clean) return [];
+  const chunks: string[] = [];
+  let start = 0;
   while (start < clean.length) {
     const end = Math.min(start + chunkSize, clean.length);
-    const slice = clean.slice(start, end);
-    chunks.push({ content: slice, index: i++ });
+    chunks.push(clean.slice(start, end));
     start = end - overlap;
     if (start < 0) start = 0;
   }
