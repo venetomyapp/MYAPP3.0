@@ -31,14 +31,12 @@ export async function POST(req: NextRequest) {
     const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
     if (!folderId) throw new Error("Missing GOOGLE_DRIVE_FOLDER_ID");
 
-    // 1) Elenco file nella cartella
     const files = await listFolderFiles(folderId);
     if (!files.length) return NextResponse.json({ ok: true, ingested: 0, results: [] });
 
     const results: any[] = [];
 
     for (const f of files) {
-      // 2) Scarica e parse
       const buf = await downloadFile(f.id);
       const text = await parseBufferToText(buf, f.mimeType, f.name);
       if (!text || text.length < 50) {
@@ -46,7 +44,7 @@ export async function POST(req: NextRequest) {
         continue;
       }
 
-      // 3) Inserisci documento
+      // documento
       const { data: doc, error: docErr } = await supabase
         .from("knowledge_documents")
         .insert({ title: f.name, source_url: `https://drive.google.com/file/d/${f.id}/view` })
@@ -54,11 +52,10 @@ export async function POST(req: NextRequest) {
         .single();
       if (docErr) throw docErr;
 
-      // 4) Chunk + embedding
+      // chunk + embedding
       const chunks = chunkText(text, 1200, 200);
       const embeddings = await embedBatch(chunks);
 
-      // 5) Inserisci chunk
       const rows = chunks.map((c, idx) => ({
         document_id: doc.id,
         chunk_index: idx,
