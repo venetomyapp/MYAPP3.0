@@ -1,531 +1,488 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accesso - MyApp</title>
-    
-    <!-- Tailwind CSS (CDN: ok per test / non per produzione) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Supabase JS v2 (CDN) -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- Configurazione colori Tailwind personalizzata -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1a1a2e',
-                        secondary: '#16213e',
-                        accent: '#0f3460',
-                        aurora: '#e94560',
-                        cyan: '#00d4ff',
-                        magenta: '#ff006e',
-                        gold: '#ffd700',
-                        teal: '#03dac6',
-                        dark: '#0a0a23',
-                        light: '#f8fafc',
-                        textDark: '#1C1C1E',
-                        backgroundLight: '#F4F4F8',
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <style>
-        :root {
-            --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
-            --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
-            --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Accesso - MyApp</title>
 
-        body {
-            background: var(--gradient-aurora);
-            background-size: 400% 400%;
-            animation: aurora 20s ease infinite;
-            min-height: 100vh;
-        }
+  <!-- PROD: NESSUN Tailwind CDN. Stili minimi equivalenti alle utility usate -->
+  <!-- Nota: se usi un bundler, puoi rimpiazzare questo blocco con il CSS compilato da Tailwind. -->
+  <style>
+    :root {
+      --primary: #1a1a2e;
+      --secondary: #16213e;
+      --accent: #0f3460;
+      --aurora: #e94560;
+      --cyan: #00d4ff;
+      --magenta: #ff006e;
+      --gold: #ffd700;
+      --teal: #03dac6;
+      --dark: #0a0a23;
+      --light: #f8fafc;
+      --textDark: #1C1C1E;
+      --backgroundLight: #F4F4F8;
+      --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
+      --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
+    }
 
-        @keyframes aurora {
-            0%, 100% { background-position: 0% 50%; }
-            25% { background-position: 100% 50%; }
-            50% { background-position: 100% 100%; }
-            75% { background-position: 0% 100%; }
-        }
+    /* --- Utility essenziali (equivalenti Tailwind usate in pagina) --- */
+    .flex { display: flex; }
+    .grid { display: grid; }
+    .items-center { align-items: center; }
+    .justify-center { justify-content: center; }
+    .justify-end { justify-content: flex-end; }
+    .min-h-screen { min-height: 100vh; }
+    .p-1 { padding: 0.25rem; }
+    .p-4 { padding: 1rem; }
+    .p-6 { padding: 1.5rem; }
+    .p-8 { padding: 2rem; }
+    .px-4 { padding-left: 1rem; padding-right: 1rem; }
+    .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+    .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+    .pr-12 { padding-right: 3rem; }
+    .w-full { width: 100%; }
+    .max-w-md { max-width: 28rem; }
+    .text-center { text-align: center; }
+    .text-white { color: #fff; }
+    .text-gray-500 { color: #6b7280; }
+    .text-gray-600 { color: #4b5563; }
+    .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+    .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+    .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+    .font-black { font-weight: 900; }
+    .font-bold { font-weight: 700; }
+    .font-semibold { font-weight: 600; }
+    .rounded-lg { border-radius: 0.5rem; }
+    .rounded-xl { border-radius: 0.75rem; }
+    .rounded-2xl { border-radius: 1rem; }
+    .rounded-3xl { border-radius: 1.5rem; }
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mb-6 { margin-bottom: 1.5rem; }
+    .mb-8 { margin-bottom: 2rem; }
+    .mt-1 { margin-top: 0.25rem; }
+    .mt-2 { margin-top: 0.5rem; }
+    .mt-3 { margin-top: 0.75rem; }
+    .mt-4 { margin-top: 1rem; }
+    .mt-6 { margin-top: 1.5rem; }
+    .gap-3 { gap: 0.75rem; }
+    .gap-4 { gap: 1rem; }
+    .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .space-y-6 > * + * { margin-top: 1.5rem; }
+    .bg-white { background-color: #fff; }
+    .bg-gray-100 { background-color: #f3f4f6; }
+    .bg-black\/60 { background-color: rgba(0,0,0,0.6); }
+    .text-primary { color: var(--primary); }
+    .shadow-sm { box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .transition-all { transition: all .2s ease; }
+    .transform { transform: translateZ(0); }
+    .-translate-y-1\/2 { transform: translateY(-50%); }
+    .absolute { position: absolute; }
+    .relative { position: relative; }
+    .fixed { position: fixed; }
+    .inset-0 { top:0; right:0; bottom:0; left:0; }
+    .right-3 { right: 0.75rem; }
+    .top-1\/2 { top: 50%; }
+    .z-50 { z-index: 50; }
+    .hidden { display: none; }
+    .opacity-80 { opacity: .8; }
+    .hover\:opacity-100:hover { opacity: 1; }
+    .transition-opacity { transition: opacity .2s ease; }
+    .flex-1 { flex: 1 1 0%; }
 
-        .text-ultra-visible {
-            color: #ffffff;
-            text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
-            font-weight: 800;
-        }
+    /* --- Stili personalizzati del layout --- */
+    body {
+      background: var(--gradient-aurora);
+      background-size: 400% 400%;
+      animation: aurora 20s ease infinite;
+      min-height: 100vh;
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+    @keyframes aurora { 0%,100%{background-position:0% 50%}25%{background-position:100% 50%}50%{background-position:100% 100%}75%{background-position:0% 100%} }
 
-        .glass-morphism {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        }
+    .text-ultra-visible { color:#fff; text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1); font-weight:800; }
+    .glass-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(16px); border:1px solid rgba(255,255,255,0.3); }
+    .btn-aurora { background: var(--gradient-magic); color:#fff; border:2px solid rgba(233,69,96,0.3); transition: all .4s cubic-bezier(0.4,0,0.2,1); font-weight:700; }
+    .btn-aurora:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 20px 40px rgba(233,69,96,0.4); border-color: rgba(233,69,96,0.8); }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .btn-aurora {
-            background: var(--gradient-magic);
-            color: white;
-            border: 2px solid rgba(233, 69, 96, 0.3);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: 700;
-        }
-
-        .btn-aurora:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(233, 69, 96, 0.4);
-            border-color: rgba(233, 69, 96, 0.8);
-        }
-
-        .input-field {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(16px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 15px;
-            padding: 14px 18px;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .input-field:focus {
-            outline: none;
-            border-color: #e94560;
-            box-shadow: 0 0 0 4px rgba(233, 69, 96, 0.2);
-            transform: scale(1.02);
-        }
-
-        .loading {
-            opacity: 0.7;
-            pointer-events: none;
-        }
-
-        .error-message {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #ef4444;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 8px;
-            font-size: 14px;
-        }
-
-        .success-message {
-            background: rgba(34, 197, 94, 0.1);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            color: #22c55e;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 8px;
-            font-size: 14px;
-        }
-    </style>
+    .input-field { background: rgba(255,255,255,0.95); backdrop-filter: blur(16px); border: 2px solid rgba(255,255,255,0.3); border-radius: 15px; padding: 14px 18px; font-size: 16px; font-weight:600; transition: all .3s ease; width:100%; box-sizing: border-box; }
+    .input-field:focus { outline: none; border-color: var(--aurora); box-shadow: 0 0 0 4px rgba(233,69,96,0.2); transform: scale(1.02); }
+    .loading { opacity:.7; pointer-events:none; }
+    .error-message { background: rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:#ef4444; padding:12px; border-radius:8px; margin-top:8px; font-size:14px; }
+    .success-message { background: rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.3); color:#22c55e; padding:12px; border-radius:8px; margin-top:8px; font-size:14px; }
+    .text-textDark { color: var(--textDark); }
+  </style>
 </head>
-
 <body class="flex items-center justify-center min-h-screen p-4">
-    <div class="w-full max-w-md">
-        <!-- Logo e Titolo -->
-        <div class="text-center mb-8">
-            <h1 class="text-ultra-visible text-4xl font-black mb-2">MyApp</h1>
-            <p class="text-white text-lg">Accedi al tuo account</p>
-        </div>
-
-        <!-- Auth Form Container -->
-        <div class="glass-card rounded-3xl p-8">
-            <!-- Tabs -->
-            <div class="flex mb-6 bg-gray-100 rounded-xl p-1">
-                <button id="loginTab" class="flex-1 py-3 px-4 rounded-lg font-semibold transition-all bg-white text-primary shadow-sm">
-                    Accedi
-                </button>
-                <button id="registerTab" class="flex-1 py-3 px-4 rounded-lg font-semibold transition-all text-gray-600">
-                    Registrati
-                </button>
-            </div>
-
-            <!-- Login Form -->
-            <form id="loginForm" class="space-y-6">
-                <div>
-                    <label class="block text-textDark font-semibold mb-2">Email</label>
-                    <input type="email" id="loginEmail" class="input-field" required>
-                </div>
-                <div>
-                    <label class="block text-textDark font-semibold mb-2">Password</label>
-                    <div class="relative">
-                        <input type="password" id="loginPassword" class="input-field pr-12" required>
-                        <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" onclick="togglePassword('loginPassword')">👁️</button>
-                    </div>
-                </div>
-                <div id="loginMessage"></div>
-                <div class="flex items-center justify-between text-sm">
-                    <button type="button" id="forgotPasswordLink" class="text-accent hover:underline">Password dimenticata?</button>
-                </div>
-                <button type="submit" class="btn-aurora w-full py-4 rounded-xl text-lg font-bold mt-2">Accedi</button>
-            </form>
-
-            <!-- Register Form -->
-            <form id="registerForm" class="space-y-6 hidden">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-textDark font-semibold mb-2">Nome</label>
-                        <input type="text" id="registerNome" class="input-field" required>
-                    </div>
-                    <div>
-                        <label class="block text-textDark font-semibold mb-2">Cognome</label>
-                        <input type="text" id="registerCognome" class="input-field" required>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-textDark font-semibold mb-2">Email</label>
-                    <input type="email" id="registerEmail" class="input-field" required>
-                </div>
-                <div>
-                    <label class="block text-textDark font-semibold mb-2">Telefono</label>
-                    <input type="tel" id="registerTelefono" class="input-field">
-                </div>
-                <div>
-                    <label class="block text-textDark font-semibold mb-2">Data di Nascita</label>
-                    <input type="date" id="registerDataNascita" class="input-field" required>
-                </div>
-                <div>
-                    <label class="block text-textDark font-semibold mb-2">Password</label>
-                    <div class="relative">
-                        <input type="password" id="registerPassword" class="input-field pr-12" required>
-                        <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" onclick="togglePassword('registerPassword')">👁️</button>
-                    </div>
-                    <div class="text-xs text-gray-600 mt-1">Minimo 6 caratteri</div>
-                </div>
-                <div>
-                    <label class="block text-textDark font-semibold mb-2">Conferma Password</label>
-                    <div class="relative">
-                        <input type="password" id="registerPasswordConfirm" class="input-field pr-12" required>
-                        <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" onclick="togglePassword('registerPasswordConfirm')">👁️</button>
-                    </div>
-                </div>
-                <div id="registerMessage"></div>
-                <button type="submit" class="btn-aurora w-full py-4 rounded-xl text-lg font-bold">Registrati</button>
-            </form>
-        </div>
-
-        <!-- Link alla home -->
-        <div class="text-center mt-6">
-            <a href="index.html" class="text-white opacity-80 hover:opacity-100 transition-opacity">← Torna alla home</a>
-        </div>
+  <div class="w-full max-w-md">
+    <div class="text-center mb-8">
+      <h1 class="text-ultra-visible text-4xl font-black mb-2">MyApp</h1>
+      <p class="text-white text-lg">Accedi al tuo account</p>
     </div>
 
-        <!-- Modal reset password -->
-        <div id="resetModal" class="fixed inset-0 hidden items-center justify-center bg-black/60 z-50">
-            <div class="glass-card w-full max-w-md rounded-2xl p-6">
-                <h2 class="text-xl font-bold text-textDark mb-4">Imposta una nuova password</h2>
-                <div>
-                    <label class="block text-textDark font-semibold mb-2">Nuova password</label>
-                    <input type="password" id="newPassword" class="input-field" placeholder="Minimo 6 caratteri" />
-                </div>
-                <div class="mt-4">
-                    <label class="block text-textDark font-semibold mb-2">Conferma nuova password</label>
-                    <input type="password" id="newPasswordConfirm" class="input-field" />
-                </div>
-                <div id="resetMessage" class="mt-3"></div>
-                <div class="mt-6 flex gap-3 justify-end">
-                    <button id="cancelReset" class="px-4 py-2 rounded-xl border">Annulla</button>
-                    <button id="saveNewPassword" class="btn-aurora px-4 py-2 rounded-xl font-bold">Salva</button>
-                </div>
-            </div>
+    <div class="glass-card rounded-3xl p-8">
+      <div class="flex mb-6 bg-gray-100 rounded-xl p-1">
+        <button id="loginTab" class="flex-1 py-3 px-4 rounded-lg font-semibold transition-all bg-white text-primary shadow-sm">Accedi</button>
+        <button id="registerTab" class="flex-1 py-3 px-4 rounded-lg font-semibold transition-all text-gray-600">Registrati</button>
+      </div>
+
+      <form id="loginForm" class="space-y-6">
+        <div>
+          <label class="block text-textDark font-semibold mb-2">Email</label>
+          <input type="email" id="loginEmail" class="input-field" required />
         </div>
+        <div>
+          <label class="block text-textDark font-semibold mb-2">Password</label>
+          <div class="relative">
+            <input type="password" id="loginPassword" class="input-field pr-12" required />
+            <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" onclick="togglePassword('loginPassword')">👁️</button>
+          </div>
+        </div>
+        <div id="loginMessage"></div>
+        <div class="flex items-center justify-between text-sm">
+          <button type="button" id="forgotPasswordLink" class="text-accent hover:underline" style="color: var(--accent)">Password dimenticata?</button>
+        </div>
+        <button type="submit" class="btn-aurora w-full py-4 rounded-xl text-lg font-bold mt-2">Accedi</button>
+      </form>
 
-        <script>
-        // --- CONFIG SUPABASE ---
-        const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
-        let supabaseClient;
+      <form id="registerForm" class="space-y-6 hidden">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-textDark font-semibold mb-2">Nome</label>
+            <input type="text" id="registerNome" class="input-field" required />
+          </div>
+          <div>
+            <label class="block text-textDark font-semibold mb-2">Cognome</label>
+            <input type="text" id="registerCognome" class="input-field" required />
+          </div>
+        </div>
+        <div>
+          <label class="block text-textDark font-semibold mb-2">Email</label>
+          <input type="email" id="registerEmail" class="input-field" required />
+        </div>
+        <div>
+          <label class="block text-textDark font-semibold mb-2">Telefono</label>
+          <input type="tel" id="registerTelefono" class="input-field" />
+        </div>
+        <div>
+          <label class="block text-textDark font-semibold mb-2">Data di Nascita</label>
+          <input type="date" id="registerDataNascita" class="input-field" required />
+        </div>
+        <div>
+          <label class="block text-textDark font-semibold mb-2">Password</label>
+          <div class="relative">
+            <input type="password" id="registerPassword" class="input-field pr-12" required />
+            <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" onclick="togglePassword('registerPassword')">👁️</button>
+          </div>
+          <div class="text-xs text-gray-600 mt-1">Minimo 6 caratteri</div>
+        </div>
+        <div>
+          <label class="block text-textDark font-semibold mb-2">Conferma Password</label>
+          <div class="relative">
+            <input type="password" id="registerPasswordConfirm" class="input-field pr-12" required />
+            <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" onclick="togglePassword('registerPasswordConfirm')">👁️</button>
+          </div>
+        </div>
+        <div id="registerMessage"></div>
+        <button type="submit" class="btn-aurora w-full py-4 rounded-xl text-lg font-bold">Registrati</button>
+      </form>
+    </div>
 
-        document.addEventListener('DOMContentLoaded', async () => {
-            if (typeof supabase === 'undefined') {
-                showMessage('loginMessage', 'Errore: Impossibile caricare Supabase', 'error');
-                return;
-            }
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            setupTabs();
-            setupForms();
-            setupResetPasswordUI();
-            await checkExistingSession();
+    <div class="text-center mt-6">
+      <a href="index.html" class="text-white opacity-80 hover:opacity-100 transition-opacity">← Torna alla home</a>
+    </div>
+  </div>
 
-            // Se arriviamo dal link di recupero password, Supabase emette l'evento PASSWORD_RECOVERY
-            supabaseClient.auth.onAuthStateChange((event) => {
-                if (event === 'PASSWORD_RECOVERY') {
-                    openResetModal();
-                }
-            });
-        });
+  <!-- Modal reset password -->
+  <div id="resetModal" class="fixed inset-0 hidden items-center justify-center bg-black/60 z-50">
+    <div class="glass-card w-full max-w-md rounded-2xl p-6">
+      <h2 class="text-xl font-bold text-textDark mb-4">Imposta una nuova password</h2>
+      <div>
+        <label class="block text-textDark font-semibold mb-2">Nuova password</label>
+        <input type="password" id="newPassword" class="input-field" placeholder="Minimo 6 caratteri" />
+      </div>
+      <div class="mt-4">
+        <label class="block text-textDark font-semibold mb-2">Conferma nuova password</label>
+        <input type="password" id="newPasswordConfirm" class="input-field" />
+      </div>
+      <div id="resetMessage" class="mt-3"></div>
+      <div class="mt-6 flex gap-3 justify-end">
+        <button id="cancelReset" class="px-4 py-2 rounded-xl border">Annulla</button>
+        <button id="saveNewPassword" class="btn-aurora px-4 py-2 rounded-xl font-bold">Salva</button>
+      </div>
+    </div>
+  </div>
 
-        function setupTabs() {
-            const loginTab = document.getElementById('loginTab');
-            const registerTab = document.getElementById('registerTab');
-            const loginForm = document.getElementById('loginForm');
-            const registerForm = document.getElementById('registerForm');
-            loginTab.addEventListener('click', () => {
-                loginTab.className = 'flex-1 py-3 px-4 rounded-lg font-semibold transition-all bg-white text-primary shadow-sm';
-                registerTab.className = 'flex-1 py-3 px-4 rounded-lg font-semibold transition-all text-gray-600';
-                loginForm.classList.remove('hidden');
-                registerForm.classList.add('hidden');
-                clearMessages();
-            });
-            registerTab.addEventListener('click', () => {
-                registerTab.className = 'flex-1 py-3 px-4 rounded-lg font-semibold transition-all bg-white text-primary shadow-sm';
-                loginTab.className = 'flex-1 py-3 px-4 rounded-lg font-semibold transition-all text-gray-600';
-                registerForm.classList.remove('hidden');
-                loginForm.classList.add('hidden');
-                clearMessages();
-            });
+  <!-- Supabase JS (solo questa libreria esterna) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
+    let supabaseClient;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (typeof supabase === 'undefined') {
+        showMessage('loginMessage', 'Errore: Impossibile caricare Supabase', 'error');
+        return;
+      }
+      supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      setupTabs();
+      setupForms();
+      setupResetPasswordUI();
+      await checkExistingSession();
+
+      supabaseClient.auth.onAuthStateChange((event) => {
+        if (event === 'PASSWORD_RECOVERY') openResetModal();
+      });
+
+      runSelfTests();
+    });
+
+    function setupTabs() {
+      const loginTab = document.getElementById('loginTab');
+      const registerTab = document.getElementById('registerTab');
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      loginTab.addEventListener('click', () => {
+        loginTab.className = 'flex-1 py-3 px-4 rounded-lg font-semibold transition-all bg-white text-primary shadow-sm';
+        registerTab.className = 'flex-1 py-3 px-4 rounded-lg font-semibold transition-all text-gray-600';
+        loginForm.classList.remove('hidden');
+        registerForm.classList.add('hidden');
+        clearMessages();
+      });
+      registerTab.addEventListener('click', () => {
+        registerTab.className = 'flex-1 py-3 px-4 rounded-lg font-semibold transition-all bg-white text-primary shadow-sm';
+        loginTab.className = 'flex-1 py-3 px-4 rounded-lg font-semibold transition-all text-gray-600';
+        registerForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+        clearMessages();
+      });
+    }
+
+    function setupForms() {
+      document.getElementById('loginForm').addEventListener('submit', handleLogin);
+      document.getElementById('registerForm').addEventListener('submit', handleRegister);
+      const forgot = document.getElementById('forgotPasswordLink');
+      if (forgot) forgot.addEventListener('click', handleForgotPassword);
+    }
+
+    async function checkExistingSession() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session) {
+        const profile = await getUserProfile(session.user.id);
+        if (profile) redirectBasedOnRole(profile.role);
+      }
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const button = e.target.querySelector('button[type="submit"]');
+      setLoading(button, true);
+      clearMessages();
+      try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        const profile = await getUserProfile(data.user.id);
+        if (!profile) throw new Error('Profilo utente non trovato');
+        showMessage('loginMessage', 'Accesso effettuato con successo!', 'success');
+        setTimeout(() => redirectBasedOnRole(profile.role), 1000);
+      } catch (error) {
+        showMessage('loginMessage', getErrorMessage(error), 'error');
+      } finally {
+        setLoading(button, false);
+      }
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      const nome = document.getElementById('registerNome').value.trim();
+      const cognome = document.getElementById('registerCognome').value.trim();
+      const email = document.getElementById('registerEmail').value.trim();
+      const telefono = document.getElementById('registerTelefono').value.trim();
+      const dataNascita = document.getElementById('registerDataNascita').value;
+      const password = document.getElementById('registerPassword').value;
+      const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
+      const button = e.target.querySelector('button[type="submit"]');
+
+      setLoading(button, true);
+      clearMessages();
+
+      if (password !== passwordConfirm) {
+        showMessage('registerMessage', 'Le password non coincidono', 'error');
+        setLoading(button, false);
+        return;
+      }
+      if (password.length < 6) {
+        showMessage('registerMessage', 'La password deve essere di almeno 6 caratteri', 'error');
+        setLoading(button, false);
+        return;
+      }
+
+      try {
+        const { data: authData, error: authError } = await supabaseClient.auth.signUp({ email, password });
+        if (authError) {
+          if (authError.status === 400 && /already registered/i.test(authError.message)) {
+            showMessage('registerMessage', 'Questa email è già registrata. Accedi o reimposta la password.', 'error');
+            setLoading(button, false);
+            return;
+          }
+          if (authError.status === 429) {
+            showMessage('registerMessage', 'Troppi tentativi ravvicinati. Riprova tra circa 1 minuto.', 'error');
+            setLoading(button, false);
+            return;
+          }
+          showMessage('registerMessage', getErrorMessage(authError), 'error');
+          setLoading(button, false);
+          return;
         }
 
-        function setupForms() {
-            document.getElementById('loginForm').addEventListener('submit', handleLogin);
-            document.getElementById('registerForm').addEventListener('submit', handleRegister);
-            const forgot = document.getElementById('forgotPasswordLink');
-            if (forgot) forgot.addEventListener('click', handleForgotPassword);
+        const user = authData?.user;
+        if (user) {
+          const profileData = {
+            user_id: user.id,
+            email,
+            nome,
+            cognome,
+            full_name: `${nome} ${cognome}`.trim(),
+            telefono: telefono || null,
+            data_nascita: dataNascita,
+            role: 'USER',
+            stato: 'ATTIVO',
+            created_at: new Date().toISOString()
+          };
+          const { error: profileError } = await supabaseClient
+            .from('user_profiles')
+            .upsert(profileData, { onConflict: 'user_id' });
+          if (profileError) console.warn('Errore upsert profilo:', profileError);
         }
 
-        async function checkExistingSession() {
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session) {
-                const profile = await getUserProfile(session.user.id);
-                if (profile) redirectBasedOnRole(profile.role);
-            }
-        }
+        showMessage('registerMessage', 'Registrazione avviata! Controlla la tua email per confermare l’account.', 'success');
+        setTimeout(() => redirectBasedOnRole('USER'), 1500);
+      } catch (error) {
+        showMessage('registerMessage', getErrorMessage(error), 'error');
+      } finally {
+        setLoading(button, false);
+      }
+    }
 
-        async function handleLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
-            const button = e.target.querySelector('button[type="submit"]');
-            setLoading(button, true);
-            clearMessages();
-            try {
-                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-                if (error) throw error;
-                const profile = await getUserProfile(data.user.id);
-                if (!profile) throw new Error('Profilo utente non trovato');
-                showMessage('loginMessage', 'Accesso effettuato con successo!', 'success');
-                setTimeout(() => redirectBasedOnRole(profile.role), 1000);
-            } catch (error) {
-                showMessage('loginMessage', getErrorMessage(error), 'error');
-            } finally {
-                setLoading(button, false);
-            }
-        }
+    async function getUserProfile(userId) {
+      const { data, error } = await supabaseClient
+        .from('user_profiles')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
+      if (error) return null;
+      return data;
+    }
 
-        // --- REGISTRAZIONE CON GESTIONE "EMAIL GIÀ REGISTRATA" + 429 + UPSERT PROFILO ---
-        async function handleRegister(e) {
-            e.preventDefault();
-            const nome = document.getElementById('registerNome').value.trim();
-            const cognome = document.getElementById('registerCognome').value.trim();
-            const email = document.getElementById('registerEmail').value.trim();
-            const telefono = document.getElementById('registerTelefono').value.trim();
-            const dataNascita = document.getElementById('registerDataNascita').value;
-            const password = document.getElementById('registerPassword').value;
-            const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
-            const button = e.target.querySelector('button[type="submit"]');
+    function redirectBasedOnRole(role) {
+      if (role === 'ADMIN' || role === 'DIRIGENTE') {
+        window.location.href = 'home_dirigenti.html';
+      } else {
+        window.location.href = 'home.html';
+      }
+    }
 
-            setLoading(button, true);
-            clearMessages();
+    function togglePassword(id) {
+      const input = document.getElementById(id);
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
 
-            if (password !== passwordConfirm) {
-                showMessage('registerMessage', 'Le password non coincidono', 'error');
-                setLoading(button, false);
-                return;
-            }
-            if (password.length < 6) {
-                showMessage('registerMessage', 'La password deve essere di almeno 6 caratteri', 'error');
-                setLoading(button, false);
-                return;
-            }
+    function showMessage(containerId, message, type) {
+      const container = document.getElementById(containerId);
+      const cls = type === 'error' ? 'error-message' : 'success-message';
+      container.innerHTML = `<div class="${cls}">${message}</div>`;
+    }
 
-            try {
-                const { data: authData, error: authError } = await supabaseClient.auth.signUp({ email, password });
+    function clearMessages() {
+      document.getElementById('loginMessage').innerHTML = '';
+      document.getElementById('registerMessage').innerHTML = '';
+    }
 
-                if (authError) {
-                    // Email già registrata
-                    if (authError.status === 400 && /already registered/i.test(authError.message)) {
-                        showMessage('registerMessage', 'Questa email è già registrata. Accedi o reimposta la password.', 'error');
-                        setLoading(button, false);
-                        return;
-                    }
-                    // Rate limit
-                    if (authError.status === 429) {
-                        showMessage('registerMessage', 'Troppi tentativi ravvicinati. Riprova tra circa 1 minuto.', 'error');
-                        setLoading(button, false);
-                        return;
-                    }
-                    // Altri errori
-                    showMessage('registerMessage', getErrorMessage(authError), 'error');
-                    setLoading(button, false);
-                    return;
-                }
+    function setLoading(button, loading) {
+      if (loading) {
+        button.classList.add('loading');
+        button.textContent = 'Caricamento...';
+      } else {
+        button.classList.remove('loading');
+        const isLogin = button.closest('#loginForm');
+        button.textContent = isLogin ? 'Accedi' : 'Registrati';
+      }
+    }
 
-                // Se disponibile, crea/aggiorna il profilo (evita 23505 con upsert)
-                const user = authData?.user;
-                if (user) {
-                    const profileData = {
-                        user_id: user.id,
-                        email,
-                        nome,
-                        cognome,
-                        full_name: `${nome} ${cognome}`.trim(),
-                        telefono: telefono || null,
-                        data_nascita: dataNascita,
-                        role: 'USER',
-                        stato: 'ATTIVO',
-                        created_at: new Date().toISOString()
-                    };
+    function getErrorMessage(error) {
+      const msgs = {
+        'Invalid login credentials': 'Email o password non corretti',
+        'Email not confirmed': 'Conferma la tua email prima di accedere',
+        'User already registered': 'Email già registrata',
+        'Password should be at least 6 characters': 'La password deve essere di almeno 6 caratteri',
+        'Email rate limit exceeded': 'Hai richiesto troppi reset. Riprova più tardi.'
+      };
+      return msgs[error.message] || error.message || 'Si è verificato un errore';
+    }
 
-                    const { error: profileError } = await supabaseClient
-                        .from('user_profiles')
-                        .upsert(profileData, { onConflict: 'user_id' });
+    function setupResetPasswordUI() {
+      const cancelBtn = document.getElementById('cancelReset');
+      const saveBtn = document.getElementById('saveNewPassword');
+      if (cancelBtn) cancelBtn.addEventListener('click', closeResetModal);
+      if (saveBtn) saveBtn.addEventListener('click', submitNewPassword);
+    }
 
-                    if (profileError) {
-                        console.warn('Errore upsert profilo:', profileError);
-                    }
-                }
+    async function handleForgotPassword() {
+      clearMessages();
+      const email = document.getElementById('loginEmail').value.trim();
+      if (!email) {
+        showMessage('loginMessage', 'Inserisci la tua email nel campo sopra e poi clicca "Password dimenticata?"', 'error');
+        return;
+      }
+      try {
+        const redirectTo = `${window.location.origin}/login.html`;
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(email, { redirectTo });
+        if (error) throw error;
+        showMessage('loginMessage', 'Ti abbiamo inviato un link per reimpostare la password. Controlla la posta.', 'success');
+      } catch (err) {
+        showMessage('loginMessage', getErrorMessage(err), 'error');
+      }
+    }
 
-                showMessage('registerMessage', 'Registrazione avviata! Controlla la tua email per confermare l’account.', 'success');
-                setTimeout(() => redirectBasedOnRole('USER'), 1500);
+    function openResetModal() {
+      const modal = document.getElementById('resetModal');
+      if (modal) { modal.classList.remove('hidden'); modal.classList.add('flex'); }
+    }
+    function closeResetModal() {
+      const modal = document.getElementById('resetModal');
+      const msg = document.getElementById('resetMessage');
+      if (msg) msg.innerHTML = '';
+      if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+    }
+    async function submitNewPassword() {
+      const p1 = document.getElementById('newPassword').value;
+      const p2 = document.getElementById('newPasswordConfirm').value;
+      const msg = 'resetMessage';
+      if (!p1 || p1.length < 6) { showMessage(msg, 'La password deve essere di almeno 6 caratteri', 'error'); return; }
+      if (p1 !== p2) { showMessage(msg, 'Le password non coincidono', 'error'); return; }
+      try {
+        const { error } = await supabaseClient.auth.updateUser({ password: p1 });
+        if (error) throw error;
+        showMessage(msg, 'Password aggiornata con successo! Ora puoi accedere.', 'success');
+        setTimeout(() => { closeResetModal(); }, 1200);
+      } catch (err) {
+        showMessage('resetMessage', getErrorMessage(err), 'error');
+      }
+    }
 
-            } catch (error) {
-                showMessage('registerMessage', getErrorMessage(error), 'error');
-            } finally {
-                setLoading(button, false);
-            }
-        }
-
-        async function getUserProfile(userId) {
-            const { data, error } = await supabaseClient.from('user_profiles').select('*').eq('user_id', userId).single();
-            if (error) return null;
-            return data;
-        }
-
-        function redirectBasedOnRole(role) {
-            if (role === 'ADMIN' || role === 'DIRIGENTE') {
-                window.location.href = 'home_dirigenti.html';
-            } else {
-                window.location.href = 'home.html';
-            }
-        }
-
-        function togglePassword(inputId) {
-            const input = document.getElementById(inputId);
-            input.type = input.type === 'password' ? 'text' : 'password';
-        }
-
-        function showMessage(containerId, message, type) {
-            const container = document.getElementById(containerId);
-            const className = type === 'error' ? 'error-message' : 'success-message';
-            container.innerHTML = `<div class="${className}">${message}</div>`;
-        }
-
-        function clearMessages() {
-            document.getElementById('loginMessage').innerHTML = '';
-            document.getElementById('registerMessage').innerHTML = '';
-        }
-
-        function setLoading(button, loading) {
-            if (loading) {
-                button.classList.add('loading');
-                button.textContent = 'Caricamento...';
-            } else {
-                button.classList.remove('loading');
-                const isLogin = button.closest('#loginForm');
-                button.textContent = isLogin ? 'Accedi' : 'Registrati';
-            }
-        }
-
-        function getErrorMessage(error) {
-            const msgs = {
-                'Invalid login credentials': 'Email o password non corretti',
-                'Email not confirmed': 'Conferma la tua email prima di accedere',
-                'User already registered': 'Email già registrata',
-                'Password should be at least 6 characters': 'La password deve essere di almeno 6 caratteri',
-                'Email rate limit exceeded': 'Hai richiesto troppi reset. Riprova più tardi.'
-            };
-            return msgs[error.message] || error.message || 'Si è verificato un errore';
-        }
-
-        // --- RESET PASSWORD ---
-        function setupResetPasswordUI() {
-            const cancelBtn = document.getElementById('cancelReset');
-            const saveBtn = document.getElementById('saveNewPassword');
-            if (cancelBtn) cancelBtn.addEventListener('click', closeResetModal);
-            if (saveBtn) saveBtn.addEventListener('click', submitNewPassword);
-        }
-
-        async function handleForgotPassword() {
-            clearMessages();
-            const email = document.getElementById('loginEmail').value.trim();
-            if (!email) {
-                showMessage('loginMessage', 'Inserisci la tua email nel campo sopra e poi clicca "Password dimenticata?"', 'error');
-                return;
-            }
-            try {
-                const redirectTo = `${window.location.origin}/login.html`;
-                const { error } = await supabaseClient.auth.resetPasswordForEmail(email, { redirectTo });
-                if (error) throw error;
-                showMessage('loginMessage', 'Ti abbiamo inviato un link per reimpostare la password. Controlla la posta.', 'success');
-            } catch (err) {
-                showMessage('loginMessage', getErrorMessage(err), 'error');
-            }
-        }
-
-        function openResetModal() {
-            const modal = document.getElementById('resetModal');
-            if (modal) {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            }
-        }
-        function closeResetModal() {
-            const modal = document.getElementById('resetModal');
-            const msg = document.getElementById('resetMessage');
-            if (msg) msg.innerHTML = '';
-            if (modal) {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }
-        }
-        async function submitNewPassword() {
-            const p1 = document.getElementById('newPassword').value;
-            const p2 = document.getElementById('newPasswordConfirm').value;
-            const msg = 'resetMessage';
-            if (!p1 || p1.length < 6) {
-                showMessage(msg, 'La password deve essere di almeno 6 caratteri', 'error');
-                return;
-            }
-            if (p1 !== p2) {
-                showMessage(msg, 'Le password non coincidono', 'error');
-                return;
-            }
-            try {
-                const { error } = await supabaseClient.auth.updateUser({ password: p1 });
-                if (error) throw error;
-                showMessage(msg, 'Password aggiornata con successo! Ora puoi accedere.', 'success');
-                setTimeout(() => { closeResetModal(); }, 1200);
-            } catch (err) {
-                showMessage('resetMessage', getErrorMessage(err), 'error');
-            }
-        };
-            return msgs[error.message] || error.message || 'Si è verificato un errore';
-        }
-    </script>
+    function runSelfTests() {
+      try {
+        console.group('login.html self-tests');
+        console.assert(getErrorMessage({ message: 'Invalid login credentials' }) === 'Email o password non corretti', 'Mapping credenziali non valido');
+        console.assert(getErrorMessage({ message: 'User already registered' }) === 'Email già registrata', 'Mapping utente già registrato');
+        console.assert(getErrorMessage({ message: 'Qualcosa' }) === 'Qualcosa', 'Fallback messaggio originale');
+        console.assert(typeof supabaseClient !== 'undefined', 'Client Supabase inizializzato');
+        console.groupEnd();
+      } catch (e) { console.error('Self-tests exception', e); }
+    }
+  </script>
 </body>
 </html>
