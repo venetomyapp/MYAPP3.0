@@ -1,434 +1,606 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Conferma Account - MyApp</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    :root {
-      --gradient-bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
-      --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
-      --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.2);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conferma Email - MyApp</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- CONFIGURAZIONE COLORI TAILWIND -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1a1a2e',
+                        secondary: '#16213e',
+                        accent: '#0f3460',
+                        aurora: '#e94560',
+                        cyan: '#00d4ff',
+                        magenta: '#ff006e',
+                        gold: '#ffd700',
+                        teal: '#03dac6',
+                        dark: '#0a0a23',
+                        light: '#f8fafc',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        :root {
+            --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
+            --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
+        }
 
-    body {
-      font-family: 'Segoe UI', Roboto, sans-serif;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-      text-align: center;
-      background: var(--gradient-bg);
-      background-size: 400% 400%;
-      animation: gradientShift 20s ease infinite;
-      color: white;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+        body {
+            background: var(--gradient-aurora);
+            background-size: 400% 400%;
+            animation: aurora 20s ease infinite;
+            min-height: 100vh;
+        }
 
-    @keyframes gradientShift {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
+        @keyframes aurora {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+        }
 
-    .card {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: #1C1C1E;
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: var(--shadow-card);
-      width: 100%;
-      max-width: 500px;
-    }
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% { transform: translate3d(0,0,0); }
+            40%, 43% { transform: translate3d(0, -30px, 0); }
+            70% { transform: translate3d(0, -15px, 0); }
+            90% { transform: translate3d(0, -4px, 0); }
+        }
 
-    .logo {
-      width: 80px;
-      height: 80px;
-      background: linear-gradient(135deg, #e94560, #00d4ff);
-      border-radius: 20px;
-      margin: 0 auto 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.5rem;
-    }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
-    h1 {
-      color: #1a1a2e;
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
 
-    p {
-      color: #6b7280;
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
-    }
+        .status-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            border-radius: 24px;
+            max-width: 500px;
+            width: 100%;
+            padding: 3rem 2.5rem;
+            margin: 2rem;
+            text-align: center;
+        }
 
-    .success-icon {
-      font-size: 4rem;
-      color: #10b981;
-      margin-bottom: 20px;
-    }
+        .icon-bounce {
+            animation: bounce 2s infinite;
+        }
 
-    .loading-icon {
-      font-size: 4rem;
-      color: #f59e0b;
-      margin-bottom: 20px;
-      animation: pulse 1.5s infinite ease-in-out;
-    }
+        .icon-spin {
+            animation: spin 1s linear infinite;
+        }
 
-    .error-icon {
-      font-size: 4rem;
-      color: #ef4444;
-      margin-bottom: 20px;
-    }
+        .icon-pulse {
+            animation: pulse 2s infinite;
+        }
 
-    .setup-icon {
-      font-size: 4rem;
-      color: #3b82f6;
-      margin-bottom: 20px;
-      animation: spin 2s linear infinite;
-    }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
 
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-magic);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 1; }
-    }
+        .btn-primary {
+            background: var(--gradient-magic);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+        }
 
-    .button {
-      display: inline-block;
-      padding: 1rem 2rem;
-      background: var(--gradient-magic);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 1rem;
-      font-weight: 600;
-      text-decoration: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-top: 20px;
-      border: 2px solid rgba(233, 69, 96, 0.3);
-    }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(233, 69, 96, 0.3);
+        }
 
-    .button:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 20px 40px rgba(233, 69, 96, 0.4);
-      border-color: rgba(233, 69, 96, 0.8);
-    }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #1a1a2e;
+            border: 2px solid rgba(26, 26, 46, 0.2);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+        }
 
-    .progress-steps {
-      margin: 20px 0;
-      text-align: left;
-    }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(26, 26, 46, 0.4);
+        }
 
-    .progress-step {
-      display: flex;
-      align-items: center;
-      margin: 10px 0;
-      padding: 8px 0;
-      color: #6b7280;
-      font-size: 0.9rem;
-    }
+        .status-text {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: #64748b;
+            line-height: 1.6;
+        }
 
-    .progress-step.completed {
-      color: #10b981;
-    }
+        .status-title {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #1a1a2e;
+        }
 
-    .progress-step.current {
-      color: #3b82f6;
-      font-weight: 600;
-    }
+        .status-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
 
-    .progress-step .step-icon {
-      margin-right: 10px;
-      font-size: 1.2rem;
-    }
+        .step-info {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #e94560;
+            text-align: left;
+        }
 
-    #loadingState, #errorState, #successState, #setupState {
-      display: none;
-    }
-  </style>
+        .step-title {
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+        }
+
+        .step-description {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
 </head>
-<body>
-  <div class="card">
-    <!-- Stato di caricamento iniziale -->
-    <div id="loadingState">
-      <div class="loading-icon">⏳</div>
-      <h1>Conferma Account in Corso...</h1>
-      <p>Stiamo confermando il tuo account, attendere...</p>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- STATO LOADING -->
+    <div id="loadingState" class="status-container">
+        <div class="status-icon icon-spin">⚡</div>
+        <h1 class="status-title">Conferma in corso...</h1>
+        <p class="status-text">
+            Stiamo verificando la tua email e configurando il tuo account.
+        </p>
+        
+        <div class="progress-bar">
+            <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+        </div>
+        
+        <div class="step-info">
+            <div class="step-title">🔐 Fase attuale: <span id="currentStep">Verifica email</span></div>
+            <div class="step-description" id="stepDescription">
+                Stiamo verificando la validità del link di conferma...
+            </div>
+        </div>
     </div>
 
-    <!-- Stato di configurazione dati -->
-    <div id="setupState">
-      <div class="logo">🚀</div>
-      <div class="setup-icon">⚙️</div>
-      <h1>Configurazione Account...</h1>
-      <p>Stiamo configurando il tuo profilo e la tua tessera</p>
-      
-      <div class="progress-steps">
-        <div class="progress-step" id="step-auth">
-          <span class="step-icon">🔐</span>
-          <span>Account confermato</span>
+    <!-- STATO SETUP -->
+    <div id="setupState" class="status-container hidden">
+        <div class="status-icon icon-bounce">🚀</div>
+        <h1 class="status-title">Configurazione account</h1>
+        <p class="status-text">
+            Email confermata! Stiamo configurando il tuo profilo e la tua tessera digitale.
+        </p>
+        
+        <div class="progress-bar">
+            <div id="setupProgress" class="progress-fill" style="width: 50%"></div>
         </div>
-        <div class="progress-step" id="step-profile">
-          <span class="step-icon">👤</span>
-          <span>Creazione profilo...</span>
+        
+        <div class="step-info">
+            <div class="step-title">⚙️ Configurazione automatica</div>
+            <div class="step-description">
+                • Creazione profilo utente<br>
+                • Generazione tessera digitale<br>
+                • Attivazione servizi
+            </div>
         </div>
-        <div class="progress-step" id="step-tessera">
-          <span class="step-icon">🎫</span>
-          <span>Generazione tessera...</span>
-        </div>
-        <div class="progress-step" id="step-complete">
-          <span class="step-icon">✅</span>
-          <span>Finalizzazione...</span>
-        </div>
-      </div>
     </div>
 
-    <!-- Stato di successo -->
-    <div id="successState">
-      <div class="logo">🔐</div>
-      <div class="success-icon">✅</div>
-      <h1>Account Confermato!</h1>
-      <p>Il tuo account è stato confermato con successo.</p>
-      <p><strong>Profilo e tessera creati automaticamente!</strong></p>
-      <p>Ora puoi effettuare il login e iniziare a utilizzare tutti i servizi.</p>
-      <a href="login.html?confirmed=true" class="button">Vai al Login</a>
+    <!-- STATO SUCCESS -->
+    <div id="successState" class="status-container hidden">
+        <div class="status-icon icon-bounce">🎉</div>
+        <h1 class="status-title">Account attivato!</h1>
+        <p class="status-text">
+            La tua registrazione è stata completata con successo. Ora puoi accedere a tutti i servizi di MyApp.
+        </p>
+        
+        <div class="step-info">
+            <div class="step-title">✅ Configurazione completata</div>
+            <div class="step-description">
+                • Profilo utente creato<br>
+                • Tessera digitale generata<br>
+                • Tutti i servizi attivati
+            </div>
+        </div>
+        
+        <div style="margin-top: 2rem;">
+            <a href="home.html" class="btn-primary">🏠 Accedi all'App</a>
+            <a href="auth.html" class="btn-secondary">🔐 Vai al Login</a>
+        </div>
     </div>
 
-    <!-- Stato di errore -->
-    <div id="errorState">
-      <div class="error-icon">❌</div>
-      <h1>Errore Conferma</h1>
-      <p id="errorMessage">Si è verificato un errore durante la conferma dell'account.</p>
-      <a href="login.html" class="button">Vai al Login</a>
+    <!-- STATO ERROR -->
+    <div id="errorState" class="status-container hidden">
+        <div class="status-icon icon-pulse">❌</div>
+        <h1 class="status-title">Errore conferma</h1>
+        <p class="status-text" id="errorMessage">
+            Si è verificato un errore durante la conferma dell'email.
+        </p>
+        
+        <div class="step-info">
+            <div class="step-title">🔍 Possibili cause</div>
+            <div class="step-description">
+                • Link di conferma scaduto (valido 24h)<br>
+                • Link già utilizzato in precedenza<br>
+                • Problema di connessione temporaneo
+            </div>
+        </div>
+        
+        <div style="margin-top: 2rem;">
+            <a href="auth.html" class="btn-primary">🔄 Riprova Registrazione</a>
+            <a href="index.html" class="btn-secondary">🏠 Torna alla Home</a>
+        </div>
     </div>
-  </div>
 
-  <script>
-    const SUPABASE_URL = 'https://lycrgzptkdkksukcwrld.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5Y3JnenB0a2Rra3N1a2N3cmxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3ODQyMzAsImV4cCI6MjA2ODM2MDIzMH0.ZJGOXAMC3hKKrnwXHKEa2_Eh7ZpOKeLYvYlYneBiEfk';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    <script>
+        // === CONFIGURAZIONE SUPABASE ===
+        const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
+        
+        let supabaseClient;
 
-    function showState(stateId) {
-      ['loadingState', 'setupState', 'successState', 'errorState'].forEach(id => {
-        document.getElementById(id).style.display = id === stateId ? 'block' : 'none';
-      });
-    }
+        // === INIZIALIZZAZIONE ===
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('📧 CONFERMA EMAIL PAGE LOADED - MyApp v5.0');
+            
+            try {
+                // Inizializza Supabase
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('✅ Supabase client inizializzato');
+                
+                // Avvia processo di conferma
+                await handleEmailConfirmation();
+                
+            } catch (error) {
+                console.error('❌ Errore inizializzazione:', error);
+                showError('Errore inizializzazione sistema');
+            }
+        });
 
-    function updateProgressStep(stepId, status) {
-      const step = document.getElementById(stepId);
-      if (!step) return;
-      
-      step.classList.remove('current', 'completed');
-      if (status === 'current') {
-        step.classList.add('current');
-      } else if (status === 'completed') {
-        step.classList.add('completed');
-        step.querySelector('.step-icon').textContent = '✅';
-      }
-    }
+        // === GESTIONE CONFERMA EMAIL ===
+        async function handleEmailConfirmation() {
+            try {
+                console.log('🔄 Inizio processo di conferma email...');
+                
+                // Aggiorna progress
+                updateProgress(20, 'Verifica parametri', 'Analisi dei parametri di conferma...');
+                
+                // Ottieni i parametri dalla URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const token = urlParams.get('token');
+                const type = urlParams.get('type');
+                
+                console.log('📋 Parametri URL:', { token: token ? 'presente' : 'assente', type });
+                
+                if (!token || type !== 'signup') {
+                    throw new Error('Parametri di conferma non validi');
+                }
+                
+                // Aggiorna progress
+                updateProgress(40, 'Conferma email', 'Verifica del token di conferma...');
+                
+                // Verifica il token con Supabase
+                const { data, error } = await supabaseClient.auth.verifyOtp({
+                    token_hash: token,
+                    type: 'signup'
+                });
 
-    function showSuccess() {
-      showState('successState');
-      setTimeout(() => {
-        window.location.href = 'login.html?confirmed=true';
-      }, 5000);
-    }
+                if (error) {
+                    console.error('❌ Errore verifica token:', error);
+                    throw new Error(`Errore conferma: ${error.message}`);
+                }
 
-    function showError(message = 'Si è verificato un errore durante la conferma dell\'account.') {
-      document.getElementById('errorMessage').textContent = message;
-      showState('errorState');
-    }
+                if (!data.user) {
+                    throw new Error('Utente non trovato dopo la conferma');
+                }
 
-    async function createProfile(userId, userData) {
-      try {
-        console.log('🔄 Creazione profilo per utente:', userId);
-        updateProgressStep('step-profile', 'current');
-
-        const profileData = {
-          user_id: userId,
-          nome: userData.nome || '',
-          cognome: userData.cognome || '',
-          email: userData.email || '',
-          telefono: userData.telefono || '',
-          data_nascita: userData.dataNascita || null,
-          luogo_nascita: userData.luogoNascita || '',
-          codice_fiscale: userData.codiceFiscale || '',
-          indirizzo: userData.indirizzo || '',
-          citta: userData.citta || '',
-          cap: userData.cap || '',
-          provincia: userData.provincia || '',
-          ruolo: 'ISCRITTO',
-          stato: 'ATTIVO',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        };
-
-        const { data, error } = await supabase
-          .from('profiles')
-          .insert([profileData])
-          .select();
-
-        if (error) {
-          console.error('❌ Errore creazione profilo:', error);
-          throw new Error('Errore nella creazione del profilo: ' + error.message);
+                console.log('✅ Email confermata per:', data.user.email);
+                
+                // Aggiorna progress
+                updateProgress(60, 'Email confermata', 'Email verificata con successo!');
+                
+                // Avvia setup account
+                await setupUserAccount(data.user);
+                
+            } catch (error) {
+                console.error('❌ Errore conferma email:', error);
+                showError(error.message);
+            }
         }
 
-        console.log('✅ Profilo creato:', data);
-        updateProgressStep('step-profile', 'completed');
-        return data[0];
-
-      } catch (error) {
-        updateProgressStep('step-profile', 'error');
-        throw error;
-      }
-    }
-
-    async function createTessera(userId, userData) {
-      try {
-        console.log('🔄 Creazione tessera per utente:', userId);
-        updateProgressStep('step-tessera', 'current');
-
-        const numeroTessera = generateNumeroTessera();
-        
-        const tesseraData = {
-          user_id: userId,
-          numero_tessera: numeroTessera,
-          nome: userData.nome || '',
-          cognome: userData.cognome || '',
-          data_nascita: userData.dataNascita || null,
-          luogo_nascita: userData.luogoNascita || '',
-          codice_fiscale: userData.codiceFiscale || '',
-          data_emissione: new Date().toISOString().split('T')[0],
-          data_scadenza: getDataScadenza(),
-          stato: 'ATTIVA',
-          tipo_tessera: 'STANDARD',
-          qr_code_data: generateQRData(numeroTessera),
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        };
-
-        const { data, error } = await supabase
-          .from('tessere')
-          .insert([tesseraData])
-          .select();
-
-        if (error) {
-          console.error('❌ Errore creazione tessera:', error);
-          throw new Error('Errore nella creazione della tessera: ' + error.message);
+        // === SETUP ACCOUNT UTENTE ===
+        async function setupUserAccount(user) {
+            try {
+                console.log('⚙️ Inizio setup account per:', user.email);
+                
+                // Mostra stato setup
+                showState('setupState');
+                updateSetupProgress(25);
+                
+                // Ottieni metadati utente
+                const userData = user.user_metadata || {};
+                console.log('📋 Metadati utente:', userData);
+                
+                // 1. Verifica/Crea profilo utente
+                await createOrUpdateProfile(user, userData);
+                updateSetupProgress(50);
+                
+                // Pausa per UX
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // 2. Crea tessera digitale
+                await createDigitalTessera(user, userData);
+                updateSetupProgress(75);
+                
+                // Pausa per UX
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // 3. Finalizza setup
+                updateSetupProgress(100);
+                
+                // Mostra successo
+                setTimeout(() => showSuccess(), 1500);
+                
+                console.log('🎉 Setup account completato con successo');
+                
+            } catch (error) {
+                console.error('❌ Errore setup account:', error);
+                showError(`Errore durante la configurazione: ${error.message}`);
+            }
         }
 
-        console.log('✅ Tessera creata:', data);
-        updateProgressStep('step-tessera', 'completed');
-        return data[0];
+        // === CREAZIONE/AGGIORNAMENTO PROFILO ===
+        async function createOrUpdateProfile(user, userData) {
+            try {
+                console.log('👤 Creazione profilo utente...');
+                
+                // Verifica se il profilo esiste già
+                const { data: existingProfile } = await supabaseClient
+                    .from('user_profiles')
+                    .select('id')
+                    .eq('user_id', user.id)
+                    .single();
 
-      } catch (error) {
-        updateProgressStep('step-tessera', 'error');
-        throw error;
-      }
-    }
+                if (existingProfile) {
+                    console.log('✅ Profilo esistente trovato, aggiorno stato');
+                    
+                    // Aggiorna solo lo stato se il profilo esiste
+                    const { error: updateError } = await supabaseClient
+                        .from('user_profiles')
+                        .update({ 
+                            stato: 'ATTIVO',
+                            email: user.email 
+                        })
+                        .eq('user_id', user.id);
+                    
+                    if (updateError) {
+                        console.error('❌ Errore aggiornamento profilo:', updateError);
+                    }
+                } else {
+                    console.log('🆕 Creazione nuovo profilo');
+                    
+                    // Crea nuovo profilo con i dati dai metadati
+                    const profileData = {
+                        user_id: user.id,
+                        email: user.email,
+                        nome: userData.nome || 'Non specificato',
+                        cognome: userData.cognome || 'Non specificato',
+                        full_name: userData.nome && userData.cognome 
+                            ? `${userData.nome} ${userData.cognome}` 
+                            : 'Non specificato',
+                        telefono: userData.telefono || null,
+                        data_nascita: userData.data_nascita || null,
+                        luogo_nascita: userData.luogo_nascita || null,
+                        role: 'USER',
+                        stato: 'ATTIVO'
+                    };
 
-    function generateNumeroTessera() {
-      const year = new Date().getFullYear();
-      const random = Math.random().toString(36).substr(2, 6).toUpperCase();
-      return `TESS-${year}-${random}`;
-    }
+                    const { error: insertError } = await supabaseClient
+                        .from('user_profiles')
+                        .insert([profileData]);
 
-    function getDataScadenza() {
-      const now = new Date();
-      const scadenza = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate());
-      return scadenza.toISOString().split('T')[0];
-    }
-
-    function generateQRData(numeroTessera) {
-      return JSON.stringify({
-        tessera: numeroTessera,
-        timestamp: Date.now(),
-        type: 'tessera_sindacale'
-      });
-    }
-
-    async function setupUserData(session) {
-      try {
-        showState('setupState');
-        updateProgressStep('step-auth', 'completed');
-
-        const user = session.user;
-        const userData = user.user_metadata || {};
-
-        console.log('📋 Dati utente disponibili:', userData);
-
-        // Crea profilo
-        await createProfile(user.id, userData);
-        
-        // Piccola pausa per migliorare UX
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        // Crea tessera
-        await createTessera(user.id, userData);
-        
-        // Finalizzazione
-        updateProgressStep('step-complete', 'current');
-        await new Promise(resolve => setTimeout(resolve, 500));
-        updateProgressStep('step-complete', 'completed');
-
-        console.log('🎉 Setup completato con successo!');
-        
-        // Aspetta un po' prima di mostrare il successo
-        setTimeout(showSuccess, 1000);
-
-      } catch (error) {
-        console.error('❌ Errore durante il setup:', error);
-        showError('Errore durante la configurazione: ' + error.message);
-      }
-    }
-
-    async function handleEmailConfirmation() {
-      showState('loadingState');
-
-      try {
-        console.log('🔄 Elaborazione conferma email...');
-        
-        const { data, error } = await supabase.auth.exchangeCodeForSession();
-
-        if (error) {
-          console.error("❌ Errore nella conferma:", error);
-          showError('Errore nella conferma: ' + error.message);
-          return;
+                    if (insertError) {
+                        console.error('❌ Errore creazione profilo:', insertError);
+                        throw new Error('Impossibile creare il profilo utente');
+                    }
+                }
+                
+                console.log('✅ Profilo configurato correttamente');
+                
+            } catch (error) {
+                console.error('❌ Errore gestione profilo:', error);
+                throw error;
+            }
         }
 
-        if (!data.session) {
-          console.error("❌ Nessuna sessione trovata");
-          showError('Nessuna sessione trovata. Il link potrebbe essere scaduto.');
-          return;
+        // === CREAZIONE TESSERA DIGITALE ===
+        async function createDigitalTessera(user, userData) {
+            try {
+                console.log('🎫 Creazione tessera digitale...');
+                
+                // Verifica se la tessera esiste già
+                const { data: existingTessera } = await supabaseClient
+                    .from('tessere')
+                    .select('numero_tessera')
+                    .eq('user_id', user.id)
+                    .single();
+
+                if (existingTessera) {
+                    console.log('✅ Tessera esistente trovata:', existingTessera.numero_tessera);
+                    return;
+                }
+                
+                // Genera numero tessera univoco
+                const numeroTessera = await generateTesseraNumber();
+                
+                // Crea tessera digitale
+                const tesseraData = {
+                    user_id: user.id,
+                    numero_tessera: numeroTessera,
+                    nome_completo: userData.nome && userData.cognome 
+                        ? `${userData.nome} ${userData.cognome}` 
+                        : 'Non specificato',
+                    email: user.email,
+                    telefono: userData.telefono || null,
+                    data_emissione: new Date().toISOString().split('T')[0],
+                    data_scadenza: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // +1 anno
+                    stato: 'ATTIVA',
+                    tipo: 'STANDARD',
+                    qr_code_data: JSON.stringify({
+                        tessera: numeroTessera,
+                        user_id: user.id,
+                        timestamp: Date.now(),
+                        type: 'MyApp_tessera'
+                    })
+                };
+
+                const { error: tesseraError } = await supabaseClient
+                    .from('tessere')
+                    .insert([tesseraData]);
+
+                if (tesseraError) {
+                    console.error('❌ Errore creazione tessera:', tesseraError);
+                    throw new Error('Impossibile creare la tessera digitale');
+                }
+                
+                console.log('✅ Tessera digitale creata:', numeroTessera);
+                
+            } catch (error) {
+                console.error('❌ Errore creazione tessera:', error);
+                throw error;
+            }
         }
 
-        console.log('✅ Email confermata per:', data.session.user.email);
-        
-        // Avvia il setup automatico
-        await setupUserData(data.session);
+        // === GENERAZIONE NUMERO TESSERA ===
+        async function generateTesseraNumber() {
+            try {
+                const year = new Date().getFullYear();
+                
+                // Conta tessere esistenti per determinare il numero progressivo
+                const { count } = await supabaseClient
+                    .from('tessere')
+                    .select('*', { count: 'exact', head: true });
+                
+                const nextNumber = (count || 0) + 1;
+                const numeroTessera = `MYAPP-${year}-${nextNumber.toString().padStart(4, '0')}`;
+                
+                console.log('🎯 Numero tessera generato:', numeroTessera);
+                return numeroTessera;
+                
+            } catch (error) {
+                console.error('❌ Errore generazione numero tessera:', error);
+                // Fallback con timestamp
+                const timestamp = Date.now().toString().slice(-6);
+                return `MYAPP-${new Date().getFullYear()}-${timestamp}`;
+            }
+        }
 
-      } catch (e) {
-        console.error('❌ Errore generale:', e);
-        showError('Errore imprevisto durante la conferma.');
-      }
-    }
+        // === FUNZIONI UI ===
+        function showState(stateId) {
+            // Nasconde tutti gli stati
+            ['loadingState', 'setupState', 'successState', 'errorState'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            
+            // Mostra lo stato richiesto
+            document.getElementById(stateId).classList.remove('hidden');
+        }
 
-    // Avvia il processo quando la pagina è caricata
-    document.addEventListener('DOMContentLoaded', handleEmailConfirmation);
-  </script>
+        function updateProgress(percentage, step, description) {
+            const progressFill = document.getElementById('progressFill');
+            const currentStep = document.getElementById('currentStep');
+            const stepDescription = document.getElementById('stepDescription');
+            
+            if (progressFill) progressFill.style.width = `${percentage}%`;
+            if (currentStep) currentStep.textContent = step;
+            if (stepDescription) stepDescription.textContent = description;
+        }
+
+        function updateSetupProgress(percentage) {
+            const setupProgress = document.getElementById('setupProgress');
+            if (setupProgress) setupProgress.style.width = `${percentage}%`;
+        }
+
+        function showSuccess() {
+            showState('successState');
+            
+            // Aggiungi confetti effect (opzionale)
+            setTimeout(() => {
+                console.log('🎉 Account configurato con successo!');
+            }, 500);
+        }
+
+        function showError(message) {
+            showState('errorState');
+            
+            const errorMessage = document.getElementById('errorMessage');
+            if (errorMessage) {
+                errorMessage.textContent = message || 'Si è verificato un errore imprevisto.';
+            }
+            
+            console.error('❌ Errore mostrato all\'utente:', message);
+        }
+
+        // === UTILITY ===
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        console.log('🚀 MyApp Email Confirmation System - Ready');
+    </script>
+
 </body>
 </html>
