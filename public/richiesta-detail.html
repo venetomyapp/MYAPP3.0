@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dettaglio Richiesta - MyApp</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Configurazione colori -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1a1a2e',
+                        secondary: '#16213e',
+                        accent: '#0f3460',
+                        aurora: '#e94560',
+                        cyan: '#00d4ff',
+                        magenta: '#ff006e',
+                        gold: '#ffd700',
+                        teal: '#03dac6',
+                        dark: '#0a0a23',
+                        light: '#f8fafc',
+                        textDark: '#1C1C1E',
+                        backgroundLight: '#F4F4F8',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        :root {
+            --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
+            --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
+            --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
+        }
+
+        body {
+            background: var(--gradient-aurora);
+            background-size: 400% 400%;
+            animation: aurora 20s ease infinite;
+            min-height: 100vh;
+        }
+
+        @keyframes aurora {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .text-ultra-visible {
+            color: #ffffff;
+            text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
+            font-weight: 800;
+        }
+
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        .btn-aurora {
+            background: var(--gradient-magic);
+            color: white;
+            border: 2px solid rgba(233, 69, 96, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 700;
+        }
+
+        .btn-aurora:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(233, 69, 96, 0.4);
+            border-color: rgba(233, 69, 96, 0.8);
+        }
+
+        .btn-cyber {
+            background: var(--gradient-cyber);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            color: white;
+            font-weight: 700;
+        }
+
+        .btn-cyber:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.4);
+            border-color: rgba(0, 212, 255, 0.8);
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.35);
+            border-top-color: #e94560;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0.5rem;
+            width: 0.75rem;
+            height: 0.75rem;
+            background: #00d4ff;
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.3);
+        }
+
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 0.875rem;
+            top: 1.25rem;
+            bottom: -1rem;
+            width: 2px;
+            background: linear-gradient(to bottom, rgba(0, 212, 255, 0.5), transparent);
+        }
+
+        .comunicazione-bubble {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .comunicazione-sistema {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .comunicazione-dirigente {
+            background: rgba(233, 69, 96, 0.1);
+            border-color: rgba(233, 69, 96, 0.3);
+        }
+    </style>
+</head>
+
+<body class="flex flex-col min-h-screen font-sans">
+    <!-- Header -->
+    <header class="py-4 px-6 sticky top-0 z-50 glass-morphism">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-white text-xl font-bold" id="pageTitle">Dettaglio Richiesta</h1>
+            <a href="richieste.html" class="btn-cyber py-2 px-4 rounded-full">← Le Mie Richieste</a>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <div id="richiestaContainer">
+            <!-- Loading iniziale -->
+            <div class="text-center py-12">
+                <div class="spinner mx-auto mb-4"></div>
+                <p class="text-white">Caricamento dettagli...</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Configurazione
+        const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        let currentUser = null;
+        let currentRichiesta = null;
+
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                await checkAuth();
+                await loadRichiestaDetail();
+            } catch (error) {
+                console.error('Errore:', error);
+                showError();
+            }
+        });
+
+        async function checkAuth() {
+            const { data: { user }, error } = await supabase.auth.getUser();
+            if (error || !user) {
+                window.location.href = 'auth.html';
+                return;
+            }
+            currentUser = user;
+        }
+
+        async function loadRichiestaDetail() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const richiestaId = urlParams.get('id');
+            
+            if (!richiestaId) {
+                window.location.href = 'richieste.html';
+                return;
+            }
+
+            try {
+                // Carica richiesta
+                const { data: richiesta, error } = await supabase
+                    .from('richieste_personali')
+                    .select('*')
+                    .eq('id', richiestaId)
+                    .eq('user_id', currentUser.id) // Sicurezza: solo proprie richieste
+                    .single();
+
+                if (error) throw error;
+                if (!richiesta) throw new Error('Richiesta non trovata');
+
+                currentRichiesta = richiesta;
+
+                // Carica cronologia
+                const { data: cronologia } = await supabase
+                    .from('richieste_log')
+                    .select('*')
+                    .eq('richiesta_id', richiestaId)
+                    .order('created_at', { ascending: false });
+
+                renderRichiestaDetail(richiesta, cronologia || []);
+
+            } catch (error) {
+                console.error('Errore caricamento:', error);
+                showError();
+            }
+        }
+
+        function renderRichiestaDetail(richiesta, cronologia) {
+            const container = document.getElementById('richiestaContainer');
+            const comunicazioni = JSON.parse(richiesta.comunicazioni || '[]');
+            
+            document.getElementById('pageTitle').textContent = richiesta.titolo;
+            
+            container.innerHTML = `
+                <div class="space-y-8">
+                    <!-- Header richiesta -->
+                    <div class="glass-morphism rounded-3xl p-8">
+                        <div class="flex items-start justify-between mb-6">
+                            <div>
+                                <h1 class="text-ultra-visible text-3xl font-black mb-2">${richiesta.titolo}</h1>
+                                <div class="flex flex-wrap items-center gap-4 text-white/70">
+                                    <span class="flex items-center gap-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 7 4-4 4 4" />
+                                        </svg>
+                                        ${richiesta.categoria}
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 6l6-6" />
+                                        </svg>
+                                        ${new Date(richiesta.created_at).toLocaleDateString('it-IT')}
+                                    </span>
+                                    <span class="px-3 py-1 rounded-full text-xs ${getPriorityColor(richiesta.priorita)}">
+                                        ${richiesta.priorita}
+                                    </span>
+                                </div>
+                            </div>
+                            <span class="px-4 py-2 rounded-full text-sm font-bold text-white ${getStatusColor(richiesta.stato)}">
+                                ${getStatusText(richiesta.stato)}
+                            </span>
+                        </div>
+                        
+                        <div class="bg-white/10 rounded-2xl p-6">
+                            <h3 class="text-white text-lg font-bold mb-3 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Descrizione
+                            </h3>
+                            <p class="text-white/90 whitespace-pre-wrap">${richiesta.descrizione || 'Nessuna descrizione fornita'}</p>
+                        </div>
+                    </div>
+
+                    <!-- Stato e gestione -->
+                    <div class="glass-morphism rounded-3xl p-6">
+                        <h2 class="text-white text-xl font-bold mb-4 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                            Stato della Richiesta
+                        </h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-white/5 rounded-xl p-4">
+                                <h4 class="text-white/80 font-semibold mb-2 flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                    Dirigente Assegnato
+                                </h4>
+                                <p class="text-white">
+                                    ${richiesta.dirigente_nome ? 
+                                        `👤 ${richiesta.dirigente_nome}` : 
+                                        '⏳ In attesa di assegnazione'}
+                                </p>
+                                ${richiesta.data_presa_in_carico ? `
+                                    <p class="text-white/70 text-sm mt-1">
+                                        Presa in carico il ${new Date(richiesta.data_presa_in_carico).toLocaleDateString('it-IT')}
+                                    </p>
+                                ` : ''}
+                            </div>
+                            
+                            <div class="bg-white/5 rounded-xl p-4">
+                                <h4 class="text-white/80 font-semibold mb-2 flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Tempi di Gestione
+                                </h4>
+                                ${richiesta.data_completamento ? `
+                                    <p class="text-green-400 flex items-center gap-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Completata il ${new Date(richiesta.data_completamento).toLocaleDateString('it-IT')}
+                                    </p>
+                                ` : `
+                                    <p class="text-white/70">
+                                        ⏱️ ${Math.floor((new Date() - new Date(richiesta.created_at)) / (1000 * 60 * 60 * 24))} giorni dall'invio
+                                    </p>
+                                `}
+                            </div>
+                        </div>
+
+                        ${richiesta.note_dirigente ? `
+                            <div class="mt-6 bg-white/10 rounded-2xl p-4">
+                                <h4 class="text-white/80 font-semibold mb-2 flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                                    </svg>
+                                    Note del Dirigente
+                                </h4>
+                                <p class="text-white/90">${richiesta.note_dirigente}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- Comunicazioni -->
+                    ${comunicazioni.length > 0 ? `
+                        <div class="glass-morphism rounded-3xl p-6">
+                            <h2 class="text-white text-xl font-bold mb-4 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
+                                Comunicazioni
+                            </h2>
+                            <div class="space-y-4">
+                                ${comunicazioni.map(com => {
+                                    const tipoClass = com.tipo === 'SISTEMA' ? 'comunicazione-sistema' : 
+                                                     com.tipo === 'DIRIGENTE' ? 'comunicazione-dirigente' : 
+                                                     'comunicazione-bubble';
+                                    const icon = com.tipo === 'SISTEMA' ? '🤖' : 
+                                                com.tipo === 'DIRIGENTE' ? '👤' : '💬';
+                                    
+                                    return `
+                                        <div class="${tipoClass}">
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="text-white font-semibold flex items-center gap-2">
+                                                    ${icon} ${com.mittente}
+                                                </span>
+                                                <span class="text-white/60 text-sm">${new Date(com.data).toLocaleString('it-IT')}</span>
+                                            </div>
+                                            <p class="text-white/90">${com.messaggio}</p>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <!-- Cronologia -->
+                    ${cronologia.length > 0 ? `
+                        <div class="glass-morphism rounded-3xl p-6">
+                            <h2 class="text-white text-xl font-bold mb-4 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Cronologia
+                            </h2>
+                            <div class="space-y-4">
+                                ${cronologia.map(log => `
+                                    <div class="timeline-item">
+                                        <div class="bg-white/5 rounded-xl p-4">
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="text-white font-semibold">${log.azione}</span>
+                                                <span class="text-white/60 text-sm">${new Date(log.created_at).toLocaleString('it-IT')}</span>
+                                            </div>
+                                            <p class="text-white/70 text-sm">${log.user_nome} • ${log.user_role}</p>
+                                            ${log.note ? `<p class="text-white/80 text-sm mt-1">${log.note}</p>` : ''}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <!-- Azioni utente -->
+                    <div class="glass-morphism rounded-3xl p-6">
+                        <h2 class="text-white text-xl font-bold mb-4 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                            Azioni Disponibili
+                        </h2>
+                        <div class="flex gap-4 flex-wrap">
+                            <button onclick="refreshData()" class="btn-cyber py-2 px-4 rounded-xl inline-flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                                Aggiorna
+                            </button>
+                            
+                            <a href="richieste.html" class="btn-aurora py-2 px-4 rounded-xl inline-flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Tutte le Richieste
+                            </a>
+                            
+                            <a href="home.html" class="btn-cyber py-2 px-4 rounded-xl inline-flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                </svg>
+                                Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function refreshData() {
+            await loadRichiestaDetail();
+            showSuccess('Dati aggiornati');
+        }
+
+        function showError() {
+            const container = document.getElementById('richiestaContainer');
+            container.innerHTML = `
+                <div class="glass-morphism rounded-3xl p-12 text-center">
+                    <div class="text-6xl mb-4">❌</div>
+                    <h2 class="text-white text-2xl font-bold mb-4">Errore</h2>
+                    <p class="text-white/70 mb-6">Impossibile caricare i dettagli della richiesta</p>
+                    <div class="flex gap-4 justify-center">
+                        <button onclick="location.reload()" class="btn-aurora py-3 px-6 rounded-xl">
+                            🔄 Riprova
+                        </button>
+                        <a href="richieste.html" class="btn-cyber py-3 px-6 rounded-xl">
+                            ← Torna alle Richieste
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Utility functions
+        function getStatusColor(stato) {
+            const colors = {
+                'RICEVUTA': 'bg-blue-500',
+                'IN_ESAME': 'bg-yellow-500',
+                'IN_LAVORAZIONE': 'bg-orange-500',
+                'NECESSARIE_INFO': 'bg-purple-500',
+                'COMPLETATA': 'bg-green-500',
+                'CHIUSA': 'bg-gray-500',
+                'ANNULLATA': 'bg-red-500'
+            };
+            return colors[stato] || 'bg-gray-500';
+        }
+
+        function getStatusText(stato) {
+            const texts = {
+                'RICEVUTA': 'Ricevuta',
+                'IN_ESAME': 'In Esame',
+                'IN_LAVORAZIONE': 'In Lavorazione',
+                'NECESSARIE_INFO': 'Info Richieste',
+                'COMPLETATA': 'Completata',
+                'CHIUSA': 'Chiusa',
+                'ANNULLATA': 'Annullata'
+            };
+            return texts[stato] || stato;
+        }
+
+        function getPriorityColor(priorita) {
+            const colors = {
+                'BASSA': 'bg-green-100 text-green-800',
+                'NORMALE': 'bg-blue-100 text-blue-800',
+                'ALTA': 'bg-red-100 text-red-800'
+            };
+            return colors[priorita] || 'bg-gray-100 text-gray-800';
+        }
+
+        function showSuccess(message) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg bg-green-500 text-white font-semibold transition-all duration-300';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Auto-refresh ogni 60 secondi
+        setInterval(() => {
+            loadRichiestaDetail();
+        }, 60000);
+    </script>
+</body>
+</html>
