@@ -1,25 +1,29 @@
 {
-  "name": "la-mia-app2026",
-  "version": "2.0.0",
-  "description": "Progressive Web App per Sindacato Carabinieri - Il tuo dirigente sempre con te",
-  "main": "public/index.html",
-  "homepage": "https://antoniogrande81.github.io/la-mia-app2026",
+  "name": "myapp31",
+  "version": "3.0.0",
+  "description": "MyApp - Progressive Web App per gestione richieste e servizi",
+  "main": "index.html",
+  "homepage": "https://myapp31.vercel.app",
+  "type": "module",
   "scripts": {
-    "dev": "npx http-server public -p 3000 -c-1",
+    "dev": "npx http-server . -p 3000 -c-1",
     "start": "npm run dev",
     "build": "echo 'Build completato - App pronta per deploy'",
     "deploy": "git add . && git commit -m 'Deploy update' && git push origin main",
-    "test": "echo 'Test suite non ancora implementata'",
-    "serve": "npx http-server . -p 8080"
+    "test": "echo 'Test webhook: curl -X POST https://myapp31.vercel.app/api/jotform-webhook'",
+    "serve": "npx http-server . -p 8080",
+    "webhook-test": "node test/webhook-test.js"
   },
   "keywords": [
     "pwa",
-    "sindacato",
-    "carabinieri",
+    "myapp",
     "webapp",
     "mobile-app",
     "supabase",
-    "tailwind"
+    "tailwind",
+    "jotform",
+    "webhook",
+    "richieste"
   ],
   "author": {
     "name": "Antonio Grande",
@@ -34,8 +38,8 @@
     "url": "https://github.com/antoniogrande81/la-mia-app2026/issues"
   },
   "engines": {
-    "node": ">=14.0.0",
-    "npm": ">=6.0.0"
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   },
   "devDependencies": {
     "http-server": "^14.1.1"
@@ -44,10 +48,10 @@
     "@supabase/supabase-js": "^2.39.0"
   },
   "pwa": {
-    "name": "MyApp Sindacato Carabinieri",
+    "name": "MyApp",
     "short_name": "MyApp",
-    "description": "Il tuo dirigente sempre con te",
-    "theme_color": "#2400C1",
+    "description": "Sistema integrato di gestione richieste e servizi",
+    "theme_color": "#1a1a2e",
     "background_color": "#F4F4F8",
     "display": "standalone",
     "orientation": "portrait"
@@ -57,5 +61,13 @@
     "last 2 versions",
     "not dead",
     "not ie <= 11"
-  ]
+  ],
+  "vercel": {
+    "functions": {
+      "api/jotform-webhook.js": {
+        "runtime": "nodejs18.x",
+        "memory": 512
+      }
+    }
+  }
 }
