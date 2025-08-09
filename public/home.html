@@ -1,8 +1,689 @@
-<div class="flex items-center gap-4">
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - MyApp</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- CONFIGURAZIONE COLORI TAILWIND -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Aurora Boreale 2025 Palette
+                        primary: '#1a1a2e',      // Blu notte profondo
+                        secondary: '#16213e',     // Blu oceano
+                        accent: '#0f3460',        // Blu acciaio
+                        aurora: '#e94560',        // Rosa aurora
+                        cyan: '#00d4ff',          // Cyan elettrico
+                        magenta: '#ff006e',       // Magenta vibrante
+                        gold: '#ffd700',          // Oro elegante
+                        teal: '#03dac6',          // Teal premium
+                        dark: '#0a0a23',          // Nero cyber
+                        light: '#f8fafc',         // Bianco ghiaccio
+                        textDark: '#1C1C1E',
+                        backgroundLight: '#F4F4F8',
+                    },
+                    screens: {
+                        'xs': '320px',
+                        'sm': '640px',
+                        'md': '768px',
+                        'lg': '1024px',
+                        'xl': '1280px',
+                        '2xl': '1536px',
+                        '3xl': '1920px',
+                        '4xl': '2560px',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- STILI CSS COMPLETI -->
+    <style>
+        /* === VARIABILI CSS === */
+        :root {
+            --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
+            --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
+            --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
+        }
+
+        /* === SFONDO PRINCIPALE === */
+        body {
+            background: var(--gradient-aurora);
+            background-size: 400% 400%;
+            animation: aurora 20s ease infinite;
+            min-height: 100vh;
+        }
+
+        /* === ANIMAZIONI === */
+        @keyframes aurora {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(233, 69, 96, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(0, 212, 255, 0.8); }
+        }
+
+        /* === TIPOGRAFIA ULTRA-VISIBILE === */
+        .text-ultra-visible {
+            color: #ffffff;
+            text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
+            font-weight: 800;
+        }
+
+        .text-white {
+            text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
+        }
+
+        /* === GLASSMORPHISM === */
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* === BOTTONI === */
+        .btn-aurora {
+            background: var(--gradient-magic);
+            color: white;
+            border: 2px solid rgba(233, 69, 96, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 700;
+        }
+
+        .btn-aurora:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(233, 69, 96, 0.4);
+            border-color: rgba(233, 69, 96, 0.8);
+        }
+
+        .btn-cyber {
+            background: var(--gradient-cyber);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            color: white;
+            font-weight: 700;
+        }
+
+        .btn-cyber:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.4);
+            border-color: rgba(0, 212, 255, 0.8);
+        }
+
+        .btn-primary {
+            background: var(--gradient-aurora);
+            color: white;
+            border: 2px solid rgba(26, 26, 46, 0.3);
+            font-weight: 700;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(26, 26, 46, 0.4);
+            border-color: rgba(26, 26, 46, 0.8);
+        }
+
+        /* === CARDS === */
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px) scale(1.05);
+            background: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.15));
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        /* === FORM ELEMENTS === */
+        .search-box {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 16px 20px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #e94560;
+            box-shadow: 0 0 0 4px rgba(233, 69, 96, 0.2);
+            transform: scale(1.02);
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 14px 18px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #e94560;
+            box-shadow: 0 0 0 4px rgba(233, 69, 96, 0.2);
+            transform: scale(1.02);
+        }
+
+        /* === FLOATING ELEMENTS === */
+        .floating-help {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            z-index: 1000;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* === LOADING SKELETON === */
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 12px;
+        }
+
+        /* === EMPTY STATE === */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+        }
+
+        /* === RESPONSIVE TYPOGRAPHY === */
+        .hero-title {
+            font-size: clamp(3rem, 12vw, 6rem);
+            font-weight: 900;
+        }
+
+        .section-title {
+            font-size: clamp(2.2rem, 8vw, 4rem);
+            font-weight: 900;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.5rem, 6vw, 2.5rem);
+            font-weight: 800;
+        }
+
+        /* === NOTIFICATION DROPDOWN === */
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .notification-badge {
+            background: #dc2626;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* === ACTION CARDS === */
+        .action-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+            border-color: rgba(233, 69, 96, 0.3);
+            background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+        }
+
+        /* === REQUEST PRIORITY & STATUS === */
+        .priority-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .priority-alta { background: #ef4444; }
+        .priority-normale { background: #3b82f6; }
+        .priority-bassa { background: #10b981; }
+
+        .request-status-ricevuta { background: #3b82f6; }
+        .request-status-in_esame { background: #f59e0b; }
+        .request-status-in_lavorazione { background: #f97316; }
+        .request-status-completata { background: #10b981; }
+        .request-status-chiusa { background: #6b7280; }
+
+        /* === LINE CLAMP === */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* === REDUCED MOTION === */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* === RESPONSIVE BREAKPOINTS === */
+        @media (max-width: 640px) {
+            .hero-title { font-size: 2.25rem; line-height: 2.5rem; }
+        }
+
+        @media (min-width: 641px) and (max-width: 1024px) {
+            .hero-title { font-size: 3rem; line-height: 3.5rem; }
+        }
+
+        @media (min-width: 1025px) {
+            .max-w-md { max-width: 48rem; }
+        }
+    </style>
+</head>
+
+<body class="flex flex-col min-h-screen font-sans">
+
+    <!-- HEADER PROFESSIONALE -->
+    <header class="glass-morphism sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo e Brand -->
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-primary via-secondary to-accent rounded-xl flex items-center justify-center relative">
+                        <span class="text-white font-black text-xl">📊</span>
+                    </div>
+                    <div>
+                        <span class="text-ultra-visible text-2xl font-black">MyApp</span>
+                        <div class="text-white text-sm flex items-center gap-2">
+                            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                            Dashboard Personale
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Toolbar -->
+                <div class="flex items-center space-x-6">
+                    <!-- Notifiche -->
+                    <div class="relative">
+                        <button id="notificationBtn" class="text-white hover:text-aurora transition-all duration-300 transform hover:scale-110">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                            </svg>
+                        </button>
+                        <span id="notificationBadge" class="notification-badge absolute -top-2 -right-2 hidden">0</span>
+                        
+                        <!-- Dropdown Notifiche -->
+                        <div id="notificationDropdown" class="notification-dropdown">
+                            <div class="p-4 border-b border-gray-200">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="font-bold text-textDark">🔔 Notifiche</h3>
+                                    <button id="markAllRead" class="text-aurora hover:text-magenta text-sm font-semibold">
+                                        Segna tutte lette
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="notificationList" class="p-2 max-h-80 overflow-y-auto">
+                                <!-- Le notifiche verranno caricate qui -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Profilo Utente -->
+                    <div class="flex items-center space-x-3">
+                        <div class="text-white text-right">
+                            <div id="userWelcome" class="font-semibold text-sm">Caricamento...</div>
+                            <div id="userRole" class="text-xs opacity-80">Utente</div>
+                        </div>
+                        <div id="userAvatar" class="w-10 h-10 bg-gradient-to-br from-aurora to-cyan rounded-full flex items-center justify-center text-white font-bold text-lg border-2 border-white/20">
+                            U
+                        </div>
+                    </div>
+                    
+                    <!-- Logout -->
+                    <button id="logoutBtn" class="btn-aurora px-5 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                        Esci
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="container mx-auto px-4 py-8 flex-grow">
+        
+        <!-- SEZIONE BENVENUTO -->
+        <section class="mb-12">
+            <div class="glass-morphism rounded-3xl p-8 md:p-12 relative overflow-hidden">
+                <!-- Decorative Elements -->
+                <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-aurora/20 to-cyan/20 rounded-full blur-xl"></div>
+                <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-magenta/20 to-teal/20 rounded-full blur-lg"></div>
+                
+                <div class="flex flex-col lg:flex-row items-center justify-between gap-8 relative z-10">
+                    <div class="flex-grow text-center lg:text-left">
+                        <div class="mb-6">
+                            <div class="inline-flex items-center gap-3 mb-3">
+                                <div class="w-3 h-8 bg-gradient-to-b from-aurora to-cyan rounded-full"></div>
+                                <span class="text-white/80 text-sm font-semibold uppercase tracking-wider">Dashboard Personale</span>
+                            </div>
+                        </div>
+                        
+                        <h1 class="hero-title text-ultra-visible mb-4 leading-tight">
+                            Benvenuto,<br>
+                            <span id="userNameDisplay" class="text-cyan">
+                                Utente
+                            </span>
+                        </h1>
+                        
+                        <p class="text-white/90 text-lg md:text-xl mb-8 max-w-2xl">
+                            Accedi ai servizi e alle informazioni attraverso la tua area riservata personalizzata.
+                        </p>
+                        
+                        <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
+                            <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
+                                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                                <span class="text-sm font-medium">Online</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                                <span class="text-sm font-medium">Connessione sicura</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Logo App -->
+                    <div class="flex-shrink-0 relative">
+                        <div class="w-32 h-32 bg-gradient-to-br from-primary via-secondary to-accent rounded-full flex items-center justify-center relative border-4 border-white/20 shadow-2xl">
+                            <div class="text-center">
+                                <div class="text-4xl mb-1 filter drop-shadow-lg">📊</div>
+                                <div class="text-white text-xs font-bold opacity-90">MyApp</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEZIONE STATISTICHE PERSONALI -->
+        <section class="mb-12">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-gradient-to-br from-cyan to-teal rounded-xl flex items-center justify-center">
+                    <span class="text-white text-2xl">📈</span>
+                </div>
+                <h2 class="text-ultra-visible text-3xl font-black">I Tuoi Dati</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="stat-card p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-white text-2xl font-bold" id="memberSince">-</div>
+                            <div class="text-white text-sm opacity-80">Iscritto dal</div>
+                        </div>
+                        <div class="text-4xl">📅</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-white text-2xl font-bold" id="numeroTessera">In generazione...</div>
+                            <div class="text-white text-sm opacity-80">Numero Tessera</div>
+                        </div>
+                        <div class="text-4xl">🎫</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-white text-2xl font-bold" id="richiesteCount">-</div>
+                            <div class="text-white text-sm opacity-80">Richieste Attive</div>
+                        </div>
+                        <div class="text-4xl">📋</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-white text-2xl font-bold" id="profileStatus">Attivo</div>
+                            <div class="text-white text-sm opacity-80">Stato Profilo</div>
+                        </div>
+                        <div class="text-4xl">✅</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEZIONE AZIONI PRINCIPALI -->
+        <section class="mb-12">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-gradient-to-br from-aurora to-magenta rounded-xl flex items-center justify-center">
+                    <span class="text-white text-2xl">⚡</span>
+                </div>
+                <h2 class="text-ultra-visible text-3xl font-black">Azioni Principali</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div onclick="goToRichieste()" class="action-card p-6 text-center">
+                    <div class="text-4xl mb-4">📝</div>
+                    <h3 class="text-white text-lg font-bold mb-2">Nuova Richiesta</h3>
+                    <p class="text-white/80 text-sm mb-4">Invia una nuova richiesta</p>
+                    <div class="text-aurora text-xs font-semibold">
+                        Avvia procedura →
+                    </div>
+                </div>
+                
+                <div onclick="goToTessera()" class="action-card p-6 text-center">
+                    <div class="text-4xl mb-4">🎫</div>
+                    <h3 class="text-white text-lg font-bold mb-2">Tessera Digitale</h3>
+                    <p class="text-white/80 text-sm">Visualizza e scarica la tessera</p>
+                </div>
+                
+                <div onclick="goToProfilo()" class="action-card p-6 text-center">
+                    <div class="text-4xl mb-4">👤</div>
+                    <h3 class="text-white text-lg font-bold mb-2">Il Mio Profilo</h3>
+                    <p class="text-white/80 text-sm">Modifica i tuoi dati</p>
+                </div>
+                
+                <div onclick="goToStrumenti()" class="action-card p-6 text-center">
+                    <div class="text-4xl mb-4">🛠️</div>
+                    <h3 class="text-white text-lg font-bold mb-2">Strumenti</h3>
+                    <p class="text-white/80 text-sm">Utility e strumenti di lavoro</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEZIONE LE TUE RICHIESTE -->
+        <section class="mb-12">
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center">
+                        <span class="text-white text-2xl">📋</span>
+                    </div>
+                    <h2 class="text-ultra-visible text-3xl font-black">Le Tue Richieste</h2>
+                </div>
+                <button onclick="goToRichieste()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2">
+                    <span>Vedi tutte</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="glass-morphism rounded-3xl p-6">
+                <div id="richiesteContainer" class="space-y-4">
+                    <div class="loading-skeleton h-20"></div>
+                    <div class="loading-skeleton h-20"></div>
+                    <div class="loading-skeleton h-20"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEZIONE SERVIZI AGGIUNTIVI -->
+        <section class="mb-12">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-gradient-to-br from-gold to-aurora rounded-xl flex items-center justify-center">
+                    <span class="text-white text-2xl">🌟</span>
+                </div>
+                <h2 class="text-ultra-visible text-3xl font-black">Servizi Aggiuntivi</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div onclick="goToVirgilio()" class="action-card p-6 text-center">
+                    <div class="text-4xl mb-4">🤖</div>
+                    <h3 class="text-white text-lg font-bold mb-2">Virgilio AI</h3>
+                    <p class="text-white/80 text-sm">Assistente intelligente</p>
+                </div>
+                
+                <div onclick="goToDirigenti()" class="action-card p-6 text-center">
+                    <div class="text-4xl mb-4">👥</div>
+                    <h3 class="text-white text-lg font-bold mb-2">Dirigenti</h3>
+                    <p class="text-white/80 text-sm">Contatta un dirigente</p>
+                </div>
+                
+                <div onclick="goToConvenzioni()" class="action-card p-6 text-center">
+                    <div class="text-4xl mb-4">🤝</div>
+                    <h3 class="text-white text-lg font-bold mb-2">Convenzioni</h3>
+                    <p class="text-white/80 text-sm">Sconti e offerte esclusive</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEZIONE NEWS -->
+        <section class="mb-12">
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-slate-600 to-slate-800 rounded-xl flex items-center justify-center">
+                        <span class="text-white text-2xl">📰</span>
+                    </div>
+                    <h2 class="text-ultra-visible text-3xl font-black">Ultime Notizie</h2>
+                </div>
+                <button onclick="viewAllNews()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2">
+                    <span>Vedi tutte</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="glass-card rounded-3xl p-8">
+                <div id="newsContainer">
+                    <div class="loading-skeleton h-20 mb-4"></div>
+                    <div class="loading-skeleton h-20 mb-4"></div>
+                    <div class="loading-skeleton h-20"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEZIONE CONVENZIONI IN EVIDENZA -->
+        <section class="mb-12">
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center">
                         <span class="text-white text-2xl">🤝</span>
                     </div>
-                    <h2 class="text-ultra-visible text-3xl font-black">Convenzioni Disponibili</h2>
+                    <h2 class="text-ultra-visible text-3xl font-black">Convenzioni in Evidenza</h2>
                 </div>
                 <button onclick="goToConvenzioni()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2">
                     <span>Vedi tutte</span>
@@ -43,35 +724,17 @@
         </div>
     </footer>
 
-    <!-- Modal JotForm per Nuova Richiesta -->
-    <div id="jotformModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
-            <div class="flex items-center justify-between p-6 border-b">
-                <h3 class="text-xl font-bold text-textDark">📝 Nuova Richiesta</h3>
-                <button id="closeJotformModal" class="text-gray-500 hover:text-gray-700 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-            <div class="p-0">
-                <iframe id="jotformFrame" src="" width="100%" height="600" frameborder="0" scrolling="auto"></iframe>
-            </div>
-        </div>
-    </div>
-
     <!-- SCRIPT INTEGRATO -->
     <script>
-        // === CONFIGURATION ===
+        // === CONFIGURAZIONE SUPABASE ===
         const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
-        const JOTFORM_URL = 'https://form.jotform.com/250396120847357';
         
         let supabaseClient;
         let currentUser = null;
         let userProfile = null;
 
-        // === INITIALIZATION ===
+        // === INIZIALIZZAZIONE ===
         document.addEventListener('DOMContentLoaded', async () => {
             console.log('🏠 HOME PAGE LOADED - MyApp Dashboard v5.0');
             
@@ -83,18 +746,19 @@
             
             supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             
-            // Check authentication
+            // Verifica autenticazione
             await checkAuthentication();
             
             // Setup event listeners
             setupEventListeners();
             
-            // Load dashboard data
+            // Carica i dati della dashboard
             await loadDashboardData();
             
             console.log('✅ Dashboard caricata con successo');
         });
 
+        // === GESTIONE AUTENTICAZIONE ===
         async function checkAuthentication() {
             try {
                 const { data: { session } } = await supabaseClient.auth.getSession();
@@ -108,7 +772,7 @@
                 currentUser = session.user;
                 console.log('✅ Utente autenticato:', currentUser.email);
                 
-                // Get user profile
+                // Recupera profilo utente
                 userProfile = await getUserProfile(currentUser.id);
                 
                 if (!userProfile) {
@@ -116,14 +780,14 @@
                     userProfile = await createUserProfile(currentUser);
                 }
                 
-                // Check role authorization
+                // Controlla autorizzazione ruolo
                 if (userProfile.role === 'ADMIN' || userProfile.role === 'DIRIGENTE') {
                     console.log('🔄 Utente dirigente/admin - redirect alla dashboard dirigenti');
                     window.location.href = 'home_dirigenti.html';
                     return;
                 }
                 
-                // Update last login
+                // Aggiorna ultimo login
                 await updateLastLogin(currentUser.id);
                 
             } catch (error) {
@@ -190,29 +854,116 @@
             }
         }
 
-        // === UI UPDATE FUNCTIONS ===
+        // === CARICAMENTO DATI TESSERA ===
+        async function loadTesseraData() {
+            try {
+                console.log('🎫 Caricamento dati tessera per utente:', currentUser.id);
+                
+                const { data: tessera, error } = await supabaseClient
+                    .from('tessere')
+                    .select('numero_tessera, stato')
+                    .eq('user_id', currentUser.id)
+                    .single();
+
+                if (error) {
+                    console.warn('⚠️ Tessera non trovata:', error);
+                    // Se non esiste tessera, prova a crearla
+                    await createTessera(currentUser.id);
+                    return;
+                }
+
+                console.log('✅ Tessera trovata:', tessera);
+                
+                // Aggiorna il display del numero tessera
+                const numeroTesseraEl = document.getElementById('numeroTessera');
+                if (numeroTesseraEl && tessera.numero_tessera) {
+                    numeroTesseraEl.textContent = tessera.numero_tessera;
+                } else {
+                    numeroTesseraEl.textContent = 'In generazione...';
+                }
+
+            } catch (error) {
+                console.error('❌ Errore caricamento tessera:', error);
+                const numeroTesseraEl = document.getElementById('numeroTessera');
+                if (numeroTesseraEl) {
+                    numeroTesseraEl.textContent = 'Errore caricamento';
+                }
+            }
+        }
+
+        async function createTessera(userId) {
+            try {
+                console.log('🔄 Creazione tessera per utente:', userId);
+                
+                const numeroTessera = generateNumeroTessera();
+                
+                const tesseraData = {
+                    user_id: userId,
+                    numero_tessera: numeroTessera,
+                    nome_completo: `${userProfile.nome} ${userProfile.cognome}`.trim(),
+                    email: userProfile.email,
+                    data_emissione: new Date().toISOString().split('T')[0],
+                    data_scadenza: getDataScadenza(),
+                    stato: 'ATTIVA',
+                    tipo: 'STANDARD'
+                };
+                
+                const { data, error } = await supabaseClient
+                    .from('tessere')
+                    .insert([tesseraData])
+                    .select()
+                    .single();
+                
+                if (error) throw error;
+                
+                console.log('✅ Tessera creata:', data);
+                
+                // Aggiorna il display
+                const numeroTesseraEl = document.getElementById('numeroTessera');
+                if (numeroTesseraEl) {
+                    numeroTesseraEl.textContent = numeroTessera;
+                }
+                
+            } catch (error) {
+                console.error('❌ Errore creazione tessera:', error);
+            }
+        }
+
+        function generateNumeroTessera() {
+            const year = new Date().getFullYear();
+            const random = Math.floor(Math.random() * 90000) + 10000;
+            return `${year}${random}`;
+        }
+
+        function getDataScadenza() {
+            const now = new Date();
+            const scadenza = new Date(now.getFullYear() + 1, 11, 31); // 31 dicembre dell'anno successivo
+            return scadenza.toISOString().split('T')[0];
+        }
+
+        // === AGGIORNAMENTO INTERFACCIA ===
         function updateUserInterface() {
             if (!userProfile) return;
             
-            // Update welcome message
+            // Aggiorna messaggio benvenuto
             const welcomeEl = document.getElementById('userWelcome');
             const roleEl = document.getElementById('userRole');
             const nameDisplayEl = document.getElementById('userNameDisplay');
             
             const firstName = userProfile.nome || 'Utente';
             
-            if (welcomeEl) welcomeEl.textContent = `Ciao, ${firstName}`;
+            if (welcomeEl) welcomeEl.textContent = `Ciao, ${firstName}!`;
             if (roleEl) roleEl.textContent = getRoleLabel(userProfile.role);
             if (nameDisplayEl) nameDisplayEl.textContent = firstName;
             
-            // Update avatars
+            // Aggiorna avatar
             const avatars = document.querySelectorAll('#userAvatar');
             const initials = getInitials(`${userProfile.nome} ${userProfile.cognome}`);
             avatars.forEach(avatar => {
                 avatar.textContent = initials;
             });
             
-            // Update stats
+            // Aggiorna carte statistiche
             updateStatsCards();
         }
 
@@ -220,7 +971,6 @@
             if (!userProfile) return;
             
             const memberSinceEl = document.getElementById('memberSince');
-            const tesseraEl = document.getElementById('tessera');
             const statusEl = document.getElementById('profileStatus');
             
             if (memberSinceEl) {
@@ -228,21 +978,18 @@
                 memberSinceEl.textContent = memberSince;
             }
             
-            if (tesseraEl) {
-                tesseraEl.textContent = userProfile.numero_tessera || 'In generazione...';
-            }
-            
             if (statusEl) {
                 statusEl.textContent = getStatusLabel(userProfile.stato);
             }
         }
 
-        // === DATA LOADING FUNCTIONS ===
+        // === CARICAMENTO DATI DASHBOARD ===
         async function loadDashboardData() {
             updateUserInterface();
             
-            // Load data in parallel
+            // Carica i dati in parallelo
             await Promise.all([
+                loadTesseraData(),
                 loadRichieste(),
                 loadNews(),
                 loadNotifications(),
@@ -263,18 +1010,9 @@
 
                 const richiesteAttive = richieste?.filter(r => !['COMPLETATA', 'CHIUSA'].includes(r.stato)).length || 0;
                 
-                // Update stats
+                // Aggiorna contatore statistiche
                 const countEl = document.getElementById('richiesteCount');
-                const quickStatsEl = document.getElementById('richiesteQuickStats');
-                
                 if (countEl) countEl.textContent = richiesteAttive;
-                if (quickStatsEl) {
-                    if (richiesteAttive > 0) {
-                        quickStatsEl.textContent = `${richiesteAttive} richiesta${richiesteAttive > 1 ? 'e' : ''} attiva${richiesteAttive > 1 ? 'e' : ''}`;
-                    } else {
-                        quickStatsEl.textContent = 'Nessuna richiesta attiva';
-                    }
-                }
 
                 displayRichieste(richieste || []);
             } catch (error) {
@@ -303,14 +1041,14 @@
 
         async function loadNotifications() {
             try {
-                // Get unread count
+                // Ottieni conteggio non lette
                 const { count: unreadCount } = await supabaseClient
                     .from('notifications')
                     .select('id', { count: 'exact' })
                     .eq('user_id', currentUser.id)
                     .eq('read', false);
                 
-                // Get recent notifications
+                // Ottieni notifiche recenti
                 const { data, error } = await supabaseClient
                     .from('notifications')
                     .select('*')
@@ -347,7 +1085,7 @@
             }
         }
 
-        // === DISPLAY FUNCTIONS ===
+        // === FUNZIONI DISPLAY ===
         function displayRichieste(richieste) {
             const container = document.getElementById('richiesteContainer');
             if (!container) return;
@@ -557,9 +1295,6 @@
             // Mark all notifications as read
             document.getElementById('markAllRead')?.addEventListener('click', markAllNotificationsAsRead);
             
-            // Close JotForm modal
-            document.getElementById('closeJotformModal')?.addEventListener('click', closeJotformModal);
-            
             // Close dropdowns when clicking outside
             document.addEventListener('click', (e) => {
                 const notificationBtn = document.getElementById('notificationBtn');
@@ -578,7 +1313,7 @@
             });
         }
 
-        // === ACTION FUNCTIONS ===
+        // === FUNZIONI AZIONI ===
         async function handleLogout() {
             try {
                 await supabaseClient.auth.signOut();
@@ -607,7 +1342,7 @@
                     .eq('user_id', currentUser.id)
                     .eq('read', false);
                 
-                // Refresh notifications
+                // Ricarica notifiche
                 await loadNotifications();
                 
             } catch (error) {
@@ -625,7 +1360,7 @@
                     })
                     .eq('id', notificationId);
                 
-                // Refresh notifications
+                // Ricarica notifiche
                 await loadNotifications();
                 
             } catch (error) {
@@ -633,30 +1368,7 @@
             }
         }
 
-        function openNewRequest() {
-            const modal = document.getElementById('jotformModal');
-            const iframe = document.getElementById('jotformFrame');
-            
-            // Pre-compila con email utente
-            const urlWithEmail = `${JOTFORM_URL}?email=${encodeURIComponent(currentUser.email)}`;
-            iframe.src = urlWithEmail;
-            
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeJotformModal() {
-            const modal = document.getElementById('jotformModal');
-            modal.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-            
-            // Ricarica le richieste dopo 2 secondi
-            setTimeout(() => {
-                loadRichieste();
-            }, 2000);
-        }
-
-        // === NAVIGATION FUNCTIONS ===
+        // === FUNZIONI NAVIGAZIONE ===
         function goToRichieste() {
             window.location.href = 'richieste.html';
         }
@@ -701,7 +1413,7 @@
             window.location.href = `convenzioni.html#${convenzioneId}`;
         }
 
-        // === UTILITY FUNCTIONS ===
+        // === FUNZIONI UTILITY ===
         function getRoleLabel(role) {
             const labels = {
                 'USER': 'Utente',
@@ -757,1506 +1469,6 @@
 
         function getPriorityColor(priorita) {
             const colors = {
-                'BASSA': 'bg-green-500',
-                'NORMALE': 'bg-blue-500',
-                'ALTA': 'bg-red-500'
-            };
-            return colors[priorita] || 'bg-blue-500';
-        }
-
-        function formatDate(dateString) {
-            if (!dateString) return '-';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('it-IT');
-        }
-
-        function formatDateTime(dateString) {
-            if (!dateString) return '-';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('it-IT') + ' ' + date.toLocaleTimeString('it-IT', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
-        }
-
-        // === PERIODIC UPDATES ===
-        setInterval(async () => {
-            if (currentUser) {
-                await loadNotifications();
-                await loadRichieste(); // Aggiorna anche le richieste
-            }
-        }, 60000); // Aggiorna ogni minuto
-
-        // Auto-refresh più frequente per richieste urgenti
-        setInterval(async () => {
-            if (currentUser) {
-                await loadRichieste();
-            }
-        }, 30000); // Aggiorna richieste ogni 30 secondi
-
-        console.log('✅ MyApp Home Dashboard v5.0 Ready - Design Professionale');
-    </script>
-
-    <!-- CSS aggiuntivo per line-clamp -->
-    <style>
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        /* Removiamo le particelle fluttuanti per un look più professionale */
-        .floating-particles {
-            display: none;
-        }
-        
-        /* Status colors professionali */
-        .priority-alta { background: #dc2626; }
-        .priority-normale { background: #2563eb; }
-        .priority-bassa { background: #16a34a; }
-        
-        /* Animazioni più sobrie */
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-        
-        .loading-skeleton {
-            background: linear-gradient(90deg, rgba(255,255,255,0.08) 25%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.08) 75%);
-            background-size: 200% 100%;
-            animation: shimmer 2s infinite;
-            border-radius: 12px;
-        }
-    </style>
-</body>
-</html><!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - MyApp</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- CONFIGURAZIONE COLORI TAILWIND -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1a1a2e',
-                        secondary: '#16213e',
-                        accent: '#0f3460',
-                        aurora: '#e94560',
-                        cyan: '#00d4ff',
-                        magenta: '#ff006e',
-                        gold: '#ffd700',
-                        teal: '#03dac6',
-                        dark: '#0a0a23',
-                        light: '#f8fafc',
-                        textDark: '#1C1C1E',
-                        backgroundLight: '#F4F4F8',
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <style>
-        :root {
-            --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            --gradient-magic: linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #1e40af 100%);
-            --gradient-cosmic: radial-gradient(circle at 30% 30%, rgba(37, 99, 235, 0.15), transparent 70%),
-                               radial-gradient(circle at 70% 70%, rgba(29, 78, 216, 0.1), transparent 70%);
-        }
-
-        body {
-            background: var(--gradient-aurora);
-            background-size: 200% 200%;
-            animation: aurora 30s ease infinite;
-            min-height: 100vh;
-            position: relative;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--gradient-cosmic);
-            z-index: -1;
-            animation: cosmic-drift 60s ease-in-out infinite alternate;
-        }
-
-        @keyframes aurora {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        @keyframes cosmic-drift {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(-10px, -5px) scale(1.02); }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 10px rgba(37, 99, 235, 0.3); }
-            50% { box-shadow: 0 0 20px rgba(29, 78, 216, 0.5); }
-        }
-
-        /* TESTO PROFESSIONALE E LEGGIBILE */
-        .text-ultra-visible {
-            color: #ffffff;
-            text-shadow: 
-                0 2px 4px rgba(0, 0, 0, 0.7),
-                0 4px 8px rgba(0, 0, 0, 0.4);
-            font-weight: 700;
-            letter-spacing: 0.01em;
-        }
-
-        /* TESTO BENVENUTO PROFESSIONALE */
-        .welcome-text {
-            color: #ffffff;
-            font-size: clamp(2rem, 6vw, 3.5rem);
-            font-weight: 700;
-            line-height: 1.2;
-            text-shadow: 
-                0 2px 4px rgba(0, 0, 0, 0.8),
-                0 4px 8px rgba(0, 0, 0, 0.5);
-            letter-spacing: 0.01em;
-        }
-
-        /* NOME UTENTE ELEGANTE */
-        .user-name-gradient {
-            color: #ffffff;
-            text-shadow: 
-                0 2px 4px rgba(0, 0, 0, 0.8),
-                0 4px 8px rgba(0, 0, 0, 0.5);
-            font-weight: 700;
-        }
-
-        .glass-morphism {
-            background: rgba(255, 255, 255, 0.10);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-aurora {
-            background: var(--gradient-magic);
-            color: white;
-            border: 1px solid rgba(37, 99, 235, 0.3);
-            transition: all 0.3s ease;
-            font-weight: 600;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-aurora::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.4s;
-        }
-
-        .btn-aurora:hover::before {
-            left: 100%;
-        }
-
-        .btn-aurora:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
-            border-color: rgba(37, 99, 235, 0.5);
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 16px;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--gradient-magic);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-3px);
-            background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.10));
-            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-        }
-
-        .stat-card:hover::before {
-            opacity: 1;
-        }
-
-        .cosmic-logo {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #1a1a2e, #16213e, #0f3460);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            animation: float 12s ease-in-out infinite;
-            border: 2px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .cosmic-logo::before {
-            content: '';
-            position: absolute;
-            inset: -3px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #2563eb, #1d4ed8, #1e40af, #2563eb);
-            animation: spin 8s linear infinite;
-            z-index: -1;
-        }
-
-        .cosmic-logo::after {
-            content: '';
-            position: absolute;
-            inset: 10px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent);
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .floating-particles {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 50%;
-            animation: particle-float 4s ease-in-out infinite;
-        }
-
-        .floating-particles:nth-child(1) { top: 20%; left: 20%; animation-delay: 0s; }
-        .floating-particles:nth-child(2) { top: 60%; right: 30%; animation-delay: 1s; }
-        .floating-particles:nth-child(3) { bottom: 30%; left: 40%; animation-delay: 2s; }
-        .floating-particles:nth-child(4) { top: 40%; right: 20%; animation-delay: 3s; }
-
-        @keyframes particle-float {
-            0%, 100% { transform: translateY(0px) scale(1); opacity: 0.6; }
-            50% { transform: translateY(-20px) scale(1.2); opacity: 1; }
-        }
-
-        .loading-skeleton {
-            background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 12px;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-
-        .notification-badge {
-            background: #ef4444;
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 53%, 80%, 100% { transform: translate3d(0,0,0); }
-            40%, 43% { transform: translate3d(0,-8px,0); }
-            70% { transform: translate3d(0,-4px,0); }
-            90% { transform: translate3d(0,-2px,0); }
-        }
-
-        .action-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 16px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .action-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
-            border-color: rgba(37, 99, 235, 0.3);
-            background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
-        }
-
-        .notification-badge {
-            background: #dc2626;
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .section-divider {
-            height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(233, 69, 96, 0.5), rgba(0, 212, 255, 0.5), transparent);
-            margin: 3rem 0;
-            border-radius: 1px;
-        }
-
-        .notification-dropdown {
-            display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            width: 350px;
-            max-height: 400px;
-            overflow-y: auto;
-            z-index: 1000;
-        }
-
-        .notification-dropdown.show {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .priority-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .priority-alta { background: #ef4444; }
-        .priority-normale { background: #3b82f6; }
-        .priority-bassa { background: #10b981; }
-
-        .request-status-ricevuta { background: #3b82f6; }
-        .request-status-in_esame { background: #f59e0b; }
-        .request-status-in_lavorazione { background: #f97316; }
-        .request-status-completata { background: #10b981; }
-        .request-status-chiusa { background: #6b7280; }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .welcome-text {
-                font-size: clamp(2rem, 10vw, 3.5rem);
-            }
-            
-            .user-name-gradient {
-                font-size: clamp(1.8rem, 8vw, 3rem);
-            }
-        }
-    </style>
-</head>
-
-<body class="font-sans">
-    <!-- FLOATING PARTICLES -->
-    <div class="floating-particles"></div>
-    <div class="floating-particles"></div>
-    <div class="floating-particles"></div>
-    <div class="floating-particles"></div>
-
-    <!-- HEADER MIGLIORATO -->
-    <header class="glass-morphism sticky top-0 z-40">
-        <div class="container mx-auto px-4 py-4">
-            <div class="flex items-center justify-between">
-                <!-- Logo e Brand -->
-                <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 rounded-xl flex items-center justify-center relative">
-                        <span class="text-white font-black text-xl">📊</span>
-                    </div>
-                    <div>
-                        <span class="text-ultra-visible text-2xl font-black">MyApp</span>
-                        <div class="text-white text-sm flex items-center gap-2">
-                            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                            Dashboard Personale
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Toolbar -->
-                <div class="flex items-center space-x-6">
-                    <!-- Notifiche -->
-                    <div class="relative">
-                        <button id="notificationBtn" class="text-white hover:text-aurora transition-all duration-300 transform hover:scale-110">
-                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                            </svg>
-                        </button>
-                        <span id="notificationBadge" class="notification-badge absolute -top-2 -right-2 hidden">0</span>
-                        
-                        <!-- Dropdown Notifiche -->
-                        <div id="notificationDropdown" class="notification-dropdown">
-                            <div class="p-4 border-b border-gray-200">
-                                <div class="flex justify-between items-center">
-                                    <h3 class="font-bold text-textDark">🔔 Notifiche</h3>
-                                    <button id="markAllRead" class="text-aurora hover:text-magenta text-sm font-semibold">
-                                        Segna tutte lette
-                                    </button>
-                                </div>
-                            </div>
-                            <div id="notificationList" class="p-2 max-h-80 overflow-y-auto">
-                                <!-- Le notifiche verranno caricate qui -->
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Profilo Utente -->
-                    <div class="flex items-center space-x-3">
-                        <div class="text-white text-right">
-                            <div id="userWelcome" class="font-semibold text-sm">Caricamento...</div>
-                            <div id="userRole" class="text-xs opacity-80">Utente</div>
-                        </div>
-                        <div id="userAvatar" class="w-10 h-10 bg-gradient-to-br from-aurora to-cyan rounded-full flex items-center justify-center text-white font-bold text-lg border-2 border-white/20">
-                            U
-                        </div>
-                    </div>
-                    
-                    <!-- Logout -->
-                    <button id="logoutBtn" class="btn-aurora px-5 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                        </svg>
-                        Esci
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- MAIN CONTENT -->
-    <main class="container mx-auto px-4 py-8">
-        <!-- SEZIONE BENVENUTO ULTRA VISIBILE -->
-        <section class="mb-12">
-            <div class="glass-morphism rounded-3xl p-8 md:p-12 relative overflow-hidden">
-                <!-- Decorative Elements -->
-                <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-aurora/20 to-cyan/20 rounded-full blur-xl"></div>
-                <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-magenta/20 to-teal/20 rounded-full blur-lg"></div>
-                
-                <div class="flex flex-col lg:flex-row items-center justify-between gap-8 relative z-10">
-                    <div class="flex-grow text-center lg:text-left">
-                        <div class="mb-6">
-                            <div class="inline-flex items-center gap-3 mb-3">
-                                <div class="w-3 h-8 bg-gradient-to-b from-aurora to-cyan rounded-full"></div>
-                                <span class="text-white/80 text-sm font-semibold uppercase tracking-wider">Dashboard Personale</span>
-                            </div>
-                        </div>
-                        
-                        <h1 id="dashboardTitle" class="welcome-text mb-4 leading-tight">
-                            Benvenuto,<br>
-                            <span id="userNameDisplay" class="user-name-gradient">
-                                Utente
-                            </span>
-                        </h1>
-                        
-                        <p id="dashboardSubtitle" class="text-white/90 text-lg md:text-xl mb-8 max-w-2xl">
-                            Accedi ai servizi e alle informazioni dedicati agli associati attraverso la tua area riservata.
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-3 justify-center lg:justify-start mb-6">
-                            <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
-                                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                                <span class="text-sm font-medium">Online</span>
-                            </div>
-                            <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                </svg>
-                                <span class="text-sm font-medium">Connessione sicura</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Logo Professionale -->
-                    <div class="flex-shrink-0 relative">
-                        <div class="cosmic-logo">
-                            <div class="relative z-10 text-center">
-                                <div class="text-3xl mb-1 filter drop-shadow-lg">📊</div>
-                                <div class="text-white text-xs font-semibold opacity-90">MyApp</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- STATISTICHE MIGLIORATE -->
-        <section class="mb-12">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="stat-card p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div class="text-white text-2xl font-bold" id="memberSince">-</div>
-                            <div class="text-white text-sm opacity-80">Iscritto dal</div>
-                        </div>
-                        <div class="text-4xl">📅</div>
-                    </div>
-                </div>
-                
-                <div class="stat-card p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div class="text-white text-2xl font-bold" id="tessera">-</div>
-                            <div class="text-white text-sm opacity-80">Numero Tessera</div>
-                        </div>
-                        <div class="text-4xl">🎫</div>
-                    </div>
-                </div>
-                
-                <div class="stat-card p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div class="text-white text-2xl font-bold" id="richiesteCount">-</div>
-                            <div class="text-white text-sm opacity-80">Richieste Attive</div>
-                        </div>
-                        <div class="text-4xl">📋</div>
-                    </div>
-                </div>
-                
-                <div class="stat-card p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div class="text-white text-2xl font-bold" id="profileStatus">Attivo</div>
-                            <div class="text-white text-sm opacity-80">Stato Profilo</div>
-                        </div>
-                        <div class="text-4xl">✅</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- AZIONI RAPIDE MIGLIORATE -->
-        <section class="mb-12">
-            <div class="flex items-center gap-4 mb-8">
-                <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center">
-                    <span class="text-white text-2xl">⚡</span>
-                </div>
-                <h2 class="text-ultra-visible text-3xl font-black">Azioni Rapide</h2>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div onclick="goToRichieste()" class="action-card p-6 text-center">
-                    <div class="text-4xl mb-4">📋</div>
-                    <h3 class="text-white text-lg font-bold mb-2">Le Mie Richieste</h3>
-                    <p class="text-white/80 text-sm mb-4">Gestisci le tue richieste di assistenza</p>
-                    <div id="richiesteQuickStats" class="text-aurora text-xs font-semibold">
-                        Caricamento...
-                    </div>
-                </div>
-                
-                <div onclick="goToTessera()" class="action-card p-6 text-center">
-                    <div class="text-4xl mb-4">🎫</div>
-                    <h3 class="text-white text-lg font-bold mb-2">Tessera Digitale</h3>
-                    <p class="text-white/80 text-sm">Visualizza e scarica la tessera</p>
-                </div>
-                
-                <div onclick="goToStrumenti()" class="action-card p-6 text-center">
-                    <div class="text-4xl mb-4">🛠️</div>
-                    <h3 class="text-white text-lg font-bold mb-2">Strumenti</h3>
-                    <p class="text-white/80 text-sm">Utility e strumenti di lavoro</p>
-                </div>
-                
-                <div onclick="goToVirgilio()" class="action-card p-6 text-center">
-                    <div class="text-4xl mb-4">🤖</div>
-                    <h3 class="text-white text-lg font-bold mb-2">Virgilio AI</h3>
-                    <p class="text-white/80 text-sm">Assistente intelligente</p>
-                </div>
-                
-                <div onclick="goToProfilo()" class="action-card p-6 text-center">
-                    <div class="text-4xl mb-4">👤</div>
-                    <h3 class="text-white text-lg font-bold mb-2">Il Mio Profilo</h3>
-                    <p class="text-white/80 text-sm">Modifica i tuoi dati</p>
-                </div>
-                
-                <div onclick="goToDirigenti()" class="action-card p-6 text-center">
-                    <div class="text-4xl mb-4">👥</div>
-                    <h3 class="text-white text-lg font-bold mb-2">Dirigenti</h3>
-                    <p class="text-white/80 text-sm">Contatta un dirigente</p>
-                </div>
-                
-                <div onclick="goToConvenzioni()" class="action-card p-6 text-center">
-                    <div class="text-4xl mb-4">💎</div>
-                    <h3 class="text-white text-lg font-bold mb-2">Convenzioni</h3>
-                    <p class="text-white/80 text-sm">Sconti e offerte esclusive</p>
-                </div>
-                
-                <!-- TASTO NUOVA RICHIESTA COLLEGATO A RICHIESTE.HTML -->
-                <div onclick="goToRichieste()" class="action-card p-6 text-center bg-gradient-to-br from-blue-600/20 to-blue-800/20 border-blue-500/30">
-                    <div class="text-4xl mb-4">📝</div>
-                    <h3 class="text-white text-lg font-bold mb-2">Nuova Richiesta</h3>
-                    <p class="text-white/80 text-sm">Avvia una nuova richiesta</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEZIONE RICHIESTE RECENTI -->
-        <section class="mb-12">
-            <div class="flex items-center justify-between mb-8">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center">
-                        <span class="text-white text-2xl">📋</span>
-                    </div>
-                    <h2 class="text-ultra-visible text-3xl font-black">Le Tue Richieste</h2>
-                </div>
-                <button onclick="goToRichieste()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2">
-                    <span>Vedi tutte</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </button>
-            </div>
-            
-            <div class="glass-morphism rounded-3xl p-6">
-                <div id="richiesteContainer" class="space-y-4">
-                    <div class="loading-skeleton h-20"></div>
-                    <div class="loading-skeleton h-20"></div>
-                    <div class="loading-skeleton h-20"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEZIONE NEWS -->
-        <section class="mb-12">
-            <div class="flex items-center justify-between mb-8">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-slate-600 to-slate-800 rounded-xl flex items-center justify-center">
-                        <span class="text-white text-2xl">📰</span>
-                    </div>
-                    <h2 class="text-ultra-visible text-3xl font-black">Ultime Notizie</h2>
-                </div>
-                <button onclick="viewAllNews()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2">
-                    <span>Vedi tutte</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </button>
-            </div>
-            
-            <div class="glass-card rounded-3xl p-8">
-                <div id="newsContainer">
-                    <div class="loading-skeleton h-20 mb-4"></div>
-                    <div class="loading-skeleton h-20 mb-4"></div>
-                    <div class="loading-skeleton h-20"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEZIONE CONVENZIONI HIGHLIGHT -->
-        <section class="mb-12">
-            <div class="flex items-center justify-between mb-8">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center">
-                        <span class="text-white text-2xl">🤝</span>
-                    </div>
-                    <h2 class="text-ultra-visible text-3xl font-black">Convenzioni Disponibili</h2>
-                </div> class="text-ultra-visible text-3xl font-black">Convenzioni in Evidenza</h2>
-                </div>
-                <button onclick="goToConvenzioni()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2">
-                    <span>Vedi tutte</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </button>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="convenzioniContainer">
-                <div class="loading-skeleton h-64"></div>
-                <div class="loading-skeleton h-64"></div>
-                <div class="loading-skeleton h-64"></div>
-            </div>
-        </section>
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="glass-morphism mt-16">
-        <div class="container mx-auto px-4 py-8">
-            <div class="text-center text-white">
-                <div class="mb-4">
-                    <span class="font-bold text-xl">MyApp</span> - Dashboard Personale v5.0
-                </div>
-                <div class="flex justify-center items-center space-x-6 text-sm opacity-80 mb-4">
-                    <span>© 2025 MyApp</span>
-                    <span>•</span>
-                    <span>Powered by Supabase</span>
-                    <span>•</span>
-                    <span>Design Aurora</span>
-                </div>
-                <div class="flex justify-center space-x-4">
-                    <div class="w-2 h-2 bg-aurora rounded-full animate-pulse"></div>
-                    <div class="w-2 h-2 bg-cyan rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
-                    <div class="w-2 h-2 bg-teal rounded-full animate-pulse" style="animation-delay: 1s;"></div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Modal JotForm per Nuova Richiesta -->
-    <div id="jotformModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
-            <div class="flex items-center justify-between p-6 border-b">
-                <h3 class="text-xl font-bold text-textDark">✨ Nuova Richiesta</h3>
-                <button id="closeJotformModal" class="text-gray-500 hover:text-gray-700 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-            <div class="p-0">
-                <iframe id="jotformFrame" src="" width="100%" height="600" frameborder="0" scrolling="auto"></iframe>
-            </div>
-        </div>
-    </div>
-
-    <!-- SCRIPT INTEGRATO -->
-    <script>
-        // === CONFIGURATION ===
-        const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
-        const JOTFORM_URL = 'https://form.jotform.com/250396120847357';
-        
-        let supabaseClient;
-        let currentUser = null;
-        let userProfile = null;
-
-        // === INITIALIZATION ===
-        document.addEventListener('DOMContentLoaded', async () => {
-            console.log('🏠 HOME PAGE LOADED - MyApp Dashboard v5.0');
-            
-            if (typeof supabase === 'undefined') {
-                console.error('❌ Supabase not loaded');
-                window.location.href = 'auth.html';
-                return;
-            }
-            
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            
-            // Check authentication
-            await checkAuthentication();
-            
-            // Setup event listeners
-            setupEventListeners();
-            
-            // Load dashboard data
-            await loadDashboardData();
-            
-            console.log('✅ Dashboard caricata con successo');
-        });
-
-        async function checkAuthentication() {
-            try {
-                const { data: { session } } = await supabaseClient.auth.getSession();
-                
-                if (!session) {
-                    console.log('❌ Nessuna sessione attiva - redirect a auth');
-                    window.location.href = 'auth.html';
-                    return;
-                }
-
-                currentUser = session.user;
-                console.log('✅ Utente autenticato:', currentUser.email);
-                
-                // Get user profile
-                userProfile = await getUserProfile(currentUser.id);
-                
-                if (!userProfile) {
-                    console.log('👤 Profilo non trovato, creazione automatica...');
-                    userProfile = await createUserProfile(currentUser);
-                }
-                
-                // Check role authorization
-                if (userProfile.role === 'ADMIN' || userProfile.role === 'DIRIGENTE') {
-                    console.log('🔄 Utente dirigente/admin - redirect alla dashboard dirigenti');
-                    window.location.href = 'home_dirigenti.html';
-                    return;
-                }
-                
-                // Update last login
-                await updateLastLogin(currentUser.id);
-                
-            } catch (error) {
-                console.error('❌ Errore verifica auth:', error);
-                window.location.href = 'auth.html';
-            }
-        }
-
-        async function getUserProfile(userId) {
-            try {
-                const { data, error } = await supabaseClient
-                    .from('user_profiles')
-                    .select('*')
-                    .eq('user_id', userId)
-                    .single();
-                
-                if (error && error.code !== 'PGRST116') {
-                    throw error;
-                }
-                
-                return data;
-            } catch (error) {
-                console.warn('⚠️ Errore recupero profilo:', error);
-                return null;
-            }
-        }
-
-        async function createUserProfile(user) {
-            try {
-                const profileData = {
-                    user_id: user.id,
-                    email: user.email,
-                    nome: user.user_metadata?.nome || 'Nome',
-                    cognome: user.user_metadata?.cognome || 'Cognome',
-                    role: 'USER',
-                    stato: 'ATTIVO',
-                    created_at: new Date().toISOString()
-                };
-                
-                const { data, error } = await supabaseClient
-                    .from('user_profiles')
-                    .upsert(profileData, { onConflict: 'user_id' })
-                    .select()
-                    .single();
-                    
-                if (error) throw error;
-                
-                console.log('✅ Profilo creato automaticamente');
-                return data;
-            } catch (error) {
-                console.error('❌ Errore creazione profilo:', error);
-                return { role: 'USER', nome: 'Utente', cognome: '', email: user.email };
-            }
-        }
-
-        async function updateLastLogin(userId) {
-            try {
-                await supabaseClient
-                    .from('user_profiles')
-                    .update({ last_login: new Date().toISOString() })
-                    .eq('user_id', userId);
-            } catch (error) {
-                console.warn('⚠️ Errore aggiornamento last_login:', error);
-            }
-        }
-
-        // === UI UPDATE FUNCTIONS ===
-        function updateUserInterface() {
-            if (!userProfile) return;
-            
-            // Update welcome message
-            const welcomeEl = document.getElementById('userWelcome');
-            const roleEl = document.getElementById('userRole');
-            const nameDisplayEl = document.getElementById('userNameDisplay');
-            
-            const firstName = userProfile.nome || 'Utente';
-            
-            if (welcomeEl) welcomeEl.textContent = `Ciao, ${firstName}!`;
-            if (roleEl) roleEl.textContent = getRoleLabel(userProfile.role);
-            if (nameDisplayEl) nameDisplayEl.textContent = firstName;
-            
-            // Update avatars
-            const avatars = document.querySelectorAll('#userAvatar');
-            const initials = getInitials(`${userProfile.nome} ${userProfile.cognome}`);
-            avatars.forEach(avatar => {
-                avatar.textContent = initials;
-            });
-            
-            // Update stats
-            updateStatsCards();
-        }
-
-        function updateStatsCards() {
-            if (!userProfile) return;
-            
-            const memberSinceEl = document.getElementById('memberSince');
-            const tesseraEl = document.getElementById('tessera');
-            const statusEl = document.getElementById('profileStatus');
-            
-            if (memberSinceEl) {
-                const memberSince = userProfile.created_at ? formatDate(userProfile.created_at) : '-';
-                memberSinceEl.textContent = memberSince;
-            }
-            
-            if (tesseraEl) {
-                tesseraEl.textContent = userProfile.numero_tessera || 'In generazione...';
-            }
-            
-            if (statusEl) {
-                statusEl.textContent = getStatusLabel(userProfile.stato);
-            }
-        }
-
-        // === DATA LOADING FUNCTIONS ===
-        async function loadDashboardData() {
-            updateUserInterface();
-            
-            // Load data in parallel
-            await Promise.all([
-                loadRichieste(),
-                loadNews(),
-                loadNotifications(),
-                loadConvenzioni()
-            ]);
-        }
-
-        async function loadRichieste() {
-            try {
-                const { data: richieste, error } = await supabaseClient
-                    .from('richieste_personali')
-                    .select('*')
-                    .eq('user_id', currentUser.id)
-                    .order('created_at', { ascending: false })
-                    .limit(3);
-
-                if (error) throw error;
-
-                const richiesteAttive = richieste?.filter(r => !['COMPLETATA', 'CHIUSA'].includes(r.stato)).length || 0;
-                
-                // Update stats
-                const countEl = document.getElementById('richiesteCount');
-                const quickStatsEl = document.getElementById('richiesteQuickStats');
-                
-                if (countEl) countEl.textContent = richiesteAttive;
-                if (quickStatsEl) {
-                    if (richiesteAttive > 0) {
-                        quickStatsEl.textContent = `${richiesteAttive} richiesta${richiesteAttive > 1 ? 'e' : ''} attiva${richiesteAttive > 1 ? 'e' : ''}`;
-                    } else {
-                        quickStatsEl.textContent = 'Nessuna richiesta attiva';
-                    }
-                }
-
-                displayRichieste(richieste || []);
-            } catch (error) {
-                console.error('❌ Errore caricamento richieste:', error);
-                displayRichieste([]);
-            }
-        }
-
-        async function loadNews() {
-            try {
-                const { data, error } = await supabaseClient
-                    .from('news')
-                    .select('*')
-                    .eq('stato', 'pubblicata')
-                    .order('created_at', { ascending: false })
-                    .limit(3);
-                
-                if (error) throw error;
-                
-                displayNews(data || []);
-            } catch (error) {
-                console.error('❌ Errore caricamento news:', error);
-                displayNews([]);
-            }
-        }
-
-        async function loadNotifications() {
-            try {
-                // Get unread count
-                const { count: unreadCount } = await supabaseClient
-                    .from('notifications')
-                    .select('id', { count: 'exact' })
-                    .eq('user_id', currentUser.id)
-                    .eq('read', false);
-                
-                // Get recent notifications
-                const { data, error } = await supabaseClient
-                    .from('notifications')
-                    .select('*')
-                    .eq('user_id', currentUser.id)
-                    .order('created_at', { ascending: false })
-                    .limit(10);
-                
-                if (error) throw error;
-                
-                updateNotificationBadge(unreadCount || 0);
-                displayNotifications(data || []);
-            } catch (error) {
-                console.error('❌ Errore caricamento notifiche:', error);
-                updateNotificationBadge(0);
-                displayNotifications([]);
-            }
-        }
-
-        async function loadConvenzioni() {
-            try {
-                const { data: convenzioni, error } = await supabaseClient
-                    .from('convenzioni')
-                    .select('*')
-                    .eq('attiva', true)
-                    .order('created_at', { ascending: false })
-                    .limit(3);
-
-                if (error) throw error;
-
-                displayConvenzioni(convenzioni || []);
-            } catch (error) {
-                console.error('❌ Errore caricamento convenzioni:', error);
-                displayConvenzioni([]);
-            }
-        }
-
-        // === DISPLAY FUNCTIONS ===
-        function displayRichieste(richieste) {
-            const container = document.getElementById('richiesteContainer');
-            if (!container) return;
-            
-            if (richieste.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-12 text-white">
-                        <div class="text-6xl mb-4">📋</div>
-                        <h3 class="text-xl font-bold mb-2">Nessuna richiesta</h3>
-                        <p class="text-white/70 mb-6">Non hai ancora inviato nessuna richiesta</p>
-                        <button onclick="goToRichieste()" class="btn-aurora py-3 px-6 rounded-xl">
-                            Invia la tua prima richiesta
-                        </button>
-                    </div>
-                `;
-                return;
-            }
-            
-            container.innerHTML = richieste.map(richiesta => {
-                const statusColor = getRequestStatusColor(richiesta.stato);
-                const priorityColor = getPriorityColor(richiesta.priorita);
-                const dataCreazione = new Date(richiesta.created_at).toLocaleDateString('it-IT');
-                
-                return `
-                    <div class="glass-morphism rounded-xl p-4 hover:bg-white/10 transition-all cursor-pointer" 
-                         onclick="viewRichiestaDetail('${richiesta.id}')">
-                        <div class="flex items-start justify-between mb-3">
-                            <div class="flex-grow">
-                                <h4 class="text-white font-bold text-lg mb-1">${richiesta.titolo}</h4>
-                                <div class="flex items-center gap-3 text-sm text-white/70 mb-2">
-                                    <span class="flex items-center gap-1">
-                                        <span class="priority-indicator ${priorityColor}"></span>
-                                        ${richiesta.priorita}
-                                    </span>
-                                    <span>📂 ${richiesta.categoria}</span>
-                                    <span>📅 ${dataCreazione}</span>
-                                </div>
-                            </div>
-                            <span class="px-3 py-1 rounded-full text-xs font-bold text-white ${statusColor}">
-                                ${getStatusText(richiesta.stato)}
-                            </span>
-                        </div>
-                        
-                        <p class="text-white/80 text-sm mb-3 line-clamp-2">
-                            ${richiesta.descrizione || 'Nessuna descrizione'}
-                        </p>
-                        
-                        <div class="flex items-center justify-between text-xs text-white/60">
-                            <span>
-                                ${richiesta.dirigente_nome ? `👤 ${richiesta.dirigente_nome}` : '⏳ In attesa'}
-                            </span>
-                            <span>ID: #${richiesta.id.slice(-8)}</span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function displayNews(newsArray) {
-            const container = document.getElementById('newsContainer');
-            if (!container) return;
-            
-            if (newsArray.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-8 text-gray-500">
-                        <div class="text-4xl mb-2">📰</div>
-                        <div>Nessuna notizia disponibile al momento</div>
-                    </div>
-                `;
-                return;
-            }
-            
-            container.innerHTML = newsArray.map(news => `
-                <div class="border-b border-gray-200 pb-4 mb-4 last:border-b-0 last:pb-0 last:mb-0 hover:bg-gray-50 p-4 rounded-lg transition-colors cursor-pointer"
-                     onclick="readNews('${news.id}')">
-                    <div class="flex justify-between items-start">
-                        <div class="flex-1">
-                            <h3 class="text-textDark font-semibold text-lg mb-1">${news.titolo}</h3>
-                            ${news.sottotitolo ? `<p class="text-gray-600 text-sm mb-2">${news.sottotitolo}</p>` : ''}
-                            <div class="flex items-center space-x-3 text-xs text-gray-500">
-                                <span class="bg-aurora text-white px-2 py-1 rounded">${news.categoria}</span>
-                                <span>📅 ${formatDate(news.created_at)}</span>
-                                <span>👁️ ${news.visualizzazioni || 0}</span>
-                            </div>
-                        </div>
-                        <div class="text-aurora hover:text-magenta font-semibold text-sm ml-4">
-                            Leggi →
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function displayConvenzioni(convenzioni) {
-            const container = document.getElementById('convenzioniContainer');
-            if (!container) return;
-            
-            if (convenzioni.length === 0) {
-                container.innerHTML = `
-                    <div class="glass-morphism rounded-3xl p-12 col-span-3 text-center">
-                        <div class="text-6xl mb-4">💎</div>
-                        <h3 class="text-white text-xl font-bold mb-2">Nessuna convenzione disponibile</h3>
-                        <p class="text-white/70">Le convenzioni verranno pubblicate a breve</p>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = convenzioni.map(c => {
-                const excerpt = (c.descrizione || '').slice(0, 120) + (c.descrizione?.length > 120 ? '…' : '');
-                const sconto = c.sconto_percentuale ? `${c.sconto_percentuale}%` : '';
-                const isInEvidenza = c.in_evidenza === true || c.in_evidenza === 'true';
-                const validaFino = c.valida_fino ? new Date(c.valida_fino) : null;
-                const isScaduta = validaFino && validaFino < new Date();
-                
-                return `
-                    <div class="action-card p-6 ${isScaduta ? 'opacity-75' : ''}"
-                         onclick="${isScaduta ? '' : `openConvenzione('${c.id}')`}">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="w-12 h-12 bg-gradient-to-br from-gold to-aurora rounded-xl flex items-center justify-center text-white text-sm font-bold">
-                                ${sconto ? `-${sconto}` : '💎'}
-                            </div>
-                            <div class="flex flex-col gap-1">
-                                ${isInEvidenza ? '<div class="bg-aurora text-white px-2 py-1 rounded-full text-xs font-bold">HOT</div>' : ''}
-                                ${isScaduta ? '<div class="bg-gray-500 text-white px-2 py-1 rounded-full text-xs font-bold">SCADUTA</div>' : ''}
-                            </div>
-                        </div>
-                        
-                        <h3 class="text-white text-lg font-bold mb-2">${c.nome_azienda || '-'}</h3>
-                        <p class="text-white/80 text-sm mb-4">${excerpt}</p>
-                        
-                        <div class="flex items-center justify-between text-xs text-white/60 mb-3">
-                            <span>📂 ${c.categoria || 'Generale'}</span>
-                            <span>🌍 ${c.copertura_geografica || 'Nazionale'}</span>
-                        </div>
-                        
-                        <div class="flex items-center justify-between">
-                            <span class="text-white/60 text-xs">👀 ${c.visualizzazioni || 0} visualizzazioni</span>
-                            <span class="text-cyan text-sm font-semibold">
-                                ${isScaduta ? 'Non disponibile' : 'Scopri →'}
-                            </span>
-                        </div>
-                        
-                        ${validaFino ? `
-                            <div class="mt-3 pt-3 border-t border-white/10">
-                                <div class="text-white/60 text-xs flex items-center gap-1">
-                                    <span class="${isScaduta ? 'text-red-400' : 'text-green-400'}">⏰</span>
-                                    ${isScaduta ? 'Scaduta il' : 'Valida fino al'} ${validaFino.toLocaleDateString('it-IT')}
-                                </div>
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function displayNotifications(notifications) {
-            const container = document.getElementById('notificationList');
-            if (!container) return;
-            
-            if (notifications.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-8 text-gray-500">
-                        <div class="text-4xl mb-2">🔔</div>
-                        <div class="text-sm">Nessuna notifica</div>
-                    </div>
-                `;
-                return;
-            }
-            
-            container.innerHTML = notifications.map(notification => `
-                <div class="p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer ${!notification.read ? 'bg-blue-50 border-l-4 border-aurora' : ''}"
-                     onclick="markNotificationAsRead('${notification.id}')">
-                    <div class="flex items-start gap-3">
-                        <div class="flex-shrink-0 w-2 h-2 rounded-full mt-2 ${!notification.read ? 'bg-aurora' : 'bg-gray-300'}"></div>
-                        <div class="flex-grow">
-                            <h4 class="font-semibold text-textDark text-sm">${notification.title || 'Notifica'}</h4>
-                            <p class="text-gray-600 text-xs mt-1">${notification.message || ''}</p>
-                            <span class="text-gray-400 text-xs">${formatDateTime(notification.created_at)}</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function updateNotificationBadge(count) {
-            const badge = document.getElementById('notificationBadge');
-            
-            if (badge) {
-                if (count > 0) {
-                    badge.textContent = count > 99 ? '99+' : count;
-                    badge.classList.remove('hidden');
-                } else {
-                    badge.classList.add('hidden');
-                }
-            }
-        }
-
-        // === EVENT LISTENERS ===
-        function setupEventListeners() {
-            // Logout button
-            document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
-            
-            // Notification button
-            document.getElementById('notificationBtn')?.addEventListener('click', toggleNotificationDropdown);
-            
-            // Mark all notifications as read
-            document.getElementById('markAllRead')?.addEventListener('click', markAllNotificationsAsRead);
-            
-            // Close JotForm modal
-            document.getElementById('closeJotformModal')?.addEventListener('click', closeJotformModal);
-            
-            // Close dropdowns when clicking outside
-            document.addEventListener('click', (e) => {
-                const notificationBtn = document.getElementById('notificationBtn');
-                const notificationDropdown = document.getElementById('notificationDropdown');
-                
-                if (!notificationBtn?.contains(e.target) && !notificationDropdown?.contains(e.target)) {
-                    notificationDropdown?.classList.remove('show');
-                }
-            });
-            
-            // Auth state changes
-            supabaseClient.auth.onAuthStateChange((event, session) => {
-                if (event === 'SIGNED_OUT') {
-                    window.location.href = 'index.html';
-                }
-            });
-        }
-
-        // === ACTION FUNCTIONS ===
-        async function handleLogout() {
-            try {
-                await supabaseClient.auth.signOut();
-                window.location.href = 'index.html';
-            } catch (error) {
-                console.error('❌ Errore durante il logout:', error);
-                window.location.href = 'index.html';
-            }
-        }
-
-        function toggleNotificationDropdown() {
-            const dropdown = document.getElementById('notificationDropdown');
-            if (dropdown) {
-                dropdown.classList.toggle('show');
-            }
-        }
-
-        async function markAllNotificationsAsRead() {
-            try {
-                await supabaseClient
-                    .from('notifications')
-                    .update({ 
-                        read: true, 
-                        read_at: new Date().toISOString() 
-                    })
-                    .eq('user_id', currentUser.id)
-                    .eq('read', false);
-                
-                // Refresh notifications
-                await loadNotifications();
-                
-            } catch (error) {
-                console.error('❌ Errore aggiornamento notifiche:', error);
-            }
-        }
-
-        async function markNotificationAsRead(notificationId) {
-            try {
-                await supabaseClient
-                    .from('notifications')
-                    .update({ 
-                        read: true, 
-                        read_at: new Date().toISOString() 
-                    })
-                    .eq('id', notificationId);
-                
-                // Refresh notifications
-                await loadNotifications();
-                
-            } catch (error) {
-                console.error('❌ Errore aggiornamento notifica:', error);
-            }
-        }
-
-        function openNewRequest() {
-            const modal = document.getElementById('jotformModal');
-            const iframe = document.getElementById('jotformFrame');
-            
-            // Pre-compila con email utente
-            const urlWithEmail = `${JOTFORM_URL}?email=${encodeURIComponent(currentUser.email)}`;
-            iframe.src = urlWithEmail;
-            
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeJotformModal() {
-            const modal = document.getElementById('jotformModal');
-            modal.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-            
-            // Ricarica le richieste dopo 2 secondi
-            setTimeout(() => {
-                loadRichieste();
-            }, 2000);
-        }
-
-        // === NAVIGATION FUNCTIONS ===
-        function goToRichieste() {
-            window.location.href = 'richieste.html';
-        }
-
-        function goToTessera() {
-            window.location.href = 'tessera.html';
-        }
-
-        function goToProfilo() {
-            window.location.href = 'profilo.html';
-        }
-
-        function goToStrumenti() {
-            window.location.href = 'strumenti.html';
-        }
-
-        function goToVirgilio() {
-            window.location.href = 'virgilio.html';
-        }
-
-        function goToDirigenti() {
-            window.location.href = 'dirigenti.html';
-        }
-
-        function goToConvenzioni() {
-            window.location.href = 'convenzioni.html';
-        }
-
-        function viewAllNews() {
-            window.location.href = 'news.html';
-        }
-
-        function readNews(newsId) {
-            window.location.href = `news.html?id=${newsId}`;
-        }
-
-        function viewRichiestaDetail(richiestaId) {
-            window.location.href = `richiesta-detail.html?id=${richiestaId}`;
-        }
-
-        function openConvenzione(convenzioneId) {
-            window.location.href = `convenzioni.html#${convenzioneId}`;
-        }
-
-        // === UTILITY FUNCTIONS ===
-        function getRoleLabel(role) {
-            const labels = {
-                'USER': 'Utente',
-                'DIRIGENTE': 'Dirigente',
-                'ADMIN': 'Amministratore'
-            };
-            return labels[role] || 'Utente';
-        }
-
-        function getStatusLabel(status) {
-            const labels = {
-                'ATTIVO': 'Attivo',
-                'SOSPESO': 'Sospeso',
-                'INATTIVO': 'Inattivo'
-            };
-            return labels[status] || 'Sconosciuto';
-        }
-
-        function getInitials(fullName) {
-            if (!fullName) return 'U';
-            return fullName.split(' ')
-                .map(name => name.charAt(0))
-                .join('')
-                .toUpperCase()
-                .substring(0, 2);
-        }
-
-        function getRequestStatusColor(stato) {
-            const colors = {
-                'RICEVUTA': 'request-status-ricevuta',
-                'IN_ESAME': 'request-status-in_esame',
-                'IN_LAVORAZIONE': 'request-status-in_lavorazione',
-                'NECESSARIE_INFO': 'bg-purple-500',
-                'COMPLETATA': 'request-status-completata',
-                'CHIUSA': 'request-status-chiusa',
-                'ANNULLATA': 'bg-red-500'
-            };
-            return colors[stato] || 'bg-gray-500';
-        }
-
-        function getStatusText(stato) {
-            const texts = {
-                'RICEVUTA': 'Ricevuta',
-                'IN_ESAME': 'In Esame',
-                'IN_LAVORAZIONE': 'In Lavorazione',
-                'NECESSARIE_INFO': 'Info Richieste',
-                'COMPLETATA': 'Completata',
-                'CHIUSA': 'Chiusa',
-                'ANNULLATA': 'Annullata'
-            };
-            return texts[stato] || stato;
-        }
-
-        function getPriorityColor(priorita) {
-            const colors = {
                 'BASSA': 'priority-bassa',
                 'NORMALE': 'priority-normale',
                 'ALTA': 'priority-alta'
@@ -2279,7 +1491,7 @@
             });
         }
 
-        // === PERIODIC UPDATES ===
+        // === AGGIORNAMENTI PERIODICI ===
         setInterval(async () => {
             if (currentUser) {
                 await loadNotifications();
@@ -2294,17 +1506,8 @@
             }
         }, 30000); // Aggiorna richieste ogni 30 secondi
 
-        console.log('✅ MyApp Home Dashboard v5.0 Ready - Sistema Richieste Integrato');
+        console.log('✅ MyApp Home Dashboard v5.0 Ready - Sistema Tessera Integrato');
     </script>
 
-    <!-- CSS aggiuntivo per line-clamp -->
-    <style>
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-    </style>
 </body>
 </html>
