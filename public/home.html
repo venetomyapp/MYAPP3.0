@@ -14,51 +14,37 @@
     <!-- QR Code -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     
-    <!-- CONFIGURAZIONE COLORI TAILWIND -->
+    <!-- Configurazione colori -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        // Aurora Boreale 2025 Palette
-                        primary: '#1a1a2e',      // Blu notte profondo
-                        secondary: '#16213e',     // Blu oceano
-                        accent: '#0f3460',        // Blu acciaio
-                        aurora: '#e94560',        // Rosa aurora
-                        cyan: '#00d4ff',          // Cyan elettrico
-                        magenta: '#ff006e',       // Magenta vibrante
-                        gold: '#ffd700',          // Oro elegante
-                        teal: '#03dac6',          // Teal premium
-                        dark: '#0a0a23',          // Nero cyber
-                        light: '#f8fafc',         // Bianco ghiaccio
+                        primary: '#1a1a2e',
+                        secondary: '#16213e',
+                        accent: '#0f3460',
+                        aurora: '#e94560',
+                        cyan: '#00d4ff',
+                        magenta: '#ff006e',
+                        gold: '#ffd700',
+                        teal: '#03dac6',
+                        dark: '#0a0a23',
+                        light: '#f8fafc',
                         textDark: '#1C1C1E',
                         backgroundLight: '#F4F4F8',
-                    },
-                    screens: {
-                        'xs': '320px',
-                        'sm': '640px',
-                        'md': '768px',
-                        'lg': '1024px',
-                        'xl': '1280px',
-                        '2xl': '1536px',
-                        '3xl': '1920px',
-                        '4xl': '2560px',
                     }
                 }
             }
         }
     </script>
     
-    <!-- STILI CSS COMPLETI -->
     <style>
-        /* === VARIABILI CSS === */
         :root {
             --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
             --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
             --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
         }
 
-        /* === SFONDO PRINCIPALE === */
         body {
             background: var(--gradient-aurora);
             background-size: 400% 400%;
@@ -66,7 +52,6 @@
             min-height: 100vh;
         }
 
-        /* === ANIMAZIONI === */
         @keyframes aurora {
             0%, 100% { background-position: 0% 50%; }
             25% { background-position: 100% 50%; }
@@ -74,38 +59,34 @@
             75% { background-position: 0% 100%; }
         }
 
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
         @keyframes shimmer {
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% { transform: translate3d(0,0,0); }
+            40%, 43% { transform: translate3d(0,-8px,0); }
+            70% { transform: translate3d(0,-4px,0); }
+            90% { transform: translate3d(0,-2px,0); }
         }
 
-        /* === TIPOGRAFIA ULTRA-VISIBILE === */
         .text-ultra-visible {
             color: #ffffff;
             text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
             font-weight: 800;
         }
 
-        .text-white {
-            text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
-        }
-
-        /* === GLASSMORPHISM === */
         .glass-morphism {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.18);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        }
-
-        .glass-strong {
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
         }
 
         .glass-card {
@@ -114,7 +95,6 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        /* === BOTTONI === */
         .btn-aurora {
             background: var(--gradient-magic);
             color: white;
@@ -142,7 +122,6 @@
             border-color: rgba(0, 212, 255, 0.8);
         }
 
-        /* === CARDS === */
         .card-hover {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -152,7 +131,14 @@
             box-shadow: 0 25px 50px rgba(0,0,0,0.25);
         }
 
-        .news-card {
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 12px;
+        }
+
+        .news-card, .feature-card {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.18);
@@ -161,12 +147,11 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .news-card:hover {
+        .news-card:hover, .feature-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
-        /* === ROLE BADGES === */
         .role-badge {
             display: inline-block;
             padding: 8px 16px;
@@ -197,15 +182,6 @@
             border-color: rgba(245, 158, 11, 0.3);
         }
 
-        /* === LOADING SKELETON === */
-        .loading-skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 12px;
-        }
-
-        /* === SPINNER === */
         .spinner {
             width: 48px;
             height: 48px;
@@ -215,7 +191,10 @@
             animation: spin 1s linear infinite;
         }
 
-        /* === PAGE LOADER === */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         #pageLoader {
             position: fixed;
             inset: 0;
@@ -227,14 +206,83 @@
             z-index: 60;
         }
 
-        /* === RESPONSIVE TYPOGRAPHY === */
-        .hero-title {
-            font-size: clamp(3rem, 12vw, 6rem);
-            font-weight: 900;
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        @media (max-width: 640px) {
-            .hero-title { font-size: 2.25rem; line-height: 2.5rem; }
+        .notification-bell:hover {
+            transform: rotate(15deg);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #e94560;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 10px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: bounce 2s infinite;
+        }
+
+        .app-logo-container {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            width: 320px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--gradient-magic);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
         }
     </style>
 </head>
@@ -244,7 +292,7 @@
     <div id="pageLoader">
         <div class="glass-card p-6 rounded-2xl flex items-center gap-4">
             <div class="spinner"></div>
-            <div class="text-dark text-lg font-semibold">Caricamento dashboard...</div>
+            <div class="text-textDark text-lg font-semibold">Caricamento dashboard...</div>
         </div>
     </div>
 
@@ -256,6 +304,23 @@
                 <span id="userRoleBadge" class="ml-4 hidden md:inline-block"></span>
             </div>
             <div class="flex items-center gap-4">
+                <!-- Notifiche -->
+                <div class="notification-bell relative" id="notificationBell">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    </svg>
+                    <span id="notificationBadge" class="notification-badge hidden">0</span>
+                    
+                    <div id="notificationDropdown" class="notification-dropdown">
+                        <div class="p-4 border-b border-gray-200">
+                            <h3 class="font-bold text-textDark">Notifiche</h3>
+                        </div>
+                        <div id="notificationList" class="p-2">
+                            <!-- Le notifiche verranno caricate qui -->
+                        </div>
+                    </div>
+                </div>
+                
                 <button id="logoutBtn" class="btn-aurora py-2 px-4 rounded-full">Logout</button>
             </div>
         </div>
@@ -266,7 +331,7 @@
         <section class="mb-12">
             <div class="glass-morphism rounded-3xl p-8 md:p-12">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-8">
-                    <div>
+                    <div class="flex-grow">
                         <h1 class="text-ultra-visible text-4xl md:text-5xl font-black mb-4">
                             Benvenuto, <span id="userName">Utente</span>!
                         </h1>
@@ -291,17 +356,62 @@
                     </div>
 
                     <div class="flex-shrink-0">
-                        <div class="relative w-48 h-48 bg-primary rounded-full flex items-center justify-center border-4 border-aurora shadow-lg animate-pulse">
-                            <span id="userInitials" class="text-white text-5xl font-bold">--</span>
+                        <div class="app-logo-container">
+                            <img src="/public/icons/icon-192x192.png" alt="MyApp Logo" class="w-20 h-20" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="w-20 h-20 bg-aurora rounded-full flex items-center justify-center text-white text-3xl font-bold" style="display: none;">
+                                <span id="userInitials">--</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Menu Rapido -->
+        <section class="mb-12">
+            <div class="section-header">
+                <div class="section-icon">
+                    🚀
+                </div>
+                <h2 class="text-ultra-visible text-3xl font-black">Menu Rapido</h2>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="strumenti.html" class="feature-card p-6 text-center">
+                    <div class="text-3xl mb-3">🛠️</div>
+                    <h3 class="text-white text-lg font-bold mb-2">Strumenti</h3>
+                    <p class="text-white/80 text-sm">Utility e strumenti di lavoro</p>
+                </a>
+                
+                <a href="virgilio.html" class="feature-card p-6 text-center">
+                    <div class="text-3xl mb-3">🤖</div>
+                    <h3 class="text-white text-lg font-bold mb-2">Virgilio</h3>
+                    <p class="text-white/80 text-sm">Chatbot assistente intelligente</p>
+                </a>
+                
+                <a href="dirigenti.html" class="feature-card p-6 text-center">
+                    <div class="text-3xl mb-3">👥</div>
+                    <h3 class="text-white text-lg font-bold mb-2">Dirigenti</h3>
+                    <p class="text-white/80 text-sm">Contatta un dirigente</p>
+                </a>
+                
+                <a href="convenzioni.html" class="feature-card p-6 text-center">
+                    <div class="text-3xl mb-3">💳</div>
+                    <h3 class="text-white text-lg font-bold mb-2">Convenzioni</h3>
+                    <p class="text-white/80 text-sm">Sconti e offerte esclusive</p>
+                </a>
+            </div>
+        </section>
+
         <!-- Tessera Preview Section -->
         <section class="mb-12">
-            <h2 class="text-ultra-visible text-3xl font-black mb-6">La Tua Tessera</h2>
+            <div class="section-header">
+                <div class="section-icon">
+                    🎫
+                </div>
+                <h2 class="text-ultra-visible text-3xl font-black">La Tua Tessera</h2>
+            </div>
+            
             <div class="glass-morphism rounded-3xl p-6 card-hover">
                 <div class="flex flex-col md:flex-row items-center gap-8">
                     <div class="flex-shrink-0 w-full md:w-1/3 lg:w-1/4">
@@ -330,24 +440,17 @@
 
         <!-- News Section -->
         <section class="mb-12">
-            <div class="flex justify-between items-center mb-6">
+            <div class="section-header">
+                <div class="section-icon">
+                    📰
+                </div>
                 <h2 class="text-ultra-visible text-3xl font-black">Ultime Notizie</h2>
-                <a href="news.html" class="text-white opacity-80 hover:opacity-100 transition-opacity">Vedi tutte</a>
+                <div class="ml-auto">
+                    <a href="news.html" class="text-white opacity-80 hover:opacity-100 transition-opacity">Vedi tutte</a>
+                </div>
             </div>
+            
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="newsContainer">
-                <div class="loading-skeleton h-64"></div>
-                <div class="loading-skeleton h-64"></div>
-                <div class="loading-skeleton h-64"></div>
-            </div>
-        </section>
-
-        <!-- Convenzioni Section -->
-        <section class="mb-12">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-ultra-visible text-3xl font-black">Convenzioni</h2>
-                <a href="convenzioni.html" class="text-white opacity-80 hover:opacity-100 transition-opacity">Vedi tutte</a>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="convenzioniContainer">
                 <div class="loading-skeleton h-64"></div>
                 <div class="loading-skeleton h-64"></div>
                 <div class="loading-skeleton h-64"></div>
@@ -356,7 +459,13 @@
 
         <!-- Richieste Section -->
         <section class="mb-12">
-            <h2 class="text-ultra-visible text-3xl font-black mb-6">Le Tue Richieste</h2>
+            <div class="section-header">
+                <div class="section-icon">
+                    📋
+                </div>
+                <h2 class="text-ultra-visible text-3xl font-black">Le Tue Richieste</h2>
+            </div>
+            
             <div class="glass-morphism rounded-3xl p-6">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-white text-xl font-bold">Richieste Recenti</h3>
@@ -397,11 +506,12 @@
                     </svg>
                     <span class="text-xs mt-1">Tessera</span>
                 </a>
-                <a href="convenzioni.html" class="flex flex-col items-center text-white">
+                <a href="strumenti.html" class="flex flex-col items-center text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
-                    <span class="text-xs mt-1">Convenzioni</span>
+                    <span class="text-xs mt-1">Strumenti</span>
                 </a>
             </div>
         </div>
@@ -410,7 +520,7 @@
     <!-- CONFIGURAZIONE APP INCORPORATA -->
     <script>
         // ========================================
-        // MyApp - CONFIGURAZIONE INCORPORATA v4.0
+        // MyApp - CONFIGURAZIONE INCORPORATA v4.1
         // ========================================
 
         const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
@@ -419,11 +529,9 @@
         // Configurazione globale dell'app
         window.APP_CONFIG = {
             SUPABASE: {
-                client: null,
                 getClient: function() {
                     if (!this.client) {
                         this.client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                        console.log('✅ Supabase client inizializzato');
                     }
                     return this.client;
                 }
@@ -433,7 +541,8 @@
                 CONVENZIONI: 'convenzioni',
                 RICHIESTE: 'richieste',
                 USER_PROFILES: 'user_profiles',
-                TESSERE: 'tessere'
+                TESSERE: 'tessere',
+                NOTIFICATIONS: 'notifications'
             },
             AUTH: {
                 async getCurrentUser() {
@@ -463,12 +572,8 @@
                     return true;
                 },
                 async logout() {
-                    try {
-                        await APP_CONFIG.SUPABASE.getClient().auth.signOut();
-                        window.location.replace('auth.html');
-                    } catch (error) {
-                        console.error('Errore logout:', error);
-                    }
+                    await APP_CONFIG.SUPABASE.getClient().auth.signOut();
+                    window.location.replace('auth.html');
                 }
             },
             TESSERA: {
@@ -484,7 +589,7 @@
                         .limit(1)
                         .single();
                     if (error) {
-                        console.warn('Nessuna tessera trovata:', error.message);
+                        console.warn('Nessuna tessera:', error.message);
                         return null;
                     }
                     return data;
@@ -493,17 +598,12 @@
             NOTIFICATIONS: {
                 showToast: function(msg, type='info') {
                     console.log(`[${type.toUpperCase()}] ${msg}`);
-                    
-                    // Crea toast visuale
                     const toast = document.createElement('div');
-                    toast.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 max-w-sm font-semibold ${
+                    toast.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 ${
                         type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500'
-                    } text-white`;
+                    } text-white font-semibold`;
                     toast.textContent = msg;
-                    
                     document.body.appendChild(toast);
-                    
-                    // Auto-remove
                     setTimeout(() => {
                         toast.style.opacity = '0';
                         setTimeout(() => {
@@ -512,6 +612,58 @@
                             }
                         }, 300);
                     }, 3000);
+                },
+                async getUnreadCount() {
+                    try {
+                        const user = await APP_CONFIG.AUTH.getCurrentUser();
+                        if (!user) return 0;
+                        
+                        const client = APP_CONFIG.SUPABASE.getClient();
+                        const { count, error } = await client
+                            .from('notifications')
+                            .select('id', { count: 'exact' })
+                            .eq('user_id', user.id)
+                            .eq('read', false);
+                        
+                        if (error) throw error;
+                        return count || 0;
+                    } catch (error) {
+                        console.error('Errore conteggio notifiche:', error);
+                        return 0;
+                    }
+                },
+                async getRecentNotifications() {
+                    try {
+                        const user = await APP_CONFIG.AUTH.getCurrentUser();
+                        if (!user) return [];
+                        
+                        const client = APP_CONFIG.SUPABASE.getClient();
+                        const { data, error } = await client
+                            .from('notifications')
+                            .select('*')
+                            .eq('user_id', user.id)
+                            .order('created_at', { ascending: false })
+                            .limit(10);
+                        
+                        if (error) throw error;
+                        return data || [];
+                    } catch (error) {
+                        console.error('Errore caricamento notifiche:', error);
+                        return [];
+                    }
+                },
+                async markAsRead(notificationId) {
+                    try {
+                        const client = APP_CONFIG.SUPABASE.getClient();
+                        const { error } = await client
+                            .from('notifications')
+                            .update({ read: true })
+                            .eq('id', notificationId);
+                        
+                        if (error) throw error;
+                    } catch (error) {
+                        console.error('Errore marcatura notifica:', error);
+                    }
                 }
             }
         };
@@ -525,13 +677,11 @@
         let currentProfile = null;
 
         function showLoader() {
-            const loader = document.getElementById('pageLoader');
-            if (loader) loader.style.display = 'flex';
+            document.getElementById('pageLoader').style.display = 'flex';
         }
 
         function hideLoader() {
-            const loader = document.getElementById('pageLoader');
-            if (loader) loader.style.display = 'none';
+            document.getElementById('pageLoader').style.display = 'none';
         }
 
         function getRoleBadgeHTML(role) {
@@ -550,7 +700,10 @@
                     throw new Error('Impossibile caricare il profilo utente');
                 }
 
+                // Mostra solo il nome
                 document.getElementById('userName').textContent = currentProfile.nome || 'Utente';
+                
+                // Iniziali per fallback
                 const initials = (currentProfile.nome?.[0] || '-') + (currentProfile.cognome?.[0] || '-');
                 document.getElementById('userInitials').textContent = initials.toUpperCase();
                 
@@ -561,6 +714,67 @@
             } catch (error) {
                 console.error('Errore caricamento dati utente:', error);
                 throw error;
+            }
+        }
+
+        async function loadNotifications() {
+            try {
+                const unreadCount = await APP_CONFIG.NOTIFICATIONS.getUnreadCount();
+                const badge = document.getElementById('notificationBadge');
+                
+                if (unreadCount > 0) {
+                    badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+                
+                // Carica le notifiche per il dropdown
+                const notifications = await APP_CONFIG.NOTIFICATIONS.getRecentNotifications();
+                const container = document.getElementById('notificationList');
+                
+                if (notifications.length === 0) {
+                    container.innerHTML = `
+                        <div class="p-4 text-center text-gray-500">
+                            Nessuna notifica
+                        </div>`;
+                    return;
+                }
+                
+                container.innerHTML = '';
+                notifications.forEach(notification => {
+                    const item = document.createElement('div');
+                    item.className = `p-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50 ${!notification.read ? 'bg-blue-50' : ''}`;
+                    item.innerHTML = `
+                        <div class="flex items-start gap-3">
+                            <div class="flex-shrink-0 w-2 h-2 rounded-full mt-2 ${!notification.read ? 'bg-blue-500' : 'bg-gray-300'}"></div>
+                            <div class="flex-grow">
+                                <h4 class="font-semibold text-textDark text-sm">${notification.title || 'Notifica'}</h4>
+                                <p class="text-gray-600 text-xs mt-1">${notification.message || ''}</p>
+                                <span class="text-gray-400 text-xs">${new Date(notification.created_at).toLocaleString('it-IT')}</span>
+                            </div>
+                        </div>`;
+                    
+                    item.addEventListener('click', async () => {
+                        if (!notification.read) {
+                            await APP_CONFIG.NOTIFICATIONS.markAsRead(notification.id);
+                            item.classList.remove('bg-blue-50');
+                            item.querySelector('.w-2').classList.remove('bg-blue-500');
+                            item.querySelector('.w-2').classList.add('bg-gray-300');
+                            await loadNotifications(); // Ricarica il conteggio
+                        }
+                        
+                        // Naviga se c'è un link
+                        if (notification.link) {
+                            window.location.href = notification.link;
+                        }
+                    });
+                    
+                    container.appendChild(item);
+                });
+                
+            } catch (error) {
+                console.error('Errore caricamento notifiche:', error);
             }
         }
 
@@ -580,7 +794,7 @@
                         <div class="text-3xl font-bold text-primary mb-2">${tessera.numero_tessera || '---'}</div>
                         <div class="text-primary font-semibold mb-4">${tessera.nome || ''} ${tessera.cognome || ''}</div>
                         <canvas id="qrPreview" class="mb-4"></canvas>
-                        <div class="text-xs text-gray-600">Emessa il ${tessera.created_at ? new Date(tessera.created_at).toLocaleDateString('it-IT') : '-'}</div>
+                        <div class="text-xs text-gray-600">Emessa il ${tessera.data_creazione ? new Date(tessera.data_creazione).toLocaleDateString('it-IT') : '-'}</div>
                     </div>`;
 
                 if (window.QRCode && tessera.numero_tessera) {
@@ -603,100 +817,49 @@
             try {
                 const client = APP_CONFIG.SUPABASE.getClient();
                 const { data: news, error } = await client
-                    .from('news')
+                    .from(APP_CONFIG.TABLES.NEWS)
                     .select('*')
-                    .eq('pubblicata', true)
+                    .eq('stato', 'pubblicata')
                     .order('created_at', { ascending: false })
                     .limit(3);
 
-                if (error && error.code !== 'PGRST116') {
-                    throw error;
-                }
+                if (error) throw error;
+
+                container.innerHTML = '';
 
                 if (!news || news.length === 0) {
                     container.innerHTML = `
-                        <div class="col-span-full text-center py-12">
-                            <div class="text-white text-xl mb-4">📰</div>
-                            <div class="text-white text-lg font-semibold mb-2">Nessuna notizia disponibile</div>
-                            <div class="text-white opacity-80">Le ultime notizie appariranno qui</div>
+                        <div class="glass-morphism rounded-3xl p-6 col-span-3 text-white text-center">
+                            Nessuna news disponibile al momento
                         </div>`;
                     return;
                 }
 
-                container.innerHTML = news.map(item => `
-                    <div class="news-card p-6">
-                        <div class="mb-4">
-                            <h3 class="text-white font-bold text-lg mb-2">${item.titolo || 'Titolo non disponibile'}</h3>
-                            <p class="text-white opacity-90 text-sm line-clamp-3">${item.contenuto ? item.contenuto.substring(0, 150) + '...' : 'Contenuto non disponibile'}</p>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-white opacity-70 text-xs">
-                                ${item.created_at ? new Date(item.created_at).toLocaleDateString('it-IT') : 'Data non disponibile'}
-                            </span>
-                            <a href="news.html?id=${item.id}" class="text-aurora hover:text-cyan transition-colors text-sm font-semibold">
-                                Leggi tutto →
-                            </a>
-                        </div>
-                    </div>
-                `).join('');
+                news.forEach(n => {
+                    const date = new Date(n.created_at).toLocaleDateString('it-IT', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    });
+                    const excerpt = (n.contenuto || '').slice(0, 150) + (n.contenuto?.length > 150 ? '…' : '');
+                    
+                    const card = document.createElement('div');
+                    card.className = 'news-card';
+                    card.innerHTML = `
+                        <div class="p-6">
+                            <div class="text-white/70 text-sm mb-2">${date}</div>
+                            <h3 class="text-white text-lg font-bold mb-2">${n.titolo || '-'}</h3>
+                            <p class="text-white/90 mb-3">${excerpt}</p>
+                            <a href="news-detail.html?id=${n.id}" class="text-cyan font-semibold hover:underline">Leggi tutto</a>
+                        </div>`;
+                    container.appendChild(card);
+                });
 
             } catch (error) {
                 console.error('Errore caricamento news:', error);
                 container.innerHTML = `
-                    <div class="col-span-full text-center py-8">
-                        <div class="text-red-400 text-sm">Errore nel caricamento delle notizie</div>
-                    </div>`;
-            }
-        }
-
-        async function loadConvenzioni() {
-            const container = document.getElementById('convenzioniContainer');
-            
-            try {
-                const client = APP_CONFIG.SUPABASE.getClient();
-                const { data: convenzioni, error } = await client
-                    .from('convenzioni')
-                    .select('*')
-                    .eq('attiva', true)
-                    .order('created_at', { ascending: false })
-                    .limit(3);
-
-                if (error && error.code !== 'PGRST116') {
-                    throw error;
-                }
-
-                if (!convenzioni || convenzioni.length === 0) {
-                    container.innerHTML = `
-                        <div class="col-span-full text-center py-12">
-                            <div class="text-white text-xl mb-4">🤝</div>
-                            <div class="text-white text-lg font-semibold mb-2">Nessuna convenzione disponibile</div>
-                            <div class="text-white opacity-80">Le convenzioni attive appariranno qui</div>
-                        </div>`;
-                    return;
-                }
-
-                container.innerHTML = convenzioni.map(item => `
-                    <div class="news-card p-6">
-                        <div class="mb-4">
-                            <h3 class="text-white font-bold text-lg mb-2">${item.nome || 'Convenzione'}</h3>
-                            <p class="text-white opacity-90 text-sm line-clamp-3">${item.descrizione ? item.descrizione.substring(0, 150) + '...' : 'Descrizione non disponibile'}</p>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-teal text-xs font-semibold px-2 py-1 bg-teal bg-opacity-20 rounded-full">
-                                ${item.categoria || 'Generale'}
-                            </span>
-                            <a href="convenzioni.html?id=${item.id}" class="text-aurora hover:text-cyan transition-colors text-sm font-semibold">
-                                Dettagli →
-                            </a>
-                        </div>
-                    </div>
-                `).join('');
-
-            } catch (error) {
-                console.error('Errore caricamento convenzioni:', error);
-                container.innerHTML = `
-                    <div class="col-span-full text-center py-8">
-                        <div class="text-red-400 text-sm">Errore nel caricamento delle convenzioni</div>
+                    <div class="glass-morphism rounded-3xl p-6 col-span-3 text-white text-center">
+                        Errore nel caricamento delle news
                     </div>`;
             }
         }
@@ -707,134 +870,141 @@
             try {
                 const client = APP_CONFIG.SUPABASE.getClient();
                 const { data: richieste, error } = await client
-                    .from('richieste')
+                    .from(APP_CONFIG.TABLES.RICHIESTE)
                     .select('*')
                     .eq('user_id', currentUser.id)
                     .order('created_at', { ascending: false })
                     .limit(5);
 
-                if (error && error.code !== 'PGRST116') {
-                    throw error;
-                }
+                if (error) throw error;
+
+                container.innerHTML = '';
 
                 if (!richieste || richieste.length === 0) {
                     container.innerHTML = `
-                        <div class="text-center py-8">
-                            <div class="text-white text-lg mb-2">📋 Nessuna richiesta</div>
-                            <div class="text-white opacity-80 text-sm">Le tue richieste appariranno qui</div>
+                        <div class="glass-morphism rounded-xl p-4 text-white text-center">
+                            Nessuna richiesta effettuata
                         </div>`;
                     return;
                 }
 
-                container.innerHTML = richieste.map(richiesta => {
-                    const statusColor = {
-                        'IN_ATTESA': 'bg-yellow-500',
-                        'APPROVATA': 'bg-green-500',
-                        'RIFIUTATA': 'bg-red-500',
-                        'IN_LAVORAZIONE': 'bg-blue-500'
-                    }[richiesta.stato] || 'bg-gray-500';
+                const getStatusColor = (stato) => {
+                    switch (stato) {
+                        case 'aperta': return 'bg-blue-500';
+                        case 'in_elaborazione': return 'bg-yellow-500';
+                        case 'risolta': return 'bg-green-500';
+                        case 'chiusa': return 'bg-gray-500';
+                        default: return 'bg-gray-500';
+                    }
+                };
 
-                    return `
-                        <div class="glass-card p-4 rounded-xl">
-                            <div class="flex justify-between items-start mb-2">
-                                <h4 class="text-dark font-semibold">${richiesta.titolo || 'Richiesta'}</h4>
-                                <span class="text-xs px-2 py-1 rounded-full text-white ${statusColor}">
-                                    ${richiesta.stato || 'IN_ATTESA'}
-                                </span>
+                richieste.forEach(r => {
+                    const item = document.createElement('div');
+                    item.className = 'glass-morphism rounded-xl p-4';
+                    const stato = (r.stato || 'aperta').replace('_', ' ');
+                    const when = new Date(r.created_at).toLocaleDateString('it-IT', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric'
+                    });
+                    
+                    item.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="text-white font-bold">${r.titolo || '-'}</h4>
+                                <p class="text-white/70 text-sm">${when}</p>
                             </div>
-                            <p class="text-gray-600 text-sm mb-2">${richiesta.descrizione ? richiesta.descrizione.substring(0, 100) + '...' : ''}</p>
-                            <div class="text-xs text-gray-500">
-                                ${richiesta.created_at ? new Date(richiesta.created_at).toLocaleDateString('it-IT') : ''}
-                            </div>
+                            <span class="px-3 py-1 rounded-full text-xs font-medium text-white ${getStatusColor(r.stato)}">
+                                ${stato.charAt(0).toUpperCase() + stato.slice(1)}
+                            </span>
                         </div>`;
-                }).join('');
+                    container.appendChild(item);
+                });
 
             } catch (error) {
                 console.error('Errore caricamento richieste:', error);
                 container.innerHTML = `
-                    <div class="text-center py-8">
-                        <div class="text-red-400 text-sm">Errore nel caricamento delle richieste</div>
+                    <div class="glass-morphism rounded-xl p-4 text-white text-center">
+                        Errore nel caricamento delle richieste
                     </div>`;
             }
         }
 
-        // Event handlers
-        function setupEventHandlers() {
-            // Logout button
-            const logoutBtn = document.getElementById('logoutBtn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', async () => {
-                    try {
-                        showLoader();
-                        await APP_CONFIG.AUTH.logout();
-                    } catch (error) {
-                        console.error('Errore logout:', error);
-                        hideLoader();
-                    }
-                });
-            }
+        function setupEventListeners() {
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                APP_CONFIG.AUTH.logout();
+            });
+            
+            // Nuova richiesta
+            document.getElementById('newRequestBtn').addEventListener('click', () => {
+                APP_CONFIG.NOTIFICATIONS.showToast('Pagina richieste in sviluppo', 'info');
+            });
 
-            // New request button
-            const newRequestBtn = document.getElementById('newRequestBtn');
-            if (newRequestBtn) {
-                newRequestBtn.addEventListener('click', () => {
-                    window.location.href = 'richieste.html?new=true';
-                });
-            }
+            // Notifiche dropdown
+            const notificationBell = document.getElementById('notificationBell');
+            const notificationDropdown = document.getElementById('notificationDropdown');
+            
+            notificationBell.addEventListener('click', (e) => {
+                e.stopPropagation();
+                notificationDropdown.classList.toggle('show');
+            });
+
+            // Chiudi dropdown cliccando fuori
+            document.addEventListener('click', (e) => {
+                if (!notificationBell.contains(e.target)) {
+                    notificationDropdown.classList.remove('show');
+                }
+            });
+        }
+
+        // Auto-refresh notifiche ogni 30 secondi
+        function startNotificationRefresh() {
+            setInterval(async () => {
+                await loadNotifications();
+            }, 30000);
         }
 
         // Inizializzazione principale
-        async function initializePage() {
+        document.addEventListener('DOMContentLoaded', async () => {
             try {
                 showLoader();
+                console.log('🏠 HOME PAGE LOADED - MyApp Dashboard v4.1');
 
-                // Proteggi la pagina (controlla autenticazione)
+                // Aspetta che Supabase sia disponibile
+                if (typeof supabase === 'undefined') {
+                    throw new Error('Supabase SDK non caricato');
+                }
+
+                // Controlla autenticazione
                 await APP_CONFIG.AUTH.protectPage();
 
                 // Carica dati utente
                 await loadUserData();
 
-                // Carica contenuti in parallelo
+                // Carica tutti i contenuti in parallelo
                 await Promise.all([
+                    loadNotifications(),
                     loadTesseraPreview(),
                     loadNews(),
-                    loadConvenzioni(),
                     loadRichieste()
                 ]);
 
-                // Setup event handlers
-                setupEventHandlers();
+                // Setup eventi
+                setupEventListeners();
 
-                console.log('✅ Pagina home inizializzata correttamente');
-                
+                // Avvia refresh automatico notifiche
+                startNotificationRefresh();
+
+                console.log('✅ Dashboard caricata con successo');
+
             } catch (error) {
-                console.error('❌ Errore inizializzazione:', error);
-                APP_CONFIG.NOTIFICATIONS.showToast('Errore nel caricamento della pagina', 'error');
-                
-                // Redirect to auth se non autenticato
-                if (error.message === 'Utente non autenticato') {
-                    window.location.replace('auth.html');
-                }
+                console.error('Errore inizializzazione home:', error);
+                APP_CONFIG.NOTIFICATIONS.showToast('Errore: ' + (error?.message || 'inizializzazione'), 'error');
             } finally {
                 hideLoader();
             }
-        }
-
-        // Avvia l'app quando il DOM è pronto
-        document.addEventListener('DOMContentLoaded', initializePage);
-
-        // Service Worker per PWA (opzionale)
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then((registration) => {
-                        console.log('✅ SW registrato:', registration.scope);
-                    })
-                    .catch((error) => {
-                        console.log('❌ SW registrazione fallita:', error);
-                    });
-            });
-        }
+        });
     </script>
 </body>
 </html>
