@@ -33,16 +33,6 @@
                         light: '#f8fafc',         // Bianco ghiaccio
                         textDark: '#1C1C1E',
                         backgroundLight: '#F4F4F8',
-                    },
-                    screens: {
-                        'xs': '320px',
-                        'sm': '640px',
-                        'md': '768px',
-                        'lg': '1024px',
-                        'xl': '1280px',
-                        '2xl': '1536px',
-                        '3xl': '1920px',
-                        '4xl': '2560px',
                     }
                 }
             }
@@ -85,11 +75,6 @@
             100% { background-position: 200% 0; }
         }
 
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(233, 69, 96, 0.5); }
-            50% { box-shadow: 0 0 40px rgba(0, 212, 255, 0.8); }
-        }
-
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.8; }
@@ -112,12 +97,6 @@
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.18);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        }
-
-        .glass-strong {
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
         }
 
         .glass-card {
@@ -169,35 +148,6 @@
             animation: pulse 2s infinite;
         }
 
-        /* === CARDS === */
-        .admin-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(16px);
-            border: 2px solid rgba(255, 215, 0, 0.3);
-            border-radius: 24px;
-            padding: 2rem;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .admin-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient-gold);
-        }
-
-        .admin-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 25px 50px rgba(255, 215, 0, 0.3);
-            border-color: rgba(255, 215, 0, 0.6);
-        }
-
         /* === STATISTICHE === */
         .stat-card {
             background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
@@ -216,23 +166,31 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: var(--gradient-magic);
+            background: var(--gradient-gold);
         }
 
         .stat-card:hover {
-            transform: translateY(-5px) scale(1.05);
-            border-color: rgba(233, 69, 96, 0.5);
-            box-shadow: 0 15px 30px rgba(233, 69, 96, 0.3);
+            transform: translateY(-3px) scale(1.05);
+            background: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.15));
+            box-shadow: 0 15px 30px rgba(255, 215, 0, 0.3);
         }
 
-        /* === CHARTS === */
-        .chart-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            padding: 2rem;
-            height: 400px;
+        /* === ACTION CARDS === */
+        .action-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+            border-color: rgba(255, 215, 0, 0.3);
+            background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
         }
 
         /* === NOTIFICATION DROPDOWN === */
@@ -275,44 +233,10 @@
             font-weight: 600;
         }
 
-        /* === LOADING SKELETON === */
-        .loading-skeleton {
-            background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 12px;
-        }
-
-        /* === RESPONSIVE TYPOGRAPHY === */
-        .hero-title {
-            font-size: clamp(2.5rem, 8vw, 4rem);
-            font-weight: 900;
-        }
-
-        .section-title {
-            font-size: clamp(2rem, 6vw, 3rem);
-            font-weight: 900;
-        }
-
-        /* === REDUCED MOTION === */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-
-        /* === RESPONSIVE BREAKPOINTS === */
+        /* === RESPONSIVE === */
         @media (max-width: 768px) {
-            .admin-card {
-                padding: 1.5rem;
-            }
-            
-            .chart-container {
-                height: 300px;
-                padding: 1rem;
-            }
+            .hero-title { font-size: 2.5rem; }
+            .section-title { font-size: 2rem; }
         }
     </style>
 </head>
@@ -396,7 +320,6 @@
         <!-- SEZIONE BENVENUTO ADMIN -->
         <section class="mb-12">
             <div class="glass-morphism rounded-3xl p-8 md:p-12 relative overflow-hidden">
-                <!-- Decorative Elements -->
                 <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-gold/20 to-aurora/20 rounded-full blur-xl"></div>
                 <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-cyan/20 to-teal/20 rounded-full blur-lg"></div>
                 
@@ -409,7 +332,7 @@
                             </div>
                         </div>
                         
-                        <h1 class="hero-title text-ultra-visible mb-4 leading-tight">
+                        <h1 class="text-ultra-visible text-4xl md:text-5xl font-black mb-4 leading-tight">
                             Benvenuto,<br>
                             <span id="adminNameDisplay" class="text-gold">
                                 Amministratore
@@ -447,7 +370,7 @@
             </div>
         </section>
 
-        <!-- SEZIONE STATISTICHE AMMINISTRATIVE -->
+        <!-- STATISTICHE SISTEMA -->
         <section class="mb-12">
             <div class="flex items-center gap-4 mb-8">
                 <div class="w-12 h-12 bg-gradient-to-br from-gold to-aurora rounded-xl flex items-center justify-center">
@@ -460,7 +383,7 @@
                 <div class="stat-card p-6">
                     <div class="flex items-center justify-between">
                         <div>
-                            <div class="text-white text-2xl font-bold" id="totalUsers">-</div>
+                            <div class="text-white text-2xl font-bold" id="totalUsers">0</div>
                             <div class="text-white text-sm opacity-80">Utenti Totali</div>
                         </div>
                         <div class="text-4xl">👥</div>
@@ -470,7 +393,7 @@
                 <div class="stat-card p-6">
                     <div class="flex items-center justify-between">
                         <div>
-                            <div class="text-white text-2xl font-bold" id="activeRequests">-</div>
+                            <div class="text-white text-2xl font-bold" id="activeRequests">0</div>
                             <div class="text-white text-sm opacity-80">Richieste Attive</div>
                         </div>
                         <div class="text-4xl">📋</div>
@@ -480,7 +403,7 @@
                 <div class="stat-card p-6">
                     <div class="flex items-center justify-between">
                         <div>
-                            <div class="text-white text-2xl font-bold" id="activeTessere">-</div>
+                            <div class="text-white text-2xl font-bold" id="activeTessere">0</div>
                             <div class="text-white text-sm opacity-80">Tessere Attive</div>
                         </div>
                         <div class="text-4xl">🎫</div>
@@ -490,16 +413,16 @@
                 <div class="stat-card p-6">
                     <div class="flex items-center justify-between">
                         <div>
-                            <div class="text-white text-2xl font-bold" id="systemStatus">Online</div>
-                            <div class="text-white text-sm opacity-80">Stato Sistema</div>
+                            <div class="text-white text-2xl font-bold" id="monthlyGrowth">+12%</div>
+                            <div class="text-white text-sm opacity-80">Crescita Mensile</div>
                         </div>
-                        <div class="text-4xl">⚡</div>
+                        <div class="text-4xl">📈</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SEZIONE STRUMENTI DI GESTIONE -->
+        <!-- STRUMENTI DI GESTIONE -->
         <section class="mb-12">
             <div class="flex items-center gap-4 mb-8">
                 <div class="w-12 h-12 bg-gradient-to-br from-aurora to-magenta rounded-xl flex items-center justify-center">
@@ -509,48 +432,48 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div onclick="goToGestioneUtenti()" class="admin-card text-center">
-                    <div class="text-5xl mb-4">👥</div>
-                    <h3 class="text-primary text-xl font-bold mb-2">Gestione Utenti</h3>
-                    <p class="text-gray-600 text-sm mb-4">Amministra profili, ruoli e permessi utenti</p>
-                    <div class="text-aurora text-xs font-semibold">
+                <div onclick="goToGestioneUtenti()" class="action-card p-6 text-center">
+                    <div class="text-4xl mb-4">👥</div>
+                    <h3 class="text-white text-lg font-bold mb-2">Gestione Utenti</h3>
+                    <p class="text-white/80 text-sm mb-4">Amministra profili, ruoli e permessi</p>
+                    <div class="text-gold text-xs font-semibold">
                         Gestisci →
                     </div>
                 </div>
                 
-                <div onclick="goToGestioneRichieste()" class="admin-card text-center">
-                    <div class="text-5xl mb-4">📋</div>
-                    <h3 class="text-primary text-xl font-bold mb-2">Gestione Richieste</h3>
-                    <p class="text-gray-600 text-sm">Visualizza e gestisci tutte le richieste</p>
+                <div onclick="goToGestioneRichieste()" class="action-card p-6 text-center">
+                    <div class="text-4xl mb-4">📋</div>
+                    <h3 class="text-white text-lg font-bold mb-2">Gestione Richieste</h3>
+                    <p class="text-white/80 text-sm">Visualizza e gestisci tutte le richieste</p>
                 </div>
                 
-                <div onclick="goToGestioneTessere()" class="admin-card text-center">
-                    <div class="text-5xl mb-4">🎫</div>
-                    <h3 class="text-primary text-xl font-bold mb-2">Gestione Tessere</h3>
-                    <p class="text-gray-600 text-sm">Amministra tessere e stati</p>
+                <div onclick="goToGestioneTessere()" class="action-card p-6 text-center">
+                    <div class="text-4xl mb-4">🎫</div>
+                    <h3 class="text-white text-lg font-bold mb-2">Gestione Tessere</h3>
+                    <p class="text-white/80 text-sm">Amministra tessere e stati</p>
                 </div>
                 
-                <div onclick="goToGestioneNews()" class="admin-card text-center">
-                    <div class="text-5xl mb-4">📰</div>
-                    <h3 class="text-primary text-xl font-bold mb-2">Gestione News</h3>
-                    <p class="text-gray-600 text-sm">Pubblica e gestisci notizie</p>
+                <div onclick="goToGestioneNews()" class="action-card p-6 text-center">
+                    <div class="text-4xl mb-4">📰</div>
+                    <h3 class="text-white text-lg font-bold mb-2">Gestione News</h3>
+                    <p class="text-white/80 text-sm">Pubblica e gestisci notizie</p>
                 </div>
                 
-                <div onclick="goToGestioneConvenzioni()" class="admin-card text-center">
-                    <div class="text-5xl mb-4">🤝</div>
-                    <h3 class="text-primary text-xl font-bold mb-2">Gestione Convenzioni</h3>
-                    <p class="text-gray-600 text-sm">Amministra convenzioni e partnership</p>
+                <div onclick="goToGestioneConvenzioni()" class="action-card p-6 text-center">
+                    <div class="text-4xl mb-4">🤝</div>
+                    <h3 class="text-white text-lg font-bold mb-2">Gestione Convenzioni</h3>
+                    <p class="text-white/80 text-sm">Amministra convenzioni e partnership</p>
                 </div>
                 
-                <div onclick="goToAnalytics()" class="admin-card text-center">
-                    <div class="text-5xl mb-4">📈</div>
-                    <h3 class="text-primary text-xl font-bold mb-2">Analytics</h3>
-                    <p class="text-gray-600 text-sm">Statistiche e report dettagliati</p>
+                <div onclick="goToAnalytics()" class="action-card p-6 text-center">
+                    <div class="text-4xl mb-4">📈</div>
+                    <h3 class="text-white text-lg font-bold mb-2">Analytics</h3>
+                    <p class="text-white/80 text-sm">Statistiche e report dettagliati</p>
                 </div>
             </div>
         </section>
 
-        <!-- SEZIONE GRAFICI -->
+        <!-- GRAFICI ANALYTICS -->
         <section class="mb-12">
             <div class="flex items-center gap-4 mb-8">
                 <div class="w-12 h-12 bg-gradient-to-br from-cyan to-teal rounded-xl flex items-center justify-center">
@@ -561,20 +484,24 @@
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- GRAFICO ISCRIZIONI -->
-                <div class="chart-container">
+                <div class="glass-card rounded-3xl p-6">
                     <h3 class="text-primary text-xl font-bold mb-4">📊 Iscrizioni Ultimi 6 Mesi</h3>
-                    <canvas id="subscriptionsChart"></canvas>
+                    <div class="h-80">
+                        <canvas id="subscriptionsChart"></canvas>
+                    </div>
                 </div>
                 
                 <!-- GRAFICO RICHIESTE -->
-                <div class="chart-container">
+                <div class="glass-card rounded-3xl p-6">
                     <h3 class="text-primary text-xl font-bold mb-4">📋 Richieste per Categoria</h3>
-                    <canvas id="requestsChart"></canvas>
+                    <div class="h-80">
+                        <canvas id="requestsChart"></canvas>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- SEZIONE ATTIVITÀ RECENTI -->
+        <!-- ATTIVITÀ RECENTI -->
         <section class="mb-12">
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-4">
@@ -593,9 +520,7 @@
             
             <div class="glass-card rounded-3xl p-8">
                 <div id="activityContainer">
-                    <div class="loading-skeleton h-16 mb-4"></div>
-                    <div class="loading-skeleton h-16 mb-4"></div>
-                    <div class="loading-skeleton h-16"></div>
+                    <!-- Le attività verranno caricate qui -->
                 </div>
             </div>
         </section>
@@ -636,566 +561,4 @@
 
         // === INIZIALIZZAZIONE ===
         document.addEventListener('DOMContentLoaded', async () => {
-            console.log('👑 ADMIN DASHBOARD LOADED - MyApp Dashboard Dirigenti v5.0');
-            
-            if (typeof supabase === 'undefined') {
-                console.error('❌ Supabase not loaded');
-                window.location.href = 'auth.html';
-                return;
-            }
-            
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            
-            // Verifica autenticazione admin
-            await checkAdminAuthentication();
-            
-            // Setup event listeners
-            setupEventListeners();
-            
-            // Carica i dati della dashboard
-            await loadAdminDashboardData();
-            
-            // Inizializza i grafici
-            initializeCharts();
-            
-            console.log('✅ Dashboard dirigenti caricata con successo');
-        });
-
-        // === GESTIONE AUTENTICAZIONE ADMIN ===
-        async function checkAdminAuthentication() {
-            try {
-                const { data: { session } } = await supabaseClient.auth.getSession();
-                
-                if (!session) {
-                    console.log('❌ Nessuna sessione attiva - redirect a auth');
-                    window.location.href = 'auth.html';
-                    return;
-                }
-
-                currentUser = session.user;
-                console.log('✅ Utente autenticato:', currentUser.email);
-                
-                // Recupera profilo admin
-                adminProfile = await getAdminProfile(currentUser.id);
-                
-                if (!adminProfile) {
-                    console.log('👤 Profilo non trovato');
-                    window.location.href = 'auth.html';
-                    return;
-                }
-                
-                // Controlla autorizzazione admin
-                if (adminProfile.role !== 'ADMIN' && adminProfile.role !== 'DIRIGENTE') {
-                    console.log('🚫 Utente non autorizzato - redirect alla home utenti');
-                    window.location.href = 'home.html';
-                    return;
-                }
-                
-                // Aggiorna ultimo accesso
-                await updateLastAccess(currentUser.id);
-                
-            } catch (error) {
-                console.error('❌ Errore verifica auth admin:', error);
-                window.location.href = 'auth.html';
-            }
-        }
-
-        async function getAdminProfile(userId) {
-            try {
-                const { data, error } = await supabaseClient
-                    .from('user_profiles')
-                    .select('*')
-                    .eq('user_id', userId)
-                    .single();
-                
-                if (error && error.code !== 'PGRST116') {
-                    throw error;
-                }
-                
-                return data;
-            } catch (error) {
-                console.warn('⚠️ Errore recupero profilo admin:', error);
-                return null;
-            }
-        }
-
-        async function updateLastAccess(userId) {
-            try {
-                await supabaseClient
-                    .from('user_profiles')
-                    .update({ last_login: new Date().toISOString() })
-                    .eq('user_id', userId);
-            } catch (error) {
-                console.warn('⚠️ Errore aggiornamento last_access:', error);
-            }
-        }
-
-        // === AGGIORNAMENTO INTERFACCIA ADMIN ===
-        function updateAdminInterface() {
-            if (!adminProfile) return;
-            
-            // Aggiorna informazioni admin
-            const welcomeEl = document.getElementById('adminWelcome');
-            const roleEl = document.getElementById('adminRole');
-            const nameDisplayEl = document.getElementById('adminNameDisplay');
-            
-            const firstName = adminProfile.nome || 'Amministratore';
-            
-            if (welcomeEl) welcomeEl.textContent = `Ciao, ${firstName}!`;
-            if (roleEl) roleEl.textContent = getRoleLabel(adminProfile.role);
-            if (nameDisplayEl) nameDisplayEl.textContent = firstName;
-            
-            // Aggiorna avatar admin
-            const avatars = document.querySelectorAll('#adminAvatar');
-            const initials = getInitials(`${adminProfile.nome} ${adminProfile.cognome}`);
-            avatars.forEach(avatar => {
-                avatar.textContent = adminProfile.role === 'ADMIN' ? '👑' : '🛡️';
-            });
-        }
-
-        // === CARICAMENTO DATI DASHBOARD ADMIN ===
-        async function loadAdminDashboardData() {
-            updateAdminInterface();
-            
-            // Carica i dati in parallelo
-            await Promise.all([
-                loadSystemStats(),
-                loadRecentActivity(),
-                loadAdminNotifications()
-            ]);
-        }
-
-        async function loadSystemStats() {
-            try {
-                // Carica statistiche del sistema
-                const [usersCount, requestsCount, tesseraCount] = await Promise.all([
-                    getTotalUsers(),
-                    getActiveRequests(),
-                    getActiveTessere()
-                ]);
-                
-                // Aggiorna le statistiche
-                document.getElementById('totalUsers').textContent = usersCount;
-                document.getElementById('activeRequests').textContent = requestsCount;
-                document.getElementById('activeTessere').textContent = tesseraCount;
-                document.getElementById('systemStatus').textContent = 'Online';
-                
-            } catch (error) {
-                console.error('❌ Errore caricamento statistiche:', error);
-                // Valori di fallback
-                document.getElementById('totalUsers').textContent = '0';
-                document.getElementById('activeRequests').textContent = '0';
-                document.getElementById('activeTessere').textContent = '0';
-                document.getElementById('systemStatus').textContent = 'Errore';
-            }
-        }
-
-        async function getTotalUsers() {
-            try {
-                const { count, error } = await supabaseClient
-                    .from('user_profiles')
-                    .select('id', { count: 'exact' });
-                
-                if (error) throw error;
-                return count || 0;
-            } catch (error) {
-                console.error('❌ Errore conteggio utenti:', error);
-                return 0;
-            }
-        }
-
-        async function getActiveRequests() {
-            try {
-                const { count, error } = await supabaseClient
-                    .from('richieste_personali')
-                    .select('id', { count: 'exact' })
-                    .not('stato', 'in', '("COMPLETATA","CHIUSA","ANNULLATA")');
-                
-                if (error) throw error;
-                return count || 0;
-            } catch (error) {
-                console.error('❌ Errore conteggio richieste:', error);
-                return 0;
-            }
-        }
-
-        async function getActiveTessere() {
-            try {
-                const { count, error } = await supabaseClient
-                    .from('tessere')
-                    .select('id', { count: 'exact' })
-                    .eq('stato', 'ATTIVA');
-                
-                if (error) throw error;
-                return count || 0;
-            } catch (error) {
-                console.error('❌ Errore conteggio tessere:', error);
-                return 0;
-            }
-        }
-
-        async function loadRecentActivity() {
-            try {
-                // Simulazione attività recenti - puoi sostituire con dati reali
-                const activities = [
-                    { type: 'user_registration', message: 'Nuovo utente registrato: Mario Rossi', time: '2 minuti fa' },
-                    { type: 'request_created', message: 'Nuova richiesta: Assistenza legale', time: '15 minuti fa' },
-                    { type: 'tessera_issued', message: 'Tessera emessa per: Anna Verdi', time: '1 ora fa' },
-                    { type: 'system_update', message: 'Sistema aggiornato alla versione 5.0', time: '2 ore fa' }
-                ];
-                
-                displayRecentActivity(activities);
-            } catch (error) {
-                console.error('❌ Errore caricamento attività:', error);
-                displayRecentActivity([]);
-            }
-        }
-
-        function displayRecentActivity(activities) {
-            const container = document.getElementById('activityContainer');
-            if (!container) return;
-            
-            if (activities.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-8 text-gray-500">
-                        <div class="text-4xl mb-2">📝</div>
-                        <div>Nessuna attività recente</div>
-                    </div>
-                `;
-                return;
-            }
-            
-            container.innerHTML = activities.map(activity => `
-                <div class="border-b border-gray-200 pb-4 mb-4 last:border-b-0 last:pb-0 last:mb-0">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 bg-aurora rounded-full flex items-center justify-center text-white text-sm">
-                                ${getActivityIcon(activity.type)}
-                            </div>
-                            <div>
-                                <div class="text-textDark font-semibold">${activity.message}</div>
-                                <div class="text-gray-500 text-sm">${activity.time}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function getActivityIcon(type) {
-            const icons = {
-                'user_registration': '👤',
-                'request_created': '📋',
-                'tessera_issued': '🎫',
-                'system_update': '⚙️'
-            };
-            return icons[type] || '📝';
-        }
-
-        async function loadAdminNotifications() {
-            try {
-                // Carica notifiche admin specifiche
-                const { data, error } = await supabaseClient
-                    .from('notifications')
-                    .select('*')
-                    .eq('user_id', currentUser.id)
-                    .order('created_at', { ascending: false })
-                    .limit(10);
-                
-                if (error) throw error;
-                
-                const unreadCount = data?.filter(n => !n.read).length || 0;
-                updateNotificationBadge(unreadCount);
-                displayNotifications(data || []);
-            } catch (error) {
-                console.error('❌ Errore caricamento notifiche admin:', error);
-                updateNotificationBadge(0);
-                displayNotifications([]);
-            }
-        }
-
-        function displayNotifications(notifications) {
-            const container = document.getElementById('notificationList');
-            if (!container) return;
-            
-            if (notifications.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-8 text-gray-500">
-                        <div class="text-4xl mb-2">🔔</div>
-                        <div class="text-sm">Nessuna notifica</div>
-                    </div>
-                `;
-                return;
-            }
-            
-            container.innerHTML = notifications.map(notification => `
-                <div class="p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer ${!notification.read ? 'bg-blue-50 border-l-4 border-aurora' : ''}"
-                     onclick="markNotificationAsRead('${notification.id}')">
-                    <div class="flex items-start gap-3">
-                        <div class="flex-shrink-0 w-2 h-2 rounded-full mt-2 ${!notification.read ? 'bg-aurora' : 'bg-gray-300'}"></div>
-                        <div class="flex-grow">
-                            <h4 class="font-semibold text-textDark text-sm">${notification.title || 'Notifica Admin'}</h4>
-                            <p class="text-gray-600 text-xs mt-1">${notification.message || ''}</p>
-                            <span class="text-gray-400 text-xs">${formatDateTime(notification.created_at)}</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function updateNotificationBadge(count) {
-            const badge = document.getElementById('notificationBadge');
-            
-            if (badge) {
-                if (count > 0) {
-                    badge.textContent = count > 99 ? '99+' : count;
-                    badge.classList.remove('hidden');
-                } else {
-                    badge.classList.add('hidden');
-                }
-            }
-        }
-
-        // === INIZIALIZZAZIONE GRAFICI ===
-        function initializeCharts() {
-            initSubscriptionsChart();
-            initRequestsChart();
-        }
-
-        function initSubscriptionsChart() {
-            const ctx = document.getElementById('subscriptionsChart');
-            if (!ctx) return;
-            
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
-                    datasets: [{
-                        label: 'Nuove Iscrizioni',
-                        data: [12, 19, 15, 25, 22, 30],
-                        borderColor: '#e94560',
-                        backgroundColor: 'rgba(233, 69, 96, 0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(0,0,0,0.1)'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                color: 'rgba(0,0,0,0.1)'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function initRequestsChart() {
-            const ctx = document.getElementById('requestsChart');
-            if (!ctx) return;
-            
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Assistenza Legale', 'Supporto Tecnico', 'Informazioni', 'Reclami', 'Altri'],
-                    datasets: [{
-                        data: [30, 25, 20, 15, 10],
-                        backgroundColor: [
-                            '#e94560',
-                            '#00d4ff',
-                            '#ff006e',
-                            '#03dac6',
-                            '#ffd700'
-                        ],
-                        borderWidth: 2,
-                        borderColor: '#ffffff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 20,
-                                font: {
-                                    size: 12,
-                                    weight: 'bold'
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // === EVENT LISTENERS ===
-        function setupEventListeners() {
-            // Logout button
-            document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
-            
-            // Notification button
-            document.getElementById('notificationBtn')?.addEventListener('click', toggleNotificationDropdown);
-            
-            // Mark all notifications as read
-            document.getElementById('markAllRead')?.addEventListener('click', markAllNotificationsAsRead);
-            
-            // Close dropdowns when clicking outside
-            document.addEventListener('click', (e) => {
-                const notificationBtn = document.getElementById('notificationBtn');
-                const notificationDropdown = document.getElementById('notificationDropdown');
-                
-                if (!notificationBtn?.contains(e.target) && !notificationDropdown?.contains(e.target)) {
-                    notificationDropdown?.classList.remove('show');
-                }
-            });
-            
-            // Auth state changes
-            supabaseClient.auth.onAuthStateChange((event, session) => {
-                if (event === 'SIGNED_OUT') {
-                    window.location.href = 'index.html';
-                }
-            });
-        }
-
-        // === FUNZIONI AZIONI ===
-        async function handleLogout() {
-            try {
-                await supabaseClient.auth.signOut();
-                window.location.href = 'index.html';
-            } catch (error) {
-                console.error('❌ Errore durante il logout:', error);
-                window.location.href = 'index.html';
-            }
-        }
-
-        function toggleNotificationDropdown() {
-            const dropdown = document.getElementById('notificationDropdown');
-            if (dropdown) {
-                dropdown.classList.toggle('show');
-            }
-        }
-
-        async function markAllNotificationsAsRead() {
-            try {
-                await supabaseClient
-                    .from('notifications')
-                    .update({ 
-                        read: true, 
-                        read_at: new Date().toISOString() 
-                    })
-                    .eq('user_id', currentUser.id)
-                    .eq('read', false);
-                
-                // Ricarica notifiche
-                await loadAdminNotifications();
-                
-            } catch (error) {
-                console.error('❌ Errore aggiornamento notifiche:', error);
-            }
-        }
-
-        async function markNotificationAsRead(notificationId) {
-            try {
-                await supabaseClient
-                    .from('notifications')
-                    .update({ 
-                        read: true, 
-                        read_at: new Date().toISOString() 
-                    })
-                    .eq('id', notificationId);
-                
-                // Ricarica notifiche
-                await loadAdminNotifications();
-                
-            } catch (error) {
-                console.error('❌ Errore aggiornamento notifica:', error);
-            }
-        }
-
-        // === FUNZIONI NAVIGAZIONE ADMIN ===
-        function goToGestioneUtenti() {
-            window.location.href = 'gestione-utenti.html';
-        }
-
-        function goToGestioneRichieste() {
-            window.location.href = 'gestione-richieste.html';
-        }
-
-        function goToGestioneTessere() {
-            window.location.href = 'gestione-tessere.html';
-        }
-
-        function goToGestioneNews() {
-            window.location.href = 'gestione-news.html';
-        }
-
-        function goToGestioneConvenzioni() {
-            window.location.href = 'gestione-convenzioni.html';
-        }
-
-        function goToAnalytics() {
-            window.location.href = 'analytics.html';
-        }
-
-        function goToActivityLog() {
-            window.location.href = 'activity-log.html';
-        }
-
-        // === FUNZIONI UTILITY ===
-        function getRoleLabel(role) {
-            const labels = {
-                'USER': 'Utente',
-                'DIRIGENTE': 'Dirigente',
-                'ADMIN': 'Amministratore'
-            };
-            return labels[role] || 'Utente';
-        }
-
-        function getInitials(fullName) {
-            if (!fullName) return 'A';
-            return fullName.split(' ')
-                .map(name => name.charAt(0))
-                .join('')
-                .toUpperCase()
-                .substring(0, 2);
-        }
-
-        function formatDateTime(dateString) {
-            if (!dateString) return '-';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('it-IT') + ' ' + date.toLocaleTimeString('it-IT', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
-        }
-
-        // === AGGIORNAMENTI PERIODICI ===
-        setInterval(async () => {
-            if (currentUser) {
-                await loadSystemStats();
-                await loadAdminNotifications();
-            }
-        }, 300000); // Aggiorna ogni 5 minuti
-
-        console.log('✅ MyApp Dashboard Dirigenti v5.0 Ready - Sistema Admin Completo');
-    </script>
-
-</body>
-</html>
+            console.log('👑 ADMIN DASHBOARD LOADED - MyApp
