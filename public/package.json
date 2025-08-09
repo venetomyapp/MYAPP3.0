@@ -1,41 +1,46 @@
 {
   "name": "myapp31",
-  "version": "3.0.0",
-  "description": "MyApp - Progressive Web App per gestione richieste e servizi",
+  "version": "4.1.0",
+  "description": "MyApp v4.1 - Piattaforma digitale moderna per gestione utenti con Supabase",
   "main": "index.html",
   "homepage": "https://myapp31.vercel.app",
   "type": "module",
   "scripts": {
     "dev": "npx http-server . -p 3000 -c-1",
     "start": "npm run dev",
-    "build": "echo 'Build completato - App pronta per deploy'",
-    "deploy": "git add . && git commit -m 'Deploy update' && git push origin main",
-    "test": "echo 'Test webhook: curl -X POST https://myapp31.vercel.app/api/jotform-webhook'",
+    "build": "echo 'MyApp v4.1 - Build completato - App pronta per deploy'",
+    "deploy": "git add . && git commit -m 'Deploy MyApp v4.1 update' && git push origin main",
+    "test": "echo 'Testing MyApp v4.1 components...'",
     "serve": "npx http-server . -p 8080",
-    "webhook-test": "node test/webhook-test.js"
+    "validate": "echo 'Validating HTML files...' && ls *.html",
+    "clean": "echo 'Cleaning temporary files...'",
+    "prebuild": "npm run validate"
   },
   "keywords": [
-    "pwa",
-    "myapp",
     "webapp",
-    "mobile-app",
+    "myapp",
     "supabase",
     "tailwind",
-    "jotform",
-    "webhook",
-    "richieste"
+    "authentication",
+    "dashboard",
+    "responsive",
+    "tessera-digitale",
+    "gestione-utenti",
+    "notifications",
+    "news-management",
+    "events-calendar"
   ],
   "author": {
-    "name": "Antonio Grande",
-    "email": "antoniogrande81@example.com"
+    "name": "MyApp Team",
+    "email": "info@myapp.com"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/antoniogrande81/la-mia-app2026.git"
+    "url": "https://github.com/venetomyapp/MYAPP3.0.git"
   },
   "bugs": {
-    "url": "https://github.com/antoniogrande81/la-mia-app2026/issues"
+    "url": "https://github.com/venetomyapp/MYAPP3.0/issues"
   },
   "engines": {
     "node": ">=18.0.0",
@@ -47,14 +52,25 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0"
   },
-  "pwa": {
+  "myapp": {
     "name": "MyApp",
     "short_name": "MyApp",
-    "description": "Sistema integrato di gestione richieste e servizi",
+    "description": "Piattaforma digitale moderna per gestione utenti",
+    "version": "4.1.0",
     "theme_color": "#1a1a2e",
     "background_color": "#F4F4F8",
     "display": "standalone",
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "database": "Supabase PostgreSQL",
+    "features": [
+      "Autenticazione sicura",
+      "Gestione ruoli",
+      "Tessera digitale",
+      "Dashboard responsive",
+      "Sistema notifiche",
+      "Gestione news",
+      "Calendario eventi"
+    ]
   },
   "browserslist": [
     "> 1%",
@@ -63,11 +79,24 @@
     "not ie <= 11"
   ],
   "vercel": {
-    "functions": {
-      "api/jotform-webhook.js": {
-        "runtime": "nodejs18.x",
-        "memory": 512
+    "builds": [
+      {
+        "src": "*.html",
+        "use": "@vercel/static"
       }
-    }
+    ],
+    "routes": [
+      {
+        "src": "/",
+        "dest": "/index.html"
+      },
+      {
+        "handle": "filesystem"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "/index.html"
+      }
+    ]
   }
 }
