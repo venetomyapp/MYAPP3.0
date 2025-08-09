@@ -304,11 +304,11 @@
     <header class="py-4 px-6 sticky top-0 z-50 glass-morphism">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center">
-                <a href="home.html" class="text-white text-2xl font-bold">MyApp</a>
+                <a href="#" id="logoHomeLink" class="text-white text-2xl font-bold">MyApp</a>
                 <span class="ml-4 text-white opacity-80">/ Profilo</span>
             </div>
             <div class="flex items-center gap-4">
-                <a href="home.html" class="text-white opacity-80 hover:opacity-100 transition-opacity">
+                <a href="#" id="backHomeLink" class="text-white opacity-80 hover:opacity-100 transition-opacity">
                     ← Torna alla Home
                 </a>
             </div>
@@ -676,7 +676,7 @@
     <nav class="py-4 px-6 sticky bottom-0 z-40 glass-morphism">
         <div class="container mx-auto">
             <div class="flex justify-between items-center">
-                <a href="home.html" class="flex flex-col items-center text-white">
+                <a href="#" id="navHomeLink" class="flex flex-col items-center text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                     </svg>
@@ -817,6 +817,30 @@
         }
 
         // ========================================
+        // UTILITÀ NAVIGATION
+        // ========================================
+
+        function getCorrectHomePage(userRole) {
+            if (userRole === 'DIRIGENTE' || userRole === 'ADMIN') {
+                return 'home_dirigenti.html';
+            }
+            return 'home.html';
+        }
+
+        function setupNavigation() {
+            if (!currentProfile) return;
+
+            const homePage = getCorrectHomePage(currentProfile.role);
+            
+            // Aggiorna tutti i link alla home
+            document.getElementById('logoHomeLink').href = homePage;
+            document.getElementById('backHomeLink').href = homePage;
+            document.getElementById('navHomeLink').href = homePage;
+            
+            console.log(`✅ Navigation setup: ${currentProfile.role} → ${homePage}`);
+        }
+
+        // ========================================
         // GESTIONE AVATAR
         // ========================================
 
@@ -884,6 +908,7 @@
                 updateProfileDisplay();
                 await loadUserStats();
                 await loadUserTessera();
+                setupNavigation(); // Setup navigation basata sul ruolo
 
             } catch (error) {
                 console.error('Errore caricamento dati utente:', error);
