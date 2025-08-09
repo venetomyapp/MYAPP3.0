@@ -327,6 +327,19 @@
                             <div id="avatarPlaceholder" class="w-full h-full bg-primary flex items-center justify-center">
                                 <span id="avatarInitials" class="text-white text-4xl font-bold">--</span>
                             </div>
+
+                    <div>
+                        <label class="block text-white text-sm font-semibold mb-2">Luogo di Nascita *</label>
+                        <input 
+                            type="text" 
+                            id="inputLuogoNascita" 
+                            name="luogo_nascita"
+                            class="input-field w-full" 
+                            disabled
+                            required
+                        >
+                        <small class="text-white opacity-70 text-xs">Il luogo di nascita non può essere modificato</small>
+                    </div>
                             <div class="avatar-upload-overlay">
                                 <div>
                                     📷<br>
@@ -349,7 +362,7 @@
                                 <span id="userStatus">ATTIVO</span>
                             </span>
                             <span class="role-badge" style="background: rgba(255, 215, 0, 0.2); color: #ffd700; border-color: rgba(255, 215, 0, 0.3);">
-                                Membro dal <span id="memberSince">--</span>
+                                Tessera: <span id="userTessera">--</span>
                             </span>
                         </div>
                     </div>
@@ -447,19 +460,6 @@
                             >
                             <small class="text-white opacity-70 text-xs">La data di nascita non può essere modificata</small>
                         </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-white text-sm font-semibold mb-2">Luogo di Nascita *</label>
-                        <input 
-                            type="text" 
-                            id="inputLuogoNascita" 
-                            name="luogo_nascita"
-                            class="input-field w-full" 
-                            disabled
-                            required
-                        >
-                        <small class="text-white opacity-70 text-xs">Il luogo di nascita non può essere modificato</small>
                     </div>
 
                     <div>
@@ -704,12 +704,8 @@
         </div>
     </nav>
 
-    <!-- CONFIGURAZIONE APP INCORPORATA -->
+    <!-- CONFIGURAZIONE SUPABASE -->
     <script>
-        // ========================================
-        // MyApp - CONFIGURAZIONE INCORPORATA v4.0
-        // ========================================
-
         const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
 
@@ -887,6 +883,7 @@
                 // Aggiorna interfaccia
                 updateProfileDisplay();
                 await loadUserStats();
+                await loadUserTessera();
 
             } catch (error) {
                 console.error('Errore caricamento dati utente:', error);
@@ -905,14 +902,14 @@
             roleBadge.className = getRoleBadgeHTML(currentProfile.role);
             roleBadge.textContent = currentProfile.role || 'USER';
             
-            // Status e membro da
+            // Status
             document.getElementById('userStatus').textContent = currentProfile.stato || 'ATTIVO';
-            document.getElementById('memberSince').textContent = new Date(currentProfile.created_at).getFullYear();
             
-            // Avatar e iniziali
+            // Avatar e iniziali - usa avatar di default o iniziali
             const initials = (currentProfile.nome?.[0] || '') + (currentProfile.cognome?.[0] || '');
             document.getElementById('avatarInitials').textContent = initials.toUpperCase() || '--';
             
+            // Implementa avatar di default o da database
             if (currentProfile.avatar_url) {
                 const avatarImage = document.getElementById('avatarImage');
                 const avatarPlaceholder = document.getElementById('avatarPlaceholder');
@@ -920,9 +917,16 @@
                 avatarImage.src = currentProfile.avatar_url;
                 avatarImage.style.display = 'block';
                 avatarPlaceholder.style.display = 'none';
+            } else {
+                // Mostra sempre le iniziali come avatar di default
+                const avatarImage = document.getElementById('avatarImage');
+                const avatarPlaceholder = document.getElementById('avatarPlaceholder');
+                
+                avatarImage.style.display = 'none';
+                avatarPlaceholder.style.display = 'flex';
             }
 
-            // Form fields - mappati su tutti i campi delle tue tabelle
+            // Form fields - mappati su TUTTI i campi del database user_profiles
             document.getElementById('inputNome').value = currentProfile.nome || '';
             document.getElementById('inputCognome').value = currentProfile.cognome || '';
             document.getElementById('inputEmail').value = currentProfile.email || '';
@@ -941,17 +945,22 @@
             try {
                 const client = APP_CONFIG.SUPABASE.getClient();
                 
-                // Conta richieste utente - usa la tabella corretta
-                const { data: richieste, error: richiesteError } = await client
-                    .from('richieste')
-                    .select('id', { count: 'exact' })
-                    .eq('user_id', currentUser.id);
-                
-                if (richiesteError && richiesteError.code !== 'PGRST116') {
-                    console.warn('Errore caricamento richieste:', richiesteError);
+                // Conta richieste utente se la tabella esiste
+                let totalRequests = 0;
+                try {
+                    const { data: richieste, error: richiesteError } = await client
+                        .from('richieste')
+                        .select('id', { count: 'exact' })
+                        .eq('user_id', currentUser.id);
+                    
+                    if (!richiesteError) {
+                        totalRequests = richieste?.length || 0;
+                    }
+                } catch (error) {
+                    console.warn('Tabella richieste non trovata');
                 }
 
-                // Calcola completamento profilo - usa TUTTI i campi delle tue tabelle
+                // Calcola completamento profilo - usa TUTTI i campi obbligatori del database
                 const completionFields = [
                     'nome', 'cognome', 'email', 'telefono', 'data_nascita', 
                     'luogo_nascita', 'codice_fiscale', 'indirizzo', 'citta', 'cap', 'provincia'
@@ -960,13 +969,36 @@
                 const completionPercentage = Math.round((completedFields.length / completionFields.length) * 100);
 
                 // Aggiorna interfaccia
-                document.getElementById('totalRequests').textContent = richieste?.length || 0;
+                document.getElementById('totalRequests').textContent = totalRequests;
                 document.getElementById('profileCompletion').textContent = `${completionPercentage}%`;
 
             } catch (error) {
                 console.error('Errore caricamento statistiche:', error);
                 document.getElementById('totalRequests').textContent = '--';
                 document.getElementById('profileCompletion').textContent = '--';
+            }
+        }
+
+        async function loadUserTessera() {
+            try {
+                const client = APP_CONFIG.SUPABASE.getClient();
+                
+                // Cerca tessera utente
+                const { data: tessera, error } = await client
+                    .from('tessere')
+                    .select('numero_tessera')
+                    .eq('user_id', currentUser.id)
+                    .single();
+
+                if (!error && tessera) {
+                    document.getElementById('userTessera').textContent = tessera.numero_tessera;
+                } else {
+                    document.getElementById('userTessera').textContent = 'Non assegnata';
+                }
+
+            } catch (error) {
+                console.error('Errore caricamento tessera:', error);
+                document.getElementById('userTessera').textContent = '--';
             }
         }
 
@@ -977,7 +1009,7 @@
         function toggleEditMode() {
             isEditing = !isEditing;
             
-            // Solo i campi modificabili secondo le specifiche
+            // Campi modificabili secondo le tue specifiche (tutti tranne nome, cognome, email, data_nascita, luogo_nascita)
             const editableFields = [
                 'inputTelefono', 'inputCodiceFiscale', 'inputIndirizzo', 
                 'inputCitta', 'inputCap', 'inputProvincia', 'inputBio'
@@ -1045,7 +1077,7 @@
 
                 const client = APP_CONFIG.SUPABASE.getClient();
                 
-                // Prepara dati per l'aggiornamento - TUTTI i campi modificabili
+                // Prepara dati per l'aggiornamento - TUTTI i campi modificabili secondo database
                 const updateData = {
                     telefono: document.getElementById('inputTelefono').value.trim(),
                     codice_fiscale: document.getElementById('inputCodiceFiscale').value.trim().toUpperCase(),
@@ -1113,165 +1145,37 @@
             const container = document.getElementById('activityLog');
             
             try {
-                // Usa la tabella sessions per gli accessi
-                const client = APP_CONFIG.SUPABASE.getClient();
-                const { data: sessions, error } = await client
-                    .from('auth.sessions')
-                    .select('*')
-                    .eq('user_id', currentUser.id)
-                    .order('created_at', { ascending: false })
-                    .limit(10);
-
-                if (error && error.code !== 'PGRST116') {
-                    // Se non possiamo accedere alle sessioni, mostra attività generiche
-                    container.innerHTML = `
-                        <div class="text-center py-8">
-                            <div class="text-white text-lg mb-2">📊 Log attività</div>
-                            <div class="text-white opacity-80 text-sm">Ultima modifica profilo: ${new Date(currentProfile.updated_at).toLocaleDateString('it-IT')}</div>
-                            <div class="text-white opacity-80 text-sm">Registrazione: ${new Date(currentProfile.created_at).toLocaleDateString('it-IT')}</div>
-                        </div>`;
-                    return;
-                }
-
-                if (!sessions || sessions.length === 0) {
-                    container.innerHTML = `
-                        <div class="text-center py-8">
-                            <div class="text-white text-lg mb-2">📊 Nessuna attività registrata</div>
-                            <div class="text-white opacity-80 text-sm">Le tue attività appariranno qui</div>
-                        </div>`;
-                    return;
-                }
-
-                container.innerHTML = sessions.map(session => {
-                    const date = new Date(session.created_at).toLocaleDateString('it-IT');
-                    const time = new Date(session.created_at).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
-                    
-                    return `
-                        <div class="glass-card p-4 rounded-xl">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-3">
-                                    <span class="text-2xl">🔑</span>
-                                    <div>
-                                        <div class="text-dark font-semibold">Accesso effettuato</div>
-                                        <div class="text-gray-600 text-sm">${date} alle ${time}</div>
-                                    </div>
-                                </div>
-                                <div class="text-gray-500 text-xs">
-                                    ${session.ip || 'N/A'}
+                // Mostra attività generiche
+                container.innerHTML = `
+                    <div class="glass-card p-4 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">👤</span>
+                                <div>
+                                    <div class="text-dark font-semibold">Profilo aggiornato</div>
+                                    <div class="text-gray-600 text-sm">${new Date(currentProfile.updated_at).toLocaleDateString('it-IT')}</div>
                                 </div>
                             </div>
-                        </div>`;
-                }).join('');
+                        </div>
+                    </div>
+                    <div class="glass-card p-4 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">🎯</span>
+                                <div>
+                                    <div class="text-dark font-semibold">Account creato</div>
+                                    <div class="text-gray-600 text-sm">${new Date(currentProfile.created_at).toLocaleDateString('it-IT')}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
 
             } catch (error) {
                 console.error('Errore caricamento log attività:', error);
                 container.innerHTML = `
                     <div class="text-center py-8">
-                        <div class="text-red-400 text-sm">Attività non disponibili</div>
+                        <div class="text-white opacity-70 text-sm">Nessuna attività registrata</div>
                     </div>`;
-            }
-        }
-
-        // ========================================
-        // GESTIONE MODIFICA PROFILO
-        // ========================================
-
-        function toggleEditMode() {
-            isEditing = !isEditing;
-            
-            // Solo i campi modificabili - secondo le tue specifiche
-            const editableFields = ['inputTelefono', 'inputBio'];
-            const editBtn = document.getElementById('editProfileBtn');
-            const formActions = document.getElementById('formActions');
-            
-            editableFields.forEach(fieldId => {
-                document.getElementById(fieldId).disabled = !isEditing;
-            });
-            
-            if (isEditing) {
-                editBtn.innerHTML = '❌ Annulla Modifica';
-                editBtn.className = 'bg-red-600 hover:bg-red-700 text-white py-2 px-6 rounded-xl transition-colors';
-                formActions.classList.remove('hidden');
-            } else {
-                editBtn.innerHTML = '✏️ Modifica';
-                editBtn.className = 'btn-aurora py-2 px-6 rounded-xl';
-                formActions.classList.add('hidden');
-                
-                // Reset ai valori originali
-                resetForm();
-            }
-        }
-
-        function resetForm() {
-            document.getElementById('inputTelefono').value = originalData.telefono || '';
-            document.getElementById('inputBio').value = originalData.bio || '';
-            
-            // Reset avatar se era stato cambiato
-            if (originalData.avatar_url) {
-                const avatarImage = document.getElementById('avatarImage');
-                const avatarPlaceholder = document.getElementById('avatarPlaceholder');
-                
-                avatarImage.src = originalData.avatar_url;
-                avatarImage.style.display = 'block';
-                avatarPlaceholder.style.display = 'none';
-            } else {
-                const avatarImage = document.getElementById('avatarImage');
-                const avatarPlaceholder = document.getElementById('avatarPlaceholder');
-                
-                avatarImage.style.display = 'none';
-                avatarPlaceholder.style.display = 'flex';
-            }
-        }
-
-        async function saveProfile(event) {
-            event.preventDefault();
-            
-            try {
-                const editBtnText = document.getElementById('editBtnText');
-                const editBtnSpinner = document.getElementById('editBtnSpinner');
-                
-                editBtnText.classList.add('hidden');
-                editBtnSpinner.classList.remove('hidden');
-
-                const client = APP_CONFIG.SUPABASE.getClient();
-                
-                // Prepara dati per l'aggiornamento - usa i campi corretti delle tue tabelle
-                const updateData = {
-                    telefono: document.getElementById('inputTelefono').value.trim(),
-                    bio: document.getElementById('inputBio').value.trim(),
-                    updated_at: new Date().toISOString()
-                };
-
-                // Aggiorna anche full_name se necessario
-                if (currentProfile.nome && currentProfile.cognome) {
-                    updateData.full_name = `${currentProfile.nome} ${currentProfile.cognome}`;
-                }
-
-                // Aggiorna profilo
-                const { error } = await client
-                    .from('user_profiles')
-                    .update(updateData)
-                    .eq('user_id', currentUser.id);
-
-                if (error) throw error;
-
-                // Aggiorna dati locali
-                currentProfile = { ...currentProfile, ...updateData };
-                originalData = { ...currentProfile };
-
-                APP_CONFIG.NOTIFICATIONS.showToast('Profilo aggiornato con successo!', 'success');
-                
-                toggleEditMode(); // Disabilita modalità modifica
-
-            } catch (error) {
-                console.error('Errore salvataggio profilo:', error);
-                APP_CONFIG.NOTIFICATIONS.showToast('Errore nel salvataggio del profilo', 'error');
-            } finally {
-                const editBtnText = document.getElementById('editBtnText');
-                const editBtnSpinner = document.getElementById('editBtnSpinner');
-                
-                editBtnText.classList.remove('hidden');
-                editBtnSpinner.classList.add('hidden');
             }
         }
 
@@ -1291,7 +1195,6 @@
         async function changePassword(event) {
             event.preventDefault();
             
-            const currentPassword = document.getElementById('currentPassword').value;
             const newPassword = document.getElementById('newPassword').value;
             const confirmNewPassword = document.getElementById('confirmNewPassword').value;
             
@@ -1403,616 +1306,29 @@
             try {
                 const client = APP_CONFIG.SUPABASE.getClient();
                 
-                // Crea una richiesta nella tabella richieste
-                const { error } = await client
-                    .from('richieste')
-                    .insert([{
-                        user_id: currentUser.id,
-                        tipo_richiesta: 'CANCELLAZIONE_ACCOUNT',
-                        oggetto: 'Richiesta cancellazione account',
-                        descrizione: `L'utente ${currentProfile.full_name} (${currentProfile.email}) ha richiesto la cancellazione del proprio account.`,
-                        priorita: 'ALTA',
-                        stato: 'APERTA'
-                    }]);
+                // Crea una richiesta nella tabella richieste se esiste
+                try {
+                    const { error } = await client
+                        .from('richieste')
+                        .insert([{
+                            user_id: currentUser.id,
+                            tipo_richiesta: 'CANCELLAZIONE_ACCOUNT',
+                            oggetto: 'Richiesta cancellazione account',
+                            descrizione: `L'utente ${currentProfile.full_name} (${currentProfile.email}) ha richiesto la cancellazione del proprio account.`,
+                            priorita: 'ALTA',
+                            stato: 'APERTA'
+                        }]);
 
-                if (error) throw error;
-
-                APP_CONFIG.NOTIFICATIONS.showToast('Richiesta inviata all\'amministratore', 'warning');
+                    if (error) throw error;
+                    APP_CONFIG.NOTIFICATIONS.showToast('Richiesta inviata all\'amministratore', 'warning');
+                } catch (error) {
+                    // Se la tabella non esiste, mostra solo un messaggio
+                    APP_CONFIG.NOTIFICATIONS.showToast('Contatta l\'amministratore per la cancellazione dell\'account', 'warning');
+                }
                 
             } catch (error) {
                 console.error('Errore richiesta cancellazione:', error);
                 APP_CONFIG.NOTIFICATIONS.showToast('Errore nell\'invio della richiesta', 'error');
-            }
-        }
-
-        // ========================================
-        // EVENT HANDLERS
-        // ========================================
-
-        function setupEventHandlers() {
-            // Edit profile button
-            document.getElementById('editProfileBtn').addEventListener('click', toggleEditMode);
-            
-            // Cancel edit button
-            document.getElementById('cancelEditBtn').addEventListener('click', toggleEditMode);
-            
-            // Profile form
-            document.getElementById('profileForm').addEventListener('submit', saveProfile);
-            
-            // Change password
-            document.getElementById('changePasswordBtn').addEventListener('click', openPasswordModal);
-            document.getElementById('changePasswordForm').addEventListener('submit', changePassword);
-            
-            // Save preferences
-            document.getElementById('savePreferencesBtn').addEventListener('click', savePreferences);
-            
-            // Delete account
-            document.getElementById('deleteAccountBtn').addEventListener('click', requestAccountDeletion);
-        }
-
-        // ========================================
-        // INIZIALIZZAZIONE PRINCIPALE
-        // ========================================
-
-        async function initializePage() {
-            try {
-                showLoader();
-
-                // Proteggi la pagina (controlla autenticazione)
-                await APP_CONFIG.AUTH.protectPage();
-
-                // Carica dati utente
-                await loadUserData();
-
-                // Carica contenuti in parallelo
-                await Promise.all([
-                    loadActivityLog()
-                ]);
-
-                // Carica preferenze
-                loadPreferences();
-
-                // Setup event handlers
-                setupEventHandlers();
-
-                console.log('✅ Pagina profilo inizializzata correttamente');
-                
-            } catch (error) {
-                console.error('❌ Errore inizializzazione:', error);
-                APP_CONFIG.NOTIFICATIONS.showToast('Errore nel caricamento della pagina', 'error');
-                
-                // Redirect to auth se non autenticato
-                if (error.message === 'Utente non autenticato') {
-                    window.location.replace('auth.html');
-                }
-            } finally {
-                hideLoader();
-            }
-        }
-
-        // Avvia l'app quando il DOM è pronto
-        document.addEventListener('DOMContentLoaded', initializePage);
-    </script>
-</body>
-</html>
-        window.APP_CONFIG = {
-            SUPABASE: {
-                client: null,
-                getClient: function() {
-                    if (!this.client) {
-                        this.client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                        console.log('✅ Supabase client inizializzato');
-                    }
-                    return this.client;
-                }
-            },
-            TABLES: {
-                NEWS: 'news',
-                CONVENZIONI: 'convenzioni',
-                RICHIESTE: 'richieste',
-                USER_PROFILES: 'user_profiles',
-                TESSERE: 'tessere',
-                LOG_ATTIVITA: 'log_attivita'
-            },
-            AUTH: {
-                async getCurrentUser() {
-                    const client = APP_CONFIG.SUPABASE.getClient();
-                    const { data, error } = await client.auth.getUser();
-                    if (error) throw error;
-                    return data?.user || null;
-                },
-                async getUserProfile() {
-                    const user = await this.getCurrentUser();
-                    if (!user) return null;
-                    const client = APP_CONFIG.SUPABASE.getClient();
-                    const { data, error } = await client
-                        .from('user_profiles')
-                        .select('*')
-                        .eq('user_id', user.id)
-                        .single();
-                    if (error) throw error;
-                    return data;
-                },
-                async protectPage() {
-                    const { data: { session } } = await APP_CONFIG.SUPABASE.getClient().auth.getSession();
-                    if (!session) {
-                        window.location.replace('auth.html');
-                        throw new Error('Utente non autenticato');
-                    }
-                    return true;
-                },
-                async logout() {
-                    try {
-                        await APP_CONFIG.SUPABASE.getClient().auth.signOut();
-                        window.location.replace('auth.html');
-                    } catch (error) {
-                        console.error('Errore logout:', error);
-                    }
-                }
-            },
-            NOTIFICATIONS: {
-                showToast: function(msg, type='info') {
-                    console.log(`[${type.toUpperCase()}] ${msg}`);
-                    
-                    const toast = document.createElement('div');
-                    toast.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 max-w-sm font-semibold ${
-                        type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500'
-                    } text-white`;
-                    toast.textContent = msg;
-                    
-                    document.body.appendChild(toast);
-                    
-                    setTimeout(() => {
-                        toast.style.opacity = '0';
-                        setTimeout(() => {
-                            if (document.body.contains(toast)) {
-                                document.body.removeChild(toast);
-                            }
-                        }, 300);
-                    }, 3000);
-                }
-            }
-        };
-
-        console.log('✅ APP_CONFIG incorporato e pronto');
-    </script>
-
-    <!-- LOGICA PAGINA PROFILO -->
-    <script>
-        let currentUser = null;
-        let currentProfile = null;
-        let isEditing = false;
-        let originalData = {};
-
-        function showLoader() {
-            const loader = document.getElementById('pageLoader');
-            if (loader) loader.style.display = 'flex';
-        }
-
-        function hideLoader() {
-            const loader = document.getElementById('pageLoader');
-            if (loader) loader.style.display = 'none';
-        }
-
-        function getRoleBadgeHTML(role) {
-            let className = 'role-user';
-            if (role === 'ADMIN') className = 'role-admin';
-            else if (role === 'DIRIGENTE') className = 'role-dirigente';
-            return `role-badge ${className}`;
-        }
-
-        // ========================================
-        // GESTIONE AVATAR
-        // ========================================
-
-        function triggerAvatarUpload() {
-            if (!isEditing) {
-                APP_CONFIG.NOTIFICATIONS.showToast('Abilita la modalità modifica per cambiare l\'avatar', 'warning');
-                return;
-            }
-            document.getElementById('avatarInput').click();
-        }
-
-        async function handleAvatarUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            // Validazioni
-            if (file.size > 5 * 1024 * 1024) { // 5MB
-                APP_CONFIG.NOTIFICATIONS.showToast('L\'immagine deve essere inferiore a 5MB', 'error');
-                return;
-            }
-
-            if (!file.type.startsWith('image/')) {
-                APP_CONFIG.NOTIFICATIONS.showToast('Seleziona un file immagine valido', 'error');
-                return;
-            }
-
-            try {
-                // Mostra preview
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const avatarImage = document.getElementById('avatarImage');
-                    const avatarPlaceholder = document.getElementById('avatarPlaceholder');
-                    
-                    avatarImage.src = e.target.result;
-                    avatarImage.style.display = 'block';
-                    avatarPlaceholder.style.display = 'none';
-                };
-                reader.readAsDataURL(file);
-
-                APP_CONFIG.NOTIFICATIONS.showToast('Avatar aggiornato! Ricorda di salvare le modifiche.', 'success');
-
-            } catch (error) {
-                console.error('Errore caricamento avatar:', error);
-                APP_CONFIG.NOTIFICATIONS.showToast('Errore nel caricamento dell\'avatar', 'error');
-            }
-        }
-
-        // ========================================
-        // CARICAMENTO DATI
-        // ========================================
-
-        async function loadUserData() {
-            try {
-                currentUser = await APP_CONFIG.AUTH.getCurrentUser();
-                currentProfile = await APP_CONFIG.AUTH.getUserProfile();
-
-                if (!currentProfile) {
-                    throw new Error('Impossibile caricare il profilo utente');
-                }
-
-                // Salva dati originali per reset
-                originalData = { ...currentProfile };
-
-                // Aggiorna interfaccia
-                updateProfileDisplay();
-                await loadUserStats();
-
-            } catch (error) {
-                console.error('Errore caricamento dati utente:', error);
-                throw error;
-            }
-        }
-
-        function updateProfileDisplay() {
-            // Header
-            document.getElementById('userFullName').textContent = `${currentProfile.nome} ${currentProfile.cognome}`;
-            document.getElementById('userEmail').textContent = currentProfile.email;
-            
-            // Role badge
-            const roleBadge = document.getElementById('userRoleBadge');
-            roleBadge.className = getRoleBadgeHTML(currentProfile.role);
-            roleBadge.textContent = currentProfile.role || 'USER';
-            
-            // Status e membro da
-            document.getElementById('userStatus').textContent = currentProfile.stato || 'ATTIVO';
-            document.getElementById('memberSince').textContent = new Date(currentProfile.created_at).getFullYear();
-            
-            // Avatar e iniziali
-            const initials = (currentProfile.nome?.[0] || '-') + (currentProfile.cognome?.[0] || '-');
-            document.getElementById('avatarInitials').textContent = initials.toUpperCase();
-            
-            if (currentProfile.avatar_url) {
-                const avatarImage = document.getElementById('avatarImage');
-                const avatarPlaceholder = document.getElementById('avatarPlaceholder');
-                
-                avatarImage.src = currentProfile.avatar_url;
-                avatarImage.style.display = 'block';
-                avatarPlaceholder.style.display = 'none';
-            }
-
-            // Form fields
-            document.getElementById('inputNome').value = currentProfile.nome || '';
-            document.getElementById('inputCognome').value = currentProfile.cognome || '';
-            document.getElementById('inputEmail').value = currentProfile.email || '';
-            document.getElementById('inputTelefono').value = currentProfile.telefono || '';
-            document.getElementById('inputDataNascita').value = currentProfile.data_nascita || '';
-            document.getElementById('inputLuogoNascita').value = currentProfile.luogo_nascita || '';
-            document.getElementById('inputBio').value = currentProfile.bio || '';
-        }
-
-        async function loadUserStats() {
-            try {
-                const client = APP_CONFIG.SUPABASE.getClient();
-                
-                // Conta richieste utente
-                const { data: richieste, error: richiesteError } = await client
-                    .from('richieste')
-                    .select('id', { count: 'exact' })
-                    .eq('user_id', currentUser.id);
-                
-                if (richiesteError && richiesteError.code !== 'PGRST116') {
-                    console.warn('Errore caricamento richieste:', richiesteError);
-                }
-
-                // Calcola completamento profilo
-                const completionFields = ['nome', 'cognome', 'email', 'telefono', 'data_nascita', 'luogo_nascita'];
-                const completedFields = completionFields.filter(field => currentProfile[field]);
-                const completionPercentage = Math.round((completedFields.length / completionFields.length) * 100);
-
-                // Aggiorna interfaccia
-                document.getElementById('totalRequests').textContent = richieste?.length || 0;
-                document.getElementById('profileCompletion').textContent = `${completionPercentage}%`;
-
-            } catch (error) {
-                console.error('Errore caricamento statistiche:', error);
-                document.getElementById('totalRequests').textContent = '--';
-                document.getElementById('profileCompletion').textContent = '--';
-            }
-        }
-
-        async function loadActivityLog() {
-            const container = document.getElementById('activityLog');
-            
-            try {
-                const client = APP_CONFIG.SUPABASE.getClient();
-                const { data: activities, error } = await client
-                    .from('log_attivita')
-                    .select('*')
-                    .eq('user_id', currentUser.id)
-                    .order('created_at', { ascending: false })
-                    .limit(10);
-
-                if (error && error.code !== 'PGRST116') {
-                    throw error;
-                }
-
-                if (!activities || activities.length === 0) {
-                    container.innerHTML = `
-                        <div class="text-center py-8">
-                            <div class="text-white text-lg mb-2">📊 Nessuna attività registrata</div>
-                            <div class="text-white opacity-80 text-sm">Le tue attività appariranno qui</div>
-                        </div>`;
-                    return;
-                }
-
-                container.innerHTML = activities.map(activity => {
-                    const date = new Date(activity.created_at).toLocaleDateString('it-IT');
-                    const time = new Date(activity.created_at).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
-                    
-                    const actionIcon = {
-                        'CREATE': '✅',
-                        'UPDATE': '✏️',
-                        'DELETE': '🗑️',
-                        'LOGIN': '🔑',
-                        'VIEW': '👁️'
-                    }[activity.azione] || '📝';
-
-                    return `
-                        <div class="glass-card p-4 rounded-xl">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-3">
-                                    <span class="text-2xl">${actionIcon}</span>
-                                    <div>
-                                        <div class="text-dark font-semibold">${activity.azione} ${activity.entita}</div>
-                                        <div class="text-gray-600 text-sm">${date} alle ${time}</div>
-                                    </div>
-                                </div>
-                                <div class="text-gray-500 text-xs">
-                                    ${activity.ip_address || 'N/A'}
-                                </div>
-                            </div>
-                        </div>`;
-                }).join('');
-
-            } catch (error) {
-                console.error('Errore caricamento log attività:', error);
-                container.innerHTML = `
-                    <div class="text-center py-8">
-                        <div class="text-red-400 text-sm">Errore nel caricamento delle attività</div>
-                    </div>`;
-            }
-        }
-
-        // ========================================
-        // GESTIONE MODIFICA PROFILO
-        // ========================================
-
-        function toggleEditMode() {
-            isEditing = !isEditing;
-            
-            const editableFields = ['inputTelefono', 'inputBio'];
-            const editBtn = document.getElementById('editProfileBtn');
-            const formActions = document.getElementById('formActions');
-            
-            editableFields.forEach(fieldId => {
-                document.getElementById(fieldId).disabled = !isEditing;
-            });
-            
-            if (isEditing) {
-                editBtn.innerHTML = '❌ Annulla Modifica';
-                editBtn.className = 'bg-red-600 hover:bg-red-700 text-white py-2 px-6 rounded-xl transition-colors';
-                formActions.classList.remove('hidden');
-            } else {
-                editBtn.innerHTML = '✏️ Modifica';
-                editBtn.className = 'btn-aurora py-2 px-6 rounded-xl';
-                formActions.classList.add('hidden');
-                
-                // Reset ai valori originali
-                resetForm();
-            }
-        }
-
-        function resetForm() {
-            document.getElementById('inputTelefono').value = originalData.telefono || '';
-            document.getElementById('inputBio').value = originalData.bio || '';
-            
-            // Reset avatar se era stato cambiato
-            if (originalData.avatar_url) {
-                const avatarImage = document.getElementById('avatarImage');
-                const avatarPlaceholder = document.getElementById('avatarPlaceholder');
-                
-                avatarImage.src = originalData.avatar_url;
-                avatarImage.style.display = 'block';
-                avatarPlaceholder.style.display = 'none';
-            } else {
-                const avatarImage = document.getElementById('avatarImage');
-                const avatarPlaceholder = document.getElementById('avatarPlaceholder');
-                
-                avatarImage.style.display = 'none';
-                avatarPlaceholder.style.display = 'flex';
-            }
-        }
-
-        async function saveProfile(event) {
-            event.preventDefault();
-            
-            try {
-                const editBtnText = document.getElementById('editBtnText');
-                const editBtnSpinner = document.getElementById('editBtnSpinner');
-                
-                editBtnText.classList.add('hidden');
-                editBtnSpinner.classList.remove('hidden');
-
-                const client = APP_CONFIG.SUPABASE.getClient();
-                
-                // Prepara dati per l'aggiornamento (solo campi modificabili)
-                const updateData = {
-                    telefono: document.getElementById('inputTelefono').value.trim(),
-                    bio: document.getElementById('inputBio').value.trim(),
-                    updated_at: new Date().toISOString()
-                };
-
-                // Aggiorna profilo
-                const { error } = await client
-                    .from('user_profiles')
-                    .update(updateData)
-                    .eq('user_id', currentUser.id);
-
-                if (error) throw error;
-
-                // Aggiorna dati locali
-                currentProfile = { ...currentProfile, ...updateData };
-                originalData = { ...currentProfile };
-
-                APP_CONFIG.NOTIFICATIONS.showToast('Profilo aggiornato con successo!', 'success');
-                
-                toggleEditMode(); // Disabilita modalità modifica
-
-            } catch (error) {
-                console.error('Errore salvataggio profilo:', error);
-                APP_CONFIG.NOTIFICATIONS.showToast('Errore nel salvataggio del profilo', 'error');
-            } finally {
-                const editBtnText = document.getElementById('editBtnText');
-                const editBtnSpinner = document.getElementById('editBtnSpinner');
-                
-                editBtnText.classList.remove('hidden');
-                editBtnSpinner.classList.add('hidden');
-            }
-        }
-
-        // ========================================
-        // GESTIONE CAMBIO PASSWORD
-        // ========================================
-
-        function openPasswordModal() {
-            document.getElementById('changePasswordModal').style.display = 'flex';
-        }
-
-        function closePasswordModal() {
-            document.getElementById('changePasswordModal').style.display = 'none';
-            document.getElementById('changePasswordForm').reset();
-        }
-
-        async function changePassword(event) {
-            event.preventDefault();
-            
-            const currentPassword = document.getElementById('currentPassword').value;
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
-            
-            // Validazioni
-            if (newPassword !== confirmNewPassword) {
-                APP_CONFIG.NOTIFICATIONS.showToast('Le nuove password non coincidono', 'error');
-                return;
-            }
-            
-            if (newPassword.length < 8) {
-                APP_CONFIG.NOTIFICATIONS.showToast('La password deve contenere almeno 8 caratteri', 'error');
-                return;
-            }
-
-            try {
-                const btnText = document.getElementById('changePasswordBtnText');
-                const btnSpinner = document.getElementById('changePasswordSpinner');
-                
-                btnText.classList.add('hidden');
-                btnSpinner.classList.remove('hidden');
-
-                const client = APP_CONFIG.SUPABASE.getClient();
-                
-                // Cambia password
-                const { error } = await client.auth.updateUser({
-                    password: newPassword
-                });
-
-                if (error) throw error;
-
-                APP_CONFIG.NOTIFICATIONS.showToast('Password aggiornata con successo!', 'success');
-                closePasswordModal();
-
-            } catch (error) {
-                console.error('Errore cambio password:', error);
-                APP_CONFIG.NOTIFICATIONS.showToast('Errore nel cambio password', 'error');
-            } finally {
-                const btnText = document.getElementById('changePasswordBtnText');
-                const btnSpinner = document.getElementById('changePasswordSpinner');
-                
-                btnText.classList.remove('hidden');
-                btnSpinner.classList.add('hidden');
-            }
-        }
-
-        // ========================================
-        // GESTIONE PREFERENZE
-        // ========================================
-
-        async function savePreferences() {
-            try {
-                const preferences = {
-                    email_news: document.getElementById('emailNews').checked,
-                    email_events: document.getElementById('emailEvents').checked,
-                    email_updates: document.getElementById('emailUpdates').checked
-                };
-
-                // Qui potresti salvare le preferenze nel database
-                // Per ora le salviamo solo localmente
-                localStorage.setItem('myapp_preferences', JSON.stringify(preferences));
-
-                APP_CONFIG.NOTIFICATIONS.showToast('Preferenze salvate!', 'success');
-
-            } catch (error) {
-                console.error('Errore salvataggio preferenze:', error);
-                APP_CONFIG.NOTIFICATIONS.showToast('Errore nel salvataggio delle preferenze', 'error');
-            }
-        }
-
-        function loadPreferences() {
-            try {
-                const savedPreferences = localStorage.getItem('myapp_preferences');
-                if (savedPreferences) {
-                    const preferences = JSON.parse(savedPreferences);
-                    
-                    document.getElementById('emailNews').checked = preferences.email_news ?? true;
-                    document.getElementById('emailEvents').checked = preferences.email_events ?? true;
-                    document.getElementById('emailUpdates').checked = preferences.email_updates ?? true;
-                }
-            } catch (error) {
-                console.error('Errore caricamento preferenze:', error);
-            }
-        }
-
-        // ========================================
-        // GESTIONE CANCELLAZIONE ACCOUNT
-        // ========================================
-
-        function requestAccountDeletion() {
-            if (confirm('Sei sicuro di voler richiedere la cancellazione del tuo account? Questa azione non può essere annullata.')) {
-                APP_CONFIG.NOTIFICATIONS.showToast('Richiesta inviata all\'amministratore', 'warning');
-                
-                // Qui potresti inviare una notifica agli admin
-                // O creare una richiesta speciale nel sistema
             }
         }
 
