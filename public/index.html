@@ -270,7 +270,7 @@
                     Benvenuto in MyApp
                 </h1>
                 <p class="hero-subtitle text-white mb-8">
-                    La tua piattaforma digitale per la gestione moderna
+                    La tua piattaforma digitale per avere sempre un dirigente a tua disposizione
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <button onclick="goToLogin()" class="btn-aurora px-8 py-4 rounded-2xl text-xl font-bold">
@@ -395,7 +395,8 @@
         // === NAVIGATION FUNCTIONS ===
         function goToLogin() {
             // Semplice redirect senza controlli di sessione
-            window.location.href = 'login.html';
+            // Aggiungiamo un parametro per evitare redirect automatici
+            window.location.href = 'login.html?from=index';
         }
 
         function scrollToFeatures() {
