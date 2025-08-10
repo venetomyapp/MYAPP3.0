@@ -430,7 +430,7 @@
         error: 'bg-gradient-to-r from-red-500 to-red-600',
         info: 'bg-gradient-to-r from-blue-500 to-blue-600'
       };
-      notification.className = \`fixed top-6 right-6 \${colors[type]} text-white px-6 py-4 rounded-2xl shadow-2xl z-50 transform translate-x-full transition-transform duration-500 font-bold text-base backdrop-blur-md border border-white/20\`;
+      notification.className = `fixed top-6 right-6 ${colors[type]} text-white px-6 py-4 rounded-2xl shadow-2xl z-50 transform translate-x-full transition-transform duration-500 font-bold text-base backdrop-blur-md border border-white/20`;
       notification.textContent = message;
       document.body.appendChild(notification);
       setTimeout(() => notification.classList.remove('translate-x-full'), 100);
@@ -459,21 +459,18 @@
     // === Profilo & Ruolo ===
     async function loadUserProfile(){
       try{
-        const { data: profile, error } = await supabase
+        const { data: profile } = await supabase
           .from('user_profiles')
           .select('nome,cognome,email,role')
           .eq('user_id', currentUser.id)
           .single();
 
-        if(error){ console.warn('Profilo non trovato, uso dati auth'); }
-
         userProfile = profile || { nome: currentUser.user_metadata?.nome || 'Utente', cognome: currentUser.user_metadata?.cognome || '', email: currentUser.email, role:'USER' };
-        const fullName = \`\${userProfile?.nome||''} \${userProfile?.cognome||''}\`.trim() || 'Dirigente';
+        const fullName = `${userProfile?.nome||''} ${userProfile?.cognome||''}`.trim() || 'Dirigente';
         const role = (userProfile?.role || 'USER').toUpperCase();
 
         // Guard autorizzazione
         if(!['ADMIN','DIRIGENTE'].includes(role)){
-          // non autorizzato all'area dirigenti
           window.location.href = 'home.html';
           return;
         }
@@ -486,7 +483,7 @@
         const rolesContainer = document.getElementById('userRoles');
         const badgeClass = role === 'ADMIN' ? 'admin' : role === 'DIRIGENTE' ? 'dirigente' : 'user';
         const icon = role === 'ADMIN' ? '👑' : role === 'DIRIGENTE' ? '🎯' : '👤';
-        rolesContainer.innerHTML = \`<span class="role-badge \${badgeClass}">\${icon} \${escapeHTML(role)}</span>\`;
+        rolesContainer.innerHTML = `<span class="role-badge ${badgeClass}">${icon} ${escapeHTML(role)}</span>`;
 
         document.getElementById('accessLevel').textContent = role === 'ADMIN' ? 'Accesso Amministratore Completo' : 'Accesso Dirigente Autorizzato';
         document.getElementById('rolesSummary').textContent = role;
@@ -503,13 +500,12 @@
     // === "Iscritto dal" (tessere) ===
     async function loadIscrittoDal(){
       try{
-        const { data, error } = await supabase
+        const { data } = await supabase
           .from('tessere')
           .select('data_emissione')
           .eq('user_id', currentUser.id)
           .order('data_emissione', { ascending:true })
           .limit(1);
-        if(error) throw error;
         const de = data && data[0]?.data_emissione;
         document.getElementById('iscrittoDal').textContent = de ? fmtDate(de) : 'Non disponibile';
       }catch(e){
@@ -527,14 +523,14 @@
           .from('news')
           .select('id', { count:'exact', head:true })
           .eq('pubblicata', true)
-          .or(\`data_scadenza.is.null,data_scadenza.gt.\${nowIso}\`);
+          .or('data_scadenza.is.null,data_scadenza.gt.' + nowIso);
 
         const { count: featuredCount } = await supabase
           .from('news')
           .select('id', { count:'exact', head:true })
           .eq('pubblicata', true)
           .eq('in_evidenza', true)
-          .or(\`data_scadenza.is.null,data_scadenza.gt.\${nowIso}\`);
+          .or('data_scadenza.is.null,data_scadenza.gt.' + nowIso);
 
         document.getElementById('newsCount').textContent = (typeof totalNews === 'number') ? totalNews : '—';
         document.getElementById('featuredNewsCount').textContent = (typeof featuredCount === 'number') ? featuredCount : '—';
@@ -562,7 +558,7 @@
           .from('news')
           .select('id,titolo,sottotitolo,immagine_url,categoria,data_pubblicazione,in_evidenza,pubblicata,url_articolo,created_at')
           .eq('pubblicata', true)
-          .or(\`data_scadenza.is.null,data_scadenza.gt.\${nowIso}\`)
+          .or('data_scadenza.is.null,data_scadenza.gt.' + nowIso)
           .order('in_evidenza', { ascending:false })
           .order('data_pubblicazione', { ascending:false })
           .limit(6);
@@ -583,7 +579,7 @@
         empty.classList.add('hidden'); wrap.innerHTML = '';
 
         for(const n of news){
-          const href = n.url_articolo ? n.url_articolo : \`gestione-notizie.html?id=\${encodeURIComponent(n.id)}\`;
+          const href = n.url_articolo ? n.url_articolo : 'gestione-notizie.html?id=' + encodeURIComponent(n.id);
           const target = n.url_articolo ? '_blank' : '_self';
 
           const article = document.createElement('article');
@@ -681,11 +677,10 @@
       loadBtn.disabled = true;
 
       try{
-        const { data: users, error } = await supabase
+        const { data: users } = await supabase
           .from('user_profiles')
           .select('user_id,nome,cognome,email,role,created_at')
           .order('created_at', { ascending:false });
-        if(error) throw error;
 
         allUsers = users || [];
         displayUsers();
@@ -715,7 +710,7 @@
         const role = (u.role||'USER').toUpperCase();
         const badgeClass = role === 'ADMIN' ? 'admin' : role === 'DIRIGENTE' ? 'dirigente' : 'user';
         const icon = role === 'ADMIN' ? '👑' : role === 'DIRIGENTE' ? '🎯' : '👤';
-        const name = \`\${u.nome||''} \${u.cognome||''}\`.trim() || 'Senza nome';
+        const name = `${u.nome||''} ${u.cognome||''}`.trim() || 'Senza nome';
 
         return `
           <div class="user-row">
@@ -740,7 +735,7 @@
       if(!u) return;
       editingUserId = userId;
 
-      const name = \`\${u.nome||''} \${u.cognome||''}\`.trim() || 'Senza nome';
+      const name = `${u.nome||''} ${u.cognome||''}`.trim() || 'Senza nome';
       document.getElementById('modalUserName').textContent = name;
       document.getElementById('modalUserEmail').textContent = u.email || '';
       document.getElementById('modalUserId').value = userId;
