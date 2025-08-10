@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Tailwind (OK per sviluppo; in produzione builda con CLI/PostCSS) -->
+    <!-- Tailwind (ok in sviluppo; in produzione builda con CLI/PostCSS) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -377,8 +377,8 @@
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
         
         const supabase = createClient(
-            'https://lycrgzptkdkksukcwrld.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5Y3JnenB0a2Rra3N1a2N3cmxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3ODQyMzAsImV4cCI6MjA2ODM2MDIzMH0.ZJGOXAMC3hKKrnwXHKEa2_Eh7ZpOKeLYvYlYneBiEfk',
+            'https://pvzdilkozpspsnepedqc.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk',
             { auth: { persistSession:true, autoRefreshToken:true, detectSessionInUrl:true } }
         );
 
@@ -407,25 +407,23 @@
             clearRequire(){ this.required = this.required || document.getElementById('session-required'); this.required?.classList.remove('active'); }
         };
 
-        // 🔐 Guard robusta: prova getUser() (server) + fallback all'evento
-        async function ensureUser(timeoutMs = 6000){
+        // Attendi fino a 5s l'INITIAL_SESSION/SIGNED_IN per evitare loop
+        async function ensureSession(timeoutMs = 5000){
             sessionGuard.show();
             try{
-                // 1) Forza check lato server: se c'è refresh token valido, ripristina la sessione
-                const { data: { user }, error } = await supabase.auth.getUser();
-                if (user) return user;
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session?.user) return session.user;
 
-                // 2) Se ancora nulla, ascolta un eventuale INITIAL_SESSION/SIGNED_IN
                 return await new Promise((resolve)=>{
                     let settled = false;
                     const timer = setTimeout(()=>{ if(!settled){ settled=true; resolve(null); } }, timeoutMs);
-                    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, sess)=>{
+                    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, sess)=>{
                         if (sess?.user && !settled){
                             settled = true; clearTimeout(timer); subscription?.unsubscribe?.(); resolve(sess.user);
                         }
                     });
                 });
-            } finally{
+            } finally {
                 sessionGuard.hide();
             }
         }
@@ -433,10 +431,13 @@
         // ===================== Init =====================
         async function init(){
             try{
-                const user = await ensureUser();
+                const user = await ensureSession();
                 if (!user){
+                    // niente redirect automatico: mostro CTA
                     sessionGuard.require();
                     document.getElementById('btnRetry').onclick = async ()=>{ sessionGuard.clearRequire(); init(); };
+                    // puoi opzionalmente puntare a ../login.html se login.html sta una cartella sopra:
+                    // document.getElementById('btnGoLogin').setAttribute('href','../login.html');
                     return;
                 }
                 currentUser = user;
@@ -485,8 +486,11 @@
                 // Gate: se non ha ruolo, non redirecto — mostro info box
                 if (!currentUserRoles.some(r=>REQUIRE_ROLE.includes(r))){
                     document.getElementById('noAccessBox').classList.remove('hidden');
-                } else if (currentUserRoles.includes('ADMIN')){
-                    document.getElementById('adminSection').style.display = 'block';
+                } else {
+                    // admin tools visibili solo se ADMIN
+                    if (currentUserRoles.includes('ADMIN')){
+                        document.getElementById('adminSection').style.display = 'block';
+                    }
                 }
             } catch (e){
                 console.error('Errore caricamento profilo:', e);
@@ -744,6 +748,11 @@
         document.addEventListener('click', (e)=>{ if (e.target.classList.contains('modal')) closeRolesModal(); });
         // Close modal on ESC key
         document.addEventListener('keydown', (e)=>{ if (e.key==='Escape') closeRolesModal(); });
+
+        // Espongo funzioni globali (se servono altrove)
+        window.loadUsers = loadUsers;
+        window.openRolesModal = openRolesModal;
+        window.closeRolesModal = closeRolesModal;
 
         // Avvio
         init();
