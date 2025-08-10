@@ -8,51 +8,37 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <!-- CONFIGURAZIONE COLORI TAILWIND -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        // Aurora Boreale 2025 Palette
-                        primary: '#1a1a2e',      // Blu notte profondo
-                        secondary: '#16213e',     // Blu oceano
-                        accent: '#0f3460',        // Blu acciaio
-                        aurora: '#e94560',        // Rosa aurora
-                        cyan: '#00d4ff',          // Cyan elettrico
-                        magenta: '#ff006e',       // Magenta vibrante
-                        gold: '#ffd700',          // Oro elegante
-                        teal: '#03dac6',          // Teal premium
-                        dark: '#0a0a23',          // Nero cyber
-                        light: '#f8fafc',         // Bianco ghiaccio
-                        textDark: '#1C1C1E',
-                        backgroundLight: '#F4F4F8',
-                    },
-                    screens: {
-                        'xs': '320px',
-                        'sm': '640px',
-                        'md': '768px',
-                        'lg': '1024px',
-                        'xl': '1280px',
-                        '2xl': '1536px',
-                        '3xl': '1920px',
-                        '4xl': '2560px',
+                        primary: '#1a1a2e',
+                        secondary: '#16213e',
+                        accent: '#0f3460',
+                        aurora: '#e94560',
+                        cyan: '#00d4ff',
+                        magenta: '#ff006e',
+                        gold: '#ffd700',
+                        teal: '#03dac6',
+                        dark: '#0a0a23',
+                        light: '#f8fafc',
                     }
                 }
             }
         }
     </script>
     
-    <!-- STILI CSS COMPLETI -->
     <style>
-        /* === VARIABILI CSS === */
         :root {
             --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
-            --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
             --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
         }
 
-        /* === SFONDO PRINCIPALE === */
         body {
             background: var(--gradient-aurora);
             background-size: 400% 400%;
@@ -60,7 +46,6 @@
             min-height: 100vh;
         }
 
-        /* === ANIMAZIONI === */
         @keyframes aurora {
             0%, 100% { background-position: 0% 50%; }
             25% { background-position: 100% 50%; }
@@ -73,424 +58,512 @@
             50% { transform: translateY(-10px); }
         }
 
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(233, 69, 96, 0.5); }
-            50% { box-shadow: 0 0 40px rgba(0, 212, 255, 0.8); }
-        }
-
         @keyframes pulse {
             0%, 100% { opacity: 1; }
-            50% { opacity: .7; }
+            50% { opacity: 0.8; }
         }
 
-        /* === TIPOGRAFIA ULTRA-VISIBILE === */
-        .text-ultra-visible {
-            color: #ffffff;
-            text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
-            font-weight: 800;
-        }
-
-        .text-white {
-            text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
-        }
-
-        /* === GLASSMORPHISM === */
-        .glass-morphism {
+        .hero-container {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.18);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            text-align: center;
         }
 
-        .glass-strong {
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
+        .logo-main {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+            animation: float 3s ease-in-out infinite;
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+        .title-main {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8);
         }
 
-        /* === BOTTONI === */
-        .btn-aurora {
+        .subtitle-main {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 3rem;
+            font-weight: 600;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+        }
+
+        .btn-hero {
             background: var(--gradient-magic);
             color: white;
-            border: 2px solid rgba(233, 69, 96, 0.3);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
             font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
-        .btn-aurora:hover {
+        .btn-hero:hover {
             transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(233, 69, 96, 0.4);
-            border-color: rgba(233, 69, 96, 0.8);
+            box-shadow: 0 15px 30px rgba(233, 69, 96, 0.4);
+            border-color: rgba(255, 255, 255, 0.6);
         }
 
-        .btn-cyber {
-            background: var(--gradient-cyber);
-            border: 2px solid rgba(0, 212, 255, 0.3);
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
             color: white;
-            font-weight: 700;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.5rem;
         }
 
-        .btn-cyber:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.4);
-            border-color: rgba(0, 212, 255, 0.8);
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
         }
 
-        /* === CARDS === */
-        .card-hover {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .card-hover:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+        .features-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 3rem auto;
+            max-width: 800px;
         }
 
         .feature-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 20px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            text-align: center;
             transition: all 0.3s ease;
         }
 
         .feature-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            background: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.15));
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         }
 
-        /* === HERO SECTION === */
-        .hero-title {
-            font-size: clamp(3rem, 12vw, 6rem);
-            font-weight: 900;
-            line-height: 1.1;
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
         }
 
-        .hero-subtitle {
-            font-size: clamp(1.5rem, 6vw, 2.5rem);
-            font-weight: 800;
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 0.5rem;
         }
 
-        /* === STATUS INDICATORS === */
-        .status-indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #22c55e;
-            animation: pulse 2s infinite;
-            display: inline-block;
-            margin-right: 8px;
+        .feature-description {
+            color: #64748b;
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
 
-        .status-offline {
-            background: #ef4444;
+        .session-info {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 2rem auto;
+            max-width: 500px;
+            text-align: center;
         }
 
-        /* === LOADING STATES === */
-        .loading {
-            opacity: 0.7;
-            pointer-events: none;
+        .session-user {
+            color: white;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
         }
 
-        .loading::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 20px;
-            height: 20px;
-            margin: -10px 0 0 -10px;
-            border: 2px solid transparent;
-            border-top-color: #ffffff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        .session-role {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .hidden {
+            display: none !important;
         }
 
-        /* === RESPONSIVE === */
-        @media (max-width: 640px) {
-            .hero-title { font-size: 2.25rem; line-height: 2.5rem; }
-            .hero-subtitle { font-size: 1.25rem; line-height: 1.75rem; }
-        }
-
-        /* === FLOATING HELP === */
-        .floating-help {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            z-index: 1000;
-            animation: float 3s ease-in-out infinite;
+        @media (max-width: 768px) {
+            .hero-container {
+                margin: 1rem;
+                padding: 2rem 1.5rem;
+            }
+            
+            .title-main {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle-main {
+                font-size: 1.1rem;
+            }
+            
+            .btn-hero, .btn-secondary {
+                display: block;
+                margin: 0.75rem auto;
+                width: 80%;
+                max-width: 300px;
+            }
         }
     </style>
 </head>
-<body class="flex flex-col min-h-screen font-sans">
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
 
-    <!-- HEADER -->
-    <header class="glass-morphism">
-        <div class="container mx-auto px-4 py-6">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-r from-aurora to-cyan rounded-xl flex items-center justify-center">
-                        <span class="text-white font-black text-xl">M</span>
-                    </div>
-                    <span class="text-ultra-visible text-2xl font-black">MyApp</span>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <div class="flex items-center text-white text-sm">
-                        <span class="status-indicator" id="statusIndicator"></span>
-                        <span id="statusText">Sistema Online</span>
-                    </div>
-                </div>
+    <!-- HERO SECTION -->
+    <div class="hero-container">
+        <div class="logo-main">🛡️</div>
+        <h1 class="title-main">MyApp</h1>
+        <p class="subtitle-main">
+            La piattaforma di gestione digitale moderna e sicura
+        </p>
+        
+        <!-- SESSIONE NON ATTIVA -->
+        <div id="guestSection">
+            <div class="mb-8">
+                <a href="auth.html" class="btn-hero">
+                    🚀 Accedi o Registrati
+                </a>
+            </div>
+            
+            <div>
+                <a href="#features" class="btn-secondary">
+                    📋 Scopri di più
+                </a>
             </div>
         </div>
-    </header>
-
-    <!-- MAIN CONTENT -->
-    <main class="flex-1 flex items-center justify-center px-4 py-12">
-        <div class="text-center max-w-4xl">
-            <!-- HERO SECTION -->
-            <div class="mb-12">
-                <h1 class="hero-title text-ultra-visible mb-6">
-                    Benvenuto in MyApp
-                </h1>
-                <p class="hero-subtitle text-white mb-8">
-                    La tua piattaforma digitale per avere sempre un dirigente a tua disposizione
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <button onclick="goToLogin()" class="btn-aurora px-8 py-4 rounded-2xl text-xl font-bold">
-                        🚀 Accedi alla Piattaforma
-                    </button>
-                    <button onclick="scrollToFeatures()" class="btn-cyber px-8 py-4 rounded-2xl text-xl font-bold">
-                        📖 Scopri di più
-                    </button>
-                </div>
+        
+        <!-- SESSIONE ATTIVA -->
+        <div id="userSection" class="hidden">
+            <div class="session-info">
+                <div class="session-user" id="userName">Utente connesso</div>
+                <div class="session-role" id="userRole">Ruolo: User</div>
             </div>
-
-            <!-- FEATURES GRID -->
-            <div id="features" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
-                <div class="feature-card card-hover p-8">
-                    <div class="text-4xl mb-4">🔐</div>
-                    <h3 class="text-ultra-visible text-xl font-bold mb-3">Accesso Sicuro</h3>
-                    <p class="text-white">Sistema di autenticazione avanzato con Supabase</p>
-                </div>
-
-                <div class="feature-card card-hover p-8">
-                    <div class="text-4xl mb-4">📱</div>
-                    <h3 class="text-ultra-visible text-xl font-bold mb-3">Multi-Dispositivo</h3>
-                    <p class="text-white">Interfaccia responsive per desktop, tablet e mobile</p>
-                </div>
-
-                <div class="feature-card card-hover p-8">
-                    <div class="text-4xl mb-4">⚡</div>
-                    <h3 class="text-ultra-visible text-xl font-bold mb-3">Prestazioni</h3>
-                    <p class="text-white">Tecnologie moderne per un'esperienza fluida</p>
-                </div>
-
-                <div class="feature-card card-hover p-8">
-                    <div class="text-4xl mb-4">🎫</div>
-                    <h3 class="text-ultra-visible text-xl font-bold mb-3">Tessera Digitale</h3>
-                    <p class="text-white">Gestione completa del tuo profilo e tessera</p>
-                </div>
-
-                <div class="feature-card card-hover p-8">
-                    <div class="text-4xl mb-4">👥</div>
-                    <h3 class="text-ultra-visible text-xl font-bold mb-3">Gestione Ruoli</h3>
-                    <p class="text-white">Sistema avanzato per utenti e dirigenti</p>
-                </div>
-
-                <div class="feature-card card-hover p-8">
-                    <div class="text-4xl mb-4">🔄</div>
-                    <h3 class="text-ultra-visible text-xl font-bold mb-3">Aggiornamenti Real-time</h3>
-                    <p class="text-white">Dati sempre sincronizzati e aggiornati</p>
-                </div>
+            
+            <div class="mb-4">
+                <button onclick="goToUserDashboard()" class="btn-hero">
+                    🏠 Vai alla Dashboard
+                </button>
             </div>
-        </div>
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="glass-morphism mt-16">
-        <div class="container mx-auto px-4 py-8">
-            <div class="text-center">
-                <div class="flex items-center justify-center space-x-3 mb-4">
-                    <div class="w-8 h-8 bg-gradient-to-r from-aurora to-cyan rounded-lg flex items-center justify-center">
-                        <span class="text-white font-black text-sm">M</span>
-                    </div>
-                    <span class="text-white text-lg font-bold">MyApp</span>
-                </div>
-                <p class="text-white text-sm mb-4">
-                    Piattaforma digitale moderna per la gestione professionale
-                </p>
-                <div class="flex justify-center space-x-6 text-sm text-white">
-                    <span>© 2025 MyApp</span>
-                    <span>•</span>
-                    <span>Versione 4.1</span>
-                    <span>•</span>
-                    <span>Powered by Supabase</span>
-                </div>
+            
+            <div class="mb-4">
+                <a href="auth.html" class="btn-secondary">
+                    🔐 Cambia Account
+                </a>
             </div>
-        </div>
-    </footer>
-
-    <!-- FLOATING HELP BUTTON -->
-    <div class="floating-help">
-        <button onclick="showHelp()" class="btn-aurora w-14 h-14 rounded-full flex items-center justify-center text-2xl">
-            ❓
-        </button>
-    </div>
-
-    <!-- HELP MODAL -->
-    <div id="helpModal" class="fixed inset-0 hidden items-center justify-center bg-black/60 z-50">
-        <div class="glass-card w-full max-w-md rounded-2xl p-6 m-4">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-textDark">Aiuto - MyApp</h2>
-                <button onclick="closeHelp()" class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
-            </div>
-            <div class="space-y-4 text-textDark">
-                <div>
-                    <h3 class="font-semibold mb-2">🚀 Come iniziare</h3>
-                    <p class="text-sm">Clicca su "Accedi alla Piattaforma" per effettuare il login o registrarti.</p>
-                </div>
-                <div>
-                    <h3 class="font-semibold mb-2">🔐 Primo accesso</h3>
-                    <p class="text-sm">Se è la prima volta, registrati con i tuoi dati. Riceverai una email di conferma.</p>
-                </div>
-                <div>
-                    <h3 class="font-semibold mb-2">📱 Compatibilità</h3>
-                    <p class="text-sm">MyApp funziona su tutti i dispositivi: desktop, tablet e smartphone.</p>
-                </div>
-                <div>
-                    <h3 class="font-semibold mb-2">❓ Supporto</h3>
-                    <p class="text-sm">Per assistenza, contatta il supporto tecnico dalla tua dashboard.</p>
-                </div>
-            </div>
-            <div class="mt-6">
-                <button onclick="closeHelp()" class="btn-aurora w-full py-3 rounded-xl font-bold">
-                    Ho capito
+            
+            <div>
+                <button onclick="handleLogout()" class="btn-secondary">
+                    🚪 Logout
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT -->
-    <script>
-        // === CONFIGURATION ===
-        let systemStatus = 'online';
+    <!-- FEATURES SECTION -->
+    <div id="features" class="features-section">
+        <h2 style="text-align: center; font-size: 2rem; font-weight: 800; color: #1a1a2e; margin-bottom: 2rem;">
+            Funzionalità Principali
+        </h2>
         
-        // === NAVIGATION FUNCTIONS ===
-        function goToLogin() {
-            // Semplice redirect senza controlli di sessione
-            // Aggiungiamo un parametro per evitare redirect automatici
-            window.location.href = 'login.html?from=index';
-        }
-
-        function scrollToFeatures() {
-            const featuresSection = document.getElementById('features');
-            if (featuresSection) {
-                featuresSection.scrollIntoView({ 
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        }
-
-        // === HELP MODAL ===
-        function showHelp() {
-            const modal = document.getElementById('helpModal');
-            if (modal) {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            }
-        }
-
-        function closeHelp() {
-            const modal = document.getElementById('helpModal');
-            if (modal) {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }
-        }
-
-        // === STATUS MANAGEMENT ===
-        function updateSystemStatus() {
-            const indicator = document.getElementById('statusIndicator');
-            const text = document.getElementById('statusText');
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="feature-card">
+                <div class="feature-icon">🎫</div>
+                <h3 class="feature-title">Tessera Digitale</h3>
+                <p class="feature-description">
+                    Tessera digitale sempre con te, con QR code e dati aggiornati
+                </p>
+            </div>
             
-            if (systemStatus === 'online') {
-                indicator.classList.remove('status-offline');
-                text.textContent = 'Sistema Online';
+            <div class="feature-card">
+                <div class="feature-icon">📰</div>
+                <h3 class="feature-title">News & Comunicazioni</h3>
+                <p class="feature-description">
+                    Rimani aggiornato con le ultime notizie e comunicazioni ufficiali
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🏷️</div>
+                <h3 class="feature-title">Convenzioni</h3>
+                <p class="feature-description">
+                    Accedi a sconti esclusivi e convenzioni con partner selezionati
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3 class="feature-title">App Mobile</h3>
+                <p class="feature-description">
+                    Accesso completo da qualsiasi dispositivo, ovunque tu sia
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3 class="feature-title">Sicurezza</h3>
+                <p class="feature-description">
+                    Dati protetti con crittografia avanzata e autenticazione sicura
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Dashboard</h3>
+                <p class="feature-description">
+                    Interfaccia intuitiva per gestire tutti i tuoi dati e servizi
+                </p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="auth.html" class="btn-hero">
+                🎯 Inizia Subito
+            </a>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-top: 3rem; padding: 2rem;">
+        <div style="margin-bottom: 1rem;">
+            <strong style="color: white;">MyApp</strong> v5.0 - Sistema di gestione digitale
+        </div>
+        <div style="font-size: 0.9rem;">
+            © 2025 MyApp. Tutti i diritti riservati. | Powered by Supabase
+        </div>
+    </footer>
+
+    <script>
+        // === CONFIGURAZIONE SUPABASE ===
+        const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
+        
+        let supabaseClient;
+        let currentUser = null;
+        let userProfile = null;
+
+        // === INIZIALIZZAZIONE ===
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🏠 INDEX PAGE LOADED - MyApp v5.0');
+            
+            try {
+                // Inizializza Supabase
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('✅ Supabase client inizializzato');
+                
+                // Controlla sessione SENZA redirect automatico
+                await checkSessionQuietly();
+                
+                console.log('✅ Homepage caricata correttamente');
+                
+            } catch (error) {
+                console.error('❌ Errore inizializzazione homepage:', error);
+                // Non bloccare la pagina, mostra solo la sezione guest
+                showGuestSection();
+            }
+        });
+
+        // === CONTROLLO SESSIONE SILENZIOSO ===
+        async function checkSessionQuietly() {
+            try {
+                console.log('🔍 Controllo sessione silenzioso...');
+                
+                const { data: { session }, error } = await supabaseClient.auth.getSession();
+                
+                if (error) {
+                    console.warn('⚠️ Errore controllo sessione:', error);
+                    showGuestSection();
+                    return;
+                }
+
+                if (!session || !session.user) {
+                    console.log('👤 Nessuna sessione attiva');
+                    showGuestSection();
+                    return;
+                }
+
+                currentUser = session.user;
+                console.log('✅ Sessione attiva per:', currentUser.email);
+                
+                // Carica profilo utente
+                await loadUserProfile();
+                
+                // Mostra sezione utente loggato
+                showUserSection();
+                
+            } catch (error) {
+                console.error('❌ Errore controllo sessione:', error);
+                showGuestSection();
+            }
+        }
+
+        // === CARICAMENTO PROFILO UTENTE ===
+        async function loadUserProfile() {
+            try {
+                const { data: profile, error } = await supabaseClient
+                    .from('user_profiles')
+                    .select('full_name, nome, cognome, role')
+                    .eq('user_id', currentUser.id)
+                    .single();
+
+                if (error) {
+                    console.warn('⚠️ Profilo non trovato:', error);
+                    userProfile = null;
+                    return;
+                }
+
+                userProfile = profile;
+                console.log('👤 Profilo caricato:', profile);
+                
+            } catch (error) {
+                console.error('❌ Errore caricamento profilo:', error);
+                userProfile = null;
+            }
+        }
+
+        // === MOSTRA SEZIONE GUEST ===
+        function showGuestSection() {
+            document.getElementById('guestSection').classList.remove('hidden');
+            document.getElementById('userSection').classList.add('hidden');
+        }
+
+        // === MOSTRA SEZIONE UTENTE LOGGATO ===
+        function showUserSection() {
+            document.getElementById('guestSection').classList.add('hidden');
+            document.getElementById('userSection').classList.remove('hidden');
+            
+            // Aggiorna info utente
+            updateUserInfo();
+        }
+
+        // === AGGIORNA INFO UTENTE ===
+        function updateUserInfo() {
+            const userNameEl = document.getElementById('userName');
+            const userRoleEl = document.getElementById('userRole');
+            
+            if (userProfile) {
+                const fullName = userProfile.full_name || 
+                                [userProfile.nome, userProfile.cognome].filter(Boolean).join(' ') || 
+                                'Utente';
+                const role = userProfile.role || 'USER';
+                
+                userNameEl.textContent = `Benvenuto, ${fullName}`;
+                
+                let roleText = 'Utente';
+                if (role === 'ADMIN') {
+                    roleText = 'Amministratore';
+                } else if (role === 'DIRIGENTE') {
+                    roleText = 'Dirigente';
+                }
+                
+                userRoleEl.textContent = `Ruolo: ${roleText}`;
             } else {
-                indicator.classList.add('status-offline');
-                text.textContent = 'Sistema Offline';
+                userNameEl.textContent = `Benvenuto, ${currentUser.email}`;
+                userRoleEl.textContent = 'Ruolo: Utente';
             }
         }
 
-        // === INITIALIZATION ===
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 MyApp Index Page Loaded v4.1');
+        // === VAI ALLA DASHBOARD UTENTE ===
+        async function goToUserDashboard() {
+            try {
+                console.log('🎯 Reindirizzamento alla dashboard...');
+                
+                if (!userProfile) {
+                    console.log('⚠️ Profilo non caricato, reindirizzo alla home standard');
+                    window.location.href = 'home.html';
+                    return;
+                }
+                
+                const userRole = userProfile.role || 'USER';
+                
+                if (userRole === 'ADMIN' || userRole === 'DIRIGENTE') {
+                    console.log('👔 Reindirizzo alla dashboard dirigenti');
+                    window.location.href = 'home_dirigenti.html';
+                } else {
+                    console.log('👤 Reindirizzo alla dashboard utente');
+                    window.location.href = 'home.html';
+                }
+                
+            } catch (error) {
+                console.error('❌ Errore reindirizzamento:', error);
+                // Fallback sicuro
+                window.location.href = 'home.html';
+            }
+        }
+
+        // === LOGOUT ===
+        async function handleLogout() {
+            if (!confirm('Sei sicuro di voler uscire?')) {
+                return;
+            }
             
-            // Update status
-            updateSystemStatus();
-            
-            // Check system status every 30 seconds
-            setInterval(() => {
-                // Qui potresti aggiungere una vera verifica dello stato del sistema
-                updateSystemStatus();
-            }, 30000);
-            
-            // Add smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
+            try {
+                console.log('🚪 Logout in corso...');
+                
+                const { error } = await supabaseClient.auth.signOut();
+                if (error) {
+                    console.error('❌ Errore logout:', error);
+                }
+                
+                // Reset variabili
+                currentUser = null;
+                userProfile = null;
+                
+                // Mostra sezione guest
+                showGuestSection();
+                
+                console.log('✅ Logout completato');
+                
+            } catch (error) {
+                console.error('❌ Errore durante logout:', error);
+                alert('Errore durante il logout');
+            }
+        }
+
+        // === SMOOTH SCROLL ===
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
             });
-            
-            // Keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
-                // Press 'L' to go to login
-                if (e.key.toLowerCase() === 'l' && !e.ctrlKey && !e.altKey) {
-                    goToLogin();
-                }
-                // Press 'H' to show help
-                if (e.key.toLowerCase() === 'h' && !e.ctrlKey && !e.altKey) {
-                    showHelp();
-                }
-                // Press Escape to close help
-                if (e.key === 'Escape') {
-                    closeHelp();
-                }
-            });
-            
-            console.log('✅ Index page fully initialized');
         });
 
-        // === PERFORMANCE MONITORING ===
-        window.addEventListener('load', function() {
-            const loadTime = performance.now();
-            console.log(`⚡ Page loaded in ${Math.round(loadTime)}ms`);
-        });
+        // === EXPORT GLOBALI ===
+        window.goToUserDashboard = goToUserDashboard;
+        window.handleLogout = handleLogout;
+
+        console.log('🚀 MyApp Homepage - Ready (No Auto-Redirect)');
     </script>
+
 </body>
 </html>
