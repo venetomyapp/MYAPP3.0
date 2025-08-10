@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Area Riservata Dirigenti</title>
 
-  <!-- Font -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Tailwind (ok per test; in prod builda con CLI/PostCSS) -->
+  <!-- Tailwind (ok per test; in produzione builda con CLI/PostCSS) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -58,7 +58,6 @@
     .btn-secondary:hover{background:#fff;transform:translateY(-2px);box-shadow:0 10px 25px rgba(0,0,0,.15)}
     .spinner{border:3px solid rgba(255,215,0,.3);border-radius:50%;border-top:3px solid #ffd700;width:24px;height:24px;animation:spin 1s linear infinite;display:inline-block;margin-right:.5rem}
     @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
-    /* Overlays sessione */
     #session-guard,#session-required{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(10,10,35,.6);backdrop-filter:blur(6px);z-index:2000;color:#fff;font-weight:800}
     #session-guard.active,#session-required.active{display:flex}
   </style>
@@ -85,13 +84,13 @@
     </div>
   </div>
 
-  <!-- Back Button -->
+  <!-- Home Button -->
   <div class="absolute top-6 left-6 z-10">
-    <a href="javascript:history.length>1?history.back():'home.html'" class="flex items-center gap-3 text-ultra-visible hover:text-gold transition-all duration-300 transform hover:scale-110 group" aria-label="Indietro">
+    <a href="home.html" class="flex items-center gap-3 text-ultra-visible hover:text-gold transition-all duration-300 transform hover:scale-110 group" aria-label="Vai alla Home">
       <svg class="w-8 h-8 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M3 12l9-9 9 9M4 10v10h6v-6h4v6h6V10"></path>
       </svg>
-      <span class="text-lg font-bold">Indietro</span>
+      <span class="text-lg font-bold">Home</span>
     </a>
   </div>
 
@@ -108,7 +107,7 @@
       </p>
     </div>
 
-    <!-- ========== 1) Azioni Personali ========== -->
+    <!-- 1) Azioni Personali -->
     <section class="glass-card p-6 md:p-8 mb-8 fade-in" aria-labelledby="azioni-title">
       <h2 id="azioni-title" class="section-title text-primary mb-8 text-center">
         <span class="mr-3 text-3xl">🧭</span>Azioni Personali
@@ -119,13 +118,11 @@
           <h4 class="font-bold text-ultra-visible text-lg mb-2">Richiedi Rimborso</h4>
           <p class="text-ultra-visible opacity-80 text-sm">Compila il modulo per richieste di rimborso spese</p>
         </a>
-
         <a class="function-card" href="https://form.jotform.com/243262801203343" target="_blank" rel="noopener noreferrer" aria-label="Richiedi Permesso">
           <div class="text-4xl mb-3">📝</div>
           <h4 class="font-bold text-ultra-visible text-lg mb-2">Richiedi Permesso</h4>
           <p class="text-ultra-visible opacity-80 text-sm">Inoltra richiesta di permesso sindacale</p>
         </a>
-
         <a class="function-card" href="https://www.carabinierinsc.it/webmail/?_task=mail&_mbox=INBOX#" target="_blank" rel="noopener noreferrer" aria-label="Casella di Posta">
           <div class="text-4xl mb-3">📧</div>
           <h4 class="font-bold text-ultra-visible text-lg mb-2">Casella di Posta</h4>
@@ -134,7 +131,7 @@
       </div>
     </section>
 
-    <!-- ========== 2) I Tuoi Dati dirigenziali ========== -->
+    <!-- 2) I Tuoi Dati dirigenziali -->
     <section class="glass-card p-6 md:p-8 mb-8 fade-in" aria-labelledby="dati-title">
       <h2 id="dati-title" class="section-title text-primary mb-8 text-center">
         <span class="mr-3 text-3xl">🪪</span>I Tuoi Dati dirigenziali
@@ -167,7 +164,7 @@
       </div>
     </section>
 
-    <!-- ========== 3) Panoramica di sistema ========== -->
+    <!-- 3) Panoramica -->
     <section class="glass-card p-6 md:p-8 mb-8 fade-in" aria-labelledby="panoramica-title">
       <h2 id="panoramica-title" class="section-title text-primary mb-8 text-center">
         <span class="mr-3 text-3xl">📈</span>Panoramica di sistema
@@ -197,7 +194,7 @@
       </div>
     </section>
 
-    <!-- ========== 4) Area Amministrativa dirigenziale ========== -->
+    <!-- 4) Area Amministrativa dirigenziale -->
     <section class="glass-card p-6 md:p-8 mb-8 fade-in" aria-labelledby="area-admin-title">
       <h2 id="area-admin-title" class="section-title text-primary mb-8 text-center">
         <span class="mr-3 text-3xl">🏗️</span>Area Amministrativa dirigenziale
@@ -224,7 +221,7 @@
       </div>
     </section>
 
-    <!-- ========== 5) Ultime Notizie ========== -->
+    <!-- 5) Ultime Notizie -->
     <section class="glass-card p-6 md:p-8 mb-8 fade-in" aria-labelledby="ultime-notizie-title">
       <h2 id="ultime-notizie-title" class="section-title text-primary mb-8 text-center">
         <span class="mr-3 text-3xl">🗞️</span>Ultime Notizie
@@ -238,7 +235,7 @@
       </div>
     </section>
 
-    <!-- ========== 6) Convenzioni in evidenza ========== -->
+    <!-- 6) Convenzioni in evidenza -->
     <section class="glass-card p-6 md:p-8 mb-8 fade-in" aria-labelledby="conv-evidenza-title">
       <h2 id="conv-evidenza-title" class="section-title text-primary mb-8 text-center">
         <span class="mr-3 text-3xl">🤝</span>Convenzioni in evidenza
@@ -269,14 +266,13 @@
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    // 👇 STESSO PROGETTO DEL TUO LOGIN
+    // tuo progetto
     const supabase = createClient(
       'https://pvzdilkozpspsnepedqc.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk',
       { auth: { persistSession:true, autoRefreshToken:true, detectSessionInUrl:true } }
     );
 
-    // ===== Utils
     const fmtDate = (iso) => { try { return iso ? new Intl.DateTimeFormat('it-IT',{dateStyle:'long'}).format(new Date(iso)) : '—'; } catch { return '—'; } };
     const escapeHTML = (s) => String(s ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;");
     const sessionGuard = {
@@ -285,6 +281,9 @@
       require(){ document.getElementById('session-required')?.classList.add('active') },
       clearRequire(){ document.getElementById('session-required')?.classList.remove('active') },
     };
+
+    let currentUser=null;
+    let currentRole='USER';
 
     async function ensureUser(timeoutMs=6000){
       sessionGuard.show();
@@ -301,33 +300,22 @@
       } finally { sessionGuard.hide(); }
     }
 
-    // ===== Stato
-    let currentUser=null;
-    let currentRole='USER';
-
-    // ===== Init
     async function init(){
-      try{
-        const u = await ensureUser();
-        if(!u){
-          sessionGuard.require();
-          document.getElementById('btnRetry').onclick = async ()=>{ sessionGuard.clearRequire(); init(); };
-          return;
-        }
-        currentUser = u;
-
-        await loadUserProfile();     // nome/email/ruolo + gate
-        await loadIscrittoDal();     // tessere.data_emissione
-        await loadSystemOverview();  // counts
-        await loadLatestNews();      // news collegate
-        await loadFeaturedConvenzioni(); // convenzioni in evidenza
-      }catch(e){
-        console.error('Errore init:', e);
+      const u = await ensureUser();
+      if(!u){
         sessionGuard.require();
+        document.getElementById('btnRetry').onclick = async ()=>{ sessionGuard.clearRequire(); init(); };
+        return;
       }
+      currentUser = u;
+
+      await loadUserProfile();
+      await loadIscrittoDal();
+      await loadSystemOverview();
+      await loadLatestNews();
+      await loadFeaturedConvenzioni();
     }
 
-    // ===== Profile & Ruolo (user_profiles)
     async function loadUserProfile(){
       let nome='Dirigente', email='—', ruoloDb='USER';
       try{
@@ -364,21 +352,15 @@
       }
     }
 
-    // ===== "Iscritto dal" (tessere.data_emissione)
     async function loadIscrittoDal(){
       try{
-        const uid=currentUser?.id;
-        if(!uid){ document.getElementById('iscrittoDal').textContent='—'; return; }
-
         const { data, error } = await supabase
           .from('tessere')
           .select('data_emissione')
-          .eq('user_id', uid)
+          .eq('user_id', currentUser.id)
           .order('data_emissione',{ ascending:true })
           .limit(1);
-
-        if(error) throw error;
-
+        if (error) throw error;
         const de = data && data[0]?.data_emissione;
         document.getElementById('iscrittoDal').textContent = de ? fmtDate(de) : 'Non disponibile';
       }catch(e){
@@ -387,22 +369,18 @@
       }
     }
 
-    // ===== Panoramica counts (news & in evidenza)
     async function loadSystemOverview(){
       try{
         const nowIso = new Date().toISOString();
 
         const { count: totalNews } = await supabase
-          .from('news')
-          .select('id',{ count:'exact', head:true })
+          .from('news').select('id',{ count:'exact', head:true })
           .eq('pubblicata', true)
           .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
 
         const { count: featuredCount } = await supabase
-          .from('news')
-          .select('id',{ count:'exact', head:true })
-          .eq('pubblicata', true)
-          .eq('in_evidenza', true)
+          .from('news').select('id',{ count:'exact', head:true })
+          .eq('pubblicata', true).eq('in_evidenza', true)
           .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
 
         document.getElementById('newsCount').textContent = Number.isFinite(totalNews) ? totalNews : '—';
@@ -413,7 +391,7 @@
       }
     }
 
-    // ===== Ultime Notizie (tabella "news")
+    // == NEWS: query principale + fallback senza filtri ==
     async function loadLatestNews(){
       const wrap=document.getElementById('latestNews');
       const empty=document.getElementById('newsEmptyState');
@@ -424,17 +402,29 @@
 
       try{
         const nowIso = new Date().toISOString();
-        const { data: news, error } = await supabase
+
+        // 1) only pubblicate e non scadute
+        let { data: news, error } = await supabase
           .from('news')
-          .select('id,titolo,sottotitolo,immagine_url,categoria,data_pubblicazione,in_evidenza')
+          .select('id,titolo,sottotitolo,immagine_url,categoria,data_pubblicazione,in_evidenza,pubblicata')
           .eq('pubblicata', true)
           .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`)
           .order('in_evidenza',{ ascending:false })
           .order('data_pubblicazione',{ ascending:false })
           .limit(6);
-        if(error) throw error;
 
-        if(!news || !news.length){
+        // 2) Fallback: se 0 righe, mostra comunque le ultime (aiuta se pubblicata è NULL/false)
+        if ((!news || news.length===0) && !error){
+          console.warn('[NEWS] Nessuna news pubblicata/non scaduta. Fallback: ultime inserite senza filtri.');
+          const r2 = await supabase
+            .from('news')
+            .select('id,titolo,sottotitolo,immagine_url,categoria,data_pubblicazione,in_evidenza,pubblicata')
+            .order('created_at',{ ascending:false })
+            .limit(6);
+          news = r2.data || [];
+        }
+
+        if(!news || news.length===0){
           wrap.innerHTML=''; empty.classList.remove('hidden'); return;
         }
         empty.classList.add('hidden');
@@ -448,6 +438,7 @@
               ${n.immagine_url ? `<img src="${escapeHTML(n.immagine_url)}" alt="" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300">` : `<div class="w-full h-full flex items-center justify-center text-4xl">📰</div>`}
               <div class="absolute top-2 left-2"><span class="badge">${escapeHTML(n.categoria||'GENERALE')}</span></div>
               ${n.in_evidenza ? `<div class="absolute top-2 right-2"><span class="badge">⭐ In evidenza</span></div>` : ``}
+              ${n.pubblicata ? `` : `<div class="absolute bottom-2 right-2"><span class="badge">Bozza</span></div>`}
             </div>
             <div class="p-5">
               <h3 class="font-extrabold text-primary text-lg leading-snug mb-1">${escapeHTML(n.titolo)}</h3>
@@ -470,12 +461,10 @@
       }
     }
 
-    // ===== Convenzioni in evidenza (fallback su "attiva=true")
     async function loadFeaturedConvenzioni(){
       const wrap=document.getElementById('featuredConvenzioni');
       const empty=document.getElementById('convEmptyState');
       try{
-        // 1) prova in_evidenza
         let data=null;
         try{
           const r = await supabase.from('convenzioni')
@@ -484,8 +473,6 @@
             .limit(6);
           data=r.data;
         }catch{}
-
-        // 2) fallback attiva
         if (!data || !data.length){
           const r2 = await supabase.from('convenzioni')
             .select('id,nome_azienda,descrizione,logo_url,immagine_url,link_esterno,attiva')
@@ -493,7 +480,6 @@
             .limit(6);
           data=r2.data;
         }
-
         if(!data || !data.length){ empty.classList.remove('hidden'); return; }
         empty.classList.add('hidden');
         wrap.innerHTML='';
@@ -518,7 +504,7 @@
       }
     }
 
-    // Start
+    // avvio
     init();
   </script>
 </body>
