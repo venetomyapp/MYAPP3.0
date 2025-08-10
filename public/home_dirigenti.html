@@ -1,1393 +1,930 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard Dirigenti - MyApp</title>
-
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Supabase JS v2 -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#1e293b',
-            secondary: '#334155',
-            accent: '#475569',
-            aurora: '#3b82f6',
-            executive: '#1d4ed8',
-            success: '#059669',
-            warning: '#d97706',
-            danger: '#dc2626',
-            dark: '#0f172a',
-            light: '#f8fafc',
-            textDark: '#1e293b',
-            backgroundLight: '#f1f5f9',
-            gold: '#f59e0b',
-            platinum: '#e5e7eb',
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Area Riservata Dirigenti</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#1a1a2e',
+                        secondary: '#16213e',
+                        accent: '#0f3460',
+                        aurora: '#e94560',
+                        cyan: '#00d4ff',
+                        magenta: '#ff006e',
+                        gold: '#ffd700',
+                        teal: '#03dac6',
+                        dark: '#0a0a23',
+                        light: '#f8fafc',
+                        success: '#10b981'
+                    }
+                }
+            }
         }
-      }
-    }
-  </script>
+    </script>
+    
+    <style>
+        :root {
+            --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
+            --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
+            --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
+            --gradient-gold: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+            --gradient-teal: linear-gradient(135deg, #03dac6 0%, #00d4ff 100%);
+        }
 
-  <style>
-    :root{
-      --gradient-professional: linear-gradient(135deg,#1e293b 0%,#334155 50%,#3b82f6 100%);
-      --gradient-executive: linear-gradient(135deg,#1d4ed8 0%,#2563eb 100%);
-      --gradient-gold: linear-gradient(135deg,#f59e0b 0%,#d97706 100%);
-      --shadow-professional: 0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);
-    }
-    body{ background:var(--gradient-professional); background-attachment:fixed; min-height:100vh; }
-    .glass-header{ background:rgba(30,41,59,.95); backdrop-filter:blur(10px); border-bottom:1px solid rgba(59,130,246,.2); }
-    .glass-card{ background:rgba(255,255,255,.98); backdrop-filter:blur(8px); border:1px solid rgba(229,231,235,.8); }
-    .glass-morphism{ background:rgba(255,255,255,.08); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,.18); box-shadow:0 8px 32px 0 rgba(31,38,135,.37);}
-    .action-card{ background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.04)); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.12); border-radius:16px; transition:all .3s ease; cursor:pointer; position:relative;}
-    .action-card:hover{ transform:translateY(-4px); box-shadow:0 12px 24px rgba(0,0,0,.2); border-color:rgba(59,130,246,.3); background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.06)); }
-    .stat-card{ background:#fff; border:1px solid #e2e8f0; border-radius:12px; transition:all .2s ease; }
-    .stat-card:hover{ border-color:#3b82f6; box-shadow:0 4px 12px rgba(59,130,246,.15); }
-    .stat-card-executive{ background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(245,158,11,.05)); backdrop-filter:blur(15px); border:1px solid rgba(245,158,11,.2); border-radius:20px; transition:all .3s ease;}
-    .stat-card-executive:hover{ transform:translateY(-3px) scale(1.05); background:linear-gradient(135deg,rgba(245,158,11,.25),rgba(245,158,11,.15)); box-shadow:0 15px 30px rgba(245,158,11,.2);}
-    .btn-outline{ background:transparent; color:#3b82f6; border:2px solid #3b82f6; font-weight:600;}
-    .btn-outline:hover{ background:#3b82f6; color:#fff;}
-    .priority-alta{ background:#dc2626; } .priority-normale{ background:#3b82f6; } .priority-bassa{ background:#059669; }
-    .priority-indicator{ width:8px; height:8px; border-radius:50%; display:inline-block; }
-    .text-ultra-visible{ color:#fff; text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1); font-weight:800;}
-    .hero-title{ font-size:clamp(2.5rem,8vw,4rem); font-weight:900; }
-    .section-title{ font-size:clamp(1.8rem,6vw,2.5rem); font-weight:900; }
-    .loading-skeleton{ background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; border-radius:8px;}
-    @keyframes shimmer{0%{background-position:-200% 0;}100%{background-position:200% 0;}}
-    .alert{ padding:1rem; border-radius:8px; margin:1rem 0; border:1px solid; position:fixed; top:1rem; right:1rem; z-index:50; max-width:22rem; }
-    .alert-success{ background:#d1fae5; border-color:#059669; color:#047857;}
-    .alert-error{ background:#fee2e2; border-color:#dc2626; color:#b91c1c;}
-    .alert-warning{ background:#fef3c7; border-color:#d97706; color:#b45309;}
-    .alert-info{ background:#dbeafe; border-color:#3b82f6; color:#1d4ed8;}
-    .modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.5); display:flex; align-items:center; justify-content:center; z-index:1000; opacity:0; visibility:hidden; transition:all .3s;}
-    .modal-overlay.show{ opacity:1; visibility:visible;}
-    .modal-content{ background:#fff; border-radius:12px; max-width:90vw; max-height:90vh; overflow-y:auto; transform:scale(.7); transition:transform .3s;}
-    .modal-overlay.show .modal-content{ transform:scale(1); }
-    .notification-dropdown{ display:none; position:absolute; top:100%; right:0; background:#fff; border:1px solid #e2e8f0; border-radius:12px; box-shadow:0 20px 25px -5px rgba(0,0,0,.1); width:350px; max-height:400px; overflow-y:auto; z-index:1000; }
-    .notification-dropdown.show{ display:block; }
-    .notification-badge{ background:#dc2626; color:#fff; border-radius:50%; width:18px; height:18px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; }
-    .line-clamp-2{ display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
-  </style>
+        * { font-family: 'Inter', sans-serif; }
+
+        body {
+            background: var(--gradient-aurora);
+            background-size: 400% 400%;
+            animation: aurora 15s ease infinite;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+        }
+
+        @keyframes aurora {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in { animation: fade-in 0.6s ease-out forwards; }
+        .text-ultra-visible {
+            color: #ffffff;
+            text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
+            font-weight: 800;
+        }
+        .hero-title { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 900; line-height: 1.1; }
+        .section-title { font-size: clamp(1.5rem, 5vw, 2.25rem); font-weight: 900; line-height: 1.2; }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 215, 0, 0.15);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.12);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ffd700, #e94560, #00d4ff, #03dac6);
+        }
+        .glass-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.15);
+            border-color: rgba(255, 215, 0, 0.25);
+        }
+
+        .admin-card {
+            background: linear-gradient(145deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            backdrop-filter: blur(16px);
+            border: 2px solid rgba(255, 215, 0, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .admin-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--gradient-gold);
+        }
+
+        .function-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(16px);
+            border: 3px solid rgba(255, 255, 255, 0.4);
+            border-radius: 18px;
+            padding: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            text-align: center;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                        0 0 0 1px rgba(255, 215, 0, 0.1);
+            position: relative;
+            text-decoration: none;
+            color: inherit;
+        }
+        .function-card::before {
+            content: '';
+            position: absolute; inset: 0; border-radius: 15px; padding: 2px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(233, 69, 96, 0.3), rgba(0, 212, 255, 0.3));
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: xor; -webkit-mask-composite: xor; pointer-events: none;
+        }
+        .function-card:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-6px) scale(1.03);
+            border-color: rgba(255, 215, 0, 0.6);
+            box-shadow: 0 25px 50px rgba(255, 215, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                        0 0 0 2px rgba(255, 215, 0, 0.3);
+        }
+
+        .role-badge { display:inline-block; padding:0.25rem 0.75rem; border-radius:20px; font-size:0.75rem; font-weight:700; margin:0.125rem; }
+        .role-badge.admin { background: var(--gradient-gold); color:#1a1a2e; }
+        .role-badge.dirigente { background: var(--gradient-magic); color:#fff; }
+        .role-badge.user { background: linear-gradient(135deg, #6b7280, #4b5563); color:#fff; }
+
+        /* Piccolo badge per categorie/tag nelle card notizie */
+        .badge {
+            display:inline-block; 
+            padding: .25rem .6rem; 
+            border-radius: 9999px; 
+            font-size:.70rem; 
+            font-weight:800; 
+            color:#fff;
+            background: rgba(0,0,0,.65);
+            border: 1px solid rgba(255,255,255,.25);
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-aurora{ background: var(--gradient-magic); color:#fff; border:2px solid rgba(233,69,96,.3); transition: all .4s cubic-bezier(.4,0,.2,1); min-height:44px; font-weight:700; border-radius:12px; padding:.75rem 1.5rem; text-decoration:none; display:inline-block}
+        .btn-aurora:hover{ transform: translateY(-3px) scale(1.05); box-shadow:0 15px 35px rgba(233,69,96,.4); border-color: rgba(233,69,96,.6); }
+        .btn-secondary{ background: rgba(255,255,255,.9); color:#1a1a2e; border:2px solid rgba(255,255,255,.8); transition:.3s; min-height:44px; font-weight:700; border-radius:12px; padding:.75rem 1.5rem; text-decoration:none; display:inline-block}
+        .btn-secondary:hover{ background:#fff; transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,.15); }
+
+        .user-row { background: rgba(255,255,255,0.95); border:1px solid rgba(255,215,0,0.2); border-radius:12px; padding:1rem; margin-bottom:0.75rem; transition:.3s }
+        .user-row:hover { background:#fff; border-color: rgba(255,215,0,0.3); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255,215,0,0.1); }
+
+        .modal { display:none; position:fixed; inset:0; background: rgba(0,0,0,.7); backdrop-filter: blur(8px); z-index:1000; }
+        .modal.active { display:flex; align-items:center; justify-content:center; }
+        .modal-content { background: rgba(255,255,255,.95); backdrop-filter: blur(20px); border-radius:20px; padding:2rem; max-width:500px; width:90%; max-height:85vh; overflow-y:auto; border:2px solid rgba(255,215,0,.2); box-shadow: 0 25px 50px rgba(0,0,0,.25); }
+
+        .spinner { border:3px solid rgba(255,215,0,.3); border-radius:50%; border-top:3px solid #ffd700; width:24px; height:24px; animation: spin 1s linear infinite; display:inline-block; margin-right:.5rem }
+        @keyframes spin { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
+    </style>
 </head>
-<body class="min-h-screen font-sans bg-gray-50">
+<body class="font-inter">
 
-  <!-- HEADER -->
-  <header class="glass-header sticky top-0 z-40">
-    <div class="container mx-auto px-6 py-4">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <div class="w-12 h-12 bg-gradient-to-br from-gold to-warning rounded-xl flex items-center justify-center">
-            <span class="text-white font-bold text-xl">👑</span>
-          </div>
-          <div>
-            <span class="text-white text-xl font-bold">MyApp</span>
-            <div class="text-blue-200 text-sm flex items-center gap-2">
-              <span class="w-2 h-2 bg-gold rounded-full animate-pulse"></span>
-              Dashboard Dirigenti
-            </div>
-          </div>
-        </div>
-
-        <div class="flex items-center space-x-6">
-          <!-- Notifiche -->
-          <div class="relative">
-            <button id="notificationBtn" class="text-white hover:text-blue-200 transition-colors p-2 rounded-lg hover:bg-white/10" aria-label="Apri notifiche">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2 2 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-              </svg>
-            </button>
-            <span id="notificationBadge" class="notification-badge absolute -top-1 -right-1 hidden">0</span>
-
-            <div id="notificationDropdown" class="notification-dropdown">
-              <div class="p-4 border-b border-gray-200">
-                <div class="flex justify-between items-center">
-                  <h3 class="font-semibold text-gray-900">Notifiche</h3>
-                  <button id="markAllRead" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Segna tutte lette</button>
-                </div>
-              </div>
-              <div id="notificationList" class="p-2"></div>
-            </div>
-          </div>
-
-          <!-- Profilo -->
-          <div class="flex items-center space-x-3">
-            <div class="text-white text-right">
-              <div id="userWelcome" class="font-medium text-sm">Caricamento...</div>
-              <div id="userRole" class="text-xs text-blue-200">Dirigente</div>
-            </div>
-            <div id="userAvatar" class="w-8 h-8 bg-gradient-to-br from-gold to-warning rounded-full flex items-center justify-center text-white font-semibold text-sm">D</div>
-          </div>
-
-          <!-- Logout -->
-          <button id="logoutBtn" class="px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 text-white border-white/20 hover:bg-white/10" aria-label="Esci">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+    <!-- Back Button -->
+    <div class="absolute top-6 left-6 z-10">
+        <a href="javascript:history.length>1?history.back():'home.html'" class="flex items-center gap-3 text-ultra-visible hover:text-gold transition-all duration-300 transform hover:scale-110 group" aria-label="Indietro">
+            <svg class="w-8 h-8 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path>
             </svg>
-            Esci
-          </button>
-        </div>
-      </div>
+            <span class="text-lg font-bold">Indietro</span>
+        </a>
     </div>
-  </header>
 
-  <!-- MAIN -->
-  <main class="container mx-auto px-6 py-8">
-    <!-- Hero -->
-    <section class="mb-8">
-      <div class="glass-morphism rounded-3xl p-8 md:p-12 relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-gold/20 to-warning/20 rounded-full blur-xl"></div>
-        <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-aurora/20 to-success/20 rounded-full blur-lg"></div>
+    <main class="min-h-screen px-4 py-8 max-w-6xl mx-auto">
 
-        <div class="flex flex-col lg:flex-row items-center justify-between gap-8 relative z-10">
-          <div class="flex-grow text-center lg:text-left">
+        <!-- Hero Section -->
+        <div class="text-center mb-12 fade-in">
+            <div class="w-24 h-24 bg-gradient-to-br from-gold to-aurora rounded-full mx-auto mb-8 flex items-center justify-center shadow-2xl">
+                <span class="text-4xl text-white">🏛️</span>
+            </div>
+            <h1 class="hero-title text-ultra-visible mb-6">Area Riservata Dirigenti</h1>
+            <p class="text-xl text-ultra-visible opacity-90 max-w-3xl mx-auto font-semibold">
+                Accesso esclusivo alle funzioni direzionali e amministrative
+            </p>
+        </div>
+
+        <!-- ===================== 1) Azioni Personali ===================== -->
+        <section class="glass-card p-6 md:p-8 mb-8 fade-in" aria-labelledby="azioni-title">
+            <h2 id="azioni-title" class="section-title text-primary mb-8 text-center">
+                <span class="mr-3 text-3xl">🧭</span>Azioni Personali
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <a class="function-card" href="https://form.jotform.com/243226223182044" target="_blank" rel="noopener noreferrer" aria-label="Richiedi Rimborso">
+                    <div class="text-4xl mb-3">💰</div>
+                    <h4 class="font-bold text-ultra-visible text-lg mb-2">Richiedi Rimborso</h4>
+                    <p class="text-ultra-visible opacity-80 text-sm">Compila il modulo per richieste di rimborso spese</p>
+                </a>
+
+                <a class="function-card" href="https://form.jotform.com/243262801203343" target="_blank" rel="noopener noreferrer" aria-label="Richiedi Permesso">
+                    <div class="text-4xl mb-3">📝</div>
+                    <h4 class="font-bold text-ultra-visible text-lg mb-2">Richiedi Permesso</h4>
+                    <p class="text-ultra-visible opacity-80 text-sm">Inoltra richiesta di permesso sindacale</p>
+                </a>
+
+                <a class="function-card" href="https://eu.jotform.com/tables/243226223182044?st=UGpyTWZFR0lXeUlKclRSWFpURFNEWEk5TklTZ2RSWithczc5UzJ3ajVKVDRrenVEWlIxdzJaVDduV1I0ZjVVM21BM1NzQlNmOEZ2cFNxQ3hIczlkK2JWL2w2a0grU1FSa0NrVGl2WmZCcGNsTlkvZlZ1V2FKUUNkdUdJL0d1YXA=" target="_blank" rel="noopener noreferrer" aria-label="Tabella Rendiconto">
+                    <div class="text-4xl mb-3">📊</div>
+                    <h4 class="font-bold text-ultra-visible text-lg mb-2">Tabella Rendiconto</h4>
+                    <p class="text-ultra-visible opacity-80 text-sm">Visualizza i dati di rendiconto</p>
+                </a>
+
+                <a class="function-card" href="https://eu.jotform.com/tables/243262801203343" target="_blank" rel="noopener noreferrer" aria-label="Tabella Permessi">
+                    <div class="text-4xl mb-3">📅</div>
+                    <h4 class="font-bold text-ultra-visible text-lg mb-2">Tabella Permessi</h4>
+                    <p class="text-ultra-visible opacity-80 text-sm">Gestisci permessi sindacali</p>
+                </a>
+
+                <a class="function-card" href="https://mega.nz/#fm/b3ojlZgY" target="_blank" rel="noopener noreferrer" aria-label="Accesso Cloud">
+                    <div class="text-4xl mb-3">☁️</div>
+                    <h4 class="font-bold text-ultra-visible text-lg mb-2">Accesso Cloud</h4>
+                    <p class="text-ultra-visible opacity-80 text-sm">Repository documenti</p>
+                </a>
+
+                <a class="function-card" href="https://www.carabinierinsc.it/webmail/?_task=mail&_mbox=INBOX#" target="_blank" rel="noopener noreferrer" aria-label="Casella di Posta">
+                    <div class="text-4xl mb-3">📧</div>
+                    <h4 class="font-bold text-ultra-visible text-lg mb-2">Casella di Posta</h4>
+                    <p class="text-ultra-visible opacity-80 text-sm">Accedi alla webmail</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- ===================== 2) I Tuoi Dati dirigenziali ===================== -->
+        <section class="glass-card p-6 md:p-8 mb-8 fade-in" aria-labelledby="dati-title">
+            <h2 id="dati-title" class="section-title text-primary mb-8 text-center">
+                <span class="mr-3 text-3xl">🪪</span>I Tuoi Dati dirigenziali
+            </h2>
+
+            <div class="flex items-center justify-center gap-4 mb-4">
+                <div class="w-16 h-16 bg-gradient-to-br from-gold to-aurora rounded-full flex items-center justify-center shadow-lg">
+                    <span class="text-2xl text-white" id="userIcon">👤</span>
+                </div>
+                <div class="text-left">
+                    <h3 class="text-2xl font-bold text-primary" id="userName">Caricamento...</h3>
+                    <div id="userRoles" class="mt-2"></div>
+                    <p class="text-gray-600 font-semibold" id="userEmail">—</p>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap gap-3 mt-4">
+                <span class="inline-flex items-center gap-2 badge bg-white px-3 py-1 rounded-full border">
+                    📅 Iscritto dal: <strong id="iscrittoDal" class="ml-1">—</strong>
+                </span>
+                <span class="inline-flex items-center gap-2 badge bg-white px-3 py-1 rounded-full border">
+                    🔐 Accesso: <strong id="accessLevel" class="ml-1">Verificando privilegi...</strong>
+                </span>
+            </div>
+        </section>
+
+        <!-- ===================== 3) Panoramica di sistema ===================== -->
+        <section class="glass-card p-6 md:p-8 mb-8 fade-in" aria-labelledby="panoramica-title">
+            <h2 id="panoramica-title" class="section-title text-primary mb-8 text-center">
+                <span class="mr-3 text-3xl">📈</span>Panoramica di sistema
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="p-5 rounded-2xl border border-yellow-200/40 bg-white/90 shadow">
+                    <div class="text-2xl mb-2">📰</div>
+                    <div class="text-sm text-gray-500">News pubblicate</div>
+                    <div id="newsCount" class="text-3xl font-extrabold text-primary mt-1">—</div>
+                </div>
+                <div class="p-5 rounded-2xl border border-yellow-200/40 bg-white/90 shadow">
+                    <div class="text-2xl mb-2">⭐</div>
+                    <div class="text-sm text-gray-500">News in evidenza</div>
+                    <div id="featuredNewsCount" class="text-3xl font-extrabold text-primary mt-1">—</div>
+                </div>
+                <div class="p-5 rounded-2xl border border-yellow-200/40 bg-white/90 shadow">
+                    <div class="text-2xl mb-2">🛡️</div>
+                    <div class="text-sm text-gray-500">Ruoli attivi</div>
+                    <div id="rolesSummary" class="text-lg font-bold text-primary mt-1">—</div>
+                </div>
+                <div class="p-5 rounded-2xl border border-yellow-200/40 bg-white/90 shadow">
+                    <div class="text-2xl mb-2">⚙️</div>
+                    <div class="text-sm text-gray-500">Stato</div>
+                    <div class="text-lg font-bold text-success mt-1">Attivo</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 4) Area Amministrativa dirigenziale ===================== -->
+        <section class="glass-card p-6 md:p-8 mb-8 fade-in" aria-labelledby="area-admin-title">
+            <h2 id="area-admin-title" class="section-title text-primary mb-8 text-center">
+                <span class="mr-3 text-3xl">🏗️</span>Area Amministrativa dirigenziale
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <a href="areadirigenti.html" class="function-card" aria-label="Area Dirigenti">
+                    <div class="text-4xl mb-2">🧭</div>
+                    <div class="font-bold text-ultra-visible text-lg mb-1">Area Dirigenti</div>
+                    <p class="text-ultra-visible opacity-80 text-sm">Vai all'area operativa per dirigenti</p>
+                </a>
+
+                <a href="gestione-convenzioni.html" class="function-card" aria-label="Gestione Convenzioni">
+                    <div class="text-4xl mb-2">🏷️</div>
+                    <div class="font-bold text-ultra-visible text-lg mb-1">Gestione Convenzioni</div>
+                    <p class="text-ultra-visible opacity-80 text-sm">Crea e gestisci partnership</p>
+                </a>
+
+                <a href="gestione-notizie.html" class="function-card" aria-label="Gestione Notizie">
+                    <div class="text-4xl mb-2">📰</div>
+                    <div class="font-bold text-ultra-visible text-lg mb-1">Gestione Notizie</div>
+                    <p class="text-ultra-visible opacity-80 text-sm">Pubblica e modifica comunicazioni</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- ===================== 5) Ultime Notizie ===================== -->
+        <section class="glass-card p-6 md:p-8 mb-8 fade-in" aria-labelledby="ultime-notizie-title">
+            <h2 id="ultime-notizie-title" class="section-title text-primary mb-8 text-center">
+                <span class="mr-3 text-3xl">🗞️</span>Ultime Notizie
+            </h2>
+
+            <div id="latestNews" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+            <div id="newsEmptyState" class="hidden text-center py-10">
+                <div class="text-5xl mb-4">🪧</div>
+                <p class="text-gray-700 font-semibold">Nessuna notizia pubblicata al momento</p>
+            </div>
+        </section>
+
+        <!-- ===================== 6) Convenzioni in evidenza ===================== -->
+        <section class="glass-card p-6 md:p-8 mb-8 fade-in" aria-labelledby="conv-evidenza-title">
+            <h2 id="conv-evidenza-title" class="section-title text-primary mb-8 text-center">
+                <span class="mr-3 text-3xl">🤝</span>Convenzioni in evidenza
+            </h2>
+
+            <div id="featuredConvenzioni" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+            <div id="convEmptyState" class="text-center py-10">
+                <div class="text-5xl mb-4">🔎</div>
+                <p class="text-gray-700 font-semibold">Al momento non ci sono convenzioni in evidenza.</p>
+                <p class="text-gray-500 mt-1">Gestiscile da <a class="text-aurora font-bold underline" href="gestione-convenzioni.html">Gestione Convenzioni</a>.</p>
+            </div>
+        </section>
+
+        <!-- Gestione Ruoli (Solo ADMIN) -->
+        <div id="adminSection" class="admin-card p-6 md:p-8 mb-8 fade-in" style="display: none;">
+            <h3 class="section-title text-ultra-visible mb-8 text-center">
+                <span class="mr-3 text-3xl">👑</span>
+                Gestione Ruoli Utenti
+                <span class="text-sm font-normal opacity-80 block mt-2">Solo Amministratori</span>
+            </h3>
+            
+            <div class="mb-6 text-center">
+                <button onclick="loadUsers()" class="btn-aurora" id="loadUsersBtn">
+                    <span class="mr-2">🔄</span>
+                    Carica Utenti
+                </button>
+            </div>
+
+            <div id="usersContainer" class="max-h-96 overflow-y-auto"></div>
+        </div>
+
+        <!-- Supporto -->
+        <div class="glass-card p-6 md:p-8 text-center fade-in">
+            <h3 class="section-title text-primary mb-4">Supporto Tecnico</h3>
+            <p class="text-gray-600 text-lg mb-6">Hai bisogno di assistenza con le funzioni dirigenziali?</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="mailto:support@aurora.app" class="btn-aurora">
+                    <span class="mr-2">📧</span>
+                    Contatta Supporto
+                </a>
+                <a href="tel:+390000000000" class="btn-secondary">
+                    <span class="mr-2">📞</span>
+                    Chiamata Urgente
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal Gestione Ruoli -->
+    <div id="rolesModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="rolesModalTitle">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="rolesModalTitle" class="text-xl font-bold text-primary">Modifica Ruoli Utente</h3>
+                <button onclick="closeRolesModal()" class="text-gray-500 hover:text-aurora text-3xl font-bold transition-colors" aria-label="Chiudi">&times;</button>
+            </div>
+            
             <div class="mb-6">
-              <div class="inline-flex items-center gap-3 mb-3">
-                <div class="w-3 h-8 bg-gradient-to-b from-gold to-warning rounded-full"></div>
-                <span class="text-white/80 text-sm font-semibold uppercase tracking-wider">Dashboard Dirigenziale</span>
-              </div>
+                <h4 class="font-bold text-primary mb-2" id="modalUserName">Nome Utente</h4>
+                <p class="text-gray-600 mb-4" id="modalUserEmail">email@example.com</p>
             </div>
 
-            <h1 class="hero-title text-ultra-visible mb-4 leading-tight">
-              Benvenuto,<br/>
-              <span id="userNameDisplay" class="text-white">Dirigente</span>
-            </h1>
+            <form id="rolesForm" class="space-y-4">
+                <input type="hidden" id="modalUserId">
+                
+                <div>
+                    <label class="block text-sm font-bold text-primary mb-2">Ruoli Attuali:</label>
+                    <div class="flex flex-wrap gap-2 mb-4" id="currentRoles"></div>
+                </div>
 
-            <p class="text-white/90 text-lg md:text-xl mb-8 max-w-2xl">
-              Gestione completa del sistema MyApp con accesso alle funzioni dirigenziali e amministrative.
-            </p>
+                <div>
+                    <label class="block text-sm font-bold text-primary mb-2">Seleziona Nuovi Ruoli:</label>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="roles" value="USER" class="mr-2">
+                            <span class="role-badge user">USER</span>
+                            <span class="ml-2 text-sm text-gray-600">Utente base</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="roles" value="DIRIGENTE" class="mr-2">
+                            <span class="role-badge dirigente">DIRIGENTE</span>
+                            <span class="ml-2 text-sm text-gray-600">Accesso area dirigenti</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="roles" value="ADMIN" class="mr-2">
+                            <span class="role-badge admin">ADMIN</span>
+                            <span class="ml-2 text-sm text-gray-600">Amministratore completo</span>
+                        </label>
+                    </div>
+                </div>
 
-            <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
-              <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
-                <div class="w-2 h-2 bg-gold rounded-full animate-pulse"></div>
-                <span class="text-sm font-medium">Accesso Dirigenziale</span>
-              </div>
-              <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                </svg>
-                <span class="text-sm font-medium">Funzioni Avanzate</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex-shrink-0 relative">
-            <div class="w-32 h-32 bg-gradient-to-br from-gold via-warning to-gold rounded-full flex items-center justify-center relative border-4 border-white/20 shadow-2xl">
-              <div class="text-center">
-                <div class="text-4xl mb-1">👑</div>
-                <div class="text-white text-xs font-bold opacity-90">Dirigenti</div>
-              </div>
-            </div>
-          </div>
+                <div class="flex gap-4 pt-4">
+                    <button type="submit" class="flex-1 btn-aurora" id="saveRolesBtn">
+                        <span class="mr-2">💾</span>
+                        Salva Modifiche
+                    </button>
+                    <button type="button" onclick="closeRolesModal()" class="flex-1 btn-secondary">
+                        <span class="mr-2">❌</span>
+                        Annulla
+                    </button>
+                </div>
+            </form>
         </div>
-      </div>
-    </section>
-
-    <!-- Contenuto dinamico -->
-    <div id="dynamic-content"></div>
-  </main>
-
-  <!-- MODAL -->
-  <div id="modalContainer" class="modal-overlay" aria-hidden="true" role="dialog">
-    <div id="modalContent" class="modal-content p-8"></div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer class="glass-header mt-16">
-    <div class="container mx-auto px-6 py-8 text-center text-white">
-      <div class="mb-4"><span class="font-semibold text-lg">MyApp</span> - Dashboard Dirigenti Completa v8.1</div>
-      <div class="flex justify-center items-center space-x-6 text-sm text-blue-200 mb-4">
-        <span>© 2025 MyApp</span><span>•</span><span>Area Dirigenziale Completa</span><span>•</span><span>Powered by Supabase</span>
-      </div>
-      <div class="flex justify-center space-x-2">
-        <div class="w-2 h-2 bg-gold rounded-full animate-pulse"></div>
-        <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style="animation-delay:.2s;"></div>
-        <div class="w-2 h-2 bg-success rounded-full animate-pulse" style="animation-delay:.4s;"></div>
-      </div>
     </div>
-  </footer>
 
-  <!-- JAVASCRIPT -->
-  <script>
-    // ====== CONFIG SUPABASE (solo test: proteggi con RLS!) ======
-    const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
+    <!-- Scripts -->
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+        
+        const supabase = createClient(
+            'https://lycrgzptkdkksukcwrld.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5Y3JnenB0a2Rra3N1a2N3cmxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3ODQyMzAsImV4cCI6MjA2ODM2MDIzMH0.ZJGOXAMC3hKKrnwXHKEa2_Eh7ZpOKeLYvYlYneBiEfk'
+        );
 
-    const PAGE_MAPPING = {
-      'gestione-soci':'gestione-soci.html',
-      'gestione-news':'gestione-news.html',
-      'gestione-convenzioni':'gestione-convenzioni.html',
-      'area-dirigenti':'area-dirigenti.html',
-      'gestione-richieste':'gestione-richieste.html',
-      'statistiche':'statistiche.html',
-      'impostazioni':'impostazioni.html',
-      'backup':'backup.html',
-      'richieste':'richieste.html',
-      'tessera':'tessera.html',
-      'profilo':'profilo.html',
-      'strumenti':'strumenti.html',
-      'dirigenti':'dirigenti.html',
-      'convenzioni':'convenzioni.html',
-      'support':'support.html',
-      'servizi':'servizi.html',
-      'virgilio':'virgilio.html',
-      'home':'home.html',
-      'auth':'auth.html',
-      'news':'news.html'
-    };
+        let currentUser = null;
+        let currentUserRoles = [];
+        let allUsers = [];
+        let editingUserId = null;
 
-    // ====== Stato app ======
-    const AppState = {
-      user:null,
-      profile:null,
-      notifications:[],
-      settings:{ theme:'light', language:'it', autoRefresh:true, refreshInterval:5*60*1000 },
-      setUser(u){ this.user=u; this.saveToStorage(); },
-      setProfile(p){ this.profile=p; this.saveToStorage(); },
-      saveToStorage(){
-        try{ localStorage.setItem('appState', JSON.stringify({settings:this.settings,lastUpdate:Date.now()})); }catch(e){ console.warn('Storage save fail',e); }
-      },
-      loadFromStorage(){
-        try{
-          const saved=localStorage.getItem('appState');
-          if(saved){ const parsed=JSON.parse(saved); this.settings={...this.settings,...parsed.settings};}
-        }catch(e){ console.warn('Storage load fail',e); }
-      }
-    };
-
-    // ====== Helpers di sicurezza / formato ======
-    function escapeHTML(str){
-      if(str===null || str===undefined) return '';
-      return String(str)
-        .replace(/&/g,'&amp;')
-        .replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;')
-        .replace(/"/g,'&quot;')
-        .replace(/'/g,'&#39;');
-    }
-    function sanitizeString(str){ return escapeHTML(str); }
-
-    function sanitizeRequestData(r){
-      return {
-        ...r,
-        titolo: sanitizeString(r?.titolo),
-        descrizione: sanitizeString(r?.descrizione),
-        user_nome: sanitizeString(r?.user_nome),
-        categoria: sanitizeString(r?.categoria),
-        priorita: sanitizeString(r?.priorita),
-        stato: sanitizeString(r?.stato),
-        id: r?.id
-      };
-    }
-
-    function validateRequestData(r){
-      return r && r.id!=null && r.titolo && r.stato;
-    }
-    function validateNewsData(n){
-      return n && n.id!=null && n.titolo && n.pubblicata!==undefined;
-    }
-    function validateConvenzioneData(c){
-      return c && c.id!=null && c.nome_azienda && c.attiva!==undefined;
-    }
-
-    function formatDate(dateString){
-      if(!dateString) return '-';
-      const d = new Date(dateString);
-      if(Number.isNaN(d.getTime())) return '-';
-      return d.toLocaleDateString('it-IT');
-    }
-
-    function formatDateAdvanced(dateString, format='short'){
-      if(!dateString) return '-';
-      const date = new Date(dateString);
-      if(isNaN(date)) return 'Data non valida';
-      const options = {
-        short:{ day:'2-digit', month:'2-digit', year:'numeric' },
-        long:{ weekday:'long', day:'numeric', month:'long', year:'numeric' },
-        time:{ day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }
-      };
-      return date.toLocaleDateString('it-IT', options[format] || options.short);
-    }
-
-    function timeAgo(dateString){
-      if(!dateString) return '';
-      const date = new Date(dateString);
-      const diff = Math.floor((Date.now()-date.getTime())/1000);
-      const units = [
-        ['anno', 'anni', 31536000],
-        ['mese', 'mesi', 2592000],
-        ['settimana', 'settimane', 604800],
-        ['giorno', 'giorni', 86400],
-        ['ora','ore',3600],
-        ['minuto','minuti',60],
-        ['secondo','secondi',1]
-      ];
-      for(const [sing, plur, sec] of units){
-        const val = Math.floor(diff/sec);
-        if(val>=1) return `${val} ${val===1?sing:plur} fa`;
-      }
-      return 'Ora';
-    }
-
-    function formatNumber(num){ return typeof num==='number' ? num.toLocaleString('it-IT') : '0'; }
-
-    function formatFileSize(bytes){
-      if(bytes===0) return '0 Bytes';
-      const k=1024;
-      const sizes=['Bytes','KB','MB','GB','TB','PB'];
-      const i=Math.floor(Math.log(bytes)/Math.log(k));
-      const idx = Math.min(i, sizes.length-1);
-      return parseFloat((bytes/Math.pow(k, idx)).toFixed(2)) + ' ' + sizes[idx];
-    }
-
-    function generateUniqueId(prefix='id'){
-      if(window.crypto && crypto.getRandomValues){
-        const arr=new Uint32Array(2); crypto.getRandomValues(arr);
-        return `${prefix}_${Date.now()}_${arr[0].toString(36)}${arr[1].toString(36)}`;
-      }
-      return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2,11)}`;
-    }
-
-    function isValidEmail(email){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email || ''); }
-    function isValidPhoneNumber(phone){ return /^(\+39\s?)?((3[0-9]{2}\s?\d{6,7})|(0[0-9]{1,3}\s?\d{6,8}))$/.test(String(phone||'').replace(/\s/g,'')); }
-    function truncateText(text, maxLength=100, suffix='...'){ if(!text||text.length<=maxLength) return text||''; return text.substring(0,maxLength).trim()+suffix; }
-    function capitalizeWords(str){ if(!str) return ''; return str.toLowerCase().replace(/\b\w/g, l=>l.toUpperCase()); }
-
-    function getRequestStatusColor(status){
-      const map={ 'RICEVUTA':'bg-blue-500', 'IN_ESAME':'bg-yellow-500','IN_LAVORAZIONE':'bg-orange-500','COMPLETATA':'bg-green-500','CHIUSA':'bg-gray-500','RIFIUTATA':'bg-red-500' };
-      return map[status] || 'bg-gray-500';
-    }
-    function getPriorityColor(priority){
-      const map={ 'ALTA':'priority-alta','NORMALE':'priority-normale','BASSA':'priority-bassa' };
-      return map[priority] || 'priority-normale';
-    }
-    function getStatusText(status){
-      const map={ 'RICEVUTA':'Ricevuta','IN_ESAME':'In Esame','IN_LAVORAZIONE':'In Lavorazione','COMPLETATA':'Completata','CHIUSA':'Chiusa','RIFIUTATA':'Rifiutata' };
-      return map[status] || status || '-';
-    }
-    function getStatusLabel(status){ const map={ 'ATTIVO':'Attivo','SOSPESO':'Sospeso','INATTIVO':'Inattivo' }; return map[status] || status || '-'; }
-    function updateElement(id, content){ const el=document.getElementById(id); if(el) el.textContent = content; }
-
-    // ====== Messaggi ======
-    function showAlert(message, type='info'){
-      const existing = document.querySelectorAll('.alert'); existing.forEach(a=>a.remove());
-      const el = document.createElement('div');
-      el.className = `alert alert-${type}`;
-      el.innerHTML = `<div class="flex items-center justify-between"><span>${escapeHTML(message)}</span><button aria-label="Chiudi" class="ml-4 text-lg font-bold">×</button></div>`;
-      el.querySelector('button').addEventListener('click',()=>el.remove());
-      document.body.appendChild(el);
-      setTimeout(()=>{ if(el.parentNode) el.remove(); }, 5000);
-    }
-    const showErrorMessage = (m)=>showAlert(m,'error');
-    const showSuccessMessage = (m)=>showAlert(m,'success');
-
-    // ====== Error Handling ======
-    class ErrorHandler{
-      static errors=[]; static maxErrors=50;
-      static log(error, context={}){
-        const entry={ id:generateUniqueId('error'), timestamp:new Date().toISOString(), message:(error?.message||String(error)), stack:error?.stack, context, userAgent:navigator.userAgent, url:location.href, user: currentUser?.email || 'anonymous' };
-        this.errors.unshift(entry); if(this.errors.length>this.maxErrors) this.errors=this.errors.slice(0,this.maxErrors);
-        console.error('🚨 Errore registrato:', entry);
-        if(this.isCriticalError(error)) this.reportError(entry);
-      }
-      static isCriticalError(error){
-        const msg=(error?.message||String(error)).toLowerCase();
-        return ['network error','authentication failed','database connection','supabase'].some(s=>msg.includes(s));
-      }
-      static async reportError(entry){
-        try{
-          await supabaseClient.from('error_logs').insert([{
-            error_id: entry.id, message: entry.message, context: entry.context, user_id: currentUser?.id, created_at: entry.timestamp
-          }]);
-        }catch(e){ console.warn('Impossibile inviare errore al backend:', e); }
-      }
-      static getErrors(){ return [...this.errors]; }
-      static clearErrors(){ this.errors=[]; }
-    }
-
-    class PerformanceMonitor{
-      static metrics=[];
-      static startTimer(name){ const t={name, startTime:performance.now(), id:generateUniqueId('timer')}; return { end:()=>this.endTimer(t) }; }
-      static endTimer(t){ const d=performance.now()-t.startTime; const m={ name:t.name, duration:Math.round(d), timestamp:new Date().toISOString() }; this.metrics.push(m); console.log(`⚡ ${t.name}: ${d.toFixed(2)}ms`); return m; }
-      static getMetrics(){ return [...this.metrics]; }
-      static getAverageTime(name){ const items=this.metrics.filter(m=>m.name===name); if(!items.length) return 0; return items.reduce((s,m)=>s+m.duration,0)/items.length; }
-    }
-
-    class CacheManager{
-      static cache=new Map(); static defaultTTL=5*60*1000;
-      static set(key,data,ttl=this.defaultTTL){ this.cache.set(key,{data,timestamp:Date.now(), ttl}); }
-      static get(key){ const e=this.cache.get(key); if(!e) return null; if(Date.now()-e.timestamp>e.ttl){ this.cache.delete(key); return null; } return e.data; }
-      static has(key){ return this.get(key)!==null; }
-      static clear(){ this.cache.clear(); }
-      static cleanup(){ const now=Date.now(); for(const [k,e] of this.cache.entries()){ if(now-e.timestamp>e.ttl) this.cache.delete(k); } }
-      static getStats(){ return { size:this.cache.size, keys:[...this.cache.keys()] }; }
-    }
-
-    class NotificationManager{
-      static queue=[]; static isProcessing=false;
-      static async show(message,type='info',options={}){
-        const n={ id:generateUniqueId('notif'), message, type, timestamp:Date.now(), ...options };
-        this.queue.push(n); if(!this.isProcessing) this.processQueue();
-      }
-      static async processQueue(){
-        this.isProcessing=true;
-        while(this.queue.length){
-          const n=this.queue.shift(); await this.displayNotification(n);
-          await new Promise(r=>setTimeout(r,300));
-        }
-        this.isProcessing=false;
-      }
-      static async displayNotification(n){
-        showAlert(n.message, n.type);
-        if('Notification' in window && Notification.permission==='granted'){
-          new Notification('MyApp Dashboard',{ body:n.message, icon:'/favicon.ico', tag:n.id });
-        }
-      }
-      static async requestPermission(){ if('Notification' in window) { try{ const p=await Notification.requestPermission(); return p==='granted'; }catch{} } return false; }
-    }
-
-    class SessionManager{
-      static sessionTimeout = 30*60*1000; // 30m
-      static warningTime  = 5*60*1000;   // 5m before
-      static logoutTimeoutId = null;
-      static warningTimeoutId = null;
-      static warningShown=false;
-
-      static startSession(){ this.resetTimer(); this.addActivityListeners(); }
-      static clearTimers(){
-        if(this.logoutTimeoutId){ clearTimeout(this.logoutTimeoutId); this.logoutTimeoutId=null; }
-        if(this.warningTimeoutId){ clearTimeout(this.warningTimeoutId); this.warningTimeoutId=null; }
-      }
-      static resetTimer(){
-        this.warningShown=false; this.clearTimers();
-        this.warningTimeoutId = setTimeout(()=> this.showSessionWarning(), this.sessionTimeout - this.warningTime);
-        this.logoutTimeoutId  = setTimeout(()=> this.expireSession(), this.sessionTimeout);
-      }
-      static showSessionWarning(){
-        if(this.warningShown) return; this.warningShown=true;
-        const msg='La sessione scadrà tra 5 minuti. Clicca per rinnovare.';
-        showAlert(msg,'warning');
-        document.addEventListener('click', this.renewSession.bind(this), { once:true });
-      }
-      static renewSession(){ this.resetTimer(); showSuccessMessage('Sessione rinnovata!'); }
-      static expireSession(){ showErrorMessage('Sessione scaduta. Reindirizzamento al login...'); setTimeout(()=>{ handleLogout(); }, 1200); }
-      static addActivityListeners(){
-        const events=['mousedown','mousemove','keypress','scroll','touchstart','click'];
-        events.forEach(ev=> document.addEventListener(ev, ()=>{ if(!this.warningShown) this.resetTimer(); }, { passive:true, capture:true }));
-      }
-    }
-
-    class NetworkManager{
-      static async checkConnection(){
-        try{
-          const res= await fetch(SUPABASE_URL + '/rest/v1/', { method:'HEAD', headers:{ 'apikey': SUPABASE_ANON_KEY }});
-          return res.ok;
-        }catch{ return false; }
-      }
-      static async withRetry(operation, maxRetries=3, delay=1000){
-        for(let attempt=1; attempt<=maxRetries; attempt++){
-          try{ return await operation(); }
-          catch(err){
-            console.warn(`Tentativo ${attempt}/${maxRetries} fallito:`, err);
-            if(attempt===maxRetries) throw err;
-            await new Promise(r=>setTimeout(r, delay*Math.pow(2,attempt-1)));
-          }
-        }
-      }
-      static async healthCheck(){
-        const t=PerformanceMonitor.startTimer('healthCheck');
-        try{
-          const online = await this.checkConnection(); t.end();
-          return { online, timestamp:new Date().toISOString() };
-        }catch(error){
-          t.end(); ErrorHandler.log(error,{operation:'healthCheck'});
-          return { online:false, error:error.message, timestamp:new Date().toISOString() };
-        }
-      }
-    }
-
-    // ====== Supabase client / utente ======
-    let supabaseClient=null;
-    let currentUser=null;
-    let userProfile=null;
-
-    // ====== UI Dinamica ======
-    function createDynamicSections(){
-      const dynamicContent=document.getElementById('dynamic-content');
-      if(!dynamicContent) return;
-
-      dynamicContent.innerHTML = `
-        <!-- Panoramica -->
-        <section class="mb-8">
-          <h2 class="section-title text-ultra-visible mb-6 flex items-center gap-4">
-            <div class="w-12 h-12 bg-gradient-to-br from-gold to-warning rounded-xl flex items-center justify-center">
-              <span class="text-white text-2xl">📊</span>
-            </div>
-            Panoramica Sistema
-          </h2>
-          <div class="stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div class="stat-card-executive p-6">
-              <div class="flex items-center justify-between">
-                <div>
-                  <div class="text-white text-3xl font-bold" id="totalUsers">-</div>
-                  <div class="text-white text-sm opacity-80">Utenti Totali</div>
-                </div>
-                <div class="w-12 h-12 bg-gradient-to-br from-aurora to-executive rounded-lg flex items-center justify-center">
-                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-                  </svg>
-                </div>
-              </div>
-            </div>
-            <div class="stat-card-executive p-6">
-              <div class="flex items-center justify-between">
-                <div>
-                  <div class="text-white text-3xl font-bold" id="pendingRequests">-</div>
-                  <div class="text-white text-sm opacity-80">Richieste Pendenti</div>
-                </div>
-                <div class="w-12 h-12 bg-gradient-to-br from-warning to-danger rounded-lg flex items-center justify-center">
-                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                  </svg>
-                </div>
-              </div>
-            </div>
-            <div class="stat-card-executive p-6">
-              <div class="flex items-center justify-between">
-                <div>
-                  <div class="text-white text-3xl font-bold" id="activeNews">-</div>
-                  <div class="text-white text-sm opacity-80">News Pubblicate</div>
-                </div>
-                <div class="w-12 h-12 bg-gradient-to-br from-success to-accent rounded-lg flex items-center justify-center">
-                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
-                  </svg>
-                </div>
-              </div>
-            </div>
-            <div class="stat-card-executive p-6">
-              <div class="flex items-center justify-between">
-                <div>
-                  <div class="text-white text-3xl font-bold text-success" id="systemStatus">Online</div>
-                  <div class="text-white text-sm opacity-80">Stato Sistema</div>
-                </div>
-                <div class="w-12 h-12 bg-gradient-to-br from-success to-primary rounded-lg flex items-center justify-center">
-                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Richieste Sistema -->
-        <section class="mb-8">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="section-title text-ultra-visible flex items-center gap-4">
-              <div class="w-12 h-12 bg-gradient-to-br from-warning to-danger rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📋</span></div>
-              Richieste Sistema (Recenti)
-            </h2>
-            <button data-nav="gestione-richieste" class="btn-outline px-4 py-2 rounded-lg text-sm font-medium">Gestisci tutte</button>
-          </div>
-          <div class="glass-card rounded-xl p-6">
-            <div id="richiesteContainer" class="space-y-4"></div>
-          </div>
-        </section>
-
-        <!-- Richieste Personali -->
-        <section class="mb-8">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="section-title text-ultra-visible flex items-center gap-4">
-              <div class="w-12 h-12 bg-gradient-to-br from-success to-primary rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📝</span></div>
-              Le Tue Richieste Personali
-            </h2>
-            <button data-nav="richieste" class="btn-outline px-4 py-2 rounded-lg text-sm font-medium">Vedi tutte</button>
-          </div>
-          <div class="glass-morphism rounded-3xl p-6">
-            <div id="richiestePersonaliContainer" class="space-y-4"></div>
-          </div>
-        </section>
-
-        <!-- News -->
-        <section class="mb-8">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="section-title text-ultra-visible flex items-center gap-4">
-              <div class="w-12 h-12 bg-gradient-to-br from-slate-600 to-slate-800 rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📰</span></div>
-              Ultime Notizie
-            </h2>
-            <button data-nav="news" class="btn-outline px-4 py-2 rounded-lg text-sm font-medium">Vedi tutte</button>
-          </div>
-          <div class="glass-card rounded-3xl p-8"><div id="newsContainer"></div></div>
-        </section>
-
-        <!-- Convenzioni -->
-        <section class="mb-8">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="section-title text-ultra-visible flex items-center gap-4">
-              <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center"><span class="text-white text-2xl">🤝</span></div>
-              Convenzioni in Evidenza
-            </h2>
-            <button data-nav="convenzioni" class="btn-outline px-4 py-2 rounded-lg text-sm font-medium">Gestisci tutte</button>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="convenzioniContainer"></div>
-        </section>
-
-        <!-- Statistiche Personali -->
-        <section class="mb-8">
-          <h2 class="section-title text-ultra-visible mb-6 flex items-center gap-4">
-            <div class="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📈</span></div>
-            I Tuoi Dati Dirigenziali
-          </h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div class="stat-card p-6">
-              <div class="flex items-center justify-between">
-                <div>
-                  <div class="text-3xl font-bold text-gray-900" id="memberSince">-</div>
-                  <div class="text-sm text-gray-600">Iscritto dal</div>
-                </div>
-                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a4 4 0 118 0v4m-8 0h8m-8 0H3a2 2 0 00-2 2v3a2 2 0 002 2h1m2-6h14a2 2 0 012 2v3a2 2 0 01-2 2h-1m-6 7.13V21a3.001 3.001 0 01-6 0v-1.87m6 1.87a3.001 3.001 0 01-6 0v-1.87m6 1.87V20a2 2 0 01-2 2h-2a2 2 0 01-2-2v-.13m8-4.87h-2M5 11h2"></path>
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            <div class="stat-card p-6">
-              <div class="flex items-center justify-between">
-                <div>
-                  <div class="text-3xl font-bold text-gray-900" id="numeroTessera">In generazione...</div>
-                  <div class="text-sm text-gray-600">Numero Tessera</div>
-                </div>
-                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                  <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            <div class="stat-card p-6">
-              <div class="flex items-center justify-between">
-                <div>
-                  <div class="text-3xl font-bold text-gray-900" id="richiestePersonali">-</div>
-                  <div class="text-sm text-gray-600">Richieste Personali</div>
-                </div>
-                <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                  <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            <div class="stat-card p-6">
-              <div class="flex items-center justify-between">
-                <div>
-                  <div class="text-3xl font-bold text-green-600" id="profileStatus">Attivo</div>
-                  <div class="text-sm text-gray-600">Stato Profilo</div>
-                </div>
-                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                  <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Azioni Personali -->
-        <section class="mb-8">
-          <h2 class="section-title text-ultra-visible mb-6 flex items-center gap-4">
-            <div class="w-12 h-12 bg-gradient-to-br from-aurora to-success rounded-xl flex items-center justify-center"><span class="text-white text-2xl">👤</span></div>
-            Azioni Personali
-          </h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div data-nav="richieste" class="action-card p-6 text-center">
-              <div class="text-4xl mb-4">📝</div>
-              <h3 class="text-white text-lg font-bold mb-2">Nuova Richiesta</h3>
-              <p class="text-white/80 text-sm mb-4">Invia una nuova richiesta</p>
-              <div class="text-blue-300 text-xs font-semibold">Avvia procedura →</div>
-            </div>
-            <div data-nav="tessera" class="action-card p-6 text-center">
-              <div class="text-4xl mb-4">🎫</div>
-              <h3 class="text-white text-lg font-bold mb-2">Tessera Digitale</h3>
-              <p class="text-white/80 text-sm mb-4">Visualizza e scarica la tessera</p>
-              <div class="text-blue-300 text-xs font-semibold">Visualizza →</div>
-            </div>
-            <div data-nav="profilo" class="action-card p-6 text-center">
-              <div class="text-4xl mb-4">👤</div>
-              <h3 class="text-white text-lg font-bold mb-2">Il Mio Profilo</h3>
-              <p class="text-white/80 text-sm mb-4">Modifica i tuoi dati</p>
-              <div class="text-blue-300 text-xs font-semibold">Modifica →</div>
-            </div>
-            <div data-nav="strumenti" class="action-card p-6 text-center">
-              <div class="text-4xl mb-4">🛠️</div>
-              <h3 class="text-white text-lg font-bold mb-2">Strumenti</h3>
-              <p class="text-white/80 text-sm mb-4">Utility e strumenti di lavoro</p>
-              <div class="text-blue-300 text-xs font-semibold">Accedi →</div>
-            </div>
-          </div>
-        </section>
-      `;
-    }
-
-    // ====== Skeletons ======
-    function generateLoadingSkeleton(type){
-      switch(type){
-        case 'richiesteContainer':
-        case 'richiestePersonaliContainer':
-          return `<div class="space-y-4"><div class="loading-skeleton h-16"></div><div class="loading-skeleton h-16"></div><div class="loading-skeleton h-16"></div></div>`;
-        case 'newsContainer':
-          return `<div class="space-y-4"><div class="loading-skeleton h-20"></div><div class="loading-skeleton h-20"></div><div class="loading-skeleton h-20"></div></div>`;
-        case 'convenzioniContainer':
-          return `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"><div class="loading-skeleton h-64"></div><div class="loading-skeleton h-64"></div><div class="loading-skeleton h-64"></div></div>`;
-        default: return '<div class="loading-skeleton h-16"></div>';
-      }
-    }
-    function showLoadingSkeletons(){
-      ['richiesteContainer','richiestePersonaliContainer','newsContainer','convenzioniContainer'].forEach(id=>{
-        const el=document.getElementById(id); if(el) el.innerHTML=generateLoadingSkeleton(id);
-      });
-    }
-    function hideLoadingSkeletons(){ /* contenuto sostituito dopo il load */ }
-
-    // ====== Rendering liste (senza inline onclick) ======
-    function displaySystemRequests(richieste){
-      const container=document.getElementById('richiesteContainer'); if(!container) return;
-      if(!Array.isArray(richieste) || !richieste.length){
-        container.innerHTML = `
-          <div class="text-center py-12 text-gray-500">
-            <div class="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-              </svg>
-            </div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Nessuna richiesta</h3>
-            <p class="text-gray-600">Non ci sono richieste da gestire al momento</p>
-          </div>`;
-        return;
-      }
-      container.innerHTML = richieste.map(r=>{
-        const s = sanitizeRequestData(r);
-        if(!validateRequestData(s)){ console.warn('⚠️ Dati richiesta non validi:', r); return ''; }
-        const statusColor=getRequestStatusColor(s.stato);
-        const priorityColor=getPriorityColor(s.priorita);
-        const dataCreazione=formatDate(s.created_at);
-        const idStr = String(s.id ?? '').toString();
-
-        return `
-          <div class="bg-white border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-colors cursor-pointer"
-               data-action="view-richiesta" data-id="${escapeHTML(idStr)}">
-            <div class="flex items-start justify-between mb-3">
-              <div class="flex-grow">
-                <h4 class="font-semibold text-gray-900 text-lg mb-1">${s.titolo}</h4>
-                <div class="flex items-center gap-3 text-sm text-gray-600 mb-2">
-                  <span class="flex items-center gap-1">
-                    <span class="w-2 h-2 rounded-full ${priorityColor}"></span>
-                    ${s.priorita || 'NORMALE'}
-                  </span>
-                  <span>📂 ${s.categoria || 'Generale'}</span>
-                  <span>📅 ${dataCreazione}</span>
-                </div>
-              </div>
-              <span class="px-3 py-1 rounded-full text-xs font-medium text-white ${statusColor}">
-                ${getStatusText(s.stato)}
-              </span>
-            </div>
-            <p class="text-gray-600 text-sm mb-3 line-clamp-2">
-              ${s.descrizione || 'Nessuna descrizione disponibile'}
-            </p>
-            <div class="flex items-center justify-between text-xs text-gray-500">
-              <span>👤 ${s.user_nome || 'Utente'}</span>
-              <span>ID: #${String(idStr).slice(-8)}</span>
-            </div>
-          </div>`;
-      }).join('');
-    }
-
-    function displayPersonalRequests(richieste){
-      const container=document.getElementById('richiestePersonaliContainer'); if(!container) return;
-      if(!Array.isArray(richieste) || !richieste.length){
-        container.innerHTML = `
-          <div class="text-center py-12 text-white">
-            <div class="text-6xl mb-4">📋</div>
-            <h3 class="text-xl font-bold mb-2">Nessuna richiesta personale</h3>
-            <p class="text-white/70 mb-6">Non hai ancora inviato nessuna richiesta personale</p>
-            <button data-nav="richieste" class="btn-aurora py-3 px-6 rounded-xl">Invia la tua prima richiesta</button>
-          </div>`;
-        return;
-      }
-      container.innerHTML = richieste.map(r=>{
-        const s = sanitizeRequestData(r);
-        if(!validateRequestData(s)){ console.warn('⚠️ Dati richiesta personale non validi:', r); return ''; }
-        const statusColor=getRequestStatusColor(s.stato);
-        const priorityColor=getPriorityColor(s.priorita);
-        const dataCreazione=formatDate(s.created_at);
-        const idStr = String(s.id ?? '');
-
-        return `
-          <div class="glass-morphism rounded-xl p-4 hover:bg-white/10 transition-all cursor-pointer"
-               data-action="view-richiesta" data-id="${escapeHTML(idStr)}">
-            <div class="flex items-start justify-between mb-3">
-              <div class="flex-grow">
-                <h4 class="text-white font-bold text-lg mb-1">${s.titolo}</h4>
-                <div class="flex items-center gap-3 text-sm text-white/70 mb-2">
-                  <span class="flex items-center gap-1">
-                    <span class="priority-indicator ${priorityColor}"></span>
-                    ${s.priorita || 'NORMALE'}
-                  </span>
-                  <span>📂 ${s.categoria || 'Generale'}</span>
-                  <span>📅 ${dataCreazione}</span>
-                </div>
-              </div>
-              <span class="px-3 py-1 rounded-full text-xs font-bold text-white ${statusColor}">
-                ${getStatusText(s.stato)}
-              </span>
-            </div>
-            <p class="text-white/80 text-sm mb-3 line-clamp-2">${s.descrizione || 'Nessuna descrizione'}</p>
-            <div class="flex items-center justify-between text-xs text-white/60">
-              <span>${s.dirigente_nome ? `👤 ${sanitizeString(s.dirigente_nome)}` : '⏳ In attesa'}</span>
-              <span>ID: #${String(idStr).slice(-8)}</span>
-            </div>
-          </div>`;
-      }).join('');
-    }
-
-    function displayNews(newsArray){
-      const container=document.getElementById('newsContainer'); if(!container) return;
-      if(!Array.isArray(newsArray) || !newsArray.length){
-        container.innerHTML = `
-          <div class="text-center py-8 text-gray-500">
-            <div class="text-4xl mb-2">📰</div>
-            <div>Nessuna notizia disponibile al momento</div>
-          </div>`;
-        return;
-      }
-      container.innerHTML = newsArray.map(n=>{
-        if(!validateNewsData(n)){ console.warn('⚠️ Dati news non validi:', n); return ''; }
-        const s = {
-          ...n,
-          id: n.id,
-          titolo: sanitizeString(n.titolo),
-          sottotitolo: sanitizeString(n.sottotitolo),
-          categoria: sanitizeString(n.categoria),
-          created_at: n.created_at
+        // ===================== Utils =====================
+        const fmtDate = (iso) => {
+            try { return iso ? new Intl.DateTimeFormat('it-IT', { dateStyle:'long' }).format(new Date(iso)) : '—'; }
+            catch { return '—'; }
         };
-        const idStr = String(s.id ?? '');
-        return `
-          <div class="border-b border-gray-200 pb-4 mb-4 last:border-b-0 last:pb-0 last:mb-0 hover:bg-gray-50 p-4 rounded-lg transition-colors cursor-pointer"
-               data-action="read-news" data-id="${escapeHTML(idStr)}">
-            <div class="flex justify-between items-start">
-              <div class="flex-1">
-                <h3 class="text-textDark font-semibold text-lg mb-1">${s.titolo}</h3>
-                ${s.sottotitolo ? `<p class="text-gray-600 text-sm mb-2">${s.sottotitolo}</p>` : ''}
-                <div class="flex items-center space-x-3 text-xs text-gray-500">
-                  <span class="bg-blue-600 text-white px-2 py-1 rounded">${s.categoria || 'Generale'}</span>
-                  <span>📅 ${formatDate(s.created_at)}</span>
-                  <span>👁️ ${s.visualizzazioni || 0}</span>
-                </div>
-              </div>
-              <div class="text-blue-600 hover:text-blue-800 font-semibold text-sm ml-4">Leggi →</div>
-            </div>
-          </div>`;
-      }).join('');
-    }
-
-    function displayConvenzioni(convenzioni){
-      const container=document.getElementById('convenzioniContainer'); if(!container) return;
-      if(!Array.isArray(convenzioni) || !convenzioni.length){
-        container.innerHTML = `
-          <div class="glass-morphism rounded-3xl p-12 col-span-3 text-center">
-            <div class="text-6xl mb-4">🤝</div>
-            <h3 class="text-white text-xl font-bold mb-2">Nessuna convenzione disponibile</h3>
-            <p class="text-white/70">Le convenzioni verranno pubblicate a breve</p>
-          </div>`;
-        return;
-      }
-      container.innerHTML = convenzioni.map(c=>{
-        if(!validateConvenzioneData(c)){ console.warn('⚠️ Dati convenzione non validi:', c); return ''; }
-        const s = {
-          ...c,
-          nome_azienda: sanitizeString(c.nome_azienda),
-          descrizione: sanitizeString(c.descrizione),
-          categoria: sanitizeString(c.categoria),
-          copertura_geografica: sanitizeString(c.copertura_geografica)
-        };
-        const excerpt = truncateText(s.descrizione || '', 120, '…');
-        const sconto = s.sconto_percentuale ? `${s.sconto_percentuale}%` : '';
-        const isInEvidenza = s.in_evidenza === true || s.in_evidenza === 'true';
-        const validaFino = s.valida_fino ? new Date(s.valida_fino) : null;
-        const isScaduta = validaFino && validaFino < new Date();
-        const idStr = String(s.id ?? '');
-
-        return `
-          <div class="action-card p-6 ${isScaduta ? 'opacity-75' : ''}"
-               ${!isScaduta ? `data-action="open-convenzione" data-id="${escapeHTML(idStr)}"` : ''}>
-            <div class="flex items-start justify-between mb-4">
-              <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center text-white text-sm font-bold">
-                ${sconto ? `-${sconto}` : '🤝'}
-              </div>
-              <div class="flex flex-col gap-1">
-                ${isInEvidenza ? '<div class="bg-emerald-600 text-white px-2 py-1 rounded-full text-xs font-bold">IN EVIDENZA</div>' : ''}
-                ${isScaduta ? '<div class="bg-gray-500 text-white px-2 py-1 rounded-full text-xs font-bold">SCADUTA</div>' : ''}
-              </div>
-            </div>
-            <h3 class="text-white text-lg font-bold mb-2">${s.nome_azienda || '-'}</h3>
-            <p class="text-white/80 text-sm mb-4">${excerpt}</p>
-            <div class="flex items-center justify-between text-xs text-white/60 mb-3">
-              <span>📂 ${s.categoria || 'Generale'}</span>
-              <span>🌍 ${s.copertura_geografica || 'Nazionale'}</span>
-            </div>
-            <div class="flex items-center justify-between">
-              <span class="text-white/60 text-xs">👀 ${s.visualizzazioni || 0} visualizzazioni</span>
-              <span class="text-emerald-300 text-sm font-semibold">${isScaduta ? 'Non disponibile' : 'Scopri →'}</span>
-            </div>
-            ${validaFino ? `
-              <div class="mt-3 pt-3 border-t border-white/10">
-                <div class="text-white/60 text-xs flex items-center gap-1">
-                  <span class="${isScaduta ? 'text-red-400' : 'text-green-400'}">⏰</span>
-                  ${isScaduta ? 'Scaduta il' : 'Valida fino al'} ${validaFino.toLocaleDateString('it-IT')}
-                </div>
-              </div>` : ''}
-          </div>`;
-      }).join('');
-    }
-
-    function displayNotifications(notifications){
-      const container=document.getElementById('notificationList'); if(!container) return;
-      if(!Array.isArray(notifications) || !notifications.length){
-        container.innerHTML = `
-          <div class="text-center py-8 text-gray-500">
-            <div class="text-4xl mb-2">🔔</div>
-            <div class="text-sm">Nessuna notifica</div>
-          </div>`;
-        return;
-      }
-      container.innerHTML = notifications.map(n=>{
-        const s = { ...n, title:sanitizeString(n.title), message:sanitizeString(n.message) };
-        return `
-          <div class="p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 cursor-pointer"
-               data-action="read-notification" data-id="${escapeHTML(String(s.id ?? ''))}">
-            <div class="flex items-start gap-3">
-              <div class="w-2 h-2 bg-blue-500 rounded-full mt-2 ${s.read ? 'opacity-30' : ''}"></div>
-              <div class="flex-1">
-                <h4 class="font-medium text-gray-900 text-sm">${s.title}</h4>
-                <p class="text-gray-600 text-xs mt-1">${s.message}</p>
-                <span class="text-gray-400 text-xs">${formatDate(s.created_at)}</span>
-              </div>
-            </div>
-          </div>`;
-      }).join('');
-    }
-
-    // ====== Notifiche UI ======
-    function updateNotificationBadge(count){
-      const badge=document.getElementById('notificationBadge'); if(!badge) return;
-      if(count>0){ badge.textContent=String(count); badge.classList.remove('hidden'); }
-      else{ badge.classList.add('hidden'); }
-    }
-    function toggleNotifications(){
-      const dd=document.getElementById('notificationDropdown'); if(!dd) return;
-      dd.classList.toggle('show');
-    }
-    function markAllNotificationsRead(){
-      updateNotificationBadge(0); displayNotifications([]);
-    }
-
-    // ====== Modal ======
-    function openModal(content){
-      const overlay=document.getElementById('modalContainer');
-      const modal=document.getElementById('modalContent');
-      if(overlay && modal){
-        modal.innerHTML=content;
-        overlay.classList.add('show');
-        overlay.setAttribute('aria-hidden','false');
-        document.body.style.overflow='hidden';
-      }
-    }
-    function closeModal(){
-      const overlay=document.getElementById('modalContainer');
-      const modal=document.getElementById('modalContent');
-      if(overlay && modal){
-        overlay.classList.remove('show');
-        overlay.setAttribute('aria-hidden','true');
-        document.body.style.overflow='auto';
-        setTimeout(()=>{ modal.innerHTML=''; }, 300);
-      }
-    }
-
-    // ====== Navigazione ======
-    function goTo(pageKey){
-      const url = PAGE_MAPPING[pageKey] || pageKey;
-      window.location.href = url;
-    }
-
-    // ====== Caricamento dati ======
-    async function testDatabaseConnection(){
-      const { error } = await supabaseClient
-        .from('user_profiles')
-        .select('*', { count:'exact', head:true })
-        .limit(1);
-      if(error) throw new Error(`Errore database: ${error.message}`);
-      return true;
-    }
-
-    async function checkAuthentication(){
-      const { data:{ session }, error } = await supabaseClient.auth.getSession();
-      if(error) throw new Error(`Errore sessione: ${error.message}`);
-      if(!session){ window.location.href='auth.html'; return; }
-      currentUser = session.user;
-      const { data, error:profileErr } = await supabaseClient
-        .from('user_profiles')
-        .select('*')
-        .eq('user_id', currentUser.id)
-        .single();
-      if(profileErr && profileErr.code!=='PGRST116'){ console.warn('Profilo non trovato:', profileErr.message); }
-      userProfile = data || await createUserProfile(currentUser);
-      if(!isAuthorizedUser(userProfile.role)){
-        showErrorMessage('Accesso non autorizzato per questo ruolo');
-        setTimeout(()=> goTo('home'), 1200);
-        return;
-      }
-    }
-
-    async function createUserProfile(user){
-      try{
-        const profileData = {
-          user_id: user.id,
-          email: user.email,
-          nome: user.user_metadata?.nome || 'Dirigente',
-          cognome: user.user_metadata?.cognome || '',
-          role: 'USER',
-          stato: 'ATTIVO',
-          created_at: new Date().toISOString()
-        };
-        const { data, error } = await supabaseClient
-          .from('user_profiles')
-          .upsert(profileData, { onConflict:'user_id' })
-          .select()
-          .single();
-        if(error) throw error;
-        return data;
-      }catch(e){
-        ErrorHandler.log(e, { area:'createUserProfile' });
-        return { role:'USER', nome:'Dirigente', cognome:'', email:user.email };
-      }
-    }
-
-    function isAuthorizedUser(role){ return ['ADMIN','DIRIGENTE'].includes(role); }
-
-    async function loadSystemStats(){
-      try{
-        const [totalUsers, pendingRequests, activeNews] = await Promise.all([
-          getTotalUsers(), getPendingRequests(), getActiveNews()
-        ]);
-        updateElement('totalUsers', totalUsers || '0');
-        updateElement('pendingRequests', pendingRequests || '0');
-        updateElement('activeNews', activeNews || '0');
-      }catch(e){ ErrorHandler.log(e, { area:'loadSystemStats' }); }
-    }
-
-    async function getTotalUsers(){
-      try{
-        const { count, error } = await supabaseClient
-          .from('user_profiles').select('*',{ count:'exact', head:true });
-        if(error) throw error; return count;
-      }catch(e){ ErrorHandler.log(e); return 0; }
-    }
-    async function getPendingRequests(){
-      try{
-        const { count, error } = await supabaseClient
-          .from('richieste_personali')
-          .select('*',{ count:'exact', head:true })
-          .in('stato',['RICEVUTA','IN_ESAME','IN_LAVORAZIONE']);
-        if(error) throw error; return count;
-      }catch(e){ ErrorHandler.log(e); return 0; }
-    }
-    async function getActiveNews(){
-      try{
-        const { count, error } = await supabaseClient
-          .from('news').select('*',{ count:'exact', head:true }).eq('pubblicata', true);
-        if(error) throw error; return count;
-      }catch(e){ ErrorHandler.log(e); return 0; }
-    }
-
-    async function loadSystemRequests(){
-      try{
-        const { data, error } = await supabaseClient
-          .from('richieste_personali')
-          .select(`*, user_profiles!richieste_personali_user_id_fkey(nome, cognome)`)
-          .order('created_at',{ ascending:false })
-          .limit(5);
-        if(error) throw error;
-        const mapped = (data||[]).map(r=>({
-          ...r,
-          user_nome: r.user_profiles ? `${r.user_profiles.nome||''} ${r.user_profiles.cognome||''}`.trim() : 'Utente Sconosciuto'
-        }));
-        displaySystemRequests(mapped);
-      }catch(e){ ErrorHandler.log(e, { area:'loadSystemRequests' }); displaySystemRequests([]); }
-    }
-
-    async function loadPersonalRequests(){
-      try{
-        const { data, error } = await supabaseClient
-          .from('richieste_personali')
-          .select('*')
-          .eq('user_id', currentUser.id)
-          .order('created_at',{ ascending:false })
-          .limit(3);
-        if(error) throw error;
-        const attive = (data||[]).filter(r=>!['COMPLETATA','CHIUSA'].includes(r.stato)).length || 0;
-        updateElement('richiestePersonali', attive);
-        displayPersonalRequests(data||[]);
-      }catch(e){ ErrorHandler.log(e, { area:'loadPersonalRequests' }); displayPersonalRequests([]); }
-    }
-
-    async function loadNews(){
-      try{
-        const { data, error } = await supabaseClient
-          .from('news').select('*').eq('pubblicata',true).order('created_at',{ascending:false}).limit(3);
-        if(error) throw error;
-        displayNews(data||[]);
-      }catch(e){ ErrorHandler.log(e, { area:'loadNews' }); displayNews([]); }
-    }
-
-    async function loadNotifications(){
-      try{
-        updateNotificationBadge(0); displayNotifications([]);
-      }catch(e){ ErrorHandler.log(e, { area:'loadNotifications' }); updateNotificationBadge(0); displayNotifications([]); }
-    }
-
-    async function loadConvenzioni(){
-      try{
-        const { data, error } = await supabaseClient
-          .from('convenzioni').select('*').eq('attiva',true).order('created_at',{ascending:false}).limit(3);
-        if(error) throw error;
-        displayConvenzioni(data||[]);
-      }catch(e){ ErrorHandler.log(e, { area:'loadConvenzioni' }); displayConvenzioni([]); }
-    }
-
-    async function loadTesseraData(){
-      try{
-        const { data:tessera, error } = await supabaseClient
-          .from('tessere').select('numero_tessera, stato').eq('user_id', currentUser.id).single();
-        if(error){
-          await createTessera(currentUser.id);
-          return;
+        const escapeHTML = (s) => String(s ?? '')
+            .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
+            .replaceAll('"','&quot;').replaceAll("'","&#39;");
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const colors = {
+                success: 'bg-gradient-to-r from-green-500 to-green-600',
+                error: 'bg-gradient-to-r from-red-500 to-red-600',
+                info: 'bg-gradient-to-r from-blue-500 to-blue-600'
+            };
+            notification.className = `fixed top-6 right-6 ${colors[type]} text-white px-6 py-4 rounded-2xl shadow-2xl z-50 transform translate-x-full transition-transform duration-500 font-bold text-base backdrop-blur-md border border-white/20`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.classList.remove('translate-x-full'), 100);
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => notification.remove(), 500);
+            }, 4000);
         }
-        const el=document.getElementById('numeroTessera');
-        if(el) el.textContent = tessera?.numero_tessera || 'In generazione...';
-      }catch(e){
-        ErrorHandler.log(e,{area:'loadTesseraData'});
-        const el=document.getElementById('numeroTessera'); if(el) el.textContent='Errore caricamento';
-      }
-    }
 
-    async function createTessera(userId){
-      try{
-        const numero = generateNumeroTessera();
-        const tesseraData = {
-          user_id:userId,
-          numero_tessera: numero,
-          nome_completo: `${userProfile?.nome||''} ${userProfile?.cognome||''}`.trim(),
-          email: userProfile?.email,
-          data_emissione: new Date().toISOString().split('T')[0],
-          data_scadenza: getDataScadenza(),
-          stato: 'ATTIVA',
-          tipo: 'DIRIGENTE'
-        };
-        const { error } = await supabaseClient.from('tessere').insert([tesseraData]);
-        if(error) throw error;
-        const el=document.getElementById('numeroTessera'); if(el) el.textContent = numero;
-      }catch(e){ ErrorHandler.log(e,{area:'createTessera'}); }
-    }
-    function generateNumeroTessera(){ const year=new Date().getFullYear(); const rnd=Math.floor(Math.random()*90000)+10000; return `DIR${year}${rnd}`; }
-    function getDataScadenza(){ const now=new Date(); const scad=new Date(now.getFullYear()+1,11,31); return scad.toISOString().split('T')[0]; }
+        // ===================== Init =====================
+        async function init() {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) { window.location.href = '../login.html'; return; }
+                currentUser = user;
 
-    // ====== Dettagli e incrementi ======
-    async function incrementNewsViews(newsId){
-      try{
-        // Richiede presenza funzione RPC sul DB
-        await supabaseClient.rpc('increment_news_views',{ news_id: newsId });
-      }catch(e){ console.warn('Incremento news non disponibile:', e?.message); }
-    }
-    async function incrementConvenzioneViews(convenzioneId){
-      try{
-        await supabaseClient.rpc('increment_convenzione_views',{ convenzione_id: convenzioneId });
-      }catch(e){ console.warn('Incremento convenzioni non disponibile:', e?.message); }
-    }
-
-    function viewRichiestaDetail(id){ window.location.href = `richiesta-dettaglio.html?id=${encodeURIComponent(id)}`; }
-    async function readNews(id){ await incrementNewsViews(id); window.location.href = `news-dettaglio.html?id=${encodeURIComponent(id)}`; }
-    async function openConvenzione(id){ await incrementConvenzioneViews(id); window.location.href = `convenzione-dettaglio.html?id=${encodeURIComponent(id)}`; }
-    function readNotification(id){ console.log('Notifica letta:', id); }
-
-    // ====== UI/Profilo ======
-    function updateUserInterface(){
-      if(!userProfile) return;
-      const firstName = userProfile?.nome || 'Dirigente';
-      updateElement('userWelcome', `Benvenuto, ${firstName}!`);
-      updateElement('userRole', getRoleLabel(userProfile?.role));
-      updateElement('userNameDisplay', firstName);
-      const initials = getInitials(`${userProfile?.nome||''} ${userProfile?.cognome||''}`);
-      const avatar=document.getElementById('userAvatar'); if(avatar) avatar.textContent = initials;
-      updatePersonalStats();
-    }
-    function getRoleLabel(role){ const map={ 'ADMIN':'Amministratore','DIRIGENTE':'Dirigente Sindacale','USER':'Utente' }; return map[role] || role || 'Utente'; }
-    function getInitials(fullName){ return (fullName||'').split(' ').filter(Boolean).map(n=>n[0]?.toUpperCase()||'').join('').slice(0,2) || 'D'; }
-    function updatePersonalStats(){
-      if(!userProfile) return;
-      const ms=document.getElementById('memberSince');
-      if(ms){ const d=userProfile.created_at ? formatDate(userProfile.created_at) : '-'; ms.textContent=d; }
-      const st=document.getElementById('profileStatus'); if(st){ st.textContent = getStatusLabel(userProfile?.stato); }
-    }
-
-    // ====== Event listeners di pagina ======
-    function setupEventListeners(){
-      document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
-      document.getElementById('notificationBtn')?.addEventListener('click', toggleNotifications);
-      document.getElementById('markAllRead')?.addEventListener('click', markAllNotificationsRead);
-
-      // Chiudi modal con sfondo/ESC
-      const modalContainer=document.getElementById('modalContainer');
-      modalContainer?.addEventListener('click', (e)=>{ if(e.target===modalContainer) closeModal(); });
-      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ closeModal(); document.getElementById('notificationDropdown')?.classList.remove('show'); } });
-
-      // Chiudi dropdown notifiche cliccando fuori
-      document.addEventListener('click', (e)=>{
-        const dd=document.getElementById('notificationDropdown');
-        const btn=document.getElementById('notificationBtn');
-        if(dd && btn && !dd.contains(e.target) && !btn.contains(e.target)){ dd.classList.remove('show'); }
-      });
-
-      // Event delegation per card dinamiche
-      document.addEventListener('click', async (e)=>{
-        const target = e.target.closest('[data-action]');
-        if(target){
-          const action=target.getAttribute('data-action');
-          const id=target.getAttribute('data-id');
-          if(action==='view-richiesta' && id) viewRichiestaDetail(id);
-          if(action==='read-news' && id) await readNews(id);
-          if(action==='open-convenzione' && id) await openConvenzione(id);
-          if(action==='read-notification' && id) readNotification(id);
+                await loadUserProfile();   // badge/ruoli/email
+                await loadIscrittoDal();   // tessera.data_emissione
+                await loadSystemOverview();// counts
+                await loadLatestNews();    // news (pubblicate & non scadute)
+                await loadFeaturedConvenzioni(); // opzionale
+            } catch (error) {
+                console.error('Errore inizializzazione:', error);
+                showNotification('❌ Errore nel caricamento', 'error');
+            }
         }
-        const navBtn = e.target.closest('[data-nav]');
-        if(navBtn){ goTo(navBtn.getAttribute('data-nav')); }
-      });
 
-      // Richiedi permesso notifiche al primo gesto utente
-      document.addEventListener('click', ()=>{ NotificationManager.requestPermission(); }, { once:true });
-    }
+        // ===================== Profile & Roles =====================
+        async function loadUserProfile() {
+            try {
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('nome, email, ruoli')
+                    .eq('id', currentUser.id)
+                    .single();
 
-    async function handleLogout(){
-      try{
-        const { error } = await supabaseClient.auth.signOut();
-        if(error) throw error;
-        window.location.href='auth.html';
-      }catch(e){ ErrorHandler.log(e,{area:'logout'}); showErrorMessage('Errore durante il logout'); }
-    }
+                if (!profile) throw new Error('Profilo non trovato');
 
-    // ====== Auto refresh / visibility ======
-    let autoRefreshInterval=null; let isPageVisible=true;
-    function startAutoRefresh(){
-      stopAutoRefresh();
-      autoRefreshInterval = setInterval(async ()=>{
-        if(isPageVisible){ console.log('🔄 Auto-refresh dati dashboard'); await refreshCriticalData(); }
-      }, 5*60*1000);
-    }
-    function stopAutoRefresh(){ if(autoRefreshInterval){ clearInterval(autoRefreshInterval); autoRefreshInterval=null; } }
-    async function refreshCriticalData(){ try{ await Promise.all([ loadSystemStats(), loadNotifications() ]); }catch(e){ ErrorHandler.log(e,{area:'refreshCriticalData'}); } }
+                currentUserRoles = profile.ruoli || ['USER'];
 
-    // ====== Inizializzazione ======
-    async function loadDashboardData(){
-      updateUserInterface();
-      createDynamicSections();
-      try{
-        showLoadingSkeletons();
-        await Promise.all([ loadSystemStats(), loadTesseraData(), loadSystemRequests(), loadPersonalRequests(), loadNews(), loadNotifications(), loadConvenzioni() ]);
-        hideLoadingSkeletons();
-      }catch(error){
-        ErrorHandler.log(error,{area:'loadDashboardData'});
-        hideLoadingSkeletons();
-      }
-    }
+                // Check permessi
+                if (!currentUserRoles.includes('DIRIGENTE') && !currentUserRoles.includes('ADMIN')) {
+                    window.location.href = 'home.html';
+                    return;
+                }
 
-    // ====== Bootstrap ======
-    window.addEventListener('error', (event)=>{ ErrorHandler.log(event.error || event.message, { filename:event.filename, lineno:event.lineno, colno:event.colno }); });
-    window.addEventListener('unhandledrejection', (event)=>{ ErrorHandler.log(event.reason, { type:'unhandled_promise_rejection' }); });
+                // UI: nome, email, icona
+                document.getElementById('userName').textContent = profile.nome || 'Dirigente';
+                document.getElementById('userEmail').textContent = profile.email || '—';
+                document.getElementById('userIcon').textContent = currentUserRoles.includes('ADMIN') ? '👑' : '🎯';
+                
+                // Ruoli badges
+                const rolesContainer = document.getElementById('userRoles');
+                rolesContainer.innerHTML = currentUserRoles.map(role => {
+                    const badgeClass = role === 'ADMIN' ? 'admin' : role === 'DIRIGENTE' ? 'dirigente' : 'user';
+                    const icon = role === 'ADMIN' ? '👑' : role === 'DIRIGENTE' ? '🎯' : '👤';
+                    return `<span class="role-badge ${badgeClass}">${icon} ${escapeHTML(role)}</span>`;
+                }).join('');
 
-    document.addEventListener('visibilitychange', ()=>{
-      isPageVisible = !document.hidden;
-      if(isPageVisible){ refreshCriticalData(); }
-    });
+                // Access level + summary
+                const accessLevel = currentUserRoles.includes('ADMIN') ? 
+                    'Accesso Amministratore Completo' : 
+                    'Accesso Dirigente Autorizzato';
+                document.getElementById('accessLevel').textContent = accessLevel;
+                document.getElementById('rolesSummary').textContent = currentUserRoles.join(' · ');
 
-    window.addEventListener('load', ()=>{
-      const navStart = performance.timeOrigin || (performance.timing?.navigationStart ?? Date.now());
-      const loadMs = Math.max(0, performance.now()); // relativo
-      console.log(`⚡ Dashboard (client) caricata in ~${Math.round(loadMs)}ms`);
-      startAutoRefresh();
-    });
+                // Mostra sezione admin
+                if (currentUserRoles.includes('ADMIN')) {
+                    document.getElementById('adminSection').style.display = 'block';
+                }
 
-    document.addEventListener('DOMContentLoaded', async ()=>{
-      console.log('🚀 Inizializzazione sistema...');
-      AppState.loadFromStorage();
+            } catch (error) {
+                console.error('Errore caricamento profilo:', error);
+                showNotification('❌ Errore nel caricamento del profilo', 'error');
+            }
+        }
 
-      try{
-        if(typeof supabase==='undefined') throw new Error('Libreria Supabase non caricata');
-        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        await testDatabaseConnection();
-        await checkAuthentication();
-        setupEventListeners();
-        SessionManager.startSession();
-        // Cleanup cache e health check periodici
-        setInterval(()=> CacheManager.cleanup(), 10*60*1000);
-        setInterval(async ()=>{
-          const health=await NetworkManager.healthCheck();
-          if(!health.online) showErrorMessage('Connessione al server persa. Riprovo...');
-        }, 60*1000);
+        // ===================== "Iscritto dal" da tabella tessera =====================
+        async function loadIscrittoDal() {
+            try {
+                const uid = currentUser?.id;
+                if (!uid) { document.getElementById('iscrittoDal').textContent = '—'; return; }
 
-        await loadDashboardData();
-        console.log('✅ Dashboard dirigenti pronta');
-      }catch(e){
-        ErrorHandler.log(e,{area:'bootstrap'});
-        showErrorMessage('Errore di inizializzazione. Verifica la connessione.');
-        setTimeout(()=> goTo('auth'), 2000);
-      }
-    });
+                // Cerca record più vecchio per l'utente (user_id o utente_id)
+                const { data, error } = await supabase
+                    .from('tessera')
+                    .select('data_emissione')
+                    .or(`user_id.eq.${uid},utente_id.eq.${uid}`)
+                    .order('data_emissione', { ascending: true })
+                    .limit(1);
 
-    window.addEventListener('beforeunload', ()=>{
-      try{
-        AppState.saveToStorage();
-        stopAutoRefresh();
-        CacheManager.clear();
-        SessionManager.clearTimers();
-      }catch{}
-    });
+                if (error) throw error;
 
-    // ====== Debug console ======
-    if(typeof window!=='undefined'){
-      window.MyAppDebug = {
-        getSystemInfo: ()=>({ user:currentUser, profile:userProfile, cache:CacheManager.getStats(), errors:ErrorHandler.getErrors(), performance:PerformanceMonitor.getMetrics(), state:AppState }),
-        clearCache: ()=>CacheManager.clear(),
-        clearErrors: ()=>ErrorHandler.clearErrors(),
-        testNotification: (m='Test notifica')=> NotificationManager.show(m,'info'),
-        testError: ()=>{ throw new Error('Test error per debugging'); },
-        forceRefresh: ()=> loadDashboardData(),
-        healthCheck: ()=> NetworkManager.healthCheck(),
-        getPerformance: ()=>({ averageLoadTime: PerformanceMonitor.getAverageTime('dashboard_loaded'), totalMetrics: PerformanceMonitor.getMetrics().length, cacheHitRate: 'n/d' })
-      };
-      console.log('🔧 MyApp Debug Console: window.MyAppDebug');
-    }
-  </script>
+                const dataEm = data && data[0]?.data_emissione;
+                document.getElementById('iscrittoDal').textContent = dataEm ? fmtDate(dataEm) : 'Non disponibile';
+            } catch (e) {
+                console.warn('Impossibile leggere tessera:', e?.message || e);
+                document.getElementById('iscrittoDal').textContent = 'Non disponibile';
+            }
+        }
+
+        // ===================== Panoramica di sistema (counts) =====================
+        async function loadSystemOverview() {
+            try {
+                const nowIso = new Date().toISOString();
+
+                const { count: totalNews, error: newsErr } = await supabase
+                    .from('news')
+                    .select('id', { count: 'exact', head: true })
+                    .eq('pubblicata', true)
+                    .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
+
+                if (newsErr) throw newsErr;
+
+                const { count: featuredCount, error: featErr } = await supabase
+                    .from('news')
+                    .select('id', { count: 'exact', head: true })
+                    .eq('pubblicata', true)
+                    .eq('in_evidenza', true)
+                    .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
+
+                if (featErr) throw featErr;
+
+                document.getElementById('newsCount').textContent = typeof totalNews === 'number' ? totalNews : '—';
+                document.getElementById('featuredNewsCount').textContent = typeof featuredCount === 'number' ? featuredCount : '—';
+            } catch (err) {
+                console.error('Panoramica errore:', err);
+                document.getElementById('newsCount').textContent = '—';
+                document.getElementById('featuredNewsCount').textContent = '—';
+            }
+        }
+
+        // ===================== Ultime Notizie (public.news) =====================
+        async function loadLatestNews() {
+            const wrap = document.getElementById('latestNews');
+            const empty = document.getElementById('newsEmptyState');
+            wrap.innerHTML = `
+                <div class="col-span-full flex items-center justify-center py-8">
+                    <span class="spinner"></span><span class="font-semibold text-gray-600">Caricamento notizie…</span>
+                </div>
+            `;
+
+            try {
+                const nowIso = new Date().toISOString();
+                const { data: news, error } = await supabase
+                    .from('news')
+                    .select('id,titolo,sottotitolo,immagine_url,categoria,data_pubblicazione,in_evidenza')
+                    .eq('pubblicata', true)
+                    .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`)
+                    .order('in_evidenza', { ascending: false })
+                    .order('data_pubblicazione', { ascending: false })
+                    .limit(6);
+
+                if (error) throw error;
+
+                if (!news || news.length === 0) {
+                    wrap.innerHTML = '';
+                    empty.classList.remove('hidden');
+                    return;
+                }
+
+                empty.classList.add('hidden');
+                wrap.innerHTML = '';
+
+                for (const n of news) {
+                    const article = document.createElement('article');
+                    article.className = 'rounded-2xl border border-yellow-200/40 bg-white/95 overflow-hidden shadow group';
+                    article.innerHTML = `
+                        <div class="relative h-40 bg-gray-100 overflow-hidden">
+                            ${n.immagine_url 
+                                ? `<img src="${escapeHTML(n.immagine_url)}" alt="" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300">`
+                                : `<div class="w-full h-full flex items-center justify-center text-4xl">📰</div>`}
+                            <div class="absolute top-2 left-2"><span class="badge">${escapeHTML(n.categoria || 'GENERALE')}</span></div>
+                            ${n.in_evidenza ? `<div class="absolute top-2 right-2"><span class="badge">⭐ In evidenza</span></div>` : ``}
+                        </div>
+                        <div class="p-5">
+                            <h3 class="font-extrabold text-primary text-lg leading-snug mb-1">${escapeHTML(n.titolo)}</h3>
+                            ${n.sottotitolo ? `<p class="text-gray-600 text-sm mb-3">${escapeHTML(n.sottotitolo)}</p>` : ``}
+                            <div class="flex items-center justify-between text-xs text-gray-500">
+                                <span>${fmtDate(n.data_pubblicazione)}</span>
+                                <a href="gestione-notizie.html?id=${encodeURIComponent(n.id)}" class="text-aurora font-bold hover:underline">Apri</a>
+                            </div>
+                        </div>
+                    `;
+                    wrap.appendChild(article);
+                }
+            } catch (err) {
+                console.error('Errore caricamento news:', err);
+                wrap.innerHTML = `
+                    <div class="col-span-full text-center py-10">
+                        <div class="text-5xl mb-4">⚠️</div>
+                        <p class="text-gray-700 font-semibold">Impossibile caricare le notizie</p>
+                        <p class="text-gray-500 text-sm">Riprova più tardi</p>
+                    </div>
+                `;
+            }
+        }
+
+        // ===================== Convenzioni in evidenza (opzionale) =====================
+        async function loadFeaturedConvenzioni() {
+            const wrap = document.getElementById('featuredConvenzioni');
+            const empty = document.getElementById('convEmptyState');
+
+            try {
+                const { data, error } = await supabase
+                    .from('convenzioni')
+                    .select('id,titolo,descrizione,logo_url,link_url,in_evidenza')
+                    .eq('in_evidenza', true)
+                    .limit(6);
+
+                if (error) { 
+                    // se la tabella non esiste o RLS non consente la lettura, mostra placeholder
+                    empty.classList.remove('hidden'); 
+                    return; 
+                }
+
+                if (!data || data.length === 0) {
+                    empty.classList.remove('hidden');
+                    return;
+                }
+
+                empty.classList.add('hidden');
+                wrap.innerHTML = '';
+
+                for (const c of data) {
+                    const a = document.createElement('a');
+                    a.className = 'function-card rounded-2xl border border-yellow-200/40 bg-white/95 overflow-hidden shadow';
+                    a.href = c.link_url || 'gestione-convenzioni.html';
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                    a.innerHTML = `
+                        <div class="w-full h-28 bg-gray-50 flex items-center justify-center overflow-hidden rounded-xl mb-3">
+                            ${c.logo_url ? `<img src="${escapeHTML(c.logo_url)}" alt="" class="max-h-28 object-contain">` : `<div class="text-4xl">🏷️</div>`}
+                        </div>
+                        <div class="font-bold text-ultra-visible text-lg mb-1">${escapeHTML(c.titolo || 'Convenzione')}</div>
+                        <p class="text-ultra-visible opacity-80 text-sm">${escapeHTML(c.descrizione || 'Scopri i vantaggi riservati')}</p>
+                    `;
+                    wrap.appendChild(a);
+                }
+            } catch (e) {
+                console.warn('Errore convenzioni:', e);
+                empty.classList.remove('hidden');
+            }
+        }
+
+        // ===================== Admin: gestione ruoli =====================
+        async function loadUsers() {
+            if (!currentUserRoles.includes('ADMIN')) {
+                showNotification('❌ Accesso negato', 'error');
+                return;
+            }
+
+            const loadBtn = document.getElementById('loadUsersBtn');
+            loadBtn.innerHTML = '<div class="spinner"></div>Caricamento...';
+            loadBtn.disabled = true;
+
+            try {
+                const { data: users, error } = await supabase
+                    .from('profiles')
+                    .select('id, nome, email, ruoli, created_at')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                allUsers = users || [];
+                displayUsers();
+
+                loadBtn.innerHTML = '<span class="mr-2">✅</span>Aggiorna Lista';
+            } catch (error) {
+                console.error('Errore caricamento utenti:', error);
+                showNotification('❌ Errore nel caricamento degli utenti', 'error');
+                loadBtn.innerHTML = '<span class="mr-2">⚠️</span>Riprova';
+            } finally {
+                loadBtn.disabled = false;
+            }
+        }
+
+        function displayUsers() {
+            const container = document.getElementById('usersContainer');
+            
+            if (allUsers.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="text-4xl mb-4">👥</div>
+                        <p class="text-ultra-visible font-semibold">Nessun utente trovato</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = allUsers.map(user => {
+                const userRoles = user.ruoli || ['USER'];
+                const rolesHtml = userRoles.map(role => {
+                    const badgeClass = role === 'ADMIN' ? 'admin' : role === 'DIRIGENTE' ? 'dirigente' : 'user';
+                    const icon = role === 'ADMIN' ? '👑' : role === 'DIRIGENTE' ? '🎯' : '👤';
+                    return `<span class="role-badge ${badgeClass}">${icon} ${escapeHTML(role)}</span>`;
+                }).join('');
+
+                return `
+                    <div class="user-row">
+                        <div class="flex justify-between items-center">
+                            <div class="flex-1">
+                                <div class="font-bold text-primary text-lg">${escapeHTML(user.nome || 'Nome non disponibile')}</div>
+                                <div class="text-gray-600 text-sm mb-2">${escapeHTML(user.email || 'Email non disponibile')}</div>
+                                <div class="flex flex-wrap gap-1">${rolesHtml}</div>
+                            </div>
+                            <div class="ml-4">
+                                <button onclick="openRolesModal('${user.id}')" class="btn-aurora text-sm px-3 py-2">
+                                    <span class="mr-1">✏️</span>
+                                    Modifica
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openRolesModal(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+
+            editingUserId = userId;
+            
+            document.getElementById('modalUserName').textContent = user.nome || 'Nome non disponibile';
+            document.getElementById('modalUserEmail').textContent = user.email || 'Email non disponibile';
+            document.getElementById('modalUserId').value = userId;
+
+            const currentRoles = user.ruoli || ['USER'];
+            const currentRolesHtml = currentRoles.map(role => {
+                const badgeClass = role === 'ADMIN' ? 'admin' : role === 'DIRIGENTE' ? 'dirigente' : 'user';
+                const icon = role === 'ADMIN' ? '👑' : role === 'DIRIGENTE' ? '🎯' : '👤';
+                return `<span class="role-badge ${badgeClass}">${icon} ${escapeHTML(role)}</span>`;
+            }).join('');
+            document.getElementById('currentRoles').innerHTML = currentRolesHtml;
+
+            // Set checkboxes
+            const checkboxes = document.querySelectorAll('input[name="roles"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = currentRoles.includes(checkbox.value);
+            });
+
+            document.getElementById('rolesModal').classList.add('active');
+        }
+
+        function closeRolesModal() {
+            document.getElementById('rolesModal').classList.remove('active');
+            editingUserId = null;
+        }
+
+        async function saveUserRoles(event) {
+            event.preventDefault();
+            if (!editingUserId) return;
+
+            const saveBtn = document.getElementById('saveRolesBtn');
+            saveBtn.innerHTML = '<div class="spinner"></div>Salvando...';
+            saveBtn.disabled = true;
+
+            try {
+                const formData = new FormData(event.target);
+                const selectedRoles = formData.getAll('roles');
+                if (selectedRoles.length === 0) selectedRoles.push('USER');
+
+                const { error } = await supabase
+                    .from('profiles')
+                    .update({ ruoli: selectedRoles })
+                    .eq('id', editingUserId);
+
+                if (error) throw error;
+
+                showNotification('✅ Ruoli aggiornati con successo!', 'success');
+                closeRolesModal();
+                await loadUsers();
+
+            } catch (error) {
+                console.error('Errore salvataggio ruoli:', error);
+                showNotification('❌ Errore nel salvataggio dei ruoli', 'error');
+            } finally {
+                saveBtn.innerHTML = '<span class="mr-2">💾</span>Salva Modifiche';
+                saveBtn.disabled = false;
+            }
+        }
+
+        // Smart Home Redirect (resta disponibile)
+        async function smartHomeRedirect() {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                
+                if (!user) { window.location.href = '../login.html'; return; }
+
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('ruoli')
+                    .eq('id', user.id)
+                    .single();
+
+                const userRoles = profile?.ruoli || ['USER'];
+                
+                if (userRoles.includes('DIRIGENTE') || userRoles.includes('ADMIN')) {
+                    window.location.href = 'home_dirigenti.html';
+                } else {
+                    window.location.href = 'home.html';
+                }
+            } catch (error) {
+                console.error('Errore smart navigation:', error);
+                window.location.href = 'home.html';
+            }
+        }
+
+        // Event listeners
+        document.getElementById('rolesForm').addEventListener('submit', saveUserRoles);
+
+        // Close modal on click outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                closeRolesModal();
+            }
+        });
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeRolesModal();
+            }
+        });
+
+        // Expose functions globally
+        window.loadUsers = loadUsers;
+        window.openRolesModal = openRolesModal;
+        window.closeRolesModal = closeRolesModal;
+        window.smartHomeRedirect = smartHomeRedirect;
+
+        // Initialize app
+        init();
+    </script>
+
 </body>
 </html>
