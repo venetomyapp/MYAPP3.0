@@ -10,26 +10,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
+    <!-- Tailwind (ok in sviluppo; in produzione builda con CLI/PostCSS) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        'inter': ['Inter', 'sans-serif'],
-                    },
+                    fontFamily: { inter: ['Inter', 'sans-serif'] },
                     colors: {
-                        primary: '#1a1a2e',
-                        secondary: '#16213e',
-                        accent: '#0f3460',
-                        aurora: '#e94560',
-                        cyan: '#00d4ff',
-                        magenta: '#ff006e',
-                        gold: '#ffd700',
-                        teal: '#03dac6',
-                        dark: '#0a0a23',
-                        light: '#f8fafc',
-                        success: '#10b981'
+                        primary:'#1a1a2e', secondary:'#16213e', accent:'#0f3460', aurora:'#e94560',
+                        cyan:'#00d4ff', magenta:'#ff006e', gold:'#ffd700', teal:'#03dac6',
+                        dark:'#0a0a23', light:'#f8fafc', success:'#10b981'
                     }
                 }
             }
@@ -37,168 +28,67 @@
     </script>
     
     <style>
-        :root {
-            --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
-            --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
-            --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
-            --gradient-gold: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
-            --gradient-teal: linear-gradient(135deg, #03dac6 0%, #00d4ff 100%);
+        :root{
+            --gradient-aurora:linear-gradient(135deg,#1a1a2e 0%,#16213e 25%,#0f3460 50%,#e94560 75%,#00d4ff 100%);
+            --gradient-gold:linear-gradient(135deg,#ffd700 0%,#ffb347 100%);
+            --gradient-magic:linear-gradient(135deg,#ff006e 0%,#e94560 50%,#03dac6 100%);
         }
-
-        * { font-family: 'Inter', sans-serif; }
-
-        body {
-            background: var(--gradient-aurora);
-            background-size: 400% 400%;
-            animation: aurora 15s ease infinite;
-            min-height: 100vh;
-        }
-
-        @keyframes aurora {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        @keyframes fade-in {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .fade-in { animation: fade-in 0.6s ease-out forwards; }
-        .text-ultra-visible {
-            color: #ffffff;
-            text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
-            font-weight: 800;
-        }
-        .hero-title { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 900; line-height: 1.1; }
-        .section-title { font-size: clamp(1.5rem, 5vw, 2.25rem); font-weight: 900; line-height: 1.2; }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(255, 215, 0, 0.15);
-            border-radius: 24px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.12);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        .glass-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #ffd700, #e94560, #00d4ff, #03dac6);
-        }
-        .glass-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.15);
-            border-color: rgba(255, 215, 0, 0.25);
-        }
-
-        .admin-card {
-            background: linear-gradient(145deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
-            backdrop-filter: blur(16px);
-            border: 2px solid rgba(255, 215, 0, 0.2);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.1);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .admin-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
-            background: var(--gradient-gold);
-        }
-
-        .function-card {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(16px);
-            border: 3px solid rgba(255, 255, 255, 0.4);
-            border-radius: 18px;
-            padding: 1.5rem;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            text-align: center;
-            min-height: 140px;
-            display: flex;
-            flex-direction: column; align-items: center; justify-content: center;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1), 
-                        inset 0 1px 0 rgba(255, 255, 255, 0.2),
-                        0 0 0 1px rgba(255, 215, 0, 0.1);
-            position: relative;
-            text-decoration: none;
-            color: inherit;
-        }
-        .function-card::before {
-            content: '';
-            position: absolute; inset: 0; border-radius: 15px; padding: 2px;
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(233, 69, 96, 0.3), rgba(0, 212, 255, 0.3));
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask-composite: xor; -webkit-mask-composite: xor; pointer-events: none;
-        }
-        .function-card:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-6px) scale(1.03);
-            border-color: rgba(255, 215, 0, 0.6);
-            box-shadow: 0 25px 50px rgba(255, 215, 0, 0.2),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.3),
-                        0 0 0 2px rgba(255, 215, 0, 0.3);
-        }
-
-        .role-badge { display:inline-block; padding:0.25rem 0.75rem; border-radius:20px; font-size:0.75rem; font-weight:700; margin:0.125rem; }
-        .role-badge.admin { background: var(--gradient-gold); color:#1a1a2e; }
-        .role-badge.dirigente { background: var(--gradient-magic); color:#fff; }
-        .role-badge.user { background: linear-gradient(135deg, #6b7280, #4b5563); color:#fff; }
-
-        /* Badge scuri per la categoria notizia */
-        .badge {
-            display:inline-block; 
-            padding: .25rem .6rem; 
-            border-radius: 9999px; 
-            font-size:.70rem; 
-            font-weight:800; 
-            color:#fff;
-            background: rgba(0,0,0,.65);
-            border: 1px solid rgba(255,255,255,.25);
-            backdrop-filter: blur(4px);
-        }
-
-        .btn-aurora{ background: var(--gradient-magic); color:#fff; border:2px solid rgba(233,69,96,.3); transition: all .4s cubic-bezier(.4,0,.2,1); min-height:44px; font-weight:700; border-radius:12px; padding:.75rem 1.5rem; text-decoration:none; display:inline-block}
-        .btn-aurora:hover{ transform: translateY(-3px) scale(1.05); box-shadow:0 15px 35px rgba(233,69,96,.4); border-color: rgba(233,69,96,.6); }
-        .btn-secondary{ background: rgba(255,255,255,.9); color:#1a1a2e; border:2px solid rgba(255,255,255,.8); transition:.3s; min-height:44px; font-weight:700; border-radius:12px; padding:.75rem 1.5rem; text-decoration:none; display:inline-block}
-        .btn-secondary:hover{ background:#fff; transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,.15); }
-
-        .user-row { background: rgba(255,255,255,0.95); border:1px solid rgba(255,215,0,0.2); border-radius:12px; padding:1rem; margin-bottom:0.75rem; transition:.3s }
-        .user-row:hover { background:#fff; border-color: rgba(255,215,0,0.3); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255,215,0,0.1); }
-
-        .modal { display:none; position:fixed; inset:0; background: rgba(0,0,0,.7); backdrop-filter: blur(8px); z-index:1000; }
-        .modal.active { display:flex; align-items:center; justify-content:center; }
-        .modal-content { background: rgba(255,255,255,.95); backdrop-filter: blur(20px); border-radius:20px; padding:2rem; max-width:500px; width:90%; max-height:85vh; overflow-y:auto; border:2px solid rgba(255,215,0,.2); box-shadow: 0 25px 50px rgba(0,0,0,.25); }
-
-        .spinner { border:3px solid rgba(255,215,0,.3); border-radius:50%; border-top:3px solid #ffd700; width:24px; height:24px; animation: spin 1s linear infinite; display:inline-block; margin-right:.5rem }
-        @keyframes spin { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
-
-        /* Schermata di guardia mentre si verifica la sessione */
-        #session-guard {
-            position: fixed; inset: 0; display:none; align-items:center; justify-content:center;
-            background: rgba(10,10,35,.6); backdrop-filter: blur(6px); z-index: 2000;
-            color: #fff; font-weight: 800;
-        }
-        #session-guard.active { display:flex; }
+        *{font-family:'Inter',sans-serif}
+        body{background:var(--gradient-aurora);background-size:400% 400%;animation:aurora 15s ease infinite;min-height:100vh}
+        @keyframes aurora{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        @keyframes fade-in{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .6s ease-out forwards}
+        .text-ultra-visible{color:#fff;text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1);font-weight:800}
+        .hero-title{font-size:clamp(2.5rem,8vw,4.5rem);font-weight:900;line-height:1.1}
+        .section-title{font-size:clamp(1.5rem,5vw,2.25rem);font-weight:900;line-height:1.2}
+        .glass-card{background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border:2px solid rgba(255,215,0,.15);border-radius:24px;box-shadow:0 25px 50px rgba(0,0,0,.12);transition:.4s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
+        .glass-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#ffd700,#e94560,#00d4ff,#03dac6)}
+        .glass-card:hover{transform:translateY(-8px);box-shadow:0 35px 70px rgba(0,0,0,.15);border-color:rgba(255,215,0,.25)}
+        .admin-card{background:linear-gradient(145deg,rgba(255,215,0,.1),rgba(255,215,0,.05));backdrop-filter:blur(16px);border:2px solid rgba(255,215,0,.2);border-radius:20px;box-shadow:0 20px 40px rgba(255,215,0,.1);transition:.3s ease;position:relative;overflow:hidden}
+        .admin-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gradient-gold)}
+        .function-card{background:rgba(255,255,255,.2);backdrop-filter:blur(16px);border:3px solid rgba(255,255,255,.4);border-radius:18px;padding:1.5rem;transition:.4s cubic-bezier(.4,0,.2,1);cursor:pointer;text-align:center;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 8px 25px rgba(0,0,0,.1),inset 0 1px 0 rgba(255,255,255,.2),0 0 0 1px rgba(255,215,0,.1);position:relative;text-decoration:none;color:inherit}
+        .function-card::before{content:'';position:absolute;inset:0;border-radius:15px;padding:2px;background:linear-gradient(135deg,rgba(255,215,0,.3),rgba(233,69,96,.3),rgba(0,212,255,.3));mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+        .function-card:hover{background:rgba(255,255,255,.3);transform:translateY(-6px) scale(1.03);border-color:rgba(255,215,0,.6);box-shadow:0 25px 50px rgba(255,215,0,.2),inset 0 1px 0 rgba(255,255,255,.3),0 0 0 2px rgba(255,215,0,.3)}
+        .role-badge{display:inline-block;padding:.25rem .75rem;border-radius:20px;font-size:.75rem;font-weight:700;margin:.125rem}
+        .role-badge.admin{background:var(--gradient-gold);color:#1a1a2e}
+        .role-badge.dirigente{background:var(--gradient-magic);color:#fff}
+        .role-badge.user{background:linear-gradient(135deg,#6b7280,#4b5563);color:#fff}
+        .badge{display:inline-block;padding:.25rem .6rem;border-radius:9999px;font-size:.70rem;font-weight:800;color:#fff;background:rgba(0,0,0,.65);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(4px)}
+        .btn-aurora{background:var(--gradient-magic);color:#fff;border:2px solid rgba(233,69,96,.3);transition:.4s cubic-bezier(.4,0,.2,1);min-height:44px;font-weight:700;border-radius:12px;padding:.75rem 1.5rem;text-decoration:none;display:inline-block}
+        .btn-aurora:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 15px 35px rgba(233,69,96,.4);border-color:rgba(233,69,96,.6)}
+        .btn-secondary{background:rgba(255,255,255,.9);color:#1a1a2e;border:2px solid rgba(255,255,255,.8);transition:.3s;min-height:44px;font-weight:700;border-radius:12px;padding:.75rem 1.5rem;text-decoration:none;display:inline-block}
+        .btn-secondary:hover{background:#fff;transform:translateY(-2px);box-shadow:0 10px 25px rgba(0,0,0,.15)}
+        .user-row{background:rgba(255,255,255,.95);border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:1rem;margin-bottom:.75rem;transition:.3s}
+        .user-row:hover{background:#fff;border-color:rgba(255,215,0,.3);transform:translateY(-2px);box-shadow:0 8px 20px rgba(255,215,0,.1)}
+        .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);z-index:1000}
+        .modal.active{display:flex;align-items:center;justify-content:center}
+        .modal-content{background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-radius:20px;padding:2rem;max-width:500px;width:90%;max-height:85vh;overflow-y:auto;border:2px solid rgba(255,215,0,.2);box-shadow:0 25px 50px rgba(0,0,0,.25)}
+        .spinner{border:3px solid rgba(255,215,0,.3);border-radius:50%;border-top:3px solid #ffd700;width:24px;height:24px;animation:spin 1s linear infinite;display:inline-block;margin-right:.5rem}
+        @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+        /* Overlays sessione */
+        #session-guard,#session-required{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(10,10,35,.6);backdrop-filter:blur(6px);z-index:2000;color:#fff;font-weight:800}
+        #session-guard.active,#session-required.active{display:flex}
     </style>
 </head>
 <body class="font-inter">
 
-    <!-- Overlay guardia sessione -->
+    <!-- Overlay: verifica sessione -->
     <div id="session-guard" aria-live="polite">
         <div class="flex items-center gap-3 text-xl">
             <span class="spinner"></span>
             <span>Verifica accesso…</span>
+        </div>
+    </div>
+    <!-- Overlay: sessione richiesta -->
+    <div id="session-required" class="p-4">
+        <div class="glass-card max-w-md w-full p-6 text-center">
+            <div class="text-4xl mb-3">🔐</div>
+            <h3 class="text-xl font-extrabold text-primary mb-2">Sessione non attiva</h3>
+            <p class="text-gray-600 mb-5">Accedi per continuare nell’area dirigenti.</p>
+            <div class="flex gap-3 justify-center">
+                <a id="btnGoLogin" class="btn-aurora" href="login.html">Accedi</a>
+                <button id="btnRetry" class="btn-secondary">Riprova</button>
+            </div>
         </div>
     </div>
 
@@ -294,6 +184,13 @@
                 <span class="inline-flex items-center gap-2 bg-white px-3 py-1 rounded-full border">
                     🔐 Accesso: <strong id="accessLevel" class="ml-1">Verificando privilegi...</strong>
                 </span>
+            </div>
+
+            <!-- Messaggio accesso negato (se ruoli mancanti) -->
+            <div id="noAccessBox" class="hidden mt-6 p-4 rounded-xl border border-rose-200 bg-rose-50 text-rose-700">
+                <div class="font-bold mb-1">Accesso limitato</div>
+                <p class="text-sm">Il tuo profilo non ha i privilegi da DIRIGENTE/ADMIN. Se pensi sia un errore, contatta l’amministratore.</p>
+                <a href="home.html" class="btn-secondary mt-3 inline-block">Vai alla Home</a>
             </div>
         </section>
 
@@ -482,71 +379,47 @@
         const supabase = createClient(
             'https://lycrgzptkdkksukcwrld.supabase.co',
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5Y3JnenB0a2Rra3N1a2N3cmxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3ODQyMzAsImV4cCI6MjA2ODM2MDIzMH0.ZJGOXAMC3hKKrnwXHKEa2_Eh7ZpOKeLYvYlYneBiEfk',
-            {
-                auth: {
-                    persistSession: true,
-                    autoRefreshToken: true,
-                    detectSessionInUrl: true,
-                }
-            }
+            { auth: { persistSession:true, autoRefreshToken:true, detectSessionInUrl:true } }
         );
 
+        const REQUIRE_ROLE = ['DIRIGENTE','ADMIN'];
         let currentUser = null;
         let currentUserRoles = [];
         let allUsers = [];
         let editingUserId = null;
-        let __redirecting = false;
 
         // ===================== Utils =====================
-        const fmtDate = (iso) => {
-            try { return iso ? new Intl.DateTimeFormat('it-IT', { dateStyle:'long' }).format(new Date(iso)) : '—'; }
-            catch { return '—'; }
-        };
-        const escapeHTML = (s) => String(s ?? '')
-            .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
-            .replaceAll('"','&quot;').replaceAll("'","&#39;");
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            const colors = {
-                success: 'bg-gradient-to-r from-green-500 to-green-600',
-                error: 'bg-gradient-to-r from-red-500 to-red-600',
-                info: 'bg-gradient-to-r from-blue-500 to-blue-600'
-            };
-            notification.className = `fixed top-6 right-6 ${colors[type]} text-white px-6 py-4 rounded-2xl shadow-2xl z-50 transform translate-x-full transition-transform duration-500 font-bold text-base backdrop-blur-md border border-white/20`;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            setTimeout(() => notification.classList.remove('translate-x-full'), 100);
-            setTimeout(() => {
-                notification.classList.add('translate-x-full');
-                setTimeout(() => notification.remove(), 500);
-            }, 4000);
+        const fmtDate = (iso) => { try { return iso ? new Intl.DateTimeFormat('it-IT',{dateStyle:'long'}).format(new Date(iso)) : '—'; } catch { return '—'; } };
+        const escapeHTML = (s) => String(s ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;");
+        function showNotification(message, type='info'){
+            const n = document.createElement('div');
+            const colors = {success:'from-green-500 to-green-600',error:'from-red-500 to-red-600',info:'from-blue-500 to-blue-600'};
+            n.className=`fixed top-6 right-6 bg-gradient-to-r ${colors[type]} text-white px-6 py-4 rounded-2xl shadow-2xl z-50 transform translate-x-full transition-transform duration-500 font-bold text-base backdrop-blur-md border border-white/20`;
+            n.textContent=message; document.body.appendChild(n);
+            setTimeout(()=>n.classList.remove('translate-x-full'),100);
+            setTimeout(()=>{ n.classList.add('translate-x-full'); setTimeout(()=>n.remove(),500) },4000);
         }
         const sessionGuard = {
-            el: null,
-            show() { this.el = this.el || document.getElementById('session-guard'); this.el?.classList.add('active'); },
-            hide() { this.el = this.el || document.getElementById('session-guard'); this.el?.classList.remove('active'); }
+            guard: null, required: null,
+            show(){ this.guard = this.guard || document.getElementById('session-guard'); this.guard?.classList.add('active'); },
+            hide(){ this.guard = this.guard || document.getElementById('session-guard'); this.guard?.classList.remove('active'); },
+            require(){ this.required = this.required || document.getElementById('session-required'); this.required?.classList.add('active'); },
+            clearRequire(){ this.required = this.required || document.getElementById('session-required'); this.required?.classList.remove('active'); }
         };
-        function safeReplace(url) { if (__redirecting) return; __redirecting = true; window.location.replace(url); }
 
-        // Attende la sessione iniziale per evitare loop di redirect
-        async function ensureSession(timeoutMs = 1500) {
+        // Attendi fino a 5s l'INITIAL_SESSION/SIGNED_IN per evitare loop
+        async function ensureSession(timeoutMs = 5000){
             sessionGuard.show();
-            try {
+            try{
                 const { data: { session } } = await supabase.auth.getSession();
                 if (session?.user) return session.user;
 
-                // Se non c'è ancora sessione, attendi l'INITIAL_SESSION
-                return await new Promise((resolve) => {
-                    const timer = setTimeout(() => {
-                        subscription?.unsubscribe?.();
-                        resolve(null);
-                    }, timeoutMs);
-
-                    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, sess) => {
-                        if (sess?.user) {
-                            clearTimeout(timer);
-                            subscription?.unsubscribe?.();
-                            resolve(sess.user);
+                return await new Promise((resolve)=>{
+                    let settled = false;
+                    const timer = setTimeout(()=>{ if(!settled){ settled=true; resolve(null); } }, timeoutMs);
+                    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, sess)=>{
+                        if (sess?.user && !settled){
+                            settled = true; clearTimeout(timer); subscription?.unsubscribe?.(); resolve(sess.user);
                         }
                     });
                 });
@@ -556,132 +429,125 @@
         }
 
         // ===================== Init =====================
-        async function init() {
-            try {
+        async function init(){
+            try{
                 const user = await ensureSession();
-                if (!user) { safeReplace('../login.html'); return; }
+                if (!user){
+                    // niente redirect automatico: mostro CTA
+                    sessionGuard.require();
+                    document.getElementById('btnRetry').onclick = async ()=>{ sessionGuard.clearRequire(); init(); };
+                    // puoi opzionalmente puntare a ../login.html se login.html sta una cartella sopra:
+                    // document.getElementById('btnGoLogin').setAttribute('href','../login.html');
+                    return;
+                }
                 currentUser = user;
 
                 await loadUserProfile();   // badge/ruoli/email + gate accessi
                 await loadIscrittoDal();   // tessera.data_emissione
                 await loadSystemOverview();// counts
-                await loadLatestNews();    // news (pubblicate & non scadute)
+                await loadLatestNews();    // news pubblicate & non scadute
                 await loadFeaturedConvenzioni(); // opzionale
-            } catch (error) {
-                console.error('Errore inizializzazione:', error);
+            } catch (e){
+                console.error('Errore inizializzazione:', e);
                 showNotification('❌ Errore nel caricamento', 'error');
             }
         }
 
         // ===================== Profile & Roles =====================
-        async function loadUserProfile() {
-            try {
+        async function loadUserProfile(){
+            try{
                 const { data: profile, error } = await supabase
                     .from('profiles')
-                    .select('nome, email, ruoli')
+                    .select('nome,email,ruoli')
                     .eq('id', currentUser.id)
                     .single();
-
                 if (error) throw error;
-                if (!profile) throw new Error('Profilo non trovato');
 
-                // garantisco array
-                currentUserRoles = Array.isArray(profile.ruoli) ? profile.ruoli : (profile.ruoli ? [String(profile.ruoli)] : ['USER']);
+                currentUserRoles = Array.isArray(profile?.ruoli) ? profile.ruoli : (profile?.ruoli ? [String(profile.ruoli)] : ['USER']);
 
-                // Check permessi
-                if (!currentUserRoles.includes('DIRIGENTE') && !currentUserRoles.includes('ADMIN')) {
-                    safeReplace('home.html');
-                    return;
-                }
-
-                // UI: nome, email, icona
-                document.getElementById('userName').textContent = profile.nome || 'Dirigente';
-                document.getElementById('userEmail').textContent = profile.email || '—';
+                // UI base
+                document.getElementById('userName').textContent = profile?.nome || 'Dirigente';
+                document.getElementById('userEmail').textContent = profile?.email || '—';
                 document.getElementById('userIcon').textContent = currentUserRoles.includes('ADMIN') ? '👑' : '🎯';
-                
-                // Ruoli badges
+
+                // Badge ruoli
                 const rolesContainer = document.getElementById('userRoles');
-                rolesContainer.innerHTML = currentUserRoles.map(role => {
-                    const badgeClass = role === 'ADMIN' ? 'admin' : role === 'DIRIGENTE' ? 'dirigente' : 'user';
-                    const icon = role === 'ADMIN' ? '👑' : role === 'DIRIGENTE' ? '🎯' : '👤';
-                    return `<span class="role-badge ${badgeClass}">${icon} ${escapeHTML(role)}</span>`;
+                rolesContainer.innerHTML = currentUserRoles.map(role=>{
+                    const cls = role==='ADMIN'?'admin':role==='DIRIGENTE'?'dirigente':'user';
+                    const icon = role==='ADMIN'?'👑':role==='DIRIGENTE'?'🎯':'👤';
+                    return `<span class="role-badge ${cls}">${icon} ${escapeHTML(role)}</span>`;
                 }).join('');
 
                 // Access level + summary
-                const accessLevel = currentUserRoles.includes('ADMIN') ? 
-                    'Accesso Amministratore Completo' : 
-                    'Accesso Dirigente Autorizzato';
+                const accessLevel = currentUserRoles.some(r=>REQUIRE_ROLE.includes(r)) ? 'Accesso Dirigente Autorizzato' : 'Accesso Utente Base';
                 document.getElementById('accessLevel').textContent = accessLevel;
                 document.getElementById('rolesSummary').textContent = currentUserRoles.join(' · ');
 
-                // Mostra sezione admin
-                if (currentUserRoles.includes('ADMIN')) {
-                    document.getElementById('adminSection').style.display = 'block';
+                // Gate: se non ha ruolo, non redirecto — mostro info box
+                if (!currentUserRoles.some(r=>REQUIRE_ROLE.includes(r))){
+                    document.getElementById('noAccessBox').classList.remove('hidden');
+                } else {
+                    // admin tools visibili solo se ADMIN
+                    if (currentUserRoles.includes('ADMIN')){
+                        document.getElementById('adminSection').style.display = 'block';
+                    }
                 }
-
-            } catch (error) {
-                console.error('Errore caricamento profilo:', error);
+            } catch (e){
+                console.error('Errore caricamento profilo:', e);
                 showNotification('❌ Errore nel caricamento del profilo', 'error');
             }
         }
 
         // ===================== "Iscritto dal" da tabella tessera =====================
-        async function loadIscrittoDal() {
-            try {
+        async function loadIscrittoDal(){
+            try{
                 const uid = currentUser?.id;
-                if (!uid) { document.getElementById('iscrittoDal').textContent = '—'; return; }
-
-                // Cerca record più vecchio per l'utente (user_id o utente_id)
+                if (!uid){ document.getElementById('iscrittoDal').textContent='—'; return; }
                 const { data, error } = await supabase
                     .from('tessera')
                     .select('data_emissione')
                     .or(`user_id.eq.${uid},utente_id.eq.${uid}`)
-                    .order('data_emissione', { ascending: true })
+                    .order('data_emissione', { ascending:true })
                     .limit(1);
-
                 if (error) throw error;
-
                 const dataEm = data && data[0]?.data_emissione;
                 document.getElementById('iscrittoDal').textContent = dataEm ? fmtDate(dataEm) : 'Non disponibile';
-            } catch (e) {
-                console.warn('Impossibile leggere tessera:', e?.message || e);
+            } catch(e){
+                console.warn('Impossibile leggere tessera:', e?.message||e);
                 document.getElementById('iscrittoDal').textContent = 'Non disponibile';
             }
         }
 
         // ===================== Panoramica di sistema (counts) =====================
-        async function loadSystemOverview() {
-            try {
+        async function loadSystemOverview(){
+            try{
                 const nowIso = new Date().toISOString();
-
                 const { count: totalNews, error: newsErr } = await supabase
                     .from('news')
-                    .select('id', { count: 'exact', head: true })
+                    .select('id', { count:'exact', head:true })
                     .eq('pubblicata', true)
                     .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
-
                 if (newsErr) throw newsErr;
 
                 const { count: featuredCount, error: featErr } = await supabase
                     .from('news')
-                    .select('id', { count: 'exact', head: true })
+                    .select('id', { count:'exact', head:true })
                     .eq('pubblicata', true)
                     .eq('in_evidenza', true)
                     .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
-
                 if (featErr) throw featErr;
 
-                document.getElementById('newsCount').textContent = typeof totalNews === 'number' ? totalNews : '—';
-                document.getElementById('featuredNewsCount').textContent = typeof featuredCount === 'number' ? featuredCount : '—';
-            } catch (err) {
-                console.error('Panoramica errore:', err);
+                document.getElementById('newsCount').textContent = Number.isFinite(totalNews) ? totalNews : '—';
+                document.getElementById('featuredNewsCount').textContent = Number.isFinite(featuredCount) ? featuredCount : '—';
+            } catch (e){
+                console.error('Panoramica errore:', e);
                 document.getElementById('newsCount').textContent = '—';
                 document.getElementById('featuredNewsCount').textContent = '—';
             }
         }
 
         // ===================== Ultime Notizie (public.news) =====================
-        async function loadLatestNews() {
+        async function loadLatestNews(){
             const wrap = document.getElementById('latestNews');
             const empty = document.getElementById('newsEmptyState');
             wrap.innerHTML = `
@@ -689,38 +555,30 @@
                     <span class="spinner"></span><span class="font-semibold text-gray-600">Caricamento notizie…</span>
                 </div>
             `;
-
-            try {
+            try{
                 const nowIso = new Date().toISOString();
                 const { data: news, error } = await supabase
                     .from('news')
                     .select('id,titolo,sottotitolo,immagine_url,categoria,data_pubblicazione,in_evidenza')
                     .eq('pubblicata', true)
                     .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`)
-                    .order('in_evidenza', { ascending: false })
-                    .order('data_pubblicazione', { ascending: false })
+                    .order('in_evidenza', { ascending:false })
+                    .order('data_pubblicazione', { ascending:false })
                     .limit(6);
-
                 if (error) throw error;
 
-                if (!news || news.length === 0) {
-                    wrap.innerHTML = '';
-                    empty.classList.remove('hidden');
-                    return;
+                if (!news || news.length===0){
+                    wrap.innerHTML=''; empty.classList.remove('hidden'); return;
                 }
-
                 empty.classList.add('hidden');
-                wrap.innerHTML = '';
-
-                for (const n of news) {
-                    const article = document.createElement('article');
-                    article.className = 'rounded-2xl border border-yellow-200/40 bg-white/95 overflow-hidden shadow group';
-                    article.innerHTML = `
+                wrap.innerHTML='';
+                for (const n of news){
+                    const el = document.createElement('article');
+                    el.className='rounded-2xl border border-yellow-200/40 bg-white/95 overflow-hidden shadow group';
+                    el.innerHTML = `
                         <div class="relative h-40 bg-gray-100 overflow-hidden">
-                            ${n.immagine_url 
-                                ? `<img src="${escapeHTML(n.immagine_url)}" alt="" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300">`
-                                : `<div class="w-full h-full flex items-center justify-center text-4xl">📰</div>`}
-                            <div class="absolute top-2 left-2"><span class="badge">${escapeHTML(n.categoria || 'GENERALE')}</span></div>
+                            ${n.immagine_url ? `<img src="${escapeHTML(n.immagine_url)}" alt="" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300">` : `<div class="w-full h-full flex items-center justify-center text-4xl">📰</div>`}
+                            <div class="absolute top-2 left-2"><span class="badge">${escapeHTML(n.categoria||'GENERALE')}</span></div>
                             ${n.in_evidenza ? `<div class="absolute top-2 right-2"><span class="badge">⭐ In evidenza</span></div>` : ``}
                         </div>
                         <div class="p-5">
@@ -732,10 +590,10 @@
                             </div>
                         </div>
                     `;
-                    wrap.appendChild(article);
+                    wrap.appendChild(el);
                 }
-            } catch (err) {
-                console.error('Errore caricamento news:', err);
+            } catch(e){
+                console.error('Errore caricamento news:', e);
                 wrap.innerHTML = `
                     <div class="col-span-full text-center py-10">
                         <div class="text-5xl mb-4">⚠️</div>
@@ -747,212 +605,139 @@
         }
 
         // ===================== Convenzioni in evidenza (opzionale) =====================
-        async function loadFeaturedConvenzioni() {
+        async function loadFeaturedConvenzioni(){
             const wrap = document.getElementById('featuredConvenzioni');
             const empty = document.getElementById('convEmptyState');
-
-            try {
+            try{
                 const { data, error } = await supabase
                     .from('convenzioni')
                     .select('id,titolo,descrizione,logo_url,link_url,in_evidenza')
                     .eq('in_evidenza', true)
                     .limit(6);
-
-                if (error) { 
-                    // se la tabella non esiste o RLS non consente la lettura, mostra placeholder
-                    empty.classList.remove('hidden'); 
-                    return; 
-                }
-
-                if (!data || data.length === 0) {
-                    empty.classList.remove('hidden');
-                    return;
-                }
-
+                if (error){ empty.classList.remove('hidden'); return; }
+                if (!data || data.length===0){ empty.classList.remove('hidden'); return; }
                 empty.classList.add('hidden');
-                wrap.innerHTML = '';
-
-                for (const c of data) {
+                wrap.innerHTML='';
+                for (const c of data){
                     const a = document.createElement('a');
-                    a.className = 'function-card rounded-2xl border border-yellow-200/40 bg-white/95 overflow-hidden shadow';
+                    a.className='function-card rounded-2xl border border-yellow-200/40 bg-white/95 overflow-hidden shadow';
                     a.href = c.link_url || 'gestione-convenzioni.html';
-                    a.target = '_blank';
-                    a.rel = 'noopener noreferrer';
+                    a.target='_blank'; a.rel='noopener noreferrer';
                     a.innerHTML = `
                         <div class="w-full h-28 bg-gray-50 flex items-center justify-center overflow-hidden rounded-xl mb-3">
-                            ${c.logo_url ? `<img src="${escapeHTML(c.logo_url)}" alt="" class="max-h-28 object-contain">` : `<div class="text-4xl">🏷️</div>`}
+                            ${c.logo_url ? `<img src="${escapeHTML(c.logo_url)}" alt="" class="max-height-28 object-contain">` : `<div class="text-4xl">🏷️</div>`}
                         </div>
-                        <div class="font-bold text-ultra-visible text-lg mb-1">${escapeHTML(c.titolo || 'Convenzione')}</div>
-                        <p class="text-ultra-visible opacity-80 text-sm">${escapeHTML(c.descrizione || 'Scopri i vantaggi riservati')}</p>
+                        <div class="font-bold text-ultra-visible text-lg mb-1">${escapeHTML(c.titolo||'Convenzione')}</div>
+                        <p class="text-ultra-visible opacity-80 text-sm">${escapeHTML(c.descrizione||'Scopri i vantaggi riservati')}</p>
                     `;
                     wrap.appendChild(a);
                 }
-            } catch (e) {
+            } catch(e){
                 console.warn('Errore convenzioni:', e);
                 empty.classList.remove('hidden');
             }
         }
 
         // ===================== Admin: gestione ruoli =====================
-        async function loadUsers() {
-            if (!currentUserRoles.includes('ADMIN')) {
-                showNotification('❌ Accesso negato', 'error');
-                return;
-            }
-
-            const loadBtn = document.getElementById('loadUsersBtn');
-            loadBtn.innerHTML = '<div class="spinner"></div>Caricamento...';
-            loadBtn.disabled = true;
-
-            try {
+        async function loadUsers(){
+            if (!currentUserRoles.includes('ADMIN')){ showNotification('❌ Accesso negato', 'error'); return; }
+            const btn = document.getElementById('loadUsersBtn');
+            btn.innerHTML = '<div class="spinner"></div>Caricamento...'; btn.disabled = true;
+            try{
                 const { data: users, error } = await supabase
                     .from('profiles')
-                    .select('id, nome, email, ruoli, created_at')
-                    .order('created_at', { ascending: false });
-
+                    .select('id,nome,email,ruoli,created_at')
+                    .order('created_at', { ascending:false });
                 if (error) throw error;
-
                 allUsers = users || [];
                 displayUsers();
-
-                loadBtn.innerHTML = '<span class="mr-2">✅</span>Aggiorna Lista';
-            } catch (error) {
-                console.error('Errore caricamento utenti:', error);
+                btn.innerHTML = '<span class="mr-2">✅</span>Aggiorna Lista';
+            } catch(e){
+                console.error('Errore caricamento utenti:', e);
                 showNotification('❌ Errore nel caricamento degli utenti', 'error');
-                loadBtn.innerHTML = '<span class="mr-2">⚠️</span>Riprova';
-            } finally {
-                loadBtn.disabled = false;
+                btn.innerHTML = '<span class="mr-2">⚠️</span>Riprova';
+            } finally{
+                btn.disabled = false;
             }
         }
 
-        function displayUsers() {
+        function displayUsers(){
             const container = document.getElementById('usersContainer');
-            
-            if (allUsers.length === 0) {
+            if (allUsers.length===0){
                 container.innerHTML = `
                     <div class="text-center py-8">
                         <div class="text-4xl mb-4">👥</div>
                         <p class="text-ultra-visible font-semibold">Nessun utente trovato</p>
-                    </div>
-                `;
+                    </div>`;
                 return;
             }
-
-            container.innerHTML = allUsers.map(user => {
-                const userRoles = Array.isArray(user.ruoli) ? user.ruoli : (user.ruoli ? [String(user.ruoli)] : ['USER']);
-                const rolesHtml = userRoles.map(role => {
-                    const badgeClass = role === 'ADMIN' ? 'admin' : role === 'DIRIGENTE' ? 'dirigente' : 'user';
-                    const icon = role === 'ADMIN' ? '👑' : role === 'DIRIGENTE' ? '🎯' : '👤';
-                    return `<span class="role-badge ${badgeClass}">${icon} ${escapeHTML(role)}</span>`;
+            container.innerHTML = allUsers.map(u=>{
+                const roles = Array.isArray(u.ruoli) ? u.ruoli : (u.ruoli ? [String(u.ruoli)] : ['USER']);
+                const rolesHtml = roles.map(r=>{
+                    const cls = r==='ADMIN'?'admin':r==='DIRIGENTE'?'dirigente':'user';
+                    const icon = r==='ADMIN'?'👑':r==='DIRIGENTE'?'🎯':'👤';
+                    return `<span class="role-badge ${cls}">${icon} ${escapeHTML(r)}</span>`;
                 }).join('');
-
                 return `
                     <div class="user-row">
                         <div class="flex justify-between items-center">
                             <div class="flex-1">
-                                <div class="font-bold text-primary text-lg">${escapeHTML(user.nome || 'Nome non disponibile')}</div>
-                                <div class="text-gray-600 text-sm mb-2">${escapeHTML(user.email || 'Email non disponibile')}</div>
+                                <div class="font-bold text-primary text-lg">${escapeHTML(u.nome||'Nome non disponibile')}</div>
+                                <div class="text-gray-600 text-sm mb-2">${escapeHTML(u.email||'Email non disponibile')}</div>
                                 <div class="flex flex-wrap gap-1">${rolesHtml}</div>
                             </div>
                             <div class="ml-4">
-                                <button onclick="openRolesModal('${user.id}')" class="btn-aurora text-sm px-3 py-2">
-                                    <span class="mr-1">✏️</span>
-                                    Modifica
+                                <button onclick="openRolesModal('${u.id}')" class="btn-aurora text-sm px-3 py-2">
+                                    <span class="mr-1">✏️</span>Modifica
                                 </button>
                             </div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             }).join('');
         }
 
-        function openRolesModal(userId) {
-            const user = allUsers.find(u => u.id === userId);
-            if (!user) return;
-
+        function openRolesModal(userId){
+            const user = allUsers.find(u=>u.id===userId); if (!user) return;
             editingUserId = userId;
-            
             document.getElementById('modalUserName').textContent = user.nome || 'Nome non disponibile';
             document.getElementById('modalUserEmail').textContent = user.email || 'Email non disponibile';
             document.getElementById('modalUserId').value = userId;
 
             const currentRoles = Array.isArray(user.ruoli) ? user.ruoli : (user.ruoli ? [String(user.ruoli)] : ['USER']);
-            const currentRolesHtml = currentRoles.map(role => {
-                const badgeClass = role === 'ADMIN' ? 'admin' : role === 'DIRIGENTE' ? 'dirigente' : 'user';
-                const icon = role === 'ADMIN' ? '👑' : role === 'DIRIGENTE' ? '🎯' : '👤';
-                return `<span class="role-badge ${badgeClass}">${icon} ${escapeHTML(role)}</span>`;
+            const rolesHtml = currentRoles.map(r=>{
+                const cls = r==='ADMIN'?'admin':r==='DIRIGENTE'?'dirigente':'user';
+                const icon = r==='ADMIN'?'👑':r==='DIRIGENTE'?'🎯':'👤';
+                return `<span class="role-badge ${cls}">${icon} ${escapeHTML(r)}</span>`;
             }).join('');
-            document.getElementById('currentRoles').innerHTML = currentRolesHtml;
+            document.getElementById('currentRoles').innerHTML = rolesHtml;
 
-            // Set checkboxes
-            const checkboxes = document.querySelectorAll('input[name="roles"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = currentRoles.includes(checkbox.value);
+            document.querySelectorAll('input[name="roles"]').forEach(cb=>{
+                cb.checked = currentRoles.includes(cb.value);
             });
 
             document.getElementById('rolesModal').classList.add('active');
         }
+        function closeRolesModal(){ document.getElementById('rolesModal').classList.remove('active'); editingUserId = null; }
 
-        function closeRolesModal() {
-            document.getElementById('rolesModal').classList.remove('active');
-            editingUserId = null;
-        }
-
-        async function saveUserRoles(event) {
-            event.preventDefault();
+        async function saveUserRoles(e){
+            e.preventDefault();
             if (!editingUserId) return;
-
-            const saveBtn = document.getElementById('saveRolesBtn');
-            saveBtn.innerHTML = '<div class="spinner"></div>Salvando...';
-            saveBtn.disabled = true;
-
-            try {
-                const formData = new FormData(event.target);
-                const selectedRoles = formData.getAll('roles');
-                if (selectedRoles.length === 0) selectedRoles.push('USER');
-
-                const { error } = await supabase
-                    .from('profiles')
-                    .update({ ruoli: selectedRoles })
-                    .eq('id', editingUserId);
-
+            const btn = document.getElementById('saveRolesBtn');
+            btn.innerHTML = '<div class="spinner"></div>Salvando...'; btn.disabled = true;
+            try{
+                const fd = new FormData(e.target);
+                const selected = fd.getAll('roles');
+                if (selected.length===0) selected.push('USER');
+                const { error } = await supabase.from('profiles').update({ ruoli:selected }).eq('id', editingUserId);
                 if (error) throw error;
-
-                showNotification('✅ Ruoli aggiornati con successo!', 'success');
+                showNotification('✅ Ruoli aggiornati con successo!','success');
                 closeRolesModal();
                 await loadUsers();
-
-            } catch (error) {
-                console.error('Errore salvataggio ruoli:', error);
-                showNotification('❌ Errore nel salvataggio dei ruoli', 'error');
-            } finally {
-                saveBtn.innerHTML = '<span class="mr-2">💾</span>Salva Modifiche';
-                saveBtn.disabled = false;
-            }
-        }
-
-        // Smart Home Redirect (resta disponibile) con guardia sessione robusta
-        async function smartHomeRedirect() {
-            try {
-                const user = await ensureSession();
-                if (!user) { safeReplace('../login.html'); return; }
-
-                const { data: profile } = await supabase
-                    .from('profiles')
-                    .select('ruoli')
-                    .eq('id', user.id)
-                    .single();
-
-                const userRoles = Array.isArray(profile?.ruoli) ? profile.ruoli : (profile?.ruoli ? [String(profile.ruoli)] : ['USER']);
-                
-                if (userRoles.includes('DIRIGENTE') || userRoles.includes('ADMIN')) {
-                    safeReplace('home_dirigenti.html');
-                } else {
-                    safeReplace('home.html');
-                }
-            } catch (error) {
-                console.error('Errore smart navigation:', error);
-                safeReplace('home.html');
+            } catch(e){
+                console.error('Errore salvataggio ruoli:', e);
+                showNotification('❌ Errore nel salvataggio dei ruoli','error');
+            } finally{
+                btn.innerHTML = '<span class="mr-2">💾</span>Salva Modifiche'; btn.disabled=false;
             }
         }
 
@@ -960,26 +745,16 @@
         document.getElementById('rolesForm').addEventListener('submit', saveUserRoles);
 
         // Close modal on click outside
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('modal')) {
-                closeRolesModal();
-            }
-        });
-
+        document.addEventListener('click', (e)=>{ if (e.target.classList.contains('modal')) closeRolesModal(); });
         // Close modal on ESC key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeRolesModal();
-            }
-        });
+        document.addEventListener('keydown', (e)=>{ if (e.key==='Escape') closeRolesModal(); });
 
-        // Expose functions globally
+        // Espongo funzioni globali (se servono altrove)
         window.loadUsers = loadUsers;
         window.openRolesModal = openRolesModal;
         window.closeRolesModal = closeRolesModal;
-        window.smartHomeRedirect = smartHomeRedirect;
 
-        // Initialize app
+        // Avvio
         init();
     </script>
 
