@@ -1,543 +1,1393 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Dirigenti - MyApp</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <style>
-        body {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #3b82f6 100%);
-            background-attachment: fixed;
-            min-height: 100vh;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard Dirigenti - MyApp</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Supabase JS v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1e293b',
+            secondary: '#334155',
+            accent: '#475569',
+            aurora: '#3b82f6',
+            executive: '#1d4ed8',
+            success: '#059669',
+            warning: '#d97706',
+            danger: '#dc2626',
+            dark: '#0f172a',
+            light: '#f8fafc',
+            textDark: '#1e293b',
+            backgroundLight: '#f1f5f9',
+            gold: '#f59e0b',
+            platinum: '#e5e7eb',
+          }
         }
-        
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .glass-header {
-            background: rgba(30, 41, 59, 0.95);
-            backdrop-filter: blur(10px);
-        }
-        
-        .glass-section {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
-            color: white;
-            transition: all 0.2s ease;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
-        }
-        
-        .card-hover:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-        
-        .text-shadow {
-            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-        }
-    </style>
+      }
+    }
+  </script>
+
+  <style>
+    :root{
+      --gradient-professional: linear-gradient(135deg,#1e293b 0%,#334155 50%,#3b82f6 100%);
+      --gradient-executive: linear-gradient(135deg,#1d4ed8 0%,#2563eb 100%);
+      --gradient-gold: linear-gradient(135deg,#f59e0b 0%,#d97706 100%);
+      --shadow-professional: 0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);
+    }
+    body{ background:var(--gradient-professional); background-attachment:fixed; min-height:100vh; }
+    .glass-header{ background:rgba(30,41,59,.95); backdrop-filter:blur(10px); border-bottom:1px solid rgba(59,130,246,.2); }
+    .glass-card{ background:rgba(255,255,255,.98); backdrop-filter:blur(8px); border:1px solid rgba(229,231,235,.8); }
+    .glass-morphism{ background:rgba(255,255,255,.08); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,.18); box-shadow:0 8px 32px 0 rgba(31,38,135,.37);}
+    .action-card{ background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.04)); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.12); border-radius:16px; transition:all .3s ease; cursor:pointer; position:relative;}
+    .action-card:hover{ transform:translateY(-4px); box-shadow:0 12px 24px rgba(0,0,0,.2); border-color:rgba(59,130,246,.3); background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.06)); }
+    .stat-card{ background:#fff; border:1px solid #e2e8f0; border-radius:12px; transition:all .2s ease; }
+    .stat-card:hover{ border-color:#3b82f6; box-shadow:0 4px 12px rgba(59,130,246,.15); }
+    .stat-card-executive{ background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(245,158,11,.05)); backdrop-filter:blur(15px); border:1px solid rgba(245,158,11,.2); border-radius:20px; transition:all .3s ease;}
+    .stat-card-executive:hover{ transform:translateY(-3px) scale(1.05); background:linear-gradient(135deg,rgba(245,158,11,.25),rgba(245,158,11,.15)); box-shadow:0 15px 30px rgba(245,158,11,.2);}
+    .btn-outline{ background:transparent; color:#3b82f6; border:2px solid #3b82f6; font-weight:600;}
+    .btn-outline:hover{ background:#3b82f6; color:#fff;}
+    .priority-alta{ background:#dc2626; } .priority-normale{ background:#3b82f6; } .priority-bassa{ background:#059669; }
+    .priority-indicator{ width:8px; height:8px; border-radius:50%; display:inline-block; }
+    .text-ultra-visible{ color:#fff; text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1); font-weight:800;}
+    .hero-title{ font-size:clamp(2.5rem,8vw,4rem); font-weight:900; }
+    .section-title{ font-size:clamp(1.8rem,6vw,2.5rem); font-weight:900; }
+    .loading-skeleton{ background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; border-radius:8px;}
+    @keyframes shimmer{0%{background-position:-200% 0;}100%{background-position:200% 0;}}
+    .alert{ padding:1rem; border-radius:8px; margin:1rem 0; border:1px solid; position:fixed; top:1rem; right:1rem; z-index:50; max-width:22rem; }
+    .alert-success{ background:#d1fae5; border-color:#059669; color:#047857;}
+    .alert-error{ background:#fee2e2; border-color:#dc2626; color:#b91c1c;}
+    .alert-warning{ background:#fef3c7; border-color:#d97706; color:#b45309;}
+    .alert-info{ background:#dbeafe; border-color:#3b82f6; color:#1d4ed8;}
+    .modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.5); display:flex; align-items:center; justify-content:center; z-index:1000; opacity:0; visibility:hidden; transition:all .3s;}
+    .modal-overlay.show{ opacity:1; visibility:visible;}
+    .modal-content{ background:#fff; border-radius:12px; max-width:90vw; max-height:90vh; overflow-y:auto; transform:scale(.7); transition:transform .3s;}
+    .modal-overlay.show .modal-content{ transform:scale(1); }
+    .notification-dropdown{ display:none; position:absolute; top:100%; right:0; background:#fff; border:1px solid #e2e8f0; border-radius:12px; box-shadow:0 20px 25px -5px rgba(0,0,0,.1); width:350px; max-height:400px; overflow-y:auto; z-index:1000; }
+    .notification-dropdown.show{ display:block; }
+    .notification-badge{ background:#dc2626; color:#fff; border-radius:50%; width:18px; height:18px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; }
+    .line-clamp-2{ display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
+  </style>
 </head>
+<body class="min-h-screen font-sans bg-gray-50">
 
-<body class="min-h-screen font-sans">
+  <!-- HEADER -->
+  <header class="glass-header sticky top-0 z-40">
+    <div class="container mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-gold to-warning rounded-xl flex items-center justify-center">
+            <span class="text-white font-bold text-xl">👑</span>
+          </div>
+          <div>
+            <span class="text-white text-xl font-bold">MyApp</span>
+            <div class="text-blue-200 text-sm flex items-center gap-2">
+              <span class="w-2 h-2 bg-gold rounded-full animate-pulse"></span>
+              Dashboard Dirigenti
+            </div>
+          </div>
+        </div>
 
-    <!-- HEADER -->
-    <header class="glass-header sticky top-0 z-40">
-        <div class="container mx-auto px-6 py-4">
+        <div class="flex items-center space-x-6">
+          <!-- Notifiche -->
+          <div class="relative">
+            <button id="notificationBtn" class="text-white hover:text-blue-200 transition-colors p-2 rounded-lg hover:bg-white/10" aria-label="Apri notifiche">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2 2 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+              </svg>
+            </button>
+            <span id="notificationBadge" class="notification-badge absolute -top-1 -right-1 hidden">0</span>
+
+            <div id="notificationDropdown" class="notification-dropdown">
+              <div class="p-4 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                  <h3 class="font-semibold text-gray-900">Notifiche</h3>
+                  <button id="markAllRead" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Segna tutte lette</button>
+                </div>
+              </div>
+              <div id="notificationList" class="p-2"></div>
+            </div>
+          </div>
+
+          <!-- Profilo -->
+          <div class="flex items-center space-x-3">
+            <div class="text-white text-right">
+              <div id="userWelcome" class="font-medium text-sm">Caricamento...</div>
+              <div id="userRole" class="text-xs text-blue-200">Dirigente</div>
+            </div>
+            <div id="userAvatar" class="w-8 h-8 bg-gradient-to-br from-gold to-warning rounded-full flex items-center justify-center text-white font-semibold text-sm">D</div>
+          </div>
+
+          <!-- Logout -->
+          <button id="logoutBtn" class="px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 text-white border-white/20 hover:bg-white/10" aria-label="Esci">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            Esci
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="container mx-auto px-6 py-8">
+    <!-- Hero -->
+    <section class="mb-8">
+      <div class="glass-morphism rounded-3xl p-8 md:p-12 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-gold/20 to-warning/20 rounded-full blur-xl"></div>
+        <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-aurora/20 to-success/20 rounded-full blur-lg"></div>
+
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-8 relative z-10">
+          <div class="flex-grow text-center lg:text-left">
+            <div class="mb-6">
+              <div class="inline-flex items-center gap-3 mb-3">
+                <div class="w-3 h-8 bg-gradient-to-b from-gold to-warning rounded-full"></div>
+                <span class="text-white/80 text-sm font-semibold uppercase tracking-wider">Dashboard Dirigenziale</span>
+              </div>
+            </div>
+
+            <h1 class="hero-title text-ultra-visible mb-4 leading-tight">
+              Benvenuto,<br/>
+              <span id="userNameDisplay" class="text-white">Dirigente</span>
+            </h1>
+
+            <p class="text-white/90 text-lg md:text-xl mb-8 max-w-2xl">
+              Gestione completa del sistema MyApp con accesso alle funzioni dirigenziali e amministrative.
+            </p>
+
+            <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
+              <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
+                <div class="w-2 h-2 bg-gold rounded-full animate-pulse"></div>
+                <span class="text-sm font-medium">Accesso Dirigenziale</span>
+              </div>
+              <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+                <span class="text-sm font-medium">Funzioni Avanzate</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex-shrink-0 relative">
+            <div class="w-32 h-32 bg-gradient-to-br from-gold via-warning to-gold rounded-full flex items-center justify-center relative border-4 border-white/20 shadow-2xl">
+              <div class="text-center">
+                <div class="text-4xl mb-1">👑</div>
+                <div class="text-white text-xs font-bold opacity-90">Dirigenti</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contenuto dinamico -->
+    <div id="dynamic-content"></div>
+  </main>
+
+  <!-- MODAL -->
+  <div id="modalContainer" class="modal-overlay" aria-hidden="true" role="dialog">
+    <div id="modalContent" class="modal-content p-8"></div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="glass-header mt-16">
+    <div class="container mx-auto px-6 py-8 text-center text-white">
+      <div class="mb-4"><span class="font-semibold text-lg">MyApp</span> - Dashboard Dirigenti Completa v8.1</div>
+      <div class="flex justify-center items-center space-x-6 text-sm text-blue-200 mb-4">
+        <span>© 2025 MyApp</span><span>•</span><span>Area Dirigenziale Completa</span><span>•</span><span>Powered by Supabase</span>
+      </div>
+      <div class="flex justify-center space-x-2">
+        <div class="w-2 h-2 bg-gold rounded-full animate-pulse"></div>
+        <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style="animation-delay:.2s;"></div>
+        <div class="w-2 h-2 bg-success rounded-full animate-pulse" style="animation-delay:.4s;"></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT -->
+  <script>
+    // ====== CONFIG SUPABASE (solo test: proteggi con RLS!) ======
+    const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
+
+    const PAGE_MAPPING = {
+      'gestione-soci':'gestione-soci.html',
+      'gestione-news':'gestione-news.html',
+      'gestione-convenzioni':'gestione-convenzioni.html',
+      'area-dirigenti':'area-dirigenti.html',
+      'gestione-richieste':'gestione-richieste.html',
+      'statistiche':'statistiche.html',
+      'impostazioni':'impostazioni.html',
+      'backup':'backup.html',
+      'richieste':'richieste.html',
+      'tessera':'tessera.html',
+      'profilo':'profilo.html',
+      'strumenti':'strumenti.html',
+      'dirigenti':'dirigenti.html',
+      'convenzioni':'convenzioni.html',
+      'support':'support.html',
+      'servizi':'servizi.html',
+      'virgilio':'virgilio.html',
+      'home':'home.html',
+      'auth':'auth.html',
+      'news':'news.html'
+    };
+
+    // ====== Stato app ======
+    const AppState = {
+      user:null,
+      profile:null,
+      notifications:[],
+      settings:{ theme:'light', language:'it', autoRefresh:true, refreshInterval:5*60*1000 },
+      setUser(u){ this.user=u; this.saveToStorage(); },
+      setProfile(p){ this.profile=p; this.saveToStorage(); },
+      saveToStorage(){
+        try{ localStorage.setItem('appState', JSON.stringify({settings:this.settings,lastUpdate:Date.now()})); }catch(e){ console.warn('Storage save fail',e); }
+      },
+      loadFromStorage(){
+        try{
+          const saved=localStorage.getItem('appState');
+          if(saved){ const parsed=JSON.parse(saved); this.settings={...this.settings,...parsed.settings};}
+        }catch(e){ console.warn('Storage load fail',e); }
+      }
+    };
+
+    // ====== Helpers di sicurezza / formato ======
+    function escapeHTML(str){
+      if(str===null || str===undefined) return '';
+      return String(str)
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#39;');
+    }
+    function sanitizeString(str){ return escapeHTML(str); }
+
+    function sanitizeRequestData(r){
+      return {
+        ...r,
+        titolo: sanitizeString(r?.titolo),
+        descrizione: sanitizeString(r?.descrizione),
+        user_nome: sanitizeString(r?.user_nome),
+        categoria: sanitizeString(r?.categoria),
+        priorita: sanitizeString(r?.priorita),
+        stato: sanitizeString(r?.stato),
+        id: r?.id
+      };
+    }
+
+    function validateRequestData(r){
+      return r && r.id!=null && r.titolo && r.stato;
+    }
+    function validateNewsData(n){
+      return n && n.id!=null && n.titolo && n.pubblicata!==undefined;
+    }
+    function validateConvenzioneData(c){
+      return c && c.id!=null && c.nome_azienda && c.attiva!==undefined;
+    }
+
+    function formatDate(dateString){
+      if(!dateString) return '-';
+      const d = new Date(dateString);
+      if(Number.isNaN(d.getTime())) return '-';
+      return d.toLocaleDateString('it-IT');
+    }
+
+    function formatDateAdvanced(dateString, format='short'){
+      if(!dateString) return '-';
+      const date = new Date(dateString);
+      if(isNaN(date)) return 'Data non valida';
+      const options = {
+        short:{ day:'2-digit', month:'2-digit', year:'numeric' },
+        long:{ weekday:'long', day:'numeric', month:'long', year:'numeric' },
+        time:{ day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }
+      };
+      return date.toLocaleDateString('it-IT', options[format] || options.short);
+    }
+
+    function timeAgo(dateString){
+      if(!dateString) return '';
+      const date = new Date(dateString);
+      const diff = Math.floor((Date.now()-date.getTime())/1000);
+      const units = [
+        ['anno', 'anni', 31536000],
+        ['mese', 'mesi', 2592000],
+        ['settimana', 'settimane', 604800],
+        ['giorno', 'giorni', 86400],
+        ['ora','ore',3600],
+        ['minuto','minuti',60],
+        ['secondo','secondi',1]
+      ];
+      for(const [sing, plur, sec] of units){
+        const val = Math.floor(diff/sec);
+        if(val>=1) return `${val} ${val===1?sing:plur} fa`;
+      }
+      return 'Ora';
+    }
+
+    function formatNumber(num){ return typeof num==='number' ? num.toLocaleString('it-IT') : '0'; }
+
+    function formatFileSize(bytes){
+      if(bytes===0) return '0 Bytes';
+      const k=1024;
+      const sizes=['Bytes','KB','MB','GB','TB','PB'];
+      const i=Math.floor(Math.log(bytes)/Math.log(k));
+      const idx = Math.min(i, sizes.length-1);
+      return parseFloat((bytes/Math.pow(k, idx)).toFixed(2)) + ' ' + sizes[idx];
+    }
+
+    function generateUniqueId(prefix='id'){
+      if(window.crypto && crypto.getRandomValues){
+        const arr=new Uint32Array(2); crypto.getRandomValues(arr);
+        return `${prefix}_${Date.now()}_${arr[0].toString(36)}${arr[1].toString(36)}`;
+      }
+      return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2,11)}`;
+    }
+
+    function isValidEmail(email){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email || ''); }
+    function isValidPhoneNumber(phone){ return /^(\+39\s?)?((3[0-9]{2}\s?\d{6,7})|(0[0-9]{1,3}\s?\d{6,8}))$/.test(String(phone||'').replace(/\s/g,'')); }
+    function truncateText(text, maxLength=100, suffix='...'){ if(!text||text.length<=maxLength) return text||''; return text.substring(0,maxLength).trim()+suffix; }
+    function capitalizeWords(str){ if(!str) return ''; return str.toLowerCase().replace(/\b\w/g, l=>l.toUpperCase()); }
+
+    function getRequestStatusColor(status){
+      const map={ 'RICEVUTA':'bg-blue-500', 'IN_ESAME':'bg-yellow-500','IN_LAVORAZIONE':'bg-orange-500','COMPLETATA':'bg-green-500','CHIUSA':'bg-gray-500','RIFIUTATA':'bg-red-500' };
+      return map[status] || 'bg-gray-500';
+    }
+    function getPriorityColor(priority){
+      const map={ 'ALTA':'priority-alta','NORMALE':'priority-normale','BASSA':'priority-bassa' };
+      return map[priority] || 'priority-normale';
+    }
+    function getStatusText(status){
+      const map={ 'RICEVUTA':'Ricevuta','IN_ESAME':'In Esame','IN_LAVORAZIONE':'In Lavorazione','COMPLETATA':'Completata','CHIUSA':'Chiusa','RIFIUTATA':'Rifiutata' };
+      return map[status] || status || '-';
+    }
+    function getStatusLabel(status){ const map={ 'ATTIVO':'Attivo','SOSPESO':'Sospeso','INATTIVO':'Inattivo' }; return map[status] || status || '-'; }
+    function updateElement(id, content){ const el=document.getElementById(id); if(el) el.textContent = content; }
+
+    // ====== Messaggi ======
+    function showAlert(message, type='info'){
+      const existing = document.querySelectorAll('.alert'); existing.forEach(a=>a.remove());
+      const el = document.createElement('div');
+      el.className = `alert alert-${type}`;
+      el.innerHTML = `<div class="flex items-center justify-between"><span>${escapeHTML(message)}</span><button aria-label="Chiudi" class="ml-4 text-lg font-bold">×</button></div>`;
+      el.querySelector('button').addEventListener('click',()=>el.remove());
+      document.body.appendChild(el);
+      setTimeout(()=>{ if(el.parentNode) el.remove(); }, 5000);
+    }
+    const showErrorMessage = (m)=>showAlert(m,'error');
+    const showSuccessMessage = (m)=>showAlert(m,'success');
+
+    // ====== Error Handling ======
+    class ErrorHandler{
+      static errors=[]; static maxErrors=50;
+      static log(error, context={}){
+        const entry={ id:generateUniqueId('error'), timestamp:new Date().toISOString(), message:(error?.message||String(error)), stack:error?.stack, context, userAgent:navigator.userAgent, url:location.href, user: currentUser?.email || 'anonymous' };
+        this.errors.unshift(entry); if(this.errors.length>this.maxErrors) this.errors=this.errors.slice(0,this.maxErrors);
+        console.error('🚨 Errore registrato:', entry);
+        if(this.isCriticalError(error)) this.reportError(entry);
+      }
+      static isCriticalError(error){
+        const msg=(error?.message||String(error)).toLowerCase();
+        return ['network error','authentication failed','database connection','supabase'].some(s=>msg.includes(s));
+      }
+      static async reportError(entry){
+        try{
+          await supabaseClient.from('error_logs').insert([{
+            error_id: entry.id, message: entry.message, context: entry.context, user_id: currentUser?.id, created_at: entry.timestamp
+          }]);
+        }catch(e){ console.warn('Impossibile inviare errore al backend:', e); }
+      }
+      static getErrors(){ return [...this.errors]; }
+      static clearErrors(){ this.errors=[]; }
+    }
+
+    class PerformanceMonitor{
+      static metrics=[];
+      static startTimer(name){ const t={name, startTime:performance.now(), id:generateUniqueId('timer')}; return { end:()=>this.endTimer(t) }; }
+      static endTimer(t){ const d=performance.now()-t.startTime; const m={ name:t.name, duration:Math.round(d), timestamp:new Date().toISOString() }; this.metrics.push(m); console.log(`⚡ ${t.name}: ${d.toFixed(2)}ms`); return m; }
+      static getMetrics(){ return [...this.metrics]; }
+      static getAverageTime(name){ const items=this.metrics.filter(m=>m.name===name); if(!items.length) return 0; return items.reduce((s,m)=>s+m.duration,0)/items.length; }
+    }
+
+    class CacheManager{
+      static cache=new Map(); static defaultTTL=5*60*1000;
+      static set(key,data,ttl=this.defaultTTL){ this.cache.set(key,{data,timestamp:Date.now(), ttl}); }
+      static get(key){ const e=this.cache.get(key); if(!e) return null; if(Date.now()-e.timestamp>e.ttl){ this.cache.delete(key); return null; } return e.data; }
+      static has(key){ return this.get(key)!==null; }
+      static clear(){ this.cache.clear(); }
+      static cleanup(){ const now=Date.now(); for(const [k,e] of this.cache.entries()){ if(now-e.timestamp>e.ttl) this.cache.delete(k); } }
+      static getStats(){ return { size:this.cache.size, keys:[...this.cache.keys()] }; }
+    }
+
+    class NotificationManager{
+      static queue=[]; static isProcessing=false;
+      static async show(message,type='info',options={}){
+        const n={ id:generateUniqueId('notif'), message, type, timestamp:Date.now(), ...options };
+        this.queue.push(n); if(!this.isProcessing) this.processQueue();
+      }
+      static async processQueue(){
+        this.isProcessing=true;
+        while(this.queue.length){
+          const n=this.queue.shift(); await this.displayNotification(n);
+          await new Promise(r=>setTimeout(r,300));
+        }
+        this.isProcessing=false;
+      }
+      static async displayNotification(n){
+        showAlert(n.message, n.type);
+        if('Notification' in window && Notification.permission==='granted'){
+          new Notification('MyApp Dashboard',{ body:n.message, icon:'/favicon.ico', tag:n.id });
+        }
+      }
+      static async requestPermission(){ if('Notification' in window) { try{ const p=await Notification.requestPermission(); return p==='granted'; }catch{} } return false; }
+    }
+
+    class SessionManager{
+      static sessionTimeout = 30*60*1000; // 30m
+      static warningTime  = 5*60*1000;   // 5m before
+      static logoutTimeoutId = null;
+      static warningTimeoutId = null;
+      static warningShown=false;
+
+      static startSession(){ this.resetTimer(); this.addActivityListeners(); }
+      static clearTimers(){
+        if(this.logoutTimeoutId){ clearTimeout(this.logoutTimeoutId); this.logoutTimeoutId=null; }
+        if(this.warningTimeoutId){ clearTimeout(this.warningTimeoutId); this.warningTimeoutId=null; }
+      }
+      static resetTimer(){
+        this.warningShown=false; this.clearTimers();
+        this.warningTimeoutId = setTimeout(()=> this.showSessionWarning(), this.sessionTimeout - this.warningTime);
+        this.logoutTimeoutId  = setTimeout(()=> this.expireSession(), this.sessionTimeout);
+      }
+      static showSessionWarning(){
+        if(this.warningShown) return; this.warningShown=true;
+        const msg='La sessione scadrà tra 5 minuti. Clicca per rinnovare.';
+        showAlert(msg,'warning');
+        document.addEventListener('click', this.renewSession.bind(this), { once:true });
+      }
+      static renewSession(){ this.resetTimer(); showSuccessMessage('Sessione rinnovata!'); }
+      static expireSession(){ showErrorMessage('Sessione scaduta. Reindirizzamento al login...'); setTimeout(()=>{ handleLogout(); }, 1200); }
+      static addActivityListeners(){
+        const events=['mousedown','mousemove','keypress','scroll','touchstart','click'];
+        events.forEach(ev=> document.addEventListener(ev, ()=>{ if(!this.warningShown) this.resetTimer(); }, { passive:true, capture:true }));
+      }
+    }
+
+    class NetworkManager{
+      static async checkConnection(){
+        try{
+          const res= await fetch(SUPABASE_URL + '/rest/v1/', { method:'HEAD', headers:{ 'apikey': SUPABASE_ANON_KEY }});
+          return res.ok;
+        }catch{ return false; }
+      }
+      static async withRetry(operation, maxRetries=3, delay=1000){
+        for(let attempt=1; attempt<=maxRetries; attempt++){
+          try{ return await operation(); }
+          catch(err){
+            console.warn(`Tentativo ${attempt}/${maxRetries} fallito:`, err);
+            if(attempt===maxRetries) throw err;
+            await new Promise(r=>setTimeout(r, delay*Math.pow(2,attempt-1)));
+          }
+        }
+      }
+      static async healthCheck(){
+        const t=PerformanceMonitor.startTimer('healthCheck');
+        try{
+          const online = await this.checkConnection(); t.end();
+          return { online, timestamp:new Date().toISOString() };
+        }catch(error){
+          t.end(); ErrorHandler.log(error,{operation:'healthCheck'});
+          return { online:false, error:error.message, timestamp:new Date().toISOString() };
+        }
+      }
+    }
+
+    // ====== Supabase client / utente ======
+    let supabaseClient=null;
+    let currentUser=null;
+    let userProfile=null;
+
+    // ====== UI Dinamica ======
+    function createDynamicSections(){
+      const dynamicContent=document.getElementById('dynamic-content');
+      if(!dynamicContent) return;
+
+      dynamicContent.innerHTML = `
+        <!-- Panoramica -->
+        <section class="mb-8">
+          <h2 class="section-title text-ultra-visible mb-6 flex items-center gap-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-gold to-warning rounded-xl flex items-center justify-center">
+              <span class="text-white text-2xl">📊</span>
+            </div>
+            Panoramica Sistema
+          </h2>
+          <div class="stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="stat-card-executive p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-white text-3xl font-bold" id="totalUsers">-</div>
+                  <div class="text-white text-sm opacity-80">Utenti Totali</div>
+                </div>
+                <div class="w-12 h-12 bg-gradient-to-br from-aurora to-executive rounded-lg flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="stat-card-executive p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-white text-3xl font-bold" id="pendingRequests">-</div>
+                  <div class="text-white text-sm opacity-80">Richieste Pendenti</div>
+                </div>
+                <div class="w-12 h-12 bg-gradient-to-br from-warning to-danger rounded-lg flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="stat-card-executive p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-white text-3xl font-bold" id="activeNews">-</div>
+                  <div class="text-white text-sm opacity-80">News Pubblicate</div>
+                </div>
+                <div class="w-12 h-12 bg-gradient-to-br from-success to-accent rounded-lg flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="stat-card-executive p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-white text-3xl font-bold text-success" id="systemStatus">Online</div>
+                  <div class="text-white text-sm opacity-80">Stato Sistema</div>
+                </div>
+                <div class="w-12 h-12 bg-gradient-to-br from-success to-primary rounded-lg flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Richieste Sistema -->
+        <section class="mb-8">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="section-title text-ultra-visible flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-warning to-danger rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📋</span></div>
+              Richieste Sistema (Recenti)
+            </h2>
+            <button data-nav="gestione-richieste" class="btn-outline px-4 py-2 rounded-lg text-sm font-medium">Gestisci tutte</button>
+          </div>
+          <div class="glass-card rounded-xl p-6">
+            <div id="richiesteContainer" class="space-y-4"></div>
+          </div>
+        </section>
+
+        <!-- Richieste Personali -->
+        <section class="mb-8">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="section-title text-ultra-visible flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-success to-primary rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📝</span></div>
+              Le Tue Richieste Personali
+            </h2>
+            <button data-nav="richieste" class="btn-outline px-4 py-2 rounded-lg text-sm font-medium">Vedi tutte</button>
+          </div>
+          <div class="glass-morphism rounded-3xl p-6">
+            <div id="richiestePersonaliContainer" class="space-y-4"></div>
+          </div>
+        </section>
+
+        <!-- News -->
+        <section class="mb-8">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="section-title text-ultra-visible flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-slate-600 to-slate-800 rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📰</span></div>
+              Ultime Notizie
+            </h2>
+            <button data-nav="news" class="btn-outline px-4 py-2 rounded-lg text-sm font-medium">Vedi tutte</button>
+          </div>
+          <div class="glass-card rounded-3xl p-8"><div id="newsContainer"></div></div>
+        </section>
+
+        <!-- Convenzioni -->
+        <section class="mb-8">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="section-title text-ultra-visible flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center"><span class="text-white text-2xl">🤝</span></div>
+              Convenzioni in Evidenza
+            </h2>
+            <button data-nav="convenzioni" class="btn-outline px-4 py-2 rounded-lg text-sm font-medium">Gestisci tutte</button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="convenzioniContainer"></div>
+        </section>
+
+        <!-- Statistiche Personali -->
+        <section class="mb-8">
+          <h2 class="section-title text-ultra-visible mb-6 flex items-center gap-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📈</span></div>
+            I Tuoi Dati Dirigenziali
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="stat-card p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-3xl font-bold text-gray-900" id="memberSince">-</div>
+                  <div class="text-sm text-gray-600">Iscritto dal</div>
+                </div>
+                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a4 4 0 118 0v4m-8 0h8m-8 0H3a2 2 0 00-2 2v3a2 2 0 002 2h1m2-6h14a2 2 0 012 2v3a2 2 0 01-2 2h-1m-6 7.13V21a3.001 3.001 0 01-6 0v-1.87m6 1.87a3.001 3.001 0 01-6 0v-1.87m6 1.87V20a2 2 0 01-2 2h-2a2 2 0 01-2-2v-.13m8-4.87h-2M5 11h2"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-card p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-3xl font-bold text-gray-900" id="numeroTessera">In generazione...</div>
+                  <div class="text-sm text-gray-600">Numero Tessera</div>
+                </div>
+                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-card p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-3xl font-bold text-gray-900" id="richiestePersonali">-</div>
+                  <div class="text-sm text-gray-600">Richieste Personali</div>
+                </div>
+                <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-card p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-3xl font-bold text-green-600" id="profileStatus">Attivo</div>
+                  <div class="text-sm text-gray-600">Stato Profilo</div>
+                </div>
+                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Azioni Personali -->
+        <section class="mb-8">
+          <h2 class="section-title text-ultra-visible mb-6 flex items-center gap-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-aurora to-success rounded-xl flex items-center justify-center"><span class="text-white text-2xl">👤</span></div>
+            Azioni Personali
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div data-nav="richieste" class="action-card p-6 text-center">
+              <div class="text-4xl mb-4">📝</div>
+              <h3 class="text-white text-lg font-bold mb-2">Nuova Richiesta</h3>
+              <p class="text-white/80 text-sm mb-4">Invia una nuova richiesta</p>
+              <div class="text-blue-300 text-xs font-semibold">Avvia procedura →</div>
+            </div>
+            <div data-nav="tessera" class="action-card p-6 text-center">
+              <div class="text-4xl mb-4">🎫</div>
+              <h3 class="text-white text-lg font-bold mb-2">Tessera Digitale</h3>
+              <p class="text-white/80 text-sm mb-4">Visualizza e scarica la tessera</p>
+              <div class="text-blue-300 text-xs font-semibold">Visualizza →</div>
+            </div>
+            <div data-nav="profilo" class="action-card p-6 text-center">
+              <div class="text-4xl mb-4">👤</div>
+              <h3 class="text-white text-lg font-bold mb-2">Il Mio Profilo</h3>
+              <p class="text-white/80 text-sm mb-4">Modifica i tuoi dati</p>
+              <div class="text-blue-300 text-xs font-semibold">Modifica →</div>
+            </div>
+            <div data-nav="strumenti" class="action-card p-6 text-center">
+              <div class="text-4xl mb-4">🛠️</div>
+              <h3 class="text-white text-lg font-bold mb-2">Strumenti</h3>
+              <p class="text-white/80 text-sm mb-4">Utility e strumenti di lavoro</p>
+              <div class="text-blue-300 text-xs font-semibold">Accedi →</div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    // ====== Skeletons ======
+    function generateLoadingSkeleton(type){
+      switch(type){
+        case 'richiesteContainer':
+        case 'richiestePersonaliContainer':
+          return `<div class="space-y-4"><div class="loading-skeleton h-16"></div><div class="loading-skeleton h-16"></div><div class="loading-skeleton h-16"></div></div>`;
+        case 'newsContainer':
+          return `<div class="space-y-4"><div class="loading-skeleton h-20"></div><div class="loading-skeleton h-20"></div><div class="loading-skeleton h-20"></div></div>`;
+        case 'convenzioniContainer':
+          return `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"><div class="loading-skeleton h-64"></div><div class="loading-skeleton h-64"></div><div class="loading-skeleton h-64"></div></div>`;
+        default: return '<div class="loading-skeleton h-16"></div>';
+      }
+    }
+    function showLoadingSkeletons(){
+      ['richiesteContainer','richiestePersonaliContainer','newsContainer','convenzioniContainer'].forEach(id=>{
+        const el=document.getElementById(id); if(el) el.innerHTML=generateLoadingSkeleton(id);
+      });
+    }
+    function hideLoadingSkeletons(){ /* contenuto sostituito dopo il load */ }
+
+    // ====== Rendering liste (senza inline onclick) ======
+    function displaySystemRequests(richieste){
+      const container=document.getElementById('richiesteContainer'); if(!container) return;
+      if(!Array.isArray(richieste) || !richieste.length){
+        container.innerHTML = `
+          <div class="text-center py-12 text-gray-500">
+            <div class="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Nessuna richiesta</h3>
+            <p class="text-gray-600">Non ci sono richieste da gestire al momento</p>
+          </div>`;
+        return;
+      }
+      container.innerHTML = richieste.map(r=>{
+        const s = sanitizeRequestData(r);
+        if(!validateRequestData(s)){ console.warn('⚠️ Dati richiesta non validi:', r); return ''; }
+        const statusColor=getRequestStatusColor(s.stato);
+        const priorityColor=getPriorityColor(s.priorita);
+        const dataCreazione=formatDate(s.created_at);
+        const idStr = String(s.id ?? '').toString();
+
+        return `
+          <div class="bg-white border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-colors cursor-pointer"
+               data-action="view-richiesta" data-id="${escapeHTML(idStr)}">
+            <div class="flex items-start justify-between mb-3">
+              <div class="flex-grow">
+                <h4 class="font-semibold text-gray-900 text-lg mb-1">${s.titolo}</h4>
+                <div class="flex items-center gap-3 text-sm text-gray-600 mb-2">
+                  <span class="flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full ${priorityColor}"></span>
+                    ${s.priorita || 'NORMALE'}
+                  </span>
+                  <span>📂 ${s.categoria || 'Generale'}</span>
+                  <span>📅 ${dataCreazione}</span>
+                </div>
+              </div>
+              <span class="px-3 py-1 rounded-full text-xs font-medium text-white ${statusColor}">
+                ${getStatusText(s.stato)}
+              </span>
+            </div>
+            <p class="text-gray-600 text-sm mb-3 line-clamp-2">
+              ${s.descrizione || 'Nessuna descrizione disponibile'}
+            </p>
+            <div class="flex items-center justify-between text-xs text-gray-500">
+              <span>👤 ${s.user_nome || 'Utente'}</span>
+              <span>ID: #${String(idStr).slice(-8)}</span>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function displayPersonalRequests(richieste){
+      const container=document.getElementById('richiestePersonaliContainer'); if(!container) return;
+      if(!Array.isArray(richieste) || !richieste.length){
+        container.innerHTML = `
+          <div class="text-center py-12 text-white">
+            <div class="text-6xl mb-4">📋</div>
+            <h3 class="text-xl font-bold mb-2">Nessuna richiesta personale</h3>
+            <p class="text-white/70 mb-6">Non hai ancora inviato nessuna richiesta personale</p>
+            <button data-nav="richieste" class="btn-aurora py-3 px-6 rounded-xl">Invia la tua prima richiesta</button>
+          </div>`;
+        return;
+      }
+      container.innerHTML = richieste.map(r=>{
+        const s = sanitizeRequestData(r);
+        if(!validateRequestData(s)){ console.warn('⚠️ Dati richiesta personale non validi:', r); return ''; }
+        const statusColor=getRequestStatusColor(s.stato);
+        const priorityColor=getPriorityColor(s.priorita);
+        const dataCreazione=formatDate(s.created_at);
+        const idStr = String(s.id ?? '');
+
+        return `
+          <div class="glass-morphism rounded-xl p-4 hover:bg-white/10 transition-all cursor-pointer"
+               data-action="view-richiesta" data-id="${escapeHTML(idStr)}">
+            <div class="flex items-start justify-between mb-3">
+              <div class="flex-grow">
+                <h4 class="text-white font-bold text-lg mb-1">${s.titolo}</h4>
+                <div class="flex items-center gap-3 text-sm text-white/70 mb-2">
+                  <span class="flex items-center gap-1">
+                    <span class="priority-indicator ${priorityColor}"></span>
+                    ${s.priorita || 'NORMALE'}
+                  </span>
+                  <span>📂 ${s.categoria || 'Generale'}</span>
+                  <span>📅 ${dataCreazione}</span>
+                </div>
+              </div>
+              <span class="px-3 py-1 rounded-full text-xs font-bold text-white ${statusColor}">
+                ${getStatusText(s.stato)}
+              </span>
+            </div>
+            <p class="text-white/80 text-sm mb-3 line-clamp-2">${s.descrizione || 'Nessuna descrizione'}</p>
+            <div class="flex items-center justify-between text-xs text-white/60">
+              <span>${s.dirigente_nome ? `👤 ${sanitizeString(s.dirigente_nome)}` : '⏳ In attesa'}</span>
+              <span>ID: #${String(idStr).slice(-8)}</span>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function displayNews(newsArray){
+      const container=document.getElementById('newsContainer'); if(!container) return;
+      if(!Array.isArray(newsArray) || !newsArray.length){
+        container.innerHTML = `
+          <div class="text-center py-8 text-gray-500">
+            <div class="text-4xl mb-2">📰</div>
+            <div>Nessuna notizia disponibile al momento</div>
+          </div>`;
+        return;
+      }
+      container.innerHTML = newsArray.map(n=>{
+        if(!validateNewsData(n)){ console.warn('⚠️ Dati news non validi:', n); return ''; }
+        const s = {
+          ...n,
+          id: n.id,
+          titolo: sanitizeString(n.titolo),
+          sottotitolo: sanitizeString(n.sottotitolo),
+          categoria: sanitizeString(n.categoria),
+          created_at: n.created_at
+        };
+        const idStr = String(s.id ?? '');
+        return `
+          <div class="border-b border-gray-200 pb-4 mb-4 last:border-b-0 last:pb-0 last:mb-0 hover:bg-gray-50 p-4 rounded-lg transition-colors cursor-pointer"
+               data-action="read-news" data-id="${escapeHTML(idStr)}">
+            <div class="flex justify-between items-start">
+              <div class="flex-1">
+                <h3 class="text-textDark font-semibold text-lg mb-1">${s.titolo}</h3>
+                ${s.sottotitolo ? `<p class="text-gray-600 text-sm mb-2">${s.sottotitolo}</p>` : ''}
+                <div class="flex items-center space-x-3 text-xs text-gray-500">
+                  <span class="bg-blue-600 text-white px-2 py-1 rounded">${s.categoria || 'Generale'}</span>
+                  <span>📅 ${formatDate(s.created_at)}</span>
+                  <span>👁️ ${s.visualizzazioni || 0}</span>
+                </div>
+              </div>
+              <div class="text-blue-600 hover:text-blue-800 font-semibold text-sm ml-4">Leggi →</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function displayConvenzioni(convenzioni){
+      const container=document.getElementById('convenzioniContainer'); if(!container) return;
+      if(!Array.isArray(convenzioni) || !convenzioni.length){
+        container.innerHTML = `
+          <div class="glass-morphism rounded-3xl p-12 col-span-3 text-center">
+            <div class="text-6xl mb-4">🤝</div>
+            <h3 class="text-white text-xl font-bold mb-2">Nessuna convenzione disponibile</h3>
+            <p class="text-white/70">Le convenzioni verranno pubblicate a breve</p>
+          </div>`;
+        return;
+      }
+      container.innerHTML = convenzioni.map(c=>{
+        if(!validateConvenzioneData(c)){ console.warn('⚠️ Dati convenzione non validi:', c); return ''; }
+        const s = {
+          ...c,
+          nome_azienda: sanitizeString(c.nome_azienda),
+          descrizione: sanitizeString(c.descrizione),
+          categoria: sanitizeString(c.categoria),
+          copertura_geografica: sanitizeString(c.copertura_geografica)
+        };
+        const excerpt = truncateText(s.descrizione || '', 120, '…');
+        const sconto = s.sconto_percentuale ? `${s.sconto_percentuale}%` : '';
+        const isInEvidenza = s.in_evidenza === true || s.in_evidenza === 'true';
+        const validaFino = s.valida_fino ? new Date(s.valida_fino) : null;
+        const isScaduta = validaFino && validaFino < new Date();
+        const idStr = String(s.id ?? '');
+
+        return `
+          <div class="action-card p-6 ${isScaduta ? 'opacity-75' : ''}"
+               ${!isScaduta ? `data-action="open-convenzione" data-id="${escapeHTML(idStr)}"` : ''}>
+            <div class="flex items-start justify-between mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center text-white text-sm font-bold">
+                ${sconto ? `-${sconto}` : '🤝'}
+              </div>
+              <div class="flex flex-col gap-1">
+                ${isInEvidenza ? '<div class="bg-emerald-600 text-white px-2 py-1 rounded-full text-xs font-bold">IN EVIDENZA</div>' : ''}
+                ${isScaduta ? '<div class="bg-gray-500 text-white px-2 py-1 rounded-full text-xs font-bold">SCADUTA</div>' : ''}
+              </div>
+            </div>
+            <h3 class="text-white text-lg font-bold mb-2">${s.nome_azienda || '-'}</h3>
+            <p class="text-white/80 text-sm mb-4">${excerpt}</p>
+            <div class="flex items-center justify-between text-xs text-white/60 mb-3">
+              <span>📂 ${s.categoria || 'Generale'}</span>
+              <span>🌍 ${s.copertura_geografica || 'Nazionale'}</span>
+            </div>
             <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center">
-                        <span class="text-white font-bold text-xl">👑</span>
-                    </div>
-                    <div>
-                        <span class="text-white text-xl font-bold">MyApp</span>
-                        <div class="text-blue-200 text-sm">Dashboard Dirigenti</div>
-                    </div>
-                </div>
-                
-                <div class="flex items-center space-x-4">
-                    <div class="text-white text-right">
-                        <div id="userWelcome" class="font-medium">Benvenuto, Dirigente!</div>
-                        <div class="text-xs text-blue-200">Area Dirigenziale</div>
-                    </div>
-                    <button id="logoutBtn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
-                        Esci
-                    </button>
-                </div>
+              <span class="text-white/60 text-xs">👀 ${s.visualizzazioni || 0} visualizzazioni</span>
+              <span class="text-emerald-300 text-sm font-semibold">${isScaduta ? 'Non disponibile' : 'Scopri →'}</span>
             </div>
-        </div>
-    </header>
-
-    <!-- CONTENUTO PRINCIPALE -->
-    <main class="container mx-auto px-6 py-8">
-        
-        <!-- BENVENUTO -->
-        <section class="mb-8">
-            <div class="glass-section rounded-3xl p-8 md:p-12 text-center">
-                <h1 class="text-4xl md:text-6xl font-bold text-white text-shadow mb-4">
-                    Dashboard Dirigenti
-                </h1>
-                <p class="text-white/90 text-lg mb-6">
-                    Gestione completa del sistema MyApp con accesso alle funzioni dirigenziali
-                </p>
-                <div class="flex justify-center">
-                    <span class="bg-yellow-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
-                        ⚡ Accesso Dirigenziale Attivo
-                    </span>
+            ${validaFino ? `
+              <div class="mt-3 pt-3 border-t border-white/10">
+                <div class="text-white/60 text-xs flex items-center gap-1">
+                  <span class="${isScaduta ? 'text-red-400' : 'text-green-400'}">⏰</span>
+                  ${isScaduta ? 'Scaduta il' : 'Valida fino al'} ${validaFino.toLocaleDateString('it-IT')}
                 </div>
+              </div>` : ''}
+          </div>`;
+      }).join('');
+    }
+
+    function displayNotifications(notifications){
+      const container=document.getElementById('notificationList'); if(!container) return;
+      if(!Array.isArray(notifications) || !notifications.length){
+        container.innerHTML = `
+          <div class="text-center py-8 text-gray-500">
+            <div class="text-4xl mb-2">🔔</div>
+            <div class="text-sm">Nessuna notifica</div>
+          </div>`;
+        return;
+      }
+      container.innerHTML = notifications.map(n=>{
+        const s = { ...n, title:sanitizeString(n.title), message:sanitizeString(n.message) };
+        return `
+          <div class="p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 cursor-pointer"
+               data-action="read-notification" data-id="${escapeHTML(String(s.id ?? ''))}">
+            <div class="flex items-start gap-3">
+              <div class="w-2 h-2 bg-blue-500 rounded-full mt-2 ${s.read ? 'opacity-30' : ''}"></div>
+              <div class="flex-1">
+                <h4 class="font-medium text-gray-900 text-sm">${s.title}</h4>
+                <p class="text-gray-600 text-xs mt-1">${s.message}</p>
+                <span class="text-gray-400 text-xs">${formatDate(s.created_at)}</span>
+              </div>
             </div>
-        </section>
+          </div>`;
+      }).join('');
+    }
 
-        <!-- STATISTICHE RAPIDE -->
-        <section class="mb-8">
-            <h2 class="text-2xl font-bold text-white text-shadow mb-6">📊 Panoramica Sistema</h2>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="glass-card rounded-xl p-6 text-center">
-                    <div class="text-3xl font-bold text-blue-600" id="totalUsers">-</div>
-                    <div class="text-gray-600">Utenti Totali</div>
-                </div>
-                <div class="glass-card rounded-xl p-6 text-center">
-                    <div class="text-3xl font-bold text-orange-600" id="pendingRequests">-</div>
-                    <div class="text-gray-600">Richieste Pendenti</div>
-                </div>
-                <div class="glass-card rounded-xl p-6 text-center">
-                    <div class="text-3xl font-bold text-green-600" id="activeNews">-</div>
-                    <div class="text-gray-600">News Attive</div>
-                </div>
-                <div class="glass-card rounded-xl p-6 text-center">
-                    <div class="text-3xl font-bold text-green-600">Online</div>
-                    <div class="text-gray-600">Stato Sistema</div>
-                </div>
-            </div>
-        </section>
+    // ====== Notifiche UI ======
+    function updateNotificationBadge(count){
+      const badge=document.getElementById('notificationBadge'); if(!badge) return;
+      if(count>0){ badge.textContent=String(count); badge.classList.remove('hidden'); }
+      else{ badge.classList.add('hidden'); }
+    }
+    function toggleNotifications(){
+      const dd=document.getElementById('notificationDropdown'); if(!dd) return;
+      dd.classList.toggle('show');
+    }
+    function markAllNotificationsRead(){
+      updateNotificationBadge(0); displayNotifications([]);
+    }
 
-        <!-- FUNZIONI DIRIGENZIALI -->
-        <section class="mb-8">
-            <h2 class="text-2xl font-bold text-white text-shadow mb-6">⚡ Funzioni Dirigenziali</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                
-                <div onclick="goToGestioneSoci()" class="glass-card card-hover rounded-xl p-6 text-center cursor-pointer">
-                    <div class="text-4xl mb-4">👥</div>
-                    <h3 class="font-semibold text-gray-900 mb-2">Gestione Soci</h3>
-                    <p class="text-gray-600 text-sm">Amministra iscritti e adesioni</p>
-                </div>
+    // ====== Modal ======
+    function openModal(content){
+      const overlay=document.getElementById('modalContainer');
+      const modal=document.getElementById('modalContent');
+      if(overlay && modal){
+        modal.innerHTML=content;
+        overlay.classList.add('show');
+        overlay.setAttribute('aria-hidden','false');
+        document.body.style.overflow='hidden';
+      }
+    }
+    function closeModal(){
+      const overlay=document.getElementById('modalContainer');
+      const modal=document.getElementById('modalContent');
+      if(overlay && modal){
+        overlay.classList.remove('show');
+        overlay.setAttribute('aria-hidden','true');
+        document.body.style.overflow='auto';
+        setTimeout(()=>{ modal.innerHTML=''; }, 300);
+      }
+    }
 
-                <div onclick="goToGestioneNews()" class="glass-card card-hover rounded-xl p-6 text-center cursor-pointer">
-                    <div class="text-4xl mb-4">📰</div>
-                    <h3 class="font-semibold text-gray-900 mb-2">Gestione News</h3>
-                    <p class="text-gray-600 text-sm">Pubblica comunicazioni</p>
-                </div>
+    // ====== Navigazione ======
+    function goTo(pageKey){
+      const url = PAGE_MAPPING[pageKey] || pageKey;
+      window.location.href = url;
+    }
 
-                <div onclick="goToGestioneConvenzioni()" class="glass-card card-hover rounded-xl p-6 text-center cursor-pointer">
-                    <div class="text-4xl mb-4">🤝</div>
-                    <h3 class="font-semibold text-gray-900 mb-2">Convenzioni</h3>
-                    <p class="text-gray-600 text-sm">Gestisci partnership</p>
-                </div>
+    // ====== Caricamento dati ======
+    async function testDatabaseConnection(){
+      const { error } = await supabaseClient
+        .from('user_profiles')
+        .select('*', { count:'exact', head:true })
+        .limit(1);
+      if(error) throw new Error(`Errore database: ${error.message}`);
+      return true;
+    }
 
-                <div onclick="goToGestioneRichieste()" class="glass-card card-hover rounded-xl p-6 text-center cursor-pointer">
-                    <div class="text-4xl mb-4">📋</div>
-                    <h3 class="font-semibold text-gray-900 mb-2">Richieste</h3>
-                    <p class="text-gray-600 text-sm">Gestisci richieste sistema</p>
-                </div>
+    async function checkAuthentication(){
+      const { data:{ session }, error } = await supabaseClient.auth.getSession();
+      if(error) throw new Error(`Errore sessione: ${error.message}`);
+      if(!session){ window.location.href='auth.html'; return; }
+      currentUser = session.user;
+      const { data, error:profileErr } = await supabaseClient
+        .from('user_profiles')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .single();
+      if(profileErr && profileErr.code!=='PGRST116'){ console.warn('Profilo non trovato:', profileErr.message); }
+      userProfile = data || await createUserProfile(currentUser);
+      if(!isAuthorizedUser(userProfile.role)){
+        showErrorMessage('Accesso non autorizzato per questo ruolo');
+        setTimeout(()=> goTo('home'), 1200);
+        return;
+      }
+    }
 
-                <div onclick="goToStatistiche()" class="glass-card card-hover rounded-xl p-6 text-center cursor-pointer">
-                    <div class="text-4xl mb-4">📈</div>
-                    <h3 class="font-semibold text-gray-900 mb-2">Statistiche</h3>
-                    <p class="text-gray-600 text-sm">Report e analytics</p>
-                </div>
+    async function createUserProfile(user){
+      try{
+        const profileData = {
+          user_id: user.id,
+          email: user.email,
+          nome: user.user_metadata?.nome || 'Dirigente',
+          cognome: user.user_metadata?.cognome || '',
+          role: 'USER',
+          stato: 'ATTIVO',
+          created_at: new Date().toISOString()
+        };
+        const { data, error } = await supabaseClient
+          .from('user_profiles')
+          .upsert(profileData, { onConflict:'user_id' })
+          .select()
+          .single();
+        if(error) throw error;
+        return data;
+      }catch(e){
+        ErrorHandler.log(e, { area:'createUserProfile' });
+        return { role:'USER', nome:'Dirigente', cognome:'', email:user.email };
+      }
+    }
 
-                <div onclick="goToImpostazioni()" class="glass-card card-hover rounded-xl p-6 text-center cursor-pointer">
-                    <div class="text-4xl mb-4">⚙️</div>
-                    <h3 class="font-semibold text-gray-900 mb-2">Impostazioni</h3>
-                    <p class="text-gray-600 text-sm">Configurazioni sistema</p>
-                </div>
+    function isAuthorizedUser(role){ return ['ADMIN','DIRIGENTE'].includes(role); }
 
-                <div onclick="goToBackup()" class="glass-card card-hover rounded-xl p-6 text-center cursor-pointer">
-                    <div class="text-4xl mb-4">💾</div>
-                    <h3 class="font-semibold text-gray-900 mb-2">Backup</h3>
-                    <p class="text-gray-600 text-sm">Backup e ripristino</p>
-                </div>
+    async function loadSystemStats(){
+      try{
+        const [totalUsers, pendingRequests, activeNews] = await Promise.all([
+          getTotalUsers(), getPendingRequests(), getActiveNews()
+        ]);
+        updateElement('totalUsers', totalUsers || '0');
+        updateElement('pendingRequests', pendingRequests || '0');
+        updateElement('activeNews', activeNews || '0');
+      }catch(e){ ErrorHandler.log(e, { area:'loadSystemStats' }); }
+    }
 
-                <div onclick="goToAreaDirigenti()" class="glass-card card-hover rounded-xl p-6 text-center cursor-pointer">
-                    <div class="text-4xl mb-4">🏛️</div>
-                    <h3 class="font-semibold text-gray-900 mb-2">Area Riservata</h3>
-                    <p class="text-gray-600 text-sm">Funzioni avanzate</p>
-                </div>
-            </div>
-        </section>
+    async function getTotalUsers(){
+      try{
+        const { count, error } = await supabaseClient
+          .from('user_profiles').select('*',{ count:'exact', head:true });
+        if(error) throw error; return count;
+      }catch(e){ ErrorHandler.log(e); return 0; }
+    }
+    async function getPendingRequests(){
+      try{
+        const { count, error } = await supabaseClient
+          .from('richieste_personali')
+          .select('*',{ count:'exact', head:true })
+          .in('stato',['RICEVUTA','IN_ESAME','IN_LAVORAZIONE']);
+        if(error) throw error; return count;
+      }catch(e){ ErrorHandler.log(e); return 0; }
+    }
+    async function getActiveNews(){
+      try{
+        const { count, error } = await supabaseClient
+          .from('news').select('*',{ count:'exact', head:true }).eq('pubblicata', true);
+        if(error) throw error; return count;
+      }catch(e){ ErrorHandler.log(e); return 0; }
+    }
 
-        <!-- RICHIESTE RECENTI -->
-        <section class="mb-8">
-            <h2 class="text-2xl font-bold text-white text-shadow mb-6">📋 Richieste Recenti</h2>
-            <div class="glass-card rounded-xl p-6">
-                <div id="richiesteContainer">
-                    <div class="text-center py-8 text-gray-500">
-                        <div class="text-4xl mb-2">📄</div>
-                        <div>Caricamento richieste...</div>
-                    </div>
-                </div>
-            </div>
-        </section>
+    async function loadSystemRequests(){
+      try{
+        const { data, error } = await supabaseClient
+          .from('richieste_personali')
+          .select(`*, user_profiles!richieste_personali_user_id_fkey(nome, cognome)`)
+          .order('created_at',{ ascending:false })
+          .limit(5);
+        if(error) throw error;
+        const mapped = (data||[]).map(r=>({
+          ...r,
+          user_nome: r.user_profiles ? `${r.user_profiles.nome||''} ${r.user_profiles.cognome||''}`.trim() : 'Utente Sconosciuto'
+        }));
+        displaySystemRequests(mapped);
+      }catch(e){ ErrorHandler.log(e, { area:'loadSystemRequests' }); displaySystemRequests([]); }
+    }
 
-        <!-- NEWS RECENTI -->
-        <section class="mb-8">
-            <h2 class="text-2xl font-bold text-white text-shadow mb-6">📰 Ultime News</h2>
-            <div class="glass-card rounded-xl p-6">
-                <div id="newsContainer">
-                    <div class="text-center py-8 text-gray-500">
-                        <div class="text-4xl mb-2">📰</div>
-                        <div>Caricamento news...</div>
-                    </div>
-                </div>
-            </div>
-        </section>
+    async function loadPersonalRequests(){
+      try{
+        const { data, error } = await supabaseClient
+          .from('richieste_personali')
+          .select('*')
+          .eq('user_id', currentUser.id)
+          .order('created_at',{ ascending:false })
+          .limit(3);
+        if(error) throw error;
+        const attive = (data||[]).filter(r=>!['COMPLETATA','CHIUSA'].includes(r.stato)).length || 0;
+        updateElement('richiestePersonali', attive);
+        displayPersonalRequests(data||[]);
+      }catch(e){ ErrorHandler.log(e, { area:'loadPersonalRequests' }); displayPersonalRequests([]); }
+    }
 
-        <!-- AZIONI RAPIDE -->
-        <section class="mb-8">
-            <h2 class="text-2xl font-bold text-white text-shadow mb-6">🚀 Azioni Rapide</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                
-                <a href="https://form.jotform.com/243226223182044" target="_blank" class="glass-card card-hover rounded-xl p-6 text-center cursor-pointer">
-                    <div class="text-4xl mb-4">💰</div>
-                    <h3 class="font-semibold text-gray-900 mb-2">Richiedi Rimborso</h3>
-                    <p class="text-gray-600 text-sm">Modulo rimborso spese</p>
-                </a>
+    async function loadNews(){
+      try{
+        const { data, error } = await supabaseClient
+          .from('news').select('*').eq('pubblicata',true).order('created_at',{ascending:false}).limit(3);
+        if(error) throw error;
+        displayNews(data||[]);
+      }catch(e){ ErrorHandler.log(e, { area:'loadNews' }); displayNews([]); }
+    }
 
-                <a href="https://form.jotform.com/243262801203343" target="_blank" class="glass-card card-hover rounded-xl p-6 text-center cursor-pointer">
-                    <div class="text-4xl mb-4">📝</div>
-                    <h3 class="font-semibold text-gray-900 mb-2">Richiedi Permesso</h3>
-                    <p class="text-gray-600 text-sm">Permesso sindacale</p>
-                </a>
+    async function loadNotifications(){
+      try{
+        updateNotificationBadge(0); displayNotifications([]);
+      }catch(e){ ErrorHandler.log(e, { area:'loadNotifications' }); updateNotificationBadge(0); displayNotifications([]); }
+    }
 
-                <a href="https://www.carabinierinsc.it/webmail/" target="_blank" class="glass-card card-hover rounded-xl p-6 text-center cursor-pointer">
-                    <div class="text-4xl mb-4">📧</div>
-                    <h3 class="font-semibold text-gray-900 mb-2">Webmail</h3>
-                    <p class="text-gray-600 text-sm">Casella posta ufficiale</p>
-                </a>
+    async function loadConvenzioni(){
+      try{
+        const { data, error } = await supabaseClient
+          .from('convenzioni').select('*').eq('attiva',true).order('created_at',{ascending:false}).limit(3);
+        if(error) throw error;
+        displayConvenzioni(data||[]);
+      }catch(e){ ErrorHandler.log(e, { area:'loadConvenzioni' }); displayConvenzioni([]); }
+    }
 
-                <div onclick="goToVirgilio()" class="glass-card card-hover rounded-xl p-6 text-center cursor-pointer">
-                    <div class="text-4xl mb-4">🤖</div>
-                    <h3 class="font-semibold text-gray-900 mb-2">Virgilio AI</h3>
-                    <p class="text-gray-600 text-sm">Assistente intelligente</p>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="glass-header mt-16">
-        <div class="container mx-auto px-6 py-8 text-center text-white">
-            <div class="mb-4">
-                <span class="font-semibold text-lg">MyApp</span> - Dashboard Dirigenti v8.0
-            </div>
-            <div class="text-sm text-blue-200">
-                © 2025 MyApp • Area Dirigenziale • Powered by Supabase
-            </div>
-        </div>
-    </footer>
-
-    <!-- JAVASCRIPT SEMPLIFICATO -->
-    <script>
-        // === CONFIGURAZIONE ===
-        const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
-        
-        let supabaseClient;
-        let currentUser = null;
-
-        // === INIZIALIZZAZIONE ===
-        document.addEventListener('DOMContentLoaded', async () => {
-            console.log('🚀 Dashboard Dirigenti Semplificata v8.0');
-            
-            try {
-                // Inizializza Supabase
-                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                
-                // Verifica autenticazione
-                await checkAuth();
-                
-                // Carica dati
-                await loadData();
-                
-                // Setup eventi
-                setupEvents();
-                
-                console.log('✅ Dashboard caricata con successo');
-                
-            } catch (error) {
-                console.error('❌ Errore:', error);
-                showMessage('Errore di inizializzazione', 'error');
-            }
-        });
-
-        // === AUTENTICAZIONE ===
-        async function checkAuth() {
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            
-            if (!session) {
-                window.location.href = 'auth.html';
-                return;
-            }
-            
-            currentUser = session.user;
-            console.log('✅ Utente autenticato:', currentUser.email);
+    async function loadTesseraData(){
+      try{
+        const { data:tessera, error } = await supabaseClient
+          .from('tessere').select('numero_tessera, stato').eq('user_id', currentUser.id).single();
+        if(error){
+          await createTessera(currentUser.id);
+          return;
         }
+        const el=document.getElementById('numeroTessera');
+        if(el) el.textContent = tessera?.numero_tessera || 'In generazione...';
+      }catch(e){
+        ErrorHandler.log(e,{area:'loadTesseraData'});
+        const el=document.getElementById('numeroTessera'); if(el) el.textContent='Errore caricamento';
+      }
+    }
 
-        // === CARICAMENTO DATI ===
-        async function loadData() {
-            try {
-                // Carica statistiche
-                await loadStats();
-                
-                // Carica richieste
-                await loadRequests();
-                
-                // Carica news
-                await loadNews();
-                
-            } catch (error) {
-                console.error('❌ Errore caricamento dati:', error);
-            }
+    async function createTessera(userId){
+      try{
+        const numero = generateNumeroTessera();
+        const tesseraData = {
+          user_id:userId,
+          numero_tessera: numero,
+          nome_completo: `${userProfile?.nome||''} ${userProfile?.cognome||''}`.trim(),
+          email: userProfile?.email,
+          data_emissione: new Date().toISOString().split('T')[0],
+          data_scadenza: getDataScadenza(),
+          stato: 'ATTIVA',
+          tipo: 'DIRIGENTE'
+        };
+        const { error } = await supabaseClient.from('tessere').insert([tesseraData]);
+        if(error) throw error;
+        const el=document.getElementById('numeroTessera'); if(el) el.textContent = numero;
+      }catch(e){ ErrorHandler.log(e,{area:'createTessera'}); }
+    }
+    function generateNumeroTessera(){ const year=new Date().getFullYear(); const rnd=Math.floor(Math.random()*90000)+10000; return `DIR${year}${rnd}`; }
+    function getDataScadenza(){ const now=new Date(); const scad=new Date(now.getFullYear()+1,11,31); return scad.toISOString().split('T')[0]; }
+
+    // ====== Dettagli e incrementi ======
+    async function incrementNewsViews(newsId){
+      try{
+        // Richiede presenza funzione RPC sul DB
+        await supabaseClient.rpc('increment_news_views',{ news_id: newsId });
+      }catch(e){ console.warn('Incremento news non disponibile:', e?.message); }
+    }
+    async function incrementConvenzioneViews(convenzioneId){
+      try{
+        await supabaseClient.rpc('increment_convenzione_views',{ convenzione_id: convenzioneId });
+      }catch(e){ console.warn('Incremento convenzioni non disponibile:', e?.message); }
+    }
+
+    function viewRichiestaDetail(id){ window.location.href = `richiesta-dettaglio.html?id=${encodeURIComponent(id)}`; }
+    async function readNews(id){ await incrementNewsViews(id); window.location.href = `news-dettaglio.html?id=${encodeURIComponent(id)}`; }
+    async function openConvenzione(id){ await incrementConvenzioneViews(id); window.location.href = `convenzione-dettaglio.html?id=${encodeURIComponent(id)}`; }
+    function readNotification(id){ console.log('Notifica letta:', id); }
+
+    // ====== UI/Profilo ======
+    function updateUserInterface(){
+      if(!userProfile) return;
+      const firstName = userProfile?.nome || 'Dirigente';
+      updateElement('userWelcome', `Benvenuto, ${firstName}!`);
+      updateElement('userRole', getRoleLabel(userProfile?.role));
+      updateElement('userNameDisplay', firstName);
+      const initials = getInitials(`${userProfile?.nome||''} ${userProfile?.cognome||''}`);
+      const avatar=document.getElementById('userAvatar'); if(avatar) avatar.textContent = initials;
+      updatePersonalStats();
+    }
+    function getRoleLabel(role){ const map={ 'ADMIN':'Amministratore','DIRIGENTE':'Dirigente Sindacale','USER':'Utente' }; return map[role] || role || 'Utente'; }
+    function getInitials(fullName){ return (fullName||'').split(' ').filter(Boolean).map(n=>n[0]?.toUpperCase()||'').join('').slice(0,2) || 'D'; }
+    function updatePersonalStats(){
+      if(!userProfile) return;
+      const ms=document.getElementById('memberSince');
+      if(ms){ const d=userProfile.created_at ? formatDate(userProfile.created_at) : '-'; ms.textContent=d; }
+      const st=document.getElementById('profileStatus'); if(st){ st.textContent = getStatusLabel(userProfile?.stato); }
+    }
+
+    // ====== Event listeners di pagina ======
+    function setupEventListeners(){
+      document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
+      document.getElementById('notificationBtn')?.addEventListener('click', toggleNotifications);
+      document.getElementById('markAllRead')?.addEventListener('click', markAllNotificationsRead);
+
+      // Chiudi modal con sfondo/ESC
+      const modalContainer=document.getElementById('modalContainer');
+      modalContainer?.addEventListener('click', (e)=>{ if(e.target===modalContainer) closeModal(); });
+      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ closeModal(); document.getElementById('notificationDropdown')?.classList.remove('show'); } });
+
+      // Chiudi dropdown notifiche cliccando fuori
+      document.addEventListener('click', (e)=>{
+        const dd=document.getElementById('notificationDropdown');
+        const btn=document.getElementById('notificationBtn');
+        if(dd && btn && !dd.contains(e.target) && !btn.contains(e.target)){ dd.classList.remove('show'); }
+      });
+
+      // Event delegation per card dinamiche
+      document.addEventListener('click', async (e)=>{
+        const target = e.target.closest('[data-action]');
+        if(target){
+          const action=target.getAttribute('data-action');
+          const id=target.getAttribute('data-id');
+          if(action==='view-richiesta' && id) viewRichiestaDetail(id);
+          if(action==='read-news' && id) await readNews(id);
+          if(action==='open-convenzione' && id) await openConvenzione(id);
+          if(action==='read-notification' && id) readNotification(id);
         }
+        const navBtn = e.target.closest('[data-nav]');
+        if(navBtn){ goTo(navBtn.getAttribute('data-nav')); }
+      });
 
-        async function loadStats() {
-            try {
-                // Conta utenti
-                const { count: users } = await supabaseClient
-                    .from('user_profiles')
-                    .select('*', { count: 'exact', head: true });
+      // Richiedi permesso notifiche al primo gesto utente
+      document.addEventListener('click', ()=>{ NotificationManager.requestPermission(); }, { once:true });
+    }
 
-                // Conta richieste pendenti
-                const { count: requests } = await supabaseClient
-                    .from('richieste_personali')
-                    .select('*', { count: 'exact', head: true })
-                    .in('stato', ['RICEVUTA', 'IN_ESAME', 'IN_LAVORAZIONE']);
+    async function handleLogout(){
+      try{
+        const { error } = await supabaseClient.auth.signOut();
+        if(error) throw error;
+        window.location.href='auth.html';
+      }catch(e){ ErrorHandler.log(e,{area:'logout'}); showErrorMessage('Errore durante il logout'); }
+    }
 
-                // Conta news attive
-                const { count: news } = await supabaseClient
-                    .from('news')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('pubblicata', true);
+    // ====== Auto refresh / visibility ======
+    let autoRefreshInterval=null; let isPageVisible=true;
+    function startAutoRefresh(){
+      stopAutoRefresh();
+      autoRefreshInterval = setInterval(async ()=>{
+        if(isPageVisible){ console.log('🔄 Auto-refresh dati dashboard'); await refreshCriticalData(); }
+      }, 5*60*1000);
+    }
+    function stopAutoRefresh(){ if(autoRefreshInterval){ clearInterval(autoRefreshInterval); autoRefreshInterval=null; } }
+    async function refreshCriticalData(){ try{ await Promise.all([ loadSystemStats(), loadNotifications() ]); }catch(e){ ErrorHandler.log(e,{area:'refreshCriticalData'}); } }
 
-                // Aggiorna UI
-                document.getElementById('totalUsers').textContent = users || '0';
-                document.getElementById('pendingRequests').textContent = requests || '0';
-                document.getElementById('activeNews').textContent = news || '0';
+    // ====== Inizializzazione ======
+    async function loadDashboardData(){
+      updateUserInterface();
+      createDynamicSections();
+      try{
+        showLoadingSkeletons();
+        await Promise.all([ loadSystemStats(), loadTesseraData(), loadSystemRequests(), loadPersonalRequests(), loadNews(), loadNotifications(), loadConvenzioni() ]);
+        hideLoadingSkeletons();
+      }catch(error){
+        ErrorHandler.log(error,{area:'loadDashboardData'});
+        hideLoadingSkeletons();
+      }
+    }
 
-            } catch (error) {
-                console.error('❌ Errore statistiche:', error);
-            }
-        }
+    // ====== Bootstrap ======
+    window.addEventListener('error', (event)=>{ ErrorHandler.log(event.error || event.message, { filename:event.filename, lineno:event.lineno, colno:event.colno }); });
+    window.addEventListener('unhandledrejection', (event)=>{ ErrorHandler.log(event.reason, { type:'unhandled_promise_rejection' }); });
 
-        async function loadRequests() {
-            try {
-                const { data: richieste, error } = await supabaseClient
-                    .from('richieste_personali')
-                    .select(`
-                        *,
-                        user_profiles!richieste_personali_user_id_fkey(nome, cognome)
-                    `)
-                    .order('created_at', { ascending: false })
-                    .limit(5);
+    document.addEventListener('visibilitychange', ()=>{
+      isPageVisible = !document.hidden;
+      if(isPageVisible){ refreshCriticalData(); }
+    });
 
-                if (error) throw error;
+    window.addEventListener('load', ()=>{
+      const navStart = performance.timeOrigin || (performance.timing?.navigationStart ?? Date.now());
+      const loadMs = Math.max(0, performance.now()); // relativo
+      console.log(`⚡ Dashboard (client) caricata in ~${Math.round(loadMs)}ms`);
+      startAutoRefresh();
+    });
 
-                const container = document.getElementById('richiesteContainer');
-                
-                if (!richieste || richieste.length === 0) {
-                    container.innerHTML = `
-                        <div class="text-center py-8 text-gray-500">
-                            <div class="text-4xl mb-2">📄</div>
-                            <div>Nessuna richiesta da gestire</div>
-                        </div>
-                    `;
-                    return;
-                }
+    document.addEventListener('DOMContentLoaded', async ()=>{
+      console.log('🚀 Inizializzazione sistema...');
+      AppState.loadFromStorage();
 
-                container.innerHTML = richieste.map(r => {
-                    const userName = r.user_profiles ? 
-                        `${r.user_profiles.nome} ${r.user_profiles.cognome}` : 
-                        'Utente Sconosciuto';
-                    
-                    const statusColor = getStatusColor(r.stato);
-                    
-                    return `
-                        <div class="border-b border-gray-200 pb-4 mb-4 last:border-b-0">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h4 class="font-semibold text-gray-900">${r.titolo}</h4>
-                                    <p class="text-sm text-gray-600">👤 ${userName}</p>
-                                    <p class="text-xs text-gray-500">${formatDate(r.created_at)}</p>
-                                </div>
-                                <span class="px-2 py-1 rounded text-xs text-white ${statusColor}">
-                                    ${r.stato}
-                                </span>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
+      try{
+        if(typeof supabase==='undefined') throw new Error('Libreria Supabase non caricata');
+        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        await testDatabaseConnection();
+        await checkAuthentication();
+        setupEventListeners();
+        SessionManager.startSession();
+        // Cleanup cache e health check periodici
+        setInterval(()=> CacheManager.cleanup(), 10*60*1000);
+        setInterval(async ()=>{
+          const health=await NetworkManager.healthCheck();
+          if(!health.online) showErrorMessage('Connessione al server persa. Riprovo...');
+        }, 60*1000);
 
-            } catch (error) {
-                console.error('❌ Errore richieste:', error);
-                document.getElementById('richiesteContainer').innerHTML = `
-                    <div class="text-center py-8 text-red-500">
-                        <div>Errore caricamento richieste</div>
-                    </div>
-                `;
-            }
-        }
+        await loadDashboardData();
+        console.log('✅ Dashboard dirigenti pronta');
+      }catch(e){
+        ErrorHandler.log(e,{area:'bootstrap'});
+        showErrorMessage('Errore di inizializzazione. Verifica la connessione.');
+        setTimeout(()=> goTo('auth'), 2000);
+      }
+    });
 
-        async function loadNews() {
-            try {
-                const { data: news, error } = await supabaseClient
-                    .from('news')
-                    .select('*')
-                    .eq('pubblicata', true)
-                    .order('created_at', { ascending: false })
-                    .limit(3);
+    window.addEventListener('beforeunload', ()=>{
+      try{
+        AppState.saveToStorage();
+        stopAutoRefresh();
+        CacheManager.clear();
+        SessionManager.clearTimers();
+      }catch{}
+    });
 
-                if (error) throw error;
-
-                const container = document.getElementById('newsContainer');
-                
-                if (!news || news.length === 0) {
-                    container.innerHTML = `
-                        <div class="text-center py-8 text-gray-500">
-                            <div class="text-4xl mb-2">📰</div>
-                            <div>Nessuna news disponibile</div>
-                        </div>
-                    `;
-                    return;
-                }
-
-                container.innerHTML = news.map(n => `
-                    <div class="border-b border-gray-200 pb-4 mb-4 last:border-b-0">
-                        <h4 class="font-semibold text-gray-900 mb-1">${n.titolo}</h4>
-                        <p class="text-sm text-gray-600 mb-2">${n.sottotitolo || ''}</p>
-                        <div class="flex items-center space-x-3 text-xs text-gray-500">
-                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded">${n.categoria || 'Generale'}</span>
-                            <span>📅 ${formatDate(n.created_at)}</span>
-                            <span>👁️ ${n.visualizzazioni || 0}</span>
-                        </div>
-                    </div>
-                `).join('');
-
-            } catch (error) {
-                console.error('❌ Errore news:', error);
-                document.getElementById('newsContainer').innerHTML = `
-                    <div class="text-center py-8 text-red-500">
-                        <div>Errore caricamento news</div>
-                    </div>
-                `;
-            }
-        }
-
-        // === FUNZIONI NAVIGAZIONE ===
-        function goToGestioneSoci() {
-            window.location.href = 'gestione-soci.html';
-        }
-
-        function goToGestioneNews() {
-            window.location.href = 'gestione-news.html';
-        }
-
-        function goToGestioneConvenzioni() {
-            window.location.href = 'gestione-convenzioni.html';
-        }
-
-        function goToGestioneRichieste() {
-            window.location.href = 'gestione-richieste.html';
-        }
-
-        function goToStatistiche() {
-            window.location.href = 'statistiche.html';
-        }
-
-        function goToImpostazioni() {
-            window.location.href = 'impostazioni.html';
-        }
-
-        function goToBackup() {
-            window.location.href = 'backup.html';
-        }
-
-        function goToAreaDirigenti() {
-            window.location.href = 'area-dirigenti.html';
-        }
-
-        function goToVirgilio() {
-            window.location.href = 'virgilio.html';
-        }
-
-        // === EVENTI ===
-        function setupEvents() {
-            // Logout
-            document.getElementById('logoutBtn').addEventListener('click', async () => {
-                try {
-                    await supabaseClient.auth.signOut();
-                    window.location.href = 'auth.html';
-                } catch (error) {
-                    showMessage('Errore logout', 'error');
-                }
-            });
-        }
-
-        // === UTILITY ===
-        function formatDate(dateString) {
-            if (!dateString) return '-';
-            return new Date(dateString).toLocaleDateString('it-IT');
-        }
-
-        function getStatusColor(status) {
-            const colors = {
-                'RICEVUTA': 'bg-blue-500',
-                'IN_ESAME': 'bg-yellow-500',
-                'IN_LAVORAZIONE': 'bg-orange-500',
-                'COMPLETATA': 'bg-green-500',
-                'CHIUSA': 'bg-gray-500',
-                'RIFIUTATA': 'bg-red-500'
-            };
-            return colors[status] || 'bg-gray-500';
-        }
-
-        function showMessage(message, type = 'info') {
-            const colors = {
-                'info': 'bg-blue-500',
-                'success': 'bg-green-500',
-                'error': 'bg-red-500'
-            };
-            
-            const alert = document.createElement('div');
-            alert.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg z-50`;
-            alert.textContent = message;
-            
-            document.body.appendChild(alert);
-            
-            setTimeout(() => {
-                alert.remove();
-            }, 3000);
-        }
-
-        console.log('✅ Dashboard Dirigenti Semplificata Ready!');
-    </script>
-
+    // ====== Debug console ======
+    if(typeof window!=='undefined'){
+      window.MyAppDebug = {
+        getSystemInfo: ()=>({ user:currentUser, profile:userProfile, cache:CacheManager.getStats(), errors:ErrorHandler.getErrors(), performance:PerformanceMonitor.getMetrics(), state:AppState }),
+        clearCache: ()=>CacheManager.clear(),
+        clearErrors: ()=>ErrorHandler.clearErrors(),
+        testNotification: (m='Test notifica')=> NotificationManager.show(m,'info'),
+        testError: ()=>{ throw new Error('Test error per debugging'); },
+        forceRefresh: ()=> loadDashboardData(),
+        healthCheck: ()=> NetworkManager.healthCheck(),
+        getPerformance: ()=>({ averageLoadTime: PerformanceMonitor.getAverageTime('dashboard_loaded'), totalMetrics: PerformanceMonitor.getMetrics().length, cacheHitRate: 'n/d' })
+      };
+      console.log('🔧 MyApp Debug Console: window.MyAppDebug');
+    }
+  </script>
 </body>
 </html>
