@@ -5,18 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gestione Notizie</title>
 
+  <!-- Tailwind per test (in produzione usare build/CLI) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily:{ inter:['Inter','sans-serif'] },
-          colors:{ primary:'#1a1a2e', slate:'#0f172a' }
+          fontFamily: { inter: ['Inter','sans-serif'] },
+          colors: { slate:'#0f172a' }
         }
       }
     }
   </script>
+
   <style>
+    body{ background:#f8fafc; }
     .card{ background:#fff; border:1px solid #e5e7eb; border-radius:16px; box-shadow:0 12px 24px rgba(0,0,0,.06); }
     .btn{ display:inline-flex; align-items:center; gap:.5rem; font-weight:700; border-radius:10px; padding:.6rem 1rem; }
     .btn-primary{ background:#1d4ed8; color:#fff; }
@@ -36,10 +39,10 @@
     .table th, .table td{ padding:.7rem .8rem; }
   </style>
 </head>
-<body class="bg-slate-50 font-inter">
+<body class="font-inter">
 
   <!-- Topbar -->
-  <header class="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-slate-200">
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200">
     <div class="max-w-6xl mx-auto px-3 sm:px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <a href="home_dirigenti.html" class="btn btn-ghost" title="Indietro">
@@ -48,7 +51,7 @@
         <h1 class="text-xl sm:text-2xl font-black text-slate-900">Gestione Notizie</h1>
       </div>
       <div class="flex items-center gap-2">
-        <button id="newBtn" class="btn btn-primary"><span>➕</span><span>Nuova Notizia</span></button>
+        <button id="newBtn" class="btn btn-primary"><span>+</span><span>Nuova Notizia</span></button>
       </div>
     </div>
   </header>
@@ -58,7 +61,7 @@
     <!-- Filtri -->
     <section class="card p-4 sm:p-6 mb-5">
       <div class="grid sm:grid-cols-3 gap-3">
-        <input id="searchInput" class="input" placeholder="Cerca per titolo o sottotitolo…">
+        <input id="searchInput" class="input" placeholder="Cerca per titolo o sottotitolo...">
         <select id="statusFilter" class="select">
           <option value="ALL">Tutte</option>
           <option value="PUBBLICATE">Pubblicate</option>
@@ -67,8 +70,12 @@
         </select>
         <select id="catFilter" class="select">
           <option value="ALL">Tutte le categorie</option>
-          <option>GENERALE</option><option>SINDACALE</option><option>LEGALE</option>
-          <option>EVENTI</option><option>FORMAZIONE</option><option>CONVENZIONI</option>
+          <option>GENERALE</option>
+          <option>SINDACALE</option>
+          <option>LEGALE</option>
+          <option>EVENTI</option>
+          <option>FORMAZIONE</option>
+          <option>CONVENZIONI</option>
         </select>
       </div>
     </section>
@@ -92,17 +99,18 @@
         </table>
       </div>
       <div id="emptyState" class="hidden text-center py-10 text-slate-600">
-        <div class="text-5xl mb-2">📰</div>Nessuna notizia trovata.
+        <div class="text-3xl mb-2">Nessuna notizia</div>
+        <div>Aggiungi o modifica con il pulsante in alto a destra.</div>
       </div>
     </section>
   </main>
 
   <!-- Modal Edit -->
-  <div id="modal" class="overlay">
+  <div id="modal" class="overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal">
       <div class="flex items-center justify-between mb-3">
         <h2 id="modalTitle" class="text-xl font-black text-slate-900">Modifica Notizia</h2>
-        <button id="closeModal" class="btn btn-ghost">✖</button>
+        <button id="closeModal" class="btn btn-ghost" title="Chiudi">X</button>
       </div>
 
       <form id="newsForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -126,28 +134,32 @@
         <div>
           <label class="label">Categoria *</label>
           <select id="categoria" class="select" required>
-            <option>GENERALE</option><option>SINDACALE</option><option>LEGALE</option>
-            <option>EVENTI</option><option>FORMAZIONE</option><option>CONVENZIONI</option>
+            <option>GENERALE</option>
+            <option>SINDACALE</option>
+            <option>LEGALE</option>
+            <option>EVENTI</option>
+            <option>FORMAZIONE</option>
+            <option>CONVENZIONI</option>
           </select>
         </div>
 
         <div>
           <label class="label">URL immagine</label>
-          <input id="immagine_url" class="input" placeholder="https://…">
+          <input id="immagine_url" class="input" placeholder="https://...">
         </div>
 
-        <div class="">
+        <div>
           <label class="label">URL articolo</label>
-          <input id="url_articolo" class="input" placeholder="https://…">
+          <input id="url_articolo" class="input" placeholder="https://...">
         </div>
 
-        <div class="">
+        <div>
           <label class="label">Data pubblicazione</label>
           <input id="data_pubblicazione" type="datetime-local" class="input">
           <button type="button" id="publishNow" class="mt-1 btn btn-ghost">Imposta adesso</button>
         </div>
 
-        <div class="">
+        <div>
           <label class="label">Data scadenza</label>
           <input id="data_scadenza" type="datetime-local" class="input">
         </div>
@@ -155,7 +167,7 @@
         <div>
           <label class="label">Pubblicata</label>
           <select id="pubblicata" class="select">
-            <option value="true">Sì</option>
+            <option value="true">Si</option>
             <option value="false">No</option>
           </select>
         </div>
@@ -164,29 +176,34 @@
           <label class="label">In evidenza</label>
           <select id="in_evidenza" class="select">
             <option value="false">No</option>
-            <option value="true">Sì</option>
+            <option value="true">Si</option>
           </select>
         </div>
 
         <div class="sm:col-span-2 flex items-center justify-end gap-2 mt-2">
           <button type="button" id="cancelBtn" class="btn btn-ghost">Annulla</button>
-          <button type="submit" class="btn btn-primary">💾 Salva</button>
+          <button type="submit" class="btn btn-primary">Salva</button>
         </div>
       </form>
     </div>
   </div>
 
+  <!-- App -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
+    // SUPABASE: tuo progetto pvzdilkozpspsnepedqc
     const supabase = createClient(
       'https://pvzdilkozpspsnepedqc.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk'
     );
 
+    // Helpers
     const $ = (id)=>document.getElementById(id);
-    const fmt = (iso)=> iso? new Date(iso).toLocaleString('it-IT'): '—';
-    const esc = (s)=> String(s??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;');
+    const fmt = (iso)=> iso ? new Date(iso).toLocaleString('it-IT') : '—';
+    const esc = (s)=> String(s==null?'':s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 
     async function guard(){
       const { data:{ user } } = await supabase.auth.getUser();
@@ -194,7 +211,7 @@
       return user;
     }
 
-    // ----- LISTA -----
+    // Stato lista
     let allNews = [];
 
     async function loadNews(){
@@ -216,8 +233,8 @@
 
       if(q){
         rows = rows.filter(n =>
-          (n.titolo||'').toLowerCase().includes(q) ||
-          (n.sottotitolo||'').toLowerCase().includes(q)
+          String(n.titolo||'').toLowerCase().includes(q) ||
+          String(n.sottotitolo||'').toLowerCase().includes(q)
         );
       }
       if(status==='PUBBLICATE') rows = rows.filter(n => n.pubblicata===true);
@@ -233,33 +250,38 @@
       }
       $('emptyState').classList.add('hidden');
 
-      body.innerHTML = rows.map(n => {
+      // Per evitare caratteri strani nelle template string, uso concat rigoroso
+      const html = rows.map(function(n){
         const p = n.pubblicata===true;
         const e = n.in_evidenza===true;
-        return `
-          <tr class="border-b hover:bg-slate-50">
-            <td class="text-slate-900 font-semibold">${esc(n.titolo||'-')}</td>
-            <td><span class="badge badge-slate">${esc(n.categoria||'GENERALE')}</span></td>
-            <td class="text-center">${p?'<span class="badge badge-green">Sì</span>':'<span class="badge badge-yellow">No</span>'}</td>
-            <td class="text-center">${e?'<span class="badge badge-green">Sì</span>':'<span class="badge badge-slate">No</span>'}</td>
-            <td>${fmt(n.data_pubblicazione)}</td>
-            <td class="text-center">${n.visualizzazioni||0}</td>
-            <td class="text-right">
-              <button class="btn btn-ghost" data-edit="${n.id}">Modifica</button>
-              ${n.url_articolo?`<a class="btn btn-ghost" href="${esc(n.url_articolo)}" target="_blank" rel="noopener">Apri link</a>`:''}
-            </td>
-          </tr>
-        `;
+
+        let azioni = '<button class="btn btn-ghost" data-edit="'+esc(n.id)+'">Modifica</button>';
+        if(n.url_articolo){
+          azioni += ' <a class="btn btn-ghost" href="'+esc(n.url_articolo)+'" target="_blank" rel="noopener">Apri link</a>';
+        }
+
+        return ''+
+          '<tr class="border-b hover:bg-slate-50">'+
+            '<td class="text-slate-900 font-semibold">'+esc(n.titolo||'-')+'</td>'+
+            '<td><span class="badge badge-slate">'+esc(n.categoria||'GENERALE')+'</span></td>'+
+            '<td class="text-center">'+(p?'<span class="badge badge-green">Si</span>':'<span class="badge badge-yellow">No</span>')+'</td>'+
+            '<td class="text-center">'+(e?'<span class="badge badge-green">Si</span>':'<span class="badge badge-slate">No</span>')+'</td>'+
+            '<td>'+fmt(n.data_pubblicazione)+'</td>'+
+            '<td class="text-center">'+(n.visualizzazioni||0)+'</td>'+
+            '<td class="text-right">'+azioni+'</td>'+
+          '</tr>';
       }).join('');
+
+      body.innerHTML = html;
     }
 
     $('searchInput').addEventListener('input', renderRows);
     $('statusFilter').addEventListener('change', renderRows);
     $('catFilter').addEventListener('change', renderRows);
 
-    // ----- MODAL -----
-    function openModal(title='Modifica Notizia'){
-      $('modalTitle').textContent = title;
+    // Modal
+    function openModal(title){
+      $('modalTitle').textContent = title||'Modifica Notizia';
       $('modal').classList.add('show');
       document.body.style.overflow='hidden';
     }
@@ -271,13 +293,13 @@
     }
     $('closeModal').addEventListener('click', closeModal);
     $('cancelBtn').addEventListener('click', closeModal);
-    $('publishNow').addEventListener('click', ()=>{
+    $('publishNow').addEventListener('click', function(){
       const now = new Date(); now.setSeconds(0,0);
-      $('data_pubblicazione').value = new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,16);
+      const local = new Date(now.getTime() - now.getTimezoneOffset()*60000).toISOString().slice(0,16);
+      $('data_pubblicazione').value = local;
     });
 
-    // Nuova notizia
-    $('newBtn').addEventListener('click', ()=>{
+    $('newBtn').addEventListener('click', function(){
       $('newsForm').reset();
       $('newsId').value='';
       $('pubblicata').value='false';
@@ -286,12 +308,13 @@
     });
 
     // Click su Modifica
-    document.addEventListener('click', (e)=>{
-      const btn = e.target.closest('button[data-edit]');
+    document.addEventListener('click', function(e){
+      const btn = e.target.closest('[data-edit]');
       if(!btn) return;
       const id = btn.getAttribute('data-edit');
-      const n = allNews.find(x => x.id===id);
+      const n = allNews.find(function(x){ return x.id===id; });
       if(!n) return;
+
       $('newsId').value = n.id;
       $('titolo').value = n.titolo||'';
       $('sottotitolo').value = n.sottotitolo||'';
@@ -303,15 +326,16 @@
       $('in_evidenza').value = String(!!n.in_evidenza);
       $('data_pubblicazione').value = n.data_pubblicazione ? new Date(n.data_pubblicazione).toISOString().slice(0,16) : '';
       $('data_scadenza').value = n.data_scadenza ? new Date(n.data_scadenza).toISOString().slice(0,16) : '';
+
       openModal('Modifica Notizia');
     });
 
     // Salvataggio
-    $('newsForm').addEventListener('submit', async (e)=>{
+    $('newsForm').addEventListener('submit', async function(e){
       e.preventDefault();
       const id = $('newsId').value || null;
 
-      const toIso = (v)=> v ? new Date(v).toISOString() : null;
+      const toIso = function(v){ return v ? new Date(v).toISOString() : null; };
 
       const payload = {
         titolo: $('titolo').value.trim(),
@@ -327,8 +351,10 @@
       };
 
       try{
-        if(!payload.titolo || !payload.contenuto) { alert('Titolo e contenuto sono obbligatori'); return; }
-
+        if(!payload.titolo || !payload.contenuto){
+          alert('Titolo e contenuto sono obbligatori');
+          return;
+        }
         if(id){
           const { error } = await supabase.from('news').update(payload).eq('id', id);
           if(error) throw error;
@@ -336,17 +362,16 @@
           const { error } = await supabase.from('news').insert([payload]);
           if(error) throw error;
         }
-
         closeModal();
         await loadNews();
       }catch(err){
         console.error(err);
-        alert('Errore nel salvataggio: ' + (err?.message||''));
+        alert('Errore nel salvataggio: ' + (err && err.message ? err.message : ''));
       }
     });
 
     // Bootstrap
-    (async ()=>{
+    (async function(){
       const user = await guard(); if(!user) return;
       await loadNews();
     })();
