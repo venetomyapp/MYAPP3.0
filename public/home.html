@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Dashboard - MyApp</title>
     
     <!-- Tailwind CSS -->
@@ -45,7 +45,7 @@
         }
     </script>
     
-    <!-- STILI CSS COMPLETI -->
+    <!-- STILI -->
     <style>
         :root {
             --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
@@ -58,8 +58,8 @@
             background-size: 400% 400%;
             animation: aurora 20s ease infinite;
             min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
         }
-
         @keyframes aurora {
             0%, 100% { background-position: 0% 50%; }
             25% { background-position: 100% 50%; }
@@ -68,22 +68,55 @@
         }
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 
+        /* Riduci movimento su chi lo richiede */
+        @media (prefers-reduced-motion: reduce) {
+            * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+        }
+
         .text-ultra-visible { color:#fff; text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1); font-weight:800; }
         .text-white { text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1); }
 
-        .glass-morphism { background: rgba(255,255,255,.08); backdrop-filter: blur(12px); border:1px solid rgba(255,255,255,.18); box-shadow:0 8px 32px rgba(31,38,135,.37); }
-        .glass-card { background: rgba(255,255,255,.95); backdrop-filter: blur(16px); border:1px solid rgba(255,255,255,.3); }
+        .glass-morphism { background: rgba(255,255,255,.08); backdrop-filter: blur(12px); border:1px solid rgba(255,255,255,.20); box-shadow:0 8px 32px rgba(31,38,135,.25); }
+        .glass-card { background: rgba(255,255,255,.95); backdrop-filter: blur(16px); border:1px solid rgba(0,0,0,.06); }
 
-        .btn-aurora { background: var(--gradient-magic); color:white; border:2px solid rgba(233,69,96,.3); transition: all .4s cubic-bezier(.4,0,.2,1); font-weight:700; }
-        .btn-aurora:hover { transform: translateY(-3px) scale(1.05); box-shadow:0 20px 40px rgba(233,69,96,.4); border-color: rgba(233,69,96,.8); }
+        .btn-aurora { background: var(--gradient-magic); color:white; border:2px solid rgba(233,69,96,.3); transition: all .25s cubic-bezier(.4,0,.2,1); font-weight:700; touch-action: manipulation; }
+        @media (hover:hover) and (pointer:fine){ .btn-aurora:hover { transform: translateY(-3px) scale(1.03); box-shadow:0 16px 32px rgba(233,69,96,.35); border-color: rgba(233,69,96,.7); } }
 
-        .stat-card { background: linear-gradient(135deg,rgba(255,255,255,.15),rgba(255,255,255,.05)); backdrop-filter: blur(15px); border:1px solid rgba(255,255,255,.2); border-radius:20px; transition: all .3s ease; }
-        .stat-card:hover { transform: translateY(-3px) scale(1.05); background: linear-gradient(135deg,rgba(255,255,255,.25),rgba(255,255,255,.15)); box-shadow:0 15px 30px rgba(0,0,0,.2); }
+        /* Box delineati e leggibili */
+        .tool-card,
+        .action-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.06));
+            border: 1.5px solid rgba(255,255,255,0.28);
+            border-radius: 16px;
+            transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+            will-change: transform;
+            touch-action: manipulation;
+        }
+        @media (hover:hover) and (pointer:fine){
+            .tool-card:hover,
+            .action-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 12px 24px rgba(0,0,0,0.22);
+                border-color: rgba(233, 69, 96, 0.4);
+                background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.08));
+            }
+        }
+        /* Focus accessibile */
+        .tool-card:focus-visible,
+        .action-card:focus-visible,
+        button:focus-visible,
+        [role="button"]:focus-visible {
+            outline: 3px solid rgba(0,212,255,.65);
+            outline-offset: 3px;
+        }
 
-        .loading-skeleton { background: linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size:200% 100%; animation: shimmer 1.5s infinite; border-radius:12px; }
+        .stat-card { background: linear-gradient(135deg,rgba(255,255,255,.15),rgba(255,255,255,.05)); backdrop-filter: blur(15px); border:1px solid rgba(255,255,255,.22); border-radius:20px; transition: transform .2s ease, background .2s ease; }
+        @media (hover:hover) and (pointer:fine){ .stat-card:hover { transform: translateY(-3px); background: linear-gradient(135deg,rgba(255,255,255,.25),rgba(255,255,255,.12)); } }
 
-        .notification-dropdown { display:none; position:absolute; top:100%; right:0; background: rgba(255,255,255,.95); backdrop-filter: blur(20px); border:1px solid rgba(255,255,255,.3); border-radius:16px; box-shadow:0 15px 35px rgba(0,0,0,.2); width:350px; max-height:400px; overflow-y:auto; z-index:1000; }
-        .notification-dropdown.show { display:block; animation: slideDown .3s ease; }
+        .loading-skeleton { background: linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size:200% 100%; animation: shimmer 1.2s infinite; border-radius:12px; }
+
+        .notification-dropdown { display:none; position:absolute; top:100%; right:0; background: rgba(255,255,255,.95); backdrop-filter: blur(20px); border:1px solid rgba(0,0,0,.06); border-radius:16px; box-shadow:0 15px 35px rgba(0,0,0,.18); width:350px; max-height:400px; overflow-y:auto; z-index:1000; }
+        .notification-dropdown.show { display:block; animation: slideDown .2s ease; }
         @keyframes slideDown { from { opacity:0; transform: translateY(-10px);} to { opacity:1; transform: translateY(0);} }
         .notification-badge { background:#dc2626; color:white; border-radius:50%; width:18px; height:18px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; }
 
@@ -94,20 +127,7 @@
 
         .hero-title { font-size: clamp(2.4rem, 8vw, 5rem); font-weight:900; }
 
-        /* BOX delineati per strumenti/servizi */
-        .tool-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.06));
-            border: 1.5px solid rgba(255,255,255,0.28);
-            border-radius: 16px;
-            transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
-        }
-        .tool-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.22);
-            border-color: rgba(233, 69, 96, 0.4);
-        }
-
-        /* wrapper orizzontali */
+        /* Wrapper orizzontali migliorati */
         .hscroll {
             display: flex;
             gap: 16px;
@@ -115,15 +135,22 @@
             scroll-snap-type: x mandatory;
             padding-bottom: 6px;
             -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
         }
         .hscroll::-webkit-scrollbar { height: 8px; }
         .hscroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,.25); border-radius: 9999px; }
+        .hscroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.4); }
 
-        .hitem { scroll-snap-align: start; min-width: 240px; }
+        .hitem { scroll-snap-align: start; min-width: 220px; }
 
-        @media (min-width: 1024px) {
-            .hscroll { overflow: visible; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+        /* Griglie progressive: md=3, lg=4, 2xl=5 */
+        @media (min-width: 768px) {
+            .hscroll { overflow: visible; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
             .hitem { min-width: 0; }
+        }
+        @media (min-width: 1024px) {
+            .hscroll { grid-template-columns: repeat(4, minmax(0, 1fr)); }
         }
         @media (min-width: 1536px) {
             .hscroll { grid-template-columns: repeat(5, minmax(0, 1fr)); }
@@ -149,7 +176,7 @@
                     <!-- Notifiche -->
                     <div class="relative">
                         <button id="notificationBtn" class="text-white hover:text-aurora transition-all duration-300 transform hover:scale-110">
-                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2 2 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                         </button>
                         <span id="notificationBadge" class="notification-badge absolute -top-2 -right-2 hidden">0</span>
                         <div id="notificationDropdown" class="notification-dropdown">
@@ -221,64 +248,63 @@
             </div>
         </section>
 
-        <!-- 2) I TUOI STRUMENTI E SERVIZI (unione Azioni + Servizi) -->
+        <!-- 2) I TUOI STRUMENTI E SERVIZI -->
         <section class="mb-12">
             <div class="flex items-center gap-4 mb-6">
                 <div class="w-12 h-12 bg-gradient-to-br from-gold to-aurora rounded-xl flex items-center justify-center"><span class="text-white text-2xl">🌟</span></div>
                 <h2 class="text-ultra-visible text-3xl font-black">I tuoi strumenti e servizi</h2>
             </div>
 
-            <!-- wrapper orizzontale -->
             <div class="hscroll -mx-1 md:mx-0">
-                <div class="tool-card hitem p-6 text-center cursor-pointer" onclick="goToRichieste()">
+                <div class="tool-card hitem p-6 text-center cursor-pointer" role="button" tabindex="0" aria-label="Nuova Richiesta" onclick="goToRichieste()" onkeydown="keyActivate(event,'goToRichieste')">
                     <div class="text-4xl mb-3">📝</div>
                     <h3 class="text-white text-lg font-bold mb-1">Nuova Richiesta</h3>
                     <p class="text-white/80 text-sm">Invia una nuova richiesta</p>
                 </div>
 
-                <div class="tool-card hitem p-6 text-center cursor-pointer" onclick="goToTessera()">
+                <div class="tool-card hitem p-6 text-center cursor-pointer" role="button" tabindex="0" aria-label="Tessera Digitale" onclick="goToTessera()" onkeydown="keyActivate(event,'goToTessera')">
                     <div class="text-4xl mb-3">🎫</div>
                     <h3 class="text-white text-lg font-bold mb-1">Tessera Digitale</h3>
                     <p class="text-white/80 text-sm">Visualizza e scarica la tessera</p>
                 </div>
 
-                <div class="tool-card hitem p-6 text-center cursor-pointer" onclick="goToProfilo()">
+                <div class="tool-card hitem p-6 text-center cursor-pointer" role="button" tabindex="0" aria-label="Il Mio Profilo" onclick="goToProfilo()" onkeydown="keyActivate(event,'goToProfilo')">
                     <div class="text-4xl mb-3">👤</div>
                     <h3 class="text-white text-lg font-bold mb-1">Il Mio Profilo</h3>
                     <p class="text-white/80 text-sm">Gestisci i tuoi dati</p>
                 </div>
 
-                <div class="tool-card hitem p-6 text-center cursor-pointer" onclick="goToStrumenti()">
+                <div class="tool-card hitem p-6 text-center cursor-pointer" role="button" tabindex="0" aria-label="Strumenti" onclick="goToStrumenti()" onkeydown="keyActivate(event,'goToStrumenti')">
                     <div class="text-4xl mb-3">🛠️</div>
                     <h3 class="text-white text-lg font-bold mb-1">Strumenti</h3>
                     <p class="text-white/80 text-sm">Utility di lavoro</p>
                 </div>
 
-                <div class="tool-card hitem p-6 text-center cursor-pointer" onclick="goToVirgilio()">
+                <div class="tool-card hitem p-6 text-center cursor-pointer" role="button" tabindex="0" aria-label="Virgilio AI" onclick="goToVirgilio()" onkeydown="keyActivate(event,'goToVirgilio')">
                     <div class="text-4xl mb-3">🤖</div>
                     <h3 class="text-white text-lg font-bold mb-1">Virgilio AI</h3>
                     <p class="text-white/80 text-sm">Assistente intelligente</p>
                 </div>
 
-                <div class="tool-card hitem p-6 text-center cursor-pointer" onclick="goToDirigenti()">
+                <div class="tool-card hitem p-6 text-center cursor-pointer" role="button" tabindex="0" aria-label="Dirigenti" onclick="goToDirigenti()" onkeydown="keyActivate(event,'goToDirigenti')">
                     <div class="text-4xl mb-3">👥</div>
                     <h3 class="text-white text-lg font-bold mb-1">Dirigenti</h3>
                     <p class="text-white/80 text-sm">Contatta un dirigente</p>
                 </div>
 
-                <div class="tool-card hitem p-6 text-center cursor-pointer" onclick="goToConvenzioni()">
+                <div class="tool-card hitem p-6 text-center cursor-pointer" role="button" tabindex="0" aria-label="Convenzioni" onclick="goToConvenzioni()" onkeydown="keyActivate(event,'goToConvenzioni')">
                     <div class="text-4xl mb-3">🤝</div>
                     <h3 class="text-white text-lg font-bold mb-1">Convenzioni</h3>
                     <p class="text-white/80 text-sm">Sconti e offerte</p>
                 </div>
 
-                <div class="tool-card hitem p-6 text-center cursor-pointer" onclick="goToFileBox()">
+                <div class="tool-card hitem p-6 text-center cursor-pointer" role="button" tabindex="0" aria-label="FileBox" onclick="goToFileBox()" onkeydown="keyActivate(event,'goToFileBox')">
                     <div class="text-4xl mb-3">📁</div>
                     <h3 class="text-white text-lg font-bold mb-1">FileBox</h3>
                     <p class="text-white/80 text-sm">I tuoi file e documenti</p>
                 </div>
 
-                <div class="tool-card hitem p-6 text-center cursor-pointer" onclick="goToAssistenza()">
+                <div class="tool-card hitem p-6 text-center cursor-pointer" role="button" tabindex="0" aria-label="Assistenza" onclick="goToAssistenza()" onkeydown="keyActivate(event,'goToAssistenza')">
                     <div class="text-4xl mb-3">🛟</div>
                     <h3 class="text-white text-lg font-bold mb-1">Assistenza</h3>
                     <p class="text-white/80 text-sm">Supporto e servizi</p>
@@ -286,7 +312,7 @@
             </div>
         </section>
 
-        <!-- 3) I TUOI DATI (KPI in orizzontale) -->
+        <!-- 3) I TUOI DATI -->
         <section class="mb-12">
             <div class="flex items-center gap-4 mb-6">
                 <div class="w-12 h-12 bg-gradient-to-br from-cyan to-teal rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📈</span></div>
@@ -336,16 +362,22 @@
             </div>
         </section>
 
-        <!-- RICHIESTE (invariato) -->
+        <!-- RICHIESTE -->
         <section class="mb-12">
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-4"><div class="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📋</span></div><h2 class="text-ultra-visible text-3xl font-black">Le Tue Richieste</h2></div>
                 <button onclick="goToRichieste()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2"><span>Vedi tutte</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
             </div>
-            <div class="glass-morphism rounded-3xl p-6"><div id="richiesteContainer" class="space-y-4"><div class="loading-skeleton h-20"></div><div class="loading-skeleton h-20"></div><div class="loading-skeleton h-20"></div></div></div>
+            <div class="glass-morphism rounded-3xl p-6">
+                <div id="richiesteContainer" class="space-y-4">
+                    <div class="loading-skeleton h-20"></div>
+                    <div class="loading-skeleton h-20"></div>
+                    <div class="loading-skeleton h-20"></div>
+                </div>
+            </div>
         </section>
 
-        <!-- NEWS (invariato) -->
+        <!-- NEWS -->
         <section class="mb-12">
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-4"><div class="w-12 h-12 bg-gradient-to-br from-slate-600 to-slate-800 rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📰</span></div><h2 class="text-ultra-visible text-3xl font-black">Ultime Notizie</h2></div>
@@ -360,7 +392,7 @@
             </div>
         </section>
 
-        <!-- CONVENZIONI (invariato) -->
+        <!-- CONVENZIONI -->
         <section class="mb-12">
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-4"><div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center"><span class="text-white text-2xl">🤝</span></div><h2 class="text-ultra-visible text-3xl font-black">Convenzioni in Evidenza</h2></div>
@@ -394,6 +426,14 @@
         let supabaseClient;
         let currentUser = null;
         let userProfile = null;
+
+        // Attivazione via tastiera per qualsiasi "role=button"
+        function keyActivate(e, fnName, ...args) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                if (typeof window[fnName] === 'function') window[fnName](...args);
+            }
+        }
 
         // === INIZIALIZZAZIONE ===
         document.addEventListener('DOMContentLoaded', async () => {
@@ -544,7 +584,7 @@
             }
         }
 
-        // NEWS — mostra immagini, click su URL esterno se disponibile
+        // NEWS
         async function loadNews() {
             try {
                 const { data, error } = await supabaseClient
@@ -585,7 +625,7 @@
             }
         }
 
-        // CONVENZIONI — con immagini e click su URL esterno se presente
+        // CONVENZIONI
         async function loadConvenzioni() {
             try {
                 const { data: convenzioni, error } = await supabaseClient
@@ -622,7 +662,9 @@
                 const dataCreazione = new Date(richiesta.created_at).toLocaleDateString('it-IT');
                 return `
                     <div class="glass-morphism rounded-xl p-4 hover:bg-white/10 transition-all cursor-pointer" 
-                         onclick="viewRichiestaDetail('${richiesta.id}')">
+                         role="button" tabindex="0" aria-label="Apri richiesta ${escapeHtml(richiesta.titolo)}"
+                         onclick="viewRichiestaDetail('${richiesta.id}')"
+                         onkeydown="keyActivate(event,'viewRichiestaDetail','${richiesta.id}')">
                         <div class="flex items-start justify-between mb-3">
                             <div class="flex-grow">
                                 <h4 class="text-white font-bold text-lg mb-1">${richiesta.titolo}</h4>
@@ -663,7 +705,9 @@
                 const cat = n.categoria || 'GENERALE';
                 return `
                     <div class="group border border-gray-200 hover:border-blue-200 bg-white/70 hover:bg-white rounded-xl p-4 mb-4 transition-colors cursor-pointer"
-                         onclick="readNews('${n.id}','${url}')">
+                         role="button" tabindex="0" aria-label="Apri notizia ${escapeHtml(n.titolo)}"
+                         onclick="readNews('${n.id}','${url}')"
+                         onkeydown="keyActivate(event,'readNews','${n.id}','${url}')">
                         <div class="flex gap-4 items-start">
                             <div class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
                                 ${img ? `<img src="${img}" alt="${escapeHtml(n.titolo)}" class="w-full h-full object-cover" loading="lazy">`
@@ -707,42 +751,43 @@
                 const img = c.immagine_url || c.logo_url || '';
                 const url = c.link_esterno ? encodeURIComponent(c.link_esterno) : '';
                 return `
-                    <div class="action-card p-0 overflow-hidden ${isScaduta ? 'opacity-75' : ''}">
-                        <div class="cursor-pointer" onclick="openConvenzione('${c.id}','${url}')">
-                            ${img ? `
-                                <div class="w-full h-36 bg-gray-100 overflow-hidden">
-                                    <img src="${img}" alt="${escapeHtml(c.nome_azienda || 'Convenzione')}" class="w-full h-full object-cover" loading="lazy">
+                    <div class="action-card p-0 overflow-hidden ${isScaduta ? 'opacity-75' : ''}" role="button" tabindex="0"
+                         aria-label="Apri convenzione ${escapeHtml(c.nome_azienda || 'Convenzione')}"
+                         onclick="openConvenzione('${c.id}','${url}')"
+                         onkeydown="keyActivate(event,'openConvenzione','${c.id}','${url}')">
+                        ${img ? `
+                            <div class="w-full h-36 bg-gray-100 overflow-hidden">
+                                <img src="${img}" alt="${escapeHtml(c.nome_azienda || 'Convenzione')}" class="w-full h-full object-cover" loading="lazy">
+                            </div>` : ''
+                        }
+                        <div class="p-6">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center text-white text-sm font-bold">
+                                    ${sconto ? `-${sconto}` : '🤝'}
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    ${inEvidenza ? '<div class="bg-emerald-600 text-white px-2 py-1 rounded-full text-xs font-bold">IN EVIDENZA</div>' : ''}
+                                    ${isScaduta ? '<div class="bg-gray-500 text-white px-2 py-1 rounded-full text-xs font-bold">SCADUTA</div>' : ''}
+                                </div>
+                            </div>
+                            <h3 class="text-white text-lg font-bold mb-2">${c.nome_azienda || '-'}</h3>
+                            <p class="text-white/80 text-sm mb-4">${excerpt}</p>
+                            <div class="flex items-center justify-between text-xs text-white/60 mb-3">
+                                <span>📂 ${c.categoria || 'Generale'}</span>
+                                <span>🌍 ${c.copertura_geografica || 'Nazionale'}</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-xs">👀 ${c.visualizzazioni || 0} visualizzazioni</span>
+                                <span class="text-emerald-300 text-sm font-semibold">${isScaduta ? 'Non disponibile' : 'Scopri →'}</span>
+                            </div>
+                            ${validaFino ? `
+                                <div class="mt-3 pt-3 border-t border-white/10">
+                                    <div class="text-white/60 text-xs flex items-center gap-1">
+                                        <span class="${isScaduta ? 'text-red-400' : 'text-green-400'}">⏰</span>
+                                        ${isScaduta ? 'Scaduta il' : 'Valida fino al'} ${validaFino.toLocaleDateString('it-IT')}
+                                    </div>
                                 </div>` : ''
                             }
-                            <div class="p-6">
-                                <div class="flex items-start justify-between mb-4">
-                                    <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center text-white text-sm font-bold">
-                                        ${sconto ? `-${sconto}` : '🤝'}
-                                    </div>
-                                    <div class="flex flex-col gap-1">
-                                        ${inEvidenza ? '<div class="bg-emerald-600 text-white px-2 py-1 rounded-full text-xs font-bold">IN EVIDENZA</div>' : ''}
-                                        ${isScaduta ? '<div class="bg-gray-500 text-white px-2 py-1 rounded-full text-xs font-bold">SCADUTA</div>' : ''}
-                                    </div>
-                                </div>
-                                <h3 class="text-white text-lg font-bold mb-2">${c.nome_azienda || '-'}</h3>
-                                <p class="text-white/80 text-sm mb-4">${excerpt}</p>
-                                <div class="flex items-center justify-between text-xs text-white/60 mb-3">
-                                    <span>📂 ${c.categoria || 'Generale'}</span>
-                                    <span>🌍 ${c.copertura_geografica || 'Nazionale'}</span>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-white/60 text-xs">👀 ${c.visualizzazioni || 0} visualizzazioni</span>
-                                    <span class="text-emerald-300 text-sm font-semibold">${isScaduta ? 'Non disponibile' : 'Scopri →'}</span>
-                                </div>
-                                ${validaFino ? `
-                                    <div class="mt-3 pt-3 border-t border-white/10">
-                                        <div class="text-white/60 text-xs flex items-center gap-1">
-                                            <span class="${isScaduta ? 'text-red-400' : 'text-green-400'}">⏰</span>
-                                            ${isScaduta ? 'Scaduta il' : 'Valida fino al'} ${validaFino.toLocaleDateString('it-IT')}
-                                        </div>
-                                    </div>` : ''
-                                }
-                            </div>
                         </div>
                     </div>`;
             }).join('');
@@ -822,7 +867,7 @@
         function goToAssistenza(){ window.location.href = 'servizi.html'; }
         function viewAllNews(){ window.location.href = 'news.html'; }
 
-        // Apri notizia: priorità all'URL esterno, fallback alla pagina interna
+        // Apri notizia: priorità all'URL esterno, fallback interno
         function readNews(newsId, encodedUrl) {
             const url = encodedUrl ? decodeURIComponent(encodedUrl) : null;
             if (isValidHttpUrl(url)) { safeOpen(url); }
@@ -841,6 +886,7 @@
         function getStatusLabel(status){ return ({ATTIVO:'Attivo', SOSPESO:'Sospeso', INATTIVO:'Inattivo'})[status] || 'Sconosciuto'; }
         function getInitials(fullName){ if(!fullName) return 'U'; return fullName.split(' ').map(n=>n.charAt(0)).join('').toUpperCase().substring(0,2); }
         function getRequestStatusColor(stato){ return ({RICEVUTA:'bg-blue-600', IN_ESAME:'bg-yellow-600', IN_LAVORAZIONE:'bg-orange-600', NECESSARIE_INFO:'bg-purple-600', COMPLETATA:'bg-green-600', CHIUSA:'bg-gray-600', ANNULLATA:'bg-red-600'})[stato] || 'bg-gray-500'; }
+        function getStatusText(stato){ return ({RICEVUTA:'Ricevuta', IN_ESAME:'In Esame', IN_LAVORAZIONE:'In Lavorazione', NECESSARIE_INFO:'Info Richieste', COMPLETATA:'Completata', CHIUSA:'Chiusa', ANNULLATA:'Annullata'})[stato] || stato; }
         function getPriorityColor(p){ return ({BASSA:'priority-bassa', NORMALE:'priority-normale', ALTA:'priority-alta'})[p] || 'priority-normale'; }
         function formatDate(s){ if(!s) return '-'; const d = new Date(s); return d.toLocaleDateString('it-IT'); }
         function formatDateTime(s){ if(!s) return '-'; const d = new Date(s); return d.toLocaleDateString('it-IT') + ' ' + d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}); }
