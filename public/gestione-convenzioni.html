@@ -42,6 +42,7 @@
             --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
             --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
             --gradient-gold: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+            --gradient-teal: linear-gradient(135deg, #03dac6 0%, #00d4ff 100%);
         }
 
         * {
@@ -77,13 +78,13 @@
         }
 
         .hero-title {
-            font-size: clamp(2rem, 6vw, 3.5rem);
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
             font-weight: 900;
             line-height: 1.1;
         }
 
         .section-title {
-            font-size: clamp(1.25rem, 4vw, 1.75rem);
+            font-size: clamp(1.5rem, 5vw, 2.25rem);
             font-weight: 900;
             line-height: 1.2;
         }
@@ -91,42 +92,75 @@
         .glass-card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border: 2px solid rgba(0, 212, 255, 0.15);
-            border-radius: 20px;
+            border: 2px solid rgba(255, 215, 0, 0.15);
+            border-radius: 24px;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.12);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ffd700, #e94560, #00d4ff, #03dac6);
         }
 
         .glass-card:hover {
-            border-color: rgba(0, 212, 255, 0.25);
-            transform: translateY(-4px);
+            transform: translateY(-8px);
             box-shadow: 0 35px 70px rgba(0, 0, 0, 0.15);
+            border-color: rgba(255, 215, 0, 0.25);
         }
 
         .convention-card {
             background: rgba(255, 255, 255, 0.95);
             border: 2px solid rgba(0, 212, 255, 0.1);
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 1.5rem;
             margin-bottom: 1rem;
             transition: all 0.3s ease;
             border-left: 5px solid #00d4ff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .convention-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00d4ff, #03dac6);
         }
 
         .convention-card:hover {
-            border-color: rgba(0, 212, 255, 0.2);
-            transform: translateY(-2px);
-            box-shadow: 0 15px 35px rgba(0, 212, 255, 0.1);
+            border-color: rgba(0, 212, 255, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.15);
         }
 
         .convention-card.inactive {
             border-left-color: #6b7280;
-            opacity: 0.7;
+            opacity: 0.8;
         }
 
         .convention-card.expired {
             border-left-color: #dc2626;
             background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(254, 242, 242, 0.95));
+        }
+
+        .convention-card.featured {
+            border-left-color: #ffd700;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 248, 220, 0.95));
+        }
+
+        .convention-card.featured::before {
+            background: linear-gradient(90deg, #ffd700, #ffb347);
         }
 
         .btn-aurora {
@@ -149,6 +183,28 @@
             transform: translateY(-3px) scale(1.05);
             box-shadow: 0 15px 35px rgba(233, 69, 96, 0.4);
             border-color: rgba(233, 69, 96, 0.6);
+        }
+
+        .btn-gold {
+            background: var(--gradient-gold);
+            color: #1a1a2e;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 44px;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(255, 215, 0, 0.4);
+            border-color: rgba(255, 215, 0, 0.6);
         }
 
         .btn-secondary {
@@ -177,9 +233,20 @@
             background: linear-gradient(135deg, #10b981, #059669);
             color: white;
             border: 2px solid rgba(16, 185, 129, 0.3);
+            transition: all 0.3s ease;
+            min-height: 44px;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
         }
 
         .btn-success:hover {
+            transform: translateY(-2px);
             box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
             border-color: rgba(16, 185, 129, 0.6);
         }
@@ -188,9 +255,20 @@
             background: linear-gradient(135deg, #ef4444, #dc2626);
             color: white;
             border: 2px solid rgba(239, 68, 68, 0.3);
+            transition: all 0.3s ease;
+            min-height: 44px;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
         }
 
         .btn-danger:hover {
+            transform: translateY(-2px);
             box-shadow: 0 15px 35px rgba(239, 68, 68, 0.4);
             border-color: rgba(239, 68, 68, 0.6);
         }
@@ -241,6 +319,11 @@
             color: white;
         }
 
+        .status-badge.featured {
+            background: var(--gradient-gold);
+            color: #1a1a2e;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -264,11 +347,11 @@
             backdrop-filter: blur(20px);
             border-radius: 20px;
             padding: 2rem;
-            max-width: 800px;
-            width: 90%;
+            max-width: 900px;
+            width: 95%;
             max-height: 90vh;
             overflow-y: auto;
-            border: 2px solid rgba(0, 212, 255, 0.2);
+            border: 2px solid rgba(255, 215, 0, 0.2);
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
         }
 
@@ -281,6 +364,7 @@
             font-family: 'Inter', sans-serif;
             min-height: 44px;
             padding: 0.75rem;
+            width: 100%;
         }
 
         input:focus, select:focus, textarea:focus {
@@ -295,9 +379,9 @@
             resize: vertical;
         }
 
-        .logo-preview {
-            max-width: 150px;
-            max-height: 150px;
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
             border-radius: 12px;
             border: 2px solid rgba(0, 212, 255, 0.2);
             margin-top: 1rem;
@@ -309,11 +393,11 @@
         }
 
         .spinner {
-            border: 3px solid rgba(0, 212, 255, 0.3);
+            border: 3px solid rgba(255, 215, 0, 0.3);
             border-radius: 50%;
-            border-top: 3px solid #00d4ff;
-            width: 20px;
-            height: 20px;
+            border-top: 3px solid #ffd700;
+            width: 24px;
+            height: 24px;
             animation: spin 1s linear infinite;
             display: inline-block;
             margin-right: 0.5rem;
@@ -324,20 +408,58 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* Search styles */
+        .search-input {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(255, 215, 0, 0.2);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+        }
+
+        /* Stats cards */
+        .stat-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(16px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 215, 0, 0.4);
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .modal-content {
                 padding: 1.5rem;
                 margin: 1rem;
+                width: 90%;
             }
 
             .glass-card {
-                border-radius: 16px;
+                border-radius: 20px;
                 padding: 1.5rem;
             }
 
             .convention-card {
                 padding: 1rem;
+            }
+
+            .hero-title {
+                font-size: clamp(2rem, 8vw, 3rem);
             }
         }
     </style>
@@ -346,7 +468,7 @@
 
     <!-- Back Button -->
     <div class="absolute top-6 left-6 z-10">
-        <button id="backBtn" class="flex items-center gap-3 text-ultra-visible hover:text-cyan transition-all duration-300 transform hover:scale-110 group">
+        <button id="backBtn" class="flex items-center gap-3 text-ultra-visible hover:text-gold transition-all duration-300 transform hover:scale-110 group">
             <svg class="w-8 h-8 group-hover:translate-x-[-2px] transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path>
             </svg>
@@ -354,57 +476,93 @@
         </button>
     </div>
 
-    <main class="min-h-screen px-4 py-8 max-w-6xl mx-auto">
+    <main class="min-h-screen px-4 py-8 max-w-7xl mx-auto">
 
         <!-- Hero Section -->
-        <div class="text-center mb-8 fade-in">
-            <div class="w-20 h-20 bg-gradient-to-br from-cyan to-teal rounded-full mx-auto mb-6 flex items-center justify-center shadow-2xl">
-                <span class="text-3xl text-white">🏷️</span>
+        <div class="text-center mb-12 fade-in">
+            <div class="w-24 h-24 bg-gradient-to-br from-gold to-aurora rounded-full mx-auto mb-8 flex items-center justify-center shadow-2xl">
+                <span class="text-4xl text-white">🏷️</span>
             </div>
-            <h1 class="hero-title text-ultra-visible mb-4">Gestione Convenzioni</h1>
-            <p class="text-lg text-ultra-visible opacity-90 max-w-2xl mx-auto font-semibold">
+            <h1 class="hero-title text-ultra-visible mb-6">Gestione Convenzioni</h1>
+            <p class="text-xl text-ultra-visible opacity-90 max-w-3xl mx-auto font-semibold">
                 Amministra partnership e offerte speciali per i soci Aurora
             </p>
         </div>
 
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 fade-in">
+            <div class="stat-card">
+                <div class="text-3xl mb-2">🏷️</div>
+                <div class="text-2xl font-bold text-ultra-visible" id="totalConventions">-</div>
+                <div class="text-ultra-visible opacity-80">Convenzioni Totali</div>
+            </div>
+            <div class="stat-card">
+                <div class="text-3xl mb-2">✅</div>
+                <div class="text-2xl font-bold text-ultra-visible" id="activeConventions">-</div>
+                <div class="text-ultra-visible opacity-80">Attive</div>
+            </div>
+            <div class="stat-card">
+                <div class="text-3xl mb-2">⭐</div>
+                <div class="text-2xl font-bold text-ultra-visible" id="featuredConventions">-</div>
+                <div class="text-ultra-visible opacity-80">In Evidenza</div>
+            </div>
+            <div class="stat-card">
+                <div class="text-3xl mb-2">👀</div>
+                <div class="text-2xl font-bold text-ultra-visible" id="totalViews">-</div>
+                <div class="text-ultra-visible opacity-80">Visualizzazioni</div>
+            </div>
+        </div>
+
         <!-- Actions Bar -->
-        <div class="glass-card p-6 mb-8 fade-in">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="flex items-center gap-4">
+        <div class="glass-card p-6 md:p-8 mb-8 fade-in">
+            <div class="flex flex-col lg:flex-row justify-between items-center gap-6">
+                <div class="flex flex-col sm:flex-row items-center gap-4">
                     <button id="newConventionBtn" class="btn-aurora">
                         <span class="mr-2">➕</span>
                         Nuova Convenzione
                     </button>
-                    <button id="refreshBtn" class="btn-secondary">
+                    <button id="refreshBtn" class="btn-gold">
                         <span class="mr-2">🔄</span>
                         Aggiorna
                     </button>
                 </div>
                 
-                <div class="flex items-center gap-4">
+                <div class="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="🔍 Cerca convenzioni..." 
+                        class="search-input max-w-xs"
+                    >
                     <select id="filterStatus" class="text-sm">
                         <option value="all">Tutte</option>
                         <option value="active">Attive</option>
                         <option value="inactive">Inattive</option>
                         <option value="expired">Scadute</option>
+                        <option value="featured">In Evidenza</option>
                     </select>
                     <select id="filterCategory" class="text-sm">
                         <option value="all">Tutte le categorie</option>
-                        <option value="casa">Casa</option>
-                        <option value="auto">Auto</option>
-                        <option value="viaggi">Viaggi</option>
-                        <option value="salute">Salute</option>
-                        <option value="shopping">Shopping</option>
-                        <option value="servizi">Servizi</option>
-                        <option value="altro">Altro</option>
+                        <option value="SALUTE">🏥 Salute</option>
+                        <option value="VIAGGI">✈️ Viaggi</option>
+                        <option value="SHOPPING">🛍️ Shopping</option>
+                        <option value="SERVIZI">⚙️ Servizi</option>
+                        <option value="FORMAZIONE">📚 Formazione</option>
+                        <option value="TEMPO_LIBERO">🎮 Tempo Libero</option>
+                        <option value="RISTORAZIONE">🍽️ Ristorazione</option>
+                        <option value="AUTOMOTIVE">🚗 Automotive</option>
+                        <option value="ALTRO">📦 Altro</option>
                     </select>
                 </div>
             </div>
         </div>
 
         <!-- Conventions List -->
-        <div class="glass-card p-6 fade-in">
-            <h3 class="section-title text-primary mb-6">📋 Lista Convenzioni</h3>
+        <div class="glass-card p-6 md:p-8 fade-in">
+            <h3 class="section-title text-primary mb-8 text-center">
+                <span class="mr-3 text-3xl">📋</span>
+                Lista Convenzioni
+            </h3>
             <div id="conventionsContainer">
                 <div class="text-center py-8">
                     <div class="spinner mx-auto mb-4"></div>
@@ -420,88 +578,51 @@
         <div class="modal-content">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-xl font-bold text-primary" id="modalTitle">🏷️ Nuova Convenzione</h3>
-                <button id="closeModalBtn" class="text-gray-500 hover:text-cyan text-3xl font-bold transition-colors" aria-label="Chiudi">&times;</button>
+                <button id="closeModalBtn" class="text-gray-500 hover:text-aurora text-3xl font-bold transition-colors" aria-label="Chiudi">&times;</button>
             </div>
 
             <form id="conventionForm" class="space-y-6">
                 <input type="hidden" id="conventionId">
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-bold text-primary mb-2">Nome Partner *</label>
-                        <input type="text" id="nomePartner" placeholder="Es. MediaWorld, Conad..." required maxlength="100">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-primary mb-2">Categoria</label>
-                        <select id="categoria">
-                            <option value="casa">🏠 Casa</option>
-                            <option value="auto">🚗 Auto</option>
-                            <option value="viaggi">✈️ Viaggi</option>
-                            <option value="salute">🏥 Salute</option>
-                            <option value="shopping">🛍️ Shopping</option>
-                            <option value="servizi">⚙️ Servizi</option>
-                            <option value="altro">📦 Altro</option>
-                        </select>
+                <!-- Informazioni Base -->
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="font-bold text-primary mb-4">📝 Informazioni Base</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <label class="block text-sm font-bold text-primary mb-2">Logo Azienda (opzionale)</label>
+                            <input type="file" id="logoFile" accept="image/*">
+                            <div id="logoPreview"></div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-primary mb-2">Immagine Promozione (opzionale)</label>
+                            <input type="file" id="immagineFile" accept="image/*">
+                            <div id="immaginePreview"></div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-bold text-primary mb-2">Icona</label>
-                        <select id="icona">
-                            <option value="🏷️">🏷️ Generico</option>
-                            <option value="💰">💰 Sconto</option>
-                            <option value="🎁">🎁 Regalo</option>
-                            <option value="⭐">⭐ Premium</option>
-                            <option value="🔥">🔥 Offerta</option>
-                            <option value="📦">📦 Prodotti</option>
-                            <option value="🛍️">🛍️ Shopping</option>
-                            <option value="🏠">🏠 Casa</option>
-                            <option value="🚗">🚗 Auto</option>
-                            <option value="✈️">✈️ Viaggi</option>
-                        </select>
+                <!-- Contatti e Note -->
+                <div class="bg-yellow-50 p-4 rounded-lg">
+                    <h4 class="font-bold text-primary mb-4">📞 Contatti e Note</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-primary mb-2">Telefono (opzionale)</label>
+                            <input type="tel" id="telefono" placeholder="+39 123 456 7890">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-primary mb-2">Email (opzionale)</label>
+                            <input type="email" id="email" placeholder="info@azienda.com">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-bold text-primary mb-2">Sconto %</label>
-                        <input type="number" id="scontoPercentuale" min="0" max="100" placeholder="Es. 15">
+                    
+                    <div class="mt-4">
+                        <label class="block text-sm font-bold text-primary mb-2">Note Aggiuntive (opzionale)</label>
+                        <textarea id="note" placeholder="Note interne per la gestione..." rows="3"></textarea>
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-bold text-primary mb-2">Descrizione *</label>
-                    <textarea id="descrizione" placeholder="Descrivi l'offerta e come utilizzarla..." required rows="4"></textarea>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-bold text-primary mb-2">Data Inizio</label>
-                        <input type="date" id="dataInizio">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-primary mb-2">Data Fine (opzionale)</label>
-                        <input type="date" id="dataFine">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-bold text-primary mb-2">Link Esterno (opzionale)</label>
-                    <input type="url" id="linkEsterno" placeholder="https://www.partner.com">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-bold text-primary mb-2">Logo Partner (opzionale)</label>
-                    <input type="file" id="logoPartner" accept="image/*">
-                    <div id="logoPreview"></div>
-                </div>
-
-                <div class="flex items-center gap-4">
-                    <label class="flex items-center">
-                        <input type="checkbox" id="attiva" class="mr-2" checked>
-                        <span class="font-semibold">Attiva immediatamente</span>
-                    </label>
-                </div>
-
-                <div class="flex gap-4 pt-4 border-t">
+                <!-- Actions -->
+                <div class="flex gap-4 pt-4 border-t border-gray-200">
                     <button type="submit" class="flex-1 btn-success" id="saveConventionBtn">
                         <span class="mr-2">💾</span>
                         Salva Convenzione
@@ -524,15 +645,17 @@
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
         
         const supabase = createClient(
-            'https://lycrgzptkdkksukcwrld.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5Y3JnenB0a2Rra3N1a2N3cmxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3ODQyMzAsImV4cCI6MjA2ODM2MDIzMH0.ZJGOXAMC3hKKrnwXHKEa2_Eh7ZpOKeLYvYlYneBiEfk'
+            'https://pvzdilkozpspsnepedqc.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk'
         );
 
         let currentUser = null;
         let currentUserRoles = [];
         let allConventions = [];
+        let filteredConventions = [];
         let editingConventionId = null;
         let uploadedLogoUrl = null;
+        let uploadedImmagineUrl = null;
 
         // Initialize app
         async function init() {
@@ -549,7 +672,7 @@
                 setupEventListeners();
                 
                 // Set today's date as default
-                document.getElementById('dataInizio').value = new Date().toISOString().split('T')[0];
+                document.getElementById('validaDal').value = new Date().toISOString().split('T')[0];
 
             } catch (error) {
                 console.error('Errore inizializzazione:', error);
@@ -571,7 +694,8 @@
 
                 // Check if user has required permissions (DIRIGENTE or ADMIN)
                 if (!currentUserRoles.includes('DIRIGENTE') && !currentUserRoles.includes('ADMIN')) {
-                    window.location.href = 'home.html';
+                    showNotification('❌ Accesso negato - Solo dirigenti e amministratori', 'error');
+                    setTimeout(() => window.location.href = 'home.html', 2000);
                     return;
                 }
 
@@ -587,7 +711,6 @@
             refreshBtn.disabled = true;
 
             try {
-                // Simple query without foreign key relationship
                 const { data: conventions, error } = await supabase
                     .from('convenzioni')
                     .select('*')
@@ -595,25 +718,10 @@
 
                 if (error) throw error;
 
-                // Get author names separately if needed
-                if (conventions && conventions.length > 0) {
-                    const authorIds = [...new Set(conventions.map(c => c.autore_id).filter(Boolean))];
-                    
-                    if (authorIds.length > 0) {
-                        const { data: authors } = await supabase
-                            .from('profiles')
-                            .select('id, nome')
-                            .in('id', authorIds);
-
-                        // Add author names to conventions
-                        conventions.forEach(convention => {
-                            const author = authors?.find(a => a.id === convention.autore_id);
-                            convention.author_name = author?.nome || 'Autore sconosciuto';
-                        });
-                    }
-                }
-
                 allConventions = conventions || [];
+                filteredConventions = [...allConventions];
+                
+                updateStatistics();
                 displayConventions();
 
                 refreshBtn.innerHTML = '<span class="mr-2">✅</span>Aggiornato';
@@ -625,15 +733,40 @@
                 console.error('Errore caricamento convenzioni:', error);
                 showNotification('❌ Errore nel caricamento delle convenzioni', 'error');
                 refreshBtn.innerHTML = '<span class="mr-2">⚠️</span>Errore';
+                
+                // Show empty state on error
+                document.getElementById('conventionsContainer').innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="text-6xl mb-4">⚠️</div>
+                        <h3 class="text-xl font-bold text-primary mb-2">Errore nel caricamento</h3>
+                        <p class="text-gray-600 mb-6">Impossibile caricare le convenzioni</p>
+                        <button onclick="loadConventions()" class="btn-aurora">
+                            <span class="mr-2">🔄</span>
+                            Riprova
+                        </button>
+                    </div>
+                `;
             } finally {
                 refreshBtn.disabled = false;
             }
         }
 
+        function updateStatistics() {
+            const total = allConventions.length;
+            const active = allConventions.filter(c => c.attiva && (!c.valida_fino || new Date(c.valida_fino) >= new Date())).length;
+            const featured = allConventions.filter(c => c.in_evidenza).length;
+            const totalViews = allConventions.reduce((sum, c) => sum + (c.visualizzazioni || 0), 0);
+
+            document.getElementById('totalConventions').textContent = total;
+            document.getElementById('activeConventions').textContent = active;
+            document.getElementById('featuredConventions').textContent = featured;
+            document.getElementById('totalViews').textContent = totalViews.toLocaleString();
+        }
+
         function displayConventions() {
             const container = document.getElementById('conventionsContainer');
             
-            if (allConventions.length === 0) {
+            if (filteredConventions.length === 0 && allConventions.length === 0) {
                 container.innerHTML = `
                     <div class="text-center py-12">
                         <div class="text-6xl mb-4">🏷️</div>
@@ -646,45 +779,44 @@
                     </div>
                 `;
                 
-                // Add event listener for the create first button
                 document.getElementById('createFirstBtn').addEventListener('click', openConventionModal);
                 return;
             }
 
-            const filteredConventions = getFilteredConventions();
-            
             if (filteredConventions.length === 0) {
                 container.innerHTML = `
                     <div class="text-center py-8">
                         <div class="text-4xl mb-4">🔍</div>
                         <p class="text-gray-600 font-semibold">Nessuna convenzione corrisponde ai filtri selezionati</p>
+                        <button onclick="clearFilters()" class="btn-secondary mt-4">
+                            <span class="mr-2">🧹</span>
+                            Pulisci Filtri
+                        </button>
                     </div>
                 `;
                 return;
             }
 
             container.innerHTML = filteredConventions.map(convention => {
-                const authorName = convention.author_name || 'Autore sconosciuto';
-                const isOwner = convention.autore_id === currentUser.id;
-                const canEdit = isOwner || currentUserRoles.includes('ADMIN');
-                const isExpired = convention.data_fine && new Date(convention.data_fine) < new Date();
+                const isExpired = convention.valida_fino && new Date(convention.valida_fino) < new Date();
                 const status = isExpired ? 'expired' : (convention.attiva ? 'active' : 'inactive');
+                const cardClass = convention.in_evidenza ? 'featured' : status;
                 
                 return `
-                    <div class="convention-card ${status}">
+                    <div class="convention-card ${cardClass}">
                         <div class="flex justify-between items-start mb-4">
                             <div class="flex items-start gap-4 flex-1">
                                 ${convention.logo_url ? `
-                                    <img src="${convention.logo_url}" alt="Logo ${convention.nome_partner}" class="w-16 h-16 object-contain rounded-lg border">
+                                    <img src="${convention.logo_url}" alt="Logo ${convention.nome_azienda}" class="w-16 h-16 object-contain rounded-lg border">
                                 ` : `
-                                    <div class="w-16 h-16 bg-gradient-to-br from-cyan to-teal rounded-lg flex items-center justify-center text-2xl text-white">${convention.icona || '🏷️'}</div>
+                                    <div class="w-16 h-16 bg-gradient-to-br from-cyan to-teal rounded-lg flex items-center justify-center text-2xl text-white">${getCategoryIcon(convention.categoria)}</div>
                                 `}
                                 
                                 <div class="flex-1">
                                     <div class="flex items-center gap-3 mb-2">
-                                        <h4 class="font-bold text-primary text-xl">${convention.nome_partner}</h4>
+                                        <h4 class="font-bold text-primary text-xl">${convention.nome_azienda}</h4>
                                         ${convention.link_esterno ? `
-                                            <a href="${convention.link_esterno}" target="_blank" class="text-cyan hover:text-aurora transition-colors">
+                                            <a href="${convention.link_esterno}" target="_blank" class="text-cyan hover:text-aurora transition-colors" title="Visita sito">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                                                 </svg>
@@ -695,50 +827,73 @@
                                     <p class="text-gray-700 mb-4 leading-relaxed">${convention.descrizione}</p>
                                     
                                     <div class="flex flex-wrap items-center gap-2 mb-3">
-                                        <span class="category-badge">${getCategoryIcon(convention.categoria)} ${convention.categoria.toUpperCase()}</span>
+                                        <span class="category-badge">${getCategoryIcon(convention.categoria)} ${convention.categoria}</span>
                                         
                                         ${convention.sconto_percentuale ? `
                                             <span class="discount-badge">💰 -${convention.sconto_percentuale}%</span>
+                                        ` : ''}
+
+                                        ${convention.codice_sconto ? `
+                                            <span class="discount-badge">🎟️ ${convention.codice_sconto}</span>
                                         ` : ''}
                                         
                                         <span class="status-badge ${status}">
                                             ${status === 'active' ? '✅ Attiva' : status === 'expired' ? '❌ Scaduta' : '⏸️ Inattiva'}
                                         </span>
+
+                                        ${convention.in_evidenza ? `
+                                            <span class="status-badge featured">⭐ In Evidenza</span>
+                                        ` : ''}
                                     </div>
                                     
-                                    <div class="flex items-center gap-4 text-sm text-gray-500">
-                                        <span>📅 ${new Date(convention.data_inizio).toLocaleDateString('it-IT')}</span>
-                                        ${convention.data_fine ? `<span>⏰ Scade: ${new Date(convention.data_fine).toLocaleDateString('it-IT')}</span>` : ''}
-                                        <span>👤 ${authorName}</span>
+                                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                                        <span>📅 Dal: ${new Date(convention.valida_dal).toLocaleDateString('it-IT')}</span>
+                                        ${convention.valida_fino ? `<span>⏰ Fino: ${new Date(convention.valida_fino).toLocaleDateString('it-IT')}</span>` : '<span>♾️ Senza scadenza</span>'}
+                                        <span>🌍 ${convention.copertura_geografica}</span>
+                                        <span>👀 ${convention.visualizzazioni || 0} visualizzazioni</span>
                                     </div>
+
+                                    ${convention.condizioni ? `
+                                        <div class="mt-3 p-2 bg-gray-100 rounded-lg">
+                                            <small class="text-gray-600"><strong>Condizioni:</strong> ${convention.condizioni}</small>
+                                        </div>
+                                    ` : ''}
                                 </div>
                             </div>
                             
-                            ${canEdit ? `
-                                <div class="flex gap-2 ml-4">
-                                    <button class="edit-convention-btn btn-secondary text-sm px-3 py-2" data-id="${convention.id}">
-                                        <span class="mr-1">✏️</span>
-                                        Modifica
+                            <div class="flex flex-col gap-2 ml-4">
+                                <button class="edit-convention-btn btn-gold text-sm px-3 py-2" data-id="${convention.id}">
+                                    <span class="mr-1">✏️</span>
+                                    Modifica
+                                </button>
+                                ${convention.attiva ? `
+                                    <button class="toggle-convention-btn btn-secondary text-sm px-3 py-2" data-id="${convention.id}" data-active="true">
+                                        <span class="mr-1">⏸️</span>
+                                        Disattiva
                                     </button>
-                                    ${convention.attiva ? `
-                                        <button class="toggle-convention-btn btn-secondary text-sm px-3 py-2" data-id="${convention.id}" data-active="true">
-                                            <span class="mr-1">⏸️</span>
-                                            Disattiva
-                                        </button>
-                                    ` : `
-                                        <button class="toggle-convention-btn btn-success text-sm px-3 py-2" data-id="${convention.id}" data-active="false">
-                                            <span class="mr-1">▶️</span>
-                                            Attiva
-                                        </button>
-                                    `}
-                                </div>
-                            ` : ''}
+                                ` : `
+                                    <button class="toggle-convention-btn btn-success text-sm px-3 py-2" data-id="${convention.id}" data-active="false">
+                                        <span class="mr-1">▶️</span>
+                                        Attiva
+                                    </button>
+                                `}
+                                ${convention.in_evidenza ? `
+                                    <button class="feature-convention-btn btn-secondary text-sm px-3 py-2" data-id="${convention.id}" data-featured="true">
+                                        <span class="mr-1">⭐</span>
+                                        Rimuovi Evidenza
+                                    </button>
+                                ` : `
+                                    <button class="feature-convention-btn btn-gold text-sm px-3 py-2" data-id="${convention.id}" data-featured="false">
+                                        <span class="mr-1">⭐</span>
+                                        Metti in Evidenza
+                                    </button>
+                                `}
+                            </div>
                         </div>
                     </div>
                 `;
             }).join('');
 
-            // Add event listeners to dynamically created buttons
             setupConventionCardListeners();
         }
 
@@ -760,32 +915,66 @@
                     toggleConvention(conventionId, !currentActive);
                 });
             });
+
+            // Feature buttons
+            document.querySelectorAll('.feature-convention-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const button = e.target.closest('.feature-convention-btn');
+                    const conventionId = button.dataset.id;
+                    const currentFeatured = button.dataset.featured === 'true';
+                    toggleFeature(conventionId, !currentFeatured);
+                });
+            });
         }
 
-        function getFilteredConventions() {
+        function filterConventions() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const statusFilter = document.getElementById('filterStatus').value;
             const categoryFilter = document.getElementById('filterCategory').value;
             
-            return allConventions.filter(convention => {
-                const isExpired = convention.data_fine && new Date(convention.data_fine) < new Date();
+            filteredConventions = allConventions.filter(convention => {
+                // Search filter
+                const searchMatch = !searchTerm || 
+                    convention.nome_azienda.toLowerCase().includes(searchTerm) ||
+                    convention.descrizione.toLowerCase().includes(searchTerm) ||
+                    (convention.condizioni && convention.condizioni.toLowerCase().includes(searchTerm)) ||
+                    (convention.codice_sconto && convention.codice_sconto.toLowerCase().includes(searchTerm));
+
+                // Status filter
+                const isExpired = convention.valida_fino && new Date(convention.valida_fino) < new Date();
                 const status = isExpired ? 'expired' : (convention.attiva ? 'active' : 'inactive');
+                const statusMatch = statusFilter === 'all' || 
+                    (statusFilter === 'featured' && convention.in_evidenza) ||
+                    (statusFilter !== 'featured' && status === statusFilter);
                 
-                const statusMatch = statusFilter === 'all' || status === statusFilter;
+                // Category filter
                 const categoryMatch = categoryFilter === 'all' || convention.categoria === categoryFilter;
                 
-                return statusMatch && categoryMatch;
+                return searchMatch && statusMatch && categoryMatch;
             });
+            
+            displayConventions();
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterStatus').value = 'all';
+            document.getElementById('filterCategory').value = 'all';
+            filteredConventions = [...allConventions];
+            displayConventions();
         }
 
         function getCategoryIcon(category) {
             const icons = {
-                'casa': '🏠',
-                'auto': '🚗',
-                'viaggi': '✈️',
-                'salute': '🏥',
-                'shopping': '🛍️',
-                'servizi': '⚙️',
-                'altro': '📦'
+                'SALUTE': '🏥',
+                'VIAGGI': '✈️',
+                'SHOPPING': '🛍️',
+                'SERVIZI': '⚙️',
+                'FORMAZIONE': '📚',
+                'TEMPO_LIBERO': '🎮',
+                'RISTORAZIONE': '🍽️',
+                'AUTOMOTIVE': '🚗',
+                'ALTRO': '📦'
             };
             return icons[category] || '📦';
         }
@@ -806,10 +995,12 @@
         function resetForm() {
             editingConventionId = null;
             uploadedLogoUrl = null;
+            uploadedImmagineUrl = null;
             document.getElementById('conventionForm').reset();
             document.getElementById('conventionId').value = '';
             document.getElementById('logoPreview').innerHTML = '';
-            document.getElementById('dataInizio').value = new Date().toISOString().split('T')[0];
+            document.getElementById('immaginePreview').innerHTML = '';
+            document.getElementById('validaDal').value = new Date().toISOString().split('T')[0];
         }
 
         function editConvention(conventionId) {
@@ -821,21 +1012,39 @@
             document.getElementById('modalTitle').textContent = '✏️ Modifica Convenzione';
             document.getElementById('deleteConventionBtn').style.display = 'inline-flex';
             
+            // Fill form fields
             document.getElementById('conventionId').value = convention.id;
-            document.getElementById('nomePartner').value = convention.nome_partner;
-            document.getElementById('categoria').value = convention.categoria;
-            document.getElementById('icona').value = convention.icona || '🏷️';
+            document.getElementById('nomeAzienda').value = convention.nome_azienda || '';
+            document.getElementById('categoria').value = convention.categoria || '';
+            document.getElementById('descrizione').value = convention.descrizione || '';
             document.getElementById('scontoPercentuale').value = convention.sconto_percentuale || '';
-            document.getElementById('descrizione').value = convention.descrizione;
-            document.getElementById('dataInizio').value = convention.data_inizio;
-            document.getElementById('dataFine').value = convention.data_fine || '';
+            document.getElementById('codiceSconto').value = convention.codice_sconto || '';
+            document.getElementById('condizioni').value = convention.condizioni || '';
+            document.getElementById('validaDal').value = convention.valida_dal || '';
+            document.getElementById('validaFino').value = convention.valida_fino || '';
+            document.getElementById('coperturaGeografica').value = convention.copertura_geografica || 'NAZIONALE';
             document.getElementById('linkEsterno').value = convention.link_esterno || '';
-            document.getElementById('attiva').checked = convention.attiva;
+            document.getElementById('note').value = convention.note || '';
+            document.getElementById('attiva').checked = convention.attiva || false;
+            document.getElementById('inEvidenza').checked = convention.in_evidenza || false;
+
+            // Handle contacts JSON
+            const contatti = convention.contatti || {};
+            document.getElementById('telefono').value = contatti.telefono || '';
+            document.getElementById('email').value = contatti.email || '';
             
+            // Handle image previews
             if (convention.logo_url) {
                 uploadedLogoUrl = convention.logo_url;
                 document.getElementById('logoPreview').innerHTML = `
-                    <img src="${convention.logo_url}" alt="Anteprima" class="logo-preview">
+                    <img src="${convention.logo_url}" alt="Anteprima Logo" class="image-preview">
+                `;
+            }
+
+            if (convention.immagine_url) {
+                uploadedImmagineUrl = convention.immagine_url;
+                document.getElementById('immaginePreview').innerHTML = `
+                    <img src="${convention.immagine_url}" alt="Anteprima Immagine" class="image-preview">
                 `;
             }
             
@@ -850,21 +1059,35 @@
             saveBtn.disabled = true;
 
             try {
+                // Prepare contacts object
+                const contatti = {};
+                const telefono = document.getElementById('telefono').value.trim();
+                const email = document.getElementById('email').value.trim();
+                if (telefono) contatti.telefono = telefono;
+                if (email) contatti.email = email;
+
                 const formData = {
-                    nome_partner: document.getElementById('nomePartner').value.trim(),
+                    nome_azienda: document.getElementById('nomeAzienda').value.trim(),
                     categoria: document.getElementById('categoria').value,
-                    icona: document.getElementById('icona').value,
-                    sconto_percentuale: document.getElementById('scontoPercentuale').value ? parseInt(document.getElementById('scontoPercentuale').value) : null,
                     descrizione: document.getElementById('descrizione').value.trim(),
-                    data_inizio: document.getElementById('dataInizio').value,
-                    data_fine: document.getElementById('dataFine').value || null,
+                    sconto_percentuale: document.getElementById('scontoPercentuale').value ? parseInt(document.getElementById('scontoPercentuale').value) : null,
+                    codice_sconto: document.getElementById('codiceSconto').value.trim() || null,
+                    condizioni: document.getElementById('condizioni').value.trim() || null,
+                    valida_dal: document.getElementById('validaDal').value || null,
+                    valida_fino: document.getElementById('validaFino').value || null,
+                    copertura_geografica: document.getElementById('coperturaGeografica').value,
                     link_esterno: document.getElementById('linkEsterno').value.trim() || null,
+                    note: document.getElementById('note').value.trim() || null,
                     attiva: document.getElementById('attiva').checked,
-                    logo_url: uploadedLogoUrl
+                    in_evidenza: document.getElementById('inEvidenza').checked,
+                    logo_url: uploadedLogoUrl,
+                    immagine_url: uploadedImmagineUrl,
+                    contatti: Object.keys(contatti).length > 0 ? contatti : null,
+                    updated_at: new Date().toISOString()
                 };
 
-                if (!formData.nome_partner || !formData.descrizione) {
-                    throw new Error('Nome partner e descrizione sono obbligatori');
+                if (!formData.nome_azienda || !formData.descrizione || !formData.categoria) {
+                    throw new Error('Nome azienda, categoria e descrizione sono obbligatori');
                 }
 
                 let result;
@@ -885,7 +1108,7 @@
                         .from('convenzioni')
                         .insert({
                             ...formData,
-                            autore_id: currentUser.id
+                            created_at: new Date().toISOString()
                         })
                         .select();
 
@@ -909,8 +1132,12 @@
         async function deleteConvention() {
             if (!editingConventionId) return;
             
-            // Doppia conferma per eliminazione definitiva
-            if (!confirm('⚠️ ATTENZIONE: Stai per eliminare definitivamente questa convenzione.\n\nQuesta azione è IRREVERSIBILE e rimuoverà completamente il record dal database.\n\nSei sicuro di voler procedere?')) return;
+            const convention = allConventions.find(c => c.id === editingConventionId);
+            if (!convention) return;
+
+            const confirmMessage = `⚠️ ATTENZIONE: Stai per eliminare definitivamente la convenzione "${convention.nome_azienda}".\n\nQuesta azione è IRREVERSIBILE!\n\nSei sicuro di voler procedere?`;
+            
+            if (!confirm(confirmMessage)) return;
             
             if (!confirm('🗑️ CONFERMA FINALE: Eliminare definitivamente la convenzione?\n\nNON sarà più possibile recuperarla.')) return;
 
@@ -919,7 +1146,6 @@
             deleteBtn.disabled = true;
 
             try {
-                // Elimina definitivamente il record dal database
                 const { error } = await supabase
                     .from('convenzioni')
                     .delete()
@@ -927,9 +1153,9 @@
 
                 if (error) throw error;
 
-                showNotification('✅ Convenzione eliminata definitivamente dal database!', 'success');
+                showNotification('✅ Convenzione eliminata definitivamente!', 'success');
                 closeConventionModal();
-                await loadConventions(); // Ricarica la lista
+                await loadConventions();
 
             } catch (error) {
                 console.error('Errore eliminazione convenzione:', error);
@@ -944,7 +1170,10 @@
             try {
                 const { error } = await supabase
                     .from('convenzioni')
-                    .update({ attiva: newStatus })
+                    .update({ 
+                        attiva: newStatus,
+                        updated_at: new Date().toISOString()
+                    })
                     .eq('id', conventionId);
 
                 if (error) throw error;
@@ -958,13 +1187,34 @@
             }
         }
 
-        async function uploadLogo(file) {
+        async function toggleFeature(conventionId, newStatus) {
+            try {
+                const { error } = await supabase
+                    .from('convenzioni')
+                    .update({ 
+                        in_evidenza: newStatus,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', conventionId);
+
+                if (error) throw error;
+
+                showNotification(`✅ Convenzione ${newStatus ? 'messa in evidenza' : 'rimossa dall\'evidenza'}!`, 'success');
+                await loadConventions();
+
+            } catch (error) {
+                console.error('Errore toggle evidenza:', error);
+                showNotification('❌ Errore nella modifica dell\'evidenza', 'error');
+            }
+        }
+
+        async function uploadImage(file, folder = 'convenzioni') {
             if (!file) return null;
 
             try {
                 const fileExt = file.name.split('.').pop();
                 const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-                const filePath = `convenzioni/${fileName}`;
+                const filePath = `${folder}/${fileName}`;
 
                 const { error: uploadError } = await supabase.storage
                     .from('images')
@@ -979,12 +1229,12 @@
                 return publicUrl;
 
             } catch (error) {
-                console.error('Errore upload logo:', error);
-                throw new Error('Errore nell\'upload del logo');
+                console.error('Errore upload immagine:', error);
+                throw new Error('Errore nell\'upload dell\'immagine');
             }
         }
 
-        async function previewLogo(event) {
+        async function previewAndUpload(event, type) {
             const file = event.target.files[0];
             if (!file) return;
 
@@ -996,38 +1246,53 @@
 
             // Validate file size (max 5MB)
             if (file.size > 5 * 1024 * 1024) {
-                showNotification('❌ Il logo deve essere inferiore a 5MB', 'error');
+                showNotification('❌ L\'immagine deve essere inferiore a 5MB', 'error');
                 return;
             }
+
+            const previewContainer = type === 'logo' ? 'logoPreview' : 'immaginePreview';
 
             // Show preview
             const reader = new FileReader();
             reader.onload = function(e) {
-                document.getElementById('logoPreview').innerHTML = `
-                    <img src="${e.target.result}" alt="Anteprima" class="logo-preview">
-                    <p class="text-sm text-gray-600 mt-2">Anteprima - il logo sarà caricato al salvataggio</p>
+                document.getElementById(previewContainer).innerHTML = `
+                    <img src="${e.target.result}" alt="Anteprima" class="image-preview">
+                    <p class="text-sm text-gray-600 mt-2">📤 Upload in corso...</p>
                 `;
             };
             reader.readAsDataURL(file);
 
-            // Upload logo
+            // Upload image
             try {
-                uploadedLogoUrl = await uploadLogo(file);
-                showNotification('✅ Logo caricato con successo!', 'success');
+                const uploadedUrl = await uploadImage(file, type === 'logo' ? 'convenzioni/loghi' : 'convenzioni/immagini');
+                
+                if (type === 'logo') {
+                    uploadedLogoUrl = uploadedUrl;
+                } else {
+                    uploadedImmagineUrl = uploadedUrl;
+                }
+
+                document.getElementById(previewContainer).innerHTML = `
+                    <img src="${uploadedUrl}" alt="Anteprima" class="image-preview">
+                    <p class="text-sm text-green-600 mt-2">✅ Upload completato!</p>
+                `;
+
+                showNotification('✅ Immagine caricata con successo!', 'success');
             } catch (error) {
-                showNotification('❌ Errore nel caricamento del logo', 'error');
-                uploadedLogoUrl = null;
+                showNotification('❌ Errore nel caricamento dell\'immagine', 'error');
+                document.getElementById(previewContainer).innerHTML = '';
+                if (type === 'logo') {
+                    uploadedLogoUrl = null;
+                } else {
+                    uploadedImmagineUrl = null;
+                }
             }
         }
 
-        function filterConventions() {
-            displayConventions();
-        }
-
         function setupEventListeners() {
-            // Back button
+            // Back button - redirect to home_dirigenti.html
             document.getElementById('backBtn').addEventListener('click', () => {
-                history.back();
+                window.location.href = 'home_dirigenti.html';
             });
 
             // Main buttons
@@ -1042,10 +1307,12 @@
             // Form submission
             document.getElementById('conventionForm').addEventListener('submit', saveConvention);
             
-            // File upload
-            document.getElementById('logoPartner').addEventListener('change', previewLogo);
+            // File uploads
+            document.getElementById('logoFile').addEventListener('change', (e) => previewAndUpload(e, 'logo'));
+            document.getElementById('immagineFile').addEventListener('change', (e) => previewAndUpload(e, 'immagine'));
             
-            // Filters
+            // Search and filters
+            document.getElementById('searchInput').addEventListener('input', filterConventions);
             document.getElementById('filterStatus').addEventListener('change', filterConventions);
             document.getElementById('filterCategory').addEventListener('change', filterConventions);
             
@@ -1060,6 +1327,22 @@
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     closeConventionModal();
+                }
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'f') {
+                    e.preventDefault();
+                    document.getElementById('searchInput').focus();
+                }
+                if (e.ctrlKey && e.key === 'n') {
+                    e.preventDefault();
+                    openConventionModal();
+                }
+                if (e.ctrlKey && e.key === 'r') {
+                    e.preventDefault();
+                    loadConventions();
                 }
             });
         }
@@ -1085,9 +1368,113 @@
             }, 4000);
         }
 
+        // Auto-refresh every 10 minutes
+        setInterval(() => {
+            if (allConventions.length > 0) {
+                loadConventions();
+            }
+        }, 10 * 60 * 1000);
+
+        // Expose functions globally for onclick handlers
+        window.loadConventions = loadConventions;
+        window.clearFilters = clearFilters;
+
         // Initialize app
         init();
     </script>
 
 </body>
-</html>
+</html>2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-primary mb-2">Nome Azienda *</label>
+                            <input type="text" id="nomeAzienda" placeholder="Es. MediaWorld, Conad..." required maxlength="100">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-primary mb-2">Categoria *</label>
+                            <select id="categoria" required>
+                                <option value="">Seleziona categoria</option>
+                                <option value="SALUTE">🏥 Salute</option>
+                                <option value="VIAGGI">✈️ Viaggi</option>
+                                <option value="SHOPPING">🛍️ Shopping</option>
+                                <option value="SERVIZI">⚙️ Servizi</option>
+                                <option value="FORMAZIONE">📚 Formazione</option>
+                                <option value="TEMPO_LIBERO">🎮 Tempo Libero</option>
+                                <option value="RISTORAZIONE">🍽️ Ristorazione</option>
+                                <option value="AUTOMOTIVE">🚗 Automotive</option>
+                                <option value="ALTRO">📦 Altro</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <label class="block text-sm font-bold text-primary mb-2">Descrizione *</label>
+                        <textarea id="descrizione" placeholder="Descrivi l'offerta e i vantaggi per i soci..." required rows="4"></textarea>
+                    </div>
+                </div>
+
+                <!-- Dettagli Offerta -->
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h4 class="font-bold text-primary mb-4">💰 Dettagli Offerta</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-primary mb-2">Sconto % (opzionale)</label>
+                            <input type="number" id="scontoPercentuale" min="0" max="100" placeholder="Es. 15">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-primary mb-2">Codice Sconto (opzionale)</label>
+                            <input type="text" id="codiceSconto" placeholder="Es. AURORA2025" maxlength="50">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <label class="block text-sm font-bold text-primary mb-2">Condizioni (opzionale)</label>
+                        <textarea id="condizioni" placeholder="Termini e condizioni dell'offerta..." rows="3"></textarea>
+                    </div>
+                </div>
+
+                <!-- Validità e Visibilità -->
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <h4 class="font-bold text-primary mb-4">📅 Validità e Visibilità</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-primary mb-2">Valida Dal</label>
+                            <input type="date" id="validaDal">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-primary mb-2">Valida Fino (opzionale)</label>
+                            <input type="date" id="validaFino">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <label class="block text-sm font-bold text-primary mb-2">Copertura Geografica</label>
+                            <select id="coperturaGeografica">
+                                <option value="NAZIONALE">🇮🇹 Nazionale</option>
+                                <option value="REGIONALE">🏛️ Regionale</option>
+                                <option value="LOCALE">🏘️ Locale</option>
+                                <option value="ONLINE">🌐 Online</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center gap-4 pt-6">
+                            <label class="flex items-center">
+                                <input type="checkbox" id="attiva" class="mr-2" checked>
+                                <span class="font-semibold">✅ Attiva</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" id="inEvidenza" class="mr-2">
+                                <span class="font-semibold">⭐ In Evidenza</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Collegamenti e Media -->
+                <div class="bg-purple-50 p-4 rounded-lg">
+                    <h4 class="font-bold text-primary mb-4">🔗 Collegamenti e Media</h4>
+                    <div>
+                        <label class="block text-sm font-bold text-primary mb-2">Link Esterno (opzionale)</label>
+                        <input type="url" id="linkEsterno" placeholder="https://www.azienda.com">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-
