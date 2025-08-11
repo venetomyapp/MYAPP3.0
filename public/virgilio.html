@@ -5,30 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Virgilio - MyApp</title>
 
-  <!-- PWA Meta Tags -->
+  <!-- Manifest (puoi rimuoverlo se non esiste) -->
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#1a1a2e">
   <meta name="background-color" content="#1a1a2e">
 
-  <!-- Icone Standard -->
-  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512x512.png">
+  <!-- Favicon inline per evitare 404 -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%23e94560'/%3E%3Ctext x='32' y='41' font-size='36' text-anchor='middle' fill='white'%3EV%3C/text%3E%3C/svg%3E">
 
-  <!-- iOS Support -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="MyApp">
-  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-
-  <!-- Android Support -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="application-name" content="MyApp">
-  <meta name="msapplication-TileColor" content="#1a1a2e">
-
-  <!-- Tailwind CDN -->
+  <!-- Tailwind CDN (ok per dev) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     if (typeof tailwind !== 'undefined') {
@@ -45,7 +30,7 @@
               gold: '#ffd700',
               teal: '#03dac6',
               dark: '#0a0a23',
-              light: '#f8fafc',
+              light: '#f8fafc'
             }
           }
         }
@@ -56,16 +41,10 @@
   <style>
     :root {
       --gradient-bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
-      --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.1);
       --shadow-elevated: 0 8px 25px rgba(0, 0, 0, 0.15);
-      --chat-height-desktop: 500px;
-      --chat-height-tablet: 450px;
-      --chat-height-mobile: 60vh;
       --header-height: 60px;
     }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
       background: var(--gradient-bg);
       background-size: 400% 400%;
@@ -73,143 +52,85 @@
       min-height: 100vh;
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     }
+    @keyframes gradientShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
 
-    @keyframes gradientShift {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-
-    /* HEADER */
     .header {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255,255,255,.1);
       backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      position: sticky; top: 0; z-index: 40;
-      height: var(--header-height);
+      border-bottom: 1px solid rgba(255,255,255,.1);
+      position: sticky; top: 0; z-index: 40; height: var(--header-height);
     }
-
-    /* BACK BUTTON */
     .back-button {
-      display: flex; align-items: center; justify-content: center;
-      width: 40px; height: 40px; border-radius: 12px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: white; cursor: pointer; transition: all .2s ease; text-decoration: none;
+      display:flex; align-items:center; justify-content:center;
+      width:40px; height:40px; border-radius:12px;
+      background: rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
+      color:#fff; cursor:pointer; transition:all .2s ease;
     }
-    .back-button:hover {
-      background: rgba(255,255,255,0.2);
-      border-color: rgba(233,69,96,0.5); color: #e94560;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0,0,0,.1);
-    }
-    .back-button:active { transform: scale(.95); }
+    .back-button:hover { background: rgba(255,255,255,.2); border-color: rgba(233,69,96,.5); color:#e94560; transform: translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,.1) }
+    .back-button:active { transform: scale(.95) }
 
-    /* CHAT CONTAINER */
     .chat-container {
-      background: white; border-radius: 20px; box-shadow: var(--shadow-elevated);
-      width: 100%; max-width: 900px; margin: 1rem auto; overflow: hidden;
+      background:#fff; border-radius:20px; box-shadow: var(--shadow-elevated);
+      width:100%; max-width:900px; margin:1rem auto; overflow:hidden;
       height: calc(100vh - var(--header-height) - 2rem);
-      display: flex; flex-direction: column;
+      display:flex; flex-direction:column;
     }
-    .chat-header {
-      background: linear-gradient(135deg, #e94560, #00d4ff);
-      color: white; padding: 1.5rem; text-align: center; flex-shrink: 0;
-    }
-    .chat-messages {
-      flex: 1; overflow-y: auto; padding: 1rem; scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
-    }
-    .chat-messages::-webkit-scrollbar { width: 4px; }
-    .chat-messages::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 2px; }
-    .chat-messages::-webkit-scrollbar-thumb { background: #e94560; border-radius: 2px; }
+    .chat-header { background: linear-gradient(135deg, #e94560, #00d4ff); color:#fff; padding:1.5rem; text-align:center; flex-shrink:0 }
+    .chat-messages { flex:1; overflow-y:auto; padding:1rem; scroll-behavior:smooth; -webkit-overflow-scrolling:touch }
+    .chat-messages::-webkit-scrollbar{ width:4px } .chat-messages::-webkit-scrollbar-track{ background:#f1f1f1; border-radius:2px } .chat-messages::-webkit-scrollbar-thumb{ background:#e94560; border-radius:2px }
 
-    /* MESSAGGI */
-    .message { margin-bottom: 1rem; animation: fadeIn .3s ease-out; }
-    @keyframes fadeIn { from {opacity:0; transform: translateY(10px)} to {opacity:1; transform: none} }
+    .message { margin-bottom:1rem; animation: fadeIn .3s ease-out }
+    @keyframes fadeIn { from{opacity:0; transform: translateY(10px)} to{opacity:1; transform:none} }
+    .message-bot, .message-system { display:flex; align-items:flex-start; gap:.75rem }
+    .message-user { display:flex; align-items:flex-start; gap:.75rem; flex-direction: row-reverse }
 
-    .message-bot, .message-system { display: flex; align-items: flex-start; gap: .75rem; }
-    .message-user { display: flex; align-items: flex-start; gap: .75rem; flex-direction: row-reverse; }
+    .avatar { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem; min-width:40px; min-height:40px }
+    .avatar-bot{ background: linear-gradient(135deg, #00d4ff, #03dac6) }
+    .avatar-user{ background: linear-gradient(135deg, #e94560, #ff006e) }
+    .avatar-system{ background: linear-gradient(135deg, #ffd700, #ff8c00) }
 
-    .avatar {
-      width: 40px; height: 40px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;
-      min-width: 40px; min-height: 40px;
-    }
-    .avatar-bot { background: linear-gradient(135deg, #00d4ff, #03dac6); }
-    .avatar-user { background: linear-gradient(135deg, #e94560, #ff006e); }
-    .avatar-system { background: linear-gradient(135deg, #ffd700, #ff8c00); }
+    .message-content { max-width:75%; padding:1rem 1.25rem; border-radius:16px; font-size:.95rem; line-height:1.5; word-wrap:break-word; overflow-wrap:break-word }
+    .content-bot { background:#f8f9fa; color:#2d3748; border-bottom-left-radius:6px }
+    .content-user { background: linear-gradient(135deg, #e94560, #ff006e); color:#fff; border-bottom-right-radius:6px }
+    .content-system { background: linear-gradient(135deg, #ffd700, #ff8c00); color:#fff; border-bottom-left-radius:6px }
+    .message-time { font-size:.75rem; opacity:.7; margin-top:.5rem }
 
-    .message-content {
-      max-width: 75%; padding: 1rem 1.25rem; border-radius: 16px;
-      font-size: .95rem; line-height: 1.5; word-wrap: break-word; overflow-wrap: break-word;
-    }
-    .content-bot { background: #f8f9fa; color: #2d3748; border-bottom-left-radius: 6px; }
-    .content-user { background: linear-gradient(135deg, #e94560, #ff006e); color: white; border-bottom-right-radius: 6px; }
-    .content-system { background: linear-gradient(135deg, #ffd700, #ff8c00); color: white; border-bottom-left-radius: 6px; }
-    .message-time { font-size: .75rem; opacity: .7; margin-top: .5rem; }
-
-    /* TYPING */
-    .typing-indicator { display:flex; align-items:center; gap:.75rem; padding:1rem 0; }
-    .typing-dots { display:flex; gap:4px; padding:1rem 1.25rem; background:#f8f9fa; border-radius:16px; border-bottom-left-radius:6px; }
-    .typing-dot { width:8px; height:8px; background:#6b7280; border-radius:50%; animation: typingBounce 1.5s infinite; }
+    .typing-indicator{ display:flex; align-items:center; gap:.75rem; padding:1rem 0 }
+    .typing-dots{ display:flex; gap:4px; padding:1rem 1.25rem; background:#f8f9fa; border-radius:16px; border-bottom-left-radius:6px }
+    .typing-dot{ width:8px; height:8px; background:#6b7280; border-radius:50%; animation:typingBounce 1.5s infinite }
     .typing-dot:nth-child(2){ animation-delay:.3s } .typing-dot:nth-child(3){ animation-delay:.6s }
     @keyframes typingBounce { 0%,60%,100%{transform:none} 30%{transform: translateY(-10px)} }
 
-    /* INPUT */
-    .chat-input-area { padding: 1rem; border-top: 1px solid #e5e7eb; background: #f8f9fa; flex-shrink: 0; }
-    .input-wrapper { display:flex; gap:.75rem; align-items:flex-end; }
-    .chat-input {
-      flex:1; border:2px solid #e5e7eb; border-radius:12px; padding:.75rem 1rem; font-size:1rem;
-      resize:none; outline:none; transition:border-color .2s ease; min-height:44px; max-height:120px; font-family:inherit;
-      -webkit-appearance:none; appearance:none;
-    }
-    .chat-input:focus { border-color:#e94560; }
+    .chat-input-area{ padding:1rem; border-top:1px solid #e5e7eb; background:#f8f9fa; flex-shrink:0 }
+    .input-wrapper{ display:flex; gap:.75rem; align-items:flex-end }
+    .chat-input{ flex:1; border:2px solid #e5e7eb; border-radius:12px; padding:.75rem 1rem; font-size:1rem; resize:none; outline:none; transition:border-color .2s; min-height:44px; max-height:120px; font-family:inherit; -webkit-appearance:none; appearance:none }
+    .chat-input:focus{ border-color:#e94560 }
+    .send-button{ background: linear-gradient(135deg, #e94560, #00d4ff); color:#fff; border:none; border-radius:12px; padding:.75rem; width:44px; height:44px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; min-width:44px; min-height:44px }
+    .send-button:hover:not(:disabled){ transform: translateY(-2px); box-shadow:0 4px 12px rgba(233,69,96,.3) }
+    .send-button:active:not(:disabled){ transform: scale(.95) }
+    .send-button:disabled{ opacity:.5; cursor:not-allowed; transform:none }
 
-    .send-button {
-      background: linear-gradient(135deg, #e94560, #00d4ff); color:white; border:none; border-radius:12px;
-      padding:.75rem; width:44px; height:44px; display:flex; align-items:center; justify-content:center; cursor:pointer;
-      transition: all .2s ease; min-width:44px; min-height:44px;
-    }
-    .send-button:hover:not(:disabled){ transform: translateY(-2px); box-shadow: 0 4px 12px rgba(233,69,96,.3); }
-    .send-button:active:not(:disabled){ transform: scale(.95); }
-    .send-button:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+    .loading-spinner{ width:20px; height:20px; border:2px solid rgba(255,255,255,.3); border-radius:50%; border-top-color:#fff; animation: spin 1s linear infinite }
+    @keyframes spin { to{ transform: rotate(360deg) } }
 
-    /* SPINNER */
-    .loading-spinner { width:20px; height:20px; border:2px solid rgba(255,255,255,.3); border-radius:50%; border-top-color:white; animation: spin 1s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg) } }
+    .status-bar{ background:#f8f9fa; padding:.5rem 1rem; border-top:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center; font-size:.8rem; color:#6b7280; flex-shrink:0 }
+    .connection-status{ display:flex; align-items:center; gap:.5rem }
+    .status-dot{ width:8px; height:8px; border-radius:50%; background:#10b981 }
+    .status-dot.disconnected{ background:#ef4444 }
 
-    /* STATUS BAR */
-    .status-bar {
-      background:#f8f9fa; padding:.5rem 1rem; border-top:1px solid #e5e7eb;
-      display:flex; justify-content:space-between; align-items:center; font-size:.8rem; color:#6b7280; flex-shrink:0;
-    }
-    .connection-status { display:flex; align-items:center; gap:.5rem; }
-    .status-dot { width:8px; height:8px; border-radius:50%; background:#10b981; }
-    .status-dot.disconnected { background:#ef4444; }
+    .action-button{ background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:.5rem 1rem; font-size:.85rem; font-weight:500; color:#374151; cursor:pointer; transition:all .2s; min-height:36px; display:flex; align-items:center; justify-content:center }
+    .action-button:hover{ background:#f3f4f6; border-color:#e94560; color:#e94560 }
+    .action-button:active{ transform: scale(.98) }
+    .action-button.primary{ background: linear-gradient(135deg, #e94560, #00d4ff); color:#fff; border:none }
+    .action-button.primary:hover{ transform: translateY(-1px); box-shadow:0 4px 12px rgba(233,69,96,.3) }
 
-    /* BUTTONS */
-    .action-button {
-      background:white; border:1px solid #e5e7eb; border-radius:8px; padding:.5rem 1rem; font-size:.85rem;
-      font-weight:500; color:#374151; cursor:pointer; transition:all .2s ease; min-height:36px; display:flex; align-items:center; justify-content:center;
-    }
-    .action-button:hover { background:#f3f4f6; border-color:#e94560; color:#e94560; }
-    .action-button:active { transform: scale(.98); }
-    .action-button.primary { background: linear-gradient(135deg, #e94560, #00d4ff); color:white; border:none; }
-    .action-button.primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(233,69,96,.3); }
+    .alert{ padding:1rem; border-radius:12px; margin:1rem; font-weight:500 }
+    .alert-error{ background:#fef2f2; color:#dc2626; border:1px solid #fecaca }
+    .alert-success{ background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0 }
+    .alert-info{ background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe }
 
-    /* ALERT */
-    .alert { padding:1rem; border-radius:12px; margin:1rem; font-weight:500; }
-    .alert-error { background:#fef2f2; color:#dc2626; border:1px solid #fecaca; }
-    .alert-success { background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0; }
-    .alert-info { background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; }
+    .web-search-badge{ background: linear-gradient(135deg, #00d4ff, #03dac6); color:#fff; font-size:.75rem; font-weight:600; padding:.25rem .75rem; border-radius:12px; display:inline-block; margin-bottom:.5rem }
 
-    /* WEB SEARCH BADGE */
-    .web-search-badge {
-      background: linear-gradient(135deg, #00d4ff, #03dac6);
-      color:white; font-size:.75rem; font-weight:600; padding:.25rem .75rem; border-radius:12px; display:inline-block; margin-bottom:.5rem;
-    }
-
-    /* RESPONSIVE (identico al tuo, abbreviato per chiarezza) */
     @media (min-width:1200px){ .chat-container{ max-width:1000px } }
     @media (max-width:1024px) and (min-width:769px){ .chat-container{ margin:1rem; height: calc(100vh - var(--header-height) - 2rem) } .message-content{ max-width:80% } }
     @media (max-width:768px) and (min-width:481px){
@@ -220,8 +141,7 @@
     @media (max-width:480px){
       :root{ --header-height:56px }
       .header{ height:var(--header-height); padding:.5rem 1rem } .header .max-w-4xl{ padding:0 } .header h1{ font-size:1.1rem }
-      .back-button{ width:36px; height:36px; border-radius:10px } .back-button svg{ width:18px; height:18px }
-      .action-button{ padding:.4rem .8rem; font-size:.8rem; min-height:32px }
+      .back-button{ width:36px; height:36px; border-radius:10px }
       .chat-container{ margin:.5rem; border-radius:12px; height: calc(100vh - var(--header-height) - 1rem) }
       .chat-header{ padding:1rem .75rem } .chat-header h1{ font-size:1.3rem } .chat-header p{ font-size:.85rem }
       .chat-messages{ padding:.75rem } .message-content{ max-width:90%; padding:.75rem 1rem; font-size:.9rem }
@@ -233,27 +153,13 @@
     @media (max-width:360px){
       .chat-container{ margin:.25rem } .chat-header{ padding:.75rem .5rem } .chat-header h1{ font-size:1.2rem }
       .message-content{ padding:.6rem .8rem; font-size:.85rem }
-      .back-button{ width:32px; height:32px; border-radius:8px } .back-button svg{ width:16px; height:16px }
-      .action-button{ padding:.3rem .6rem; font-size:.75rem; min-height:30px }
+      .back-button{ width:32px; height:32px; border-radius:8px }
     }
-    @media (max-height:500px) and (orientation:landscape){
-      .chat-container{ height: calc(100vh - var(--header-height) - .5rem) }
-      .chat-header{ padding:.75rem } .chat-header h1{ font-size:1.2rem; margin-bottom:.25rem } .chat-header p{ font-size:.8rem }
-    }
-
-    @media (-webkit-min-device-pixel-ratio:2), (min-resolution:192dpi){ .avatar{ image-rendering:-webkit-optimize-contrast; image-rendering:crisp-edges } }
     @media (prefers-color-scheme:dark){
       .content-bot{ background:#2d3748; color:#e2e8f0 }
       .chat-input-area{ background:#1a202c } .status-bar{ background:#1a202c; color:#a0aec0 }
     }
-    @media (prefers-reduced-motion:reduce){
-      *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
-    }
-
     *:focus-visible{ outline:2px solid #e94560; outline-offset:2px }
-
-    @supports (-webkit-touch-callout:none){ .chat-input{ font-size:16px } .chat-container{ height: calc(100vh - var(--header-height) - env(safe-area-inset-bottom) - 1rem) } }
-    @media screen and (min-width:375px) and (max-width:812px) and (-webkit-min-device-pixel-ratio:3){ .chat-container{ height: calc(100vh - var(--header-height) - env(safe-area-inset-bottom) - 1rem) } }
   </style>
 </head>
 <body>
@@ -302,31 +208,27 @@
         </div>
       </div>
 
-      <!-- Alert Messages -->
+      <!-- Alerts -->
       <div id="alertContainer" aria-live="polite"></div>
 
-      <!-- Chat Messages -->
+      <!-- Messages -->
       <div id="chatMessages" class="chat-messages" role="log" aria-live="polite" aria-relevant="additions">
-        <!-- Welcome Message -->
         <div class="message message-bot">
           <div class="avatar avatar-bot">🤖</div>
           <div class="message-content content-bot">
             <div>
               Ciao! Sono <strong>Virgilio</strong> ✨, il tuo assistente sindacale AI di nuova generazione.
               <br><br>
-              <strong>🎯 Le mie specializzazioni principali:</strong>
-              <br><br>
-              📋 <strong>Contratto di Lavoro</strong> - Normative, diritti e doveri dei Carabinieri<br>
-              🏥 <strong>Permessi per Malattia</strong> - Procedure, certificazioni e tempistiche<br>
-              🏖️ <strong>Ferie e Permessi</strong> - Regolamenti, richieste e diritti alle vacanze<br>
-              💰 <strong>Stipendio e Aumenti</strong> - Progressioni, indennità e trattamento economico<br>
-              👥 <strong>Dirigenti Sindacali</strong> - Contatti diretti di dirigenti regionali e provinciali<br>
-              📝 <strong>Procedure Legali</strong> - Disciplinari, ricorsi e tutele legali<br>
-              <br>
+              <strong>🎯 Le mie specializzazioni principali:</strong><br><br>
+              📋 <strong>Contratto di Lavoro</strong> — Normative, diritti e doveri dei Carabinieri<br>
+              🏥 <strong>Permessi per Malattia</strong> — Procedure, certificazioni e tempistiche<br>
+              🏖️ <strong>Ferie e Permessi</strong> — Regolamenti, richieste e diritti alle vacanze<br>
+              💰 <strong>Stipendio e Aumenti</strong> — Progressioni, indennità e trattamento economico<br>
+              👥 <strong>Dirigenti Sindacali</strong> — Contatti diretti regionali e provinciali<br>
+              📝 <strong>Procedure Legali</strong> — Disciplinari, ricorsi e tutele legali<br><br>
               🌐 <strong>Novità:</strong> Posso effettuare ricerche web in tempo reale per informazioni sempre aggiornate!
               <br><br>
               <strong>💬 Come posso aiutarti oggi?</strong><br>
-              <em>Scrivi la tua domanda nell'area qui sotto. Ad esempio:</em><br>
               • "Come funzionano i permessi per malattia?"<br>
               • "Dimmi tutto sul contratto di lavoro"<br>
               • "Chi sono i dirigenti sindacali?"<br>
@@ -337,7 +239,7 @@
         </div>
       </div>
 
-      <!-- Typing Indicator -->
+      <!-- Typing -->
       <div id="typingIndicator" class="typing-indicator hidden" aria-hidden="true">
         <div class="avatar avatar-bot">🤖</div>
         <div class="typing-dots">
@@ -347,7 +249,7 @@
         </div>
       </div>
 
-      <!-- Input Area -->
+      <!-- Input -->
       <div class="chat-input-area">
         <div class="input-wrapper">
           <textarea id="messageInput" class="chat-input" placeholder="✨ Scrivi la tua domanda..." rows="1" maxlength="500" aria-label="Scrivi il messaggio"></textarea>
@@ -359,29 +261,27 @@
         </div>
       </div>
 
-      <!-- Status Bar -->
+      <!-- Status -->
       <div class="status-bar">
         <div class="connection-status">
           <div id="statusDot" class="status-dot"></div>
           <span id="statusText">Connesso</span>
         </div>
-        <div>
-          Token: <span id="tokenCount">0</span> •
-          Caratteri: <span id="charCount">0</span>/500
-        </div>
+        <div>Token: <span id="tokenCount">0</span> • Caratteri: <span id="charCount">0</span>/500</div>
       </div>
     </div>
   </main>
 
-  <!-- JavaScript -->
+  <!-- App JS (niente template literal/backtick) -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    // ⚙️ Config
+    // Config Supabase
     const supabaseUrl = 'https://pvzdilkozpspsnepedqc.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
     const supabase = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: true, autoRefreshToken: true } });
 
+    // Chatbot
     const CHATBOT_CONFIG = {
       apiEndpoint: 'https://myapp-chatbot-server.onrender.com/api/chat',
       apiEndpointLocal: 'http://localhost:3001/api/chat',
@@ -393,14 +293,14 @@
       retryDelay: 1000
     };
 
-    // 🌍 Stato app
+    // Stato
     let currentUser = null;
     let conversationHistory = [];
     let isProcessing = false;
     let totalTokensUsed = 0;
     let dirigenti = [];
 
-    // 🧱 DOM
+    // DOM
     const messagesContainer = document.getElementById('chatMessages');
     const messageInput = document.getElementById('messageInput');
     const sendButton = document.getElementById('sendButton');
@@ -411,202 +311,169 @@
     const charCount = document.getElementById('charCount');
     const alertContainer = document.getElementById('alertContainer');
 
-    // 🔧 Utils
-    function showAlert(message, type = 'info') {
-      const alert = document.createElement('div');
-      alert.className = \`alert alert-\${type}\`;
-      alert.textContent = message;
-      alertContainer.appendChild(alert);
-      setTimeout(() => alert.remove(), 5000);
+    // Utils
+    function showAlert(message, type) {
+      if (!type) type = 'info';
+      const el = document.createElement('div');
+      el.className = 'alert alert-' + type;
+      el.textContent = message;
+      alertContainer.appendChild(el);
+      setTimeout(function(){ el.remove(); }, 5000);
     }
-
     function updateConnectionStatus(connected) {
-      if (connected) {
-        statusDot.className = 'status-dot';
-        statusText.textContent = 'Connesso';
-      } else {
-        statusDot.className = 'status-dot disconnected';
-        statusText.textContent = 'Offline';
-      }
+      if (connected) { statusDot.className = 'status-dot'; statusText.textContent = 'Connesso'; }
+      else { statusDot.className = 'status-dot disconnected'; statusText.textContent = 'Offline'; }
     }
     function syncOnlineStatus(){ updateConnectionStatus(navigator.onLine); }
-    window.addEventListener('online',  syncOnlineStatus);
+    window.addEventListener('online', syncOnlineStatus);
     window.addEventListener('offline', syncOnlineStatus);
 
-    function updateCharCount() {
-      const count = messageInput.value.length;
-      charCount.textContent = count;
-      charCount.style.color = count > 400 ? '#ef4444' : '#6b7280';
-    }
-    function updateSendButton() {
-      const hasText = messageInput.value.trim().length > 0;
-      sendButton.disabled = !hasText || isProcessing;
-    }
-    function autoResizeTextarea() {
-      messageInput.style.height = 'auto';
-      messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
-    }
-    function scrollToBottom() { messagesContainer.scrollTop = messagesContainer.scrollHeight; }
-    function showTyping() { typingIndicator.classList.remove('hidden'); scrollToBottom(); }
-    function hideTyping() { typingIndicator.classList.add('hidden'); }
-    function formatTime() {
-      return new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
-    }
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-    function formatMessage(text) {
-      // Escape prima, poi piccolo markdown (* e **)
-      return escapeHtml(text)
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.*?)\*/g, '<em>$1</em>')
-        .replace(/\n/g, '<br>');
+    function updateCharCount(){ const c = messageInput.value.length; charCount.textContent = c; charCount.style.color = c>400 ? '#ef4444':'#6b7280'; }
+    function updateSendButton(){ const has = messageInput.value.trim().length>0; sendButton.disabled = !has || isProcessing; }
+    function autoResizeTextarea(){ messageInput.style.height='auto'; messageInput.style.height = Math.min(messageInput.scrollHeight,120) + 'px'; }
+    function scrollToBottom(){ messagesContainer.scrollTop = messagesContainer.scrollHeight; }
+    function showTyping(){ typingIndicator.classList.remove('hidden'); scrollToBottom(); }
+    function hideTyping(){ typingIndicator.classList.add('hidden'); }
+    function formatTime(){ return new Date().toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'}); }
+    function escapeHtml(t){ const d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
+    function formatMessage(t){
+      return escapeHtml(t)
+        .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g,'<em>$1</em>')
+        .replace(/\n/g,'<br>');
     }
 
-    // ➕ Add Message
-    function addMessage(content, type = 'bot', hasWebSearch = false) {
-      const messageDiv = document.createElement('div');
-      messageDiv.className = \`message message-\${type}\`;
+    // Add message
+    function addMessage(content, type, hasWebSearch){
+      if(!type) type='bot';
+      const m = document.createElement('div');
+      m.className = 'message message-' + type;
 
-      let webSearchBadge = '';
+      let badge = '';
       if (hasWebSearch && type === 'bot') {
-        webSearchBadge = '<div class="web-search-badge">🌐 Ricerca Web</div>';
+        badge = '<div class="web-search-badge">🌐 Ricerca Web</div>';
       }
 
       if (type === 'user') {
-        messageDiv.innerHTML = `
-          <div class="avatar avatar-user">👤</div>
-          <div class="message-content content-user">
-            <div>${escapeHtml(content)}</div>
-            <div class="message-time">${formatTime()}</div>
-          </div>`;
+        m.innerHTML =
+          '<div class="avatar avatar-user">👤</div>' +
+          '<div class="message-content content-user">' +
+            '<div>' + escapeHtml(content) + '</div>' +
+            '<div class="message-time">' + formatTime() + '</div>' +
+          '</div>';
       } else if (type === 'system') {
-        // ✅ Sanitizzazione anche qui
         const safe = formatMessage(content);
-        messageDiv.innerHTML = `
-          <div class="avatar avatar-system">ℹ️</div>
-          <div class="message-content content-system">
-            <div>${safe}</div>
-            <div class="message-time">${formatTime()}</div>
-          </div>`;
+        m.innerHTML =
+          '<div class="avatar avatar-system">ℹ️</div>' +
+          '<div class="message-content content-system">' +
+            '<div>' + safe + '</div>' +
+            '<div class="message-time">' + formatTime() + '</div>' +
+          '</div>';
       } else {
-        messageDiv.innerHTML = `
-          <div class="avatar avatar-bot">🤖</div>
-          <div class="message-content content-bot">
-            ${webSearchBadge}
-            <div>${formatMessage(content)}</div>
-            <div class="message-time">${formatTime()}</div>
-          </div>`;
+        m.innerHTML =
+          '<div class="avatar avatar-bot">🤖</div>' +
+          '<div class="message-content content-bot">' +
+            badge +
+            '<div>' + formatMessage(content) + '</div>' +
+            '<div class="message-time">' + formatTime() + '</div>' +
+          '</div>';
       }
-
-      messagesContainer.appendChild(messageDiv);
+      messagesContainer.appendChild(m);
       scrollToBottom();
     }
 
-    // 📥 Carica Dirigenti
-    async function loadDirigenti() {
-      try {
+    // Dirigenti
+    async function loadDirigenti(){
+      try{
         const { data, error } = await supabase
-          .from('organico_dirigentisindacali') // se crei una view pubblica, cambia qui
+          .from('organico_dirigentisindacali')  // se usi una view pubblica, cambia qui
           .select('*')
           .order('id', { ascending: true });
-
-        if (error) throw error;
+        if(error) throw error;
         dirigenti = data || [];
         console.log('✅ Dirigenti caricati:', dirigenti.length);
-      } catch (error) {
-        console.error('❌ Errore caricamento dirigenti:', error);
+      }catch(err){
+        console.error('❌ Errore caricamento dirigenti:', err);
         dirigenti = [
-          { nome_cognome: 'Antonio Grande', ruolo: 'Segretario Generale Regionale - Veneto', email: 'veneto@carabinierinsic.it', telefono: '3351470886' }
+          { nome_cognome:'Antonio Grande', ruolo:'Segretario Generale Regionale - Veneto', email:'veneto@carabinierinsic.it', telefono:'3351470886' }
         ];
       }
     }
 
-    // 🔐 Auth check
-    async function verificaAutenticazione() {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
+    // Auth
+    async function verificaAutenticazione(){
+      try{
+        const { data:{ session } } = await supabase.auth.getSession();
+        if(!session){
           console.log('❌ Nessuna sessione attiva');
           window.location.href = '../login.html';
           return null;
         }
         console.log('✅ Utente autenticato:', session.user.email);
         return session.user;
-      } catch (error) {
-        console.error('❌ Errore verifica auth:', error);
+      }catch(err){
+        console.error('❌ Errore verifica auth:', err);
         window.location.href = '../login.html';
         return null;
       }
     }
 
-    // ❓ Help
-    window.showHelp = function() {
-      const helpMessage = `🆘 <strong>Aiuto Virgilio</strong><br><br>
-<strong>Comandi disponibili:</strong><br>
-• Usa i pulsanti rapidi per domande frequenti<br>
-• Scrivi domande in linguaggio naturale<br>
-• Chiedi informazioni su contratti e diritti<br>
-• Per dirigenti sindacali scrivi "dirigenti"<br><br>
-<strong>Contatti di emergenza:</strong><br>
-📞 Telefono: 06-123456789<br>
-📧 Email: assistenza@sindacato.it<br><br>
-<em>Virgilio è sempre qui per aiutarti! ✨</em>`;
-      addMessage(helpMessage, 'system');
+    // Help
+    window.showHelp = function(){
+      var help =
+        '🆘 <strong>Aiuto Virgilio</strong><br><br>' +
+        '<strong>Comandi disponibili:</strong><br>' +
+        '• Usa i pulsanti rapidi per domande frequenti<br>' +
+        '• Scrivi domande in linguaggio naturale<br>' +
+        '• Chiedi informazioni su contratti e diritti<br>' +
+        '• Per dirigenti sindacali scrivi "dirigenti"<br><br>' +
+        '<strong>Contatti di emergenza:</strong><br>' +
+        '📞 Telefono: 06-123456789<br>' +
+        '📧 Email: assistenza@sindacato.it<br><br>' +
+        '<em>Virgilio è sempre qui per aiutarti! ✨</em>';
+      addMessage(help, 'system');
     };
 
-    // ✉️ Invio messaggio
-    async function sendMessage() {
+    // Send
+    async function sendMessage(){
       const message = messageInput.value.trim();
-      if (!message || isProcessing) return;
+      if(!message || isProcessing) return;
 
-      isProcessing = true;
-      updateSendButton();
+      isProcessing = true; updateSendButton();
 
-      // Aggiungi messaggio utente
       addMessage(message, 'user');
-      conversationHistory.push({ role: 'user', content: message });
+      conversationHistory.push({ role:'user', content: message });
 
-      // Pulisci input
-      messageInput.value = '';
-      updateCharCount();
-      updateSendButton();
-      autoResizeTextarea();
+      messageInput.value=''; updateCharCount(); updateSendButton(); autoResizeTextarea();
 
-      // 🔎 Comandi rapidi (no chiamata API)
-      if (/^\s*(dirigenti|contatti\s+dirigenti)\s*$/i.test(message)) {
-        if (dirigenti && dirigenti.length) {
-          const list = dirigenti.slice(0, 12).map(d => {
-            const nome = escapeHtml(d.nome_cognome ?? '');
-            const ruolo = escapeHtml(d.ruolo ?? '');
-            const email = escapeHtml(d.email ?? '');
-            const tel = escapeHtml(d.telefono ?? '');
-            return `• <strong>${nome}</strong> — ${ruolo}<br>Email: ${email} — Tel: ${tel}`;
+      // comando locale: dirigenti
+      if(/^\s*(dirigenti|contatti\s+dirigenti)\s*$/i.test(message)){
+        if(dirigenti && dirigenti.length){
+          var list = dirigenti.slice(0,12).map(function(d){
+            var nome = escapeHtml(d.nome_cognome||'');
+            var ruolo = escapeHtml(d.ruolo||'');
+            var email = escapeHtml(d.email||'');
+            var tel = escapeHtml(d.telefono||'');
+            return '• <strong>' + nome + '</strong> — ' + ruolo + '<br>Email: ' + email + ' — Tel: ' + tel;
           }).join('<br><br>');
           addMessage(list, 'system');
         } else {
           addMessage('Nessun dirigente trovato al momento. Riprova più tardi.', 'system');
         }
-        isProcessing = false;
-        updateSendButton();
-        return;
+        isProcessing=false; updateSendButton(); return;
       }
 
-      // Mostra typing solo per chiamate API
       showTyping();
 
-      try {
-        // Sessione
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) { throw new Error('Sessione scaduta'); }
+      try{
+        const { data:{ session } } = await supabase.auth.getSession();
+        if(!session){ throw new Error('Sessione scaduta'); }
 
-        // Endpoint
-        const apiEndpoint = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-          ? CHATBOT_CONFIG.apiEndpointLocal : CHATBOT_CONFIG.apiEndpoint;
+        const apiEndpoint =
+          (window.location.hostname==='localhost' || window.location.hostname==='127.0.0.1')
+          ? CHATBOT_CONFIG.apiEndpointLocal
+          : CHATBOT_CONFIG.apiEndpoint;
 
-        // Heuristica ricerca web
         const needsWebSearch = /(?:\bultim[eaie]\b|\bnews\b|aggiornamenti|oggi|attuale|corrente|novit[àa]|contratto 2025|aumenti|stipendio 2025)/i.test(message);
 
         const requestBody = {
@@ -614,36 +481,32 @@
           model: CHATBOT_CONFIG.model,
           max_tokens: CHATBOT_CONFIG.maxTokens,
           temperature: CHATBOT_CONFIG.temperature,
-          system_context: `Sei Virgilio, assistente AI del Sindacato Carabinieri. Rispondi in modo conciso e professionale.`,
+          system_context: 'Sei Virgilio, assistente AI del Sindacato Carabinieri. Rispondi in modo conciso e professionale.',
           enable_web_search: needsWebSearch,
           web_search_query: needsWebSearch ? message : null
         };
 
-        // Retry
         let lastError = null;
-        for (let attempt = 0; attempt < CHATBOT_CONFIG.retryAttempts; attempt++) {
-          try {
-            const response = await fetch(apiEndpoint, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': \`Bearer \${session.access_token}\`
+        for(let attempt=0; attempt<CHATBOT_CONFIG.retryAttempts; attempt++){
+          try{
+            const resp = await fetch(apiEndpoint, {
+              method:'POST',
+              headers:{
+                'Content-Type':'application/json',
+                'Authorization':'Bearer ' + session.access_token
               },
               body: JSON.stringify(requestBody)
             });
-
-            if (!response.ok) {
-              // prova a leggere error JSON, altrimenti status
-              let errorMsg = `HTTP ${response.status}`;
-              try {
-                const errorData = await response.json();
-                if (errorData?.error) errorMsg = errorData.error;
-              } catch(_) {}
-              throw new Error(errorMsg);
+            if(!resp.ok){
+              let msg = 'HTTP ' + resp.status;
+              try{
+                const j = await resp.json();
+                if(j && j.error) msg = j.error;
+              }catch(_){}
+              throw new Error(msg);
             }
-
-            const data = await response.json();
-            if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+            const data = await resp.json();
+            if(!data.choices || !data.choices[0] || !data.choices[0].message){
               throw new Error('Risposta API non valida');
             }
 
@@ -651,89 +514,60 @@
             const hasWebSearch = !!data.web_search_performed;
 
             addMessage(botResponse, 'bot', hasWebSearch);
-            conversationHistory.push({ role: 'assistant', content: botResponse });
+            conversationHistory.push({ role:'assistant', content: botResponse });
 
-            if (data.usage) {
-              totalTokensUsed += data.usage.total_tokens || 0;
+            if(data.usage){
+              totalTokensUsed += (data.usage.total_tokens || 0);
               tokenCount.textContent = totalTokensUsed.toLocaleString();
             }
-
-            console.log('✅ Messaggio inviato con successo');
             lastError = null;
             break;
-          } catch (err) {
+          }catch(err){
             lastError = err;
-            console.warn(`⚠️ Tentativo ${attempt + 1} fallito:`, err.message);
-            if (attempt < CHATBOT_CONFIG.retryAttempts - 1) {
-              await new Promise(r => setTimeout(r, CHATBOT_CONFIG.retryDelay * (attempt + 1)));
+            console.warn('Tentativo fallito:', err.message);
+            if(attempt < CHATBOT_CONFIG.retryAttempts-1){
+              await new Promise(function(r){ setTimeout(r, CHATBOT_CONFIG.retryDelay*(attempt+1)); });
             }
           }
         }
-
-        if (lastError) throw lastError;
-
-        // connessione ok (a livello app)
+        if(lastError) throw lastError;
         syncOnlineStatus();
-
-      } catch (error) {
-        console.error('❌ Errore invio messaggio:', error);
-        // rimuovi ultimo messaggio utente dal contesto per non “sporcare” la cronologia
+      }catch(err){
+        console.error('Errore invio:', err);
         conversationHistory.pop();
-
-        let errorMessage = 'Errore di connessione';
-        if (/scadut/i.test(error.message)) errorMessage = 'Sessione scaduta, riaccedi';
-        else if (/network|fetch/i.test(error.message)) errorMessage = 'Problema di rete, riprova';
-        else if (/500/.test(error.message)) errorMessage = 'Servizio temporaneamente non disponibile';
-        else errorMessage = error.message || errorMessage;
-
-        showAlert(errorMessage, 'error');
-
-        // non forziamo "disconnesso" se la rete è attiva, usiamo lo stato reale
+        let msg = 'Errore di connessione';
+        if(/scadut/i.test(err.message)) msg = 'Sessione scaduta, riaccedi';
+        else if(/network|fetch/i.test(err.message)) msg = 'Problema di rete, riprova';
+        else if(/500/.test(err.message)) msg = 'Servizio temporaneamente non disponibile';
+        else if(err.message) msg = err.message;
+        showAlert(msg, 'error');
         syncOnlineStatus();
-
-      } finally {
+      }finally{
         hideTyping();
-        isProcessing = false;
-        updateSendButton();
-        messageInput.focus();
+        isProcessing=false; updateSendButton(); messageInput.focus();
       }
     }
 
-    // 🌱 Init
-    document.addEventListener('DOMContentLoaded', async () => {
+    // Init
+    document.addEventListener('DOMContentLoaded', async function(){
       document.getElementById('loading').classList.remove('hidden');
-
-      try {
-        // Stato rete iniziale
+      try{
         syncOnlineStatus();
 
-        // Auth
         currentUser = await verificaAutenticazione();
-        if (!currentUser) return;
+        if(!currentUser) return;
 
-        // Dati dirigenti
         await loadDirigenti();
 
-        // Listeners input
-        messageInput.addEventListener('input', () => {
-          updateCharCount(); updateSendButton(); autoResizeTextarea();
-        });
-        messageInput.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendMessage();
-          }
-        });
+        messageInput.addEventListener('input', function(){ updateCharCount(); updateSendButton(); autoResizeTextarea(); });
+        messageInput.addEventListener('keypress', function(e){ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); }});
         sendButton.addEventListener('click', sendMessage);
 
-        // Pulisci chat
-        document.getElementById('clearChatBtn').addEventListener('click', () => {
-          if (confirm('Vuoi davvero cancellare tutta la conversazione?')) {
-            conversationHistory = [];
-            totalTokensUsed = 0;
-            tokenCount.textContent = '0';
-            const messages = messagesContainer.querySelectorAll('.message');
-            messages.forEach((msg, index) => { if (index > 0) msg.remove(); });
+        document.getElementById('clearChatBtn').addEventListener('click', function(){
+          if(confirm('Vuoi davvero cancellare tutta la conversazione?')){
+            conversationHistory=[]; totalTokensUsed=0; tokenCount.textContent='0';
+            const msgs = messagesContainer.querySelectorAll('.message');
+            msgs.forEach(function(msg, i){ if(i>0) msg.remove(); });
             showAlert('Chat cancellata con successo! ✨', 'success');
           }
         });
@@ -741,25 +575,17 @@
         messageInput.focus();
         updateSendButton();
         console.log('🤖✨ Virgilio inizializzato!');
-      } catch (error) {
-        console.error('❌ Errore inizializzazione:', error);
+      }catch(err){
+        console.error('Errore init:', err);
         showAlert('Errore di inizializzazione. Ricarica la pagina.', 'error');
-      } finally {
+      }finally{
         document.getElementById('loading').classList.add('hidden');
       }
     });
 
-    // Error handling globale
-    window.addEventListener('error', (event) => {
-      console.error('❌ Errore JavaScript:', event.error);
-      showAlert('Si è verificato un errore imprevisto', 'error');
-    });
-    window.addEventListener('unhandledrejection', (event) => {
-      console.error('❌ Promise rejected:', event.reason);
-      showAlert('Errore di rete o server', 'error');
-    });
-
-    console.log('🤖✨ Virgilio - Ready!');
+    // Error handlers
+    window.addEventListener('error', function (e){ console.error('Errore JS:', e.error); showAlert('Si è verificato un errore imprevisto', 'error'); });
+    window.addEventListener('unhandledrejection', function (e){ console.error('Promise rejected:', e.reason); showAlert('Errore di rete o server', 'error'); });
   </script>
 </body>
 </html>
