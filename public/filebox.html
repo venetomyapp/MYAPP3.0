@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>FileBox - MyApp</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1a1a2e">
+  <link rel="icon" href="/icons/favicon.ico" type="image/x-icon">
+
+  <!-- iOS PWA -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="MyApp">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+
+  <!-- Fonts & Tailwind -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary:'#1a1a2e', secondary:'#16213e', accent:'#0f3460', aurora:'#e94560',
+            cyan:'#00d4ff', magenta:'#ff006e', gold:'#ffd700', teal:'#03dac6',
+            dark:'#0a0a23', light:'#f8fafc', muted:'#64748b', success:'#00ea8d',
+            warning:'#ffb800', error:'#ff4757',
+          },
+          fontFamily:{ sans:['Inter','system-ui','sans-serif'] },
+          screens:{ xs:'320px', sm:'640px', md:'768px', lg:'1024px', xl:'1280px', '2xl':'1536px' },
+          fontSize:{
+            'fluid-xs':'clamp(.75rem,2vw,.875rem)','fluid-sm':'clamp(.875rem,2.5vw,1rem)',
+            'fluid-base':'clamp(1rem,2.5vw,1.125rem)','fluid-lg':'clamp(1.125rem,3vw,1.25rem)',
+            'fluid-xl':'clamp(1.25rem,3.5vw,1.5rem)','fluid-2xl':'clamp(1.5rem,4vw,2rem)',
+            'fluid-3xl':'clamp(1.875rem,5vw,2.5rem)','fluid-4xl':'clamp(2.25rem,6vw,3rem)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root{
+      --gradient-aurora: linear-gradient(135deg,#1a1a2e 0%,#16213e 25%,#0f3460 50%,#e94560 75%,#00d4ff 100%);
+      --gradient-magic: linear-gradient(135deg,#ff006e 0%,#e94560 50%,#03dac6 100%);
+      --gradient-ocean: linear-gradient(135deg,#16213e 0%,#0f3460 50%,#00d4ff 100%);
+      --shadow-glass: 0 8px 32px 0 rgba(31,38,135,.37);
+      --border-glass: 1px solid rgba(255,255,255,.18);
+    }
+    *{scroll-behavior:smooth}
+    body{background:var(--gradient-aurora); min-height:100vh; font-family:'Inter',system-ui,sans-serif; overflow-x:hidden; position:relative;}
+    body::before{content:''; position:fixed; inset:0; background:var(--gradient-aurora); animation:aurora 20s ease-in-out infinite; z-index:-2;}
+    @keyframes aurora{
+      0%,100%{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 25%,#0f3460 50%,#e94560 75%,#00d4ff 100%)}
+      25%{background:linear-gradient(135deg,#16213e 0%,#0f3460 25%,#e94560 50%,#00d4ff 75%,#1a1a2e 100%)}
+      50%{background:linear-gradient(135deg,#0f3460 0%,#e94560 25%,#00d4ff 50%,#1a1a2e 75%,#16213e 100%)}
+      75%{background:linear-gradient(135deg,#e94560 0%,#00d4ff 25%,#1a1a2e 50%,#16213e 75%,#0f3460 100%)}
+    }
+    .glass-card{ background:rgba(255,255,255,.95); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,.2); box-shadow:var(--shadow-glass); }
+    .glass-strong{ background:rgba(255,255,255,.12); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:var(--border-glass); box-shadow:var(--shadow-glass); }
+    .text-ultra-visible{ color:#fff; text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1); font-weight:800;}
+    .file-tile:hover{ transform:translateY(-4px); box-shadow:0 16px 40px rgba(0,0,0,.15);}
+    .fade-in{ animation:fadeIn .6s ease-out both; opacity:0 }
+    @keyframes fadeIn{ from{opacity:0; transform:translateY(20px)} to{opacity:1; transform:translateY(0)} }
+    .loading-skeleton{ background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size:200% 100%; animation:loading 1.5s infinite; border-radius:12px; }
+    @keyframes loading{ 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+    @media (prefers-reduced-motion:reduce){ *{animation:none!important; transition:none!important} body::before{animation:none} }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="w-full px-4 py-4 relative z-10">
+    <div class="max-w-4xl mx-auto flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <button id="backBtn" class="text-ultra-visible hover:text-cyan transition-colors" aria-label="Indietro">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <div class="flex items-center space-x-2">
+          <div class="w-10 h-10 bg-gradient-to-r from-cyan to-teal rounded-full flex items-center justify-center">
+            <img src="/icons/folder.svg" alt="FileBox" class="w-6 h-6" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <span class="text-white font-bold fluid-sm hidden">📁</span>
+          </div>
+          <h1 class="fluid-xl font-black text-ultra-visible">FileBox</h1>
+        </div>
+      </div>
+      <button id="logoutBtn" class="bg-gradient-to-r from-error to-aurora text-white fluid-sm px-3 py-2 rounded-full font-bold transition-all hover:scale-105 shadow-lg hidden">
+        Logout
+      </button>
+    </div>
+  </header>
+
+  <!-- Loading overlay -->
+  <div id="loading" class="fixed inset-0 bg-primary/90 flex items-center justify-center z-50 hidden">
+    <div class="glass-card rounded-xl p-6 text-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-aurora mx-auto mb-4"></div>
+      <p class="text-aurora font-bold">Caricamento documenti...</p>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <main class="max-w-4xl mx-auto px-4 pb-10">
+    <!-- Intro / Search -->
+    <section class="glass-strong rounded-3xl p-6 mb-6 text-center fade-in">
+      <h2 class="text-ultra-visible text-2xl font-extrabold mb-2">Documenti in cartella</h2>
+      <p class="text-ultra-visible fluid-base mb-4">Visualizza e scarica i file senza uscire dalla pagina</p>
+      <div class="grid md:grid-cols-3 gap-4 items-center">
+        <div class="md:col-span-2 glass-card rounded-2xl p-3">
+          <div class="flex items-center space-x-3">
+            <img src="/icons/search.svg" class="w-5 h-5" alt="search" onerror="this.style.display='none'">
+            <input id="searchInput" type="text" class="w-full outline-none bg-transparent fluid-base text-primary" placeholder="Cerca per nome o estensione..." maxlength="100">
+          </div>
+        </div>
+        <div class="flex gap-2 overflow-x-auto">
+          <button class="filterBtn category-filter active px-4 py-2 rounded-full fluid-sm font-bold" data-type="all">Tutti</button>
+          <button class="filterBtn category-filter px-4 py-2 rounded-full fluid-sm font-bold" data-type="doc">📄 Documenti</button>
+          <button class="filterBtn category-filter px-4 py-2 rounded-full fluid-sm font-bold" data-type="img">🖼️ Immagini</button>
+          <button class="filterBtn category-filter px-4 py-2 rounded-full fluid-sm font-bold" data-type="vid">🎬 Video</button>
+          <button class="filterBtn category-filter px-4 py-2 rounded-full fluid-sm font-bold" data-type="aud">🎧 Audio</button>
+        </div>
+      </div>
+      <div class="mt-4 flex justify-center gap-8">
+        <div class="text-center">
+          <div id="statTot" class="fluid-2xl font-black text-ultra-visible">--</div>
+          <div class="fluid-xs text-cyan font-bold">File</div>
+        </div>
+        <div class="text-center">
+          <div id="statSize" class="fluid-2xl font-black text-ultra-visible">--</div>
+          <div class="fluid-xs text-cyan font-bold">Dimensione totale</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Grid -->
+    <section id="filesContainer" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 fade-in">
+      <!-- skeletons -->
+      <div class="glass-card rounded-2xl p-4 loading-skeleton h-28"></div>
+      <div class="glass-card rounded-2xl p-4 loading-skeleton h-28"></div>
+      <div class="glass-card rounded-2xl p-4 loading-skeleton h-28"></div>
+    </section>
+
+    <!-- Empty -->
+    <div id="emptyState" class="text-center py-16 hidden">
+      <div class="w-24 h-24 bg-gradient-to-r from-muted to-gray-400 rounded-full flex items-center justify-center mx-auto mb-6">
+        <span class="text-4xl">🗂️</span>
+      </div>
+      <h3 class="fluid-xl font-black text-ultra-visible mb-4">Nessun file trovato</h3>
+      <p class="text-cyan fluid-base">Prova a cambiare filtri o ricerca</p>
+    </div>
+  </main>
+
+  <!-- Modal Viewer -->
+  <div id="viewer" class="fixed inset-0 bg-black/70 hidden z-50">
+    <div class="absolute inset-0 p-4 flex items-center justify-center">
+      <div class="glass-card rounded-2xl w-full max-w-5xl h-[80vh] flex flex-col">
+        <div class="p-3 flex items-center justify-between border-b border-gray-200">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-gradient-to-r from-cyan to-teal flex items-center justify-center">📄</div>
+            <div>
+              <div id="viewerName" class="font-bold text-primary"></div>
+              <div id="viewerMeta" class="text-sm text-muted"></div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <a id="downloadBtn" class="bg-gradient-to-r from-aurora to-magenta text-white px-3 py-2 rounded-full font-bold" download>Scarica</a>
+            <button id="closeViewer" class="bg-gray-100 hover:bg-gray-200 text-primary px-3 py-2 rounded-full font-bold">Chiudi</button>
+          </div>
+        </div>
+        <div class="flex-1 relative">
+          <div id="viewerLoading" class="absolute inset-0 flex flex-col items-center justify-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-aurora mb-4"></div>
+            <p class="text-aurora font-bold">Decrittazione/Caricamento…</p>
+          </div>
+          <div id="viewerBody" class="w-full h-full hidden"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    import { File as MegaFile } from 'https://unpkg.com/megajs/dist/main.browser-es.mjs';
+
+    // === CONFIG ===
+    // Tua cartella MEGA pubblica:
+    const MEGA_FOLDER_URL = 'https://mega.nz/folder/figRhbTT#dw0ZS1lb6sv8l-CHVfNSTA';
+    const PREVIEW_SIZE_LIMIT = 100 * 1024 * 1024; // 100MB, sopra mostra solo opzione download
+
+    // Supabase (per routing del tasto indietro)
+    const supabaseUrl = 'https://pvzdilkozpspsnepedqc.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Stato
+    let currentUser = null;
+    let allFiles = []; // {name, size, ext, type, megaFile}
+
+    // Utils
+    const $ = s => document.querySelector(s);
+    const $$ = s => Array.from(document.querySelectorAll(s));
+    const show = el => el.classList.remove('hidden');
+    const hide = el => el.classList.add('hidden');
+    const humanSize = b => {
+      if (!Number.isFinite(b)) return '--';
+      const u = ['B','KB','MB','GB','TB']; let i=0; while(b>=1024 && i<u.length-1){ b/=1024; i++; }
+      return `${b.toFixed( b<10&&i>0 ? 1 : 0)} ${u[i]}`;
+    };
+
+    const EXT_MAP = {
+      doc: ['pdf','doc','docx','xls','xlsx','ppt','pptx','txt','odt','ods','csv'],
+      img: ['jpg','jpeg','png','gif','webp','svg'],
+      vid: ['mp4','webm','mkv','mov','avi','m4v'],
+      aud: ['mp3','wav','ogg','m4a','flac']
+    };
+    const detectType = (ext) => {
+      ext = ext.toLowerCase();
+      if (EXT_MAP.img.includes(ext)) return 'img';
+      if (EXT_MAP.vid.includes(ext)) return 'vid';
+      if (EXT_MAP.aud.includes(ext)) return 'aud';
+      if (EXT_MAP.doc.includes(ext)) return 'doc';
+      return 'other';
+    };
+    const mimeFromExt = (ext) => {
+      ext = ext.toLowerCase();
+      const map = {
+        pdf:'application/pdf', txt:'text/plain', csv:'text/csv',
+        jpg:'image/jpeg', jpeg:'image/jpeg', png:'image/png', gif:'image/gif', webp:'image/webp', svg:'image/svg+xml',
+        mp4:'video/mp4', webm:'video/webm', mkv:'video/webm', mov:'video/quicktime', avi:'video/x-msvideo', m4v:'video/mp4',
+        mp3:'audio/mpeg', wav:'audio/wav', ogg:'audio/ogg', m4a:'audio/mp4', flac:'audio/flac',
+        doc:'application/msword', docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        xls:'application/vnd.ms-excel', xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ppt:'application/vnd.ms-powerpoint', pptx:'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        odt:'application/vnd.oasis.opendocument.text', ods:'application/vnd.oasis.opendocument.spreadsheet'
+      };
+      return map[ext] || 'application/octet-stream';
+    };
+
+    // Auth + back routing
+    async function checkAuth(){
+      try{
+        const { data:{ user } } = await supabase.auth.getUser();
+        currentUser = user || null;
+        const logoutBtn = $('#logoutBtn');
+        if (logoutBtn) (user ? logoutBtn.classList.remove('hidden') : logoutBtn.classList.add('hidden'));
+      }catch(e){ /* ignore */ }
+    }
+    async function resolveHomePath(){
+      let target = 'home.html';
+      try{
+        if (!currentUser) return target;
+        const meta = currentUser.user_metadata || {};
+        const rawRole = (meta.profilo || meta.ruolo || meta.role || '').toString().toLowerCase();
+        if (rawRole.includes('dirigente')) return 'home_dirigenti.html';
+        const { data } = await supabase.from('profili').select('ruolo,profilo,tipo').eq('user_id', currentUser.id).maybeSingle();
+        if (data){
+          const role = (data.ruolo||data.profilo||data.tipo||'').toLowerCase();
+          if (role.includes('dirigente')) target = 'home_dirigenti.html';
+        }
+      }catch(e){}
+      return target;
+    }
+    $('#backBtn')?.addEventListener('click', async ()=> { window.location.href = await resolveHomePath(); });
+    $('#logoutBtn')?.addEventListener('click', async ()=>{
+      if (confirm('Sei sicuro di voler uscire?')){ await supabase.auth.signOut(); location.href='login.html'; }
+    });
+
+    // Caricamento cartella MEGA
+    async function loadMega(){
+      show($('#loading'));
+      try{
+        const folder = MegaFile.fromURL(MEGA_FOLDER_URL);
+        await new Promise((res, rej)=> folder.loadAttributes(err => err ? rej(err) : res()));
+
+        // Flatten di tutti i file (anche sottocartelle)
+        const flatten = async (node) => {
+          if (!node) return [];
+          if (!node.directory) return [node];
+          const children = node.children || [];
+          const out = [];
+          for (const ch of children){
+            const arr = await flatten(ch);
+            out.push(...arr);
+          }
+          return out;
+        };
+
+        const files = (await flatten(folder)).filter(f => !f.directory);
+
+        allFiles = files.map(f=>{
+          const name = f.name || 'file';
+          const ext = (name.split('.').pop() || '').toLowerCase();
+          const type = detectType(ext);
+          const size = Number.isFinite(f.size) ? f.size : NaN;
+          return { name, ext, size, type, megaFile: f };
+        });
+
+        render();
+        updateStats();
+      }catch(err){
+        console.error('Errore MEGA:', err);
+        $('#filesContainer').innerHTML = `
+          <div class="glass-card rounded-2xl p-6 col-span-full">
+            <p class="text-error font-semibold">Impossibile leggere la cartella MEGA.</p>
+            <p class="text-muted mt-2">Controlla che il link sia pubblico (ID+KEY) e riprova.</p>
+          </div>`;
+      }finally{
+        hide($('#loading'));
+      }
+    }
+
+    // Render grid
+    function render(){
+      const q = $('#searchInput').value.trim().toLowerCase();
+      const activeType = $$('.filterBtn').find(b=>b.classList.contains('active'))?.dataset.type || 'all';
+
+      const filtered = allFiles.filter(f=>{
+        const matchText = !q || f.name.toLowerCase().includes(q) || f.ext.includes(q);
+        const matchType = activeType==='all' || f.type===activeType;
+        return matchText && matchType;
+      });
+
+      const container = $('#filesContainer');
+      if (!filtered.length){
+        container.innerHTML = '';
+        show($('#emptyState'));
+        return;
+      }
+      hide($('#emptyState'));
+
+      const iconFor = t => ({ doc:'📄', img:'🖼️', vid:'🎬', aud:'🎧', other:'📦' }[t] || '📦');
+
+      container.innerHTML = filtered.map(f=>`
+        <button class="file-tile glass-card rounded-2xl p-4 text-left transition-all" data-name="${encodeURIComponent(f.name)}">
+          <div class="flex items-start gap-3">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-r from-cyan to-teal flex items-center justify-center text-xl">${iconFor(f.type)}</div>
+            <div class="flex-1 min-w-0">
+              <div class="font-bold text-primary truncate" title="${f.name}">${f.name}</div>
+              <div class="text-muted fluid-xs mt-1">${f.ext.toUpperCase()} • ${humanSize(f.size)}</div>
+            </div>
+          </div>
+        </button>
+      `).join('');
+
+      // bind open
+      $$('#filesContainer .file-tile').forEach(btn=>{
+        btn.addEventListener('click', ()=> {
+          const name = decodeURIComponent(btn.dataset.name);
+          const fileObj = allFiles.find(x=>x.name===name);
+          if (fileObj) openViewer(fileObj);
+        });
+      });
+    }
+
+    function updateStats(){
+      const total = allFiles.length;
+      const sizeSum = allFiles.reduce((a,b)=> a + (Number.isFinite(b.size)? b.size : 0), 0);
+      $('#statTot').textContent = total || '--';
+      $('#statSize').textContent = total ? humanSize(sizeSum) : '--';
+    }
+
+    // Viewer
+    async function openViewer(file){
+      show($('#viewer'));
+      hide($('#viewerBody'));
+      show($('#viewerLoading'));
+      $('#viewerName').textContent = file.name;
+      $('#viewerMeta').textContent = `${file.ext.toUpperCase()} • ${humanSize(file.size)}`;
+      $('#viewerBody').innerHTML = '';
+
+      try{
+        if (Number.isFinite(file.size) && file.size > PREVIEW_SIZE_LIMIT){
+          $('#viewerBody').innerHTML = `
+            <div class="w-full h-full flex items-center justify-center p-6 text-center">
+              <div>
+                <p class="text-primary font-semibold mb-2">Anteprima disattivata per file di grandi dimensioni.</p>
+                <p class="text-muted">Usa “Scarica” per aprirlo in locale.</p>
+              </div>
+            </div>`;
+        } else {
+          const data = await new Promise((res, rej)=> file.megaFile.download((err, bytes)=> err ? rej(err) : res(bytes)));
+          const blob = new Blob([data], { type: mimeFromExt(file.ext) });
+          const url = URL.createObjectURL(blob);
+
+          // Download btn
+          const a = $('#downloadBtn');
+          a.href = url;
+          a.setAttribute('download', file.name);
+
+          // Render viewer content
+          const body = $('#viewerBody');
+          if (file.type==='img'){
+            body.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-gray-50"><img src="${url}" class="max-w-full max-h-full object-contain"/></div>`;
+          } else if (file.type==='vid'){
+            body.innerHTML = `<video src="${url}" controls class="w-full h-full bg-black rounded-b-2xl"></video>`;
+          } else if (file.type==='aud'){
+            body.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-gray-50"><audio src="${url}" controls class="w-full max-w-xl"></audio></div>`;
+          } else if (file.ext==='pdf'){
+            body.innerHTML = `<iframe src="${url}" class="w-full h-full rounded-b-2xl" title="${file.name}"></iframe>`;
+          } else {
+            body.innerHTML = `
+              <div class="w-full h-full flex items-center justify-center p-6 text-center">
+                <div>
+                  <p class="text-primary font-semibold mb-2">Anteprima non disponibile per questo formato.</p>
+                  <p class="text-muted">Clicca su “Scarica” per aprire il file.</p>
+                </div>
+              </div>`;
+          }
+        }
+      }catch(e){
+        console.error('Preview error:', e);
+        $('#viewerBody').innerHTML = `
+          <div class="w-full h-full flex items-center justify-center p-6 text-center">
+            <div>
+              <p class="text-error font-semibold mb-2">Impossibile caricare l’anteprima.</p>
+              <p class="text-muted">Prova a scaricare il file.</p>
+            </div>
+          </div>`;
+      }finally{
+        hide($('#viewerLoading'));
+        show($('#viewerBody'));
+      }
+    }
+
+    $('#closeViewer').addEventListener('click', ()=>{
+      const media = $('#viewerBody video, #viewerBody audio');
+      media?.pause?.();
+      $('#viewerBody').innerHTML = '';
+      hide($('#viewer'));
+    });
+
+    // Filtri e ricerca
+    $$('.filterBtn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        $$('.filterBtn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        render();
+      });
+    });
+    let t; $('#searchInput').addEventListener('input', ()=>{ clearTimeout(t); t = setTimeout(render, 250); });
+
+    // Init
+    (async ()=>{
+      await checkAuth();
+      await loadMega();
+    })();
+  </script>
+</body>
+</html>
