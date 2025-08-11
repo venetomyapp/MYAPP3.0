@@ -92,8 +92,42 @@
 
         .line-clamp-2{ display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow: hidden; }
 
-        .hero-title { font-size: clamp(3rem, 12vw, 6rem); font-weight:900; }
-        @media (max-width: 640px) { .hero-title { font-size:2.25rem; line-height:2.5rem; } }
+        .hero-title { font-size: clamp(2.4rem, 8vw, 5rem); font-weight:900; }
+
+        /* BOX delineati per strumenti/servizi */
+        .tool-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.06));
+            border: 1.5px solid rgba(255,255,255,0.28);
+            border-radius: 16px;
+            transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.22);
+            border-color: rgba(233, 69, 96, 0.4);
+        }
+
+        /* wrapper orizzontali */
+        .hscroll {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding-bottom: 6px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .hscroll::-webkit-scrollbar { height: 8px; }
+        .hscroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,.25); border-radius: 9999px; }
+
+        .hitem { scroll-snap-align: start; min-width: 240px; }
+
+        @media (min-width: 1024px) {
+            .hscroll { overflow: visible; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+            .hitem { min-width: 0; }
+        }
+        @media (min-width: 1536px) {
+            .hscroll { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+        }
     </style>
 </head>
 
@@ -150,7 +184,8 @@
 
     <!-- MAIN -->
     <main class="container mx-auto px-4 py-8 flex-grow">
-        <!-- Welcome -->
+
+        <!-- 1) BENVENUTO -->
         <section class="mb-12">
             <div class="glass-morphism rounded-3xl p-8 md:p-12 relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-aurora/20 to-cyan/20 rounded-full blur-xl"></div>
@@ -186,35 +221,131 @@
             </div>
         </section>
 
-        <!-- Stats -->
+        <!-- 2) I TUOI STRUMENTI E SERVIZI (unione Azioni + Servizi) -->
         <section class="mb-12">
-            <div class="flex items-center gap-4 mb-8">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-12 h-12 bg-gradient-to-br from-gold to-aurora rounded-xl flex items-center justify-center"><span class="text-white text-2xl">🌟</span></div>
+                <h2 class="text-ultra-visible text-3xl font-black">I tuoi strumenti e servizi</h2>
+            </div>
+
+            <!-- wrapper orizzontale -->
+            <div class="hscroll -mx-1 md:mx-0">
+                <div class="tool-card hitem p-6 text-center cursor-pointer" onclick="goToRichieste()">
+                    <div class="text-4xl mb-3">📝</div>
+                    <h3 class="text-white text-lg font-bold mb-1">Nuova Richiesta</h3>
+                    <p class="text-white/80 text-sm">Invia una nuova richiesta</p>
+                </div>
+
+                <div class="tool-card hitem p-6 text-center cursor-pointer" onclick="goToTessera()">
+                    <div class="text-4xl mb-3">🎫</div>
+                    <h3 class="text-white text-lg font-bold mb-1">Tessera Digitale</h3>
+                    <p class="text-white/80 text-sm">Visualizza e scarica la tessera</p>
+                </div>
+
+                <div class="tool-card hitem p-6 text-center cursor-pointer" onclick="goToProfilo()">
+                    <div class="text-4xl mb-3">👤</div>
+                    <h3 class="text-white text-lg font-bold mb-1">Il Mio Profilo</h3>
+                    <p class="text-white/80 text-sm">Gestisci i tuoi dati</p>
+                </div>
+
+                <div class="tool-card hitem p-6 text-center cursor-pointer" onclick="goToStrumenti()">
+                    <div class="text-4xl mb-3">🛠️</div>
+                    <h3 class="text-white text-lg font-bold mb-1">Strumenti</h3>
+                    <p class="text-white/80 text-sm">Utility di lavoro</p>
+                </div>
+
+                <div class="tool-card hitem p-6 text-center cursor-pointer" onclick="goToVirgilio()">
+                    <div class="text-4xl mb-3">🤖</div>
+                    <h3 class="text-white text-lg font-bold mb-1">Virgilio AI</h3>
+                    <p class="text-white/80 text-sm">Assistente intelligente</p>
+                </div>
+
+                <div class="tool-card hitem p-6 text-center cursor-pointer" onclick="goToDirigenti()">
+                    <div class="text-4xl mb-3">👥</div>
+                    <h3 class="text-white text-lg font-bold mb-1">Dirigenti</h3>
+                    <p class="text-white/80 text-sm">Contatta un dirigente</p>
+                </div>
+
+                <div class="tool-card hitem p-6 text-center cursor-pointer" onclick="goToConvenzioni()">
+                    <div class="text-4xl mb-3">🤝</div>
+                    <h3 class="text-white text-lg font-bold mb-1">Convenzioni</h3>
+                    <p class="text-white/80 text-sm">Sconti e offerte</p>
+                </div>
+
+                <div class="tool-card hitem p-6 text-center cursor-pointer" onclick="goToFileBox()">
+                    <div class="text-4xl mb-3">📁</div>
+                    <h3 class="text-white text-lg font-bold mb-1">FileBox</h3>
+                    <p class="text-white/80 text-sm">I tuoi file e documenti</p>
+                </div>
+
+                <div class="tool-card hitem p-6 text-center cursor-pointer" onclick="goToAssistenza()">
+                    <div class="text-4xl mb-3">🛟</div>
+                    <h3 class="text-white text-lg font-bold mb-1">Assistenza</h3>
+                    <p class="text-white/80 text-sm">Supporto e servizi</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3) I TUOI DATI (KPI in orizzontale) -->
+        <section class="mb-12">
+            <div class="flex items-center gap-4 mb-6">
                 <div class="w-12 h-12 bg-gradient-to-br from-cyan to-teal rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📈</span></div>
-                <h2 class="text-ultra-visible text-3xl font-black">I Tuoi Dati</h2>
+                <h2 class="text-ultra-visible text-3xl font-black">I tuoi dati</h2>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="stat-card p-6"><div class="flex items-center justify-between"><div><div class="text-white text-2xl font-bold" id="memberSince">-</div><div class="text-white text-sm opacity-80">Iscritto dal</div></div><div class="text-4xl">📅</div></div></div>
-                <div class="stat-card p-6"><div class="flex items-center justify-between"><div><div class="text-white text-2xl font-bold" id="numeroTessera">In generazione...</div><div class="text-white text-sm opacity-80">Numero Tessera</div></div><div class="text-4xl">🎫</div></div></div>
-                <div class="stat-card p-6"><div class="flex items-center justify-between"><div><div class="text-white text-2xl font-bold" id="richiesteCount">-</div><div class="text-white text-sm opacity-80">Richieste Attive</div></div><div class="text-4xl">📋</div></div></div>
-                <div class="stat-card p-6"><div class="flex items-center justify-between"><div><div class="text-white text-2xl font-bold" id="profileStatus">Attivo</div><div class="text-white text-sm opacity-80">Stato Profilo</div></div><div class="text-4xl">✅</div></div></div>
+
+            <div class="hscroll -mx-1 md:mx-0">
+                <div class="stat-card hitem p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-white text-2xl font-bold" id="memberSince">-</div>
+                            <div class="text-white text-sm opacity-80">Iscritto dal</div>
+                        </div>
+                        <div class="text-4xl">📅</div>
+                    </div>
+                </div>
+
+                <div class="stat-card hitem p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-white text-2xl font-bold" id="numeroTessera">In generazione...</div>
+                            <div class="text-white text-sm opacity-80">Numero Tessera</div>
+                        </div>
+                        <div class="text-4xl">🎫</div>
+                    </div>
+                </div>
+
+                <div class="stat-card hitem p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-white text-2xl font-bold" id="richiesteCount">-</div>
+                            <div class="text-white text-sm opacity-80">Richieste Attive</div>
+                        </div>
+                        <div class="text-4xl">📋</div>
+                    </div>
+                </div>
+
+                <div class="stat-card hitem p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-white text-2xl font-bold" id="profileStatus">Attivo</div>
+                            <div class="text-white text-sm opacity-80">Stato Profilo</div>
+                        </div>
+                        <div class="text-4xl">✅</div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- Azioni -->
+        <!-- RICHIESTE (invariato) -->
         <section class="mb-12">
-            <div class="flex items-center gap-4 mb-8">
-                <div class="w-12 h-12 bg-gradient-to-br from-aurora to-magenta rounded-xl flex items-center justify-center"><span class="text-white text-2xl">⚡</span></div>
-                <h2 class="text-ultra-visible text-3xl font-black">Azioni Principali</h2>
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center gap-4"><div class="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📋</span></div><h2 class="text-ultra-visible text-3xl font-black">Le Tue Richieste</h2></div>
+                <button onclick="goToRichieste()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2"><span>Vedi tutte</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div onclick="goToRichieste()" class="action-card p-6 text-center cursor-pointer"><div class="text-4xl mb-4">📝</div><h3 class="text-white text-lg font-bold mb-2">Nuova Richiesta</h3><p class="text-white/80 text-sm mb-4">Invia una nuova richiesta</p><div class="text-aurora text-xs font-semibold">Avvia procedura →</div></div>
-                <div onclick="goToTessera()" class="action-card p-6 text-center cursor-pointer"><div class="text-4xl mb-4">🎫</div><h3 class="text-white text-lg font-bold mb-2">Tessera Digitale</h3><p class="text-white/80 text-sm">Visualizza e scarica la tessera</p></div>
-                <div onclick="goToProfilo()" class="action-card p-6 text-center cursor-pointer"><div class="text-4xl mb-4">👤</div><h3 class="text-white text-lg font-bold mb-2">Il Mio Profilo</h3><p class="text-white/80 text-sm">Modifica i tuoi dati</p></div>
-                <div onclick="goToStrumenti()" class="action-card p-6 text-center cursor-pointer"><div class="text-4xl mb-4">🛠️</div><h3 class="text-white text-lg font-bold mb-2">Strumenti</h3><p class="text-white/80 text-sm">Utility e strumenti di lavoro</p></div>
-            </div>
+            <div class="glass-morphism rounded-3xl p-6"><div id="richiesteContainer" class="space-y-4"><div class="loading-skeleton h-20"></div><div class="loading-skeleton h-20"></div><div class="loading-skeleton h-20"></div></div></div>
         </section>
 
-        <!-- News -->
+        <!-- NEWS (invariato) -->
         <section class="mb-12">
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-4"><div class="w-12 h-12 bg-gradient-to-br from-slate-600 to-slate-800 rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📰</span></div><h2 class="text-ultra-visible text-3xl font-black">Ultime Notizie</h2></div>
@@ -229,44 +360,7 @@
             </div>
         </section>
 
-        <!-- Servizi Aggiuntivi -->
-        <section class="mb-12">
-            <div class="flex items-center gap-4 mb-8">
-                <div class="w-12 h-12 bg-gradient-to-br from-gold to-aurora rounded-xl flex items-center justify-center">
-                    <span class="text-white text-2xl">🌟</span>
-                </div>
-                <h2 class="text-ultra-visible text-3xl font-black">Servizi Aggiuntivi</h2>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div onclick="goToVirgilio()" class="action-card p-6 text-center cursor-pointer">
-                    <div class="text-4xl mb-4">🤖</div>
-                    <h3 class="text-white text-lg font-bold mb-2">Virgilio AI</h3>
-                    <p class="text-white/80 text-sm">Assistente intelligente</p>
-                </div>
-                
-                <div onclick="goToDirigenti()" class="action-card p-6 text-center cursor-pointer">
-                    <div class="text-4xl mb-4">👥</div>
-                    <h3 class="text-white text-lg font-bold mb-2">Dirigenti</h3>
-                    <p class="text-white/80 text-sm">Contatta un dirigente</p>
-                </div>
-                
-                <div onclick="goToConvenzioni()" class="action-card p-6 text-center cursor-pointer">
-                    <div class="text-4xl mb-4">🤝</div>
-                    <h3 class="text-white text-lg font-bold mb-2">Convenzioni</h3>
-                    <p class="text-white/80 text-sm">Sconti e offerte esclusive</p>
-                </div>
-
-                <!-- NUOVO BOX: FileBox -->
-                <div onclick="goToFileBox()" class="action-card p-6 text-center cursor-pointer">
-                    <div class="text-4xl mb-4">📁</div>
-                    <h3 class="text-white text-lg font-bold mb-2">FileBox</h3>
-                    <p class="text-white/80 text-sm">Accedi ai tuoi file e documenti</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Convenzioni -->
+        <!-- CONVENZIONI (invariato) -->
         <section class="mb-12">
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-4"><div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center"><span class="text-white text-2xl">🤝</span></div><h2 class="text-ultra-visible text-3xl font-black">Convenzioni in Evidenza</h2></div>
@@ -403,12 +497,19 @@
             }
         }
 
+        function capitalizeInitial(str) {
+            if (!str) return '';
+            const s = String(str);
+            return s.charAt(0).toUpperCase() + s.slice(1);
+        }
+
         function updateUserInterface() {
             if (!userProfile) return;
             const welcomeEl = document.getElementById('userWelcome');
             const roleEl = document.getElementById('userRole');
             const nameDisplayEl = document.getElementById('userNameDisplay');
-            const firstName = userProfile.nome || 'Utente';
+            const rawFirst = userProfile.nome || 'Utente';
+            const firstName = capitalizeInitial(rawFirst);
             if (welcomeEl) welcomeEl.textContent = `Ciao, ${firstName}!`;
             if (roleEl) roleEl.textContent = getRoleLabel(userProfile.role);
             if (nameDisplayEl) nameDisplayEl.textContent = firstName;
@@ -443,7 +544,7 @@
             }
         }
 
-        // NEWS — mostra immagini, fallback, click apre URL esterno se disponibile
+        // NEWS — mostra immagini, click su URL esterno se disponibile
         async function loadNews() {
             try {
                 const { data, error } = await supabaseClient
@@ -717,7 +818,8 @@
         function goToVirgilio(){ window.location.href = 'virgilio.html'; }
         function goToDirigenti(){ window.location.href = 'dirigenti.html'; }
         function goToConvenzioni(){ window.location.href = 'convenzioni.html'; }
-        function goToFileBox(){ window.location.href = 'filebox.html'; }  /* <-- nuovo */
+        function goToFileBox(){ window.location.href = 'filebox.html'; }
+        function goToAssistenza(){ window.location.href = 'servizi.html'; }
         function viewAllNews(){ window.location.href = 'news.html'; }
 
         // Apri notizia: priorità all'URL esterno, fallback alla pagina interna
@@ -751,7 +853,6 @@
         setInterval(async () => { if (currentUser) { await loadRichieste(); } }, 30000);
 
         console.log('✅ MyApp Home Dashboard v5.0 Ready - Read-only');
-
     </script>
 </body>
 </html>
