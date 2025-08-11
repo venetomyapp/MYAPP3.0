@@ -5,251 +5,177 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gestione Notizie</title>
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-
-  <!-- Tailwind (dev). In produzione usa la build CLI -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { inter: ['Inter','sans-serif'] },
-          colors: { primary:'#1a1a2e', aurora:'#e94560', gold:'#ffd700', success:'#10b981', slate:'#0f172a' }
+          fontFamily:{ inter:['Inter','sans-serif'] },
+          colors:{ primary:'#1a1a2e', slate:'#0f172a' }
         }
       }
     }
   </script>
-
   <style>
-    body{ background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%); min-height:100vh; }
-    .glass{ background:rgba(255,255,255,.96); backdrop-filter:blur(18px); border:1px solid rgba(255,255,255,.6); border-radius:20px; box-shadow:0 25px 50px rgba(0,0,0,.15); }
-    .btn{ display:inline-flex; align-items:center; justify-content:center; gap:.5rem; font-weight:700; border-radius:12px; min-height:44px; padding:.7rem 1.1rem; transition:.2s transform, .2s box-shadow; }
-    .btn-aurora{ background:linear-gradient(135deg,#ff006e,#e94560,#03dac6); color:#fff; border:2px solid rgba(233,69,96,.35); }
-    .btn-aurora:hover{ transform:translateY(-2px); box-shadow:0 10px 25px rgba(233,69,96,.35); }
-    .btn-secondary{ background:#fff; color:#1a1a2e; border:2px solid rgba(0,0,0,.06); }
-    .badge{ display:inline-block; background:#0f172a; color:#fff; border-radius:999px; font-weight:800; font-size:.7rem; padding:.25rem .6rem; }
-    .spinner{ border:3px solid rgba(16,185,129,.3); border-top:3px solid #10b981; border-radius:50%; width:20px; height:20px; animation:spin 1s linear infinite }
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .quick-card{ border:1px solid rgba(0,0,0,.06); border-radius:16px; background:linear-gradient(180deg,#ffffff 0%, #f8fafc 100%); padding:18px; transition:.25s transform, .25s box-shadow; }
-    .quick-card:hover{ transform:translateY(-4px); box-shadow:0 16px 35px rgba(0,0,0,.12); }
-    .quick-icon{ width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; }
+    .card{ background:#fff; border:1px solid #e5e7eb; border-radius:16px; box-shadow:0 12px 24px rgba(0,0,0,.06); }
+    .btn{ display:inline-flex; align-items:center; gap:.5rem; font-weight:700; border-radius:10px; padding:.6rem 1rem; }
+    .btn-primary{ background:#1d4ed8; color:#fff; }
+    .btn-primary:hover{ background:#1e40af; }
+    .btn-ghost{ background:#f1f5f9; color:#0f172a; }
+    .btn-ghost:hover{ background:#e2e8f0; }
+    .badge{ display:inline-block; padding:.2rem .55rem; border-radius:9999px; font-size:.7rem; font-weight:800; }
+    .badge-green{ background:#dcfce7; color:#166534; }
+    .badge-yellow{ background:#fef9c3; color:#854d0e; }
+    .badge-slate{ background:#e2e8f0; color:#0f172a; }
+    .overlay{ position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; z-index:50; }
+    .overlay.show{ display:flex; }
+    .modal{ background:#fff; border-radius:16px; width:min(900px,94vw); max-height:90vh; overflow:auto; padding:1rem; }
+    .label{ font-weight:700; color:#0f172a; font-size:.9rem; }
+    .input, .select, .textarea{ width:100%; border:1px solid #e5e7eb; border-radius:10px; padding:.6rem .7rem; }
+    .textarea{ min-height:140px; }
+    .table th, .table td{ padding:.7rem .8rem; }
   </style>
 </head>
-<body class="font-inter text-slate-900">
+<body class="bg-slate-50 font-inter">
 
   <!-- Topbar -->
-  <header class="w-full sticky top-0 z-30 backdrop-blur bg-white/10 border-b border-white/10">
-    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+  <header class="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-3 sm:px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-gold to-aurora flex items-center justify-center text-white text-xl">📰</div>
-        <div class="text-white">
-          <div class="text-lg font-bold">Gestione Notizie</div>
-          <div class="text-xs opacity-80">Crea, modifica e pubblica</div>
-        </div>
+        <a href="home_dirigenti.html" class="btn btn-ghost" title="Indietro">
+          <span>←</span><span>Indietro</span>
+        </a>
+        <h1 class="text-xl sm:text-2xl font-black text-slate-900">Gestione Notizie</h1>
       </div>
-
-      <nav class="flex items-center gap-2">
-        <button id="logoutBtn" class="btn btn-aurora" title="Esci">↪️ Logout</button>
-      </nav>
+      <div class="flex items-center gap-2">
+        <button id="newBtn" class="btn btn-primary"><span>➕</span><span>Nuova Notizia</span></button>
+      </div>
     </div>
   </header>
 
-  <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
+  <main class="max-w-6xl mx-auto px-3 sm:px-4 py-6">
 
-    <!-- Scorciatoie -->
-    <section class="glass p-6 md:p-8">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-extrabold text-primary">⚡ Scorciatoie Personali</h2>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <a href="tessera.html" class="quick-card" aria-label="Tessera Digitale">
-          <div class="flex items-center gap-3">
-            <div class="quick-icon bg-blue-600/10 text-blue-700 border border-blue-600/20">🎫</div>
-            <div><div class="font-extrabold text-primary">Tessera Digitale</div><div class="text-xs text-gray-600">Visualizza/Scarica</div></div>
-          </div>
-        </a>
-        <a href="profilo.html" class="quick-card" aria-label="Il Mio Profilo">
-          <div class="flex items-center gap-3">
-            <div class="quick-icon bg-emerald-600/10 text-emerald-700 border border-emerald-600/20">👤</div>
-            <div><div class="font-extrabold text-primary">Il Mio Profilo</div><div class="text-xs text-gray-600">Vedi/Modifica</div></div>
-          </div>
-        </a>
-        <a href="virgilio.html" class="quick-card" aria-label="Virgilio">
-          <div class="flex items-center gap-3">
-            <div class="quick-icon bg-fuchsia-600/10 text-fuchsia-700 border border-fuchsia-600/20">🧭</div>
-            <div><div class="font-extrabold text-primary">Virgilio</div><div class="text-xs text-gray-600">Assistente & Percorsi</div></div>
-          </div>
-        </a>
-        <a href="strumenti.html" class="quick-card" aria-label="Strumenti">
-          <div class="flex items-center gap-3">
-            <div class="quick-icon bg-amber-500/10 text-amber-700 border border-amber-500/20">🛠️</div>
-            <div><div class="font-extrabold text-primary">Strumenti</div><div class="text-xs text-gray-600">Utility di Lavoro</div></div>
-          </div>
-        </a>
-      </div>
-    </section>
-
-    <!-- Form Crea/Modifica -->
-    <section class="glass p-6 md:p-8">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-extrabold text-primary">✏️ Crea / Modifica Notizia</h2>
-        <div id="formStatus" class="text-sm text-gray-500"></div>
-      </div>
-
-      <form id="newsForm" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Colonna sinistra -->
-        <div class="lg:col-span-8 space-y-4">
-          <input type="hidden" id="newsId" />
-
-          <div>
-            <label class="block text-sm font-semibold mb-1">Titolo *</label>
-            <input id="titolo" type="text" required class="w-full border rounded-xl px-3 py-2" placeholder="Titolo della notizia">
-          </div>
-
-          <div>
-            <label class="block text-sm font-semibold mb-1">Sottotitolo</label>
-            <input id="sottotitolo" type="text" class="w-full border rounded-xl px-3 py-2" placeholder="Sottotitolo (opzionale)">
-          </div>
-
-          <div>
-            <label class="block text-sm font-semibold mb-1">Contenuto *</label>
-            <textarea id="contenuto" required rows="10" class="w-full border rounded-xl px-3 py-2" placeholder="Testo della notizia"></textarea>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-semibold mb-1">Categoria *</label>
-              <select id="categoria" required class="w-full border rounded-xl px-3 py-2">
-                <option value="GENERALE">GENERALE</option>
-                <option value="SINDACALE">SINDACALE</option>
-                <option value="LEGALE">LEGALE</option>
-                <option value="EVENTI">EVENTI</option>
-                <option value="FORMAZIONE">FORMAZIONE</option>
-                <option value="CONVENZIONI">CONVENZIONI</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block text-sm font-semibold mb-1">Tags (separa con virgola)</label>
-              <input id="tags" type="text" class="w-full border rounded-xl px-3 py-2" placeholder="es: sindacato, normativa, eventi">
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-semibold mb-1">Data pubblicazione</label>
-              <input id="data_pubblicazione" type="datetime-local" class="w-full border rounded-xl px-3 py-2">
-            </div>
-            <div>
-              <label class="block text-sm font-semibold mb-1">Data scadenza</label>
-              <input id="data_scadenza" type="datetime-local" class="w-full border rounded-xl px-3 py-2">
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <label class="inline-flex items-center gap-2">
-              <input id="pubblicata" type="checkbox" class="w-4 h-4">
-              <span class="font-semibold">Pubblicata</span>
-            </label>
-
-            <label class="inline-flex items-center gap-2">
-              <input id="in_evidenza" type="checkbox" class="w-4 h-4">
-              <span class="font-semibold">In evidenza</span>
-            </label>
-          </div>
-        </div>
-
-        <!-- Colonna destra -->
-        <div class="lg:col-span-4 space-y-4">
-          <div>
-            <label class="block text-sm font-semibold mb-1">URL immagine (immagine_url)</label>
-            <input id="immagine_url" type="url" class="w-full border rounded-xl px-3 py-2" placeholder="https://...">
-            <div id="imgPreviewWrap" class="mt-3 hidden">
-              <img id="imgPreview" alt="Anteprima immagine" class="w-full rounded-xl border">
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-sm font-semibold mb-1">URL articolo (url_articolo)</label>
-            <input id="url_articolo" type="url" class="w-full border rounded-xl px-3 py-2" placeholder="https://... (facoltativo)">
-            <p class="text-xs text-gray-500 mt-1">Se presente, “Leggi” aprirà questo link in una nuova scheda.</p>
-          </div>
-
-          <div>
-            <label class="block text-sm font-semibold mb-1">Allegati (JSON) — opzionale</label>
-            <textarea id="allegati" rows="4" class="w-full border rounded-xl px-3 py-2" placeholder='[]'></textarea>
-          </div>
-
-          <div class="flex flex-wrap gap-3 pt-2">
-            <button id="saveBtn" type="submit" class="btn btn-aurora">💾 Salva</button>
-            <button id="publishNowBtn" type="button" class="btn btn-secondary">🚀 Pubblica ora</button>
-            <button id="resetBtn" type="button" class="btn btn-secondary">🧹 Pulisci</button>
-            <button id="deleteBtn" type="button" class="btn btn-secondary hidden">🗑️ Elimina</button>
-          </div>
-        </div>
-      </form>
-    </section>
-
-    <!-- Lista / Ricerca -->
-    <section class="glass p-6 md:p-8">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-xl font-extrabold text-primary">🗞️ Ultime notizie</h3>
-        <div id="listStatus" class="text-sm text-gray-500"></div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 mb-4">
-        <input id="searchTxt" class="lg:col-span-5 border rounded-xl px-3 py-2" placeholder="Cerca per titolo / sottotitolo...">
-        <select id="filterCategoria" class="lg:col-span-3 border rounded-xl px-3 py-2">
-          <option value="">Tutte le categorie</option>
+    <!-- Filtri -->
+    <section class="card p-4 sm:p-6 mb-5">
+      <div class="grid sm:grid-cols-3 gap-3">
+        <input id="searchInput" class="input" placeholder="Cerca per titolo o sottotitolo…">
+        <select id="statusFilter" class="select">
+          <option value="ALL">Tutte</option>
+          <option value="PUBBLICATE">Pubblicate</option>
+          <option value="BOZZE">Bozze</option>
+          <option value="EVIDENZA">In evidenza</option>
+        </select>
+        <select id="catFilter" class="select">
+          <option value="ALL">Tutte le categorie</option>
           <option>GENERALE</option><option>SINDACALE</option><option>LEGALE</option>
           <option>EVENTI</option><option>FORMAZIONE</option><option>CONVENZIONI</option>
         </select>
-        <label class="lg:col-span-2 inline-flex items-center gap-2">
-          <input id="onlyPublished" type="checkbox"> <span>Solo pubblicate</span>
-        </label>
-        <label class="lg:col-span-2 inline-flex items-center gap-2">
-          <input id="onlyFeatured" type="checkbox"> <span>Solo in evidenza</span>
-        </label>
       </div>
+    </section>
 
-      <div class="overflow-x-auto border rounded-xl">
-        <table class="min-w-full divide-y divide-gray-200 text-sm">
-          <thead class="bg-gray-50">
-            <tr class="text-left">
-              <th class="px-3 py-2">Data</th>
-              <th class="px-3 py-2">Titolo</th>
-              <th class="px-3 py-2">Categoria</th>
-              <th class="px-3 py-2">Pubblicata</th>
-              <th class="px-3 py-2">In evidenza</th>
-              <th class="px-3 py-2">Azioni</th>
+    <!-- Lista -->
+    <section class="card p-3 sm:p-5">
+      <div class="overflow-x-auto">
+        <table class="table w-full text-sm">
+          <thead class="text-slate-600">
+            <tr class="border-b">
+              <th class="text-left">Titolo</th>
+              <th class="text-left">Categoria</th>
+              <th>Pubblicata</th>
+              <th>In evidenza</th>
+              <th class="text-left">Pubblicazione</th>
+              <th>Vis.</th>
+              <th class="text-right">Azioni</th>
             </tr>
           </thead>
-          <tbody id="newsTable" class="divide-y divide-gray-100 bg-white"></tbody>
+          <tbody id="newsRows"></tbody>
         </table>
+      </div>
+      <div id="emptyState" class="hidden text-center py-10 text-slate-600">
+        <div class="text-5xl mb-2">📰</div>Nessuna notizia trovata.
       </div>
     </section>
   </main>
 
-  <!-- Notifiche -->
-  <div id="toasts" class="fixed top-6 right-6 z-50 space-y-2"></div>
-
-  <!-- Modal: Leggi l'articolo -->
-  <div id="articleModal" class="fixed inset-0 bg-black/60 backdrop-blur hidden z-50">
-    <div class="mx-auto max-w-md w-[92%] bg-white rounded-2xl p-6 shadow-2xl mt-24 relative">
-      <button type="button" class="absolute top-3 right-3 text-gray-500 hover:text-rose-600 text-2xl leading-none" onclick="closeArticleModal()" aria-label="Chiudi">&times;</button>
-      <h3 class="text-xl font-extrabold text-gray-900 mb-2">Leggi l’articolo completo</h3>
-      <p class="text-gray-600 mb-6">Stai per aprire l’articolo su una nuova scheda.</p>
-      <div class="flex gap-3">
-        <a id="openArticleBtn" href="#" target="_blank" rel="noopener" class="btn btn-aurora">Apri</a>
-        <button type="button" class="btn btn-secondary" onclick="closeArticleModal()">Annulla</button>
+  <!-- Modal Edit -->
+  <div id="modal" class="overlay">
+    <div class="modal">
+      <div class="flex items-center justify-between mb-3">
+        <h2 id="modalTitle" class="text-xl font-black text-slate-900">Modifica Notizia</h2>
+        <button id="closeModal" class="btn btn-ghost">✖</button>
       </div>
+
+      <form id="newsForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <input type="hidden" id="newsId">
+
+        <div class="sm:col-span-2">
+          <label class="label">Titolo *</label>
+          <input id="titolo" class="input" required>
+        </div>
+
+        <div class="sm:col-span-2">
+          <label class="label">Sottotitolo</label>
+          <input id="sottotitolo" class="input">
+        </div>
+
+        <div class="sm:col-span-2">
+          <label class="label">Contenuto *</label>
+          <textarea id="contenuto" class="textarea" required></textarea>
+        </div>
+
+        <div>
+          <label class="label">Categoria *</label>
+          <select id="categoria" class="select" required>
+            <option>GENERALE</option><option>SINDACALE</option><option>LEGALE</option>
+            <option>EVENTI</option><option>FORMAZIONE</option><option>CONVENZIONI</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="label">URL immagine</label>
+          <input id="immagine_url" class="input" placeholder="https://…">
+        </div>
+
+        <div class="">
+          <label class="label">URL articolo</label>
+          <input id="url_articolo" class="input" placeholder="https://…">
+        </div>
+
+        <div class="">
+          <label class="label">Data pubblicazione</label>
+          <input id="data_pubblicazione" type="datetime-local" class="input">
+          <button type="button" id="publishNow" class="mt-1 btn btn-ghost">Imposta adesso</button>
+        </div>
+
+        <div class="">
+          <label class="label">Data scadenza</label>
+          <input id="data_scadenza" type="datetime-local" class="input">
+        </div>
+
+        <div>
+          <label class="label">Pubblicata</label>
+          <select id="pubblicata" class="select">
+            <option value="true">Sì</option>
+            <option value="false">No</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="label">In evidenza</label>
+          <select id="in_evidenza" class="select">
+            <option value="false">No</option>
+            <option value="true">Sì</option>
+          </select>
+        </div>
+
+        <div class="sm:col-span-2 flex items-center justify-end gap-2 mt-2">
+          <button type="button" id="cancelBtn" class="btn btn-ghost">Annulla</button>
+          <button type="submit" class="btn btn-primary">💾 Salva</button>
+        </div>
+      </form>
     </div>
   </div>
 
-  <!-- Supabase & App -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
@@ -258,245 +184,171 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk'
     );
 
-    const $ = (id)=> document.getElementById(id);
-    const toast = (msg,type='info')=>{
-      const wrap = $('toasts');
-      const el = document.createElement('div');
-      el.className = `px-4 py-3 rounded-xl text-white shadow-xl border backdrop-blur ${type==='success'?'bg-green-600/90 border-green-300/30': type==='error'?'bg-red-600/90 border-red-300/30':'bg-slate-800/90 border-white/10'}`;
-      el.textContent = msg; wrap.appendChild(el);
-      setTimeout(()=>{ el.style.opacity='0'; el.style.transform='translateY(-6px)'; setTimeout(()=> el.remove(), 300); }, 3000);
-    };
-    const escapeHTML = (s)=> String(s??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;");
-    const fmtDate = (iso)=> { if(!iso) return '—'; const d = new Date(iso); return isNaN(d)?'—': new Intl.DateTimeFormat('it-IT',{dateStyle:'medium', timeStyle:'short'}).format(d); };
-    const toISO = (val)=> { if(!val) return null; const d = new Date(val); if(isNaN(d)) return null; return d.toISOString(); };
-    const toLocalInput = (iso)=> { if(!iso) return ''; const d = new Date(iso); if(isNaN(d)) return ''; const p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`; };
+    const $ = (id)=>document.getElementById(id);
+    const fmt = (iso)=> iso? new Date(iso).toLocaleString('it-IT'): '—';
+    const esc = (s)=> String(s??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;');
 
-    const allowedCats = ['GENERALE','SINDACALE','LEGALE','EVENTI','FORMAZIONE','CONVENZIONI'];
-
-    // Auth gate
-    let currentUser = null;
     async function guard(){
       const { data:{ user } } = await supabase.auth.getUser();
-      if(!user){ window.location.href='auth.html'; return; }
-      currentUser = user;
-      const { data: profile } = await supabase.from('user_profiles').select('role').eq('user_id', user.id).single();
-      const role = (profile?.role || 'USER').toUpperCase();
-      if(!['ADMIN','DIRIGENTE'].includes(role)){ window.location.href='home.html'; }
+      if(!user){ window.location.href='auth.html'; return null; }
+      return user;
     }
-    // Logout
-    $('logoutBtn').addEventListener('click', async ()=>{
-      try{ await supabase.auth.signOut(); }catch{} finally{ window.location.href='index.html'; }
+
+    // ----- LISTA -----
+    let allNews = [];
+
+    async function loadNews(){
+      const { data, error } = await supabase
+        .from('news')
+        .select('*')
+        .order('created_at', { ascending:false });
+      if(error){ console.error(error); return; }
+      allNews = data || [];
+      renderRows();
+    }
+
+    function renderRows(){
+      const q = $('searchInput').value.toLowerCase().trim();
+      const status = $('statusFilter').value;
+      const cat = $('catFilter').value;
+
+      let rows = allNews.slice();
+
+      if(q){
+        rows = rows.filter(n =>
+          (n.titolo||'').toLowerCase().includes(q) ||
+          (n.sottotitolo||'').toLowerCase().includes(q)
+        );
+      }
+      if(status==='PUBBLICATE') rows = rows.filter(n => n.pubblicata===true);
+      if(status==='BOZZE') rows = rows.filter(n => n.pubblicata!==true);
+      if(status==='EVIDENZA') rows = rows.filter(n => n.in_evidenza===true);
+      if(cat!=='ALL') rows = rows.filter(n => n.categoria===cat);
+
+      const body = $('newsRows');
+      if(!rows.length){
+        body.innerHTML = '';
+        $('emptyState').classList.remove('hidden');
+        return;
+      }
+      $('emptyState').classList.add('hidden');
+
+      body.innerHTML = rows.map(n => {
+        const p = n.pubblicata===true;
+        const e = n.in_evidenza===true;
+        return `
+          <tr class="border-b hover:bg-slate-50">
+            <td class="text-slate-900 font-semibold">${esc(n.titolo||'-')}</td>
+            <td><span class="badge badge-slate">${esc(n.categoria||'GENERALE')}</span></td>
+            <td class="text-center">${p?'<span class="badge badge-green">Sì</span>':'<span class="badge badge-yellow">No</span>'}</td>
+            <td class="text-center">${e?'<span class="badge badge-green">Sì</span>':'<span class="badge badge-slate">No</span>'}</td>
+            <td>${fmt(n.data_pubblicazione)}</td>
+            <td class="text-center">${n.visualizzazioni||0}</td>
+            <td class="text-right">
+              <button class="btn btn-ghost" data-edit="${n.id}">Modifica</button>
+              ${n.url_articolo?`<a class="btn btn-ghost" href="${esc(n.url_articolo)}" target="_blank" rel="noopener">Apri link</a>`:''}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    $('searchInput').addEventListener('input', renderRows);
+    $('statusFilter').addEventListener('change', renderRows);
+    $('catFilter').addEventListener('change', renderRows);
+
+    // ----- MODAL -----
+    function openModal(title='Modifica Notizia'){
+      $('modalTitle').textContent = title;
+      $('modal').classList.add('show');
+      document.body.style.overflow='hidden';
+    }
+    function closeModal(){
+      $('modal').classList.remove('show');
+      document.body.style.overflow='auto';
+      $('newsForm').reset();
+      $('newsId').value='';
+    }
+    $('closeModal').addEventListener('click', closeModal);
+    $('cancelBtn').addEventListener('click', closeModal);
+    $('publishNow').addEventListener('click', ()=>{
+      const now = new Date(); now.setSeconds(0,0);
+      $('data_pubblicazione').value = new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,16);
     });
 
-    // Form logic
-    const form = $('newsForm');
-    const imgUrlInput = $('immagine_url');
-    const imgPrevWrap = $('imgPreviewWrap');
-    const imgPrev = $('imgPreview');
-
-    imgUrlInput.addEventListener('input', ()=>{
-      const url = imgUrlInput.value.trim();
-      if(url){ imgPrevWrap.classList.remove('hidden'); imgPrev.src = url; }
-      else{ imgPrevWrap.classList.add('hidden'); imgPrev.removeAttribute('src'); }
+    // Nuova notizia
+    $('newBtn').addEventListener('click', ()=>{
+      $('newsForm').reset();
+      $('newsId').value='';
+      $('pubblicata').value='false';
+      $('in_evidenza').value='false';
+      openModal('Nuova Notizia');
     });
 
-    $('resetBtn').addEventListener('click', ()=>{
-      form.reset(); $('newsId').value=''; imgPrevWrap.classList.add('hidden'); $('deleteBtn').classList.add('hidden'); $('formStatus').textContent='';
-      toast('Modulo ripulito','info');
+    // Click su Modifica
+    document.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button[data-edit]');
+      if(!btn) return;
+      const id = btn.getAttribute('data-edit');
+      const n = allNews.find(x => x.id===id);
+      if(!n) return;
+      $('newsId').value = n.id;
+      $('titolo').value = n.titolo||'';
+      $('sottotitolo').value = n.sottotitolo||'';
+      $('contenuto').value = n.contenuto||'';
+      $('categoria').value = n.categoria||'GENERALE';
+      $('immagine_url').value = n.immagine_url||'';
+      $('url_articolo').value = n.url_articolo||'';
+      $('pubblicata').value = String(!!n.pubblicata);
+      $('in_evidenza').value = String(!!n.in_evidenza);
+      $('data_pubblicazione').value = n.data_pubblicazione ? new Date(n.data_pubblicazione).toISOString().slice(0,16) : '';
+      $('data_scadenza').value = n.data_scadenza ? new Date(n.data_scadenza).toISOString().slice(0,16) : '';
+      openModal('Modifica Notizia');
     });
 
-    $('publishNowBtn').addEventListener('click', ()=>{
-      $('pubblicata').checked = true;
-      $('data_pubblicazione').value = toLocalInput(new Date().toISOString());
-      toast('Impostata pubblicazione immediata.','info');
-    });
-
-    $('deleteBtn').addEventListener('click', async ()=>{
-      const id = $('newsId').value; if(!id) return;
-      if(!confirm('Confermi l’eliminazione della notizia?')) return;
-      const { error } = await supabase.from('news').delete().eq('id', id);
-      if(error){ toast('Errore eliminazione: '+error.message,'error'); return; }
-      toast('Notizia eliminata','success');
-      form.reset(); $('newsId').value=''; $('deleteBtn').classList.add('hidden'); imgPrevWrap.classList.add('hidden');
-      await loadTable();
-    });
-
-    form.addEventListener('submit', async (e)=>{
+    // Salvataggio
+    $('newsForm').addEventListener('submit', async (e)=>{
       e.preventDefault();
-      const payload = collectForm();
+      const id = $('newsId').value || null;
 
-      if(!payload.titolo?.trim() || !payload.contenuto?.trim()){ toast('Titolo e Contenuto sono obbligatori','error'); return; }
-      if(!allowedCats.includes(payload.categoria)){ toast('Categoria non valida','error'); return; }
-      if(payload.allegati && !Array.isArray(payload.allegati)){ toast('Allegati deve essere un array JSON','error'); return; }
+      const toIso = (v)=> v ? new Date(v).toISOString() : null;
 
-      $('saveBtn').disabled = true; $('saveBtn').innerHTML = '<span class="spinner"></span> Salvataggio...';
+      const payload = {
+        titolo: $('titolo').value.trim(),
+        sottotitolo: $('sottotitolo').value.trim() || null,
+        contenuto: $('contenuto').value,
+        categoria: $('categoria').value,
+        immagine_url: $('immagine_url').value.trim() || null,
+        url_articolo: $('url_articolo').value.trim() || null,
+        pubblicata: $('pubblicata').value==='true',
+        in_evidenza: $('in_evidenza').value==='true',
+        data_pubblicazione: toIso($('data_pubblicazione').value),
+        data_scadenza: toIso($('data_scadenza').value)
+      };
+
       try{
-        const id = $('newsId').value || null;
+        if(!payload.titolo || !payload.contenuto) { alert('Titolo e contenuto sono obbligatori'); return; }
+
         if(id){
           const { error } = await supabase.from('news').update(payload).eq('id', id);
           if(error) throw error;
-          toast('Notizia aggiornata','success');
         }else{
-          const { data, error } = await supabase.from('news').insert([payload]).select('id').single();
+          const { error } = await supabase.from('news').insert([payload]);
           if(error) throw error;
-          $('newsId').value = data.id; $('deleteBtn').classList.remove('hidden');
-          toast('Notizia creata','success');
         }
-        await loadTable();
-      }catch(err){
-        toast('Errore salvataggio: ' + (err?.message||'sconosciuto'),'error');
-      }finally{
-        $('saveBtn').disabled = false; $('saveBtn').textContent = '💾 Salva';
-      }
-    });
 
-    function collectForm(){
-      const titolo = $('titolo').value.trim();
-      const sottotitolo = $('sottotitolo').value.trim();
-      const contenuto = $('contenuto').value.trim();
-      const categoria = $('categoria').value;
-      const immagine_url = $('immagine_url').value.trim() || null;
-      const url_articolo = $('url_articolo').value.trim() || null;
-      const pubblicata = $('pubblicata').checked;
-      const in_evidenza = $('in_evidenza').checked;
-      const data_pubblicazione = toISO($('data_pubblicazione').value);
-      const data_scadenza = toISO($('data_scadenza').value);
-      const tagsStr = $('tags').value.trim();
-      const tags = tagsStr ? tagsStr.split(',').map(s=>s.trim()).filter(Boolean) : null;
-
-      let allegati = null;
-      const rawAllegati = $('allegati').value.trim();
-      if(rawAllegati){ try{ allegati = JSON.parse(rawAllegati); }catch{} }
-
-      return {
-        titolo, sottotitolo: sottotitolo || null, contenuto, categoria,
-        immagine_url, url_articolo, allegati, tags,
-        pubblicata, in_evidenza,
-        data_pubblicazione: data_pubblicazione || null,
-        data_scadenza: data_scadenza || null
-      };
-    }
-
-    // Prefill ?id=
-    async function loadIfEditing(){
-      const params = new URLSearchParams(location.search);
-      const id = params.get('id'); if(!id) return;
-
-      const { data, error } = await supabase.from('news').select('*').eq('id', id).single();
-      if(error || !data){ $('formStatus').textContent='Errore caricamento notizia'; toast('Impossibile caricare la notizia','error'); return; }
-
-      $('newsId').value = data.id;
-      $('titolo').value = data.titolo || '';
-      $('sottotitolo').value = data.sottotitolo || '';
-      $('contenuto').value = data.contenuto || '';
-      $('categoria').value = allowedCats.includes(data.categoria) ? data.categoria : 'GENERALE';
-      $('immagine_url').value = data.immagine_url || '';
-      $('url_articolo').value = data.url_articolo || '';
-      $('pubblicata').checked = !!data.pubblicata;
-      $('in_evidenza').checked = !!data.in_evidenza;
-      $('data_pubblicazione').value = toLocalInput(data.data_pubblicazione);
-      $('data_scadenza').value = toLocalInput(data.data_scadenza);
-      $('tags').value = Array.isArray(data.tags)? data.tags.join(', '):'';
-      $('allegati').value = data.allegati ? JSON.stringify(data.allegati, null, 2) : '';
-
-      if(data.immagine_url){ $('imgPreview').src=data.immagine_url; $('imgPreviewWrap').classList.remove('hidden'); }
-      else{ $('imgPreviewWrap').classList.add('hidden'); }
-
-      $('deleteBtn').classList.remove('hidden');
-      $('formStatus').textContent = 'Modifica notizia esistente';
-    }
-
-    // Lista con filtri
-    async function loadTable(){
-      $('listStatus').textContent = 'Caricamento…';
-      const q = supabase
-        .from('news')
-        .select('id,titolo,sottotitolo,categoria,pubblicata,in_evidenza,data_pubblicazione,created_at,url_articolo')
-        .order('data_pubblicazione', { ascending:false })
-        .order('created_at', { ascending:false })
-        .limit(100);
-
-      const s = $('searchTxt').value.trim().toLowerCase();
-      const cat = $('filterCategoria').value;
-      const onlyPub = $('onlyPublished').checked;
-      const onlyFeat = $('onlyFeatured').checked;
-
-      const { data, error } = await q;
-      if(error){ $('listStatus').textContent='Errore'; toast('Errore caricamento lista','error'); return; }
-
-      let arr = data || [];
-      if(cat) arr = arr.filter(n => n.categoria === cat);
-      if(onlyPub) arr = arr.filter(n => n.pubblicata === true);
-      if(onlyFeat) arr = arr.filter(n => n.in_evidenza === true);
-      if(s){
-        arr = arr.filter(n =>
-          (n.titolo||'').toLowerCase().includes(s) ||
-          (n.sottotitolo||'').toLowerCase().includes(s)
-        );
-      }
-
-      const tbody = $('newsTable');
-      tbody.innerHTML = arr.map(n=>{
-        const when = n.data_pubblicazione || n.created_at;
-        const hasLink = !!n.url_articolo;
-        return `
-          <tr>
-            <td class="px-3 py-2 whitespace-nowrap">${fmtDate(when)}</td>
-            <td class="px-3 py-2">
-              <div class="font-semibold">${escapeHTML(n.titolo || '')}</div>
-              ${hasLink ? `<div class="text-xs text-gray-500 truncate">${escapeHTML(n.url_articolo)}</div>`:''}
-            </td>
-            <td class="px-3 py-2"><span class="badge">${escapeHTML(n.categoria||'GENERALE')}</span></td>
-            <td class="px-3 py-2">${n.pubblicata ? '✅' : '—'}</td>
-            <td class="px-3 py-2">${n.in_evidenza ? '⭐' : '—'}</td>
-            <td class="px-3 py-2">
-              <div class="flex items-center gap-2">
-                <a class="px-2 py-1 rounded border hover:bg-gray-50" href="?id=${encodeURIComponent(n.id)}">Modifica</a>
-                ${hasLink
-                  ? `<button class="px-2 py-1 rounded border hover:bg-gray-50" data-open-article="${escapeHTML(n.url_articolo)}">Leggi</button>`
-                  : `<button class="px-2 py-1 rounded border text-gray-400 cursor-not-allowed" disabled>Nessun link</button>`
-                }
-              </div>
-            </td>
-          </tr>`;
-      }).join('');
-
-      $('listStatus').textContent = `${arr.length} elementi`;
-    }
-
-    // Delegation: click “Leggi”
-    $('newsTable').addEventListener('click', (e)=>{
-      const btn = e.target.closest('[data-open-article]');
-      if(!btn) return;
-      const url = btn.getAttribute('data-open-article')?.trim();
-      if(url) openArticleModal(url);
-    });
-
-    // Modale helpers
-    window.openArticleModal = function(url){
-      const modal = $('articleModal'); const openBtn = $('openArticleBtn');
-      if(!modal || !openBtn) return;
-      openBtn.href = url;
-      modal.classList.remove('hidden');
-      const onKey = (ev)=>{ if(ev.key==='Escape') closeArticleModal(); };
-      document.addEventListener('keydown', onKey, { once:true });
-      const onClickOut = (ev)=>{ if(ev.target === modal) closeArticleModal(); };
-      modal.addEventListener('click', onClickOut, { once:true });
-    }
-    window.closeArticleModal = function(){
-      const modal = $('articleModal'); if(modal) modal.classList.add('hidden');
-    }
-
-    // Bootstrap
-    (async function(){
-      try{
-        await guard();
-        await loadIfEditing();
-        await loadTable();
+        closeModal();
+        await loadNews();
       }catch(err){
         console.error(err);
-        toast('Errore inizializzazione','error');
+        alert('Errore nel salvataggio: ' + (err?.message||''));
       }
+    });
+
+    // Bootstrap
+    (async ()=>{
+      const user = await guard(); if(!user) return;
+      await loadNews();
     })();
   </script>
 </body>
