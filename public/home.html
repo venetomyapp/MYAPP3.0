@@ -68,7 +68,6 @@
         }
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 
-        /* Riduci movimento su chi lo richiede */
         @media (prefers-reduced-motion: reduce) {
             * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
         }
@@ -82,7 +81,6 @@
         .btn-aurora { background: var(--gradient-magic); color:white; border:2px solid rgba(233,69,96,.3); transition: all .25s cubic-bezier(.4,0,.2,1); font-weight:700; touch-action: manipulation; }
         @media (hover:hover) and (pointer:fine){ .btn-aurora:hover { transform: translateY(-3px) scale(1.03); box-shadow:0 16px 32px rgba(233,69,96,.35); border-color: rgba(233,69,96,.7); } }
 
-        /* Box delineati e leggibili */
         .tool-card,
         .action-card {
             background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.06));
@@ -101,7 +99,6 @@
                 background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.08));
             }
         }
-        /* Focus accessibile */
         .tool-card:focus-visible,
         .action-card:focus-visible,
         button:focus-visible,
@@ -127,7 +124,7 @@
 
         .hero-title { font-size: clamp(2.4rem, 8vw, 5rem); font-weight:900; }
 
-        /* Wrapper orizzontali migliorati */
+        /* Orizzontali */
         .hscroll {
             display: flex;
             gap: 16px;
@@ -144,17 +141,19 @@
 
         .hitem { scroll-snap-align: start; min-width: 220px; }
 
-        /* Griglie progressive: md=3, lg=4, 2xl=5 */
         @media (min-width: 768px) {
             .hscroll { overflow: visible; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
             .hitem { min-width: 0; }
         }
-        @media (min-width: 1024px) {
-            .hscroll { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-        }
-        @media (min-width: 1536px) {
-            .hscroll { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-        }
+        @media (min-width: 1024px) { .hscroll { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+        @media (min-width: 1536px) { .hscroll { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+        /* Aspect ratio helpers */
+        .ratio-square { aspect-ratio: 1 / 1; }
+        .ratio-16x9 { aspect-ratio: 16 / 9; }
+
+        /* Visually hidden for live regions */
+        .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
     </style>
 </head>
 
@@ -175,11 +174,11 @@
                 <div class="flex items-center space-x-6">
                     <!-- Notifiche -->
                     <div class="relative">
-                        <button id="notificationBtn" class="text-white hover:text-aurora transition-all duration-300 transform hover:scale-110">
-                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2 2 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                        <button id="notificationBtn" class="text-white hover:text-aurora transition-all duration-300 transform hover:scale-110" aria-haspopup="true" aria-expanded="false">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2 2 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                         </button>
-                        <span id="notificationBadge" class="notification-badge absolute -top-2 -right-2 hidden">0</span>
-                        <div id="notificationDropdown" class="notification-dropdown">
+                        <span id="notificationBadge" class="notification-badge absolute -top-2 -right-2 hidden" aria-live="polite">0</span>
+                        <div id="notificationDropdown" class="notification-dropdown" role="dialog" aria-label="Elenco notifiche">
                             <div class="p-4 border-b border-gray-200">
                                 <div class="flex justify-between items-center">
                                     <h3 class="font-bold text-textDark">🔔 Notifiche</h3>
@@ -188,6 +187,7 @@
                             </div>
                             <div id="notificationList" class="p-2 max-h-80 overflow-y-auto"></div>
                         </div>
+                        <span id="notificationLive" class="sr-only" aria-live="polite"></span>
                     </div>
 
                     <!-- Profilo -->
@@ -201,7 +201,7 @@
 
                     <!-- Logout -->
                     <button id="logoutBtn" class="btn-aurora px-5 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                         Esci
                     </button>
                 </div>
@@ -233,7 +233,7 @@
                         <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
                             <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm"><div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div><span class="text-sm font-medium">Online</span></div>
                             <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                                 <span class="text-sm font-medium">Connessione sicura</span>
                             </div>
                         </div>
@@ -326,7 +326,7 @@
                             <div class="text-white text-2xl font-bold" id="memberSince">-</div>
                             <div class="text-white text-sm opacity-80">Iscritto dal</div>
                         </div>
-                        <div class="text-4xl">📅</div>
+                        <div class="text-4xl" aria-hidden="true">📅</div>
                     </div>
                 </div>
 
@@ -336,7 +336,7 @@
                             <div class="text-white text-2xl font-bold" id="numeroTessera">In generazione...</div>
                             <div class="text-white text-sm opacity-80">Numero Tessera</div>
                         </div>
-                        <div class="text-4xl">🎫</div>
+                        <div class="text-4xl" aria-hidden="true">🎫</div>
                     </div>
                 </div>
 
@@ -346,7 +346,7 @@
                             <div class="text-white text-2xl font-bold" id="richiesteCount">-</div>
                             <div class="text-white text-sm opacity-80">Richieste Attive</div>
                         </div>
-                        <div class="text-4xl">📋</div>
+                        <div class="text-4xl" aria-hidden="true">📋</div>
                     </div>
                 </div>
 
@@ -356,7 +356,7 @@
                             <div class="text-white text-2xl font-bold" id="profileStatus">Attivo</div>
                             <div class="text-white text-sm opacity-80">Stato Profilo</div>
                         </div>
-                        <div class="text-4xl">✅</div>
+                        <div class="text-4xl" aria-hidden="true">✅</div>
                     </div>
                 </div>
             </div>
@@ -366,7 +366,7 @@
         <section class="mb-12">
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-4"><div class="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📋</span></div><h2 class="text-ultra-visible text-3xl font-black">Le Tue Richieste</h2></div>
-                <button onclick="goToRichieste()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2"><span>Vedi tutte</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
+                <button onclick="goToRichieste()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2"><span>Vedi tutte</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
             </div>
             <div class="glass-morphism rounded-3xl p-6">
                 <div id="richiesteContainer" class="space-y-4">
@@ -378,10 +378,10 @@
         </section>
 
         <!-- NEWS -->
-        <section class="mb-12">
+        <section class="mb-12" id="newsSection">
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-4"><div class="w-12 h-12 bg-gradient-to-br from-slate-600 to-slate-800 rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📰</span></div><h2 class="text-ultra-visible text-3xl font-black">Ultime Notizie</h2></div>
-                <button onclick="viewAllNews()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2"><span>Vedi tutte</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
+                <button onclick="viewAllNews()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2"><span>Vedi tutte</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
             </div>
             <div class="glass-card rounded-3xl p-8">
                 <div id="newsContainer">
@@ -393,10 +393,10 @@
         </section>
 
         <!-- CONVENZIONI -->
-        <section class="mb-12">
+        <section class="mb-12" id="convenzioniSection">
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-4"><div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center"><span class="text-white text-2xl">🤝</span></div><h2 class="text-ultra-visible text-3xl font-black">Convenzioni in Evidenza</h2></div>
-                <button onclick="goToConvenzioni()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2"><span>Vedi tutte</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
+                <button onclick="goToConvenzioni()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2"><span>Vedi tutte</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="convenzioniContainer">
                 <div class="loading-skeleton h-64"></div>
@@ -427,7 +427,14 @@
         let currentUser = null;
         let userProfile = null;
 
-        // Attivazione via tastiera per qualsiasi "role=button"
+        // Lazy flags
+        let newsLoaded = false;
+        let convenzioniLoaded = false;
+
+        // Refresh loop
+        let refreshInterval = null;
+
+        // Attivazione via tastiera per "role=button"
         function keyActivate(e, fnName, ...args) {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
@@ -437,7 +444,7 @@
 
         // === INIZIALIZZAZIONE ===
         document.addEventListener('DOMContentLoaded', async () => {
-            console.log('🏠 HOME PAGE LOADED - MyApp Dashboard v5.0 (Read-only)');
+            console.log('🏠 HOME PAGE LOADED - MyApp Dashboard v5.0 (Read-only + lazy sections)');
             
             if (typeof supabase === 'undefined') {
                 console.error('❌ Supabase not loaded');
@@ -450,9 +457,19 @@
             // Verifica autenticazione
             await checkAuthentication();
             setupEventListeners();
-            await loadDashboardData();
+            setupLazySections(); // prepara lazy load di News/Convenzioni
+
+            // Carica dati principali (no news/convenzioni: li carichiamo lazy)
+            await Promise.all([
+                loadTesseraData(),
+                loadRichieste(),
+                loadNotifications()
+            ]);
+
+            // Avvia refresh loop (pausabile)
+            startRefreshLoop();
             
-            console.log('✅ Dashboard caricata con successo (solo lettura)');
+            console.log('✅ Dashboard pronta (solo lettura)');
         });
 
         // === GESTIONE AUTENTICAZIONE ===
@@ -467,13 +484,13 @@
                 currentUser = session.user;
                 userProfile = await getUserProfile(currentUser.id);
                 if (!userProfile) {
-                    // fallback locale, nessuna scrittura
-                    userProfile = await createUserProfile(currentUser);
+                    userProfile = await createUserProfile(currentUser); // fallback locale, no write
                 }
                 if (userProfile.role === 'ADMIN' || userProfile.role === 'DIRIGENTE') {
                     window.location.href = 'home_dirigenti.html';
                     return;
                 }
+                updateUserInterface();
             } catch (error) {
                 console.error('❌ Errore verifica auth:', error);
                 window.location.href = 'ofline.html';
@@ -508,19 +525,56 @@
             };
         }
 
-        // === DASHBOARD ===
-        async function loadDashboardData() {
-            updateUserInterface();
-            await Promise.all([
-                loadTesseraData(),
-                loadRichieste(),
-                loadNews(),
-                loadNotifications(),
-                loadConvenzioni()
-            ]);
+        // === LAZY SECTIONS ===
+        function setupLazySections() {
+            const newsEl = document.getElementById('newsSection');
+            const convEl = document.getElementById('convenzioniSection');
+
+            if (!('IntersectionObserver' in window)) {
+                // Fallback: carica subito
+                loadNews(); loadConvenzioni();
+                newsLoaded = convenzioniLoaded = true;
+                return;
+            }
+
+            const io = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+
+                    if (entry.target.id === 'newsSection' && !newsLoaded) {
+                        newsLoaded = true; loadNews(); obs.unobserve(entry.target);
+                    }
+                    if (entry.target.id === 'convenzioniSection' && !convenzioniLoaded) {
+                        convenzioniLoaded = true; loadConvenzioni(); obs.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.25, rootMargin: '0px 0px -10% 0px' });
+
+            if (newsEl) io.observe(newsEl);
+            if (convEl) io.observe(convEl);
         }
 
-        // TESSERA (read-only)
+        // === REFRESH LOOP (pause/resume) ===
+        function startRefreshLoop() {
+            if (refreshInterval) return;
+            refreshInterval = setInterval(async () => {
+                if (currentUser) {
+                    await Promise.all([loadNotifications(), loadRichieste()]);
+                }
+            }, 60000);
+        }
+        function stopRefreshLoop() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+                refreshInterval = null;
+            }
+        }
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) stopRefreshLoop();
+            else startRefreshLoop();
+        });
+
+        // === DATI SEZIONI ===
         async function loadTesseraData() {
             try {
                 const { data: tessera, error } = await supabaseClient
@@ -531,40 +585,12 @@
                 const el = document.getElementById('numeroTessera');
                 if (error || !tessera) { if (el) el.textContent = 'In generazione...'; return; }
                 if (el) el.textContent = tessera.numero_tessera || 'In generazione...';
-            } catch (e) {
+            } catch {
                 const el = document.getElementById('numeroTessera');
                 if (el) el.textContent = 'Errore caricamento';
             }
         }
 
-        function capitalizeInitial(str) {
-            if (!str) return '';
-            const s = String(str);
-            return s.charAt(0).toUpperCase() + s.slice(1);
-        }
-
-        function updateUserInterface() {
-            if (!userProfile) return;
-            const welcomeEl = document.getElementById('userWelcome');
-            const roleEl = document.getElementById('userRole');
-            const nameDisplayEl = document.getElementById('userNameDisplay');
-            const rawFirst = userProfile.nome || 'Utente';
-            const firstName = capitalizeInitial(rawFirst);
-            if (welcomeEl) welcomeEl.textContent = `Ciao, ${firstName}!`;
-            if (roleEl) roleEl.textContent = getRoleLabel(userProfile.role);
-            if (nameDisplayEl) nameDisplayEl.textContent = firstName;
-
-            const avatars = document.querySelectorAll('#userAvatar');
-            const initials = getInitials(`${userProfile.nome} ${userProfile.cognome}`);
-            avatars.forEach(a => a.textContent = initials);
-
-            const memberSinceEl = document.getElementById('memberSince');
-            const statusEl = document.getElementById('profileStatus');
-            if (memberSinceEl) memberSinceEl.textContent = userProfile.created_at ? formatDate(userProfile.created_at) : '-';
-            if (statusEl) statusEl.textContent = getStatusLabel(userProfile.stato);
-        }
-
-        // RICHIESTE
         async function loadRichieste() {
             try {
                 const { data: richieste, error } = await supabaseClient
@@ -584,7 +610,6 @@
             }
         }
 
-        // NEWS
         async function loadNews() {
             try {
                 const { data, error } = await supabaseClient
@@ -601,7 +626,6 @@
             }
         }
 
-        // NOTIFICHE (read-only)
         async function loadNotifications() {
             try {
                 const { count: unreadCount } = await supabaseClient
@@ -625,7 +649,6 @@
             }
         }
 
-        // CONVENZIONI
         async function loadConvenzioni() {
             try {
                 const { data: convenzioni, error } = await supabaseClient
@@ -640,6 +663,33 @@
                 console.error('❌ Errore caricamento convenzioni:', error);
                 displayConvenzioni([]);
             }
+        }
+
+        // === UI UPDATE PROFILO ===
+        function capitalizeInitial(str) {
+            if (!str) return '';
+            const s = String(str);
+            return s.charAt(0).toUpperCase() + s.slice(1);
+        }
+        function updateUserInterface() {
+            if (!userProfile) return;
+            const welcomeEl = document.getElementById('userWelcome');
+            const roleEl = document.getElementById('userRole');
+            const nameDisplayEl = document.getElementById('userNameDisplay');
+            const rawFirst = userProfile.nome || 'Utente';
+            const firstName = capitalizeInitial(rawFirst);
+            if (welcomeEl) welcomeEl.textContent = `Ciao, ${firstName}!`;
+            if (roleEl) roleEl.textContent = getRoleLabel(userProfile.role);
+            if (nameDisplayEl) nameDisplayEl.textContent = firstName;
+
+            const avatars = document.querySelectorAll('#userAvatar');
+            const initials = getInitials(`${userProfile.nome} ${userProfile.cognome}`);
+            avatars.forEach(a => a.textContent = initials);
+
+            const memberSinceEl = document.getElementById('memberSince');
+            const statusEl = document.getElementById('profileStatus');
+            if (memberSinceEl) memberSinceEl.textContent = userProfile.created_at ? formatDate(userProfile.created_at) : '-';
+            if (statusEl) statusEl.textContent = getStatusLabel(userProfile.stato);
         }
 
         // === DISPLAY ===
@@ -699,24 +749,29 @@
             }
 
             container.innerHTML = newsArray.map(n => {
-                const dateStr = formatDate(n.data_pubblicazione || n.created_at);
-                const url = n.url_articolo ? encodeURIComponent(n.url_articolo) : '';
+                const absDate = formatDate(n.data_pubblicazione || n.created_at);
+                const relDate = formatRelativeTime(n.data_pubblicazione || n.created_at);
+                const rawUrl = n.url_articolo ? n.url_articolo : '';
+                const safeUrl = sanitizeUrl(rawUrl);
                 const img = n.immagine_url || '';
                 const cat = n.categoria || 'GENERALE';
+                const encUrl = safeUrl ? encodeURIComponent(safeUrl) : '';
+
                 return `
                     <div class="group border border-gray-200 hover:border-blue-200 bg-white/70 hover:bg-white rounded-xl p-4 mb-4 transition-colors cursor-pointer"
                          role="button" tabindex="0" aria-label="Apri notizia ${escapeHtml(n.titolo)}"
-                         onclick="readNews('${n.id}','${url}')"
-                         onkeydown="keyActivate(event,'readNews','${n.id}','${url}')">
+                         onclick="readNews('${n.id}','${encUrl}')"
+                         onkeydown="keyActivate(event,'readNews','${n.id}','${encUrl}')">
                         <div class="flex gap-4 items-start">
-                            <div class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
-                                ${img ? `<img src="${img}" alt="${escapeHtml(n.titolo)}" class="w-full h-full object-cover" loading="lazy">`
-                                      : `<div class="w-full h-full flex items-center justify-center text-2xl">📰</div>`}
+                            <div class="flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 border border-gray-200 ratio-square w-20">
+                                ${img ? `<img src="${img}" alt="${escapeHtml(n.titolo)}" class="w-full h-full object-cover" loading="lazy" decoding="async">`
+                                      : `<div class="w-full h-full flex items-center justify-center text-2xl" aria-hidden="true">📰</div>`}
                             </div>
                             <div class="flex-1">
                                 <div class="flex items-center gap-2 mb-1">
                                     <span class="inline-block text-[11px] font-bold bg-blue-600 text-white px-2 py-0.5 rounded">${cat}</span>
-                                    <span class="text-xs text-gray-500">📅 ${dateStr}</span>
+                                    <span class="text-xs text-gray-500">📅 ${absDate}</span>
+                                    <span class="text-xs text-gray-500">• ${relDate}</span>
                                     <span class="text-xs text-gray-500">👁️ ${n.visualizzazioni || 0}</span>
                                 </div>
                                 <h3 class="text-textDark font-semibold text-base md:text-lg leading-snug mb-1 group-hover:underline">${n.titolo}</h3>
@@ -749,15 +804,17 @@
                 const validaFino = c.valida_fino ? new Date(c.valida_fino) : null;
                 const isScaduta = validaFino && validaFino < new Date();
                 const img = c.immagine_url || c.logo_url || '';
-                const url = c.link_esterno ? encodeURIComponent(c.link_esterno) : '';
+                const safeUrl = sanitizeUrl(c.link_esterno || '');
+                const encUrl = safeUrl ? encodeURIComponent(safeUrl) : '';
+
                 return `
                     <div class="action-card p-0 overflow-hidden ${isScaduta ? 'opacity-75' : ''}" role="button" tabindex="0"
                          aria-label="Apri convenzione ${escapeHtml(c.nome_azienda || 'Convenzione')}"
-                         onclick="openConvenzione('${c.id}','${url}')"
-                         onkeydown="keyActivate(event,'openConvenzione','${c.id}','${url}')">
+                         onclick="openConvenzione('${c.id}','${encUrl}')"
+                         onkeydown="keyActivate(event,'openConvenzione','${c.id}','${encUrl}')">
                         ${img ? `
-                            <div class="w-full h-36 bg-gray-100 overflow-hidden">
-                                <img src="${img}" alt="${escapeHtml(c.nome_azienda || 'Convenzione')}" class="w-full h-full object-cover" loading="lazy">
+                            <div class="w-full bg-gray-100 overflow-hidden ratio-16x9">
+                                <img src="${img}" alt="${escapeHtml(c.nome_azienda || 'Convenzione')}" class="w-full h-full object-cover" loading="lazy" decoding="async">
                             </div>` : ''
                         }
                         <div class="p-6">
@@ -812,16 +869,24 @@
                         <div class="flex-grow">
                             <h4 class="font-semibold text-textDark text-sm">${n.title || 'Notifica'}</h4>
                             <p class="text-gray-600 text-xs mt-1">${n.message || ''}</p>
-                            <span class="text-gray-400 text-xs">${formatDateTime(n.created_at)}</span>
+                            <span class="text-gray-400 text-xs">${formatDateTime(n.created_at)} • ${formatRelativeTime(n.created_at)}</span>
                         </div>
                     </div>
                 </div>`).join('');
         }
         function updateNotificationBadge(count) {
             const badge = document.getElementById('notificationBadge');
+            const live = document.getElementById('notificationLive');
             if (!badge) return;
-            if (count > 0) { badge.textContent = count > 99 ? '99+' : count; badge.classList.remove('hidden'); }
-            else { badge.classList.add('hidden'); }
+            if (count > 0) {
+                const txt = count > 99 ? '99+' : String(count);
+                badge.textContent = txt;
+                badge.classList.remove('hidden');
+                if (live) live.textContent = `Hai ${txt} notifiche non lette`;
+            } else {
+                badge.classList.add('hidden');
+                if (live) live.textContent = 'Tutte le notifiche sono lette';
+            }
         }
 
         // === EVENT LISTENERS ===
@@ -847,7 +912,13 @@
             catch { window.location.href = 'index.html'; }
         }
         function toggleNotificationDropdown() {
-            document.getElementById('notificationDropdown')?.classList.toggle('show');
+            const el = document.getElementById('notificationDropdown');
+            const btn = document.getElementById('notificationBtn');
+            if (el) {
+                const show = !el.classList.contains('show');
+                el.classList.toggle('show');
+                if (btn) btn.setAttribute('aria-expanded', show ? 'true' : 'false');
+            }
         }
         async function markAllNotificationsAsRead() {
             console.info('ℹ️ Read-only: nessun update al DB.');
@@ -869,15 +940,17 @@
 
         // Apri notizia: priorità all'URL esterno, fallback interno
         function readNews(newsId, encodedUrl) {
-            const url = encodedUrl ? decodeURIComponent(encodedUrl) : null;
-            if (isValidHttpUrl(url)) { safeOpen(url); }
+            const decoded = encodedUrl ? decodeURIComponent(encodedUrl) : null;
+            const url = sanitizeUrl(decoded);
+            if (url) { safeOpen(url); }
             else { window.location.href = `news.html?id=${newsId}`; }
         }
 
         // Apri convenzione: se esiste link_esterno usa quello, altrimenti fallback interno
         function openConvenzione(convenzioneId, encodedUrl) {
-            const url = encodedUrl ? decodeURIComponent(encodedUrl) : null;
-            if (isValidHttpUrl(url)) { safeOpen(url); }
+            const decoded = encodedUrl ? decodeURIComponent(encodedUrl) : null;
+            const url = sanitizeUrl(decoded);
+            if (url) { safeOpen(url); }
             else { window.location.href = `convenzioni.html#${convenzioneId}`; }
         }
 
@@ -890,15 +963,46 @@
         function getPriorityColor(p){ return ({BASSA:'priority-bassa', NORMALE:'priority-normale', ALTA:'priority-alta'})[p] || 'priority-normale'; }
         function formatDate(s){ if(!s) return '-'; const d = new Date(s); return d.toLocaleDateString('it-IT'); }
         function formatDateTime(s){ if(!s) return '-'; const d = new Date(s); return d.toLocaleDateString('it-IT') + ' ' + d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}); }
-        function isValidHttpUrl(u){ try{ const x=new URL(u); return x.protocol==='http:'||x.protocol==='https:'; }catch{return false;} }
+
+        // Relative time "3 h fa", "ieri", etc.
+        const rtf = new Intl.RelativeTimeFormat('it', { numeric:'auto' });
+        function formatRelativeTime(dateString){
+            if (!dateString) return '';
+            const now = new Date();
+            const then = new Date(dateString);
+            const diffMs = then - now;
+            const abs = Math.abs(diffMs);
+
+            const minutes = Math.round(diffMs / (60*1000));
+            const hours   = Math.round(diffMs / (60*60*1000));
+            const days    = Math.round(diffMs / (24*60*60*1000));
+
+            if (abs < 60*1000) return 'ora';
+            if (abs < 60*60*1000) return rtf.format(minutes, 'minute');
+            if (abs < 24*60*60*1000) return rtf.format(hours, 'hour');
+            if (abs < 7*24*60*60*1000) return rtf.format(days, 'day');
+            // oltre: data breve
+            return then.toLocaleDateString('it-IT', { day:'2-digit', month:'short', year:'numeric' });
+        }
+
+        // URL sanitizer: consenti solo http/https
+        function sanitizeUrl(input){
+            if (!input) return null;
+            try {
+                const u = String(input).trim();
+                const url = new URL(u);
+                if (url.protocol === 'http:' || url.protocol === 'https:') return url.href;
+                return null;
+            } catch { return null; }
+        }
+
+        function isValidHttpUrl(u){ // mantenuta per compat, non usata più direttamente
+            try{ const x=new URL(u); return x.protocol==='http:'||x.protocol==='https:'; }catch{return false;}
+        }
         function safeOpen(url){ window.open(url, '_blank', 'noopener,noreferrer'); }
         function escapeHtml(str){ return String(str||'').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])); }
 
-        // Refresh periodico
-        setInterval(async () => { if (currentUser) { await loadNotifications(); await loadRichieste(); } }, 60000);
-        setInterval(async () => { if (currentUser) { await loadRichieste(); } }, 30000);
-
-        console.log('✅ MyApp Home Dashboard v5.0 Ready - Read-only');
+        console.log('✅ MyApp Home Dashboard v5.0 Ready - Read-only + lazy + relative time');
     </script>
 </body>
 </html>
