@@ -3,253 +3,266 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gestione Notizie</title>
+  <title>Area Riservata Dirigenti</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Tailwind (dev). In produzione usa la build CLI -->
+  <!-- Tailwind (dev). In produzione build CLI -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           fontFamily: { inter: ['Inter','sans-serif'] },
-          colors: { primary:'#1a1a2e', aurora:'#e94560', gold:'#ffd700', success:'#10b981', slate:'#0f172a' }
+          colors: {
+            primary:'#1a1a2e', secondary:'#16213e', accent:'#0f3460',
+            aurora:'#e94560', cyan:'#00d4ff', magenta:'#ff006e',
+            gold:'#ffd700', teal:'#03dac6', dark:'#0a0a23',
+            light:'#f8fafc', success:'#10b981'
+          }
         }
       }
     }
   </script>
 
   <style>
-    body{ background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%); min-height:100vh; }
-    .glass{ background:rgba(255,255,255,.96); backdrop-filter:blur(18px); border:1px solid rgba(255,255,255,.6); border-radius:20px; box-shadow:0 25px 50px rgba(0,0,0,.15); }
-    .btn{ display:inline-flex; align-items:center; justify-content:center; gap:.5rem; font-weight:700; border-radius:12px; min-height:44px; padding:.7rem 1.1rem; transition:.2s transform, .2s box-shadow; }
-    .btn-aurora{ background:linear-gradient(135deg,#ff006e,#e94560,#03dac6); color:#fff; border:2px solid rgba(233,69,96,.35); }
-    .btn-aurora:hover{ transform:translateY(-2px); box-shadow:0 10px 25px rgba(233,69,96,.35); }
-    .btn-secondary{ background:#fff; color:#1a1a2e; border:2px solid rgba(0,0,0,.06); }
+    :root{
+      --gradient-aurora: linear-gradient(135deg,#1a1a2e 0%,#16213e 25%,#0f3460 50%,#e94560 75%,#00d4ff 100%);
+      --gradient-magic: linear-gradient(135deg,#ff006e 0%,#e94560 50%,#03dac6 100%);
+      --gradient-gold: linear-gradient(135deg,#ffd700 0%,#ffb347 100%);
+    }
+    *{ font-family:'Inter',sans-serif; }
+    body{ background:var(--gradient-aurora); background-size:400% 400%; animation:aurora 15s ease infinite; min-height:100vh; }
+    @keyframes aurora { 0%{background-position:0 50%} 50%{background-position:100% 50%} 100%{background-position:0 50%} }
+    .text-ultra-visible{ color:#fff; text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1); font-weight:800; }
+    .hero-title{ font-size:clamp(2.5rem,8vw,4.5rem); font-weight:900; line-height:1.1; }
+    .section-title{ font-size:clamp(1.5rem,5vw,2.25rem); font-weight:900; line-height:1.2; }
+    .glass-card{ background:rgba(255,255,255,.95); backdrop-filter:blur(20px); border:2px solid rgba(255,215,0,.15); border-radius:24px; box-shadow:0 25px 50px rgba(0,0,0,.12); position:relative; overflow:hidden; }
+    .glass-card::before{ content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,#ffd700,#e94560,#00d4ff,#03dac6); }
+    .function-card{ background:rgba(255,255,255,.2); backdrop-filter:blur(16px); border:3px solid rgba(255,255,255,.4); border-radius:18px; padding:1.25rem; transition:.3s; cursor:pointer; text-align:center; min-height:140px; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 8px 25px rgba(0,0,0,.1), inset 0 1px 0 rgba(255,255,255,.2); text-decoration:none; color:inherit; }
+    .function-card:hover{ background:rgba(255,255,255,.3); transform:translateY(-6px) scale(1.03); }
     .badge{ display:inline-block; background:#0f172a; color:#fff; border-radius:999px; font-weight:800; font-size:.7rem; padding:.25rem .6rem; }
-    .spinner{ border:3px solid rgba(16,185,129,.3); border-top:3px solid #10b981; border-radius:50%; width:20px; height:20px; animation:spin 1s linear infinite }
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .quick-card{ border:1px solid rgba(0,0,0,.06); border-radius:16px; background:linear-gradient(180deg,#ffffff 0%, #f8fafc 100%); padding:18px; transition:.25s transform, .25s box-shadow; }
-    .quick-card:hover{ transform:translateY(-4px); box-shadow:0 16px 35px rgba(0,0,0,.12); }
-    .quick-icon{ width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; }
+    .btn-aurora{ background:var(--gradient-magic); color:#fff; border:2px solid rgba(233,69,96,.3); min-height:44px; font-weight:800; border-radius:12px; padding:.7rem 1.1rem; display:inline-flex; align-items:center; justify-content:center; gap:.5rem; }
+    .btn-secondary{ background:#fff; color:#1a1a2e; border:2px solid rgba(0,0,0,.06); min-height:44px; font-weight:800; border-radius:12px; padding:.7rem 1.1rem; }
+    .spinner{ border:3px solid rgba(255,215,0,.3); border-top:3px solid #ffd700; border-radius:50%; width:22px; height:22px; animation:spin 1s linear infinite }
+    @keyframes spin { to{ transform:rotate(360deg) } }
   </style>
 </head>
-<body class="font-inter text-slate-900">
+<body class="font-inter">
 
-  <!-- Topbar -->
-  <header class="w-full sticky top-0 z-30 backdrop-blur bg-white/10 border-b border-white/10">
-    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-gold to-aurora flex items-center justify-center text-white text-xl">📰</div>
-        <div class="text-white">
-          <div class="text-lg font-bold">Gestione Notizie</div>
-          <div class="text-xs opacity-80">Crea, modifica e pubblica</div>
-        </div>
+  <!-- Top bar: Home utente -->
+  <div class="absolute top-6 left-6 z-10">
+    <a href="home.html" class="flex items-center gap-3 text-ultra-visible hover:text-gold transition-transform hover:scale-105" aria-label="Home utente">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6"></path></svg>
+      <span class="text-lg font-bold">Home Utente</span>
+    </a>
+  </div>
+
+  <!-- (opzionale) Logout a destra -->
+  <div class="absolute top-6 right-6 z-10">
+    <button id="logoutBtn" class="btn-aurora">↪️ Logout</button>
+  </div>
+
+  <main class="min-h-screen px-4 py-8 max-w-6xl mx-auto">
+
+    <!-- Hero -->
+    <div class="text-center mb-12">
+      <div class="w-24 h-24 bg-gradient-to-br from-gold to-aurora rounded-full mx-auto mb-8 flex items-center justify-center shadow-2xl">
+        <span class="text-4xl text-white">🏛️</span>
       </div>
-
-      <nav class="flex items-center gap-2">
-        <button id="logoutBtn" class="btn btn-aurora" title="Esci">↪️ Logout</button>
-      </nav>
+      <h1 class="hero-title text-ultra-visible mb-6">Area Riservata Dirigenti</h1>
+      <p class="text-xl text-ultra-visible opacity-90 max-w-3xl mx-auto font-semibold">
+        Accesso esclusivo alle funzioni direzionali e amministrative
+      </p>
     </div>
-  </header>
 
-  <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
+    <!-- 1) Azioni Personali -->
+    <section class="glass-card p-6 md:p-8 mb-8" aria-labelledby="azioni-title">
+      <h2 id="azioni-title" class="section-title text-primary mb-8 text-center">
+        <span class="mr-3 text-3xl">🧭</span>Azioni Personali
+      </h2>
 
-    <!-- Scorciatoie -->
-    <section class="glass p-6 md:p-8">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-extrabold text-primary">⚡ Scorciatoie Personali</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <a class="function-card" href="tessera.html">
+          <div class="text-4xl mb-2">🎫</div>
+          <div class="font-bold text-ultra-visible text-lg mb-1">Tessera Digitale</div>
+          <p class="text-ultra-visible opacity-80 text-sm">Visualizza/Scarica</p>
+        </a>
+        <a class="function-card" href="profilo.html">
+          <div class="text-4xl mb-2">👤</div>
+          <div class="font-bold text-ultra-visible text-lg mb-1">Il Mio Profilo</div>
+          <p class="text-ultra-visible opacity-80 text-sm">Vedi/Modifica</p>
+        </a>
+        <a class="function-card" href="virgilio.html">
+          <div class="text-4xl mb-2">🧭</div>
+          <div class="font-bold text-ultra-visible text-lg mb-1">Virgilio</div>
+          <p class="text-ultra-visible opacity-80 text-sm">Assistente & Percorsi</p>
+        </a>
+        <a class="function-card" href="strumenti.html">
+          <div class="text-4xl mb-2">🛠️</div>
+          <div class="font-bold text-ultra-visible text-lg mb-1">Strumenti</div>
+          <p class="text-ultra-visible opacity-80 text-sm">Utility di Lavoro</p>
+        </a>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <a href="tessera.html" class="quick-card" aria-label="Tessera Digitale">
-          <div class="flex items-center gap-3">
-            <div class="quick-icon bg-blue-600/10 text-blue-700 border border-blue-600/20">🎫</div>
-            <div><div class="font-extrabold text-primary">Tessera Digitale</div><div class="text-xs text-gray-600">Visualizza/Scarica</div></div>
-          </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <a class="function-card" href="https://form.jotform.com/243226223182044" target="_blank" rel="noopener">
+          <div class="text-4xl mb-2">💰</div>
+          <div class="font-bold text-ultra-visible text-lg mb-1">Richiedi Rimborso</div>
+          <p class="text-ultra-visible opacity-80 text-sm">Modulo rimborso spese</p>
         </a>
-        <a href="profilo.html" class="quick-card" aria-label="Il Mio Profilo">
-          <div class="flex items-center gap-3">
-            <div class="quick-icon bg-emerald-600/10 text-emerald-700 border border-emerald-600/20">👤</div>
-            <div><div class="font-extrabold text-primary">Il Mio Profilo</div><div class="text-xs text-gray-600">Vedi/Modifica</div></div>
-          </div>
+        <a class="function-card" href="https://form.jotform.com/243262801203343" target="_blank" rel="noopener">
+          <div class="text-4xl mb-2">📝</div>
+          <div class="font-bold text-ultra-visible text-lg mb-1">Richiedi Permesso</div>
+          <p class="text-ultra-visible opacity-80 text-sm">Permesso sindacale</p>
         </a>
-        <a href="virgilio.html" class="quick-card" aria-label="Virgilio">
-          <div class="flex items-center gap-3">
-            <div class="quick-icon bg-fuchsia-600/10 text-fuchsia-700 border border-fuchsia-600/20">🧭</div>
-            <div><div class="font-extrabold text-primary">Virgilio</div><div class="text-xs text-gray-600">Assistente & Percorsi</div></div>
-          </div>
-        </a>
-        <a href="strumenti.html" class="quick-card" aria-label="Strumenti">
-          <div class="flex items-center gap-3">
-            <div class="quick-icon bg-amber-500/10 text-amber-700 border border-amber-500/20">🛠️</div>
-            <div><div class="font-extrabold text-primary">Strumenti</div><div class="text-xs text-gray-600">Utility di Lavoro</div></div>
-          </div>
+        <a class="function-card" href="https://www.carabinierinsc.it/webmail/?_task=mail&_mbox=INBOX#" target="_blank" rel="noopener">
+          <div class="text-4xl mb-2">📧</div>
+          <div class="font-bold text-ultra-visible text-lg mb-1">Casella di Posta</div>
+          <p class="text-ultra-visible opacity-80 text-sm">Webmail</p>
         </a>
       </div>
     </section>
 
-    <!-- Form Crea/Modifica -->
-    <section class="glass p-6 md:p-8">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-extrabold text-primary">✏️ Crea / Modifica Notizia</h2>
-        <div id="formStatus" class="text-sm text-gray-500"></div>
-      </div>
+    <!-- 2) I Tuoi Dati dirigenziali -->
+    <section class="glass-card p-6 md:p-8 mb-8">
+      <h2 class="section-title text-primary mb-8 text-center">
+        <span class="mr-3 text-3xl">🪪</span>I Tuoi Dati dirigenziali
+      </h2>
 
-      <form id="newsForm" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Colonna sinistra -->
-        <div class="lg:col-span-8 space-y-4">
-          <input type="hidden" id="newsId" />
-
-          <div>
-            <label class="block text-sm font-semibold mb-1">Titolo *</label>
-            <input id="titolo" type="text" required class="w-full border rounded-xl px-3 py-2" placeholder="Titolo della notizia">
-          </div>
-
-          <div>
-            <label class="block text-sm font-semibold mb-1">Sottotitolo</label>
-            <input id="sottotitolo" type="text" class="w-full border rounded-xl px-3 py-2" placeholder="Sottotitolo (opzionale)">
-          </div>
-
-          <div>
-            <label class="block text-sm font-semibold mb-1">Contenuto *</label>
-            <textarea id="contenuto" required rows="10" class="w-full border rounded-xl px-3 py-2" placeholder="Testo della notizia"></textarea>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-semibold mb-1">Categoria *</label>
-              <select id="categoria" required class="w-full border rounded-xl px-3 py-2">
-                <option value="GENERALE">GENERALE</option>
-                <option value="SINDACALE">SINDACALE</option>
-                <option value="LEGALE">LEGALE</option>
-                <option value="EVENTI">EVENTI</option>
-                <option value="FORMAZIONE">FORMAZIONE</option>
-                <option value="CONVENZIONI">CONVENZIONI</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block text-sm font-semibold mb-1">Tags (separa con virgola)</label>
-              <input id="tags" type="text" class="w-full border rounded-xl px-3 py-2" placeholder="es: sindacato, normativa, eventi">
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-semibold mb-1">Data pubblicazione</label>
-              <input id="data_pubblicazione" type="datetime-local" class="w-full border rounded-xl px-3 py-2">
-            </div>
-            <div>
-              <label class="block text-sm font-semibold mb-1">Data scadenza</label>
-              <input id="data_scadenza" type="datetime-local" class="w-full border rounded-xl px-3 py-2">
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <label class="inline-flex items-center gap-2">
-              <input id="pubblicata" type="checkbox" class="w-4 h-4">
-              <span class="font-semibold">Pubblicata</span>
-            </label>
-
-            <label class="inline-flex items-center gap-2">
-              <input id="in_evidenza" type="checkbox" class="w-4 h-4">
-              <span class="font-semibold">In evidenza</span>
-            </label>
-          </div>
+      <div class="flex items-center justify-center gap-4 mb-4">
+        <div class="w-16 h-16 bg-gradient-to-br from-gold to-aurora rounded-full flex items-center justify-center shadow-lg">
+          <span class="text-2xl text-white" id="userIcon">👤</span>
         </div>
-
-        <!-- Colonna destra -->
-        <div class="lg:col-span-4 space-y-4">
-          <div>
-            <label class="block text-sm font-semibold mb-1">URL immagine (immagine_url)</label>
-            <input id="immagine_url" type="url" class="w-full border rounded-xl px-3 py-2" placeholder="https://...">
-            <div id="imgPreviewWrap" class="mt-3 hidden">
-              <img id="imgPreview" alt="Anteprima immagine" class="w-full rounded-xl border">
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-sm font-semibold mb-1">URL articolo (url_articolo)</label>
-            <input id="url_articolo" type="url" class="w-full border rounded-xl px-3 py-2" placeholder="https://... (facoltativo)">
-            <p class="text-xs text-gray-500 mt-1">Se presente, “Leggi” aprirà questo link in una nuova scheda.</p>
-          </div>
-
-          <div>
-            <label class="block text-sm font-semibold mb-1">Allegati (JSON) — opzionale</label>
-            <textarea id="allegati" rows="4" class="w-full border rounded-xl px-3 py-2" placeholder='[]'></textarea>
-          </div>
-
-          <div class="flex flex-wrap gap-3 pt-2">
-            <button id="saveBtn" type="submit" class="btn btn-aurora">💾 Salva</button>
-            <button id="publishNowBtn" type="button" class="btn btn-secondary">🚀 Pubblica ora</button>
-            <button id="resetBtn" type="button" class="btn btn-secondary">🧹 Pulisci</button>
-            <button id="deleteBtn" type="button" class="btn btn-secondary hidden">🗑️ Elimina</button>
-          </div>
+        <div class="text-left">
+          <h3 class="text-2xl font-bold text-primary" id="userName">Caricamento...</h3>
+          <div id="userRoles" class="mt-2"></div>
+          <p class="text-gray-600 font-semibold" id="userEmail">—</p>
         </div>
-      </form>
-    </section>
-
-    <!-- Lista / Ricerca -->
-    <section class="glass p-6 md:p-8">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-xl font-extrabold text-primary">🗞️ Ultime notizie</h3>
-        <div id="listStatus" class="text-sm text-gray-500"></div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 mb-4">
-        <input id="searchTxt" class="lg:col-span-5 border rounded-xl px-3 py-2" placeholder="Cerca per titolo / sottotitolo...">
-        <select id="filterCategoria" class="lg:col-span-3 border rounded-xl px-3 py-2">
-          <option value="">Tutte le categorie</option>
-          <option>GENERALE</option><option>SINDACALE</option><option>LEGALE</option>
-          <option>EVENTI</option><option>FORMAZIONE</option><option>CONVENZIONI</option>
-        </select>
-        <label class="lg:col-span-2 inline-flex items-center gap-2">
-          <input id="onlyPublished" type="checkbox"> <span>Solo pubblicate</span>
-        </label>
-        <label class="lg:col-span-2 inline-flex items-center gap-2">
-          <input id="onlyFeatured" type="checkbox"> <span>Solo in evidenza</span>
-        </label>
-      </div>
-
-      <div class="overflow-x-auto border rounded-xl">
-        <table class="min-w-full divide-y divide-gray-200 text-sm">
-          <thead class="bg-gray-50">
-            <tr class="text-left">
-              <th class="px-3 py-2">Data</th>
-              <th class="px-3 py-2">Titolo</th>
-              <th class="px-3 py-2">Categoria</th>
-              <th class="px-3 py-2">Pubblicata</th>
-              <th class="px-3 py-2">In evidenza</th>
-              <th class="px-3 py-2">Azioni</th>
-            </tr>
-          </thead>
-          <tbody id="newsTable" class="divide-y divide-gray-100 bg-white"></tbody>
-        </table>
+      <div class="flex flex-wrap gap-3 mt-4 justify-center">
+        <span class="inline-flex items-center gap-2 badge bg-white px-3 py-1 rounded-full border">
+          📅 Iscritto dal: <strong id="iscrittoDal" class="ml-1">—</strong>
+        </span>
+        <span class="inline-flex items-center gap-2 badge bg-white px-3 py-1 rounded-full border">
+          🔐 Accesso: <strong id="accessLevel" class="ml-1">Verificando privilegi...</strong>
+        </span>
       </div>
     </section>
+
+    <!-- 3) Panoramica di sistema -->
+    <section class="glass-card p-6 md:p-8 mb-8">
+      <h2 class="section-title text-primary mb-8 text-center">
+        <span class="mr-3 text-3xl">📈</span>Panoramica di sistema
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="p-5 rounded-2xl border border-yellow-200/40 bg-white/90 shadow">
+          <div class="text-2xl mb-2">📰</div>
+          <div class="text-sm text-gray-500">News pubblicate</div>
+          <div id="newsCount" class="text-3xl font-extrabold text-primary mt-1">—</div>
+        </div>
+        <div class="p-5 rounded-2xl border border-yellow-200/40 bg-white/90 shadow">
+          <div class="text-2xl mb-2">⭐</div>
+          <div class="text-sm text-gray-500">News in evidenza</div>
+          <div id="featuredNewsCount" class="text-3xl font-extrabold text-primary mt-1">—</div>
+        </div>
+        <div class="p-5 rounded-2xl border border-yellow-200/40 bg-white/90 shadow">
+          <div class="text-2xl mb-2">🛡️</div>
+          <div class="text-sm text-gray-500">Ruolo</div>
+          <div id="rolesSummary" class="text-lg font-bold text-primary mt-1">—</div>
+        </div>
+        <div class="p-5 rounded-2xl border border-yellow-200/40 bg-white/90 shadow">
+          <div class="text-2xl mb-2">⚙️</div>
+          <div class="text-sm text-gray-500">Stato</div>
+          <div class="text-lg font-bold text-success mt-1">Attivo</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4) Area Amministrativa dirigenziale -->
+    <section class="glass-card p-6 md:p-8 mb-8">
+      <h2 class="section-title text-primary mb-8 text-center">
+        <span class="mr-3 text-3xl">🏗️</span>Area Amministrativa dirigenziale
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <a href="areadirigenti.html" class="function-card">
+          <div class="text-4xl mb-2">🧭</div>
+          <div class="font-bold text-ultra-visible text-lg mb-1">Area Dirigenti</div>
+          <p class="text-ultra-visible opacity-80 text-sm">Vai all'area operativa</p>
+        </a>
+        <a href="gestione-convenzioni.html" class="function-card">
+          <div class="text-4xl mb-2">🏷️</div>
+          <div class="font-bold text-ultra-visible text-lg mb-1">Gestione Convenzioni</div>
+          <p class="text-ultra-visible opacity-80 text-sm">Crea e gestisci partnership</p>
+        </a>
+        <a href="gestione-notizie.html" class="function-card">
+          <div class="text-4xl mb-2">📰</div>
+          <div class="font-bold text-ultra-visible text-lg mb-1">Gestione Notizie</div>
+          <p class="text-ultra-visible opacity-80 text-sm">Pubblica e modifica comunicazioni</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- 5) Ultime Notizie -->
+    <section class="glass-card p-6 md:p-8 mb-8">
+      <h2 class="section-title text-primary mb-8 text-center">
+        <span class="mr-3 text-3xl">🗞️</span>Ultime Notizie
+      </h2>
+
+      <div id="latestNews" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+      <div id="newsEmptyState" class="hidden text-center py-10">
+        <div class="text-5xl mb-4">🪧</div>
+        <p class="text-gray-700 font-semibold">Nessuna notizia pubblicata al momento</p>
+      </div>
+    </section>
+
+    <!-- 6) Convenzioni in evidenza -->
+    <section class="glass-card p-6 md:p-8 mb-8">
+      <h2 class="section-title text-primary mb-8 text-center">
+        <span class="mr-3 text-3xl">🤝</span>Convenzioni in evidenza
+      </h2>
+
+      <div id="featuredConvenzioni" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+      <div id="convEmptyState" class="text-center py-10">
+        <div class="text-5xl mb-4">🔎</div>
+        <p class="text-gray-700 font-semibold">Al momento non ci sono convenzioni in evidenza.</p>
+        <p class="text-gray-500 mt-1">Gestiscile da <a class="text-aurora font-bold underline" href="gestione-convenzioni.html">Gestione Convenzioni</a>.</p>
+      </div>
+    </section>
+
+    <!-- Supporto -->
+    <div class="glass-card p-6 md:p-8 text-center">
+      <h3 class="section-title text-primary mb-4">Supporto Tecnico</h3>
+      <p class="text-gray-600 text-lg mb-6">Hai bisogno di assistenza con le funzioni dirigenziali?</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="mailto:support@aurora.app" class="btn-aurora">📧 Contatta Supporto</a>
+        <a href="tel:+390000000000" class="btn-secondary">📞 Chiamata Urgente</a>
+      </div>
+    </div>
+
   </main>
 
-  <!-- Notifiche -->
-  <div id="toasts" class="fixed top-6 right-6 z-50 space-y-2"></div>
-
-  <!-- Modal: Leggi l'articolo -->
+  <!-- Modal “Leggi l’articolo completo” -->
   <div id="articleModal" class="fixed inset-0 bg-black/60 backdrop-blur hidden z-50">
     <div class="mx-auto max-w-md w-[92%] bg-white rounded-2xl p-6 shadow-2xl mt-24 relative">
       <button type="button" class="absolute top-3 right-3 text-gray-500 hover:text-rose-600 text-2xl leading-none" onclick="closeArticleModal()" aria-label="Chiudi">&times;</button>
       <h3 class="text-xl font-extrabold text-gray-900 mb-2">Leggi l’articolo completo</h3>
       <p class="text-gray-600 mb-6">Stai per aprire l’articolo su una nuova scheda.</p>
       <div class="flex gap-3">
-        <a id="openArticleBtn" href="#" target="_blank" rel="noopener" class="btn btn-aurora">Apri</a>
-        <button type="button" class="btn btn-secondary" onclick="closeArticleModal()">Annulla</button>
+        <a id="openArticleBtn" href="#" target="_blank" rel="noopener" class="btn-aurora">Apri</a>
+        <button type="button" class="btn-secondary" onclick="closeArticleModal()">Annulla</button>
       </div>
     </div>
   </div>
 
-  <!-- Supabase & App -->
+  <!-- Supabase / App -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
@@ -259,220 +272,207 @@
     );
 
     const $ = (id)=> document.getElementById(id);
-    const toast = (msg,type='info')=>{
-      const wrap = $('toasts');
-      const el = document.createElement('div');
-      el.className = `px-4 py-3 rounded-xl text-white shadow-xl border backdrop-blur ${type==='success'?'bg-green-600/90 border-green-300/30': type==='error'?'bg-red-600/90 border-red-300/30':'bg-slate-800/90 border-white/10'}`;
-      el.textContent = msg; wrap.appendChild(el);
-      setTimeout(()=>{ el.style.opacity='0'; el.style.transform='translateY(-6px)'; setTimeout(()=> el.remove(), 300); }, 3000);
-    };
-    const escapeHTML = (s)=> String(s??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;");
-    const fmtDate = (iso)=> { if(!iso) return '—'; const d = new Date(iso); return isNaN(d)?'—': new Intl.DateTimeFormat('it-IT',{dateStyle:'medium', timeStyle:'short'}).format(d); };
-    const toISO = (val)=> { if(!val) return null; const d = new Date(val); if(isNaN(d)) return null; return d.toISOString(); };
-    const toLocalInput = (iso)=> { if(!iso) return ''; const d = new Date(iso); if(isNaN(d)) return ''; const p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`; };
+    const fmtDate = (iso)=> { try{ return iso ? new Intl.DateTimeFormat('it-IT',{dateStyle:'long'}).format(new Date(iso)) : '—'; }catch{return '—'} };
+    const escapeHTML = (s)=> String(s ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;");
 
-    const allowedCats = ['GENERALE','SINDACALE','LEGALE','EVENTI','FORMAZIONE','CONVENZIONI'];
-
-    // Auth gate
     let currentUser = null;
+    let currentRole = 'USER';
+
+    // ===== Auth gate (solo ADMIN/DIRIGENTE) =====
     async function guard(){
       const { data:{ user } } = await supabase.auth.getUser();
       if(!user){ window.location.href='auth.html'; return; }
       currentUser = user;
-      const { data: profile } = await supabase.from('user_profiles').select('role').eq('user_id', user.id).single();
-      const role = (profile?.role || 'USER').toUpperCase();
-      if(!['ADMIN','DIRIGENTE'].includes(role)){ window.location.href='home.html'; }
+
+      const { data: prof } = await supabase
+        .from('user_profiles')
+        .select('role,nome,cognome,email')
+        .eq('user_id', user.id)
+        .single();
+
+      currentRole = (prof?.role || 'USER').toUpperCase();
+      if(!['ADMIN','DIRIGENTE'].includes(currentRole)){
+        window.location.href = 'home.html'; return;
+      }
+
+      $('userName').textContent = prof?.nome ? `${prof.nome}` : 'Dirigente';
+      $('userEmail').textContent = prof?.email || user.email || '—';
+      $('userIcon').textContent = currentRole === 'ADMIN' ? '👑' : '🎯';
+      $('rolesSummary').textContent = currentRole;
+      $('accessLevel').textContent = currentRole === 'ADMIN' ? 'Accesso Amministratore Completo' : 'Accesso Dirigente Autorizzato';
+
+      // Roles badges
+      $('userRoles').innerHTML = `
+        <span class="inline-block px-3 py-1 rounded-full text-xs font-bold ${currentRole==='ADMIN' ? 'bg-yellow-400 text-black':'bg-fuchsia-600 text-white'}">
+          ${currentRole==='ADMIN' ? '👑 ADMIN':'🎯 DIRIGENTE'}
+        </span>`;
     }
-    // Logout
+
+    // ===== Logout =====
     $('logoutBtn').addEventListener('click', async ()=>{
-      try{ await supabase.auth.signOut(); }catch{} finally{ window.location.href='index.html'; }
+      try{ await supabase.auth.signOut(); }catch{}
+      window.location.href = 'index.html';
     });
 
-    // Form logic
-    const form = $('newsForm');
-    const imgUrlInput = $('immagine_url');
-    const imgPrevWrap = $('imgPreviewWrap');
-    const imgPrev = $('imgPreview');
-
-    imgUrlInput.addEventListener('input', ()=>{
-      const url = imgUrlInput.value.trim();
-      if(url){ imgPrevWrap.classList.remove('hidden'); imgPrev.src = url; }
-      else{ imgPrevWrap.classList.add('hidden'); imgPrev.removeAttribute('src'); }
-    });
-
-    $('resetBtn').addEventListener('click', ()=>{
-      form.reset(); $('newsId').value=''; imgPrevWrap.classList.add('hidden'); $('deleteBtn').classList.add('hidden'); $('formStatus').textContent='';
-      toast('Modulo ripulito','info');
-    });
-
-    $('publishNowBtn').addEventListener('click', ()=>{
-      $('pubblicata').checked = true;
-      $('data_pubblicazione').value = toLocalInput(new Date().toISOString());
-      toast('Impostata pubblicazione immediata.','info');
-    });
-
-    $('deleteBtn').addEventListener('click', async ()=>{
-      const id = $('newsId').value; if(!id) return;
-      if(!confirm('Confermi l’eliminazione della notizia?')) return;
-      const { error } = await supabase.from('news').delete().eq('id', id);
-      if(error){ toast('Errore eliminazione: '+error.message,'error'); return; }
-      toast('Notizia eliminata','success');
-      form.reset(); $('newsId').value=''; $('deleteBtn').classList.add('hidden'); imgPrevWrap.classList.add('hidden');
-      await loadTable();
-    });
-
-    form.addEventListener('submit', async (e)=>{
-      e.preventDefault();
-      const payload = collectForm();
-
-      if(!payload.titolo?.trim() || !payload.contenuto?.trim()){ toast('Titolo e Contenuto sono obbligatori','error'); return; }
-      if(!allowedCats.includes(payload.categoria)){ toast('Categoria non valida','error'); return; }
-      if(payload.allegati && !Array.isArray(payload.allegati)){ toast('Allegati deve essere un array JSON','error'); return; }
-
-      $('saveBtn').disabled = true; $('saveBtn').innerHTML = '<span class="spinner"></span> Salvataggio...';
+    // ===== Iscritto dal (tessere) =====
+    async function loadIscrittoDal(){
       try{
-        const id = $('newsId').value || null;
-        if(id){
-          const { error } = await supabase.from('news').update(payload).eq('id', id);
-          if(error) throw error;
-          toast('Notizia aggiornata','success');
-        }else{
-          const { data, error } = await supabase.from('news').insert([payload]).select('id').single();
-          if(error) throw error;
-          $('newsId').value = data.id; $('deleteBtn').classList.remove('hidden');
-          toast('Notizia creata','success');
+        const { data, error } = await supabase
+          .from('tessere')
+          .select('data_emissione')
+          .eq('user_id', currentUser.id)
+          .order('data_emissione', { ascending:true })
+          .limit(1);
+
+        if(error) throw error;
+        const d = data && data[0]?.data_emissione;
+        $('iscrittoDal').textContent = d ? fmtDate(d) : 'Non disponibile';
+      }catch{
+        $('iscrittoDal').textContent = 'Non disponibile';
+      }
+    }
+
+    // ===== Panoramica =====
+    async function loadSystemOverview(){
+      try{
+        const nowIso = new Date().toISOString();
+
+        const { count: totalNews } = await supabase
+          .from('news')
+          .select('id', { count:'exact', head:true })
+          .eq('pubblicata', true)
+          .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
+
+        const { count: featNews } = await supabase
+          .from('news')
+          .select('id', { count:'exact', head:true })
+          .eq('pubblicata', true)
+          .eq('in_evidenza', true)
+          .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
+
+        $('newsCount').textContent = typeof totalNews==='number' ? totalNews : '—';
+        $('featuredNewsCount').textContent = typeof featNews==='number' ? featNews : '—';
+      }catch{
+        $('newsCount').textContent = '—';
+        $('featuredNewsCount').textContent = '—';
+      }
+    }
+
+    // ===== Ultime Notizie (con URL cliccabile / modale) =====
+    async function loadLatestNews(){
+      const wrap = $('latestNews');
+      const empty = $('newsEmptyState');
+      wrap.innerHTML = `
+        <div class="col-span-full flex items-center justify-center py-8">
+          <span class="spinner"></span><span class="font-semibold text-gray-600 ml-2">Caricamento notizie…</span>
+        </div>`;
+
+      try{
+        const nowIso = new Date().toISOString();
+        const { data: news, error } = await supabase
+          .from('news')
+          .select('id,titolo,sottotitolo,immagine_url,categoria,data_pubblicazione,in_evidenza,url_articolo')
+          .eq('pubblicata', true)
+          .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`)
+          .order('in_evidenza', { ascending:false })
+          .order('data_pubblicazione', { ascending:false })
+          .limit(6);
+
+        if(error) throw error;
+
+        if(!news || news.length===0){
+          wrap.innerHTML=''; empty.classList.remove('hidden'); return;
         }
-        await loadTable();
-      }catch(err){
-        toast('Errore salvataggio: ' + (err?.message||'sconosciuto'),'error');
-      }finally{
-        $('saveBtn').disabled = false; $('saveBtn').textContent = '💾 Salva';
-      }
-    });
+        empty.classList.add('hidden'); wrap.innerHTML='';
 
-    function collectForm(){
-      const titolo = $('titolo').value.trim();
-      const sottotitolo = $('sottotitolo').value.trim();
-      const contenuto = $('contenuto').value.trim();
-      const categoria = $('categoria').value;
-      const immagine_url = $('immagine_url').value.trim() || null;
-      const url_articolo = $('url_articolo').value.trim() || null;
-      const pubblicata = $('pubblicata').checked;
-      const in_evidenza = $('in_evidenza').checked;
-      const data_pubblicazione = toISO($('data_pubblicazione').value);
-      const data_scadenza = toISO($('data_scadenza').value);
-      const tagsStr = $('tags').value.trim();
-      const tags = tagsStr ? tagsStr.split(',').map(s=>s.trim()).filter(Boolean) : null;
-
-      let allegati = null;
-      const rawAllegati = $('allegati').value.trim();
-      if(rawAllegati){ try{ allegati = JSON.parse(rawAllegati); }catch{} }
-
-      return {
-        titolo, sottotitolo: sottotitolo || null, contenuto, categoria,
-        immagine_url, url_articolo, allegati, tags,
-        pubblicata, in_evidenza,
-        data_pubblicazione: data_pubblicazione || null,
-        data_scadenza: data_scadenza || null
-      };
-    }
-
-    // Prefill ?id=
-    async function loadIfEditing(){
-      const params = new URLSearchParams(location.search);
-      const id = params.get('id'); if(!id) return;
-
-      const { data, error } = await supabase.from('news').select('*').eq('id', id).single();
-      if(error || !data){ $('formStatus').textContent='Errore caricamento notizia'; toast('Impossibile caricare la notizia','error'); return; }
-
-      $('newsId').value = data.id;
-      $('titolo').value = data.titolo || '';
-      $('sottotitolo').value = data.sottotitolo || '';
-      $('contenuto').value = data.contenuto || '';
-      $('categoria').value = allowedCats.includes(data.categoria) ? data.categoria : 'GENERALE';
-      $('immagine_url').value = data.immagine_url || '';
-      $('url_articolo').value = data.url_articolo || '';
-      $('pubblicata').checked = !!data.pubblicata;
-      $('in_evidenza').checked = !!data.in_evidenza;
-      $('data_pubblicazione').value = toLocalInput(data.data_pubblicazione);
-      $('data_scadenza').value = toLocalInput(data.data_scadenza);
-      $('tags').value = Array.isArray(data.tags)? data.tags.join(', '):'';
-      $('allegati').value = data.allegati ? JSON.stringify(data.allegati, null, 2) : '';
-
-      if(data.immagine_url){ $('imgPreview').src=data.immagine_url; $('imgPreviewWrap').classList.remove('hidden'); }
-      else{ $('imgPreviewWrap').classList.add('hidden'); }
-
-      $('deleteBtn').classList.remove('hidden');
-      $('formStatus').textContent = 'Modifica notizia esistente';
-    }
-
-    // Lista con filtri
-    async function loadTable(){
-      $('listStatus').textContent = 'Caricamento…';
-      const q = supabase
-        .from('news')
-        .select('id,titolo,sottotitolo,categoria,pubblicata,in_evidenza,data_pubblicazione,created_at,url_articolo')
-        .order('data_pubblicazione', { ascending:false })
-        .order('created_at', { ascending:false })
-        .limit(100);
-
-      const s = $('searchTxt').value.trim().toLowerCase();
-      const cat = $('filterCategoria').value;
-      const onlyPub = $('onlyPublished').checked;
-      const onlyFeat = $('onlyFeatured').checked;
-
-      const { data, error } = await q;
-      if(error){ $('listStatus').textContent='Errore'; toast('Errore caricamento lista','error'); return; }
-
-      let arr = data || [];
-      if(cat) arr = arr.filter(n => n.categoria === cat);
-      if(onlyPub) arr = arr.filter(n => n.pubblicata === true);
-      if(onlyFeat) arr = arr.filter(n => n.in_evidenza === true);
-      if(s){
-        arr = arr.filter(n =>
-          (n.titolo||'').toLowerCase().includes(s) ||
-          (n.sottotitolo||'').toLowerCase().includes(s)
-        );
-      }
-
-      const tbody = $('newsTable');
-      tbody.innerHTML = arr.map(n=>{
-        const when = n.data_pubblicazione || n.created_at;
-        const hasLink = !!n.url_articolo;
-        return `
-          <tr>
-            <td class="px-3 py-2 whitespace-nowrap">${fmtDate(when)}</td>
-            <td class="px-3 py-2">
-              <div class="font-semibold">${escapeHTML(n.titolo || '')}</div>
-              ${hasLink ? `<div class="text-xs text-gray-500 truncate">${escapeHTML(n.url_articolo)}</div>`:''}
-            </td>
-            <td class="px-3 py-2"><span class="badge">${escapeHTML(n.categoria||'GENERALE')}</span></td>
-            <td class="px-3 py-2">${n.pubblicata ? '✅' : '—'}</td>
-            <td class="px-3 py-2">${n.in_evidenza ? '⭐' : '—'}</td>
-            <td class="px-3 py-2">
-              <div class="flex items-center gap-2">
-                <a class="px-2 py-1 rounded border hover:bg-gray-50" href="?id=${encodeURIComponent(n.id)}">Modifica</a>
-                ${hasLink
-                  ? `<button class="px-2 py-1 rounded border hover:bg-gray-50" data-open-article="${escapeHTML(n.url_articolo)}">Leggi</button>`
-                  : `<button class="px-2 py-1 rounded border text-gray-400 cursor-not-allowed" disabled>Nessun link</button>`
+        for(const n of news){
+          const hasUrl = !!n.url_articolo;
+          const card = document.createElement('article');
+          card.className = 'rounded-2xl border border-yellow-200/40 bg-white/95 overflow-hidden shadow group flex flex-col';
+          card.innerHTML = `
+            <div class="relative h-40 bg-gray-100 overflow-hidden">
+              ${n.immagine_url
+                ? `<img src="${escapeHTML(n.immagine_url)}" alt="" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300">`
+                : `<div class="w-full h-full flex items-center justify-center text-4xl">📰</div>`}
+              <div class="absolute top-2 left-2"><span class="badge">${escapeHTML(n.categoria||'GENERALE')}</span></div>
+              ${n.in_evidenza ? `<div class="absolute top-2 right-2"><span class="badge">⭐ In evidenza</span></div>` : ``}
+            </div>
+            <div class="p-5 flex-1 flex flex-col">
+              <h3 class="font-extrabold text-primary text-lg leading-snug mb-1">${escapeHTML(n.titolo)}</h3>
+              ${n.sottotitolo ? `<p class="text-gray-600 text-sm mb-3">${escapeHTML(n.sottotitolo)}</p>` : ``}
+              <div class="text-xs text-gray-500 mb-4">${fmtDate(n.data_pubblicazione)}</div>
+              <div class="mt-auto flex items-center justify-between pt-2">
+                <a href="gestione-notizie.html?id=${encodeURIComponent(n.id)}" class="text-aurora font-bold hover:underline">Apri scheda admin</a>
+                ${hasUrl
+                  ? `<button class="px-3 py-2 rounded-xl font-bold text-white bg-rose-600 hover:bg-rose-700 transition" data-open-article="${escapeHTML(n.url_articolo)}">Leggi l’articolo completo →</button>`
+                  : `<button class="px-3 py-2 rounded-xl font-bold text-white bg-rose-400 opacity-60 cursor-not-allowed" disabled title="Nessun URL articolo impostato">Leggi l’articolo completo →</button>`
                 }
               </div>
-            </td>
-          </tr>`;
-      }).join('');
+            </div>`;
+          wrap.appendChild(card);
+        }
 
-      $('listStatus').textContent = `${arr.length} elementi`;
+        // Delegation per il click
+        wrap.addEventListener('click', (e)=>{
+          const btn = e.target.closest('[data-open-article]');
+          if(!btn) return;
+          const url = btn.getAttribute('data-open-article')?.trim();
+          if(url) openArticleModal(url);
+        }, { once:true });
+
+      }catch(err){
+        console.error(err);
+        wrap.innerHTML = `
+          <div class="col-span-full text-center py-10">
+            <div class="text-5xl mb-4">⚠️</div>
+            <p class="text-gray-700 font-semibold">Impossibile caricare le notizie</p>
+            <p class="text-gray-500 text-sm">Riprova più tardi</p>
+          </div>`;
+      }
     }
 
-    // Delegation: click “Leggi”
-    $('newsTable').addEventListener('click', (e)=>{
-      const btn = e.target.closest('[data-open-article]');
-      if(!btn) return;
-      const url = btn.getAttribute('data-open-article')?.trim();
-      if(url) openArticleModal(url);
-    });
+    // ===== Convenzioni in evidenza =====
+    async function loadFeaturedConvenzioni(){
+      const wrap = $('featuredConvenzioni');
+      const empty = $('convEmptyState');
 
-    // Modale helpers
+      try{
+        const { data, error } = await supabase
+          .from('convenzioni')
+          .select('id,nome_azienda,descrizione,logo_url,immagine_url,link_esterno,in_evidenza,valida_fino,categoria,copertura_geografica,sconto_percentuale')
+          .eq('in_evidenza', true)
+          .eq('attiva', true)
+          .order('created_at', { ascending:false })
+          .limit(6);
+
+        if(error) throw error;
+
+        if(!data || data.length===0){
+          empty.classList.remove('hidden'); return;
+        }
+        empty.classList.add('hidden'); wrap.innerHTML='';
+
+        for(const c of data){
+          const a = document.createElement('a');
+          a.className = 'function-card rounded-2xl border border-yellow-200/40 bg-white/95 overflow-hidden shadow';
+          a.href = c.link_esterno || 'gestione-convenzioni.html';
+          a.target = '_blank'; a.rel = 'noopener';
+          const sconto = c.sconto_percentuale ? `-${c.sconto_percentuale}%` : '🤝';
+          a.innerHTML = `
+            <div class="w-full h-28 bg-gray-50 flex items-center justify-center overflow-hidden rounded-xl mb-3">
+              ${c.logo_url ? `<img src="${escapeHTML(c.logo_url)}" alt="" class="max-h-28 object-contain">` : `<div class="text-4xl">${sconto}</div>`}
+            </div>
+            <div class="font-bold text-ultra-visible text-lg mb-1">${escapeHTML(c.nome_azienda||'Convenzione')}</div>
+            <p class="text-ultra-visible opacity-80 text-sm">${escapeHTML((c.descrizione||'').slice(0,120))}${(c.descrizione||'').length>120?'…':''}</p>`;
+          wrap.appendChild(a);
+        }
+      }catch(e){
+        console.warn('Errore convenzioni:', e);
+        empty.classList.remove('hidden');
+      }
+    }
+
+    // ===== Modale articolo =====
     window.openArticleModal = function(url){
       const modal = $('articleModal'); const openBtn = $('openArticleBtn');
       if(!modal || !openBtn) return;
@@ -484,19 +484,17 @@
       modal.addEventListener('click', onClickOut, { once:true });
     }
     window.closeArticleModal = function(){
-      const modal = $('articleModal'); if(modal) modal.classList.add('hidden');
+      const modal = $('articleModal');
+      if(modal) modal.classList.add('hidden');
     }
 
-    // Bootstrap
+    // ===== Bootstrap =====
     (async function(){
-      try{
-        await guard();
-        await loadIfEditing();
-        await loadTable();
-      }catch(err){
-        console.error(err);
-        toast('Errore inizializzazione','error');
-      }
+      await guard();
+      await loadIscrittoDal();
+      await loadSystemOverview();
+      await loadLatestNews();
+      await loadFeaturedConvenzioni();
     })();
   </script>
 </body>
