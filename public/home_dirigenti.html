@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Area Riservata Dirigenti</title>
+  <title>Area Dirigenti</title>
 
-  <!-- Tailwind (ok per test; in produzione passa a build/CLI) -->
+  <!-- Tailwind per test (in prod usa build/CLI) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -26,33 +26,50 @@
   <style>
     :root{
       --gradient-aurora: linear-gradient(135deg,#1a1a2e 0%,#16213e 25%,#0f3460 50%,#e94560 75%,#00d4ff 100%);
-      --gradient-gold: linear-gradient(135deg,#ffd700 0%,#ffb347 100%);
       --gradient-magic: linear-gradient(135deg,#ff006e 0%,#e94560 50%,#03dac6 100%);
     }
-    *{ font-family: 'Inter', sans-serif; }
-    body{ background: var(--gradient-aurora); background-size:400% 400%; animation: aurora 15s ease infinite; min-height:100vh; }
+    *{ font-family:'Inter',sans-serif; }
+    body{ background:var(--gradient-aurora); background-size:400% 400%; animation: aurora 15s ease infinite; min-height:100vh; }
     @keyframes aurora{ 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-    .text-ultra-visible{ color:#fff; text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1); font-weight:800; }
-    .hero-title{ font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight:900; line-height:1.1; }
-    .section-title{ font-size: clamp(1.5rem, 5vw, 2.25rem); font-weight:900; line-height:1.2; }
-    .glass-card{ background:rgba(255,255,255,.95); backdrop-filter: blur(18px); border:2px solid rgba(255,215,0,.15); border-radius:24px; box-shadow:0 25px 50px rgba(0,0,0,.12); }
-    .function-card{ background: rgba(255,255,255,.2); backdrop-filter: blur(16px); border:3px solid rgba(255,255,255,.4); border-radius:18px; padding:1.25rem; transition:.3s; text-align:center; color:inherit; text-decoration:none; min-height:136px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-    .function-card:hover{ background: rgba(255,255,255,.3); transform: translateY(-6px) scale(1.03); }
-    .btn-aurora{ background: var(--gradient-magic); color:#fff; border:2px solid rgba(233,69,96,.3); transition:.25s; min-height:44px; font-weight:700; border-radius:12px; padding:.7rem 1.25rem; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
-    .btn-aurora[disabled]{ opacity:.6; cursor:not-allowed; filter:grayscale(.2); }
-    .badge{ display:inline-block; padding:.25rem .6rem; border-radius:9999px; background:#111827; color:#fff; font-size:.7rem; font-weight:700; letter-spacing:.02em; }
-    .spinner{ border:3px solid rgba(255,215,0,.3); border-top:3px solid #ffd700; border-radius:50%; width:24px; height:24px; animation: spin 1s linear infinite; display:inline-block; margin-right:.5rem }
+    .text-ultra-visible{ color:#fff; text-shadow:0 8px 25px rgba(0,0,0,.8),0 4px 12px rgba(0,0,0,.7),0 2px 6px rgba(0,0,0,.9); font-weight:800; }
+    .hero-title{ font-size:clamp(2rem,6vw,3.5rem); font-weight:900; line-height:1.1; }
+
+    /* Card leggibili (bianco pieno, bordi e testo scuro) */
+    .glass-card{ background:#ffffff; border:1px solid rgba(0,0,0,.06); border-radius:22px; box-shadow:0 14px 30px rgba(0,0,0,.12); }
+    .section-title{ font-size:clamp(1.25rem,4vw,2rem); font-weight:900; color:#0f172a; }
+
+    /* Tile azioni leggibili e responsivi */
+    .function-card{
+      background:#f8fafc;
+      border:1px solid #e5e7eb;
+      border-radius:18px;
+      padding:1.25rem;
+      transition:.2s;
+      text-align:center;
+      color:#0f172a;
+      text-decoration:none;
+      min-height:140px;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+    }
+    .function-card:hover{ background:#ffffff; transform:translateY(-3px); box-shadow:0 10px 20px rgba(0,0,0,.08); }
+    .function-card h4{ font-weight:800; font-size:clamp(1rem,2.8vw,1.125rem); }
+    .function-card p{ color:#475569; font-size:.9rem; }
+
+    .badge{ display:inline-block; padding:.25rem .6rem; border-radius:9999px; background:#111827; color:#fff; font-size:.7rem; font-weight:700; }
+
+    .btn-aurora{ background:var(--gradient-magic); color:#fff; border:0; border-radius:12px; padding:.65rem 1.1rem; font-weight:800; display:inline-flex; align-items:center; gap:.5rem; }
+    .spinner{ border:3px solid rgba(0,0,0,.1); border-top:3px solid #111827; border-radius:50%; width:22px; height:22px; animation:spin 1s linear infinite; display:inline-block }
     @keyframes spin{ 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
   </style>
 </head>
-<body class="font-inter">
+<body>
 
   <!-- Topbar -->
   <header class="sticky top-0 z-40 bg-black/10 backdrop-blur-md border-b border-white/10">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3 text-ultra-visible">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-gold to-aurora flex items-center justify-center shadow">
-          <span class="text-xl">🏛️</span>
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shadow">
+          <span class="text-2xl text-white">🏛️</span>
         </div>
         <div>
           <div class="text-white font-extrabold leading-none">Area Dirigenti</div>
@@ -60,154 +77,130 @@
         </div>
       </div>
 
-      <!-- Logout -->
+      <!-- Logout SOLO qui -->
       <button id="logoutBtn" class="btn-aurora" title="Disconnetti">
-        <span class="mr-2">🚪</span>Logout
+        <span>🚪</span><span>Logout</span>
       </button>
     </div>
   </header>
 
-  <main class="min-h-screen px-4 py-8 max-w-6xl mx-auto">
+  <main class="min-h-screen px-3 sm:px-4 py-8 max-w-6xl mx-auto">
 
     <!-- Hero -->
-    <div class="text-center mb-10">
-      <h1 class="hero-title text-ultra-visible mb-3">Benvenuto nell’Area Dirigenti</h1>
-      <p class="text-white/90 font-semibold">Accesso esclusivo alle funzioni direzionali e amministrative.</p>
+    <div class="text-center mb-8">
+      <h1 class="hero-title text-ultra-visible mb-2">Benvenuto nell’Area Dirigenti</h1>
+      <p class="text-white/90 font-semibold">Funzioni direzionali e amministrative.</p>
     </div>
 
     <!-- 1) Azioni Personali -->
-    <section class="glass-card p-6 md:p-8 mb-8">
-      <h2 class="section-title text-primary mb-8 text-center"><span class="mr-3 text-3xl">🧭</span>Azioni Personali</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-        <!-- Dalla home utente -->
-        <a class="function-card" href="tessera.html">
+    <section class="glass-card p-5 sm:p-7 mb-8">
+      <h2 class="section-title mb-6 text-center">🧭 Azioni Personali</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <a class="function-card" href="tessera.html" aria-label="Tessera Digitale">
           <div class="text-4xl mb-2">🎫</div>
-          <div class="font-bold text-ultra-visible text-lg mb-1">Tessera Digitale</div>
-          <p class="text-ultra-visible opacity-80 text-sm">Visualizza/Scarica la tua tessera</p>
+          <h4>Tessera Digitale</h4>
+          <p>Visualizza/Scarica la tua tessera</p>
         </a>
-        <a class="function-card" href="profilo.html">
+        <a class="function-card" href="profilo.html" aria-label="Profilo">
           <div class="text-4xl mb-2">👤</div>
-          <div class="font-bold text-ultra-visible text-lg mb-1">Il mio profilo</div>
-          <p class="text-ultra-visible opacity-80 text-sm">Modifica i tuoi dati</p>
+          <h4>Il mio profilo</h4>
+          <p>Modifica i tuoi dati</p>
         </a>
-        <a class="function-card" href="virgilio.html">
+        <a class="function-card" href="virgilio.html" aria-label="Virgilio">
           <div class="text-4xl mb-2">🧭</div>
-          <div class="font-bold text-ultra-visible text-lg mb-1">Virgilio</div>
-          <p class="text-ultra-visible opacity-80 text-sm">Accesso rapido ai servizi</p>
+          <h4>Virgilio</h4>
+          <p>Accesso rapido ai servizi</p>
         </a>
-        <a class="function-card" href="strumenti.html">
+        <a class="function-card" href="strumenti.html" aria-label="Strumenti">
           <div class="text-4xl mb-2">🛠️</div>
-          <div class="font-bold text-ultra-visible text-lg mb-1">Strumenti</div>
-          <p class="text-ultra-visible opacity-80 text-sm">Utility di lavoro</p>
+          <h4>Strumenti</h4>
+          <p>Utility di lavoro</p>
         </a>
 
-        <!-- Le tue scorciatoie esistenti -->
         <a class="function-card" href="https://form.jotform.com/243226223182044" target="_blank" rel="noopener">
-          <div class="text-4xl mb-2">💰</div>
-          <div class="font-bold text-ultra-visible text-lg mb-1">Richiedi Rimborso</div>
-          <p class="text-ultra-visible opacity-80 text-sm">Modulo rimborso spese</p>
+          <div class="text-4xl mb-2">💰</div><h4>Richiedi Rimborso</h4><p>Modulo rimborso spese</p>
         </a>
         <a class="function-card" href="https://form.jotform.com/243262801203343" target="_blank" rel="noopener">
-          <div class="text-4xl mb-2">📝</div>
-          <div class="font-bold text-ultra-visible text-lg mb-1">Richiedi Permesso</div>
-          <p class="text-ultra-visible opacity-80 text-sm">Permesso sindacale</p>
+          <div class="text-4xl mb-2">📝</div><h4>Richiedi Permesso</h4><p>Permesso sindacale</p>
         </a>
         <a class="function-card" href="https://eu.jotform.com/tables/243226223182044" target="_blank" rel="noopener">
-          <div class="text-4xl mb-2">📊</div>
-          <div class="font-bold text-ultra-visible text-lg mb-1">Tabella Rendiconto</div>
-          <p class="text-ultra-visible opacity-80 text-sm">Visualizza i dati</p>
+          <div class="text-4xl mb-2">📊</div><h4>Tabella Rendiconto</h4><p>Visualizza i dati</p>
         </a>
         <a class="function-card" href="https://eu.jotform.com/tables/243262801203343" target="_blank" rel="noopener">
-          <div class="text-4xl mb-2">📅</div>
-          <div class="font-bold text-ultra-visible text-lg mb-1">Tabella Permessi</div>
-          <p class="text-ultra-visible opacity-80 text-sm">Gestisci permessi</p>
+          <div class="text-4xl mb-2">📅</div><h4>Tabella Permessi</h4><p>Gestisci permessi</p>
         </a>
       </div>
     </section>
 
-    <!-- 2) I tuoi dati dirigenziali -->
-    <section class="glass-card p-6 md:p-8 mb-8">
-      <h2 class="section-title text-primary mb-8 text-center"><span class="mr-3 text-3xl">🪪</span>I Tuoi Dati dirigenziali</h2>
-      <div class="flex items-center justify-center gap-4 mb-2">
-        <div class="w-16 h-16 bg-gradient-to-br from-gold to-aurora rounded-full flex items-center justify-center shadow-lg">
-          <span class="text-2xl text-white" id="userIcon">👤</span>
+    <!-- 2) I tuoi dati -->
+    <section class="glass-card p-5 sm:p-7 mb-8">
+      <h2 class="section-title mb-6 text-center">🪪 I Tuoi Dati dirigenziali</h2>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div class="w-14 h-14 rounded-full bg-slate-800 text-white flex items-center justify-center text-2xl">
+          <span id="userIcon">👤</span>
         </div>
-        <div class="text-left">
-          <h3 class="text-2xl font-bold text-primary" id="userName">Caricamento…</h3>
-          <p class="text-gray-600 font-semibold" id="userEmail">—</p>
-        </div>
-      </div>
-      <div class="flex flex-wrap gap-3 mt-4 justify-center">
-        <span class="inline-flex items-center gap-2 bg-white px-3 py-1 rounded-full border">
-          📅 Iscritto dal: <strong id="iscrittoDal" class="ml-1">—</strong>
-        </span>
-        <span class="inline-flex items-center gap-2 bg-white px-3 py-1 rounded-full border">
-          🔐 Accesso: <strong id="accessLevel" class="ml-1">Verifica…</strong>
-        </span>
-      </div>
-    </section>
-
-    <!-- 3) Panoramica di sistema -->
-    <section class="glass-card p-6 md:p-8 mb-8">
-      <h2 class="section-title text-primary mb-8 text-center"><span class="mr-3 text-3xl">📈</span>Panoramica di sistema</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="p-5 rounded-2xl border border-yellow-200/40 bg-white/90 shadow">
-          <div class="text-2xl mb-2">📰</div><div class="text-sm text-gray-500">News pubblicate</div>
-          <div id="newsCount" class="text-3xl font-extrabold text-primary mt-1">—</div>
-        </div>
-        <div class="p-5 rounded-2xl border border-yellow-200/40 bg-white/90 shadow">
-          <div class="text-2xl mb-2">⭐</div><div class="text-sm text-gray-500">News in evidenza</div>
-          <div id="featuredNewsCount" class="text-3xl font-extrabold text-primary mt-1">—</div>
-        </div>
-        <div class="p-5 rounded-2xl border border-yellow-200/40 bg-white/90 shadow">
-          <div class="text-2xl mb-2">🛡️</div><div class="text-sm text-gray-500">Ruolo</div>
-          <div id="rolesSummary" class="text-lg font-bold text-primary mt-1">—</div>
-        </div>
-        <div class="p-5 rounded-2xl border border-yellow-200/40 bg-white/90 shadow">
-          <div class="text-2xl mb-2">⚙️</div><div class="text-sm text-gray-500">Stato</div>
-          <div class="text-lg font-bold text-success mt-1">Attivo</div>
+        <div class="text-center sm:text-left">
+          <div id="userName" class="text-xl sm:text-2xl font-extrabold text-slate-900">Caricamento…</div>
+          <div id="userEmail" class="text-slate-600">—</div>
+          <div class="mt-2 flex flex-wrap justify-center sm:justify-start gap-2">
+            <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-sm">📅 Iscritto dal: <strong id="iscrittoDal">—</strong></span>
+            <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-sm">🔐 <strong id="accessLevel">Verifica…</strong></span>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- 4) Area Amministrativa -->
-    <section class="glass-card p-6 md:p-8 mb-8">
-      <h2 class="section-title text-primary mb-8 text-center"><span class="mr-3 text-3xl">🏗️</span>Area Amministrativa dirigenziale</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <a href="areadirigenti.html" class="function-card">
-          <div class="text-4xl mb-2">🧭</div><div class="font-bold text-ultra-visible text-lg mb-1">Area Dirigenti</div>
-          <p class="text-ultra-visible opacity-80 text-sm">Vai all'area operativa</p>
-        </a>
-        <a href="gestione-convenzioni.html" class="function-card">
-          <div class="text-4xl mb-2">🏷️</div><div class="font-bold text-ultra-visible text-lg mb-1">Gestione Convenzioni</div>
-          <p class="text-ultra-visible opacity-80 text-sm">Crea e gestisci partnership</p>
-        </a>
-        <a href="gestione-notizie.html" class="function-card">
-          <div class="text-4xl mb-2">📰</div><div class="font-bold text-ultra-visible text-lg mb-1">Gestione Notizie</div>
-          <p class="text-ultra-visible opacity-80 text-sm">Pubblica e modifica news</p>
-        </a>
+    <!-- 3) Panoramica -->
+    <section class="glass-card p-5 sm:p-7 mb-8">
+      <h2 class="section-title mb-6 text-center">📈 Panoramica di sistema</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div class="p-5 rounded-xl border border-slate-200 bg-white">
+          <div class="text-2xl mb-2">📰</div><div class="text-sm text-slate-600">News pubblicate</div>
+          <div id="newsCount" class="text-3xl font-extrabold text-slate-900 mt-1">—</div>
+        </div>
+        <div class="p-5 rounded-xl border border-slate-200 bg-white">
+          <div class="text-2xl mb-2">⭐</div><div class="text-sm text-slate-600">News in evidenza</div>
+          <div id="featuredNewsCount" class="text-3xl font-extrabold text-slate-900 mt-1">—</div>
+        </div>
+        <div class="p-5 rounded-xl border border-slate-200 bg-white">
+          <div class="text-2xl mb-2">🛡️</div><div class="text-sm text-slate-600">Ruolo</div>
+          <div id="rolesSummary" class="text-lg font-bold text-slate-900 mt-1">—</div>
+        </div>
+        <div class="p-5 rounded-xl border border-slate-200 bg-white">
+          <div class="text-2xl mb-2">⚙️</div><div class="text-sm text-slate-600">Stato</div>
+          <div class="text-lg font-bold text-green-600 mt-1">Attivo</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4) Area amministrativa -->
+    <section class="glass-card p-5 sm:p-7 mb-8">
+      <h2 class="section-title mb-6 text-center">🏗️ Area Amministrativa dirigenziale</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+        <a href="areadirigenti.html" class="function-card"><div class="text-4xl mb-2">🧭</div><h4>Area Dirigenti</h4><p>Vai all'area operativa</p></a>
+        <a href="gestione-convenzioni.html" class="function-card"><div class="text-4xl mb-2">🏷️</div><h4>Gestione Convenzioni</h4><p>Crea e gestisci partnership</p></a>
+        <a href="gestione-notizie.html" class="function-card"><div class="text-4xl mb-2">📰</div><h4>Gestione Notizie</h4><p>Pubblica e modifica news</p></a>
       </div>
     </section>
 
     <!-- 5) Ultime Notizie -->
-    <section class="glass-card p-6 md:p-8 mb-8">
-      <h2 class="section-title text-primary mb-8 text-center"><span class="mr-3 text-3xl">🗞️</span>Ultime Notizie</h2>
-      <div id="latestNews" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    <section class="glass-card p-5 sm:p-7 mb-8">
+      <h2 class="section-title mb-6 text-center">🗞️ Ultime Notizie</h2>
+      <div id="latestNews" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"></div>
       <div id="newsEmptyState" class="hidden text-center py-10">
         <div class="text-5xl mb-4">🪧</div>
-        <p class="text-gray-700 font-semibold">Nessuna notizia pubblicata al momento</p>
+        <p class="text-slate-700 font-semibold">Nessuna notizia pubblicata al momento</p>
       </div>
     </section>
 
     <!-- 6) Convenzioni in evidenza -->
-    <section class="glass-card p-6 md:p-8 mb-8">
-      <h2 class="section-title text-primary mb-8 text-center"><span class="mr-3 text-3xl">🤝</span>Convenzioni in evidenza</h2>
-      <div id="featuredConvenzioni" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    <section class="glass-card p-5 sm:p-7 mb-8">
+      <h2 class="section-title mb-6 text-center">🤝 Convenzioni in evidenza</h2>
+      <div id="featuredConvenzioni" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"></div>
       <div id="convEmptyState" class="text-center py-10">
         <div class="text-5xl mb-4">🔎</div>
-        <p class="text-gray-700 font-semibold">Al momento non ci sono convenzioni in evidenza.</p>
-        <p class="text-gray-500 mt-1">Gestiscile da <a class="text-aurora font-bold underline" href="gestione-convenzioni.html">Gestione Convenzioni</a>.</p>
+        <p class="text-slate-700 font-semibold">Al momento non ci sono convenzioni in evidenza.</p>
+        <p class="text-slate-500 mt-1">Gestiscile da <a class="text-blue-700 font-bold underline" href="gestione-convenzioni.html">Gestione Convenzioni</a>.</p>
       </div>
     </section>
 
@@ -217,223 +210,123 @@
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    // === CONFIG SUPABASE (tuo progetto) ===
     const supabase = createClient(
       'https://pvzdilkozpspsnepedqc.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk'
     );
 
-    // === Utils ===
-    const fmtDate = (iso) => {
-      try { return iso ? new Intl.DateTimeFormat('it-IT',{ dateStyle:'long' }).format(new Date(iso)) : '—'; }
-      catch { return '—'; }
-    };
-    const escapeHTML = (s) => String(s ?? '')
-      .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
-      .replaceAll('"','&quot;').replaceAll("'","&#39;");
+    const fmtDate = (iso) => { try{ return iso? new Intl.DateTimeFormat('it-IT',{dateStyle:'long'}).format(new Date(iso)):'—'; }catch{ return '—'; } };
+    const escapeHTML = (s)=> String(s??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;");
+    const setText = (id, v)=>{ const el=document.getElementById(id); if(el) el.textContent=v; };
 
-    function setText(id, txt){ const el=document.getElementById(id); if(el) el.textContent = txt; }
-
-    // === Auth guard ===
     async function guard(){
       const { data:{ user } } = await supabase.auth.getUser();
-      if(!user){ window.location.href = 'auth.html'; return null; }
+      if(!user){ window.location.href='auth.html'; return null; }
       return user;
     }
 
-    // === Profile & tessera ===
     async function loadProfile(user){
       try{
-        // user_profiles
-        const { data: prof } = await supabase
-          .from('user_profiles')
-          .select('nome,cognome,email,role')
-          .eq('user_id', user.id)
-          .single();
-
-        setText('whoami', prof?.email || user.email || '—');
-        setText('userName', prof?.nome ? `${prof.nome} ${prof.cognome||''}`.trim() : 'Dirigente');
-        setText('userEmail', prof?.email || user.email || '—');
-        document.getElementById('userIcon').textContent = (prof?.role==='ADMIN') ? '👑' : '🎯';
-        setText('rolesSummary', prof?.role || '—');
-        setText('accessLevel', prof?.role==='ADMIN' ? 'Accesso Amministratore Completo' : 'Accesso Dirigente Autorizzato');
-      }catch(e){
-        console.warn('Profilo non trovato', e);
+        const { data:p } = await supabase.from('user_profiles').select('nome,cognome,email,role').eq('user_id', user.id).single();
+        setText('whoami', p?.email || user.email || '—');
+        setText('userName', p?.nome ? `${p.nome} ${p.cognome||''}`.trim() : 'Dirigente');
+        setText('userEmail', p?.email || user.email || '—');
+        document.getElementById('userIcon').textContent = (p?.role==='ADMIN') ? '👑' : '🎯';
+        setText('rolesSummary', p?.role || '—');
+        setText('accessLevel', p?.role==='ADMIN' ? 'Accesso Amministratore Completo' : 'Accesso Dirigente Autorizzato');
+      }catch{
         setText('whoami', user.email || '—');
-        setText('userName', 'Dirigente');
-        setText('userEmail', user.email || '—');
-        setText('rolesSummary', '—');
-        setText('accessLevel','Accesso Dirigente Autorizzato');
+        setText('userName','Dirigente'); setText('userEmail', user.email||'—'); setText('rolesSummary','—'); setText('accessLevel','Accesso Dirigente Autorizzato');
       }
     }
 
     async function loadIscrittoDal(user){
       try{
-        const { data, error } = await supabase
-          .from('tessere')
-          .select('data_emissione')
-          .eq('user_id', user.id)
-          .order('data_emissione', { ascending:true })
-          .limit(1);
-        if(error) throw error;
-        const d = data?.[0]?.data_emissione || null;
-        setText('iscrittoDal', d ? fmtDate(d) : 'Non disponibile');
-      }catch(e){
-        console.warn('tessere: ', e?.message||e);
-        setText('iscrittoDal','Non disponibile');
-      }
+        const { data } = await supabase.from('tessere').select('data_emissione').eq('user_id', user.id).order('data_emissione', { ascending:true }).limit(1);
+        setText('iscrittoDal', data?.[0]?.data_emissione ? fmtDate(data[0].data_emissione) : 'Non disponibile');
+      }catch{ setText('iscrittoDal','Non disponibile'); }
     }
 
-    // === Panoramica ===
     async function loadSystemOverview(){
       try{
         const nowIso = new Date().toISOString();
-
-        const { count: totalNews } = await supabase
-          .from('news')
-          .select('id',{ count:'exact', head:true })
-          .eq('pubblicata', true)
-          .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
-
-        const { count: featuredCount } = await supabase
-          .from('news')
-          .select('id',{ count:'exact', head:true })
-          .eq('pubblicata', true)
-          .eq('in_evidenza', true)
-          .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
-
-        setText('newsCount', typeof totalNews==='number' ? totalNews : '—');
-        setText('featuredNewsCount', typeof featuredCount==='number' ? featuredCount : '—');
-      }catch(e){
-        console.warn('overview', e);
-        setText('newsCount','—'); setText('featuredNewsCount','—');
-      }
+        const { count: totalNews } = await supabase.from('news').select('id',{count:'exact', head:true}).eq('pubblicata', true).or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
+        const { count: featuredCount } = await supabase.from('news').select('id',{count:'exact', head:true}).eq('pubblicata', true).eq('in_evidenza', true).or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
+        setText('newsCount', typeof totalNews==='number'?totalNews:'—'); setText('featuredNewsCount', typeof featuredCount==='number'?featuredCount:'—');
+      }catch{ setText('newsCount','—'); setText('featuredNewsCount','—'); }
     }
 
-    // === Ultime Notizie ===
     async function loadLatestNews(){
-      const wrap = document.getElementById('latestNews');
-      const empty = document.getElementById('newsEmptyState');
-      wrap.innerHTML = `
-        <div class="col-span-full flex items-center justify-center py-8">
-          <span class="spinner"></span><span class="font-semibold text-gray-600">Caricamento notizie…</span>
-        </div>`;
-
+      const wrap=document.getElementById('latestNews'); const empty=document.getElementById('newsEmptyState');
+      wrap.innerHTML=`<div class="col-span-full flex items-center justify-center py-8"><span class="spinner"></span></div>`;
       try{
-        const nowIso = new Date().toISOString();
-        const { data: news, error } = await supabase
+        const nowIso=new Date().toISOString();
+        const { data:news } = await supabase
           .from('news')
           .select('id,titolo,sottotitolo,immagine_url,categoria,data_pubblicazione,in_evidenza,url_articolo')
           .eq('pubblicata', true)
           .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`)
-          .order('in_evidenza',{ ascending:false })
-          .order('data_pubblicazione',{ ascending:false })
+          .order('in_evidenza',{ascending:false})
+          .order('data_pubblicazione',{ascending:false})
           .limit(6);
-
-        if(error) throw error;
-
-        if(!news || news.length===0){
-          wrap.innerHTML = '';
-          empty.classList.remove('hidden');
-          return;
-        }
-
-        empty.classList.add('hidden');
-        wrap.innerHTML = '';
-
+        if(!news || !news.length){ wrap.innerHTML=''; empty.classList.remove('hidden'); return; }
+        empty.classList.add('hidden'); wrap.innerHTML='';
         for(const n of news){
-          const a = document.createElement('article');
-          a.className = 'rounded-2xl border border-yellow-200/40 bg-white/95 overflow-hidden shadow';
-          const hasUrl = !!n.url_articolo && String(n.url_articolo).trim().length>0;
-          a.innerHTML = `
-            <div class="relative h-40 bg-gray-100 overflow-hidden">
-              ${n.immagine_url ? `<img src="${escapeHTML(n.immagine_url)}" alt="" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-4xl">📰</div>`}
-              <div class="absolute top-2 left-2"><span class="badge">${escapeHTML(n.categoria || 'GENERALE')}</span></div>
-              ${n.in_evidenza ? `<div class="absolute top-2 right-2"><span class="badge">⭐ In evidenza</span></div>` : ``}
+          const card=document.createElement('article');
+          const hasUrl=!!n.url_articolo && String(n.url_articolo).trim().length>0;
+          card.className='rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm';
+          card.innerHTML=`
+            <div class="h-40 bg-slate-100 overflow-hidden">
+              ${n.immagine_url?`<img src="${escapeHTML(n.immagine_url)}" alt="" class="w-full h-full object-cover">`:`<div class="w-full h-full flex items-center justify-center text-4xl">📰</div>`}
             </div>
-            <div class="p-5">
-              <h3 class="font-extrabold text-primary text-lg leading-snug mb-1">${escapeHTML(n.titolo)}</h3>
-              ${n.sottotitolo ? `<p class="text-gray-600 text-sm mb-3">${escapeHTML(n.sottotitolo)}</p>` : ``}
-              <div class="flex items-center justify-between text-xs text-gray-500">
+            <div class="p-4">
+              <div class="flex items-center justify-between mb-2">
+                <span class="badge">${escapeHTML(n.categoria||'GENERALE')}</span>
+                ${n.in_evidenza?'<span class="badge">⭐ In evidenza</span>':''}
+              </div>
+              <h3 class="font-extrabold text-slate-900 text-lg leading-snug mb-1">${escapeHTML(n.titolo)}</h3>
+              ${n.sottotitolo?`<p class="text-slate-600 text-sm mb-3">${escapeHTML(n.sottotitolo)}</p>`:''}
+              <div class="flex items-center justify-between text-xs text-slate-500">
                 <span>${fmtDate(n.data_pubblicazione)}</span>
-                <button class="btn-aurora text-sm px-3 py-2" ${hasUrl?`data-url="${escapeHTML(n.url_articolo)}"`:'disabled title="Nessun link disponibile"'}>
-                  Leggi l’articolo completo
-                </button>
+                <button class="btn-aurora text-xs px-3 py-2" ${hasUrl?`data-url="${escapeHTML(n.url_articolo)}"`:'disabled title="Nessun link"'}>Leggi l’articolo completo</button>
               </div>
             </div>`;
-          wrap.appendChild(a);
+          wrap.appendChild(card);
         }
-
-        // click delegato per i pulsanti "Leggi l’articolo completo"
-        wrap.addEventListener('click', (e)=>{
-          const btn = e.target.closest('button[data-url]');
-          if(btn){
-            const url = btn.getAttribute('data-url');
-            if(url) window.open(url, '_blank','noopener');
-          }
-        }, { once:true });
-
-      }catch(e){
-        console.error('news', e);
-        wrap.innerHTML = `
-          <div class="col-span-full text-center py-10">
-            <div class="text-5xl mb-4">⚠️</div>
-            <p class="text-gray-700 font-semibold">Impossibile caricare le notizie</p>
-          </div>`;
-      }
+        wrap.addEventListener('click',(e)=>{ const b=e.target.closest('button[data-url]'); if(b){ window.open(b.getAttribute('data-url'),'_blank','noopener'); } },{ once:true });
+      }catch(e){ console.error(e); wrap.innerHTML='<div class="text-center py-8 text-slate-600">Errore nel caricamento</div>'; }
     }
 
-    // === Convenzioni in evidenza ===
     async function loadFeaturedConvenzioni(){
-      const wrap = document.getElementById('featuredConvenzioni');
-      const empty = document.getElementById('convEmptyState');
+      const wrap=document.getElementById('featuredConvenzioni'); const empty=document.getElementById('convEmptyState');
       try{
-        const { data, error } = await supabase
-          .from('convenzioni')
-          .select('id,nome_azienda,descrizione,logo_url,immagine_url,link_esterno,in_evidenza,attiva,categoria,sconto_percentuale,valida_fino')
-          .eq('attiva', true)
-          .eq('in_evidenza', true)
-          .order('created_at', { ascending:false })
-          .limit(6);
-        if(error) throw error;
-
-        if(!data || data.length===0){
-          empty.classList.remove('hidden');
-          return;
-        }
-
-        empty.classList.add('hidden');
-        wrap.innerHTML = '';
-
+        const { data } = await supabase.from('convenzioni')
+          .select('id,nome_azienda,descrizione,logo_url,link_esterno,in_evidenza,attiva')
+          .eq('attiva', true).eq('in_evidenza', true)
+          .order('created_at',{ascending:false}).limit(6);
+        if(!data || !data.length){ empty.classList.remove('hidden'); return; }
+        empty.classList.add('hidden'); wrap.innerHTML='';
         for(const c of data){
-          const el = document.createElement('a');
-          el.className = 'function-card rounded-2xl border border-yellow-200/40 bg-white/95 overflow-hidden shadow';
-          el.href = c.link_esterno || '#';
-          el.target = c.link_esterno ? '_blank' : '_self';
-          el.rel = c.link_esterno ? 'noopener' : '';
-          el.innerHTML = `
-            <div class="w-full h-28 bg-gray-50 flex items-center justify-center overflow-hidden rounded-xl mb-3">
-              ${c.logo_url ? `<img src="${escapeHTML(c.logo_url)}" alt="" class="max-h-28 object-contain">` : `<div class="text-4xl">🤝</div>`}
+          const el=document.createElement('a');
+          el.className='function-card border-slate-200 bg-white';
+          el.href=c.link_esterno||'#'; el.target=c.link_esterno?'_blank':'_self'; el.rel=c.link_esterno?'noopener':'';
+          el.innerHTML=`
+            <div class="w-full h-24 bg-slate-50 rounded-lg flex items-center justify-center overflow-hidden mb-3">
+              ${c.logo_url?`<img src="${escapeHTML(c.logo_url)}" alt="" class="max-h-24 object-contain">`:'<div class="text-3xl">🤝</div>'}
             </div>
-            <div class="font-bold text-ultra-visible text-lg mb-1">${escapeHTML(c.nome_azienda || 'Convenzione')}</div>
-            <p class="text-ultra-visible opacity-80 text-sm">${escapeHTML((c.descrizione||'').slice(0,120))}${c.descrizione&&c.descrizione.length>120?'…':''}</p>
-          `;
+            <h4 class="font-extrabold">${escapeHTML(c.nome_azienda)}</h4>
+            <p class="text-slate-600 text-sm">${escapeHTML((c.descrizione||'').slice(0,110))}${c.descrizione&&c.descrizione.length>110?'…':''}</p>`;
           wrap.appendChild(el);
         }
-      }catch(e){
-        console.warn('convenzioni', e);
-        empty.classList.remove('hidden');
-      }
+      }catch{ empty.classList.remove('hidden'); }
     }
 
-    // === Logout ===
     document.getElementById('logoutBtn').addEventListener('click', async ()=>{
       try{ await supabase.auth.signOut(); }catch{}
-      window.location.href = 'index.html';
+      window.location.href='index.html';
     });
 
-    // === Bootstrap ===
-    (async function init(){
+    (async ()=>{
       const user = await guard(); if(!user) return;
       await Promise.all([ loadProfile(user), loadIscrittoDal(user), loadSystemOverview(), loadLatestNews(), loadFeaturedConvenzioni() ]);
     })();
