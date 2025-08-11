@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -6,22 +6,36 @@
     <title>Offline - MyApp</title>
     
     <!-- PWA Meta Tags -->
-    <link rel="manifest" href="/manifest.json">
+    <meta name="description" content="MyApp - Modalità offline attiva">
     <meta name="theme-color" content="#1a1a2e">
-    <meta name="background-color" content="#1a1a2e">
-
-    <!-- Icone Standard -->
-    <link rel="icon" type="image/png" sizes="16x16" href="/public/icons/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/public/icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="/public/icons/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="/public/icons/icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="/public/icons/icon-512x512.png">
-
-    <!-- iOS Support -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="MyApp">
-    <link rel="apple-touch-icon" href="/public/icons/apple-touch-icon.png">
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/icons/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/icons/favicon-16x16.png">
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png">
+    
+    <!-- Android Icons -->
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96x96.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="/icons/icon-128x128.png">
+    <link rel="icon" type="image/png" sizes="144x144" href="/icons/icon-144x144.png">
+    <link rel="icon" type="image/png" sizes="152x152" href="/icons/icon-152x152.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="/icons/icon-256x256.png">
+    <link rel="icon" type="image/png" sizes="384x384" href="/icons/icon-384x384.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512x512.png">
 
     <!-- Android Support -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -31,7 +45,6 @@
     <!-- Preconnect per performance -->
     <link rel="preconnect" href="https://cdn.tailwindcss.com">
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
-    <link rel="preconnect" href="https://lycrgzptkdkksukcwrld.supabase.co">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -448,14 +461,21 @@
             text.textContent = 'Controllo...';
             
             try {
-                // Try to fetch a small resource to check connectivity
-                const response = await fetch('/favicon.ico', { 
+                // Try to fetch the manifest to check connectivity
+                const response = await fetch('/manifest.json', { 
                     cache: 'no-cache',
-                    mode: 'no-cors'
+                    mode: 'cors'
                 });
                 
-                // If successful, reload the page
-                window.location.reload();
+                if (response.ok) {
+                    // If successful, reload the page
+                    text.textContent = 'Connesso!';
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    throw new Error('Network response was not ok');
+                }
                 
             } catch (error) {
                 // Still offline
