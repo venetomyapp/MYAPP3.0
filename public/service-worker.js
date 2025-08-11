@@ -19,11 +19,27 @@ const STATIC_ASSETS = [
   '/convenzioni.html',
   '/news.html',
   '/offline.html',
+  // Icone dalla cartella icons
+  '/icons/icon-16x16.png',
+  '/icons/icon-32x32.png',
+  '/icons/icon-72x72.png',
+  '/icons/icon-96x96.png',
+  '/icons/icon-128x128.png',
+  '/icons/icon-144x144.png',
+  '/icons/icon-152x152.png',
+  '/icons/icon-180x180.png',
+  '/icons/icon-192x192.png',
+  '/icons/icon-256x256.png',
+  '/icons/icon-384x384.png',
+  '/icons/icon-512x512.png',
+  '/icons/apple-touch-icon.png',
+  '/icons/favicon-16x16.png',
+  '/icons/favicon-32x32.png',
   // CDN Essenziali
   'https://cdn.tailwindcss.com',
   'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
-  'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js'
-  // ❌ RIMOSSO: '/assets/js/app-config.js' - Non esiste più!
+  'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
 ];
 
 // Installazione del Service Worker
@@ -184,6 +200,7 @@ function isStaticAsset(url) {
     // CDN di librerie
     /cdn\.tailwindcss\.com/,
     /cdn\.jsdelivr\.net/,
+    /cdnjs\.cloudflare\.com/,
     // Cartelle statiche
     /\/assets\//,
     /\/icons\//,
@@ -227,7 +244,7 @@ self.addEventListener('push', (event) => {
     const notificationOptions = {
       body: notificationData.body || 'Nuova notifica da MyApp',
       icon: '/icons/icon-192x192.png',
-      badge: '/icons/badge-96x96.png',
+      badge: '/icons/icon-96x96.png',
       data: notificationData.data || {},
       actions: notificationData.actions || [],
       tag: notificationData.tag || 'myapp-notification',
