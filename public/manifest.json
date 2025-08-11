@@ -1,8 +1,8 @@
 {
-  "name": "MyApp",
+  "name": "MyApp - Sistema di Gestione Digitale",
   "short_name": "MyApp",
   "description": "L'app ufficiale MyApp per gestire servizi, richieste e comunicazioni in modo efficace.",
-  "version": "1.0.0",
+  "version": "4.0.0",
   "manifest_version": 3,
   
   "start_url": "/index.html",
@@ -15,55 +15,67 @@
   
   "icons": [
     {
-      "src": "/public/icons/icon-72x72.png",
+      "src": "/icons/icon-72x72.png",
       "sizes": "72x72",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/public/icons/icon-96x96.png",
+      "src": "/icons/icon-96x96.png",
       "sizes": "96x96",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/public/icons/icon-128x128.png",
+      "src": "/icons/icon-128x128.png",
       "sizes": "128x128",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/public/icons/icon-144x144.png",
+      "src": "/icons/icon-144x144.png",
       "sizes": "144x144",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/public/icons/icon-152x152.png",
+      "src": "/icons/icon-152x152.png",
       "sizes": "152x152",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/public/icons/icon-192x192.png",
+      "src": "/icons/icon-180x180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/public/icons/icon-384x384.png",
+      "src": "/icons/icon-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
       "sizes": "384x384",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/public/icons/icon-512x512.png",
+      "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/public/icons/apple-touch-icon.png",
+      "src": "/icons/apple-touch-icon.png",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "maskable any"
@@ -78,20 +90,8 @@
       "url": "/home.html",
       "icons": [
         {
-          "src": "/public/icons/shortcut-dashboard.png",
-          "sizes": "96x96"
-        }
-      ]
-    },
-    {
-      "name": "Nuova Richiesta",
-      "short_name": "Richiesta",
-      "description": "Crea una nuova richiesta",
-      "url": "/richieste.html",
-      "icons": [
-        {
-          "src": "/public/icons/shortcut-request.png",
-          "sizes": "96x96"
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
         }
       ]
     },
@@ -102,8 +102,8 @@
       "url": "/tessera.html",
       "icons": [
         {
-          "src": "/public/icons/shortcut-tessera.png",
-          "sizes": "96x96"
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
         }
       ]
     },
@@ -114,8 +114,20 @@
       "url": "/news.html",
       "icons": [
         {
-          "src": "/public/icons/shortcut-news.png",
-          "sizes": "96x96"
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Convenzioni",
+      "short_name": "Convenzioni",
+      "description": "Accedi alle convenzioni disponibili",
+      "url": "/convenzioni.html",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
         }
       ]
     }
@@ -148,32 +160,18 @@
   
   "screenshots": [
     {
-      "src": "/public/screenshots/mobile-home.png",
-      "sizes": "640x1136",
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
       "type": "image/png",
       "platform": "narrow",
       "label": "Dashboard utente su mobile"
     },
     {
-      "src": "/public/screenshots/mobile-tessera.png",
-      "sizes": "640x1136",
-      "type": "image/png",
-      "platform": "narrow",
-      "label": "Tessera digitale su mobile"
-    },
-    {
-      "src": "/public/screenshots/tablet-dashboard.png",
-      "sizes": "1024x768",
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
       "type": "image/png",
       "platform": "wide",
       "label": "Dashboard completa su tablet"
-    },
-    {
-      "src": "/public/screenshots/desktop-admin.png",
-      "sizes": "1920x1080",
-      "type": "image/png",
-      "platform": "wide",
-      "label": "Pannello amministrativo desktop"
     }
   ],
   
@@ -206,7 +204,7 @@
       },
       "icons": [
         {
-          "src": "/public/icons/file-handler.png",
+          "src": "/icons/icon-256x256.png",
           "sizes": "256x256"
         }
       ],
