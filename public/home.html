@@ -900,7 +900,7 @@
                 const tesseraData = {
                     user_id: userId,
                     numero_tessera: numeroTessera,
-                    nome_completo: ${userProfile.nome} ${userProfile.cognome}.trim(),
+                    nome_completo: `${userProfile.nome} ${userProfile.cognome}`.trim(),
                     email: userProfile.email,
                     data_emissione: new Date().toISOString().split('T')[0],
                     data_scadenza: getDataScadenza(),
@@ -932,7 +932,7 @@
         function generateNumeroTessera() {
             const year = new Date().getFullYear();
             const random = Math.floor(Math.random() * 90000) + 10000;
-            return ${year}${random};
+            return `${year}${random}`;
         }
 
         function getDataScadenza() {
@@ -952,13 +952,13 @@
             
             const firstName = userProfile.nome || 'Utente';
             
-            if (welcomeEl) welcomeEl.textContent = Ciao, ${firstName}!;
+            if (welcomeEl) welcomeEl.textContent = `Ciao, ${firstName}!`;
             if (roleEl) roleEl.textContent = getRoleLabel(userProfile.role);
             if (nameDisplayEl) nameDisplayEl.textContent = firstName;
             
             // Aggiorna avatar
             const avatars = document.querySelectorAll('#userAvatar');
-            const initials = getInitials(${userProfile.nome} ${userProfile.cognome});
+            const initials = getInitials(`${userProfile.nome} ${userProfile.cognome}`);
             avatars.forEach(avatar => {
                 avatar.textContent = initials;
             });
@@ -1091,7 +1091,7 @@
             if (!container) return;
             
             if (richieste.length === 0) {
-                container.innerHTML = 
+                container.innerHTML = `
                     <div class="text-center py-12 text-white">
                         <div class="text-6xl mb-4">📋</div>
                         <h3 class="text-xl font-bold mb-2">Nessuna richiesta</h3>
@@ -1100,7 +1100,7 @@
                             Invia la tua prima richiesta
                         </button>
                     </div>
-                ;
+                `;
                 return;
             }
             
@@ -1109,7 +1109,7 @@
                 const priorityColor = getPriorityColor(richiesta.priorita);
                 const dataCreazione = new Date(richiesta.created_at).toLocaleDateString('it-IT');
                 
-                return 
+                return `
                     <div class="glass-morphism rounded-xl p-4 hover:bg-white/10 transition-all cursor-pointer" 
                          onclick="viewRichiestaDetail('${richiesta.id}')">
                         <div class="flex items-start justify-between mb-3">
@@ -1135,12 +1135,12 @@
                         
                         <div class="flex items-center justify-between text-xs text-white/60">
                             <span>
-                                ${richiesta.dirigente_nome ? 👤 ${richiesta.dirigente_nome} : '⏳ In attesa'}
+                                ${richiesta.dirigente_nome ? `👤 ${richiesta.dirigente_nome}` : '⏳ In attesa'}
                             </span>
                             <span>ID: #${richiesta.id.slice(-8)}</span>
                         </div>
                     </div>
-                ;
+                `;
             }).join('');
         }
 
@@ -1149,22 +1149,22 @@
             if (!container) return;
             
             if (newsArray.length === 0) {
-                container.innerHTML = 
+                container.innerHTML = `
                     <div class="text-center py-8 text-gray-500">
                         <div class="text-4xl mb-2">📰</div>
                         <div>Nessuna notizia disponibile al momento</div>
                     </div>
-                ;
+                `;
                 return;
             }
             
-            container.innerHTML = newsArray.map(news => 
+            container.innerHTML = newsArray.map(news => `
                 <div class="border-b border-gray-200 pb-4 mb-4 last:border-b-0 last:pb-0 last:mb-0 hover:bg-gray-50 p-4 rounded-lg transition-colors cursor-pointer"
                      onclick="readNews('${news.id}')">
                     <div class="flex justify-between items-start">
                         <div class="flex-1">
                             <h3 class="text-textDark font-semibold text-lg mb-1">${news.titolo}</h3>
-                            ${news.sottotitolo ? <p class="text-gray-600 text-sm mb-2">${news.sottotitolo}</p> : ''}
+                            ${news.sottotitolo ? `<p class="text-gray-600 text-sm mb-2">${news.sottotitolo}</p>` : ''}
                             <div class="flex items-center space-x-3 text-xs text-gray-500">
                                 <span class="bg-blue-600 text-white px-2 py-1 rounded">${news.categoria}</span>
                                 <span>📅 ${formatDate(news.created_at)}</span>
@@ -1176,7 +1176,7 @@
                         </div>
                     </div>
                 </div>
-            ).join('');
+            `).join('');
         }
 
         function displayConvenzioni(convenzioni) {
@@ -1184,29 +1184,29 @@
             if (!container) return;
             
             if (convenzioni.length === 0) {
-                container.innerHTML = 
+                container.innerHTML = `
                     <div class="glass-morphism rounded-3xl p-12 col-span-3 text-center">
                         <div class="text-6xl mb-4">🤝</div>
                         <h3 class="text-white text-xl font-bold mb-2">Nessuna convenzione disponibile</h3>
                         <p class="text-white/70">Le convenzioni verranno pubblicate a breve</p>
                     </div>
-                ;
+                `;
                 return;
             }
 
             container.innerHTML = convenzioni.map(c => {
                 const excerpt = (c.descrizione || '').slice(0, 120) + (c.descrizione?.length > 120 ? '…' : '');
-                const sconto = c.sconto_percentuale ? ${c.sconto_percentuale}% : '';
+                const sconto = c.sconto_percentuale ? `${c.sconto_percentuale}%` : '';
                 const isInEvidenza = c.in_evidenza === true || c.in_evidenza === 'true';
                 const validaFino = c.valida_fino ? new Date(c.valida_fino) : null;
                 const isScaduta = validaFino && validaFino < new Date();
                 
-                return 
+                return `
                     <div class="action-card p-6 ${isScaduta ? 'opacity-75' : ''}"
-                         onclick="${isScaduta ? '' : openConvenzione('${c.id}')}">
+                         onclick="${isScaduta ? '' : `openConvenzione('${c.id}')`}">
                         <div class="flex items-start justify-between mb-4">
                             <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center text-white text-sm font-bold">
-                                ${sconto ? -${sconto} : '🤝'}
+                                ${sconto ? `-${sconto}` : '🤝'}
                             </div>
                             <div class="flex flex-col gap-1">
                                 ${isInEvidenza ? '<div class="bg-emerald-600 text-white px-2 py-1 rounded-full text-xs font-bold">IN EVIDENZA</div>' : ''}
@@ -1229,16 +1229,16 @@
                             </span>
                         </div>
                         
-                        ${validaFino ? 
+                        ${validaFino ? `
                             <div class="mt-3 pt-3 border-t border-white/10">
                                 <div class="text-white/60 text-xs flex items-center gap-1">
                                     <span class="${isScaduta ? 'text-red-400' : 'text-green-400'}">⏰</span>
                                     ${isScaduta ? 'Scaduta il' : 'Valida fino al'} ${validaFino.toLocaleDateString('it-IT')}
                                 </div>
                             </div>
-                         : ''}
+                        ` : ''}
                     </div>
-                ;
+                `;
             }).join('');
         }
 
@@ -1247,16 +1247,16 @@
             if (!container) return;
             
             if (notifications.length === 0) {
-                container.innerHTML = 
+                container.innerHTML = `
                     <div class="text-center py-8 text-gray-500">
                         <div class="text-4xl mb-2">🔔</div>
                         <div class="text-sm">Nessuna notifica</div>
                     </div>
-                ;
+                `;
                 return;
             }
             
-            container.innerHTML = notifications.map(notification => 
+            container.innerHTML = notifications.map(notification => `
                 <div class="p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer ${!notification.read ? 'bg-blue-50 border-l-4 border-blue-600' : ''}"
                      onclick="markNotificationAsRead('${notification.id}')">
                     <div class="flex items-start gap-3">
@@ -1268,7 +1268,7 @@
                         </div>
                     </div>
                 </div>
-            ).join('');
+            `).join('');
         }
 
         function updateNotificationBadge(count) {
@@ -1402,15 +1402,15 @@
         }
 
         function readNews(newsId) {
-            window.location.href = news.html?id=${newsId};
+            window.location.href = `news.html?id=${newsId}`;
         }
 
         function viewRichiestaDetail(richiestaId) {
-            window.location.href = richiesta-detail.html?id=${richiestaId};
+            window.location.href = `richiesta-detail.html?id=${richiestaId}`;
         }
 
         function openConvenzione(convenzioneId) {
-            window.location.href = convenzioni.html#${convenzioneId};
+            window.location.href = `convenzioni.html#${convenzioneId}`;
         }
 
         // === FUNZIONI UTILITY ===
