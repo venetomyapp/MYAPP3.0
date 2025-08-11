@@ -10,13 +10,14 @@
   <meta name="theme-color" content="#1a1a2e">
   <link rel="icon" href="/icons/favicon.ico" type="image/x-icon">
 
-  <!-- iOS PWA -->
+  <!-- PWA generica + iOS -->
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="MyApp">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 
-  <!-- Fonts & Tailwind -->
+  <!-- Fonts & Tailwind (CDN per prototipo; in produzione usa build) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -64,11 +65,15 @@
     .glass-card{ background:rgba(255,255,255,.95); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,.2); box-shadow:var(--shadow-glass); }
     .glass-strong{ background:rgba(255,255,255,.12); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:var(--border-glass); box-shadow:var(--shadow-glass); }
     .text-ultra-visible{ color:#fff; text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1); font-weight:800;}
+    .file-tile{ transition:transform .2s ease, box-shadow .2s ease }
     .file-tile:hover{ transform:translateY(-4px); box-shadow:0 16px 40px rgba(0,0,0,.15);}
     .fade-in{ animation:fadeIn .6s ease-out both; opacity:0 }
     @keyframes fadeIn{ from{opacity:0; transform:translateY(20px)} to{opacity:1; transform:translateY(0)} }
     .loading-skeleton{ background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size:200% 100%; animation:loading 1.5s infinite; border-radius:12px; }
     @keyframes loading{ 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+    /* Stato attivo per i filtri */
+    .category-filter{ background:rgba(255,255,255,.85); color:#0a0a23; border:1px solid rgba(0,0,0,.06); }
+    .category-filter.active{ background:linear-gradient(90deg,#e94560,#ff006e); color:#fff; box-shadow:0 8px 24px rgba(233,69,96,.25); }
     @media (prefers-reduced-motion:reduce){ *{animation:none!important; transition:none!important} body::before{animation:none} }
   </style>
 </head>
@@ -79,14 +84,17 @@
     <div class="max-w-4xl mx-auto flex justify-between items-center">
       <div class="flex items-center space-x-3">
         <button id="backBtn" class="text-ultra-visible hover:text-cyan transition-colors" aria-label="Indietro">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
           </svg>
         </button>
         <div class="flex items-center space-x-2">
           <div class="w-10 h-10 bg-gradient-to-r from-cyan to-teal rounded-full flex items-center justify-center">
-            <img src="/icons/folder.svg" alt="FileBox" class="w-6 h-6" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-            <span class="text-white font-bold fluid-sm hidden">📁</span>
+            <!-- Folder icon inline -->
+            <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M10 4H4a2 2 0 0 0-2 2v1h20V7a2 2 0 0 0-2-2h-8l-2-1z"></path>
+              <path d="M22 9H2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9z"></path>
+            </svg>
           </div>
           <h1 class="fluid-xl font-black text-ultra-visible">FileBox</h1>
         </div>
@@ -114,8 +122,12 @@
       <div class="grid md:grid-cols-3 gap-4 items-center">
         <div class="md:col-span-2 glass-card rounded-2xl p-3">
           <div class="flex items-center space-x-3">
-            <img src="/icons/search.svg" class="w-5 h-5" alt="search" onerror="this.style.display='none'">
-            <input id="searchInput" type="text" class="w-full outline-none bg-transparent fluid-base text-primary" placeholder="Cerca per nome o estensione..." maxlength="100">
+            <!-- Search icon inline -->
+            <svg class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" stroke-width="2"></circle>
+              <path d="M20 20l-3.5-3.5" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+            <input id="searchInput" type="text" class="w-full outline-none bg-transparent fluid-base text-primary" placeholder="Cerca per nome o estensione..." maxlength="100" autocomplete="off">
           </div>
         </div>
         <div class="flex gap-2 overflow-x-auto">
@@ -202,6 +214,7 @@
     // Stato
     let currentUser = null;
     let allFiles = []; // {name, size, ext, type, megaFile}
+    let lastObjectURL = null; // per cleanup
 
     // Utils
     const $ = s => document.querySelector(s);
@@ -338,7 +351,7 @@
       const iconFor = t => ({ doc:'📄', img:'🖼️', vid:'🎬', aud:'🎧', other:'📦' }[t] || '📦');
 
       container.innerHTML = filtered.map(f=>`
-        <button class="file-tile glass-card rounded-2xl p-4 text-left transition-all" data-name="${encodeURIComponent(f.name)}">
+        <button class="file-tile glass-card rounded-2xl p-4 text-left" data-name="${encodeURIComponent(f.name)}" aria-label="Apri ${f.name}">
           <div class="flex items-start gap-3">
             <div class="w-12 h-12 rounded-xl bg-gradient-to-r from-cyan to-teal flex items-center justify-center text-xl">${iconFor(f.type)}</div>
             <div class="flex-1 min-w-0">
@@ -351,7 +364,7 @@
 
       // bind open
       $$('#filesContainer .file-tile').forEach(btn=>{
-        btn.addEventListener('click', ()=> {
+        btn.addEventListener('click', ()=>{
           const name = decodeURIComponent(btn.dataset.name);
           const fileObj = allFiles.find(x=>x.name===name);
           if (fileObj) openViewer(fileObj);
@@ -375,6 +388,12 @@
       $('#viewerMeta').textContent = `${file.ext.toUpperCase()} • ${humanSize(file.size)}`;
       $('#viewerBody').innerHTML = '';
 
+      // pulisco eventuale URL precedente
+      if (lastObjectURL){
+        try { URL.revokeObjectURL(lastObjectURL); } catch {}
+        lastObjectURL = null;
+      }
+
       try{
         if (Number.isFinite(file.size) && file.size > PREVIEW_SIZE_LIMIT){
           $('#viewerBody').innerHTML = `
@@ -384,26 +403,32 @@
                 <p class="text-muted">Usa “Scarica” per aprirlo in locale.</p>
               </div>
             </div>`;
+          // comunque preparo il download “diretto” via streaming MEGA
+          const streamUrl = await ensureDownloadURL(file);
+          const a = $('#downloadBtn');
+          a.removeAttribute('download'); // lascia gestione al browser
+          a.href = streamUrl;
         } else {
           const data = await new Promise((res, rej)=> file.megaFile.download((err, bytes)=> err ? rej(err) : res(bytes)));
           const blob = new Blob([data], { type: mimeFromExt(file.ext) });
           const url = URL.createObjectURL(blob);
+          lastObjectURL = url;
 
-          // Download btn
+          // Download btn: scarica il blob (nessun target _blank => niente pagina data:)
           const a = $('#downloadBtn');
           a.href = url;
           a.setAttribute('download', file.name);
 
-          // Render viewer content
+          // Render viewer content nella stessa pagina che ha creato il blob
           const body = $('#viewerBody');
           if (file.type==='img'){
-            body.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-gray-50"><img src="${url}" class="max-w-full max-h-full object-contain"/></div>`;
+            body.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-gray-50"><img src="${url}" class="max-w-full max-h-full object-contain" alt="${file.name}"/></div>`;
           } else if (file.type==='vid'){
             body.innerHTML = `<video src="${url}" controls class="w-full h-full bg-black rounded-b-2xl"></video>`;
           } else if (file.type==='aud'){
             body.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-gray-50"><audio src="${url}" controls class="w-full max-w-xl"></audio></div>`;
           } else if (file.ext==='pdf'){
-            body.innerHTML = `<iframe src="${url}" class="w-full h-full rounded-b-2xl" title="${file.name}"></iframe>`;
+            body.innerHTML = `<iframe src="${url}" class="w-full h-full rounded-b-2xl" title="${file.name}" referrerpolicy="no-referrer"></iframe>`;
           } else {
             body.innerHTML = `
               <div class="w-full h-full flex items-center justify-center p-6 text-center">
@@ -423,17 +448,42 @@
               <p class="text-muted">Prova a scaricare il file.</p>
             </div>
           </div>`;
+        // Fallback: link diretto/stream se possibile
+        try {
+          const streamUrl = await ensureDownloadURL(file);
+          const a = $('#downloadBtn');
+          a.removeAttribute('download');
+          a.href = streamUrl;
+        } catch {}
       }finally{
         hide($('#viewerLoading'));
         show($('#viewerBody'));
       }
     }
 
+    // Ottiene (se possibile) un URL “stream” diretto da MEGA per file grandi
+    async function ensureDownloadURL(file){
+      return await new Promise((resolve, reject)=>{
+        try{
+          file.megaFile.link((err, url)=>{
+            if (err || !url) return reject(err || new Error('No URL'));
+            resolve(url);
+          });
+        }catch(e){ reject(e); }
+      });
+    }
+
     $('#closeViewer').addEventListener('click', ()=>{
-      const media = $('#viewerBody video, #viewerBody audio');
-      media?.pause?.();
+      try {
+        const media = $('#viewerBody video, #viewerBody audio');
+        media?.pause?.();
+      } catch {}
       $('#viewerBody').innerHTML = '';
       hide($('#viewer'));
+      if (lastObjectURL){
+        try { URL.revokeObjectURL(lastObjectURL); } catch {}
+        lastObjectURL = null;
+      }
     });
 
     // Filtri e ricerca
@@ -451,6 +501,13 @@
       await checkAuth();
       await loadMega();
     })();
+
+    // pulizia all'uscita
+    window.addEventListener('beforeunload', ()=>{
+      if (lastObjectURL){
+        try { URL.revokeObjectURL(lastObjectURL); } catch {}
+      }
+    });
   </script>
 </body>
 </html>
