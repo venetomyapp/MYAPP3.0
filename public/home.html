@@ -17,17 +17,16 @@
             theme: {
                 extend: {
                     colors: {
-                        // Aurora Boreale 2025 Palette
-                        primary: '#1a1a2e',      // Blu notte profondo
-                        secondary: '#16213e',     // Blu oceano
-                        accent: '#0f3460',        // Blu acciaio
-                        aurora: '#e94560',        // Rosa aurora
-                        cyan: '#00d4ff',          // Cyan elettrico
-                        magenta: '#ff006e',       // Magenta vibrante
-                        gold: '#ffd700',          // Oro elegante
-                        teal: '#03dac6',          // Teal premium
-                        dark: '#0a0a23',          // Nero cyber
-                        light: '#f8fafc',         // Bianco ghiaccio
+                        primary: '#1a1a2e',
+                        secondary: '#16213e',
+                        accent: '#0f3460',
+                        aurora: '#e94560',
+                        cyan: '#00d4ff',
+                        magenta: '#ff006e',
+                        gold: '#ffd700',
+                        teal: '#03dac6',
+                        dark: '#0a0a23',
+                        light: '#f8fafc',
                         textDark: '#1C1C1E',
                         backgroundLight: '#F4F4F8',
                     },
@@ -48,14 +47,12 @@
     
     <!-- STILI CSS COMPLETI -->
     <style>
-        /* === VARIABILI CSS === */
         :root {
             --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
             --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
             --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
         }
 
-        /* === SFONDO PRINCIPALE === */
         body {
             background: var(--gradient-aurora);
             background-size: 400% 400%;
@@ -63,382 +60,87 @@
             min-height: 100vh;
         }
 
-        /* === ANIMAZIONI === */
         @keyframes aurora {
             0%, 100% { background-position: 0% 50%; }
             25% { background-position: 100% 50%; }
             50% { background-position: 100% 100%; }
             75% { background-position: 0% 100%; }
         }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
+        .text-ultra-visible { color:#fff; text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1); font-weight:800; }
+        .text-white { text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1); }
 
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
+        .glass-morphism { background: rgba(255,255,255,.08); backdrop-filter: blur(12px); border:1px solid rgba(255,255,255,.18); box-shadow:0 8px 32px rgba(31,38,135,.37); }
+        .glass-card { background: rgba(255,255,255,.95); backdrop-filter: blur(16px); border:1px solid rgba(255,255,255,.3); }
 
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(233, 69, 96, 0.5); }
-            50% { box-shadow: 0 0 40px rgba(0, 212, 255, 0.8); }
-        }
+        .btn-aurora { background: var(--gradient-magic); color:white; border:2px solid rgba(233,69,96,.3); transition: all .4s cubic-bezier(.4,0,.2,1); font-weight:700; }
+        .btn-aurora:hover { transform: translateY(-3px) scale(1.05); box-shadow:0 20px 40px rgba(233,69,96,.4); border-color: rgba(233,69,96,.8); }
 
-        /* === TIPOGRAFIA ULTRA-VISIBILE === */
-        .text-ultra-visible {
-            color: #ffffff;
-            text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
-            font-weight: 800;
-        }
+        .stat-card { background: linear-gradient(135deg,rgba(255,255,255,.15),rgba(255,255,255,.05)); backdrop-filter: blur(15px); border:1px solid rgba(255,255,255,.2); border-radius:20px; transition: all .3s ease; }
+        .stat-card:hover { transform: translateY(-3px) scale(1.05); background: linear-gradient(135deg,rgba(255,255,255,.25),rgba(255,255,255,.15)); box-shadow:0 15px 30px rgba(0,0,0,.2); }
 
-        .text-white {
-            text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
-        }
+        .loading-skeleton { background: linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size:200% 100%; animation: shimmer 1.5s infinite; border-radius:12px; }
 
-        /* === GLASSMORPHISM === */
-        .glass-morphism {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        }
+        .notification-dropdown { display:none; position:absolute; top:100%; right:0; background: rgba(255,255,255,.95); backdrop-filter: blur(20px); border:1px solid rgba(255,255,255,.3); border-radius:16px; box-shadow:0 15px 35px rgba(0,0,0,.2); width:350px; max-height:400px; overflow-y:auto; z-index:1000; }
+        .notification-dropdown.show { display:block; animation: slideDown .3s ease; }
+        @keyframes slideDown { from { opacity:0; transform: translateY(-10px);} to { opacity:1; transform: translateY(0);} }
+        .notification-badge { background:#dc2626; color:white; border-radius:50%; width:18px; height:18px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; }
 
-        .glass-strong {
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-        }
+        .priority-indicator { width:8px; height:8px; border-radius:50%; display:inline-block; }
+        .priority-alta{ background:#ef4444;} .priority-normale{ background:#3b82f6;} .priority-bassa{ background:#10b981;}
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
+        .line-clamp-2{ display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow: hidden; }
 
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        /* === BOTTONI === */
-        .btn-aurora {
-            background: var(--gradient-magic);
-            color: white;
-            border: 2px solid rgba(233, 69, 96, 0.3);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: 700;
-        }
-
-        .btn-aurora:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(233, 69, 96, 0.4);
-            border-color: rgba(233, 69, 96, 0.8);
-        }
-
-        .btn-cyber {
-            background: var(--gradient-cyber);
-            border: 2px solid rgba(0, 212, 255, 0.3);
-            color: white;
-            font-weight: 700;
-        }
-
-        .btn-cyber:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.4);
-            border-color: rgba(0, 212, 255, 0.8);
-        }
-
-        .btn-primary {
-            background: var(--gradient-aurora);
-            color: white;
-            border: 2px solid rgba(26, 26, 46, 0.3);
-            font-weight: 700;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(26, 26, 46, 0.4);
-            border-color: rgba(26, 26, 46, 0.8);
-        }
-
-        /* === CARDS === */
-        .card-hover {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .card-hover:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-3px) scale(1.05);
-            background: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.15));
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-        }
-
-        /* === FORM ELEMENTS === */
-        .search-box {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(16px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            padding: 16px 20px;
-            width: 100%;
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 24px;
-            transition: all 0.3s ease;
-        }
-
-        .search-box:focus {
-            outline: none;
-            border-color: #e94560;
-            box-shadow: 0 0 0 4px rgba(233, 69, 96, 0.2);
-            transform: scale(1.02);
-        }
-
-        .input-field {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(16px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 15px;
-            padding: 14px 18px;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .input-field:focus {
-            outline: none;
-            border-color: #e94560;
-            box-shadow: 0 0 0 4px rgba(233, 69, 96, 0.2);
-            transform: scale(1.02);
-        }
-
-        /* === FLOATING ELEMENTS === */
-        .floating-help {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            z-index: 1000;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        /* === LOADING SKELETON === */
-        .loading-skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 12px;
-        }
-
-        /* === EMPTY STATE === */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: white;
-        }
-
-        /* === RESPONSIVE TYPOGRAPHY === */
-        .hero-title {
-            font-size: clamp(3rem, 12vw, 6rem);
-            font-weight: 900;
-        }
-
-        .section-title {
-            font-size: clamp(2.2rem, 8vw, 4rem);
-            font-weight: 900;
-        }
-
-        .hero-subtitle {
-            font-size: clamp(1.5rem, 6vw, 2.5rem);
-            font-weight: 800;
-        }
-
-        /* === NOTIFICATION DROPDOWN === */
-        .notification-dropdown {
-            display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            width: 350px;
-            max-height: 400px;
-            overflow-y: auto;
-            z-index: 1000;
-        }
-
-        .notification-dropdown.show {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .notification-badge {
-            background: #dc2626;
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        /* === ACTION CARDS === */
-        .action-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 16px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .action-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
-            border-color: rgba(233, 69, 96, 0.3);
-            background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
-        }
-
-        /* === REQUEST PRIORITY & STATUS === */
-        .priority-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .priority-alta { background: #ef4444; }
-        .priority-normale { background: #3b82f6; }
-        .priority-bassa { background: #10b981; }
-
-        .request-status-ricevuta { background: #3b82f6; }
-        .request-status-in_esame { background: #f59e0b; }
-        .request-status-in_lavorazione { background: #f97316; }
-        .request-status-completata { background: #10b981; }
-        .request-status-chiusa { background: #6b7280; }
-
-        /* === LINE CLAMP === */
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        /* === REDUCED MOTION === */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-
-        /* === RESPONSIVE BREAKPOINTS === */
-        @media (max-width: 640px) {
-            .hero-title { font-size: 2.25rem; line-height: 2.5rem; }
-        }
-
-        @media (min-width: 641px) and (max-width: 1024px) {
-            .hero-title { font-size: 3rem; line-height: 3.5rem; }
-        }
-
-        @media (min-width: 1025px) {
-            .max-w-md { max-width: 48rem; }
-        }
+        .hero-title { font-size: clamp(3rem, 12vw, 6rem); font-weight:900; }
+        @media (max-width: 640px) { .hero-title { font-size:2.25rem; line-height:2.5rem; } }
     </style>
 </head>
 
 <body class="flex flex-col min-h-screen font-sans">
 
-    <!-- HEADER PROFESSIONALE -->
+    <!-- HEADER -->
     <header class="glass-morphism sticky top-0 z-40">
         <div class="container mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
-                <!-- Logo e Brand -->
                 <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-primary via-secondary to-accent rounded-xl flex items-center justify-center relative">
-                        <span class="text-white font-black text-xl">📊</span>
-                    </div>
+                    <div class="w-12 h-12 bg-gradient-to-br from-primary via-secondary to-accent rounded-xl flex items-center justify-center"><span class="text-white font-black text-xl">📊</span></div>
                     <div>
                         <span class="text-ultra-visible text-2xl font-black">MyApp</span>
-                        <div class="text-white text-sm flex items-center gap-2">
-                            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                            Dashboard Personale
-                        </div>
+                        <div class="text-white text-sm flex items-center gap-2"><span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>Dashboard Personale</div>
                     </div>
                 </div>
-                
-                <!-- Toolbar -->
+
                 <div class="flex items-center space-x-6">
                     <!-- Notifiche -->
                     <div class="relative">
                         <button id="notificationBtn" class="text-white hover:text-aurora transition-all duration-300 transform hover:scale-110">
-                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                            </svg>
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                         </button>
                         <span id="notificationBadge" class="notification-badge absolute -top-2 -right-2 hidden">0</span>
-                        
-                        <!-- Dropdown Notifiche -->
                         <div id="notificationDropdown" class="notification-dropdown">
                             <div class="p-4 border-b border-gray-200">
                                 <div class="flex justify-between items-center">
                                     <h3 class="font-bold text-textDark">🔔 Notifiche</h3>
-                                    <button id="markAllRead" class="text-aurora hover:text-magenta text-sm font-semibold">
-                                        Segna tutte lette
-                                    </button>
+                                    <button id="markAllRead" class="text-aurora hover:text-magenta text-sm font-semibold">Segna tutte lette</button>
                                 </div>
                             </div>
-                            <div id="notificationList" class="p-2 max-h-80 overflow-y-auto">
-                                <!-- Le notifiche verranno caricate qui -->
-                            </div>
+                            <div id="notificationList" class="p-2 max-h-80 overflow-y-auto"></div>
                         </div>
                     </div>
-                    
-                    <!-- Profilo Utente -->
+
+                    <!-- Profilo -->
                     <div class="flex items-center space-x-3">
                         <div class="text-white text-right">
                             <div id="userWelcome" class="font-semibold text-sm">Caricamento...</div>
                             <div id="userRole" class="text-xs opacity-80">Utente</div>
                         </div>
-                        <div id="userAvatar" class="w-10 h-10 bg-gradient-to-br from-aurora to-cyan rounded-full flex items-center justify-center text-white font-bold text-lg border-2 border-white/20">
-                            U
-                        </div>
+                        <div id="userAvatar" class="w-10 h-10 bg-gradient-to-br from-aurora to-cyan rounded-full flex items-center justify-center text-white font-bold text-lg border-2 border-white/20">U</div>
                     </div>
-                    
+
                     <!-- Logout -->
                     <button id="logoutBtn" class="btn-aurora px-5 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                        </svg>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                         Esci
                     </button>
                 </div>
@@ -446,16 +148,14 @@
         </div>
     </header>
 
-    <!-- MAIN CONTENT -->
+    <!-- MAIN -->
     <main class="container mx-auto px-4 py-8 flex-grow">
-        
-        <!-- SEZIONE BENVENUTO -->
+        <!-- Welcome -->
         <section class="mb-12">
             <div class="glass-morphism rounded-3xl p-8 md:p-12 relative overflow-hidden">
-                <!-- Decorative Elements -->
                 <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-aurora/20 to-cyan/20 rounded-full blur-xl"></div>
                 <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-magenta/20 to-teal/20 rounded-full blur-lg"></div>
-                
+
                 <div class="flex flex-col lg:flex-row items-center justify-between gap-8 relative z-10">
                     <div class="flex-grow text-center lg:text-left">
                         <div class="mb-6">
@@ -464,209 +164,62 @@
                                 <span class="text-white/80 text-sm font-semibold uppercase tracking-wider">Dashboard Personale</span>
                             </div>
                         </div>
-                        
-                        <h1 class="hero-title text-ultra-visible mb-4 leading-tight">
-                            Benvenuto,<br>
-                            <span id="userNameDisplay" class="text-cyan">
-                                Utente
-                            </span>
-                        </h1>
-                        
-                        <p class="text-white/90 text-lg md:text-xl mb-8 max-w-2xl">
-                            Accedi ai servizi e alle informazioni attraverso la tua area riservata personalizzata.
-                        </p>
-                        
+
+                        <h1 class="hero-title text-ultra-visible mb-4 leading-tight">Benvenuto,<br><span id="userNameDisplay" class="text-cyan">Utente</span></h1>
+                        <p class="text-white/90 text-lg md:text-xl mb-8 max-w-2xl">Accedi ai servizi e alle informazioni attraverso la tua area riservata personalizzata.</p>
+
                         <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
+                            <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm"><div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div><span class="text-sm font-medium">Online</span></div>
                             <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
-                                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                                <span class="text-sm font-medium">Online</span>
-                            </div>
-                            <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                                 <span class="text-sm font-medium">Connessione sicura</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Logo App -->
                     <div class="flex-shrink-0 relative">
                         <div class="w-32 h-32 bg-gradient-to-br from-primary via-secondary to-accent rounded-full flex items-center justify-center relative border-4 border-white/20 shadow-2xl">
-                            <div class="text-center">
-                                <div class="text-4xl mb-1 filter drop-shadow-lg">📊</div>
-                                <div class="text-white text-xs font-bold opacity-90">MyApp</div>
-                            </div>
+                            <div class="text-center"><div class="text-4xl mb-1 filter drop-shadow-lg">📊</div><div class="text-white text-xs font-bold opacity-90">MyApp</div></div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SEZIONE STATISTICHE PERSONALI -->
+        <!-- Stats -->
         <section class="mb-12">
             <div class="flex items-center gap-4 mb-8">
-                <div class="w-12 h-12 bg-gradient-to-br from-cyan to-teal rounded-xl flex items-center justify-center">
-                    <span class="text-white text-2xl">📈</span>
-                </div>
+                <div class="w-12 h-12 bg-gradient-to-br from-cyan to-teal rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📈</span></div>
                 <h2 class="text-ultra-visible text-3xl font-black">I Tuoi Dati</h2>
             </div>
-            
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="stat-card p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div class="text-white text-2xl font-bold" id="memberSince">-</div>
-                            <div class="text-white text-sm opacity-80">Iscritto dal</div>
-                        </div>
-                        <div class="text-4xl">📅</div>
-                    </div>
-                </div>
-                
-                <div class="stat-card p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div class="text-white text-2xl font-bold" id="numeroTessera">In generazione...</div>
-                            <div class="text-white text-sm opacity-80">Numero Tessera</div>
-                        </div>
-                        <div class="text-4xl">🎫</div>
-                    </div>
-                </div>
-                
-                <div class="stat-card p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div class="text-white text-2xl font-bold" id="richiesteCount">-</div>
-                            <div class="text-white text-sm opacity-80">Richieste Attive</div>
-                        </div>
-                        <div class="text-4xl">📋</div>
-                    </div>
-                </div>
-                
-                <div class="stat-card p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div class="text-white text-2xl font-bold" id="profileStatus">Attivo</div>
-                            <div class="text-white text-sm opacity-80">Stato Profilo</div>
-                        </div>
-                        <div class="text-4xl">✅</div>
-                    </div>
-                </div>
+                <div class="stat-card p-6"><div class="flex items-center justify-between"><div><div class="text-white text-2xl font-bold" id="memberSince">-</div><div class="text-white text-sm opacity-80">Iscritto dal</div></div><div class="text-4xl">📅</div></div></div>
+                <div class="stat-card p-6"><div class="flex items-center justify-between"><div><div class="text-white text-2xl font-bold" id="numeroTessera">In generazione...</div><div class="text-white text-sm opacity-80">Numero Tessera</div></div><div class="text-4xl">🎫</div></div></div>
+                <div class="stat-card p-6"><div class="flex items-center justify-between"><div><div class="text-white text-2xl font-bold" id="richiesteCount">-</div><div class="text-white text-sm opacity-80">Richieste Attive</div></div><div class="text-4xl">📋</div></div></div>
+                <div class="stat-card p-6"><div class="flex items-center justify-between"><div><div class="text-white text-2xl font-bold" id="profileStatus">Attivo</div><div class="text-white text-sm opacity-80">Stato Profilo</div></div><div class="text-4xl">✅</div></div></div>
             </div>
         </section>
 
-        <!-- SEZIONE AZIONI PRINCIPALI -->
+        <!-- Azioni -->
         <section class="mb-12">
             <div class="flex items-center gap-4 mb-8">
-                <div class="w-12 h-12 bg-gradient-to-br from-aurora to-magenta rounded-xl flex items-center justify-center">
-                    <span class="text-white text-2xl">⚡</span>
-                </div>
+                <div class="w-12 h-12 bg-gradient-to-br from-aurora to-magenta rounded-xl flex items-center justify-center"><span class="text-white text-2xl">⚡</span></div>
                 <h2 class="text-ultra-visible text-3xl font-black">Azioni Principali</h2>
             </div>
-            
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div onclick="goToRichieste()" class="action-card p-6 text-center">
-                    <div class="text-4xl mb-4">📝</div>
-                    <h3 class="text-white text-lg font-bold mb-2">Nuova Richiesta</h3>
-                    <p class="text-white/80 text-sm mb-4">Invia una nuova richiesta</p>
-                    <div class="text-aurora text-xs font-semibold">
-                        Avvia procedura →
-                    </div>
-                </div>
-                
-                <div onclick="goToTessera()" class="action-card p-6 text-center">
-                    <div class="text-4xl mb-4">🎫</div>
-                    <h3 class="text-white text-lg font-bold mb-2">Tessera Digitale</h3>
-                    <p class="text-white/80 text-sm">Visualizza e scarica la tessera</p>
-                </div>
-                
-                <div onclick="goToProfilo()" class="action-card p-6 text-center">
-                    <div class="text-4xl mb-4">👤</div>
-                    <h3 class="text-white text-lg font-bold mb-2">Il Mio Profilo</h3>
-                    <p class="text-white/80 text-sm">Modifica i tuoi dati</p>
-                </div>
-                
-                <div onclick="goToStrumenti()" class="action-card p-6 text-center">
-                    <div class="text-4xl mb-4">🛠️</div>
-                    <h3 class="text-white text-lg font-bold mb-2">Strumenti</h3>
-                    <p class="text-white/80 text-sm">Utility e strumenti di lavoro</p>
-                </div>
+                <div onclick="goToRichieste()" class="action-card p-6 text-center cursor-pointer"><div class="text-4xl mb-4">📝</div><h3 class="text-white text-lg font-bold mb-2">Nuova Richiesta</h3><p class="text-white/80 text-sm mb-4">Invia una nuova richiesta</p><div class="text-aurora text-xs font-semibold">Avvia procedura →</div></div>
+                <div onclick="goToTessera()" class="action-card p-6 text-center cursor-pointer"><div class="text-4xl mb-4">🎫</div><h3 class="text-white text-lg font-bold mb-2">Tessera Digitale</h3><p class="text-white/80 text-sm">Visualizza e scarica la tessera</p></div>
+                <div onclick="goToProfilo()" class="action-card p-6 text-center cursor-pointer"><div class="text-4xl mb-4">👤</div><h3 class="text-white text-lg font-bold mb-2">Il Mio Profilo</h3><p class="text-white/80 text-sm">Modifica i tuoi dati</p></div>
+                <div onclick="goToStrumenti()" class="action-card p-6 text-center cursor-pointer"><div class="text-4xl mb-4">🛠️</div><h3 class="text-white text-lg font-bold mb-2">Strumenti</h3><p class="text-white/80 text-sm">Utility e strumenti di lavoro</p></div>
             </div>
         </section>
 
-        <!-- SEZIONE LE TUE RICHIESTE -->
+        <!-- News -->
         <section class="mb-12">
             <div class="flex items-center justify-between mb-8">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center">
-                        <span class="text-white text-2xl">📋</span>
-                    </div>
-                    <h2 class="text-ultra-visible text-3xl font-black">Le Tue Richieste</h2>
-                </div>
-                <button onclick="goToRichieste()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2">
-                    <span>Vedi tutte</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </button>
+                <div class="flex items-center gap-4"><div class="w-12 h-12 bg-gradient-to-br from-slate-600 to-slate-800 rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📰</span></div><h2 class="text-ultra-visible text-3xl font-black">Ultime Notizie</h2></div>
+                <button onclick="viewAllNews()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2"><span>Vedi tutte</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
             </div>
-            
-            <div class="glass-morphism rounded-3xl p-6">
-                <div id="richiesteContainer" class="space-y-4">
-                    <div class="loading-skeleton h-20"></div>
-                    <div class="loading-skeleton h-20"></div>
-                    <div class="loading-skeleton h-20"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEZIONE SERVIZI AGGIUNTIVI -->
-        <section class="mb-12">
-            <div class="flex items-center gap-4 mb-8">
-                <div class="w-12 h-12 bg-gradient-to-br from-gold to-aurora rounded-xl flex items-center justify-center">
-                    <span class="text-white text-2xl">🌟</span>
-                </div>
-                <h2 class="text-ultra-visible text-3xl font-black">Servizi Aggiuntivi</h2>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div onclick="goToVirgilio()" class="action-card p-6 text-center">
-                    <div class="text-4xl mb-4">🤖</div>
-                    <h3 class="text-white text-lg font-bold mb-2">Virgilio AI</h3>
-                    <p class="text-white/80 text-sm">Assistente intelligente</p>
-                </div>
-                
-                <div onclick="goToDirigenti()" class="action-card p-6 text-center">
-                    <div class="text-4xl mb-4">👥</div>
-                    <h3 class="text-white text-lg font-bold mb-2">Dirigenti</h3>
-                    <p class="text-white/80 text-sm">Contatta un dirigente</p>
-                </div>
-                
-                <div onclick="goToConvenzioni()" class="action-card p-6 text-center">
-                    <div class="text-4xl mb-4">🤝</div>
-                    <h3 class="text-white text-lg font-bold mb-2">Convenzioni</h3>
-                    <p class="text-white/80 text-sm">Sconti e offerte esclusive</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEZIONE NEWS -->
-        <section class="mb-12">
-            <div class="flex items-center justify-between mb-8">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-slate-600 to-slate-800 rounded-xl flex items-center justify-center">
-                        <span class="text-white text-2xl">📰</span>
-                    </div>
-                    <h2 class="text-ultra-visible text-3xl font-black">Ultime Notizie</h2>
-                </div>
-                <button onclick="viewAllNews()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2">
-                    <span>Vedi tutte</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </button>
-            </div>
-            
             <div class="glass-card rounded-3xl p-8">
                 <div id="newsContainer">
                     <div class="loading-skeleton h-20 mb-4"></div>
@@ -676,23 +229,49 @@
             </div>
         </section>
 
-        <!-- SEZIONE CONVENZIONI IN EVIDENZA -->
+        <!-- Servizi Aggiuntivi -->
         <section class="mb-12">
-            <div class="flex items-center justify-between mb-8">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center">
-                        <span class="text-white text-2xl">🤝</span>
-                    </div>
-                    <h2 class="text-ultra-visible text-3xl font-black">Convenzioni in Evidenza</h2>
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-gradient-to-br from-gold to-aurora rounded-xl flex items-center justify-center">
+                    <span class="text-white text-2xl">🌟</span>
                 </div>
-                <button onclick="goToConvenzioni()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2">
-                    <span>Vedi tutte</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </button>
+                <h2 class="text-ultra-visible text-3xl font-black">Servizi Aggiuntivi</h2>
             </div>
             
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div onclick="goToVirgilio()" class="action-card p-6 text-center cursor-pointer">
+                    <div class="text-4xl mb-4">🤖</div>
+                    <h3 class="text-white text-lg font-bold mb-2">Virgilio AI</h3>
+                    <p class="text-white/80 text-sm">Assistente intelligente</p>
+                </div>
+                
+                <div onclick="goToDirigenti()" class="action-card p-6 text-center cursor-pointer">
+                    <div class="text-4xl mb-4">👥</div>
+                    <h3 class="text-white text-lg font-bold mb-2">Dirigenti</h3>
+                    <p class="text-white/80 text-sm">Contatta un dirigente</p>
+                </div>
+                
+                <div onclick="goToConvenzioni()" class="action-card p-6 text-center cursor-pointer">
+                    <div class="text-4xl mb-4">🤝</div>
+                    <h3 class="text-white text-lg font-bold mb-2">Convenzioni</h3>
+                    <p class="text-white/80 text-sm">Sconti e offerte esclusive</p>
+                </div>
+
+                <!-- NUOVO BOX: FileBox -->
+                <div onclick="goToFileBox()" class="action-card p-6 text-center cursor-pointer">
+                    <div class="text-4xl mb-4">📁</div>
+                    <h3 class="text-white text-lg font-bold mb-2">FileBox</h3>
+                    <p class="text-white/80 text-sm">Accedi ai tuoi file e documenti</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Convenzioni -->
+        <section class="mb-12">
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center gap-4"><div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center"><span class="text-white text-2xl">🤝</span></div><h2 class="text-ultra-visible text-3xl font-black">Convenzioni in Evidenza</h2></div>
+                <button onclick="goToConvenzioni()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2"><span>Vedi tutte</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="convenzioniContainer">
                 <div class="loading-skeleton h-64"></div>
                 <div class="loading-skeleton h-64"></div>
@@ -705,26 +284,14 @@
     <footer class="glass-morphism mt-16">
         <div class="container mx-auto px-4 py-8">
             <div class="text-center text-white">
-                <div class="mb-4">
-                    <span class="font-bold text-xl">MyApp</span> - Dashboard Personale v5.0
-                </div>
-                <div class="flex justify-center items-center space-x-6 text-sm opacity-80 mb-4">
-                    <span>© 2025 MyApp</span>
-                    <span>•</span>
-                    <span>Powered by Supabase</span>
-                    <span>•</span>
-                    <span>Design Professionale</span>
-                </div>
-                <div class="flex justify-center space-x-4">
-                    <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                    <div class="w-2 h-2 bg-slate-500 rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
-                    <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" style="animation-delay: 1s;"></div>
-                </div>
+                <div class="mb-4"><span class="font-bold text-xl">MyApp</span> - Dashboard Personale v5.0</div>
+                <div class="flex justify-center items-center space-x-6 text-sm opacity-80 mb-4"><span>© 2025 MyApp</span><span>•</span><span>Powered by Supabase</span><span>•</span><span>Design Professionale</span></div>
+                <div class="flex justify-center space-x-4"><div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div><div class="w-2 h-2 bg-slate-500 rounded-full animate-pulse" style="animation-delay:.5s;"></div><div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" style="animation-delay:1s;"></div></div>
             </div>
         </div>
     </footer>
 
-    <!-- SCRIPT INTEGRATO -->
+    <!-- SCRIPT -->
     <script>
         // === CONFIGURAZIONE SUPABASE ===
         const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
@@ -748,11 +315,7 @@
             
             // Verifica autenticazione
             await checkAuthentication();
-            
-            // Setup event listeners
             setupEventListeners();
-            
-            // Carica i dati della dashboard
             await loadDashboardData();
             
             console.log('✅ Dashboard caricata con successo (solo lettura)');
@@ -762,34 +325,21 @@
         async function checkAuthentication() {
             try {
                 const { data: { session } } = await supabaseClient.auth.getSession();
-                
                 if (!session) {
                     console.log('❌ Nessuna sessione attiva - redirect a ofline');
                     window.location.href = 'ofline.html';
                     return;
                 }
-
                 currentUser = session.user;
-                console.log('✅ Utente autenticato:', currentUser.email);
-                
-                // Recupera profilo utente (solo lettura)
                 userProfile = await getUserProfile(currentUser.id);
-                
                 if (!userProfile) {
-                    console.log('👤 Profilo non trovato (read-only): uso dati sessione senza creare nulla.');
-                    userProfile = await createUserProfile(currentUser); // no-op: restituisce fallback, nessuna scrittura
+                    // fallback locale, nessuna scrittura
+                    userProfile = await createUserProfile(currentUser);
                 }
-                
-                // Controlla autorizzazione ruolo
                 if (userProfile.role === 'ADMIN' || userProfile.role === 'DIRIGENTE') {
-                    console.log('🔄 Utente dirigente/admin - redirect alla dashboard dirigenti');
                     window.location.href = 'home_dirigenti.html';
                     return;
                 }
-                
-                // Aggiorna ultimo login (NO-OP in sola lettura)
-                await updateLastLogin(currentUser.id);
-                
             } catch (error) {
                 console.error('❌ Errore verifica auth:', error);
                 window.location.href = 'ofline.html';
@@ -803,11 +353,7 @@
                     .select('*')
                     .eq('user_id', userId)
                     .single();
-                
-                if (error && error.code !== 'PGRST116') {
-                    throw error;
-                }
-                
+                if (error && error.code !== 'PGRST116') throw error;
                 return data;
             } catch (error) {
                 console.warn('⚠️ Errore recupero profilo:', error);
@@ -815,130 +361,22 @@
             }
         }
 
-        // NO-OP: in modalità read-only non creiamo nulla, restituiamo solo un fallback locale
+        // Fallback locale (read-only)
         async function createUserProfile(user) {
-            try {
-                const fallback = {
-                    user_id: user.id,
-                    email: user.email,
-                    nome: user.user_metadata?.nome || 'Utente',
-                    cognome: user.user_metadata?.cognome || '',
-                    role: 'USER',
-                    stato: 'ATTIVO',
-                    created_at: user.created_at || null
-                };
-                console.log('ℹ️ createUserProfile skipped (read-only). Uso fallback locale.');
-                return fallback;
-            } catch (error) {
-                console.error('❌ Errore createUserProfile fallback:', error);
-                return { role: 'USER', nome: 'Utente', cognome: '', email: user.email };
-            }
+            return {
+                user_id: user.id,
+                email: user.email,
+                nome: user.user_metadata?.nome || 'Utente',
+                cognome: user.user_metadata?.cognome || '',
+                role: 'USER',
+                stato: 'ATTIVO',
+                created_at: user.created_at || null
+            };
         }
 
-        // NO-OP: nessuna scrittura lato client
-        async function updateLastLogin(userId) {
-            return;
-        }
-
-        // === CARICAMENTO DATI TESSERA ===
-        async function loadTesseraData() {
-            try {
-                console.log('🎫 Caricamento dati tessera per utente:', currentUser.id);
-                
-                const { data: tessera, error } = await supabaseClient
-                    .from('tessere')
-                    .select('numero_tessera, stato')
-                    .eq('user_id', currentUser.id)
-                    .single();
-
-                const numeroTesseraEl = document.getElementById('numeroTessera');
-
-                if (error || !tessera) {
-                    console.warn('ℹ️ Tessera non trovata (read-only). Nessuna creazione.');
-                    if (numeroTesseraEl) numeroTesseraEl.textContent = 'In generazione...';
-                    return;
-                }
-
-                if (numeroTesseraEl && tessera.numero_tessera) {
-                    numeroTesseraEl.textContent = tessera.numero_tessera;
-                } else if (numeroTesseraEl) {
-                    numeroTesseraEl.textContent = 'In generazione...';
-                }
-
-            } catch (error) {
-                console.error('❌ Errore caricamento tessera:', error);
-                const numeroTesseraEl = document.getElementById('numeroTessera');
-                if (numeroTesseraEl) {
-                    numeroTesseraEl.textContent = 'Errore caricamento';
-                }
-            }
-        }
-
-        // Lasciamo la funzione definita ma NON usata (nessuna scrittura in read-only)
-        async function createTessera(userId) {
-            console.log('⏭️ createTessera disabilitata (read-only).');
-            return;
-        }
-
-        function generateNumeroTessera() {
-            const year = new Date().getFullYear();
-            const random = Math.floor(Math.random() * 90000) + 10000;
-            return `${year}${random}`;
-        }
-
-        function getDataScadenza() {
-            const now = new Date();
-            const scadenza = new Date(now.getFullYear() + 1, 11, 31); // 31 dicembre dell'anno successivo
-            return scadenza.toISOString().split('T')[0];
-        }
-
-        // === AGGIORNAMENTO INTERFACCIA ===
-        function updateUserInterface() {
-            if (!userProfile) return;
-            
-            // Aggiorna messaggio benvenuto
-            const welcomeEl = document.getElementById('userWelcome');
-            const roleEl = document.getElementById('userRole');
-            const nameDisplayEl = document.getElementById('userNameDisplay');
-            
-            const firstName = userProfile.nome || 'Utente';
-            
-            if (welcomeEl) welcomeEl.textContent = `Ciao, ${firstName}!`;
-            if (roleEl) roleEl.textContent = getRoleLabel(userProfile.role);
-            if (nameDisplayEl) nameDisplayEl.textContent = firstName;
-            
-            // Aggiorna avatar
-            const avatars = document.querySelectorAll('#userAvatar');
-            const initials = getInitials(`${userProfile.nome} ${userProfile.cognome}`);
-            avatars.forEach(avatar => {
-                avatar.textContent = initials;
-            });
-            
-            // Aggiorna carte statistiche
-            updateStatsCards();
-        }
-
-        function updateStatsCards() {
-            if (!userProfile) return;
-            
-            const memberSinceEl = document.getElementById('memberSince');
-            const statusEl = document.getElementById('profileStatus');
-            
-            if (memberSinceEl) {
-                const memberSince = userProfile.created_at ? formatDate(userProfile.created_at) : '-';
-                memberSinceEl.textContent = memberSince;
-            }
-            
-            if (statusEl) {
-                statusEl.textContent = getStatusLabel(userProfile.stato);
-            }
-        }
-
-        // === CARICAMENTO DATI DASHBOARD ===
+        // === DASHBOARD ===
         async function loadDashboardData() {
             updateUserInterface();
-            
-            // Carica i dati in parallelo
             await Promise.all([
                 loadTesseraData(),
                 loadRichieste(),
@@ -948,6 +386,44 @@
             ]);
         }
 
+        // TESSERA (read-only)
+        async function loadTesseraData() {
+            try {
+                const { data: tessera, error } = await supabaseClient
+                    .from('tessere')
+                    .select('numero_tessera, stato')
+                    .eq('user_id', currentUser.id)
+                    .single();
+                const el = document.getElementById('numeroTessera');
+                if (error || !tessera) { if (el) el.textContent = 'In generazione...'; return; }
+                if (el) el.textContent = tessera.numero_tessera || 'In generazione...';
+            } catch (e) {
+                const el = document.getElementById('numeroTessera');
+                if (el) el.textContent = 'Errore caricamento';
+            }
+        }
+
+        function updateUserInterface() {
+            if (!userProfile) return;
+            const welcomeEl = document.getElementById('userWelcome');
+            const roleEl = document.getElementById('userRole');
+            const nameDisplayEl = document.getElementById('userNameDisplay');
+            const firstName = userProfile.nome || 'Utente';
+            if (welcomeEl) welcomeEl.textContent = `Ciao, ${firstName}!`;
+            if (roleEl) roleEl.textContent = getRoleLabel(userProfile.role);
+            if (nameDisplayEl) nameDisplayEl.textContent = firstName;
+
+            const avatars = document.querySelectorAll('#userAvatar');
+            const initials = getInitials(`${userProfile.nome} ${userProfile.cognome}`);
+            avatars.forEach(a => a.textContent = initials);
+
+            const memberSinceEl = document.getElementById('memberSince');
+            const statusEl = document.getElementById('profileStatus');
+            if (memberSinceEl) memberSinceEl.textContent = userProfile.created_at ? formatDate(userProfile.created_at) : '-';
+            if (statusEl) statusEl.textContent = getStatusLabel(userProfile.stato);
+        }
+
+        // RICHIESTE
         async function loadRichieste() {
             try {
                 const { data: richieste, error } = await supabaseClient
@@ -956,15 +432,10 @@
                     .eq('user_id', currentUser.id)
                     .order('created_at', { ascending: false })
                     .limit(3);
-
                 if (error) throw error;
-
-                const richiesteAttive = (richieste || []).filter(r => !['COMPLETATA', 'CHIUSA'].includes(r.stato)).length || 0;
-                
-                // Aggiorna contatore statistiche
+                const attive = (richieste || []).filter(r => !['COMPLETATA', 'CHIUSA'].includes(r.stato)).length || 0;
                 const countEl = document.getElementById('richiesteCount');
-                if (countEl) countEl.textContent = richiesteAttive;
-
+                if (countEl) countEl.textContent = attive;
                 displayRichieste(richieste || []);
             } catch (error) {
                 console.error('❌ Errore caricamento richieste:', error);
@@ -972,19 +443,16 @@
             }
         }
 
+        // NEWS — mostra immagini, fallback, click apre URL esterno se disponibile
         async function loadNews() {
             try {
-                // Adeguata allo schema: boolean "pubblicata" + ordinamento per data_pubblicazione/created_at
                 const { data, error } = await supabaseClient
                     .from('news')
-                    .select('*')
+                    .select('id,titolo,sottotitolo,categoria,immagine_url,url_articolo,pubblicata,data_pubblicazione,created_at,visualizzazioni')
                     .eq('pubblicata', true)
-                    .order('data_pubblicazione', { ascending: false })
                     .order('created_at', { ascending: false })
                     .limit(3);
-                
                 if (error) throw error;
-                
                 displayNews(data || []);
             } catch (error) {
                 console.error('❌ Errore caricamento news:', error);
@@ -992,25 +460,21 @@
             }
         }
 
+        // NOTIFICHE (read-only)
         async function loadNotifications() {
             try {
-                // Conteggio non lette
                 const { count: unreadCount } = await supabaseClient
                     .from('notifications')
                     .select('id', { count: 'exact' })
                     .eq('user_id', currentUser.id)
                     .eq('read', false);
-                
-                // Notifiche recenti
                 const { data, error } = await supabaseClient
                     .from('notifications')
                     .select('*')
                     .eq('user_id', currentUser.id)
                     .order('created_at', { ascending: false })
                     .limit(10);
-                
                 if (error) throw error;
-                
                 updateNotificationBadge(unreadCount || 0);
                 displayNotifications(data || []);
             } catch (error) {
@@ -1020,17 +484,16 @@
             }
         }
 
+        // CONVENZIONI — con immagini e click su URL esterno se presente
         async function loadConvenzioni() {
             try {
                 const { data: convenzioni, error } = await supabaseClient
                     .from('convenzioni')
-                    .select('*')
+                    .select('id,nome_azienda,descrizione,categoria,copertura_geografica,attiva,in_evidenza,sconto_percentuale,created_at,valida_fino,visualizzazioni,logo_url,immagine_url,link_esterno')
                     .eq('attiva', true)
                     .order('created_at', { ascending: false })
                     .limit(3);
-
                 if (error) throw error;
-
                 displayConvenzioni(convenzioni || []);
             } catch (error) {
                 console.error('❌ Errore caricamento convenzioni:', error);
@@ -1038,30 +501,24 @@
             }
         }
 
-        // === FUNZIONI DISPLAY ===
+        // === DISPLAY ===
         function displayRichieste(richieste) {
             const container = document.getElementById('richiesteContainer');
             if (!container) return;
-            
             if (richieste.length === 0) {
                 container.innerHTML = `
                     <div class="text-center py-12 text-white">
                         <div class="text-6xl mb-4">📋</div>
                         <h3 class="text-xl font-bold mb-2">Nessuna richiesta</h3>
                         <p class="text-white/70 mb-6">Non hai ancora inviato nessuna richiesta</p>
-                        <button onclick="goToRichieste()" class="btn-aurora py-3 px-6 rounded-xl">
-                            Invia la tua prima richiesta
-                        </button>
-                    </div>
-                `;
+                        <button onclick="goToRichieste()" class="btn-aurora py-3 px-6 rounded-xl">Invia la tua prima richiesta</button>
+                    </div>`;
                 return;
             }
-            
             container.innerHTML = richieste.map(richiesta => {
                 const statusColor = getRequestStatusColor(richiesta.stato);
                 const priorityColor = getPriorityColor(richiesta.priorita);
                 const dataCreazione = new Date(richiesta.created_at).toLocaleDateString('it-IT');
-                
                 return `
                     <div class="glass-morphism rounded-xl p-4 hover:bg-white/10 transition-all cursor-pointer" 
                          onclick="viewRichiestaDetail('${richiesta.id}')">
@@ -1069,375 +526,232 @@
                             <div class="flex-grow">
                                 <h4 class="text-white font-bold text-lg mb-1">${richiesta.titolo}</h4>
                                 <div class="flex items-center gap-3 text-sm text-white/70 mb-2">
-                                    <span class="flex items-center gap-1">
-                                        <span class="priority-indicator ${priorityColor}"></span>
-                                        ${richiesta.priorita}
-                                    </span>
+                                    <span class="flex items-center gap-1"><span class="priority-indicator ${priorityColor}"></span>${richiesta.priorita}</span>
                                     <span>📂 ${richiesta.categoria}</span>
                                     <span>📅 ${dataCreazione}</span>
                                 </div>
                             </div>
-                            <span class="px-3 py-1 rounded-full text-xs font-bold text-white ${statusColor}">
-                                ${getStatusText(richiesta.stato)}
-                            </span>
+                            <span class="px-3 py-1 rounded-full text-xs font-bold text-white ${statusColor}">${getStatusText(richiesta.stato)}</span>
                         </div>
-                        
-                        <p class="text-white/80 text-sm mb-3 line-clamp-2">
-                            ${richiesta.descrizione || 'Nessuna descrizione'}
-                        </p>
-                        
+                        <p class="text-white/80 text-sm mb-3 line-clamp-2">${richiesta.descrizione || 'Nessuna descrizione'}</p>
                         <div class="flex items-center justify-between text-xs text-white/60">
-                            <span>
-                                ${richiesta.dirigente_nome ? `👤 ${richiesta.dirigente_nome}` : '⏳ In attesa'}
-                            </span>
+                            <span>${richiesta.dirigente_nome ? `👤 ${richiesta.dirigente_nome}` : '⏳ In attesa'}</span>
                             <span>ID: #${String(richiesta.id).slice(-8)}</span>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             }).join('');
         }
 
         function displayNews(newsArray) {
             const container = document.getElementById('newsContainer');
             if (!container) return;
-            
+
             if (newsArray.length === 0) {
                 container.innerHTML = `
                     <div class="text-center py-8 text-gray-500">
                         <div class="text-4xl mb-2">📰</div>
                         <div>Nessuna notizia disponibile al momento</div>
-                    </div>
-                `;
+                    </div>`;
                 return;
             }
-            
-            container.innerHTML = newsArray.map(news => `
-                <div class="border-b border-gray-200 pb-4 mb-4 last:border-b-0 last:pb-0 last:mb-0 hover:bg-gray-50 p-4 rounded-lg transition-colors cursor-pointer"
-                     onclick="readNews('${news.id}')">
-                    <div class="flex justify-between items-start">
-                        <div class="flex-1">
-                            <h3 class="text-textDark font-semibold text-lg mb-1">${news.titolo}</h3>
-                            ${news.sottotitolo ? `<p class="text-gray-600 text-sm mb-2">${news.sottotitolo}</p>` : ''}
-                            <div class="flex items-center space-x-3 text-xs text-gray-500">
-                                <span class="bg-blue-600 text-white px-2 py-1 rounded">${news.categoria}</span>
-                                <span>📅 ${formatDate(news.created_at)}</span>
-                                <span>👁️ ${news.visualizzazioni || 0}</span>
+
+            container.innerHTML = newsArray.map(n => {
+                const dateStr = formatDate(n.data_pubblicazione || n.created_at);
+                const url = n.url_articolo ? encodeURIComponent(n.url_articolo) : '';
+                const img = n.immagine_url || '';
+                const cat = n.categoria || 'GENERALE';
+                return `
+                    <div class="group border border-gray-200 hover:border-blue-200 bg-white/70 hover:bg-white rounded-xl p-4 mb-4 transition-colors cursor-pointer"
+                         onclick="readNews('${n.id}','${url}')">
+                        <div class="flex gap-4 items-start">
+                            <div class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
+                                ${img ? `<img src="${img}" alt="${escapeHtml(n.titolo)}" class="w-full h-full object-cover" loading="lazy">`
+                                      : `<div class="w-full h-full flex items-center justify-center text-2xl">📰</div>`}
                             </div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="inline-block text-[11px] font-bold bg-blue-600 text-white px-2 py-0.5 rounded">${cat}</span>
+                                    <span class="text-xs text-gray-500">📅 ${dateStr}</span>
+                                    <span class="text-xs text-gray-500">👁️ ${n.visualizzazioni || 0}</span>
+                                </div>
+                                <h3 class="text-textDark font-semibold text-base md:text-lg leading-snug mb-1 group-hover:underline">${n.titolo}</h3>
+                                ${n.sottotitolo ? `<p class="text-gray-600 text-sm line-clamp-2">${n.sottotitolo}</p>` : ''}
+                            </div>
+                            <div class="text-blue-600 group-hover:text-blue-800 font-semibold text-sm ml-2">Apri →</div>
                         </div>
-                        <div class="text-blue-600 hover:text-blue-800 font-semibold text-sm ml-4">
-                            Leggi →
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+                    </div>`;
+            }).join('');
         }
 
         function displayConvenzioni(convenzioni) {
             const container = document.getElementById('convenzioniContainer');
             if (!container) return;
-            
+
             if (convenzioni.length === 0) {
                 container.innerHTML = `
                     <div class="glass-morphism rounded-3xl p-12 col-span-3 text-center">
                         <div class="text-6xl mb-4">🤝</div>
                         <h3 class="text-white text-xl font-bold mb-2">Nessuna convenzione disponibile</h3>
                         <p class="text-white/70">Le convenzioni verranno pubblicate a breve</p>
-                    </div>
-                `;
+                    </div>`;
                 return;
             }
 
             container.innerHTML = convenzioni.map(c => {
-                const excerpt = (c.descrizione || '').slice(0, 120) + (c.descrizione?.length > 120 ? '…' : '');
+                const excerpt = (c.descrizione || '').slice(0, 120) + ((c.descrizione||'').length > 120 ? '…' : '');
                 const sconto = c.sconto_percentuale ? `${c.sconto_percentuale}%` : '';
-                const isInEvidenza = c.in_evidenza === true || c.in_evidenza === 'true';
+                const inEvidenza = c.in_evidenza === true || c.in_evidenza === 'true';
                 const validaFino = c.valida_fino ? new Date(c.valida_fino) : null;
                 const isScaduta = validaFino && validaFino < new Date();
-                
+                const img = c.immagine_url || c.logo_url || '';
+                const url = c.link_esterno ? encodeURIComponent(c.link_esterno) : '';
                 return `
-                    <div class="action-card p-6 ${isScaduta ? 'opacity-75' : ''}"
-                         onclick="${isScaduta ? '' : `openConvenzione('${c.id}')`}">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center text-white text-sm font-bold">
-                                ${sconto ? `-${sconto}` : '🤝'}
-                            </div>
-                            <div class="flex flex-col gap-1">
-                                ${isInEvidenza ? '<div class="bg-emerald-600 text-white px-2 py-1 rounded-full text-xs font-bold">IN EVIDENZA</div>' : ''}
-                                ${isScaduta ? '<div class="bg-gray-500 text-white px-2 py-1 rounded-full text-xs font-bold">SCADUTA</div>' : ''}
-                            </div>
-                        </div>
-                        
-                        <h3 class="text-white text-lg font-bold mb-2">${c.nome_azienda || '-'}</h3>
-                        <p class="text-white/80 text-sm mb-4">${excerpt}</p>
-                        
-                        <div class="flex items-center justify-between text-xs text-white/60 mb-3">
-                            <span>📂 ${c.categoria || 'Generale'}</span>
-                            <span>🌍 ${c.copertura_geografica || 'Nazionale'}</span>
-                        </div>
-                        
-                        <div class="flex items-center justify-between">
-                            <span class="text-white/60 text-xs">👀 ${c.visualizzazioni || 0} visualizzazioni</span>
-                            <span class="text-emerald-300 text-sm font-semibold">
-                                ${isScaduta ? 'Non disponibile' : 'Scopri →'}
-                            </span>
-                        </div>
-                        
-                        ${validaFino ? `
-                            <div class="mt-3 pt-3 border-t border-white/10">
-                                <div class="text-white/60 text-xs flex items-center gap-1">
-                                    <span class="${isScaduta ? 'text-red-400' : 'text-green-400'}">⏰</span>
-                                    ${isScaduta ? 'Scaduta il' : 'Valida fino al'} ${validaFino.toLocaleDateString('it-IT')}
+                    <div class="action-card p-0 overflow-hidden ${isScaduta ? 'opacity-75' : ''}">
+                        <div class="cursor-pointer" onclick="openConvenzione('${c.id}','${url}')">
+                            ${img ? `
+                                <div class="w-full h-36 bg-gray-100 overflow-hidden">
+                                    <img src="${img}" alt="${escapeHtml(c.nome_azienda || 'Convenzione')}" class="w-full h-full object-cover" loading="lazy">
+                                </div>` : ''
+                            }
+                            <div class="p-6">
+                                <div class="flex items-start justify-between mb-4">
+                                    <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center text-white text-sm font-bold">
+                                        ${sconto ? `-${sconto}` : '🤝'}
+                                    </div>
+                                    <div class="flex flex-col gap-1">
+                                        ${inEvidenza ? '<div class="bg-emerald-600 text-white px-2 py-1 rounded-full text-xs font-bold">IN EVIDENZA</div>' : ''}
+                                        ${isScaduta ? '<div class="bg-gray-500 text-white px-2 py-1 rounded-full text-xs font-bold">SCADUTA</div>' : ''}
+                                    </div>
                                 </div>
+                                <h3 class="text-white text-lg font-bold mb-2">${c.nome_azienda || '-'}</h3>
+                                <p class="text-white/80 text-sm mb-4">${excerpt}</p>
+                                <div class="flex items-center justify-between text-xs text-white/60 mb-3">
+                                    <span>📂 ${c.categoria || 'Generale'}</span>
+                                    <span>🌍 ${c.copertura_geografica || 'Nazionale'}</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white/60 text-xs">👀 ${c.visualizzazioni || 0} visualizzazioni</span>
+                                    <span class="text-emerald-300 text-sm font-semibold">${isScaduta ? 'Non disponibile' : 'Scopri →'}</span>
+                                </div>
+                                ${validaFino ? `
+                                    <div class="mt-3 pt-3 border-t border-white/10">
+                                        <div class="text-white/60 text-xs flex items-center gap-1">
+                                            <span class="${isScaduta ? 'text-red-400' : 'text-green-400'}">⏰</span>
+                                            ${isScaduta ? 'Scaduta il' : 'Valida fino al'} ${validaFino.toLocaleDateString('it-IT')}
+                                        </div>
+                                    </div>` : ''
+                                }
                             </div>
-                        ` : ''}
-                    </div>
-                `;
+                        </div>
+                    </div>`;
             }).join('');
         }
 
+        // === NOTIFICHE UI ===
         function displayNotifications(notifications) {
             const container = document.getElementById('notificationList');
             if (!container) return;
-            
             if (notifications.length === 0) {
                 container.innerHTML = `
                     <div class="text-center py-8 text-gray-500">
                         <div class="text-4xl mb-2">🔔</div>
                         <div class="text-sm">Nessuna notifica</div>
-                    </div>
-                `;
+                    </div>`;
                 return;
             }
-            
-            container.innerHTML = notifications.map(notification => `
-                <div class="p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer ${!notification.read ? 'bg-blue-50 border-l-4 border-blue-600' : ''}"
-                     onclick="markNotificationAsRead('${notification.id}')">
+            container.innerHTML = notifications.map(n => `
+                <div class="p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer ${!n.read ? 'bg-blue-50 border-l-4 border-blue-600' : ''}" onclick="markNotificationAsRead('${n.id}')">
                     <div class="flex items-start gap-3">
-                        <div class="flex-shrink-0 w-2 h-2 rounded-full mt-2 ${!notification.read ? 'bg-blue-600' : 'bg-gray-300'}"></div>
+                        <div class="flex-shrink-0 w-2 h-2 rounded-full mt-2 ${!n.read ? 'bg-blue-600' : 'bg-gray-300'}"></div>
                         <div class="flex-grow">
-                            <h4 class="font-semibold text-textDark text-sm">${notification.title || 'Notifica'}</h4>
-                            <p class="text-gray-600 text-xs mt-1">${notification.message || ''}</p>
-                            <span class="text-gray-400 text-xs">${formatDateTime(notification.created_at)}</span>
+                            <h4 class="font-semibold text-textDark text-sm">${n.title || 'Notifica'}</h4>
+                            <p class="text-gray-600 text-xs mt-1">${n.message || ''}</p>
+                            <span class="text-gray-400 text-xs">${formatDateTime(n.created_at)}</span>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                </div>`).join('');
         }
-
         function updateNotificationBadge(count) {
             const badge = document.getElementById('notificationBadge');
-            
-            if (badge) {
-                if (count > 0) {
-                    badge.textContent = count > 99 ? '99+' : count;
-                    badge.classList.remove('hidden');
-                } else {
-                    badge.classList.add('hidden');
-                }
-            }
+            if (!badge) return;
+            if (count > 0) { badge.textContent = count > 99 ? '99+' : count; badge.classList.remove('hidden'); }
+            else { badge.classList.add('hidden'); }
         }
 
         // === EVENT LISTENERS ===
         function setupEventListeners() {
-            // Logout button
             document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
-            
-            // Notification button
             document.getElementById('notificationBtn')?.addEventListener('click', toggleNotificationDropdown);
-            
-            // Mark all notifications as read (NO-OP in sola lettura)
             document.getElementById('markAllRead')?.addEventListener('click', markAllNotificationsAsRead);
-            
-            // Close dropdowns when clicking outside
+
             document.addEventListener('click', (e) => {
-                const notificationBtn = document.getElementById('notificationBtn');
-                const notificationDropdown = document.getElementById('notificationDropdown');
-                
-                if (!notificationBtn?.contains(e.target) && !notificationDropdown?.contains(e.target)) {
-                    notificationDropdown?.classList.remove('show');
-                }
+                const btn = document.getElementById('notificationBtn');
+                const dd = document.getElementById('notificationDropdown');
+                if (!btn?.contains(e.target) && !dd?.contains(e.target)) dd?.classList.remove('show');
             });
-            
-            // Auth state changes
-            supabaseClient.auth.onAuthStateChange((event, session) => {
-                if (event === 'SIGNED_OUT') {
-                    window.location.href = 'index.html';
-                }
+
+            supabaseClient.auth.onAuthStateChange((event) => {
+                if (event === 'SIGNED_OUT') window.location.href = 'index.html';
             });
         }
 
-        // === FUNZIONI AZIONI ===
+        // === AZIONI ===
         async function handleLogout() {
-            try {
-                await supabaseClient.auth.signOut();
-                window.location.href = 'index.html';
-            } catch (error) {
-                console.error('❌ Errore durante il logout:', error);
-                window.location.href = 'index.html';
-            }
+            try { await supabaseClient.auth.signOut(); window.location.href = 'index.html'; }
+            catch { window.location.href = 'index.html'; }
         }
-
         function toggleNotificationDropdown() {
-            const dropdown = document.getElementById('notificationDropdown');
-            if (dropdown) {
-                dropdown.classList.toggle('show');
-            }
+            document.getElementById('notificationDropdown')?.classList.toggle('show');
         }
-
-        // NO-OP: nessun update lato client; lasciamo il pulsante visibile ma senza scrivere sul DB
         async function markAllNotificationsAsRead() {
-            console.info('ℹ️ Modalità sola lettura: "Segna tutte lette" non modifica il database.');
-            // Facoltativo: chiudi il dropdown per feedback visivo
+            console.info('ℹ️ Read-only: nessun update al DB.');
             document.getElementById('notificationDropdown')?.classList.remove('show');
-            return;
+        }
+        async function markNotificationAsRead() { console.info('ℹ️ Read-only: nessun update al DB.'); }
+
+        // === NAVIGAZIONE ===
+        function goToRichieste(){ window.location.href = 'richieste.html'; }
+        function goToTessera(){ window.location.href = 'tessera.html'; }
+        function goToProfilo(){ window.location.href = 'profilo.html'; }
+        function goToStrumenti(){ window.location.href = 'strumenti.html'; }
+        function goToVirgilio(){ window.location.href = 'virgilio.html'; }
+        function goToDirigenti(){ window.location.href = 'dirigenti.html'; }
+        function goToConvenzioni(){ window.location.href = 'convenzioni.html'; }
+        function goToFileBox(){ window.location.href = 'filebox.html'; }  /* <-- nuovo */
+        function viewAllNews(){ window.location.href = 'news.html'; }
+
+        // Apri notizia: priorità all'URL esterno, fallback alla pagina interna
+        function readNews(newsId, encodedUrl) {
+            const url = encodedUrl ? decodeURIComponent(encodedUrl) : null;
+            if (isValidHttpUrl(url)) { safeOpen(url); }
+            else { window.location.href = `news.html?id=${newsId}`; }
         }
 
-        // NO-OP: nessun update lato client
-        async function markNotificationAsRead(notificationId) {
-            console.info('ℹ️ Modalità sola lettura: non è possibile segnare come letta la notifica:', notificationId);
-            return;
+        // Apri convenzione: se esiste link_esterno usa quello, altrimenti fallback interno
+        function openConvenzione(convenzioneId, encodedUrl) {
+            const url = encodedUrl ? decodeURIComponent(encodedUrl) : null;
+            if (isValidHttpUrl(url)) { safeOpen(url); }
+            else { window.location.href = `convenzioni.html#${convenzioneId}`; }
         }
 
-        // === FUNZIONI NAVIGAZIONE ===
-        function goToRichieste() {
-            window.location.href = 'richieste.html';
-        }
+        // === UTILITY ===
+        function getRoleLabel(role){ return ({USER:'Utente', DIRIGENTE:'Dirigente', ADMIN:'Amministratore'})[role] || 'Utente'; }
+        function getStatusLabel(status){ return ({ATTIVO:'Attivo', SOSPESO:'Sospeso', INATTIVO:'Inattivo'})[status] || 'Sconosciuto'; }
+        function getInitials(fullName){ if(!fullName) return 'U'; return fullName.split(' ').map(n=>n.charAt(0)).join('').toUpperCase().substring(0,2); }
+        function getRequestStatusColor(stato){ return ({RICEVUTA:'bg-blue-600', IN_ESAME:'bg-yellow-600', IN_LAVORAZIONE:'bg-orange-600', NECESSARIE_INFO:'bg-purple-600', COMPLETATA:'bg-green-600', CHIUSA:'bg-gray-600', ANNULLATA:'bg-red-600'})[stato] || 'bg-gray-500'; }
+        function getPriorityColor(p){ return ({BASSA:'priority-bassa', NORMALE:'priority-normale', ALTA:'priority-alta'})[p] || 'priority-normale'; }
+        function formatDate(s){ if(!s) return '-'; const d = new Date(s); return d.toLocaleDateString('it-IT'); }
+        function formatDateTime(s){ if(!s) return '-'; const d = new Date(s); return d.toLocaleDateString('it-IT') + ' ' + d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}); }
+        function isValidHttpUrl(u){ try{ const x=new URL(u); return x.protocol==='http:'||x.protocol==='https:'; }catch{return false;} }
+        function safeOpen(url){ window.open(url, '_blank', 'noopener,noreferrer'); }
+        function escapeHtml(str){ return String(str||'').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])); }
 
-        function goToTessera() {
-            window.location.href = 'tessera.html';
-        }
+        // Refresh periodico
+        setInterval(async () => { if (currentUser) { await loadNotifications(); await loadRichieste(); } }, 60000);
+        setInterval(async () => { if (currentUser) { await loadRichieste(); } }, 30000);
 
-        function goToProfilo() {
-            window.location.href = 'profilo.html';
-        }
+        console.log('✅ MyApp Home Dashboard v5.0 Ready - Read-only');
 
-        function goToStrumenti() {
-            window.location.href = 'strumenti.html';
-        }
-
-        function goToVirgilio() {
-            window.location.href = 'virgilio.html';
-        }
-
-        function goToDirigenti() {
-            window.location.href = 'dirigenti.html';
-        }
-
-        function goToConvenzioni() {
-            window.location.href = 'convenzioni.html';
-        }
-
-        function viewAllNews() {
-            window.location.href = 'news.html';
-        }
-
-        function readNews(newsId) {
-            window.location.href = `news.html?id=${newsId}`;
-        }
-
-        function viewRichiestaDetail(richiestaId) {
-            window.location.href = `richiesta-detail.html?id=${richiestaId}`;
-        }
-
-        function openConvenzione(convenzioneId) {
-            window.location.href = `convenzioni.html#${convenzioneId}`;
-        }
-
-        // === FUNZIONI UTILITY ===
-        function getRoleLabel(role) {
-            const labels = {
-                'USER': 'Utente',
-                'DIRIGENTE': 'Dirigente',
-                'ADMIN': 'Amministratore'
-            };
-            return labels[role] || 'Utente';
-        }
-
-        function getStatusLabel(status) {
-            const labels = {
-                'ATTIVO': 'Attivo',
-                'SOSPESO': 'Sospeso',
-                'INATTIVO': 'Inattivo'
-            };
-            return labels[status] || 'Sconosciuto';
-        }
-
-        function getInitials(fullName) {
-            if (!fullName) return 'U';
-            return fullName.split(' ')
-                .map(name => name.charAt(0))
-                .join('')
-                .toUpperCase()
-                .substring(0, 2);
-        }
-
-        function getRequestStatusColor(stato) {
-            const colors = {
-                'RICEVUTA': 'bg-blue-600',
-                'IN_ESAME': 'bg-yellow-600',
-                'IN_LAVORAZIONE': 'bg-orange-600',
-                'NECESSARIE_INFO': 'bg-purple-600',
-                'COMPLETATA': 'bg-green-600',
-                'CHIUSA': 'bg-gray-600',
-                'ANNULLATA': 'bg-red-600'
-            };
-            return colors[stato] || 'bg-gray-500';
-        }
-
-        function getStatusText(stato) {
-            const texts = {
-                'RICEVUTA': 'Ricevuta',
-                'IN_ESAME': 'In Esame',
-                'IN_LAVORAZIONE': 'In Lavorazione',
-                'NECESSARIE_INFO': 'Info Richieste',
-                'COMPLETATA': 'Completata',
-                'CHIUSA': 'Chiusa',
-                'ANNULLATA': 'Annullata'
-            };
-            return texts[stato] || stato;
-        }
-
-        function getPriorityColor(priorita) {
-            const colors = {
-                'BASSA': 'priority-bassa',
-                'NORMALE': 'priority-normale',
-                'ALTA': 'priority-alta'
-            };
-            return colors[priorita] || 'priority-normale';
-        }
-
-        function formatDate(dateString) {
-            if (!dateString) return '-';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('it-IT');
-        }
-
-        function formatDateTime(dateString) {
-            if (!dateString) return '-';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('it-IT') + ' ' + date.toLocaleTimeString('it-IT', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
-        }
-
-        // === AGGIORNAMENTI PERIODICI ===
-        setInterval(async () => {
-            if (currentUser) {
-                await loadNotifications();
-                await loadRichieste(); // Aggiorna anche le richieste
-            }
-        }, 60000); // Aggiorna ogni minuto
-
-        // Auto-refresh più frequente per richieste urgenti
-        setInterval(async () => {
-            if (currentUser) {
-                await loadRichieste();
-            }
-        }, 30000); // Aggiorna richieste ogni 30 secondi
-
-        console.log('✅ MyApp Home Dashboard v5.0 Ready - Sistema Tessera Integrato (Read-only)');
     </script>
-
 </body>
 </html>
