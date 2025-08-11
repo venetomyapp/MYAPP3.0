@@ -736,11 +736,11 @@
 
         // === INIZIALIZZAZIONE ===
         document.addEventListener('DOMContentLoaded', async () => {
-            console.log('🏠 HOME PAGE LOADED - MyApp Dashboard v5.0');
+            console.log('🏠 HOME PAGE LOADED - MyApp Dashboard v5.0 (Read-only)');
             
             if (typeof supabase === 'undefined') {
                 console.error('❌ Supabase not loaded');
-                window.location.href = 'auth.html';
+                window.location.href = 'ofline.html';
                 return;
             }
             
@@ -755,7 +755,7 @@
             // Carica i dati della dashboard
             await loadDashboardData();
             
-            console.log('✅ Dashboard caricata con successo');
+            console.log('✅ Dashboard caricata con successo (solo lettura)');
         });
 
         // === GESTIONE AUTENTICAZIONE ===
@@ -764,20 +764,20 @@
                 const { data: { session } } = await supabaseClient.auth.getSession();
                 
                 if (!session) {
-                    console.log('❌ Nessuna sessione attiva - redirect a auth');
-                    window.location.href = 'auth.html';
+                    console.log('❌ Nessuna sessione attiva - redirect a ofline');
+                    window.location.href = 'ofline.html';
                     return;
                 }
 
                 currentUser = session.user;
                 console.log('✅ Utente autenticato:', currentUser.email);
                 
-                // Recupera profilo utente
+                // Recupera profilo utente (solo lettura)
                 userProfile = await getUserProfile(currentUser.id);
                 
                 if (!userProfile) {
-                    console.log('👤 Profilo non trovato, creazione automatica...');
-                    userProfile = await createUserProfile(currentUser);
+                    console.log('👤 Profilo non trovato (read-only): uso dati sessione senza creare nulla.');
+                    userProfile = await createUserProfile(currentUser); // no-op: restituisce fallback, nessuna scrittura
                 }
                 
                 // Controlla autorizzazione ruolo
@@ -787,12 +787,12 @@
                     return;
                 }
                 
-                // Aggiorna ultimo login
+                // Aggiorna ultimo login (NO-OP in sola lettura)
                 await updateLastLogin(currentUser.id);
                 
             } catch (error) {
                 console.error('❌ Errore verifica auth:', error);
-                window.location.href = 'auth.html';
+                window.location.href = 'ofline.html';
             }
         }
 
@@ -815,43 +815,29 @@
             }
         }
 
+        // NO-OP: in modalità read-only non creiamo nulla, restituiamo solo un fallback locale
         async function createUserProfile(user) {
             try {
-                const profileData = {
+                const fallback = {
                     user_id: user.id,
                     email: user.email,
-                    nome: user.user_metadata?.nome || 'Nome',
-                    cognome: user.user_metadata?.cognome || 'Cognome',
+                    nome: user.user_metadata?.nome || 'Utente',
+                    cognome: user.user_metadata?.cognome || '',
                     role: 'USER',
                     stato: 'ATTIVO',
-                    created_at: new Date().toISOString()
+                    created_at: user.created_at || null
                 };
-                
-                const { data, error } = await supabaseClient
-                    .from('user_profiles')
-                    .upsert(profileData, { onConflict: 'user_id' })
-                    .select()
-                    .single();
-                    
-                if (error) throw error;
-                
-                console.log('✅ Profilo creato automaticamente');
-                return data;
+                console.log('ℹ️ createUserProfile skipped (read-only). Uso fallback locale.');
+                return fallback;
             } catch (error) {
-                console.error('❌ Errore creazione profilo:', error);
+                console.error('❌ Errore createUserProfile fallback:', error);
                 return { role: 'USER', nome: 'Utente', cognome: '', email: user.email };
             }
         }
 
+        // NO-OP: nessuna scrittura lato client
         async function updateLastLogin(userId) {
-            try {
-                await supabaseClient
-                    .from('user_profiles')
-                    .update({ last_login: new Date().toISOString() })
-                    .eq('user_id', userId);
-            } catch (error) {
-                console.warn('⚠️ Errore aggiornamento last_login:', error);
-            }
+            return;
         }
 
         // === CARICAMENTO DATI TESSERA ===
@@ -865,20 +851,17 @@
                     .eq('user_id', currentUser.id)
                     .single();
 
-                if (error) {
-                    console.warn('⚠️ Tessera non trovata:', error);
-                    // Se non esiste tessera, prova a crearla
-                    await createTessera(currentUser.id);
+                const numeroTesseraEl = document.getElementById('numeroTessera');
+
+                if (error || !tessera) {
+                    console.warn('ℹ️ Tessera non trovata (read-only). Nessuna creazione.');
+                    if (numeroTesseraEl) numeroTesseraEl.textContent = 'In generazione...';
                     return;
                 }
 
-                console.log('✅ Tessera trovata:', tessera);
-                
-                // Aggiorna il display del numero tessera
-                const numeroTesseraEl = document.getElementById('numeroTessera');
                 if (numeroTesseraEl && tessera.numero_tessera) {
                     numeroTesseraEl.textContent = tessera.numero_tessera;
-                } else {
+                } else if (numeroTesseraEl) {
                     numeroTesseraEl.textContent = 'In generazione...';
                 }
 
@@ -891,42 +874,10 @@
             }
         }
 
+        // Lasciamo la funzione definita ma NON usata (nessuna scrittura in read-only)
         async function createTessera(userId) {
-            try {
-                console.log('🔄 Creazione tessera per utente:', userId);
-                
-                const numeroTessera = generateNumeroTessera();
-                
-                const tesseraData = {
-                    user_id: userId,
-                    numero_tessera: numeroTessera,
-                    nome_completo: `${userProfile.nome} ${userProfile.cognome}`.trim(),
-                    email: userProfile.email,
-                    data_emissione: new Date().toISOString().split('T')[0],
-                    data_scadenza: getDataScadenza(),
-                    stato: 'ATTIVA',
-                    tipo: 'STANDARD'
-                };
-                
-                const { data, error } = await supabaseClient
-                    .from('tessere')
-                    .insert([tesseraData])
-                    .select()
-                    .single();
-                
-                if (error) throw error;
-                
-                console.log('✅ Tessera creata:', data);
-                
-                // Aggiorna il display
-                const numeroTesseraEl = document.getElementById('numeroTessera');
-                if (numeroTesseraEl) {
-                    numeroTesseraEl.textContent = numeroTessera;
-                }
-                
-            } catch (error) {
-                console.error('❌ Errore creazione tessera:', error);
-            }
+            console.log('⏭️ createTessera disabilitata (read-only).');
+            return;
         }
 
         function generateNumeroTessera() {
@@ -1008,7 +959,7 @@
 
                 if (error) throw error;
 
-                const richiesteAttive = richieste?.filter(r => !['COMPLETATA', 'CHIUSA'].includes(r.stato)).length || 0;
+                const richiesteAttive = (richieste || []).filter(r => !['COMPLETATA', 'CHIUSA'].includes(r.stato)).length || 0;
                 
                 // Aggiorna contatore statistiche
                 const countEl = document.getElementById('richiesteCount');
@@ -1023,10 +974,12 @@
 
         async function loadNews() {
             try {
+                // Adeguata allo schema: boolean "pubblicata" + ordinamento per data_pubblicazione/created_at
                 const { data, error } = await supabaseClient
                     .from('news')
                     .select('*')
-                    .eq('stato', 'pubblicata')
+                    .eq('pubblicata', true)
+                    .order('data_pubblicazione', { ascending: false })
                     .order('created_at', { ascending: false })
                     .limit(3);
                 
@@ -1041,14 +994,14 @@
 
         async function loadNotifications() {
             try {
-                // Ottieni conteggio non lette
+                // Conteggio non lette
                 const { count: unreadCount } = await supabaseClient
                     .from('notifications')
                     .select('id', { count: 'exact' })
                     .eq('user_id', currentUser.id)
                     .eq('read', false);
                 
-                // Ottieni notifiche recenti
+                // Notifiche recenti
                 const { data, error } = await supabaseClient
                     .from('notifications')
                     .select('*')
@@ -1137,7 +1090,7 @@
                             <span>
                                 ${richiesta.dirigente_nome ? `👤 ${richiesta.dirigente_nome}` : '⏳ In attesa'}
                             </span>
-                            <span>ID: #${richiesta.id.slice(-8)}</span>
+                            <span>ID: #${String(richiesta.id).slice(-8)}</span>
                         </div>
                     </div>
                 `;
@@ -1292,7 +1245,7 @@
             // Notification button
             document.getElementById('notificationBtn')?.addEventListener('click', toggleNotificationDropdown);
             
-            // Mark all notifications as read
+            // Mark all notifications as read (NO-OP in sola lettura)
             document.getElementById('markAllRead')?.addEventListener('click', markAllNotificationsAsRead);
             
             // Close dropdowns when clicking outside
@@ -1331,41 +1284,18 @@
             }
         }
 
+        // NO-OP: nessun update lato client; lasciamo il pulsante visibile ma senza scrivere sul DB
         async function markAllNotificationsAsRead() {
-            try {
-                await supabaseClient
-                    .from('notifications')
-                    .update({ 
-                        read: true, 
-                        read_at: new Date().toISOString() 
-                    })
-                    .eq('user_id', currentUser.id)
-                    .eq('read', false);
-                
-                // Ricarica notifiche
-                await loadNotifications();
-                
-            } catch (error) {
-                console.error('❌ Errore aggiornamento notifiche:', error);
-            }
+            console.info('ℹ️ Modalità sola lettura: "Segna tutte lette" non modifica il database.');
+            // Facoltativo: chiudi il dropdown per feedback visivo
+            document.getElementById('notificationDropdown')?.classList.remove('show');
+            return;
         }
 
+        // NO-OP: nessun update lato client
         async function markNotificationAsRead(notificationId) {
-            try {
-                await supabaseClient
-                    .from('notifications')
-                    .update({ 
-                        read: true, 
-                        read_at: new Date().toISOString() 
-                    })
-                    .eq('id', notificationId);
-                
-                // Ricarica notifiche
-                await loadNotifications();
-                
-            } catch (error) {
-                console.error('❌ Errore aggiornamento notifica:', error);
-            }
+            console.info('ℹ️ Modalità sola lettura: non è possibile segnare come letta la notifica:', notificationId);
+            return;
         }
 
         // === FUNZIONI NAVIGAZIONE ===
@@ -1506,7 +1436,7 @@
             }
         }, 30000); // Aggiorna richieste ogni 30 secondi
 
-        console.log('✅ MyApp Home Dashboard v5.0 Ready - Sistema Tessera Integrato');
+        console.log('✅ MyApp Home Dashboard v5.0 Ready - Sistema Tessera Integrato (Read-only)');
     </script>
 
 </body>
