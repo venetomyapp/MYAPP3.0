@@ -6,15 +6,18 @@
   <title>Dirigenti – MyApp – Il tuo dirigente sempre con te</title>
 
   <!-- PWA -->
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#1a1a2e">
-  <link rel="icon" href="/icons/favicon.ico" type="image/x-icon">
+
+  <!-- Icone -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/public/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/public/icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/public/icons/apple-touch-icon.png">
 
   <!-- iOS PWA -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="MyApp">
-  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 
   <!-- Fonts / Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,7 +25,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://lycrgzptkdkksukcwrld.supabase.co">
 
-  <!-- Tailwind (per produzione: build locale consigliata) -->
+  <!-- Tailwind (nota: per prod usa build locale/CLI) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -81,29 +84,20 @@
     .dirigente-card:hover::before{transform:scaleX(1)}
     .dirigente-card:hover{transform:translateY(-8px) scale(1.01);box-shadow:var(--shadow-card-hover-readable);border-color:rgba(233,69,96,.4)}
     .dirigente-avatar{width:clamp(100px,15vw,130px);height:clamp(100px,15vw,130px);border-radius:50%;background:var(--gradient-magic);display:flex;align-items:center;justify-content:center;font-size:clamp(2.5rem,6vw,3.5rem);margin:0 auto 2rem;box-shadow:0 12px 40px rgba(233,69,96,.4);transition:all .3s ease;border:4px solid #fff;font-weight:900;color:#fff;overflow:hidden}
-    .dirigente-card:hover .dirigente-avatar{transform:scale(1.05);box-shadow:0 16px 50px rgba(233,69,96,.5)}
     .readable-title{color:#111827;font-weight:800;letter-spacing:-.01em;line-height:var(--line-height-headers);margin-bottom:1rem}
     .readable-text{color:#374151;font-weight:600;line-height:var(--line-height-comfortable);margin-bottom:.5rem}
     .btn-back{background:var(--gradient-cyber);color:#fff;border:3px solid rgba(0,212,255,.4);padding:.7rem 1.2rem;border-radius:15px;transition:.3s;text-decoration:none;display:flex;align-items:center;gap:.75rem;font-weight:700;font-size:clamp(.9rem,2.5vw,1rem);box-shadow:0 8px 25px rgba(0,212,255,.3);line-height:1.2;cursor:pointer;border:none;min-width:clamp(90px,20vw,120px);position:fixed;left:1rem;top:1rem;z-index:1000}
     .btn-back:hover{transform:translateY(-2px) scale(1.05);box-shadow:0 12px 35px rgba(0,212,255,.4)}
     .search-box{background:var(--bg-card-solid);border:3px solid rgba(0,0,0,.1);border-radius:20px;padding:clamp(1.2rem,4vw,1.5rem) clamp(1.5rem,4vw,2rem);width:100%;font-size:clamp(1.1rem,3.5vw,1.3rem);font-weight:600;margin-bottom:2rem;transition:.3s;color:#111827}
-    .search-box::placeholder{color:#6b7280;font-weight:500}
-    .search-box:focus{outline:none;border-color:#e94560;box-shadow:0 0 0 4px rgba(233,69,96,.15)}
-    .filter-tabs{display:flex;gap:1rem;margin-bottom:2rem;overflow-x:auto;padding:.5rem;-webkit-overflow-scrolling:touch}
+    .filter-tabs{display:flex;gap:1rem;margin-bottom:2rem;overflow-x:auto;padding:.5rem}
     .filter-tab{padding:clamp(1rem,3vw,1.3rem) clamp(1.5rem,4vw,2rem);border-radius:25px;font-size:clamp(.9rem,2.5vw,1.1rem);font-weight:700;white-space:nowrap;transition:.3s;cursor:pointer;border:3px solid;line-height:1.2}
     .filter-tab:not(.active){background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.4);text-shadow:0 2px 4px rgba(0,0,0,.8)}
-    .filter-tab:not(.active):hover{background:rgba(255,255,255,.25);transform:translateY(-2px)}
-    .filter-tab.active{background:var(--bg-card-solid);color:#111827;border-color:#e94560;box-shadow:0 12px 30px rgba(233,69,96,.4);transform:translateY(-2px)}
-    .role-badge{display:inline-block;padding:.7rem 1.2rem;border-radius:25px;font-weight:800;font-size:clamp(.85rem,2.2vw,1rem);text-align:center;margin-bottom:1.5rem;text-transform:uppercase;letter-spacing:1.2px;border:3px solid;line-height:1.2}
-    .role-regionale{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border-color:rgba(245,158,11,.5);text-shadow:0 2px 4px rgba(0,0,0,.5)}
-    .role-provinciale{background:linear-gradient(135deg,#10b981,#047857);color:#fff;border-color:rgba(16,185,129,.5);text-shadow:0 2px 4px rgba(0,0,0,.5)}
+    .filter-tab.active{background:var(--bg-card-solid);color:#111827;border-color:#e94560;box-shadow:0 12px 30px rgba(233,69,96,.4)}
+    .role-badge{display:inline-block;padding:.7rem 1.2rem;border-radius:25px;font-weight:800;font-size:clamp(.85rem,2.2vw,1rem);text-align:center;margin-bottom:1.2rem;text-transform:uppercase;letter-spacing:1.2px;border:3px solid}
+    .role-regionale{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border-color:rgba(245,158,11,.5)}
+    .role-provinciale{background:linear-gradient(135deg,#10b981,#047857);color:#fff;border-color:rgba(16,185,129,.5)}
     .stat-card{background:rgba(255,255,255,.95);backdrop-filter:blur(15px);border:3px solid rgba(255,255,255,.3);border-radius:20px;transition:.3s;padding:clamp(1.5rem,4vw,2rem)}
-    .stat-card:hover{transform:translateY(-3px) scale(1.02);background:var(--bg-card-solid);box-shadow:0 16px 40px rgba(0,0,0,.15);border-color:rgba(233,69,96,.3)}
     .stat-number{font-size:clamp(2rem,6vw,3rem);font-weight:900;color:#111827;line-height:1.1;margin-bottom:.5rem}
-    .loading-card{background:var(--bg-card-solid);border-radius:24px;padding:3rem;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:350px;border:var(--border-card-readable)}
-    .loading-spinner{width:60px;height:60px;border:5px solid rgba(233,69,96,.1);border-left:5px solid #e94560;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:1.5rem}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .fade-in-up{animation:fadeInUp .8s ease-out forwards}@keyframes fadeInUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
     .chip{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .6rem;border-radius:9999px;background:#f3f4f6;border:1px solid #e5e7eb;font-weight:700;font-size:.8rem;color:#374151}
   </style>
 </head>
@@ -116,14 +110,14 @@
 
   <!-- Hero -->
   <section class="min-h-screen flex flex-col justify-center items-center text-center px-4 relative pt-20">
-    <h1 class="text-ultra-visible mb-8 fade-in-up" style="font-size:clamp(3rem,10vw,5rem);font-weight:900;line-height:1.1;">
+    <h1 class="text-ultra-visible mb-8" style="font-size:clamp(3rem,10vw,5rem);font-weight:900;line-height:1.1;">
       I Nostri Dirigenti
     </h1>
-    <div class="text-ultra-visible mb-16 fade-in-up" style="font-size:clamp(1.5rem,5vw,2.5rem);font-weight:800;animation-delay:.2s;">
+    <div class="text-ultra-visible mb-16" style="font-size:clamp(1.5rem,5vw,2.5rem);font-weight:800;">
       Al servizio del Sindacato Carabinieri
     </div>
 
-    <div class="bg-white rounded-3xl p-8 md:p-12 mb-20 max-w-5xl fade-in-up shadow-xl border-2 border-gray-200" style="animation-delay:.4s;">
+    <div class="bg-white rounded-3xl p-8 md:p-12 mb-20 max-w-5xl shadow-xl border-2 border-gray-200">
       <p class="text-xl md:text-2xl leading-relaxed mb-8 text-gray-700">
         <span class="readable-title text-3xl md:text-4xl block mb-6">Esperienza e Competenza</span>
         <span class="font-semibold">Il nostro team unisce esperienza e competenza per offrire la migliore tutela ai nostri iscritti.</span>
@@ -131,7 +125,7 @@
     </div>
 
     <!-- Stats -->
-    <div class="grid grid-cols-3 gap-6 mb-12 max-w-2xl w-full fade-in-up" style="animation-delay:.6s;">
+    <div class="grid grid-cols-3 gap-6 mb-12 max-w-2xl w-full">
       <div class="stat-card text-center">
         <div class="stat-number" id="totalCount">-</div>
         <div class="stat-label text-cyan">Totali</div>
@@ -169,8 +163,8 @@
 
       <!-- Loading/Error/Empty -->
       <div id="loadingContainer" class="dirigenti-grid grid gap-8 mb-20">
-        <div class="loading-card">
-          <div class="loading-spinner"></div>
+        <div class="bg-white rounded-3xl p-12 border-2 border-gray-200 text-center">
+          <div class="loading-spinner mx-auto"></div>
           <p class="text-gray-600 font-semibold">Caricamento dirigenti...</p>
         </div>
       </div>
@@ -178,7 +172,7 @@
       <div id="errorContainer" class="hidden mb-20">
         <div class="max-w-2xl mx-auto bg-red-50 border-2 border-red-300 rounded-2xl p-8 text-center">
           <h3 class="text-2xl font-bold text-red-700 mb-4">⚠️ Errore di Caricamento</h3>
-          <p class="text-lg text-red-700 mb-6">Non è stato possibile caricare i dati.</p>
+          <pre id="errText" class="text-sm text-red-700 whitespace-pre-wrap mb-6"></pre>
           <button onclick="window.dirigentiManager?.reload()" class="bg-red-600 text-white px-8 py-4 rounded-lg hover:bg-red-700 transition-colors font-bold text-lg">🔄 Riprova</button>
         </div>
       </div>
@@ -225,7 +219,7 @@
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    // ⚠️ Usa le tue credenziali definitive
+    // Config Supabase (QUESTE SONO LE TUE ATTUALI)
     const supabaseUrl = 'https://lycrgzptkdkksukcwrld.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5Y3JnenB0a2Rra3N1a2N3cmxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3ODQyMzAsImV4cCI6MjA2ODM2MDIzMH0.ZJGOXAMC3hKKrnwXHKEa2_Eh7ZpOKeLYvYlYneBiEfk';
     const supabase = createClient(supabaseUrl, supabaseKey);
@@ -260,18 +254,17 @@
           });
         });
 
-        // Smart Back
+        // Smart Back: home o home_dirigenti in base a user_profiles.role
         const backBtn = document.getElementById('backBtn');
         backBtn.addEventListener('click', async (e)=>{
           e.preventDefault();
           backBtn.style.transform='scale(0.96)'; setTimeout(()=>backBtn.style.transform='',150);
           try{
             const { data:{ session } } = await supabase.auth.getSession();
-            if(!session){ window.location.href = 'login.html'; return; }
+            if(!session){ window.location.href = '/login.html'; return; }
             const uid = session.user.id;
 
-            // Ruolo da user_profiles.role
-            const { data: prof, error } = await supabase
+            const { data: prof } = await supabase
               .from('user_profiles')
               .select('role')
               .eq('user_id', uid)
@@ -279,13 +272,13 @@
 
             const role = (prof?.role || '').toUpperCase();
             if(role === 'DIRIGENTE' || role === 'ADMIN'){
-              window.location.href = 'home_dirigenti.html';
+              window.location.href = '/home_dirigenti.html';
             } else {
-              window.location.href = 'home.html';
+              window.location.href = '/home.html';
             }
           } catch(err){
             console.error('Smart back error:', err);
-            window.location.href = 'home.html';
+            window.location.href = '/home.html';
           }
         });
       }
@@ -293,7 +286,7 @@
       async loadDirigenti(){
         this.showLoading();
         try{
-          // SELECT solo attivi, ordinati per ordine poi nome
+          // ⚠️ Se qui ottieni ancora 404, la tabella NON è nel progetto lycrgz… o non è nello schema public
           const { data, error } = await supabase
             .from('organico_dirigentisindacali')
             .select('id,nome_cognome,ruolo,provincia,regione,email,telefono,foto_url,competenze,ordine,attivo')
@@ -310,7 +303,7 @@
           this.updateStats();
         } catch(err){
           console.error('Caricamento dirigenti fallito:', err);
-          this.showError();
+          this.showError(err);
         }
       }
 
@@ -334,11 +327,19 @@
         document.getElementById('emptyState').classList.add('hidden');
       }
 
-      showError(){
+      showError(err){
         document.getElementById('loadingContainer').classList.add('hidden');
         document.getElementById('dirigentiContainer').classList.add('hidden');
         document.getElementById('emptyState').classList.add('hidden');
-        document.getElementById('errorContainer').classList.remove('hidden');
+        const box = document.getElementById('errorContainer');
+        const pre = document.getElementById('errText');
+        pre.textContent = [
+          `code: ${err?.code ?? '-'}`,
+          `message: ${err?.message ?? '-'}`,
+          `hint: ${err?.hint ?? '-'}`,
+          `details: ${err?.details ?? '-'}`
+        ].join('\n');
+        box.classList.remove('hidden');
       }
 
       render(){
@@ -353,16 +354,10 @@
         }
         empty.classList.add('hidden'); cont.classList.remove('hidden');
 
-        cont.innerHTML = this.filteredDirigenti.map((d, i)=> this.cardHTML(d, i)).join('');
-        this.attachImageFallbacks();
-        // Effetto fade-in semplice
-        cont.querySelectorAll('.dirigente-card').forEach((el, i)=>{
-          el.style.opacity = 0;
-          setTimeout(()=>{ el.style.opacity = 1; el.classList.add('fade-in-up'); }, i*80);
-        });
+        cont.innerHTML = this.filteredDirigenti.map((d)=> this.cardHTML(d)).join('');
       }
 
-      cardHTML(d, index){
+      cardHTML(d){
         const initials = (d.nome_cognome || '??')
           .split(' ')
           .filter(Boolean)
@@ -380,12 +375,12 @@
           : '';
 
         const emailBtn = d.email ? `
-          <a href="mailto:${this.escapeAttr(d.email)}" class="contact-button w-full max-w-xs">
+          <a href="mailto:${this.escapeAttr(d.email)}" class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-aurora to-magenta text-white px-6 py-3 rounded-2xl font-bold border border-white/30 shadow hover:scale-[1.02] transition-transform w-full max-w-xs">
             <span class="text-xl">📧</span><span>Email</span>
           </a>` : '';
 
         const telBtn = d.telefono ? `
-          <a href="tel:${this.escapeAttr(d.telefono)}" class="contact-button w-full max-w-xs">
+          <a href="tel:${this.escapeAttr(d.telefono)}" class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-aurora to-magenta text-white px-6 py-3 rounded-2xl font-bold border border-white/30 shadow hover:scale-[1.02] transition-transform w-full max-w-xs">
             <span class="text-xl">📞</span><span>Chiama</span>
           </a>` : '';
 
@@ -393,12 +388,12 @@
           <img src="${this.escapeAttr(d.foto_url)}"
                alt="${this.escapeAttr(d.nome_cognome || 'Foto dirigente')}"
                class="w-full h-full object-cover rounded-full"
-               data-initials="${initials}">`
+               onerror="this.replaceWith(document.createElement('span')); this.previousSibling?.remove?.();">`
           : `<span>${initials}</span>`;
 
         return `
           <article class="dirigente-card" role="article" aria-label="Dirigente ${this.escapeAttr(d.nome_cognome || '')}">
-            <div class="dirigente-avatar">${img}</div>
+            <div class="dirigente-avatar">${img || `<span>${initials}</span>`}</div>
 
             <h3 class="readable-title text-center">${this.escape(d.nome_cognome) || 'Nome non disponibile'}</h3>
 
@@ -423,24 +418,11 @@
         `;
       }
 
-      attachImageFallbacks(){
-        document.querySelectorAll('.dirigente-avatar img[data-initials]').forEach(img=>{
-          img.addEventListener('error', ()=>{
-            const initials = img.getAttribute('data-initials') || '??';
-            const wrap = img.parentElement;
-            if(wrap){
-              wrap.innerHTML = `<span>${initials}</span>`;
-            }
-          }, { once:true });
-        });
-      }
-
       roleClass(ruolo){
         if(!ruolo) return 'role-provinciale';
         if(ruolo.includes('Regionale')) return 'role-regionale';
         if(ruolo.includes('Provinciale')) return 'role-provinciale';
         return 'role-provinciale';
-        // (eventuali altri mapping specifici)
       }
 
       updateStats(){
@@ -462,15 +444,15 @@
       async reload(){ await this.loadDirigenti(); }
     }
 
-    // Bootstrap
     window.addEventListener('DOMContentLoaded', ()=> {
       window.dirigentiManager = new DirigentiManager();
     });
 
-    // Suggerimento RLS per questa pagina (solo commento):
+    // Consiglio RLS (da eseguire nel progetto giusto):
     // CREATE POLICY "read_dirigenti_authenticated"
     // ON public.organico_dirigentisindacali
-    // FOR SELECT TO authenticated
+    // FOR SELECT
+    // TO authenticated
     // USING (attivo = true);
   </script>
 </body>
