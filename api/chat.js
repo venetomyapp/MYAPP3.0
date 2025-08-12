@@ -1,7 +1,10 @@
-// api/chat.js — Vercel Serverless Function (Node runtime)
-const UPSTREAM = 'https://myapp-chatbot-server.onrender.com/api/chat';
+// api/chat.js — verifica JWT con /auth/v1/user e poi chiama OpenAI
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 export default async function handler(req, res) {
+  // CORS "soft"
   const origin = req.headers.origin || '';
   res.setHeader('Vary', 'Origin');
   res.setHeader('Access-Control-Allow-Origin', origin || '*');
@@ -11,21 +14,62 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
+  // Env check
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    return res.status(500).json({ error: 'Server misconfigured: missing Supabase env vars' });
+  }
+  if (!OPENAI_API_KEY) {
+    return res.status(500).json({ error: 'Server misconfigured: missing OPENAI_API_KEY' });
+  }
+
   try {
-    const upstream = await fetch(UPSTREAM, {
+    // 1) Authorization
+    const auth = req.headers.authorization || '';
+    if (!auth.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Missing or invalid Authorization header' });
+    }
+
+    // 2) Verifica token come in /api/whoami
+    const vr = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      headers: { Authorization: auth, apikey: SUPABASE_ANON_KEY }
+    });
+    if (vr.status !== 200) {
+      const detail = await vr.text().catch(()=> '');
+      return res.status(401).json({ error: 'Invalid or expired token', detail: detail.slice(0,200) });
+    }
+
+    // 3) Body dal client
+    const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+    const {
+      messages = [],
+      model = 'gpt-4o-mini',
+      max_tokens = 500,
+      temperature = 0.7,
+      system_context
+    } = body;
+
+    const chatMessages = [];
+    if (system_context) chatMessages.push({ role: 'system', content: system_context });
+    for (const m of Array.isArray(messages) ? messages : []) {
+      if (m?.role && m?.content) chatMessages.push({ role: m.role, content: m.content });
+    }
+
+    // 4) OpenAI
+    const oa = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': req.headers.authorization || ''
-      },
-      body: typeof req.body === 'string' ? req.body : JSON.stringify(req.body)
+      headers: { 'Authorization': `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model, messages: chatMessages, temperature, max_tokens })
     });
 
-    const ct = upstream.headers.get('content-type') || 'application/json; charset=utf-8';
-    const buf = Buffer.from(await upstream.arrayBuffer());
-    res.status(upstream.status).setHeader('Content-Type', ct).send(buf);
+    if (!oa.ok) {
+      const txt = await oa.text().catch(()=>'');
+      return res.status(oa.status).json({ error: `OpenAI error: ${txt || oa.statusText}` });
+    }
+
+    const data = await oa.json();
+    return res.status(200).json({ ...data, web_search_performed: false });
   } catch (e) {
-    console.error('Proxy error:', e);
-    res.status(502).json({ error: 'Upstream unavailable' });
+    console.error('API /api/chat error:', e);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 }
