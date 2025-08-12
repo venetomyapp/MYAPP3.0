@@ -804,9 +804,23 @@
                     .eq('attiva', true)
                     .eq('in_evidenza', true)
                     .order('created_at', {ascending: false})
-                    .limit(6);
+                    .limit(5); // Ridotto a 5 per fare spazio alla convenzione di esempio
                 
-                if (!data || !data.length) { 
+                // Convenzione di esempio sempre presente
+                const exampleConvenzione = {
+                    id: 'example',
+                    nome_azienda: 'TechStore Pro',
+                    descrizione: 'Sconto del 15% su tutti i prodotti tecnologici: smartphone, laptop, tablet e accessori. Spedizione gratuita per ordini superiori a 50€.',
+                    logo_url: null,
+                    link_esterno: 'https://www.example-techstore.com',
+                    in_evidenza: true,
+                    attiva: true
+                };
+                
+                // Combina i dati dal database con la convenzione di esempio
+                const allConvenzioni = data ? [exampleConvenzione, ...data] : [exampleConvenzione];
+                
+                if (!allConvenzioni || allConvenzioni.length === 0) { 
                     empty.classList.remove('hidden'); 
                     return; 
                 }
@@ -814,22 +828,43 @@
                 empty.classList.add('hidden'); 
                 wrap.innerHTML = '';
                 
-                for (const c of data) {
+                for (const c of allConvenzioni.slice(0, 6)) { // Mostra massimo 6 convenzioni
                     const el = document.createElement('a');
                     el.className = 'function-card border-slate-200 bg-white';
                     el.href = c.link_esterno || '#'; 
                     el.target = c.link_esterno ? '_blank' : '_self'; 
                     el.rel = c.link_esterno ? 'noopener' : '';
+                    
+                    // Usa emoji tecnologico per la convenzione di esempio
+                    const logoContent = c.id === 'example' ? 
+                        '<div class="text-2xl md:text-3xl">💻</div>' :
+                        (c.logo_url ? `<img src="${escapeHTML(c.logo_url)}" alt="" class="max-h-16 md:max-h-24 object-contain">` : '<div class="text-2xl md:text-3xl">🤝</div>');
+                    
                     el.innerHTML = `
                         <div class="w-full h-16 md:h-24 bg-slate-50 rounded-lg flex items-center justify-center overflow-hidden mb-3">
-                            ${c.logo_url ? `<img src="${escapeHTML(c.logo_url)}" alt="" class="max-h-16 md:max-h-24 object-contain">` : '<div class="text-2xl md:text-3xl">🤝</div>'}
+                            ${logoContent}
                         </div>
                         <h4 class="font-extrabold">${escapeHTML(c.nome_azienda)}</h4>
                         <p class="text-slate-600 text-xs">${escapeHTML((c.descrizione||'').slice(0,110))}${c.descrizione&&c.descrizione.length>110?'…':''}</p>`;
                     wrap.appendChild(el);
                 }
             } catch { 
-                empty.classList.remove('hidden'); 
+                // In caso di errore, mostra almeno la convenzione di esempio
+                empty.classList.add('hidden');
+                wrap.innerHTML = '';
+                
+                const el = document.createElement('a');
+                el.className = 'function-card border-slate-200 bg-white';
+                el.href = 'https://www.example-techstore.com';
+                el.target = '_blank';
+                el.rel = 'noopener';
+                el.innerHTML = `
+                    <div class="w-full h-16 md:h-24 bg-slate-50 rounded-lg flex items-center justify-center overflow-hidden mb-3">
+                        <div class="text-2xl md:text-3xl">💻</div>
+                    </div>
+                    <h4 class="font-extrabold">TechStore Pro</h4>
+                    <p class="text-slate-600 text-xs">Sconto del 15% su tutti i prodotti tecnologici: smartphone, laptop, tablet e accessori. Spedizione gratuita…</p>`;
+                wrap.appendChild(el);
             }
         }
 
