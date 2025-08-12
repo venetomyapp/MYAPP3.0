@@ -700,7 +700,7 @@
                 setText('userName', 'Dirigente'); 
                 setText('userEmail', user.email || '—'); 
                 setText('rolesSummary', '—'); 
-                setText('accessLevel', 'Dirigente Autorizzato');
+                setText('accessLevel', 'Accesso Dirigente Autorizzato');
             }
         }
 
@@ -708,9 +708,9 @@
         async function loadIscrittoDal(user) {
             try {
                 const { data } = await supabase.from('tessere').select('data_emissione').eq('user_id', user.id).order('data_emissione', { ascending: true }).limit(1);
-                setText('iscrittoDal', data?.[0]?.data_emissione ? fmtDate(data[0].data_emissione) : 'N/A');
+                setText('iscrittoDal', data?.[0]?.data_emissione ? fmtDate(data[0].data_emissione) : 'Non disponibile');
             } catch { 
-                setText('iscrittoDal', 'N/A'); 
+                setText('iscrittoDal', 'Non disponibile'); 
             }
         }
 
@@ -728,12 +728,11 @@
             }
         }
 
-        // Load latest news - Mobile optimized (PRESERVING ORIGINAL LAYOUT)
+        // Load latest news
         async function loadLatestNews() {
             const wrap = document.getElementById('latestNews'); 
             const empty = document.getElementById('newsEmptyState');
             
-            // Show spinner initially
             wrap.innerHTML = `<div class="col-span-full flex items-center justify-center py-8"><span class="spinner"></span></div>`;
             
             try {
@@ -759,38 +758,29 @@
                 for (const n of news) {
                     const card = document.createElement('article');
                     const hasUrl = !!n.url_articolo && String(n.url_articolo).trim().length > 0;
-                    card.className = 'rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow';
+                    card.className = 'rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm';
                     card.innerHTML = `
                         <div class="h-32 md:h-40 bg-slate-100 overflow-hidden">
                             ${n.immagine_url ? 
-                                `<img src="${escapeHTML(n.immagine_url)}" alt="" class="w-full h-full object-cover" loading="lazy">` : 
+                                `<img src="${escapeHTML(n.immagine_url)}" alt="" class="w-full h-full object-cover">` : 
                                 `<div class="w-full h-full flex items-center justify-center text-3xl md:text-4xl">📰</div>`
                             }
                         </div>
                         <div class="p-3 md:p-4">
-                            <div class="flex items-center justify-between mb-2 flex-wrap gap-1">
-                                <span class="badge text-xs">${escapeHTML(n.categoria || 'GENERALE')}</span>
-                                ${n.in_evidenza ? '<span class="badge text-xs">⭐ In evidenza</span>' : ''}
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="badge">${escapeHTML(n.categoria || 'GENERALE')}</span>
+                                ${n.in_evidenza ? '<span class="badge">⭐ In evidenza</span>' : ''}
                             </div>
-                            <h3 class="font-extrabold text-slate-900 text-sm md:text-lg leading-snug mb-1 line-clamp-2">
-                                ${escapeHTML(n.titolo)}
-                            </h3>
-                            ${n.sottotitolo ? 
-                                `<p class="text-slate-600 text-xs md:text-sm mb-3 line-clamp-2">${escapeHTML(n.sottotitolo)}</p>` : 
-                                ''
-                            }
-                            <div class="flex items-center justify-between text-xs text-slate-500 gap-2">
-                                <span class="truncate">${fmtDate(n.data_pubblicazione)}</span>
-                                <button class="btn-aurora text-xs px-3 py-2" 
-                                    ${hasUrl ? `data-url="${escapeHTML(n.url_articolo)}"` : 'disabled title="Nessun link"'}>
-                                    Leggi l'articolo completo
-                                </button>
+                            <h3 class="font-extrabold text-slate-900 text-sm md:text-lg leading-snug mb-1">${escapeHTML(n.titolo)}</h3>
+                            ${n.sottotitolo ? `<p class="text-slate-600 text-xs md:text-sm mb-3">${escapeHTML(n.sottotitolo)}</p>` : ''}
+                            <div class="flex items-center justify-between text-xs text-slate-500">
+                                <span>${fmtDate(n.data_pubblicazione)}</span>
+                                <button class="btn-aurora text-xs px-3 py-2" ${hasUrl ? `data-url="${escapeHTML(n.url_articolo)}"` : 'disabled title="Nessun link"'}>Leggi l'articolo completo</button>
                             </div>
                         </div>`;
                     wrap.appendChild(card);
                 }
                 
-                // Event delegation for buttons (ORIGINAL BEHAVIOR - ONE TIME LISTENER)
                 wrap.addEventListener('click', (e) => { 
                     const b = e.target.closest('button[data-url]'); 
                     if (b) { 
@@ -803,7 +793,7 @@
             }
         }
 
-        <!-- Load featured conventions - Mobile optimized (ORIGINAL BEHAVIOR) -->
+        // Load featured conventions
         async function loadFeaturedConvenzioni() {
             const wrap = document.getElementById('featuredConvenzioni'); 
             const empty = document.getElementById('convEmptyState');
@@ -826,27 +816,16 @@
                 
                 for (const c of data) {
                     const el = document.createElement('a');
-                    el.className = 'function-card border-slate-200 bg-white hover:bg-slate-50 transition-colors min-h-[140px]';
+                    el.className = 'function-card border-slate-200 bg-white';
                     el.href = c.link_esterno || '#'; 
                     el.target = c.link_esterno ? '_blank' : '_self'; 
                     el.rel = c.link_esterno ? 'noopener' : '';
-                    
-                    // Truncate description for mobile like original
-                    const maxDesc = window.innerWidth < 640 ? 60 : 110;
-                    const truncDesc = (c.descrizione || '').slice(0, maxDesc);
-                    const showEllipsis = c.descrizione && c.descrizione.length > maxDesc;
-                    
                     el.innerHTML = `
-                        <div class="w-full h-16 md:h-20 bg-slate-50 rounded-lg flex items-center justify-center overflow-hidden mb-2">
-                            ${c.logo_url ? 
-                                `<img src="${escapeHTML(c.logo_url)}" alt="" class="max-h-16 md:max-h-20 object-contain" loading="lazy">` : 
-                                '<div class="text-2xl md:text-3xl">🤝</div>'
-                            }
+                        <div class="w-full h-16 md:h-24 bg-slate-50 rounded-lg flex items-center justify-center overflow-hidden mb-3">
+                            ${c.logo_url ? `<img src="${escapeHTML(c.logo_url)}" alt="" class="max-h-16 md:max-h-24 object-contain">` : '<div class="text-2xl md:text-3xl">🤝</div>'}
                         </div>
-                        <h4 class="font-extrabold text-sm md:text-base line-clamp-2">${escapeHTML(c.nome_azienda)}</h4>
-                        <p class="text-slate-600 text-xs line-clamp-2 mt-1">
-                            ${escapeHTML(truncDesc)}${showEllipsis ? '…' : ''}
-                        </p>`;
+                        <h4 class="font-extrabold">${escapeHTML(c.nome_azienda)}</h4>
+                        <p class="text-slate-600 text-xs">${escapeHTML((c.descrizione||'').slice(0,110))}${c.descrizione&&c.descrizione.length>110?'…':''}</p>`;
                     wrap.appendChild(el);
                 }
             } catch { 
@@ -900,19 +879,6 @@
             });
         }
 
-        // Navigation functions (integrated from previous dashboard)
-        function goToFileBox() { 
-            window.location.href = 'filebox.html'; 
-        }
-        
-        function goToAssistenza() { 
-            window.location.href = 'servizi.html'; 
-        }
-
-        // Make functions available globally
-        window.goToFileBox = goToFileBox;
-        window.goToAssistenza = goToAssistenza;
-
         // Initialize everything
         (async () => {
             console.log('🏛️ Area Dirigenti Mobile-First Dashboard Loading...');
@@ -935,7 +901,7 @@
                 loadFeaturedConvenzioni()
             ]);
             
-            console.log('✅ Area Dirigenti Dashboard Ready - Mobile Optimized with FileBox & Assistenza');
+            console.log('✅ Area Dirigenti Dashboard Ready - Mobile Optimized with Full Integration');
         })();
     </script>
 </body>
