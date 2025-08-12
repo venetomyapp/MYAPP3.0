@@ -51,6 +51,15 @@
             --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
             --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
             --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
+            --safe-area-inset-top: env(safe-area-inset-top, 0);
+            --safe-area-inset-bottom: env(safe-area-inset-bottom, 0);
+            --safe-area-inset-left: env(safe-area-inset-left, 0);
+            --safe-area-inset-right: env(safe-area-inset-right, 0);
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
         }
 
         body {
@@ -58,8 +67,12 @@
             background-size: 400% 400%;
             animation: aurora 20s ease infinite;
             min-height: 100vh;
-            -webkit-tap-highlight-color: transparent;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            padding-left: var(--safe-area-inset-left);
+            padding-right: var(--safe-area-inset-right);
         }
+
         @keyframes aurora {
             0%, 100% { background-position: 0% 50%; }
             25% { background-position: 100% 50%; }
@@ -67,117 +80,334 @@
             75% { background-position: 0% 100%; }
         }
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
 
         @media (prefers-reduced-motion: reduce) {
             * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
         }
 
-        .text-ultra-visible { color:#fff; text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1); font-weight:800; }
-        .text-white { text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1); }
-
-        .glass-morphism { background: rgba(255,255,255,.08); backdrop-filter: blur(12px); border:1px solid rgba(255,255,255,.20); box-shadow:0 8px 32px rgba(31,38,135,.25); }
-        .glass-card { background: rgba(255,255,255,.95); backdrop-filter: blur(16px); border:1px solid rgba(0,0,0,.06); }
-
-        .btn-aurora { background: var(--gradient-magic); color:white; border:2px solid rgba(233,69,96,.3); transition: all .25s cubic-bezier(.4,0,.2,1); font-weight:700; touch-action: manipulation; }
-        @media (hover:hover) and (pointer:fine){ .btn-aurora:hover { transform: translateY(-3px) scale(1.03); box-shadow:0 16px 32px rgba(233,69,96,.35); border-color: rgba(233,69,96,.7); } }
-
-        .tool-card,
-        .action-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.06));
-            border: 1.5px solid rgba(255,255,255,0.28);
-            border-radius: 16px;
-            transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
-            will-change: transform;
-            touch-action: manipulation;
+        /* Typography */
+        .text-ultra-visible { 
+            color: #fff; 
+            text-shadow: 0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1); 
+            font-weight: 800; 
         }
-        @media (hover:hover) and (pointer:fine){
-            .tool-card:hover,
-            .action-card:hover {
-                transform: translateY(-4px);
-                box-shadow: 0 12px 24px rgba(0,0,0,0.22);
-                border-color: rgba(233, 69, 96, 0.4);
-                background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.08));
+        .text-white { 
+            text-shadow: 0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1); 
+        }
+
+        /* Glass effects */
+        .glass-morphism { 
+            background: rgba(255,255,255,.08); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255,255,255,.20); 
+            box-shadow: 0 8px 32px rgba(31,38,135,.25); 
+        }
+        .glass-card { 
+            background: rgba(255,255,255,.95); 
+            backdrop-filter: blur(16px); 
+            border: 1px solid rgba(0,0,0,.06); 
+        }
+
+        /* Buttons */
+        .btn-aurora { 
+            background: var(--gradient-magic); 
+            color: white; 
+            border: 2px solid rgba(233,69,96,.3); 
+            transition: all .25s cubic-bezier(.4,0,.2,1); 
+            font-weight: 700; 
+            touch-action: manipulation;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Mobile-first hover states */
+        @media (hover: hover) and (pointer: fine) {
+            .btn-aurora:hover { 
+                transform: translateY(-2px) scale(1.02); 
+                box-shadow: 0 16px 32px rgba(233,69,96,.35); 
+                border-color: rgba(233,69,96,.7); 
             }
         }
+
+        /* Cards with better mobile interaction */
+        .tool-card,
+        .action-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.08));
+            border: 1.5px solid rgba(255,255,255,0.25);
+            border-radius: 20px;
+            transition: all .2s ease;
+            will-change: transform;
+            touch-action: manipulation;
+            min-height: 120px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient-magic);
+            transition: left 0.3s ease;
+        }
+
+        .tool-card:active::before,
+        .action-card:active::before {
+            left: 0;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .tool-card:hover,
+            .action-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 12px 24px rgba(0,0,0,0.22);
+                border-color: rgba(233, 69, 96, 0.4);
+                background: linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.10));
+            }
+        }
+
+        /* Mobile optimized stats */
+        .stat-card { 
+            background: linear-gradient(135deg, rgba(255,255,255,.15), rgba(255,255,255,.05)); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(255,255,255,.22); 
+            border-radius: 24px; 
+            transition: all .2s ease;
+            min-height: 100px;
+        }
+
+        .stat-card:active {
+            transform: scale(0.98);
+        }
+
+        @media (hover: hover) and (pointer: fine) { 
+            .stat-card:hover { 
+                transform: translateY(-2px); 
+                background: linear-gradient(135deg, rgba(255,255,255,.25), rgba(255,255,255,.12)); 
+            } 
+        }
+
+        /* Focus states */
         .tool-card:focus-visible,
         .action-card:focus-visible,
         button:focus-visible,
         [role="button"]:focus-visible {
             outline: 3px solid rgba(0,212,255,.65);
-            outline-offset: 3px;
+            outline-offset: 2px;
         }
 
-        .stat-card { background: linear-gradient(135deg,rgba(255,255,255,.15),rgba(255,255,255,.05)); backdrop-filter: blur(15px); border:1px solid rgba(255,255,255,.22); border-radius:20px; transition: transform .2s ease, background .2s ease; }
-        @media (hover:hover) and (pointer:fine){ .stat-card:hover { transform: translateY(-3px); background: linear-gradient(135deg,rgba(255,255,255,.25),rgba(255,255,255,.12)); } }
-
-        .loading-skeleton { background: linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size:200% 100%; animation: shimmer 1.2s infinite; border-radius:12px; }
-
-        .notification-dropdown { display:none; position:absolute; top:100%; right:0; background: rgba(255,255,255,.95); backdrop-filter: blur(20px); border:1px solid rgba(0,0,0,.06); border-radius:16px; box-shadow:0 15px 35px rgba(0,0,0,.18); width:350px; max-height:400px; overflow-y:auto; z-index:1000; }
-        .notification-dropdown.show { display:block; animation: slideDown .2s ease; }
-        @keyframes slideDown { from { opacity:0; transform: translateY(-10px);} to { opacity:1; transform: translateY(0);} }
-        .notification-badge { background:#dc2626; color:white; border-radius:50%; width:18px; height:18px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; }
-
-        .priority-indicator { width:8px; height:8px; border-radius:50%; display:inline-block; }
-        .priority-alta{ background:#ef4444;} .priority-normale{ background:#3b82f6;} .priority-bassa{ background:#10b981;}
-
-        .line-clamp-2{ display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow: hidden; }
-
-        .hero-title { font-size: clamp(2.4rem, 8vw, 5rem); font-weight:900; }
-
-        /* Orizzontali */
-        .hscroll {
-            display: flex;
-            gap: 16px;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            padding-bottom: 6px;
-            -webkit-overflow-scrolling: touch;
-            scroll-behavior: smooth;
-            scrollbar-width: thin;
+        /* Loading */
+        .loading-skeleton { 
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); 
+            background-size: 200% 100%; 
+            animation: shimmer 1.2s infinite; 
+            border-radius: 16px; 
         }
-        .hscroll::-webkit-scrollbar { height: 8px; }
-        .hscroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,.25); border-radius: 9999px; }
-        .hscroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.4); }
 
-        .hitem { scroll-snap-align: start; min-width: 220px; }
+        /* Notifications */
+        .notification-dropdown { 
+            display: none; 
+            position: absolute; 
+            top: calc(100% + 8px); 
+            right: 0; 
+            background: rgba(255,255,255,.96); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(0,0,0,.06); 
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,.18); 
+            width: min(350px, calc(100vw - 32px)); 
+            max-height: 60vh; 
+            overflow-y: auto; 
+            z-index: 1000; 
+        }
+        .notification-dropdown.show { 
+            display: block; 
+            animation: slideDown .2s ease; 
+        }
+        @keyframes slideDown { 
+            from { opacity: 0; transform: translateY(-10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        .notification-badge { 
+            background: #dc2626; 
+            color: white; 
+            border-radius: 50%; 
+            width: 20px; 
+            height: 20px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 11px; 
+            font-weight: 600; 
+            position: absolute;
+            top: -6px;
+            right: -6px;
+        }
+
+        /* Priority indicators */
+        .priority-indicator { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+        .priority-alta { background: #ef4444; }
+        .priority-normale { background: #3b82f6; }
+        .priority-bassa { background: #10b981; }
+
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* Hero title responsive */
+        .hero-title { 
+            font-size: clamp(1.8rem, 6vw, 3.5rem); 
+            font-weight: 900; 
+            line-height: 1.1;
+        }
+
+        /* Mobile grid system */
+        .mobile-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        @media (min-width: 480px) {
+            .mobile-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 16px;
+            }
+        }
 
         @media (min-width: 768px) {
-            .hscroll { overflow: visible; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-            .hitem { min-width: 0; }
+            .mobile-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
         }
-        @media (min-width: 1024px) { .hscroll { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-        @media (min-width: 1536px) { .hscroll { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+        @media (min-width: 1024px) {
+            .mobile-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        @media (min-width: 640px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 16px;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.25); border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.4); }
+        ::-webkit-scrollbar-track { background: transparent; }
 
         /* Aspect ratio helpers */
         .ratio-square { aspect-ratio: 1 / 1; }
         .ratio-16x9 { aspect-ratio: 16 / 9; }
+        .ratio-4x3 { aspect-ratio: 4 / 3; }
 
         /* Visually hidden for live regions */
-        .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+        .sr-only { 
+            position: absolute; 
+            width: 1px; 
+            height: 1px; 
+            padding: 0; 
+            margin: -1px; 
+            overflow: hidden; 
+            clip: rect(0,0,0,0); 
+            white-space: nowrap; 
+            border: 0; 
+        }
+
+        /* Header with safe area */
+        .header-safe {
+            padding-top: max(16px, var(--safe-area-inset-top));
+        }
+
+        /* Mobile-specific animations */
+        .animate-slide-up {
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Better touch targets */
+        .touch-target {
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        /* Improved mobile spacing */
+        .mobile-section {
+            padding: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .mobile-section {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .mobile-section {
+                padding: 2rem;
+            }
+        }
     </style>
 </head>
 
 <body class="flex flex-col min-h-screen font-sans">
 
-    <!-- HEADER -->
-    <header class="glass-morphism sticky top-0 z-40">
-        <div class="container mx-auto px-4 py-4">
+    <!-- HEADER MOBILE OPTIMIZED -->
+    <header class="glass-morphism sticky top-0 z-40 header-safe">
+        <div class="px-4 py-3">
+            <!-- Mobile Header Layout -->
             <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-primary via-secondary to-accent rounded-xl flex items-center justify-center"><span class="text-white font-black text-xl">📊</span></div>
-                    <div>
-                        <span class="text-ultra-visible text-2xl font-black">MyApp</span>
-                        <div class="text-white text-sm flex items-center gap-2"><span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>Dashboard Personale</div>
+                <!-- Logo + Title (Condensed for mobile) -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary via-secondary to-accent rounded-xl flex items-center justify-center">
+                        <span class="text-white font-black text-lg">📊</span>
+                    </div>
+                    <div class="hidden sm:block">
+                        <span class="text-ultra-visible text-xl font-black">MyApp</span>
+                        <div class="text-white text-xs flex items-center gap-2">
+                            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                            <span class="hidden md:inline">Dashboard Personale</span>
+                            <span class="md:hidden">Online</span>
+                        </div>
+                    </div>
+                    <!-- Mobile: Show only logo -->
+                    <div class="sm:hidden">
+                        <span class="text-ultra-visible text-lg font-black">MyApp</span>
                     </div>
                 </div>
 
-                <div class="flex items-center space-x-6">
-                    <!-- Notifiche -->
+                <!-- Right Section -->
+                <div class="flex items-center space-x-3">
+                    <!-- Notifications -->
                     <div class="relative">
-                        <button id="notificationBtn" class="text-white hover:text-aurora transition-all duration-300 transform hover:scale-110" aria-haspopup="true" aria-expanded="false">
-                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2 2 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                        <button id="notificationBtn" class="touch-target text-white hover:text-aurora transition-all duration-300 p-2 rounded-xl" aria-haspopup="true" aria-expanded="false">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2 2 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                            </svg>
                         </button>
-                        <span id="notificationBadge" class="notification-badge absolute -top-2 -right-2 hidden" aria-live="polite">0</span>
+                        <span id="notificationBadge" class="notification-badge hidden" aria-live="polite">0</span>
                         <div id="notificationDropdown" class="notification-dropdown" role="dialog" aria-label="Elenco notifiche">
                             <div class="p-4 border-b border-gray-200">
                                 <div class="flex justify-between items-center">
@@ -190,18 +420,43 @@
                         <span id="notificationLive" class="sr-only" aria-live="polite"></span>
                     </div>
 
-                    <!-- Profilo -->
-                    <div class="flex items-center space-x-3">
-                        <div class="text-white text-right">
+                    <!-- User Profile (Condensed for mobile) -->
+                    <div class="flex items-center space-x-2">
+                        <div class="text-white text-right hidden sm:block">
                             <div id="userWelcome" class="font-semibold text-sm">Caricamento...</div>
                             <div id="userRole" class="text-xs opacity-80">Utente</div>
                         </div>
-                        <div id="userAvatar" class="w-10 h-10 bg-gradient-to-br from-aurora to-cyan rounded-full flex items-center justify-center text-white font-bold text-lg border-2 border-white/20">U</div>
+                        <div id="userAvatar" class="w-9 h-9 bg-gradient-to-br from-aurora to-cyan rounded-full flex items-center justify-content text-white font-bold text-sm border-2 border-white/20">U</div>
                     </div>
 
-                    <!-- Logout -->
-                    <button id="logoutBtn" class="btn-aurora px-5 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                    <!-- Logout Button (Hidden on mobile, show hamburger instead) -->
+                    <button id="logoutBtn" class="btn-aurora px-4 py-2 rounded-xl text-sm font-bold hidden sm:flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                        <span class="hidden md:inline">Esci</span>
+                    </button>
+
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuBtn" class="sm:hidden touch-target text-white p-2 rounded-xl">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu (Hidden by default) -->
+            <div id="mobileMenu" class="sm:hidden mt-4 pb-4 border-t border-white/20 hidden">
+                <div class="pt-4 space-y-2">
+                    <div class="text-white text-center py-2">
+                        <div id="userWelcomeMobile" class="font-semibold">Caricamento...</div>
+                        <div id="userRoleMobile" class="text-sm opacity-80">Utente</div>
+                    </div>
+                    <button id="logoutBtnMobile" class="btn-aurora w-full py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
                         Esci
                     </button>
                 </div>
@@ -209,215 +464,269 @@
         </div>
     </header>
 
-    <!-- MAIN -->
-    <main class="container mx-auto px-4 py-8 flex-grow">
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow pb-8">
 
-        <!-- 1) BENVENUTO -->
-        <section class="mb-12">
-            <div class="glass-morphism rounded-3xl p-8 md:p-12 relative overflow-hidden">
+        <!-- WELCOME SECTION - Mobile First -->
+        <section class="mobile-section animate-fade-in">
+            <div class="glass-morphism rounded-3xl p-6 md:p-8 relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-aurora/20 to-cyan/20 rounded-full blur-xl"></div>
                 <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-magenta/20 to-teal/20 rounded-full blur-lg"></div>
 
-                <div class="flex flex-col lg:flex-row items-center justify-between gap-8 relative z-10">
-                    <div class="flex-grow text-center lg:text-left">
-                        <div class="mb-6">
-                            <div class="inline-flex items-center gap-3 mb-3">
-                                <div class="w-3 h-8 bg-gradient-to-b from-aurora to-cyan rounded-full"></div>
-                                <span class="text-white/80 text-sm font-semibold uppercase tracking-wider">Dashboard Personale</span>
+                <div class="relative z-10">
+                    <!-- Mobile-optimized welcome -->
+                    <div class="text-center md:text-left">
+                        <div class="mb-4">
+                            <div class="inline-flex items-center gap-2 mb-3">
+                                <div class="w-1 h-6 bg-gradient-to-b from-aurora to-cyan rounded-full"></div>
+                                <span class="text-white/80 text-xs font-semibold uppercase tracking-wider">Dashboard</span>
                             </div>
                         </div>
 
-                        <h1 class="hero-title text-ultra-visible mb-4 leading-tight">Benvenuto,<br><span id="userNameDisplay" class="text-cyan">Utente</span></h1>
-                        <p class="text-white/90 text-lg md:text-xl mb-8 max-w-2xl">Accedi ai servizi e alle informazioni attraverso la tua area riservata personalizzata.</p>
+                        <h1 class="hero-title text-ultra-visible mb-4 leading-tight">
+                            Benvenuto,<br>
+                            <span id="userNameDisplay" class="text-cyan">Utente</span>
+                        </h1>
+                        
+                        <p class="text-white/90 text-base md:text-lg mb-6 max-w-2xl mx-auto md:mx-0">
+                            Accedi ai tuoi servizi personalizzati
+                        </p>
 
-                        <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
-                            <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm"><div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div><span class="text-sm font-medium">Online</span></div>
+                        <!-- Status indicators - Mobile optimized -->
+                        <div class="flex flex-wrap gap-2 justify-center md:justify-start">
                             <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                                <span class="text-sm font-medium">Connessione sicura</span>
+                                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                                <span class="text-sm font-medium">Online</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                                <span class="text-sm font-medium hidden sm:inline">Connessione sicura</span>
+                                <span class="text-sm font-medium sm:hidden">Sicuro</span>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
 
-                    <div class="flex-shrink-0 relative">
-                        <div class="w-32 h-32 bg-gradient-to-br from-primary via-secondary to-accent rounded-full flex items-center justify-center relative border-4 border-white/20 shadow-2xl">
-                            <div class="text-center"><div class="text-4xl mb-1 filter drop-shadow-lg">📊</div><div class="text-white text-xs font-bold opacity-90">MyApp</div></div>
-                        </div>
+        <!-- STATS SECTION - Mobile Grid -->
+        <section class="mobile-section animate-slide-up">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-gradient-to-br from-cyan to-teal rounded-xl flex items-center justify-center">
+                    <span class="text-white text-lg">📈</span>
+                </div>
+                <h2 class="text-ultra-visible text-xl md:text-2xl font-black">I tuoi dati</h2>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card p-4">
+                    <div class="text-center">
+                        <div class="text-2xl mb-1" aria-hidden="true">📅</div>
+                        <div class="text-white text-lg font-bold" id="memberSince">-</div>
+                        <div class="text-white text-xs opacity-80">Iscritto dal</div>
+                    </div>
+                </div>
+
+                <div class="stat-card p-4">
+                    <div class="text-center">
+                        <div class="text-2xl mb-1" aria-hidden="true">🎫</div>
+                        <div class="text-white text-lg font-bold" id="numeroTessera">Loading...</div>
+                        <div class="text-white text-xs opacity-80">N. Tessera</div>
+                    </div>
+                </div>
+
+                <div class="stat-card p-4">
+                    <div class="text-center">
+                        <div class="text-2xl mb-1" aria-hidden="true">📋</div>
+                        <div class="text-white text-lg font-bold" id="richiesteCount">-</div>
+                        <div class="text-white text-xs opacity-80">Richieste</div>
+                    </div>
+                </div>
+
+                <div class="stat-card p-4">
+                    <div class="text-center">
+                        <div class="text-2xl mb-1" aria-hidden="true">✅</div>
+                        <div class="text-white text-lg font-bold" id="profileStatus">Attivo</div>
+                        <div class="text-white text-xs opacity-80">Stato</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 2) I TUOI STRUMENTI E SERVIZI -->
-        <section class="mb-12">
-            <div class="flex items-center gap-4 mb-6">
-                <div class="w-12 h-12 bg-gradient-to-br from-gold to-aurora rounded-xl flex items-center justify-center"><span class="text-white text-2xl">🌟</span></div>
-                <h2 class="text-ultra-visible text-3xl font-black">I tuoi strumenti e servizi</h2>
+        <!-- TOOLS SECTION - Mobile Grid -->
+        <section class="mobile-section animate-slide-up">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-gradient-to-br from-gold to-aurora rounded-xl flex items-center justify-center">
+                    <span class="text-white text-lg">🌟</span>
+                </div>
+                <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Strumenti e servizi</h2>
             </div>
 
-            <div class="hscroll -mx-1 md:mx-0">
-                <div class="tool-card hitem p-6 text-center cursor-pointer" role="button" tabindex="0" aria-label="Nuova Richiesta" onclick="goToRichieste()" onkeydown="keyActivate(event,'goToRichieste')">
-                    <div class="text-4xl mb-3">📝</div>
-                    <h3 class="text-white text-lg font-bold mb-1">Nuova Richiesta</h3>
-                    <p class="text-white/80 text-sm">Invia una nuova richiesta</p>
+            <div class="mobile-grid">
+                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Nuova Richiesta" onclick="goToRichieste()" onkeydown="keyActivate(event,'goToRichieste')">
+                    <div class="text-3xl mb-2">📝</div>
+                    <h3 class="text-white text-sm font-bold mb-1">Nuova Richiesta</h3>
+                    <p class="text-white/80 text-xs line-clamp-2">Invia richiesta</p>
                 </div>
 
-                <div class="tool-card hitem p-6 text-center cursor-pointer" role="button" tabindex="0" aria-label="Tessera Digitale" onclick="goToTessera()" onkeydown="keyActivate(event,'goToTessera')">
-                    <div class="text-4xl mb-3">🎫</div>
-                    <h3 class="text-white text-lg font-bold mb-1">Tessera Digitale</h3>
-                    <p class="text-white/80 text-sm">Visualizza e scarica la tessera</p>
+                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Tessera Digitale" onclick="goToTessera()" onkeydown="keyActivate(event,'goToTessera')">
+                    <div class="text-3xl mb-2">🎫</div>
+                    <h3 class="text-white text-sm font-bold mb-1">Tessera</h3>
+                    <p class="text-white/80 text-xs line-clamp-2">Visualizza tessera</p>
                 </div>
 
-                <div class="tool-card hitem p-6 text-center cursor-pointer" role="button" tabindex="0" aria-label="Il Mio Profilo" onclick="goToProfilo()" onkeydown="keyActivate(event,'goToProfilo')">
-                    <div class="text-4xl mb-3">👤</div>
-                    <h3 class="text-white text-lg font-bold mb-1">Il Mio Profilo</h3>
-                    <p class="text-white/80 text-sm">Gestisci i tuoi dati</p>
+                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Il Mio Profilo" onclick="goToProfilo()" onkeydown="keyActivate(event,'goToProfilo')">
+                    <div class="text-3xl mb-2">👤</div>
+                    <h3 class="text-white text-sm font-bold mb-1">Profilo</h3>
+                    <p class="text-white/80 text-xs line-clamp-2">Gestisci dati</p>
                 </div>
 
-                <div class="tool-card hitem p-6 text-center cursor-pointer" role="button" tabindex="0" aria-label="Strumenti" onclick="goToStrumenti()" onkeydown="keyActivate(event,'goToStrumenti')">
-                    <div class="text-4xl mb-3">🛠️</div>
-                    <h3 class="text-white text-lg font-bold mb-1">Strumenti</h3>
-                    <p class="text-white/80 text-sm">Utility di lavoro</p>
+                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Strumenti" onclick="goToStrumenti()" onkeydown="keyActivate(event,'goToStrumenti')">
+                    <div class="text-3xl mb-2">🛠️</div>
+                    <h3 class="text-white text-sm font-bold mb-1">Strumenti</h3>
+                    <p class="text-white/80 text-xs line-clamp-2">Utility lavoro</p>
                 </div>
 
-                <div class="tool-card hitem p-6 text-center cursor-pointer" role="button" tabindex="0" aria-label="Virgilio AI" onclick="goToVirgilio()" onkeydown="keyActivate(event,'goToVirgilio')">
-                    <div class="text-4xl mb-3">🤖</div>
-                    <h3 class="text-white text-lg font-bold mb-1">Virgilio AI</h3>
-                    <p class="text-white/80 text-sm">Assistente intelligente</p>
+                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Virgilio AI" onclick="goToVirgilio()" onkeydown="keyActivate(event,'goToVirgilio')">
+                    <div class="text-3xl mb-2">🤖</div>
+                    <h3 class="text-white text-sm font-bold mb-1">Virgilio AI</h3>
+                    <p class="text-white/80 text-xs line-clamp-2">Assistente AI</p>
                 </div>
 
-                <div class="tool-card hitem p-6 text-center cursor-pointer" role="button" tabindex="0" aria-label="Dirigenti" onclick="goToDirigenti()" onkeydown="keyActivate(event,'goToDirigenti')">
-                    <div class="text-4xl mb-3">👥</div>
-                    <h3 class="text-white text-lg font-bold mb-1">Dirigenti</h3>
-                    <p class="text-white/80 text-sm">Contatta un dirigente</p>
+                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Dirigenti" onclick="goToDirigenti()" onkeydown="keyActivate(event,'goToDirigenti')">
+                    <div class="text-3xl mb-2">👥</div>
+                    <h3 class="text-white text-sm font-bold mb-1">Dirigenti</h3>
+                    <p class="text-white/80 text-xs line-clamp-2">Contatti</p>
                 </div>
 
-                <div class="tool-card hitem p-6 text-center cursor-pointer" role="button" tabindex="0" aria-label="Convenzioni" onclick="goToConvenzioni()" onkeydown="keyActivate(event,'goToConvenzioni')">
-                    <div class="text-4xl mb-3">🤝</div>
-                    <h3 class="text-white text-lg font-bold mb-1">Convenzioni</h3>
-                    <p class="text-white/80 text-sm">Sconti e offerte</p>
+                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Convenzioni" onclick="goToConvenzioni()" onkeydown="keyActivate(event,'goToConvenzioni')">
+                    <div class="text-3xl mb-2">🤝</div>
+                    <h3 class="text-white text-sm font-bold mb-1">Convenzioni</h3>
+                    <p class="text-white/80 text-xs line-clamp-2">Sconti e offerte</p>
                 </div>
 
-                <div class="tool-card hitem p-6 text-center cursor-pointer" role="button" tabindex="0" aria-label="FileBox" onclick="goToFileBox()" onkeydown="keyActivate(event,'goToFileBox')">
-                    <div class="text-4xl mb-3">📁</div>
-                    <h3 class="text-white text-lg font-bold mb-1">FileBox</h3>
-                    <p class="text-white/80 text-sm">I tuoi file e documenti</p>
+                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="FileBox" onclick="goToFileBox()" onkeydown="keyActivate(event,'goToFileBox')">
+                    <div class="text-3xl mb-2">📁</div>
+                    <h3 class="text-white text-sm font-bold mb-1">FileBox</h3>
+                    <p class="text-white/80 text-xs line-clamp-2">File e documenti</p>
                 </div>
 
-                <div class="tool-card hitem p-6 text-center cursor-pointer" role="button" tabindex="0" aria-label="Assistenza" onclick="goToAssistenza()" onkeydown="keyActivate(event,'goToAssistenza')">
-                    <div class="text-4xl mb-3">🛟</div>
-                    <h3 class="text-white text-lg font-bold mb-1">Assistenza</h3>
-                    <p class="text-white/80 text-sm">Supporto e servizi</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3) I TUOI DATI -->
-        <section class="mb-12">
-            <div class="flex items-center gap-4 mb-6">
-                <div class="w-12 h-12 bg-gradient-to-br from-cyan to-teal rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📈</span></div>
-                <h2 class="text-ultra-visible text-3xl font-black">I tuoi dati</h2>
-            </div>
-
-            <div class="hscroll -mx-1 md:mx-0">
-                <div class="stat-card hitem p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div class="text-white text-2xl font-bold" id="memberSince">-</div>
-                            <div class="text-white text-sm opacity-80">Iscritto dal</div>
-                        </div>
-                        <div class="text-4xl" aria-hidden="true">📅</div>
-                    </div>
-                </div>
-
-                <div class="stat-card hitem p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div class="text-white text-2xl font-bold" id="numeroTessera">In generazione...</div>
-                            <div class="text-white text-sm opacity-80">Numero Tessera</div>
-                        </div>
-                        <div class="text-4xl" aria-hidden="true">🎫</div>
-                    </div>
-                </div>
-
-                <div class="stat-card hitem p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div class="text-white text-2xl font-bold" id="richiesteCount">-</div>
-                            <div class="text-white text-sm opacity-80">Richieste Attive</div>
-                        </div>
-                        <div class="text-4xl" aria-hidden="true">📋</div>
-                    </div>
-                </div>
-
-                <div class="stat-card hitem p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div class="text-white text-2xl font-bold" id="profileStatus">Attivo</div>
-                            <div class="text-white text-sm opacity-80">Stato Profilo</div>
-                        </div>
-                        <div class="text-4xl" aria-hidden="true">✅</div>
-                    </div>
+                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Assistenza" onclick="goToAssistenza()" onkeydown="keyActivate(event,'goToAssistenza')">
+                    <div class="text-3xl mb-2">🛟</div>
+                    <h3 class="text-white text-sm font-bold mb-1">Assistenza</h3>
+                    <p class="text-white/80 text-xs line-clamp-2">Supporto</p>
                 </div>
             </div>
         </section>
 
-        <!-- RICHIESTE -->
-        <section class="mb-12">
-            <div class="flex items-center justify-between mb-8">
-                <div class="flex items-center gap-4"><div class="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📋</span></div><h2 class="text-ultra-visible text-3xl font-black">Le Tue Richieste</h2></div>
-                <button onclick="goToRichieste()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2"><span>Vedi tutte</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
+        <!-- REQUESTS SECTION - Mobile First -->
+        <section class="mobile-section animate-slide-up">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center">
+                        <span class="text-white text-lg">📋</span>
+                    </div>
+                    <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Le Tue Richieste</h2>
+                </div>
+                <button onclick="goToRichieste()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-1 text-sm">
+                    <span class="hidden sm:inline">Vedi tutte</span>
+                    <span class="sm:hidden">Tutte</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
             </div>
-            <div class="glass-morphism rounded-3xl p-6">
-                <div id="richiesteContainer" class="space-y-4">
-                    <div class="loading-skeleton h-20"></div>
-                    <div class="loading-skeleton h-20"></div>
-                    <div class="loading-skeleton h-20"></div>
+            
+            <div class="glass-morphism rounded-3xl p-4 md:p-6">
+                <div id="richiesteContainer" class="space-y-3">
+                    <div class="loading-skeleton h-16"></div>
+                    <div class="loading-skeleton h-16"></div>
+                    <div class="loading-skeleton h-16"></div>
                 </div>
             </div>
         </section>
 
-        <!-- NEWS -->
-        <section class="mb-12" id="newsSection">
-            <div class="flex items-center justify-between mb-8">
-                <div class="flex items-center gap-4"><div class="w-12 h-12 bg-gradient-to-br from-slate-600 to-slate-800 rounded-xl flex items-center justify-center"><span class="text-white text-2xl">📰</span></div><h2 class="text-ultra-visible text-3xl font-black">Ultime Notizie</h2></div>
-                <button onclick="viewAllNews()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2"><span>Vedi tutte</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
+        <!-- NEWS SECTION - Mobile Cards -->
+        <section class="mobile-section animate-slide-up" id="newsSection">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-slate-600 to-slate-800 rounded-xl flex items-center justify-center">
+                        <span class="text-white text-lg">📰</span>
+                    </div>
+                    <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Ultime Notizie</h2>
+                </div>
+                <button onclick="viewAllNews()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-1 text-sm">
+                    <span class="hidden sm:inline">Vedi tutte</span>
+                    <span class="sm:hidden">Tutte</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
             </div>
-            <div class="glass-card rounded-3xl p-8">
+            
+            <div class="glass-card rounded-3xl p-4 md:p-6">
                 <div id="newsContainer">
-                    <div class="loading-skeleton h-20 mb-4"></div>
-                    <div class="loading-skeleton h-20 mb-4"></div>
-                    <div class="loading-skeleton h-20"></div>
+                    <div class="loading-skeleton h-16 mb-3"></div>
+                    <div class="loading-skeleton h-16 mb-3"></div>
+                    <div class="loading-skeleton h-16"></div>
                 </div>
             </div>
         </section>
 
-        <!-- CONVENZIONI -->
-        <section class="mb-12" id="convenzioniSection">
-            <div class="flex items-center justify-between mb-8">
-                <div class="flex items-center gap-4"><div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center"><span class="text-white text-2xl">🤝</span></div><h2 class="text-ultra-visible text-3xl font-black">Convenzioni in Evidenza</h2></div>
-                <button onclick="goToConvenzioni()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-2"><span>Vedi tutte</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
+        <!-- CONVENTIONS SECTION - Mobile Grid -->
+        <section class="mobile-section animate-slide-up" id="convenzioniSection">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center">
+                        <span class="text-white text-lg">🤝</span>
+                    </div>
+                    <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Convenzioni</h2>
+                </div>
+                <button onclick="goToConvenzioni()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-1 text-sm">
+                    <span class="hidden sm:inline">Vedi tutte</span>
+                    <span class="sm:hidden">Tutte</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="convenzioniContainer">
-                <div class="loading-skeleton h-64"></div>
-                <div class="loading-skeleton h-64"></div>
-                <div class="loading-skeleton h-64"></div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6" id="convenzioniContainer">
+                <div class="loading-skeleton h-48"></div>
+                <div class="loading-skeleton h-48"></div>
+                <div class="loading-skeleton h-48"></div>
             </div>
         </section>
+
     </main>
 
-    <!-- FOOTER -->
-    <footer class="glass-morphism mt-16">
-        <div class="container mx-auto px-4 py-8">
+    <!-- FOOTER - Mobile Optimized -->
+    <footer class="glass-morphism mt-8 pb-8" style="padding-bottom: max(2rem, var(--safe-area-inset-bottom));">
+        <div class="px-4 py-6">
             <div class="text-center text-white">
-                <div class="mb-4"><span class="font-bold text-xl">MyApp</span> - Dashboard Personale v5.0</div>
-                <div class="flex justify-center items-center space-x-6 text-sm opacity-80 mb-4"><span>© 2025 MyApp</span><span>•</span><span>Powered by Supabase</span><span>•</span><span>Design Professionale</span></div>
-                <div class="flex justify-center space-x-4"><div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div><div class="w-2 h-2 bg-slate-500 rounded-full animate-pulse" style="animation-delay:.5s;"></div><div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" style="animation-delay:1s;"></div></div>
+                <div class="mb-3">
+                    <span class="font-bold text-lg">MyApp</span>
+                    <span class="text-white/70 text-sm ml-2">Dashboard v5.0</span>
+                </div>
+                <div class="flex justify-center items-center space-x-4 text-xs opacity-80 mb-4 flex-wrap">
+                    <span>© 2025 MyApp</span>
+                    <span class="hidden sm:inline">•</span>
+                    <span class="hidden sm:inline">Powered by Supabase</span>
+                    <span class="hidden sm:inline">•</span>
+                    <span>Design Mobile-First</span>
+                </div>
+                <div class="flex justify-center space-x-2">
+                    <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                    <div class="w-2 h-2 bg-slate-500 rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
+                    <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" style="animation-delay: 1s;"></div>
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- SCRIPT -->
+    <!-- JAVASCRIPT -->
     <script>
         // === CONFIGURAZIONE SUPABASE ===
         const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
@@ -434,6 +743,9 @@
         // Refresh loop
         let refreshInterval = null;
 
+        // Mobile menu state
+        let mobileMenuOpen = false;
+
         // Attivazione via tastiera per "role=button"
         function keyActivate(e, fnName, ...args) {
             if (e.key === 'Enter' || e.key === ' ') {
@@ -444,7 +756,7 @@
 
         // === INIZIALIZZAZIONE ===
         document.addEventListener('DOMContentLoaded', async () => {
-            console.log('🏠 HOME PAGE LOADED - MyApp Dashboard v5.0 (Read-only + lazy sections)');
+            console.log('🏠 HOME PAGE LOADED - MyApp Dashboard v5.0 Mobile-First');
             
             if (typeof supabase === 'undefined') {
                 console.error('❌ Supabase not loaded');
@@ -457,20 +769,75 @@
             // Verifica autenticazione
             await checkAuthentication();
             setupEventListeners();
-            setupLazySections(); // prepara lazy load di News/Convenzioni
+            setupLazySections();
+            setupMobileMenu();
 
-            // Carica dati principali (no news/convenzioni: li carichiamo lazy)
+            // Carica dati principali
             await Promise.all([
                 loadTesseraData(),
                 loadRichieste(),
                 loadNotifications()
             ]);
 
-            // Avvia refresh loop (pausabile)
+            // Avvia refresh loop
             startRefreshLoop();
             
-            console.log('✅ Dashboard pronta (solo lettura)');
+            console.log('✅ Dashboard mobile-first pronta');
         });
+
+        // === MOBILE MENU ===
+        function setupMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                        closeMobileMenu();
+                    }
+                });
+            }
+        }
+
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            
+            if (mobileMenu) {
+                mobileMenuOpen = !mobileMenuOpen;
+                
+                if (mobileMenuOpen) {
+                    mobileMenu.classList.remove('hidden');
+                    mobileMenu.classList.add('animate-slide-up');
+                    if (mobileMenuBtn) {
+                        mobileMenuBtn.innerHTML = `
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        `;
+                    }
+                } else {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('animate-slide-up');
+                    if (mobileMenuBtn) {
+                        mobileMenuBtn.innerHTML = `
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        `;
+                    }
+                }
+            }
+        }
+
+        function closeMobileMenu() {
+            if (mobileMenuOpen) {
+                toggleMobileMenu();
+            }
+        }
 
         // === GESTIONE AUTENTICAZIONE ===
         async function checkAuthentication() {
@@ -484,7 +851,7 @@
                 currentUser = session.user;
                 userProfile = await getUserProfile(currentUser.id);
                 if (!userProfile) {
-                    userProfile = await createUserProfile(currentUser); // fallback locale, no write
+                    userProfile = await createUserProfile(currentUser);
                 }
                 if (userProfile.role === 'ADMIN' || userProfile.role === 'DIRIGENTE') {
                     window.location.href = 'home_dirigenti.html';
@@ -531,7 +898,6 @@
             const convEl = document.getElementById('convenzioniSection');
 
             if (!('IntersectionObserver' in window)) {
-                // Fallback: carica subito
                 loadNews(); loadConvenzioni();
                 newsLoaded = convenzioniLoaded = true;
                 return;
@@ -548,13 +914,13 @@
                         convenzioniLoaded = true; loadConvenzioni(); obs.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.25, rootMargin: '0px 0px -10% 0px' });
+            }, { threshold: 0.15, rootMargin: '0px 0px -5% 0px' });
 
             if (newsEl) io.observe(newsEl);
             if (convEl) io.observe(convEl);
         }
 
-        // === REFRESH LOOP (pause/resume) ===
+        // === REFRESH LOOP ===
         function startRefreshLoop() {
             if (refreshInterval) return;
             refreshInterval = setInterval(async () => {
@@ -563,12 +929,14 @@
                 }
             }, 60000);
         }
+        
         function stopRefreshLoop() {
             if (refreshInterval) {
                 clearInterval(refreshInterval);
                 refreshInterval = null;
             }
         }
+        
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) stopRefreshLoop();
             else startRefreshLoop();
@@ -583,11 +951,15 @@
                     .eq('user_id', currentUser.id)
                     .single();
                 const el = document.getElementById('numeroTessera');
-                if (error || !tessera) { if (el) el.textContent = 'In generazione...'; return; }
-                if (el) el.textContent = tessera.numero_tessera || 'In generazione...';
+                if (error || !tessera) { 
+                    if (el) el.textContent = 'In gen...'; 
+                    return; 
+                }
+                if (el) el.textContent = tessera.numero_tessera ? 
+                    tessera.numero_tessera.slice(-8) : 'In gen...';
             } catch {
                 const el = document.getElementById('numeroTessera');
-                if (el) el.textContent = 'Errore caricamento';
+                if (el) el.textContent = 'Errore';
             }
         }
 
@@ -671,65 +1043,101 @@
             const s = String(str);
             return s.charAt(0).toUpperCase() + s.slice(1);
         }
+        
         function updateUserInterface() {
             if (!userProfile) return;
-            const welcomeEl = document.getElementById('userWelcome');
-            const roleEl = document.getElementById('userRole');
-            const nameDisplayEl = document.getElementById('userNameDisplay');
             const rawFirst = userProfile.nome || 'Utente';
             const firstName = capitalizeInitial(rawFirst);
+
+            // Desktop elements
+            const welcomeEl = document.getElementById('userWelcome');
+            const roleEl = document.getElementById('userRole');
             if (welcomeEl) welcomeEl.textContent = `Ciao, ${firstName}!`;
             if (roleEl) roleEl.textContent = getRoleLabel(userProfile.role);
+
+            // Mobile elements
+            const welcomeMobile = document.getElementById('userWelcomeMobile');
+            const roleMobile = document.getElementById('userRoleMobile');
+            if (welcomeMobile) welcomeMobile.textContent = `Ciao, ${firstName}!`;
+            if (roleMobile) roleMobile.textContent = getRoleLabel(userProfile.role);
+
+            // Name display
+            const nameDisplayEl = document.getElementById('userNameDisplay');
             if (nameDisplayEl) nameDisplayEl.textContent = firstName;
 
+            // Avatar
             const avatars = document.querySelectorAll('#userAvatar');
             const initials = getInitials(`${userProfile.nome} ${userProfile.cognome}`);
             avatars.forEach(a => a.textContent = initials);
 
+            // Stats
             const memberSinceEl = document.getElementById('memberSince');
             const statusEl = document.getElementById('profileStatus');
-            if (memberSinceEl) memberSinceEl.textContent = userProfile.created_at ? formatDate(userProfile.created_at) : '-';
+            if (memberSinceEl) memberSinceEl.textContent = userProfile.created_at ? 
+                formatDate(userProfile.created_at) : '-';
             if (statusEl) statusEl.textContent = getStatusLabel(userProfile.stato);
         }
 
-        // === DISPLAY ===
+        // === DISPLAY FUNCTIONS - Mobile Optimized ===
         function displayRichieste(richieste) {
             const container = document.getElementById('richiesteContainer');
             if (!container) return;
+            
             if (richieste.length === 0) {
                 container.innerHTML = `
-                    <div class="text-center py-12 text-white">
-                        <div class="text-6xl mb-4">📋</div>
-                        <h3 class="text-xl font-bold mb-2">Nessuna richiesta</h3>
-                        <p class="text-white/70 mb-6">Non hai ancora inviato nessuna richiesta</p>
-                        <button onclick="goToRichieste()" class="btn-aurora py-3 px-6 rounded-xl">Invia la tua prima richiesta</button>
+                    <div class="text-center py-8 text-white">
+                        <div class="text-4xl mb-3">📋</div>
+                        <h3 class="text-lg font-bold mb-2">Nessuna richiesta</h3>
+                        <p class="text-white/70 text-sm mb-4">Non hai ancora inviato nessuna richiesta</p>
+                        <button onclick="goToRichieste()" class="btn-aurora py-2 px-4 rounded-xl text-sm">
+                            Invia la tua prima richiesta
+                        </button>
                     </div>`;
                 return;
             }
+            
             container.innerHTML = richieste.map(richiesta => {
                 const statusColor = getRequestStatusColor(richiesta.stato);
                 const priorityColor = getPriorityColor(richiesta.priorita);
                 const dataCreazione = new Date(richiesta.created_at).toLocaleDateString('it-IT');
+                
                 return `
-                    <div class="glass-morphism rounded-xl p-4 hover:bg-white/10 transition-all cursor-pointer" 
+                    <div class="glass-morphism rounded-xl p-3 hover:bg-white/10 transition-all cursor-pointer" 
                          role="button" tabindex="0" aria-label="Apri richiesta ${escapeHtml(richiesta.titolo)}"
                          onclick="viewRichiestaDetail('${richiesta.id}')"
                          onkeydown="keyActivate(event,'viewRichiestaDetail','${richiesta.id}')">
-                        <div class="flex items-start justify-between mb-3">
-                            <div class="flex-grow">
-                                <h4 class="text-white font-bold text-lg mb-1">${richiesta.titolo}</h4>
-                                <div class="flex items-center gap-3 text-sm text-white/70 mb-2">
-                                    <span class="flex items-center gap-1"><span class="priority-indicator ${priorityColor}"></span>${richiesta.priorita}</span>
-                                    <span>📂 ${richiesta.categoria}</span>
-                                    <span>📅 ${dataCreazione}</span>
+                        
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex-grow min-w-0">
+                                <h4 class="text-white font-bold text-sm mb-1 line-clamp-2">${richiesta.titolo}</h4>
+                                <div class="flex items-center gap-2 text-xs text-white/70 mb-1 flex-wrap">
+                                    <span class="flex items-center gap-1">
+                                        <span class="priority-indicator ${priorityColor}"></span>
+                                        <span class="hidden sm:inline">${richiesta.priorita}</span>
+                                        <span class="sm:hidden">${richiesta.priorita.slice(0,3)}</span>
+                                    </span>
+                                    <span>📂 ${(richiesta.categoria || '').slice(0,8)}${richiesta.categoria?.length > 8 ? '...' : ''}</span>
+                                    <span class="hidden sm:inline">📅 ${dataCreazione}</span>
                                 </div>
                             </div>
-                            <span class="px-3 py-1 rounded-full text-xs font-bold text-white ${statusColor}">${getStatusText(richiesta.stato)}</span>
+                            <span class="px-2 py-1 rounded-full text-xs font-bold text-white ${statusColor} ml-2 flex-shrink-0">
+                                ${getStatusText(richiesta.stato).slice(0,8)}
+                            </span>
                         </div>
-                        <p class="text-white/80 text-sm mb-3 line-clamp-2">${richiesta.descrizione || 'Nessuna descrizione'}</p>
+                        
+                        <p class="text-white/80 text-xs mb-2 line-clamp-2">
+                            ${richiesta.descrizione || 'Nessuna descrizione'}
+                        </p>
+                        
                         <div class="flex items-center justify-between text-xs text-white/60">
-                            <span>${richiesta.dirigente_nome ? `👤 ${richiesta.dirigente_nome}` : '⏳ In attesa'}</span>
-                            <span>ID: #${String(richiesta.id).slice(-8)}</span>
+                            <span class="line-clamp-1">
+                                ${richiesta.dirigente_nome ? 
+                                    `👤 ${richiesta.dirigente_nome.slice(0,15)}${richiesta.dirigente_nome.length > 15 ? '...' : ''}` : 
+                                    '⏳ In attesa'}
+                            </span>
+                            <span class="ml-2 flex-shrink-0">
+                                ID: #${String(richiesta.id).slice(-6)}
+                            </span>
                         </div>
                     </div>`;
             }).join('');
@@ -741,9 +1149,9 @@
 
             if (newsArray.length === 0) {
                 container.innerHTML = `
-                    <div class="text-center py-8 text-gray-500">
-                        <div class="text-4xl mb-2">📰</div>
-                        <div>Nessuna notizia disponibile al momento</div>
+                    <div class="text-center py-6 text-gray-500">
+                        <div class="text-3xl mb-2">📰</div>
+                        <div class="text-sm">Nessuna notizia disponibile</div>
                     </div>`;
                 return;
             }
@@ -758,26 +1166,33 @@
                 const encUrl = safeUrl ? encodeURIComponent(safeUrl) : '';
 
                 return `
-                    <div class="group border border-gray-200 hover:border-blue-200 bg-white/70 hover:bg-white rounded-xl p-4 mb-4 transition-colors cursor-pointer"
+                    <div class="group border border-gray-200 hover:border-blue-200 bg-white/70 hover:bg-white rounded-xl p-3 mb-3 transition-colors cursor-pointer"
                          role="button" tabindex="0" aria-label="Apri notizia ${escapeHtml(n.titolo)}"
                          onclick="readNews('${n.id}','${encUrl}')"
                          onkeydown="keyActivate(event,'readNews','${n.id}','${encUrl}')">
-                        <div class="flex gap-4 items-start">
-                            <div class="flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 border border-gray-200 ratio-square w-20">
+                        
+                        <div class="flex gap-3 items-start">
+                            <div class="flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 border border-gray-200 w-16 h-16">
                                 ${img ? `<img src="${img}" alt="${escapeHtml(n.titolo)}" class="w-full h-full object-cover" loading="lazy" decoding="async">`
-                                      : `<div class="w-full h-full flex items-center justify-center text-2xl" aria-hidden="true">📰</div>`}
+                                      : `<div class="w-full h-full flex items-center justify-center text-lg" aria-hidden="true">📰</div>`}
                             </div>
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="inline-block text-[11px] font-bold bg-blue-600 text-white px-2 py-0.5 rounded">${cat}</span>
-                                    <span class="text-xs text-gray-500">📅 ${absDate}</span>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2 mb-1 flex-wrap">
+                                    <span class="inline-block text-xs font-bold bg-blue-600 text-white px-2 py-0.5 rounded">
+                                        ${cat.slice(0,8)}${cat.length > 8 ? '...' : ''}
+                                    </span>
+                                    <span class="text-xs text-gray-500 hidden sm:inline">📅 ${absDate}</span>
                                     <span class="text-xs text-gray-500">• ${relDate}</span>
-                                    <span class="text-xs text-gray-500">👁️ ${n.visualizzazioni || 0}</span>
                                 </div>
-                                <h3 class="text-textDark font-semibold text-base md:text-lg leading-snug mb-1 group-hover:underline">${n.titolo}</h3>
-                                ${n.sottotitolo ? `<p class="text-gray-600 text-sm line-clamp-2">${n.sottotitolo}</p>` : ''}
+                                <h3 class="text-textDark font-semibold text-sm leading-snug mb-1 group-hover:underline line-clamp-2">
+                                    ${n.titolo}
+                                </h3>
+                                ${n.sottotitolo ? `<p class="text-gray-600 text-xs line-clamp-2">${n.sottotitolo}</p>` : ''}
+                                <div class="flex items-center justify-between mt-2">
+                                    <span class="text-xs text-gray-500">👁️ ${n.visualizzazioni || 0}</span>
+                                    <span class="text-blue-600 group-hover:text-blue-800 font-semibold text-xs">Apri →</span>
+                                </div>
                             </div>
-                            <div class="text-blue-600 group-hover:text-blue-800 font-semibold text-sm ml-2">Apri →</div>
                         </div>
                     </div>`;
             }).join('');
@@ -789,16 +1204,16 @@
 
             if (convenzioni.length === 0) {
                 container.innerHTML = `
-                    <div class="glass-morphism rounded-3xl p-12 col-span-3 text-center">
-                        <div class="text-6xl mb-4">🤝</div>
-                        <h3 class="text-white text-xl font-bold mb-2">Nessuna convenzione disponibile</h3>
-                        <p class="text-white/70">Le convenzioni verranno pubblicate a breve</p>
+                    <div class="glass-morphism rounded-3xl p-8 col-span-full text-center">
+                        <div class="text-4xl mb-3">🤝</div>
+                        <h3 class="text-white text-lg font-bold mb-2">Nessuna convenzione disponibile</h3>
+                        <p class="text-white/70 text-sm">Le convenzioni verranno pubblicate a breve</p>
                     </div>`;
                 return;
             }
 
             container.innerHTML = convenzioni.map(c => {
-                const excerpt = (c.descrizione || '').slice(0, 120) + ((c.descrizione||'').length > 120 ? '…' : '');
+                const excerpt = (c.descrizione || '').slice(0, 80) + ((c.descrizione||'').length > 80 ? '…' : '');
                 const sconto = c.sconto_percentuale ? `${c.sconto_percentuale}%` : '';
                 const inEvidenza = c.in_evidenza === true || c.in_evidenza === 'true';
                 const validaFino = c.valida_fino ? new Date(c.valida_fino) : null;
@@ -812,36 +1227,49 @@
                          aria-label="Apri convenzione ${escapeHtml(c.nome_azienda || 'Convenzione')}"
                          onclick="openConvenzione('${c.id}','${encUrl}')"
                          onkeydown="keyActivate(event,'openConvenzione','${c.id}','${encUrl}')">
+                        
                         ${img ? `
-                            <div class="w-full bg-gray-100 overflow-hidden ratio-16x9">
-                                <img src="${img}" alt="${escapeHtml(c.nome_azienda || 'Convenzione')}" class="w-full h-full object-cover" loading="lazy" decoding="async">
+                            <div class="w-full bg-gray-100 overflow-hidden h-32">
+                                <img src="${img}" alt="${escapeHtml(c.nome_azienda || 'Convenzione')}" 
+                                     class="w-full h-full object-cover" loading="lazy" decoding="async">
                             </div>` : ''
                         }
-                        <div class="p-6">
-                            <div class="flex items-start justify-between mb-4">
-                                <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center text-white text-sm font-bold">
+                        
+                        <div class="p-4">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="w-10 h-10 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center text-white text-sm font-bold">
                                     ${sconto ? `-${sconto}` : '🤝'}
                                 </div>
                                 <div class="flex flex-col gap-1">
-                                    ${inEvidenza ? '<div class="bg-emerald-600 text-white px-2 py-1 rounded-full text-xs font-bold">IN EVIDENZA</div>' : ''}
-                                    ${isScaduta ? '<div class="bg-gray-500 text-white px-2 py-1 rounded-full text-xs font-bold">SCADUTA</div>' : ''}
+                                    ${inEvidenza ? '<div class="bg-emerald-600 text-white px-2 py-1 rounded-full text-xs font-bold">TOP</div>' : ''}
+                                    ${isScaduta ? '<div class="bg-gray-500 text-white px-2 py-1 rounded-full text-xs font-bold">SCAD</div>' : ''}
                                 </div>
                             </div>
-                            <h3 class="text-white text-lg font-bold mb-2">${c.nome_azienda || '-'}</h3>
-                            <p class="text-white/80 text-sm mb-4">${excerpt}</p>
+                            
+                            <h3 class="text-white text-base font-bold mb-2 line-clamp-2">
+                                ${c.nome_azienda || '-'}
+                            </h3>
+                            
+                            <p class="text-white/80 text-sm mb-3 line-clamp-3">${excerpt}</p>
+                            
                             <div class="flex items-center justify-between text-xs text-white/60 mb-3">
-                                <span>📂 ${c.categoria || 'Generale'}</span>
-                                <span>🌍 ${c.copertura_geografica || 'Nazionale'}</span>
+                                <span>📂 ${(c.categoria || 'Generale').slice(0,10)}</span>
+                                <span>🌍 ${(c.copertura_geografica || 'Nazionale').slice(0,8)}</span>
                             </div>
+                            
                             <div class="flex items-center justify-between">
-                                <span class="text-white/60 text-xs">👀 ${c.visualizzazioni || 0} visualizzazioni</span>
-                                <span class="text-emerald-300 text-sm font-semibold">${isScaduta ? 'Non disponibile' : 'Scopri →'}</span>
+                                <span class="text-white/60 text-xs">👀 ${c.visualizzazioni || 0}</span>
+                                <span class="text-emerald-300 text-sm font-semibold">
+                                    ${isScaduta ? 'Non disponibile' : 'Scopri →'}
+                                </span>
                             </div>
+                            
                             ${validaFino ? `
                                 <div class="mt-3 pt-3 border-t border-white/10">
                                     <div class="text-white/60 text-xs flex items-center gap-1">
                                         <span class="${isScaduta ? 'text-red-400' : 'text-green-400'}">⏰</span>
-                                        ${isScaduta ? 'Scaduta il' : 'Valida fino al'} ${validaFino.toLocaleDateString('it-IT')}
+                                        ${isScaduta ? 'Scaduta il' : 'Valida fino al'} 
+                                        <span class="font-mono">${validaFino.toLocaleDateString('it-IT')}</span>
                                     </div>
                                 </div>` : ''
                             }
@@ -854,30 +1282,39 @@
         function displayNotifications(notifications) {
             const container = document.getElementById('notificationList');
             if (!container) return;
+            
             if (notifications.length === 0) {
                 container.innerHTML = `
-                    <div class="text-center py-8 text-gray-500">
-                        <div class="text-4xl mb-2">🔔</div>
+                    <div class="text-center py-6 text-gray-500">
+                        <div class="text-3xl mb-2">🔔</div>
                         <div class="text-sm">Nessuna notifica</div>
                     </div>`;
                 return;
             }
+            
             container.innerHTML = notifications.map(n => `
-                <div class="p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer ${!n.read ? 'bg-blue-50 border-l-4 border-blue-600' : ''}" onclick="markNotificationAsRead('${n.id}')">
+                <div class="p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer ${!n.read ? 'bg-blue-50 border-l-4 border-blue-600' : ''}" 
+                     onclick="markNotificationAsRead('${n.id}')">
                     <div class="flex items-start gap-3">
                         <div class="flex-shrink-0 w-2 h-2 rounded-full mt-2 ${!n.read ? 'bg-blue-600' : 'bg-gray-300'}"></div>
-                        <div class="flex-grow">
-                            <h4 class="font-semibold text-textDark text-sm">${n.title || 'Notifica'}</h4>
-                            <p class="text-gray-600 text-xs mt-1">${n.message || ''}</p>
-                            <span class="text-gray-400 text-xs">${formatDateTime(n.created_at)} • ${formatRelativeTime(n.created_at)}</span>
+                        <div class="flex-grow min-w-0">
+                            <h4 class="font-semibold text-textDark text-sm line-clamp-2">${n.title || 'Notifica'}</h4>
+                            <p class="text-gray-600 text-xs mt-1 line-clamp-2">${n.message || ''}</p>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="text-gray-400 text-xs">${formatDateTime(n.created_at)}</span>
+                                <span class="text-gray-400 text-xs">• ${formatRelativeTime(n.created_at)}</span>
+                            </div>
                         </div>
                     </div>
-                </div>`).join('');
+                </div>
+            `).join('');
         }
+        
         function updateNotificationBadge(count) {
             const badge = document.getElementById('notificationBadge');
             const live = document.getElementById('notificationLive');
             if (!badge) return;
+            
             if (count > 0) {
                 const txt = count > 99 ? '99+' : String(count);
                 badge.textContent = txt;
@@ -891,26 +1328,59 @@
 
         // === EVENT LISTENERS ===
         function setupEventListeners() {
+            // Desktop logout
             document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
+            // Mobile logout
+            document.getElementById('logoutBtnMobile')?.addEventListener('click', handleLogout);
+            
+            // Notifications
             document.getElementById('notificationBtn')?.addEventListener('click', toggleNotificationDropdown);
             document.getElementById('markAllRead')?.addEventListener('click', markAllNotificationsAsRead);
 
+            // Close notifications dropdown when clicking outside
             document.addEventListener('click', (e) => {
                 const btn = document.getElementById('notificationBtn');
                 const dd = document.getElementById('notificationDropdown');
-                if (!btn?.contains(e.target) && !dd?.contains(e.target)) dd?.classList.remove('show');
+                if (!btn?.contains(e.target) && !dd?.contains(e.target)) {
+                    dd?.classList.remove('show');
+                }
             });
 
+            // Auth state changes
             supabaseClient.auth.onAuthStateChange((event) => {
                 if (event === 'SIGNED_OUT') window.location.href = 'index.html';
+            });
+
+            // Handle orientation changes on mobile
+            window.addEventListener('orientationchange', () => {
+                setTimeout(() => {
+                    // Close mobile menu on orientation change
+                    closeMobileMenu();
+                }, 100);
+            });
+
+            // Handle scroll to hide/show mobile menu
+            let lastScrollY = window.scrollY;
+            window.addEventListener('scroll', () => {
+                const currentScrollY = window.scrollY;
+                if (currentScrollY > lastScrollY + 50) {
+                    // Scrolling down - close mobile menu
+                    closeMobileMenu();
+                }
+                lastScrollY = currentScrollY;
             });
         }
 
         // === AZIONI ===
         async function handleLogout() {
-            try { await supabaseClient.auth.signOut(); window.location.href = 'index.html'; }
-            catch { window.location.href = 'index.html'; }
+            try { 
+                await supabaseClient.auth.signOut(); 
+                window.location.href = 'index.html'; 
+            } catch { 
+                window.location.href = 'index.html'; 
+            }
         }
+        
         function toggleNotificationDropdown() {
             const el = document.getElementById('notificationDropdown');
             const btn = document.getElementById('notificationBtn');
@@ -920,11 +1390,19 @@
                 if (btn) btn.setAttribute('aria-expanded', show ? 'true' : 'false');
             }
         }
+        
         async function markAllNotificationsAsRead() {
             console.info('ℹ️ Read-only: nessun update al DB.');
             document.getElementById('notificationDropdown')?.classList.remove('show');
         }
-        async function markNotificationAsRead() { console.info('ℹ️ Read-only: nessun update al DB.'); }
+        
+        async function markNotificationAsRead() { 
+            console.info('ℹ️ Read-only: nessun update al DB.'); 
+        }
+
+        function viewRichiestaDetail(id) {
+            window.location.href = `richieste.html?id=${id}`;
+        }
 
         // === NAVIGAZIONE ===
         function goToRichieste(){ window.location.href = 'richieste.html'; }
@@ -942,30 +1420,81 @@
         function readNews(newsId, encodedUrl) {
             const decoded = encodedUrl ? decodeURIComponent(encodedUrl) : null;
             const url = sanitizeUrl(decoded);
-            if (url) { safeOpen(url); }
-            else { window.location.href = `news.html?id=${newsId}`; }
+            if (url) { 
+                safeOpen(url); 
+            } else { 
+                window.location.href = `news.html?id=${newsId}`; 
+            }
         }
 
         // Apri convenzione: se esiste link_esterno usa quello, altrimenti fallback interno
         function openConvenzione(convenzioneId, encodedUrl) {
             const decoded = encodedUrl ? decodeURIComponent(encodedUrl) : null;
             const url = sanitizeUrl(decoded);
-            if (url) { safeOpen(url); }
-            else { window.location.href = `convenzioni.html#${convenzioneId}`; }
+            if (url) { 
+                safeOpen(url); 
+            } else { 
+                window.location.href = `convenzioni.html#${convenzioneId}`; 
+            }
         }
 
         // === UTILITY ===
-        function getRoleLabel(role){ return ({USER:'Utente', DIRIGENTE:'Dirigente', ADMIN:'Amministratore'})[role] || 'Utente'; }
-        function getStatusLabel(status){ return ({ATTIVO:'Attivo', SOSPESO:'Sospeso', INATTIVO:'Inattivo'})[status] || 'Sconosciuto'; }
-        function getInitials(fullName){ if(!fullName) return 'U'; return fullName.split(' ').map(n=>n.charAt(0)).join('').toUpperCase().substring(0,2); }
-        function getRequestStatusColor(stato){ return ({RICEVUTA:'bg-blue-600', IN_ESAME:'bg-yellow-600', IN_LAVORAZIONE:'bg-orange-600', NECESSARIE_INFO:'bg-purple-600', COMPLETATA:'bg-green-600', CHIUSA:'bg-gray-600', ANNULLATA:'bg-red-600'})[stato] || 'bg-gray-500'; }
-        function getStatusText(stato){ return ({RICEVUTA:'Ricevuta', IN_ESAME:'In Esame', IN_LAVORAZIONE:'In Lavorazione', NECESSARIE_INFO:'Info Richieste', COMPLETATA:'Completata', CHIUSA:'Chiusa', ANNULLATA:'Annullata'})[stato] || stato; }
-        function getPriorityColor(p){ return ({BASSA:'priority-bassa', NORMALE:'priority-normale', ALTA:'priority-alta'})[p] || 'priority-normale'; }
-        function formatDate(s){ if(!s) return '-'; const d = new Date(s); return d.toLocaleDateString('it-IT'); }
-        function formatDateTime(s){ if(!s) return '-'; const d = new Date(s); return d.toLocaleDateString('it-IT') + ' ' + d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}); }
+        function getRoleLabel(role){ 
+            return ({USER:'Utente', DIRIGENTE:'Dirigente', ADMIN:'Amministratore'})[role] || 'Utente'; 
+        }
+        
+        function getStatusLabel(status){ 
+            return ({ATTIVO:'Attivo', SOSPESO:'Sospeso', INATTIVO:'Inattivo'})[status] || 'Sconosciuto'; 
+        }
+        
+        function getInitials(fullName){ 
+            if(!fullName) return 'U'; 
+            return fullName.split(' ').map(n=>n.charAt(0)).join('').toUpperCase().substring(0,2); 
+        }
+        
+        function getRequestStatusColor(stato){ 
+            return ({
+                RICEVUTA:'bg-blue-600', 
+                IN_ESAME:'bg-yellow-600', 
+                IN_LAVORAZIONE:'bg-orange-600', 
+                NECESSARIE_INFO:'bg-purple-600', 
+                COMPLETATA:'bg-green-600', 
+                CHIUSA:'bg-gray-600', 
+                ANNULLATA:'bg-red-600'
+            })[stato] || 'bg-gray-500'; 
+        }
+        
+        function getStatusText(stato){ 
+            return ({
+                RICEVUTA:'Ricevuta', 
+                IN_ESAME:'In Esame', 
+                IN_LAVORAZIONE:'In Lavorazione', 
+                NECESSARIE_INFO:'Info Richieste', 
+                COMPLETATA:'Completata', 
+                CHIUSA:'Chiusa', 
+                ANNULLATA:'Annullata'
+            })[stato] || stato; 
+        }
+        
+        function getPriorityColor(p){ 
+            return ({BASSA:'priority-bassa', NORMALE:'priority-normale', ALTA:'priority-alta'})[p] || 'priority-normale'; 
+        }
+        
+        function formatDate(s){ 
+            if(!s) return '-'; 
+            const d = new Date(s); 
+            return d.toLocaleDateString('it-IT'); 
+        }
+        
+        function formatDateTime(s){ 
+            if(!s) return '-'; 
+            const d = new Date(s); 
+            return d.toLocaleDateString('it-IT') + ' ' + d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}); 
+        }
 
         // Relative time "3 h fa", "ieri", etc.
         const rtf = new Intl.RelativeTimeFormat('it', { numeric:'auto' });
+        
         function formatRelativeTime(dateString){
             if (!dateString) return '';
             const now = new Date();
@@ -993,16 +1522,26 @@
                 const url = new URL(u);
                 if (url.protocol === 'http:' || url.protocol === 'https:') return url.href;
                 return null;
-            } catch { return null; }
+            } catch { 
+                return null; 
+            }
         }
 
-        function isValidHttpUrl(u){ // mantenuta per compat, non usata più direttamente
-            try{ const x=new URL(u); return x.protocol==='http:'||x.protocol==='https:'; }catch{return false;}
+        function safeOpen(url){ 
+            window.open(url, '_blank', 'noopener,noreferrer'); 
         }
-        function safeOpen(url){ window.open(url, '_blank', 'noopener,noreferrer'); }
-        function escapeHtml(str){ return String(str||'').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])); }
+        
+        function escapeHtml(str){ 
+            return String(str||'').replace(/[&<>"']/g, s => ({
+                '&':'&amp;',
+                '<':'&lt;',
+                '>':'&gt;',
+                '"':'&quot;',
+                "'":'&#39;'
+            }[s])); 
+        }
 
-        console.log('✅ MyApp Home Dashboard v5.0 Ready - Read-only + lazy + relative time');
+        console.log('✅ MyApp Mobile-First Dashboard v5.0 Ready - Fully Responsive & Touch-Optimized');
     </script>
 </body>
 </html>
