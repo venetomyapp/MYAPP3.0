@@ -1,335 +1,691 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Area Dirigenti</title>
-
-  <!-- Tailwind per test (in prod usa build/CLI) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { inter: ['Inter','sans-serif'] },
-          colors: {
-            primary:'#1a1a2e', secondary:'#16213e', accent:'#0f3460',
-            aurora:'#e94560', cyan:'#00d4ff', magenta:'#ff006e',
-            gold:'#ffd700', teal:'#03dac6', dark:'#0a0a23',
-            light:'#f8fafc', success:'#10b981'
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Area Dirigenti - MyApp</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- CONFIGURAZIONE COLORI TAILWIND -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { inter: ['Inter','sans-serif'] },
+                    colors: {
+                        primary: '#1a1a2e',
+                        secondary: '#16213e', 
+                        accent: '#0f3460',
+                        aurora: '#e94560',
+                        cyan: '#00d4ff',
+                        magenta: '#ff006e',
+                        gold: '#ffd700',
+                        teal: '#03dac6',
+                        dark: '#0a0a23',
+                        light: '#f8fafc',
+                        success: '#10b981',
+                        textDark: '#1C1C1E',
+                        backgroundLight: '#F4F4F8',
+                    },
+                    screens: {
+                        'xs': '320px',
+                        'sm': '640px',
+                        'md': '768px',
+                        'lg': '1024px',
+                        'xl': '1280px',
+                        '2xl': '1536px',
+                    }
+                }
+            }
         }
-      }
-    }
-  </script>
+    </script>
+    
+    <!-- STILI MOBILE-FIRST -->
+    <style>
+        :root {
+            --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
+            --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
+            --safe-area-inset-top: env(safe-area-inset-top, 0);
+            --safe-area-inset-bottom: env(safe-area-inset-bottom, 0);
+            --safe-area-inset-left: env(safe-area-inset-left, 0);
+            --safe-area-inset-right: env(safe-area-inset-right, 0);
+        }
 
-  <style>
-    :root{
-      --gradient-aurora: linear-gradient(135deg,#1a1a2e 0%,#16213e 25%,#0f3460 50%,#e94560 75%,#00d4ff 100%);
-      --gradient-magic: linear-gradient(135deg,#ff006e 0%,#e94560 50%,#03dac6 100%);
-    }
-    *{ font-family:'Inter',sans-serif; }
-    body{ background:var(--gradient-aurora); background-size:400% 400%; animation: aurora 15s ease infinite; min-height:100vh; }
-    @keyframes aurora{ 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-    .text-ultra-visible{ color:#fff; text-shadow:0 8px 25px rgba(0,0,0,.8),0 4px 12px rgba(0,0,0,.7),0 2px 6px rgba(0,0,0,.9); font-weight:800; }
-    .hero-title{ font-size:clamp(2rem,6vw,3.5rem); font-weight:900; line-height:1.1; }
+        * {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
 
-    /* Card leggibili (bianco pieno, bordi e testo scuro) */
-    .glass-card{ background:#ffffff; border:1px solid rgba(0,0,0,.06); border-radius:22px; box-shadow:0 14px 30px rgba(0,0,0,.12); }
-    .section-title{ font-size:clamp(1.25rem,4vw,2rem); font-weight:900; color:#0f172a; }
+        body {
+            background: var(--gradient-aurora);
+            background-size: 400% 400%;
+            animation: aurora 20s ease infinite;
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            padding-left: var(--safe-area-inset-left);
+            padding-right: var(--safe-area-inset-right);
+        }
 
-    /* Tile azioni leggibili e responsivi */
-    .function-card{
-      background:#f8fafc;
-      border:1px solid #e5e7eb;
-      border-radius:18px;
-      padding:1.25rem;
-      transition:.2s;
-      text-align:center;
-      color:#0f172a;
-      text-decoration:none;
-      min-height:140px;
-      display:flex; flex-direction:column; align-items:center; justify-content:center;
-    }
-    .function-card:hover{ background:#ffffff; transform:translateY(-3px); box-shadow:0 10px 20px rgba(0,0,0,.08); }
-    .function-card h4{ font-weight:800; font-size:clamp(1rem,2.8vw,1.125rem); }
-    .function-card p{ color:#475569; font-size:.9rem; }
+        @keyframes aurora {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+        }
 
-    .badge{ display:inline-block; padding:.25rem .6rem; border-radius:9999px; background:#111827; color:#fff; font-size:.7rem; font-weight:700; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    .btn-aurora{ background:var(--gradient-magic); color:#fff; border:0; border-radius:12px; padding:.65rem 1.1rem; font-weight:800; display:inline-flex; align-items:center; gap:.5rem; }
-    .spinner{ border:3px solid rgba(0,0,0,.1); border-top:3px solid #111827; border-radius:50%; width:22px; height:22px; animation:spin 1s linear infinite; display:inline-block }
-    @keyframes spin{ 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
-  </style>
+        @media (prefers-reduced-motion: reduce) {
+            * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+        }
+
+        /* Typography */
+        .text-ultra-visible {
+            color: #fff;
+            text-shadow: 0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1);
+            font-weight: 800;
+        }
+
+        .hero-title {
+            font-size: clamp(1.8rem, 6vw, 3.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+        }
+
+        .section-title {
+            font-size: clamp(1.1rem, 4vw, 1.5rem);
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        /* Cards */
+        .glass-card {
+            background: #ffffff;
+            border: 1px solid rgba(0,0,0,.06);
+            border-radius: 24px;
+            box-shadow: 0 14px 30px rgba(0,0,0,.12);
+        }
+
+        /* Function Cards - Mobile Optimized */
+        .function-card {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+            padding: 1rem;
+            transition: all .25s ease;
+            text-align: center;
+            color: #0f172a;
+            text-decoration: none;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        .function-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient-magic);
+            transition: left 0.3s ease;
+        }
+
+        .function-card:active::before {
+            left: 0;
+        }
+
+        .function-card:active {
+            transform: scale(0.98);
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .function-card:hover {
+                background: #ffffff;
+                transform: translateY(-3px);
+                box-shadow: 0 10px 20px rgba(0,0,0,.12);
+            }
+        }
+
+        .function-card h4 {
+            font-weight: 800;
+            font-size: clamp(0.9rem, 2.8vw, 1rem);
+            margin-bottom: 0.25rem;
+        }
+
+        .function-card p {
+            color: #475569;
+            font-size: 0.75rem;
+            line-height: 1.3;
+        }
+
+        /* Buttons */
+        .btn-aurora {
+            background: var(--gradient-magic);
+            color: #fff;
+            border: 0;
+            border-radius: 12px;
+            padding: 0.75rem 1.25rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all .25s ease;
+            touch-action: manipulation;
+            min-height: 44px;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .btn-aurora:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 16px rgba(233,69,96,.3);
+            }
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            background: #111827;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        /* Spinner */
+        .spinner {
+            border: 3px solid rgba(0,0,0,.1);
+            border-top: 3px solid #111827;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+
+        /* Mobile Grid Systems */
+        .mobile-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        @media (min-width: 480px) {
+            .mobile-grid-2 {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 16px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .mobile-grid-2 {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .mobile-grid-2 {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        @media (min-width: 640px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 16px;
+            }
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 12px;
+        }
+
+        @media (min-width: 640px) {
+            .admin-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .admin-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 16px;
+        }
+
+        @media (min-width: 640px) {
+            .news-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .news-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Header with safe area */
+        .header-safe {
+            padding-top: max(12px, var(--safe-area-inset-top));
+        }
+
+        /* Mobile-specific animations */
+        .animate-slide-up {
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Mobile sections */
+        .mobile-section {
+            padding: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .mobile-section {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .mobile-section {
+                padding: 2rem;
+            }
+        }
+
+        /* Focus states */
+        .function-card:focus-visible,
+        button:focus-visible,
+        [role="button"]:focus-visible {
+            outline: 3px solid rgba(0,212,255,.65);
+            outline-offset: 2px;
+        }
+
+        /* Touch targets */
+        .touch-target {
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        /* Mobile menu */
+        .mobile-menu {
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-menu.show {
+            transform: translateY(0);
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.25); border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.4); }
+        ::-webkit-scrollbar-track { background: transparent; }
+
+        /* Utility classes */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
 </head>
-<body>
 
-  <!-- Topbar -->
-  <header class="sticky top-0 z-40 bg-black/10 backdrop-blur-md border-b border-white/10">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shadow">
-          <span class="text-2xl text-white">🏛️</span>
-        </div>
-        <div>
-          <div class="text-white font-extrabold leading-none">Area Dirigenti</div>
-          <div id="whoami" class="text-white/80 text-xs">Caricamento…</div>
-        </div>
-      </div>
+<body class="flex flex-col min-h-screen">
 
-      <!-- Logout SOLO qui -->
-      <button id="logoutBtn" class="btn-aurora" title="Disconnetti">
-        <span>🚪</span><span>Logout</span>
-      </button>
-    </div>
-  </header>
+    <!-- HEADER MOBILE OPTIMIZED -->
+    <header class="sticky top-0 z-40 bg-black/10 backdrop-blur-md border-b border-white/10 header-safe">
+        <div class="px-4 py-3">
+            <div class="flex items-center justify-between">
+                <!-- Logo + Title -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shadow">
+                        <span class="text-xl text-white">🏛️</span>
+                    </div>
+                    <div>
+                        <div class="text-white font-extrabold leading-none text-sm md:text-base">Area Dirigenti</div>
+                        <div id="whoami" class="text-white/80 text-xs">Caricamento…</div>
+                    </div>
+                </div>
 
-  <main class="min-h-screen px-3 sm:px-4 py-8 max-w-6xl mx-auto">
+                <!-- Right Section -->
+                <div class="flex items-center gap-2">
+                    <!-- Desktop Logout -->
+                    <button id="logoutBtn" class="btn-aurora text-sm px-4 py-2 hidden sm:flex" title="Disconnetti">
+                        <span>🚪</span>
+                        <span class="hidden md:inline">Logout</span>
+                    </button>
 
-    <!-- Hero -->
-    <div class="text-center mb-8">
-      <h1 class="hero-title text-ultra-visible mb-2">Benvenuto nell’Area Dirigenti</h1>
-      <p class="text-white/90 font-semibold">Funzioni direzionali e amministrative.</p>
-    </div>
-
-    <!-- 1) Azioni Personali -->
-    <section class="glass-card p-5 sm:p-7 mb-8">
-      <h2 class="section-title mb-6 text-center">🧭 Azioni Personali</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <a class="function-card" href="tessera.html" aria-label="Tessera Digitale">
-          <div class="text-4xl mb-2">🎫</div>
-          <h4>Tessera Digitale</h4>
-          <p>Visualizza/Scarica la tua tessera</p>
-        </a>
-        <a class="function-card" href="profilo.html" aria-label="Profilo">
-          <div class="text-4xl mb-2">👤</div>
-          <h4>Il mio profilo</h4>
-          <p>Modifica i tuoi dati</p>
-        </a>
-        <a class="function-card" href="virgilio.html" aria-label="Virgilio">
-          <div class="text-4xl mb-2">🧭</div>
-          <h4>Virgilio</h4>
-          <p>Accesso rapido ai servizi</p>
-        </a>
-        <a class="function-card" href="strumenti.html" aria-label="Strumenti">
-          <div class="text-4xl mb-2">🛠️</div>
-          <h4>Strumenti</h4>
-          <p>Utility di lavoro</p>
-        </a>
-
-        <a class="function-card" href="https://form.jotform.com/243226223182044" target="_blank" rel="noopener">
-          <div class="text-4xl mb-2">💰</div><h4>Richiedi Rimborso</h4><p>Modulo rimborso spese</p>
-        </a>
-        <a class="function-card" href="https://form.jotform.com/243262801203343" target="_blank" rel="noopener">
-          <div class="text-4xl mb-2">📝</div><h4>Richiedi Permesso</h4><p>Permesso sindacale</p>
-        </a>
-        <a class="function-card" href="https://eu.jotform.com/tables/243226223182044" target="_blank" rel="noopener">
-          <div class="text-4xl mb-2">📊</div><h4>Tabella Rendiconto</h4><p>Visualizza i dati</p>
-        </a>
-        <a class="function-card" href="https://eu.jotform.com/tables/243262801203343" target="_blank" rel="noopener">
-          <div class="text-4xl mb-2">📅</div><h4>Tabella Permessi</h4><p>Gestisci permessi</p>
-        </a>
-      </div>
-    </section>
-
-    <!-- 2) I tuoi dati -->
-    <section class="glass-card p-5 sm:p-7 mb-8">
-      <h2 class="section-title mb-6 text-center">🪪 I Tuoi Dati dirigenziali</h2>
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-        <div class="w-14 h-14 rounded-full bg-slate-800 text-white flex items-center justify-center text-2xl">
-          <span id="userIcon">👤</span>
-        </div>
-        <div class="text-center sm:text-left">
-          <div id="userName" class="text-xl sm:text-2xl font-extrabold text-slate-900">Caricamento…</div>
-          <div id="userEmail" class="text-slate-600">—</div>
-          <div class="mt-2 flex flex-wrap justify-center sm:justify-start gap-2">
-            <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-sm">📅 Iscritto dal: <strong id="iscrittoDal">—</strong></span>
-            <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-sm">🔐 <strong id="accessLevel">Verifica…</strong></span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3) Panoramica -->
-    <section class="glass-card p-5 sm:p-7 mb-8">
-      <h2 class="section-title mb-6 text-center">📈 Panoramica di sistema</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <div class="p-5 rounded-xl border border-slate-200 bg-white">
-          <div class="text-2xl mb-2">📰</div><div class="text-sm text-slate-600">News pubblicate</div>
-          <div id="newsCount" class="text-3xl font-extrabold text-slate-900 mt-1">—</div>
-        </div>
-        <div class="p-5 rounded-xl border border-slate-200 bg-white">
-          <div class="text-2xl mb-2">⭐</div><div class="text-sm text-slate-600">News in evidenza</div>
-          <div id="featuredNewsCount" class="text-3xl font-extrabold text-slate-900 mt-1">—</div>
-        </div>
-        <div class="p-5 rounded-xl border border-slate-200 bg-white">
-          <div class="text-2xl mb-2">🛡️</div><div class="text-sm text-slate-600">Ruolo</div>
-          <div id="rolesSummary" class="text-lg font-bold text-slate-900 mt-1">—</div>
-        </div>
-        <div class="p-5 rounded-xl border border-slate-200 bg-white">
-          <div class="text-2xl mb-2">⚙️</div><div class="text-sm text-slate-600">Stato</div>
-          <div class="text-lg font-bold text-green-600 mt-1">Attivo</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4) Area amministrativa -->
-    <section class="glass-card p-5 sm:p-7 mb-8">
-      <h2 class="section-title mb-6 text-center">🏗️ Area Amministrativa dirigenziale</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-        <a href="areadirigenti.html" class="function-card"><div class="text-4xl mb-2">🧭</div><h4>Area Dirigenti</h4><p>Vai all'area operativa</p></a>
-        <a href="gestione-convenzioni.html" class="function-card"><div class="text-4xl mb-2">🏷️</div><h4>Gestione Convenzioni</h4><p>Crea e gestisci partnership</p></a>
-        <a href="gestione-notizie.html" class="function-card"><div class="text-4xl mb-2">📰</div><h4>Gestione Notizie</h4><p>Pubblica e modifica news</p></a>
-      </div>
-    </section>
-
-    <!-- 5) Ultime Notizie -->
-    <section class="glass-card p-5 sm:p-7 mb-8">
-      <h2 class="section-title mb-6 text-center">🗞️ Ultime Notizie</h2>
-      <div id="latestNews" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"></div>
-      <div id="newsEmptyState" class="hidden text-center py-10">
-        <div class="text-5xl mb-4">🪧</div>
-        <p class="text-slate-700 font-semibold">Nessuna notizia pubblicata al momento</p>
-      </div>
-    </section>
-
-    <!-- 6) Convenzioni in evidenza -->
-    <section class="glass-card p-5 sm:p-7 mb-8">
-      <h2 class="section-title mb-6 text-center">🤝 Convenzioni in evidenza</h2>
-      <div id="featuredConvenzioni" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"></div>
-      <div id="convEmptyState" class="text-center py-10">
-        <div class="text-5xl mb-4">🔎</div>
-        <p class="text-slate-700 font-semibold">Al momento non ci sono convenzioni in evidenza.</p>
-        <p class="text-slate-500 mt-1">Gestiscile da <a class="text-blue-700 font-bold underline" href="gestione-convenzioni.html">Gestione Convenzioni</a>.</p>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Supabase + App -->
-  <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-    const supabase = createClient(
-      'https://pvzdilkozpspsnepedqc.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk'
-    );
-
-    const fmtDate = (iso) => { try{ return iso? new Intl.DateTimeFormat('it-IT',{dateStyle:'long'}).format(new Date(iso)):'—'; }catch{ return '—'; } };
-    const escapeHTML = (s)=> String(s??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;");
-    const setText = (id, v)=>{ const el=document.getElementById(id); if(el) el.textContent=v; };
-
-    async function guard(){
-      const { data:{ user } } = await supabase.auth.getUser();
-      if(!user){ window.location.href='auth.html'; return null; }
-      return user;
-    }
-
-    async function loadProfile(user){
-      try{
-        const { data:p } = await supabase.from('user_profiles').select('nome,cognome,email,role').eq('user_id', user.id).single();
-        setText('whoami', p?.email || user.email || '—');
-        setText('userName', p?.nome ? `${p.nome} ${p.cognome||''}`.trim() : 'Dirigente');
-        setText('userEmail', p?.email || user.email || '—');
-        document.getElementById('userIcon').textContent = (p?.role==='ADMIN') ? '👑' : '🎯';
-        setText('rolesSummary', p?.role || '—');
-        setText('accessLevel', p?.role==='ADMIN' ? 'Accesso Amministratore Completo' : 'Accesso Dirigente Autorizzato');
-      }catch{
-        setText('whoami', user.email || '—');
-        setText('userName','Dirigente'); setText('userEmail', user.email||'—'); setText('rolesSummary','—'); setText('accessLevel','Accesso Dirigente Autorizzato');
-      }
-    }
-
-    async function loadIscrittoDal(user){
-      try{
-        const { data } = await supabase.from('tessere').select('data_emissione').eq('user_id', user.id).order('data_emissione', { ascending:true }).limit(1);
-        setText('iscrittoDal', data?.[0]?.data_emissione ? fmtDate(data[0].data_emissione) : 'Non disponibile');
-      }catch{ setText('iscrittoDal','Non disponibile'); }
-    }
-
-    async function loadSystemOverview(){
-      try{
-        const nowIso = new Date().toISOString();
-        const { count: totalNews } = await supabase.from('news').select('id',{count:'exact', head:true}).eq('pubblicata', true).or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
-        const { count: featuredCount } = await supabase.from('news').select('id',{count:'exact', head:true}).eq('pubblicata', true).eq('in_evidenza', true).or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
-        setText('newsCount', typeof totalNews==='number'?totalNews:'—'); setText('featuredNewsCount', typeof featuredCount==='number'?featuredCount:'—');
-      }catch{ setText('newsCount','—'); setText('featuredNewsCount','—'); }
-    }
-
-    async function loadLatestNews(){
-      const wrap=document.getElementById('latestNews'); const empty=document.getElementById('newsEmptyState');
-      wrap.innerHTML=`<div class="col-span-full flex items-center justify-center py-8"><span class="spinner"></span></div>`;
-      try{
-        const nowIso=new Date().toISOString();
-        const { data:news } = await supabase
-          .from('news')
-          .select('id,titolo,sottotitolo,immagine_url,categoria,data_pubblicazione,in_evidenza,url_articolo')
-          .eq('pubblicata', true)
-          .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`)
-          .order('in_evidenza',{ascending:false})
-          .order('data_pubblicazione',{ascending:false})
-          .limit(6);
-        if(!news || !news.length){ wrap.innerHTML=''; empty.classList.remove('hidden'); return; }
-        empty.classList.add('hidden'); wrap.innerHTML='';
-        for(const n of news){
-          const card=document.createElement('article');
-          const hasUrl=!!n.url_articolo && String(n.url_articolo).trim().length>0;
-          card.className='rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm';
-          card.innerHTML=`
-            <div class="h-40 bg-slate-100 overflow-hidden">
-              ${n.immagine_url?`<img src="${escapeHTML(n.immagine_url)}" alt="" class="w-full h-full object-cover">`:`<div class="w-full h-full flex items-center justify-center text-4xl">📰</div>`}
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuBtn" class="sm:hidden touch-target text-white p-2 rounded-xl bg-white/10">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
             </div>
-            <div class="p-4">
-              <div class="flex items-center justify-between mb-2">
-                <span class="badge">${escapeHTML(n.categoria||'GENERALE')}</span>
-                ${n.in_evidenza?'<span class="badge">⭐ In evidenza</span>':''}
-              </div>
-              <h3 class="font-extrabold text-slate-900 text-lg leading-snug mb-1">${escapeHTML(n.titolo)}</h3>
-              ${n.sottotitolo?`<p class="text-slate-600 text-sm mb-3">${escapeHTML(n.sottotitolo)}</p>`:''}
-              <div class="flex items-center justify-between text-xs text-slate-500">
-                <span>${fmtDate(n.data_pubblicazione)}</span>
-                <button class="btn-aurora text-xs px-3 py-2" ${hasUrl?`data-url="${escapeHTML(n.url_articolo)}"`:'disabled title="Nessun link"'}>Leggi l’articolo completo</button>
-              </div>
-            </div>`;
-          wrap.appendChild(card);
-        }
-        wrap.addEventListener('click',(e)=>{ const b=e.target.closest('button[data-url]'); if(b){ window.open(b.getAttribute('data-url'),'_blank','noopener'); } },{ once:true });
-      }catch(e){ console.error(e); wrap.innerHTML='<div class="text-center py-8 text-slate-600">Errore nel caricamento</div>'; }
-    }
 
-    async function loadFeaturedConvenzioni(){
-      const wrap=document.getElementById('featuredConvenzioni'); const empty=document.getElementById('convEmptyState');
-      try{
-        const { data } = await supabase.from('convenzioni')
-          .select('id,nome_azienda,descrizione,logo_url,link_esterno,in_evidenza,attiva')
-          .eq('attiva', true).eq('in_evidenza', true)
-          .order('created_at',{ascending:false}).limit(6);
-        if(!data || !data.length){ empty.classList.remove('hidden'); return; }
-        empty.classList.add('hidden'); wrap.innerHTML='';
-        for(const c of data){
-          const el=document.createElement('a');
-          el.className='function-card border-slate-200 bg-white';
-          el.href=c.link_esterno||'#'; el.target=c.link_esterno?'_blank':'_self'; el.rel=c.link_esterno?'noopener':'';
-          el.innerHTML=`
-            <div class="w-full h-24 bg-slate-50 rounded-lg flex items-center justify-center overflow-hidden mb-3">
-              ${c.logo_url?`<img src="${escapeHTML(c.logo_url)}" alt="" class="max-h-24 object-contain">`:'<div class="text-3xl">🤝</div>'}
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="sm:hidden mt-4 pb-4 border-t border-white/20 hidden">
+                <div class="pt-4 space-y-2">
+                    <button id="logoutBtnMobile" class="btn-aurora w-full py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
+                        <span>🚪</span>
+                        <span>Logout</span>
+                    </button>
+                </div>
             </div>
-            <h4 class="font-extrabold">${escapeHTML(c.nome_azienda)}</h4>
-            <p class="text-slate-600 text-sm">${escapeHTML((c.descrizione||'').slice(0,110))}${c.descrizione&&c.descrizione.length>110?'…':''}</p>`;
-          wrap.appendChild(el);
+        </div>
+    </header>
+
+    <main class="flex-grow mobile-section max-w-6xl mx-auto w-full">
+
+        <!-- HERO SECTION -->
+        <section class="text-center mb-6 animate-fade-in">
+            <h1 class="hero-title text-ultra-visible mb-2">Benvenuto nell'Area Dirigenti</h1>
+            <p class="text-white/90 font-semibold text-sm md:text-base">Funzioni direzionali e amministrative</p>
+        </section>
+
+        <!-- AZIONI PERSONALI -->
+        <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
+            <h2 class="section-title mb-4 text-center">🧭 Azioni Personali</h2>
+            <div class="mobile-grid-2">
+                <a class="function-card" href="tessera.html" aria-label="Tessera Digitale">
+                    <div class="text-3xl mb-1">🎫</div>
+                    <h4>Tessera</h4>
+                    <p>Visualizza tessera</p>
+                </a>
+                <a class="function-card" href="profilo.html" aria-label="Profilo">
+                    <div class="text-3xl mb-1">👤</div>
+                    <h4>Profilo</h4>
+                    <p>Modifica dati</p>
+                </a>
+                <a class="function-card" href="virgilio.html" aria-label="Virgilio">
+                    <div class="text-3xl mb-1">🧭</div>
+                    <h4>Virgilio</h4>
+                    <p>Servizi rapidi</p>
+                </a>
+                <a class="function-card" href="strumenti.html" aria-label="Strumenti">
+                    <div class="text-3xl mb-1">🛠️</div>
+                    <h4>Strumenti</h4>
+                    <p>Utility lavoro</p>
+                </a>
+                <a class="function-card" href="filebox.html" aria-label="FileBox">
+                    <div class="text-3xl mb-1">📁</div>
+                    <h4>FileBox</h4>
+                    <p>File e documenti</p>
+                </a>
+                <a class="function-card" href="servizi.html" aria-label="Assistenza">
+                    <div class="text-3xl mb-1">🛟</div>
+                    <h4>Assistenza</h4>
+                    <p>Supporto</p>
+                </a>
+                <a class="function-card" href="https://form.jotform.com/243226223182044" target="_blank" rel="noopener">
+                    <div class="text-3xl mb-1">💰</div>
+                    <h4>Rimborso</h4>
+                    <p>Richiedi rimborso</p>
+                </a>
+                <a class="function-card" href="https://form.jotform.com/243262801203343" target="_blank" rel="noopener">
+                    <div class="text-3xl mb-1">📝</div>
+                    <h4>Permesso</h4>
+                    <p>Richiedi permesso</p>
+                </a>
+                <a class="function-card" href="https://eu.jotform.com/tables/243226223182044" target="_blank" rel="noopener">
+                    <div class="text-3xl mb-1">📊</div>
+                    <h4>Rendiconto</h4>
+                    <p>Visualizza dati</p>
+                </a>
+                <a class="function-card" href="https://eu.jotform.com/tables/243262801203343" target="_blank" rel="noopener">
+                    <div class="text-3xl mb-1">📅</div>
+                    <h4>Permessi</h4>
+                    <p>Gestisci permessi</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- DATI DIRIGENZIALI -->
+        <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
+            <h2 class="section-title mb-4 text-center">🪪 Dati Dirigenziali</h2>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
+                <div class="w-14 h-14 rounded-full bg-slate-800 text-white flex items-center justify-center text-2xl flex-shrink-0">
+                    <span id="userIcon">👤</span>
+                </div>
+                <div>
+                    <div id="userName" class="text-lg md:text-xl font-extrabold text-slate-900 mb-1">Caricamento…</div>
+                    <div id="userEmail" class="text-slate-600 text-sm mb-2">—</div>
+                    <div class="flex flex-wrap justify-center sm:justify-start gap-2">
+                        <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-xs">
+                            📅 <span class="hidden sm:inline">Iscritto dal:</span> <strong id="iscrittoDal">—</strong>
+                        </span>
+                        <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-xs">
+                            🔐 <strong id="accessLevel">Verifica…</strong>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PANORAMICA SISTEMA -->
+        <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
+            <h2 class="section-title mb-4 text-center">📈 Panoramica Sistema</h2>
+            <div class="stats-grid">
+                <div class="p-4 rounded-xl border border-slate-200 bg-white text-center">
+                    <div class="text-2xl mb-1">📰</div>
+                    <div class="text-xs text-slate-600 mb-1">News pubblicate</div>
+                    <div id="newsCount" class="text-2xl font-extrabold text-slate-900">—</div>
+                </div>
+                <div class="p-4 rounded-xl border border-slate-200 bg-white text-center">
+                    <div class="text-2xl mb-1">⭐</div>
+                    <div class="text-xs text-slate-600 mb-1">News evidenza</div>
+                    <div id="featuredNewsCount" class="text-2xl font-extrabold text-slate-900">—</div>
+                </div>
+                <div class="p-4 rounded-xl border border-slate-200 bg-white text-center">
+                    <div class="text-2xl mb-1">🛡️</div>
+                    <div class="text-xs text-slate-600 mb-1">Ruolo</div>
+                    <div id="rolesSummary" class="text-sm font-bold text-slate-900">—</div>
+                </div>
+                <div class="p-4 rounded-xl border border-slate-200 bg-white text-center">
+                    <div class="text-2xl mb-1">⚙️</div>
+                    <div class="text-xs text-slate-600 mb-1">Stato</div>
+                    <div class="text-sm font-bold text-green-600">Attivo</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AREA AMMINISTRATIVA -->
+        <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
+            <h2 class="section-title mb-4 text-center">🏗️ Area Amministrativa</h2>
+            <div class="admin-grid">
+                <a href="areadirigenti.html" class="function-card">
+                    <div class="text-4xl mb-2">🧭</div>
+                    <h4>Area Dirigenti</h4>
+                    <p>Vai all'area operativa</p>
+                </a>
+                <a href="gestione-convenzioni.html" class="function-card">
+                    <div class="text-4xl mb-2">🏷️</div>
+                    <h4>Convenzioni</h4>
+                    <p>Gestisci partnership</p>
+                </a>
+                <a href="gestione-notizie.html" class="function-card">
+                    <div class="text-4xl mb-2">📰</div>
+                    <h4>Notizie</h4>
+                    <p>Pubblica e modifica</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- ULTIME NOTIZIE -->
+        <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
+            <h2 class="section-title mb-4 text-center">🗞️ Ultime Notizie</h2>
+            <div id="latestNews" class="news-grid"></div>
+            <div id="newsEmptyState" class="hidden text-center py-8">
+                <div class="text-4xl mb-3">🪧</div>
+                <p class="text-slate-700 font-semibold">Nessuna notizia pubblicata al momento</p>
+            </div>
+        </section>
+
+        <!-- CONVENZIONI IN EVIDENZA -->
+        <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
+            <h2 class="section-title mb-4 text-center">🤝 Convenzioni in Evidenza</h2>
+            <div id="featuredConvenzioni" class="news-grid"></div>
+            <div id="convEmptyState" class="text-center py-8">
+                <div class="text-4xl mb-3">🔎</div>
+                <p class="text-slate-700 font-semibold">Al momento non ci sono convenzioni in evidenza.</p>
+                <p class="text-slate-500 mt-1 text-sm">
+                    Gestiscile da <a class="text-blue-700 font-bold underline" href="gestione-convenzioni.html">Gestione Convenzioni</a>.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JAVASCRIPT -->
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+        const supabase = createClient(
+            'https://pvzdilkozpspsnepedqc.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk'
+        );
+
+        // Mobile menu state
+        let mobileMenuOpen = false;
+
+        // Utility functions
+        const fmtDate = (iso) => { 
+            try { 
+                return iso ? new Intl.DateTimeFormat('it-IT', {dateStyle: 'long'}).format(new Date(iso)) : '—'; 
+            } catch { 
+                return '—'; 
+            } 
+        };
+
+        const escapeHTML = (s) => String(s ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;");
+
+        const setText = (id, v) => { 
+            const el = document.getElementById(id); 
+            if (el) el.textContent = v; 
+        };
+
+        // Mobile menu functions
+        function setupMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                        closeMobileMenu();
+                    }
+                });
+            }
         }
-      }catch{ empty.classList.remove('hidden'); }
-    }
 
-    document.getElementById('logoutBtn').addEventListener('click', async ()=>{
-      try{ await supabase.auth.signOut(); }catch{}
-      window.location.href='index.html';
-    });
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            
+            if (mobileMenu) {
+                mobileMenuOpen = !mobileMenuOpen;
+                
+                if (mobileMenuOpen) {
+                    mobileMenu.classList.remove('hidden');
+                    mobileMenu.classList.add('animate-slide-up');
+                    if (mobileMenuBtn) {
+                        mobileMenuBtn.innerHTML = `
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        `;
+                    }
+                } else {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('animate-slide-up');
+                    if (mobileMenuBtn) {
+                        mobileMenuBtn.innerHTML = `
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        `;
+                    }
+                }
+            }
+        }
 
-    (async ()=>{
-      const user = await guard(); if(!user) return;
-      await Promise.all([ loadProfile(user), loadIscrittoDal(user), loadSystemOverview(), loadLatestNews(), loadFeaturedConvenzioni() ]);
-    })();
-  </script>
-</body>
-</html>
+        function closeMobileMenu() {
+            if (mobileMenuOpen) {
+                toggleMobileMenu();
+            }
+        }
+
+        // Authentication guard
+        async function guard() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) { 
+                window.location.href = 'auth.html'; 
+                return null; 
+            }
+            return user;
+        }
+
+        // Load user profile
+        async function loadProfile(user) {
+            try {
+                const { data: p } = await supabase.from('user_profiles').select('nome,cognome,email,role').eq('user_id', user.id).single();
+                setText('whoami', p?.email || user.email || '—');
+                setText('userName', p?.nome ? `${p.nome} ${p.cognome||''}`.trim() : 'Dirigente');
+                setText('userEmail', p?.email || user.email || '—');
+                document.getElementById('
