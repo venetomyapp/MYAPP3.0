@@ -1,10 +1,12 @@
-// api/chat.ts
+// api/chat.ts — Vercel Serverless Function (Node runtime)
+// Proxy verso Render per evitare CORS e rispondere a /api/chat
+
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const UPSTREAM = 'https://myapp-chatbot-server.onrender.com/api/chat';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // CORS opzionale (utile solo se la userai anche cross-origin)
+  // CORS (in same-origin non serve, ma è innocuo e utile se testerai da altri domini)
   const origin = (req.headers.origin as string) || '';
   res.setHeader('Vary', 'Origin');
   res.setHeader('Access-Control-Allow-Origin', origin || '*');
@@ -19,6 +21,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        // gira il Bearer di Supabase all'upstream
         'Authorization': (req.headers['authorization'] as string) || ''
       },
       body: typeof req.body === 'string' ? req.body : JSON.stringify(req.body)
