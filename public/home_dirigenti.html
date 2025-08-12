@@ -567,7 +567,11 @@
         <!-- ULTIME NOTIZIE -->
         <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
             <h2 class="section-title mb-4 text-center">🗞️ Ultime Notizie</h2>
-            <div id="latestNews" class="news-grid"></div>
+            <div id="latestNews" class="news-grid">
+                <div class="col-span-full flex items-center justify-center py-8">
+                    <span class="spinner"></span>
+                </div>
+            </div>
             <div id="newsEmptyState" class="hidden text-center py-8">
                 <div class="text-4xl mb-3">🪧</div>
                 <p class="text-slate-700 font-semibold">Nessuna notizia pubblicata al momento</p>
@@ -577,8 +581,12 @@
         <!-- CONVENZIONI IN EVIDENZA -->
         <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
             <h2 class="section-title mb-4 text-center">🤝 Convenzioni in Evidenza</h2>
-            <div id="featuredConvenzioni" class="news-grid"></div>
-            <div id="convEmptyState" class="text-center py-8">
+            <div id="featuredConvenzioni" class="news-grid">
+                <div class="col-span-full flex items-center justify-center py-8">
+                    <span class="spinner"></span>
+                </div>
+            </div>
+            <div id="convEmptyState" class="hidden text-center py-8">
                 <div class="text-4xl mb-3">🔎</div>
                 <p class="text-slate-700 font-semibold">Al momento non ci sono convenzioni in evidenza.</p>
                 <p class="text-slate-500 mt-1 text-sm">
@@ -728,6 +736,8 @@
         async function loadLatestNews() {
             const wrap = document.getElementById('latestNews'); 
             const empty = document.getElementById('newsEmptyState');
+            
+            // Show spinner initially
             wrap.innerHTML = `<div class="col-span-full flex items-center justify-center py-8"><span class="spinner"></span></div>`;
             
             try {
