@@ -13,7 +13,7 @@
   <!-- Favicon inline per evitare 404 -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%23e94560'/%3E%3Ctext x='32' y='41' font-size='36' text-anchor='middle' fill='white'%3EV%3C/text%3E%3C/svg%3E">
 
-  <!-- Tailwind (ok per dev) -->
+  <!-- Tailwind (ok per test/dev) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     if (typeof tailwind !== 'undefined') {
@@ -251,19 +251,19 @@
     </div>
   </main>
 
-  <!-- App JS (senza backtick per evitare errori di encoding) -->
+  <!-- App JS -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    // ⚙️ Supabase (dati presi dal file che hai condiviso)
+    // ⚙️ Supabase (dati dal file che mi hai dato)
     const supabaseUrl = 'https://pvzdilkozpspsnepedqc.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
     const supabase = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: true, autoRefreshToken: true } });
 
-    // 🔌 Chatbot config: usa il PROXY same-origin su Vercel (/api/chat)
+    // 🔌 Chatbot config: proxy same-origin su Vercel
     const CHATBOT_CONFIG = {
-      apiEndpoint: '/api/chat',                               // <— proxy Vercel
-      apiEndpointLocal: 'http://localhost:3001/api/chat',     // per test locale diretto
+      apiEndpoint: '/api/chat',
+      apiEndpointLocal: 'http://localhost:3001/api/chat',
       maxTokens: 500,
       temperature: 0.7,
       model: 'gpt-4o-mini',
@@ -271,6 +271,9 @@
       retryAttempts: 3,
       retryDelay: 1000
     };
+
+    // ✅ opzionale: abilita DEMO_MODE per testare senza backend
+    const DEMO_MODE = false;
 
     // Stato
     let currentUser = null;
@@ -339,7 +342,7 @@
             '<div class="message-time">' + formatTime() + '</div>' +
           '</div>';
       } else if (type === 'system') {
-        const safe = formatMessage(content); // ✅ sanitizzato
+        const safe = formatMessage(content);
         m.innerHTML =
           '<div class="avatar avatar-system">ℹ️</div>' +
           '<div class="message-content content-system">' +
@@ -363,7 +366,7 @@
     async function loadDirigenti(){
       try{
         const { data, error } = await supabase
-          .from('organico_dirigentisindacali')  // se passi a una view pubblica, cambia qui
+          .from('organico_dirigentisindacali')
           .select('*')
           .order('id', { ascending: true });
         if(error) throw error;
@@ -411,6 +414,16 @@
       addMessage(help, 'system');
     };
 
+    async function tentaRefreshSessione(){
+      try {
+        const { data, error } = await supabase.auth.refreshSession();
+        if (error) throw error;
+        return data?.session;
+      } catch (e) {
+        return null;
+      }
+    }
+
     // Send
     async function sendMessage(){
       const message = messageInput.value.trim();
@@ -440,10 +453,20 @@
         isProcessing=false; updateSendButton(); return;
       }
 
+      if (DEMO_MODE) {
+        showTyping();
+        setTimeout(function(){
+          addMessage('Demo: ho ricevuto → ' + message, 'bot', false);
+          hideTyping();
+          isProcessing=false; updateSendButton();
+        }, 400);
+        return;
+      }
+
       showTyping();
 
       try{
-        const { data:{ session } } = await supabase.auth.getSession();
+        let { data:{ session } } = await supabase.auth.getSession();
         if(!session){ throw new Error('Sessione scaduta'); }
 
         const apiEndpoint =
@@ -474,6 +497,16 @@
               },
               body: JSON.stringify(requestBody)
             });
+
+            if(resp.status === 401 && attempt < CHATBOT_CONFIG.retryAttempts-1){
+              // Prova a rinfrescare la sessione e ritenta
+              const refreshed = await tentaRefreshSessione();
+              if (refreshed) {
+                session = refreshed;
+                continue; // riprova con il nuovo token
+              }
+            }
+
             if(!resp.ok){
               let msg = 'HTTP ' + resp.status;
               try{
@@ -482,6 +515,7 @@
               }catch(_){}
               throw new Error(msg);
             }
+
             const data = await resp.json();
             if(!data.choices || !data.choices[0] || !data.choices[0].message){
               throw new Error('Risposta API non valida');
@@ -514,6 +548,7 @@
         conversationHistory.pop();
         let msg = 'Errore di connessione';
         if(/scadut/i.test(err.message)) msg = 'Sessione scaduta, riaccedi';
+        else if(/invalid|expired|401/i.test(err.message)) msg = 'Token non valido o scaduto';
         else if(/network|fetch/i.test(err.message)) msg = 'Problema di rete, riprova';
         else if(/500/.test(err.message)) msg = 'Servizio temporaneamente non disponibile';
         else if(err.message) msg = err.message;
@@ -525,12 +560,25 @@
       }
     }
 
+    // Check proxy /api/chat all’avvio (mostra alert utile)
+    async function checkProxy(){
+      try {
+        const r = await fetch('/api/chat', { method:'OPTIONS' });
+        if (r.status !== 200 && r.status !== 405) {
+          showAlert('Attenzione: /api/chat non è raggiungibile ('+r.status+').', 'error');
+        }
+      } catch {
+        showAlert('Impossibile contattare /api/chat (controlla il deploy).', 'error');
+      }
+    }
+
     // Init
     document.addEventListener('DOMContentLoaded', async function(){
       document.getElementById('loading').classList.remove('hidden');
       try{
         syncOnlineStatus();
 
+        await checkProxy();          // 🔎 verifica rapida del proxy
         currentUser = await verificaAutenticazione();
         if(!currentUser) return;
 
@@ -540,6 +588,7 @@
         messageInput.addEventListener('keypress', function(e){ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); }});
         sendButton.addEventListener('click', sendMessage);
 
+        // clear chat
         document.getElementById('clearChatBtn').addEventListener('click', function(){
           if(confirm('Vuoi davvero cancellare tutta la conversazione?')){
             conversationHistory=[]; totalTokensUsed=0; tokenCount.textContent='0';
