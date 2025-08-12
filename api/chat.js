@@ -1,75 +1,49 @@
-// api/chat.js — verifica JWT con /auth/v1/user e poi chiama OpenAI
+// api/chat.js — DIAGNOSTICO: verifica JWT come /api/whoami e risponde "pong"
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 export default async function handler(req, res) {
-  // CORS "soft"
-  const origin = req.headers.origin || '';
+  const debug = { step: 'start' };
+
   res.setHeader('Vary', 'Origin');
-  res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  // Env check
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-    return res.status(500).json({ error: 'Server misconfigured: missing Supabase env vars' });
-  }
-  if (!OPENAI_API_KEY) {
-    return res.status(500).json({ error: 'Server misconfigured: missing OPENAI_API_KEY' });
+    return res.status(500).json({ error: 'Missing Supabase env vars', debug });
   }
 
   try {
-    // 1) Authorization
     const auth = req.headers.authorization || '';
-    if (!auth.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Missing or invalid Authorization header' });
+    debug.hasAuthHeader = auth.startsWith('Bearer ');
+    if (!debug.hasAuthHeader) {
+      return res.status(401).json({ error: 'Missing or invalid Authorization header', debug });
     }
 
-    // 2) Verifica token come in /api/whoami
     const vr = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
       headers: { Authorization: auth, apikey: SUPABASE_ANON_KEY }
     });
+    debug.supabaseStatus = vr.status;
+    debug.supabaseBody = (await vr.text()).slice(0, 200);
+
     if (vr.status !== 200) {
-      const detail = await vr.text().catch(()=> '');
-      return res.status(401).json({ error: 'Invalid or expired token', detail: detail.slice(0,200) });
+      return res.status(401).json({ error: 'Invalid or expired token', debug });
     }
 
-    // 3) Body dal client
-    const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
-    const {
-      messages = [],
-      model = 'gpt-4o-mini',
-      max_tokens = 500,
-      temperature = 0.7,
-      system_context
-    } = body;
-
-    const chatMessages = [];
-    if (system_context) chatMessages.push({ role: 'system', content: system_context });
-    for (const m of Array.isArray(messages) ? messages : []) {
-      if (m?.role && m?.content) chatMessages.push({ role: m.role, content: m.content });
-    }
-
-    // 4) OpenAI
-    const oa = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model, messages: chatMessages, temperature, max_tokens })
+    // OK: rispondi nel formato che si aspetta il tuo client
+    return res.status(200).json({
+      id: 'diag',
+      choices: [{ index: 0, message: { role: 'assistant', content: 'pong ✅' }, finish_reason: 'stop' }],
+      usage: { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 },
+      web_search_performed: false,
+      debug
     });
-
-    if (!oa.ok) {
-      const txt = await oa.text().catch(()=>'');
-      return res.status(oa.status).json({ error: `OpenAI error: ${txt || oa.statusText}` });
-    }
-
-    const data = await oa.json();
-    return res.status(200).json({ ...data, web_search_performed: false });
   } catch (e) {
-    console.error('API /api/chat error:', e);
-    return res.status(500).json({ error: 'Internal server error' });
+    debug.exception = String(e);
+    return res.status(500).json({ error: 'Internal server error', debug });
   }
 }
