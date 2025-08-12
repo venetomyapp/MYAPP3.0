@@ -1,1547 +1,1457 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Dashboard - MyApp</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- CONFIGURAZIONE COLORI TAILWIND -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1a1a2e',
-                        secondary: '#16213e',
-                        accent: '#0f3460',
-                        aurora: '#e94560',
-                        cyan: '#00d4ff',
-                        magenta: '#ff006e',
-                        gold: '#ffd700',
-                        teal: '#03dac6',
-                        dark: '#0a0a23',
-                        light: '#f8fafc',
-                        textDark: '#1C1C1E',
-                        backgroundLight: '#F4F4F8',
-                    },
-                    screens: {
-                        'xs': '320px',
-                        'sm': '640px',
-                        'md': '768px',
-                        'lg': '1024px',
-                        'xl': '1280px',
-                        '2xl': '1536px',
-                        '3xl': '1920px',
-                        '4xl': '2560px',
-                    }
-                }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Servizi BestBadge - Tutela Legale Specializzata</title>
+
+  <!-- PWA & meta -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1a1a2e">
+  <link rel="icon" sizes="16x16" href="/public/icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/public/icons/apple-touch-icon.png">
+  <meta name="description" content="Servizi di tutela legale, fiscale e patronato specializzata per il Sindacato Carabinieri - BestBadge">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1a1a2e',
+            secondary: '#16213e',
+            accent: '#0f3460',
+            aurora: '#e94560',
+            cyan: '#00d4ff',
+            magenta: '#ff006e',
+            gold: '#ffd700',
+            teal: '#03dac6',
+            dark: '#0a0a23',
+            light: '#f8fafc',
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'glow': 'glow 2s ease-in-out infinite alternate',
+            'slideUp': 'slideUp 0.5s ease-out',
+            'fadeIn': 'fadeIn 0.6s ease-out',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' }
+            },
+            glow: {
+              '0%': { boxShadow: '0 0 20px rgba(233, 69, 96, 0.5)' },
+              '100%': { boxShadow: '0 0 30px rgba(0, 212, 255, 0.5)' }
+            },
+            slideUp: {
+              '0%': { transform: 'translateY(20px)', opacity: '0' },
+              '100%': { transform: 'translateY(0)', opacity: '1' }
+            },
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' }
             }
+          }
         }
-    </script>
-    
-    <!-- STILI -->
-    <style>
-        :root {
-            --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
-            --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
-            --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
-            --safe-area-inset-top: env(safe-area-inset-top, 0);
-            --safe-area-inset-bottom: env(safe-area-inset-bottom, 0);
-            --safe-area-inset-left: env(safe-area-inset-left, 0);
-            --safe-area-inset-right: env(safe-area-inset-right, 0);
-        }
+      }
+    }
+  </script>
 
-        * {
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-        }
+  <style>
+    :root {
+      --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
+      --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    }
 
-        body {
-            background: var(--gradient-aurora);
-            background-size: 400% 400%;
-            animation: aurora 20s ease infinite;
-            min-height: 100vh;
-            min-height: 100dvh;
-            overflow-x: hidden;
-            padding-left: var(--safe-area-inset-left);
-            padding-right: var(--safe-area-inset-right);
-        }
+    body {
+      background: var(--gradient-aurora);
+      background-size: 400% 400%;
+      animation: aurora 20s ease infinite;
+      min-height: 100vh;
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      overflow-x: hidden;
+    }
 
-        @keyframes aurora {
-            0%, 100% { background-position: 0% 50%; }
-            25% { background-position: 100% 50%; }
-            50% { background-position: 100% 100%; }
-            75% { background-position: 0% 100%; }
-        }
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+    @keyframes aurora {
+      0%, 100% { background-position: 0% 50%; }
+      25% { background-position: 100% 50%; }
+      50% { background-position: 100% 100%; }
+      75% { background-position: 0% 100%; }
+    }
 
-        @media (prefers-reduced-motion: reduce) {
-            * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
-        }
+    .glass-card {
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.95) 0%, 
+        rgba(248,250,252,0.93) 25%, 
+        rgba(255,255,255,0.95) 50%, 
+        rgba(241,245,249,0.93) 75%, 
+        rgba(255,255,255,0.95) 100%);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-        /* Typography */
-        .text-ultra-visible { 
-            color: #fff; 
-            text-shadow: 0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1); 
-            font-weight: 800; 
-        }
-        .text-white { 
-            text-shadow: 0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1); 
-        }
+    .glass-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 30px 70px rgba(0,0,0,0.15);
+      border-color: rgba(233, 69, 96, 0.3);
+    }
 
-        /* Glass effects */
-        .glass-morphism { 
-            background: rgba(255,255,255,.08); 
-            backdrop-filter: blur(12px); 
-            border: 1px solid rgba(255,255,255,.20); 
-            box-shadow: 0 8px 32px rgba(31,38,135,.25); 
-        }
-        .glass-card { 
-            background: rgba(255,255,255,.95); 
-            backdrop-filter: blur(16px); 
-            border: 1px solid rgba(0,0,0,.06); 
-        }
+    .service-item {
+      background: rgba(248, 250, 252, 0.8);
+      border: 1px solid rgba(203, 213, 225, 0.4);
+      border-radius: 16px;
+      padding: 1.25rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
 
-        /* Buttons */
-        .btn-aurora { 
-            background: var(--gradient-magic); 
-            color: white; 
-            border: 2px solid rgba(233,69,96,.3); 
-            transition: all .25s cubic-bezier(.4,0,.2,1); 
-            font-weight: 700; 
-            touch-action: manipulation;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* Mobile-first hover states */
-        @media (hover: hover) and (pointer: fine) {
-            .btn-aurora:hover { 
-                transform: translateY(-2px) scale(1.02); 
-                box-shadow: 0 16px 32px rgba(233,69,96,.35); 
-                border-color: rgba(233,69,96,.7); 
-            }
-        }
+    .service-item:hover {
+      background: rgba(255, 255, 255, 0.9);
+      border-color: rgba(233, 69, 96, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(233, 69, 96, 0.1);
+    }
 
-        /* Cards with better mobile interaction */
-        .tool-card,
-        .action-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.08));
-            border: 1.5px solid rgba(255,255,255,0.25);
-            border-radius: 20px;
-            transition: all .2s ease;
-            will-change: transform;
-            touch-action: manipulation;
-            min-height: 120px;
-            position: relative;
-            overflow: hidden;
-        }
+    .tab-button {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 0.875rem 1.25rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
 
-        .tool-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 2px;
-            background: var(--gradient-magic);
-            transition: left 0.3s ease;
-        }
+    .tab-button.active {
+      background: linear-gradient(135deg, #e94560, #00d4ff);
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 8px 25px rgba(233, 69, 96, 0.3);
+      transform: translateY(-2px);
+    }
 
-        .tool-card:active::before,
-        .action-card:active::before {
-            left: 0;
-        }
+    .tab-button:not(.active):hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.3);
+      transform: translateY(-1px);
+    }
 
-        @media (hover: hover) and (pointer: fine) {
-            .tool-card:hover,
-            .action-card:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 12px 24px rgba(0,0,0,0.22);
-                border-color: rgba(233, 69, 96, 0.4);
-                background: linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.10));
-            }
-        }
+    .aurora-button {
+      background: linear-gradient(135deg, #e94560 0%, #ff006e 50%, #00d4ff 100%);
+      color: white;
+      font-weight: 700;
+      padding: 1rem 2rem;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 10px 30px rgba(233, 69, 96, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
 
-        /* Mobile optimized stats */
-        .stat-card { 
-            background: linear-gradient(135deg, rgba(255,255,255,.15), rgba(255,255,255,.05)); 
-            backdrop-filter: blur(15px); 
-            border: 1px solid rgba(255,255,255,.22); 
-            border-radius: 24px; 
-            transition: all .2s ease;
-            min-height: 100px;
-        }
+    .aurora-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
 
-        .stat-card:active {
-            transform: scale(0.98);
-        }
+    .aurora-button:hover::before {
+      left: 100%;
+    }
 
-        @media (hover: hover) and (pointer: fine) { 
-            .stat-card:hover { 
-                transform: translateY(-2px); 
-                background: linear-gradient(135deg, rgba(255,255,255,.25), rgba(255,255,255,.12)); 
-            } 
-        }
+    .aurora-button:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 15px 40px rgba(233, 69, 96, 0.4);
+    }
 
-        /* Focus states */
-        .tool-card:focus-visible,
-        .action-card:focus-visible,
-        button:focus-visible,
-        [role="button"]:focus-visible {
-            outline: 3px solid rgba(0,212,255,.65);
-            outline-offset: 2px;
-        }
+    .back-button {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      color: white;
+      padding: 0.875rem 1.25rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
 
-        /* Loading */
-        .loading-skeleton { 
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); 
-            background-size: 200% 100%; 
-            animation: shimmer 1.2s infinite; 
-            border-radius: 16px; 
-        }
+    .back-button:hover {
+      background: rgba(255,255,255,0.2);
+      border-color: rgba(255,255,255,0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
 
-        /* Notifications */
-        .notification-dropdown { 
-            display: none; 
-            position: absolute; 
-            top: calc(100% + 8px); 
-            right: 0; 
-            background: rgba(255,255,255,.96); 
-            backdrop-filter: blur(20px); 
-            border: 1px solid rgba(0,0,0,.06); 
-            border-radius: 20px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,.18); 
-            width: min(350px, calc(100vw - 32px)); 
-            max-height: 60vh; 
-            overflow-y: auto; 
-            z-index: 1000; 
-        }
-        .notification-dropdown.show { 
-            display: block; 
-            animation: slideDown .2s ease; 
-        }
-        @keyframes slideDown { 
-            from { opacity: 0; transform: translateY(-10px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
-        .notification-badge { 
-            background: #dc2626; 
-            color: white; 
-            border-radius: 50%; 
-            width: 20px; 
-            height: 20px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 11px; 
-            font-weight: 600; 
-            position: absolute;
-            top: -6px;
-            right: -6px;
-        }
+    .stat-card {
+      background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
 
-        /* Priority indicators */
-        .priority-indicator { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-        .priority-alta { background: #ef4444; }
-        .priority-normale { background: #3b82f6; }
-        .priority-bassa { background: #10b981; }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--accent-color);
+    }
 
-        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .stat-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+    }
 
-        /* Hero title responsive */
-        .hero-title { 
-            font-size: clamp(1.8rem, 6vw, 3.5rem); 
-            font-weight: 900; 
-            line-height: 1.1;
-        }
+    .modal-backdrop {
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+    }
 
-        /* Mobile grid system */
-        .mobile-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
+    .modal-content {
+      background: rgba(255,255,255,0.98);
+      backdrop-filter: blur(25px);
+      border: 1px solid rgba(255,255,255,0.5);
+      border-radius: 28px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+      animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-        @media (min-width: 480px) {
-            .mobile-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 16px;
-            }
-        }
+    .form-input {
+      border: 2px solid rgba(203, 213, 225, 0.6);
+      border-radius: 16px;
+      padding: 1rem 1.25rem;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(10px);
+    }
 
-        @media (min-width: 768px) {
-            .mobile-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 20px;
-            }
-        }
+    .form-input:focus {
+      outline: none;
+      border-color: #e94560;
+      box-shadow: 0 0 0 4px rgba(233, 69, 96, 0.1);
+      background: rgba(255,255,255,1);
+    }
 
-        @media (min-width: 1024px) {
-            .mobile-grid {
-                grid-template-columns: repeat(5, 1fr);
-            }
-        }
+    /* Responsive Grid System */
+    .responsive-grid {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
 
-        /* Stats grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
+    @media (max-width: 640px) {
+      .responsive-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+    }
 
-        @media (min-width: 640px) {
-            .stats-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 16px;
-            }
-        }
+    .stats-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
 
-        /* Scrollbar styling */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.25); border-radius: 9999px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.4); }
-        ::-webkit-scrollbar-track { background: transparent; }
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
 
-        /* Aspect ratio helpers */
-        .ratio-square { aspect-ratio: 1 / 1; }
-        .ratio-16x9 { aspect-ratio: 16 / 9; }
-        .ratio-4x3 { aspect-ratio: 4 / 3; }
+    .tab-container {
+      display: grid;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(15px);
+      padding: 0.75rem;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
 
-        /* Visually hidden for live regions */
-        .sr-only { 
-            position: absolute; 
-            width: 1px; 
-            height: 1px; 
-            padding: 0; 
-            margin: -1px; 
-            overflow: hidden; 
-            clip: rect(0,0,0,0); 
-            white-space: nowrap; 
-            border: 0; 
-        }
+    @media (max-width: 768px) {
+      .tab-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .tab-button {
+        padding: 1rem;
+        text-align: center;
+      }
+    }
 
-        /* Header with safe area */
-        .header-safe {
-            padding-top: max(16px, var(--safe-area-inset-top));
-        }
+    @media (min-width: 769px) {
+      .tab-container {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
 
-        /* Mobile-specific animations */
-        .animate-slide-up {
-            animation: slideUp 0.3s ease-out;
-        }
+    /* Enhanced Typography */
+    .hero-title {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 800;
+      line-height: 1.2;
+      text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
 
-        .animate-fade-in {
-            animation: fadeIn 0.3s ease-out;
-        }
+    .section-title {
+      font-size: clamp(1.125rem, 3vw, 1.375rem);
+      font-weight: 700;
+      line-height: 1.3;
+      color: #1a1a2e;
+      margin-bottom: 1rem;
+    }
 
-        /* Better touch targets */
-        .touch-target {
-            min-height: 44px;
-            min-width: 44px;
-        }
+    .body-text {
+      font-size: clamp(0.875rem, 2.5vw, 1rem);
+      line-height: 1.6;
+      color: #374151;
+    }
 
-        /* Improved mobile spacing */
-        .mobile-section {
-            padding: 1rem;
-        }
+    .caption-text {
+      font-size: clamp(0.75rem, 2vw, 0.875rem);
+      line-height: 1.5;
+      color: #6b7280;
+    }
 
-        @media (min-width: 640px) {
-            .mobile-section {
-                padding: 1.5rem;
-            }
-        }
+    /* Container System */
+    .container-fluid {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 clamp(1rem, 4vw, 2rem);
+    }
 
-        @media (min-width: 1024px) {
-            .mobile-section {
-                padding: 2rem;
-            }
-        }
-    </style>
+    /* Notification System */
+    .notification {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      z-index: 1000;
+      padding: 1rem 1.5rem;
+      border-radius: 16px;
+      color: white;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      backdrop-filter: blur(15px);
+      animation: slideUp 0.4s ease-out;
+      max-width: 400px;
+    }
+
+    @media (max-width: 640px) {
+      .notification {
+        top: 1rem;
+        right: 1rem;
+        left: 1rem;
+        max-width: none;
+      }
+    }
+
+    /* Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Focus styles for better accessibility */
+    .focusable:focus {
+      outline: 3px solid #00d4ff;
+      outline-offset: 2px;
+    }
+
+    /* Loading animation */
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(233, 69, 96, 0.2);
+      border-top: 4px solid #e94560;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 
-<body class="flex flex-col min-h-screen font-sans">
+<body>
+  <!-- Enhanced Loading Screen -->
+  <div id="loading" class="fixed inset-0 bg-primary/90 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+    <div class="glass-card p-8 text-center max-w-sm mx-4">
+      <div class="loading-spinner mx-auto mb-4"></div>
+      <p class="text-primary font-bold text-lg">Caricamento servizi…</p>
+      <p class="caption-text mt-2">Stiamo preparando tutto per te</p>
+    </div>
+  </div>
 
-    <!-- HEADER MOBILE OPTIMIZED -->
-    <header class="glass-morphism sticky top-0 z-40 header-safe">
-        <div class="px-4 py-3">
-            <!-- Mobile Header Layout -->
-            <div class="flex items-center justify-between">
-                <!-- Logo + Title (Condensed for mobile) -->
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-primary via-secondary to-accent rounded-xl flex items-center justify-center">
-                        <span class="text-white font-black text-lg">📊</span>
-                    </div>
-                    <div class="hidden sm:block">
-                        <span class="text-ultra-visible text-xl font-black">MyApp</span>
-                        <div class="text-white text-xs flex items-center gap-2">
-                            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                            <span class="hidden md:inline">Dashboard Personale</span>
-                            <span class="md:hidden">Online</span>
-                        </div>
-                    </div>
-                    <!-- Mobile: Show only logo -->
-                    <div class="sm:hidden">
-                        <span class="text-ultra-visible text-lg font-black">MyApp</span>
-                    </div>
-                </div>
-
-                <!-- Right Section -->
-                <div class="flex items-center space-x-3">
-                    <!-- Notifications -->
-                    <div class="relative">
-                        <button id="notificationBtn" class="touch-target text-white hover:text-aurora transition-all duration-300 p-2 rounded-xl" aria-haspopup="true" aria-expanded="false">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2 2 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                            </svg>
-                        </button>
-                        <span id="notificationBadge" class="notification-badge hidden" aria-live="polite">0</span>
-                        <div id="notificationDropdown" class="notification-dropdown" role="dialog" aria-label="Elenco notifiche">
-                            <div class="p-4 border-b border-gray-200">
-                                <div class="flex justify-between items-center">
-                                    <h3 class="font-bold text-textDark">🔔 Notifiche</h3>
-                                    <button id="markAllRead" class="text-aurora hover:text-magenta text-sm font-semibold">Segna tutte lette</button>
-                                </div>
-                            </div>
-                            <div id="notificationList" class="p-2 max-h-80 overflow-y-auto"></div>
-                        </div>
-                        <span id="notificationLive" class="sr-only" aria-live="polite"></span>
-                    </div>
-
-                    <!-- User Profile (Condensed for mobile) -->
-                    <div class="flex items-center space-x-2">
-                        <div class="text-white text-right hidden sm:block">
-                            <div id="userWelcome" class="font-semibold text-sm">Caricamento...</div>
-                            <div id="userRole" class="text-xs opacity-80">Utente</div>
-                        </div>
-                        <div id="userAvatar" class="w-9 h-9 bg-gradient-to-br from-aurora to-cyan rounded-full flex items-center justify-content text-white font-bold text-sm border-2 border-white/20">U</div>
-                    </div>
-
-                    <!-- Logout Button (Hidden on mobile, show hamburger instead) -->
-                    <button id="logoutBtn" class="btn-aurora px-4 py-2 rounded-xl text-sm font-bold hidden sm:flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                        </svg>
-                        <span class="hidden md:inline">Esci</span>
-                    </button>
-
-                    <!-- Mobile Menu Button -->
-                    <button id="mobileMenuBtn" class="sm:hidden touch-target text-white p-2 rounded-xl">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Mobile Menu (Hidden by default) -->
-            <div id="mobileMenu" class="sm:hidden mt-4 pb-4 border-t border-white/20 hidden">
-                <div class="pt-4 space-y-2">
-                    <div class="text-white text-center py-2">
-                        <div id="userWelcomeMobile" class="font-semibold">Caricamento...</div>
-                        <div id="userRoleMobile" class="text-sm opacity-80">Utente</div>
-                    </div>
-                    <button id="logoutBtnMobile" class="btn-aurora w-full py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                        </svg>
-                        Esci
-                    </button>
-                </div>
-            </div>
+  <!-- Enhanced Header -->
+  <header class="w-full py-6 relative z-10">
+    <div class="container-fluid">
+      <div class="flex items-center justify-between">
+        <button 
+          onclick="smartBackNavigation()" 
+          class="back-button focusable"
+          title="Torna alla dashboard"
+          aria-label="Torna alla dashboard principale"
+        >
+          <span class="text-xl">←</span>
+          <span class="hidden sm:inline">Dashboard</span>
+        </button>
+        
+        <div class="flex items-center space-x-4">
+          <div class="w-14 h-14 bg-gradient-to-br from-cyan/80 to-teal/80 rounded-full flex items-center justify-center border-2 border-white/30 shadow-lg animate-float">
+            <span class="text-white text-2xl">🛡️</span>
+          </div>
+          <div class="text-right">
+            <h1 class="hero-title text-white">BestBadge</h1>
+            <p class="caption-text text-white/80">Tutela Legale Specializzata</p>
+          </div>
         </div>
-    </header>
+      </div>
+    </div>
+  </header>
 
-    <!-- MAIN CONTENT -->
-    <main class="flex-grow pb-8">
-
-        <!-- WELCOME SECTION - Mobile First -->
-        <section class="mobile-section animate-fade-in">
-            <div class="glass-morphism rounded-3xl p-6 md:p-8 relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-aurora/20 to-cyan/20 rounded-full blur-xl"></div>
-                <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-magenta/20 to-teal/20 rounded-full blur-lg"></div>
-
-                <div class="relative z-10">
-                    <!-- Mobile-optimized welcome -->
-                    <div class="text-center md:text-left">
-                        <div class="mb-4">
-                            <div class="inline-flex items-center gap-2 mb-3">
-                                <div class="w-1 h-6 bg-gradient-to-b from-aurora to-cyan rounded-full"></div>
-                                <span class="text-white/80 text-xs font-semibold uppercase tracking-wider">Dashboard</span>
-                            </div>
-                        </div>
-
-                        <h1 class="hero-title text-ultra-visible mb-4 leading-tight">
-                            Benvenuto,<br>
-                            <span id="userNameDisplay" class="text-cyan">Utente</span>
-                        </h1>
-                        
-                        <p class="text-white/90 text-base md:text-lg mb-6 max-w-2xl mx-auto md:mx-0">
-                            Accedi ai tuoi servizi personalizzati
-                        </p>
-
-                        <!-- Status indicators - Mobile optimized -->
-                        <div class="flex flex-wrap gap-2 justify-center md:justify-start">
-                            <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
-                                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                                <span class="text-sm font-medium">Online</span>
-                            </div>
-                            <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                </svg>
-                                <span class="text-sm font-medium hidden sm:inline">Connessione sicura</span>
-                                <span class="text-sm font-medium sm:hidden">Sicuro</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- STATS SECTION - Mobile Grid -->
-        <section class="mobile-section animate-slide-up">
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 bg-gradient-to-br from-cyan to-teal rounded-xl flex items-center justify-center">
-                    <span class="text-white text-lg">📈</span>
-                </div>
-                <h2 class="text-ultra-visible text-xl md:text-2xl font-black">I tuoi dati</h2>
-            </div>
-
-            <div class="stats-grid">
-                <div class="stat-card p-4">
-                    <div class="text-center">
-                        <div class="text-2xl mb-1" aria-hidden="true">📅</div>
-                        <div class="text-white text-lg font-bold" id="memberSince">-</div>
-                        <div class="text-white text-xs opacity-80">Iscritto dal</div>
-                    </div>
-                </div>
-
-                <div class="stat-card p-4">
-                    <div class="text-center">
-                        <div class="text-2xl mb-1" aria-hidden="true">🎫</div>
-                        <div class="text-white text-lg font-bold" id="numeroTessera">Loading...</div>
-                        <div class="text-white text-xs opacity-80">N. Tessera</div>
-                    </div>
-                </div>
-
-                <div class="stat-card p-4">
-                    <div class="text-center">
-                        <div class="text-2xl mb-1" aria-hidden="true">📋</div>
-                        <div class="text-white text-lg font-bold" id="richiesteCount">-</div>
-                        <div class="text-white text-xs opacity-80">Richieste</div>
-                    </div>
-                </div>
-
-                <div class="stat-card p-4">
-                    <div class="text-center">
-                        <div class="text-2xl mb-1" aria-hidden="true">✅</div>
-                        <div class="text-white text-lg font-bold" id="profileStatus">Attivo</div>
-                        <div class="text-white text-xs opacity-80">Stato</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TOOLS SECTION - Mobile Grid -->
-        <section class="mobile-section animate-slide-up">
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 bg-gradient-to-br from-gold to-aurora rounded-xl flex items-center justify-center">
-                    <span class="text-white text-lg">🌟</span>
-                </div>
-                <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Strumenti e servizi</h2>
-            </div>
-
-            <div class="mobile-grid">
-                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Nuova Richiesta" onclick="goToRichieste()" onkeydown="keyActivate(event,'goToRichieste')">
-                    <div class="text-3xl mb-2">📝</div>
-                    <h3 class="text-white text-sm font-bold mb-1">Nuova Richiesta</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">Invia richiesta</p>
-                </div>
-
-                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Tessera Digitale" onclick="goToTessera()" onkeydown="keyActivate(event,'goToTessera')">
-                    <div class="text-3xl mb-2">🎫</div>
-                    <h3 class="text-white text-sm font-bold mb-1">Tessera</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">Visualizza tessera</p>
-                </div>
-
-                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Il Mio Profilo" onclick="goToProfilo()" onkeydown="keyActivate(event,'goToProfilo')">
-                    <div class="text-3xl mb-2">👤</div>
-                    <h3 class="text-white text-sm font-bold mb-1">Profilo</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">Gestisci dati</p>
-                </div>
-
-                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Strumenti" onclick="goToStrumenti()" onkeydown="keyActivate(event,'goToStrumenti')">
-                    <div class="text-3xl mb-2">🛠️</div>
-                    <h3 class="text-white text-sm font-bold mb-1">Strumenti</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">Utility lavoro</p>
-                </div>
-
-                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Virgilio AI" onclick="goToVirgilio()" onkeydown="keyActivate(event,'goToVirgilio')">
-                    <div class="text-3xl mb-2">🤖</div>
-                    <h3 class="text-white text-sm font-bold mb-1">Virgilio AI</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">Assistente AI</p>
-                </div>
-
-                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Dirigenti" onclick="goToDirigenti()" onkeydown="keyActivate(event,'goToDirigenti')">
-                    <div class="text-3xl mb-2">👥</div>
-                    <h3 class="text-white text-sm font-bold mb-1">Dirigenti</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">Contatti</p>
-                </div>
-
-                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Convenzioni" onclick="goToConvenzioni()" onkeydown="keyActivate(event,'goToConvenzioni')">
-                    <div class="text-3xl mb-2">🤝</div>
-                    <h3 class="text-white text-sm font-bold mb-1">Convenzioni</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">Sconti e offerte</p>
-                </div>
-
-                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="FileBox" onclick="goToFileBox()" onkeydown="keyActivate(event,'goToFileBox')">
-                    <div class="text-3xl mb-2">📁</div>
-                    <h3 class="text-white text-sm font-bold mb-1">FileBox</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">File e documenti</p>
-                </div>
-
-                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Assistenza" onclick="goToAssistenza()" onkeydown="keyActivate(event,'goToAssistenza')">
-                    <div class="text-3xl mb-2">🛟</div>
-                    <h3 class="text-white text-sm font-bold mb-1">Assistenza</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">Supporto</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- REQUESTS SECTION - Mobile First -->
-        <section class="mobile-section animate-slide-up">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center">
-                        <span class="text-white text-lg">📋</span>
-                    </div>
-                    <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Le Tue Richieste</h2>
-                </div>
-                <button onclick="goToRichieste()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-1 text-sm">
-                    <span class="hidden sm:inline">Vedi tutte</span>
-                    <span class="sm:hidden">Tutte</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </button>
-            </div>
-            
-            <div class="glass-morphism rounded-3xl p-4 md:p-6">
-                <div id="richiesteContainer" class="space-y-3">
-                    <div class="loading-skeleton h-16"></div>
-                    <div class="loading-skeleton h-16"></div>
-                    <div class="loading-skeleton h-16"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- NEWS SECTION - Mobile Cards -->
-        <section class="mobile-section animate-slide-up" id="newsSection">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-slate-600 to-slate-800 rounded-xl flex items-center justify-center">
-                        <span class="text-white text-lg">📰</span>
-                    </div>
-                    <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Ultime Notizie</h2>
-                </div>
-                <button onclick="viewAllNews()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-1 text-sm">
-                    <span class="hidden sm:inline">Vedi tutte</span>
-                    <span class="sm:hidden">Tutte</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </button>
-            </div>
-            
-            <div class="glass-card rounded-3xl p-4 md:p-6">
-                <div id="newsContainer">
-                    <div class="loading-skeleton h-16 mb-3"></div>
-                    <div class="loading-skeleton h-16 mb-3"></div>
-                    <div class="loading-skeleton h-16"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CONVENTIONS SECTION - Mobile Grid -->
-        <section class="mobile-section animate-slide-up" id="convenzioniSection">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center">
-                        <span class="text-white text-lg">🤝</span>
-                    </div>
-                    <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Convenzioni</h2>
-                </div>
-                <button onclick="goToConvenzioni()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-1 text-sm">
-                    <span class="hidden sm:inline">Vedi tutte</span>
-                    <span class="sm:hidden">Tutte</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </button>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6" id="convenzioniContainer">
-                <div class="loading-skeleton h-48"></div>
-                <div class="loading-skeleton h-48"></div>
-                <div class="loading-skeleton h-48"></div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- FOOTER - Mobile Optimized -->
-    <footer class="glass-morphism mt-8 pb-8" style="padding-bottom: max(2rem, var(--safe-area-inset-bottom));">
-        <div class="px-4 py-6">
-            <div class="text-center text-white">
-                <div class="mb-3">
-                    <span class="font-bold text-lg">MyApp</span>
-                    <span class="text-white/70 text-sm ml-2">Dashboard v5.0</span>
-                </div>
-                <div class="flex justify-center items-center space-x-4 text-xs opacity-80 mb-4 flex-wrap">
-                    <span>© 2025 MyApp</span>
-                    <span class="hidden sm:inline">•</span>
-                    <span class="hidden sm:inline">Powered by Supabase</span>
-                    <span class="hidden sm:inline">•</span>
-                    <span>Design Mobile-First</span>
-                </div>
-                <div class="flex justify-center space-x-2">
-                    <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                    <div class="w-2 h-2 bg-slate-500 rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
-                    <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" style="animation-delay: 1s;"></div>
-                </div>
-            </div>
+  <main class="container-fluid pb-12">
+    <!-- Enhanced Hero Section -->
+    <div class="glass-card p-8 mb-8 text-center animate-fadeIn">
+      <div class="w-24 h-24 bg-gradient-to-br from-aurora/20 to-cyan/20 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-white/30 animate-glow">
+        <span class="text-5xl">⚖️</span>
+      </div>
+      <h2 class="text-3xl font-bold mb-4 bg-gradient-to-r from-primary to-aurora bg-clip-text text-transparent">
+        Servizi di Tutela Professionale
+      </h2>
+      <p class="body-text mb-6 max-w-3xl mx-auto">
+        Assistenza legale, fiscale e di patronato specializzata per il Sindacato Carabinieri. 
+        <strong>Copertura completa per te e il tuo nucleo familiare.</strong>
+      </p>
+      
+      <!-- Enhanced Certifications -->
+      <div class="flex flex-wrap justify-center gap-3 mb-6">
+        <div class="bg-gradient-to-r from-green-500/20 to-green-600/20 border border-green-500/30 px-4 py-2 rounded-full">
+          <span class="caption-text font-semibold text-green-700">📋 ISO 9001:2015</span>
         </div>
-    </footer>
+        <div class="bg-gradient-to-r from-blue-500/20 to-blue-600/20 border border-blue-500/30 px-4 py-2 rounded-full">
+          <span class="caption-text font-semibold text-blue-700">🌍 ISO 14001:2015</span>
+        </div>
+        <div class="bg-gradient-to-r from-purple-500/20 to-purple-600/20 border border-purple-500/30 px-4 py-2 rounded-full">
+          <span class="caption-text font-semibold text-purple-700">👷 ISO 45001:2018</span>
+        </div>
+      </div>
+    </div>
 
-    <!-- JAVASCRIPT -->
-    <script>
-        // === CONFIGURAZIONE SUPABASE ===
-        const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
+    <!-- Enhanced Statistics -->
+    <div class="glass-card p-6 mb-8">
+      <div class="stats-grid">
+        <div class="stat-card" style="--bg-start: rgba(34,197,94,0.1); --bg-end: rgba(34,197,94,0.05); --border-color: rgba(34,197,94,0.2); --accent-color: #22c55e;">
+          <div class="text-3xl font-bold text-green-600 mb-2">24-72h</div>
+          <div class="caption-text font-semibold text-green-700">Tempo Risposta</div>
+        </div>
+        <div class="stat-card" style="--bg-start: rgba(59,130,246,0.1); --bg-end: rgba(59,130,246,0.05); --border-color: rgba(59,130,246,0.2); --accent-color: #3b82f6;">
+          <div class="text-3xl font-bold text-blue-600 mb-2">100%</div>
+          <div class="caption-text font-semibold text-blue-700">Territorio Coperto</div>
+        </div>
+        <div class="stat-card" style="--bg-start: rgba(147,51,234,0.1); --bg-end: rgba(147,51,234,0.05); --border-color: rgba(147,51,234,0.2); --accent-color: #9333ea;">
+          <div class="text-3xl font-bold text-purple-600 mb-2">15+</div>
+          <div class="caption-text font-semibold text-purple-700">Servizi Attivi</div>
+        </div>
+        <div class="stat-card" style="--bg-start: rgba(249,115,22,0.1); --bg-end: rgba(249,115,22,0.05); --border-color: rgba(249,115,22,0.2); --accent-color: #f97316;">
+          <div class="text-3xl font-bold text-orange-600 mb-2">24/7</div>
+          <div class="caption-text font-semibold text-orange-700">Supporto</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Tab System -->
+    <div class="tab-container mb-8">
+      <button class="tab-button active focusable" data-tab="legale" aria-label="Servizi legali">
+        <span class="text-xl mr-2">📋</span>
+        <span>Area Legale</span>
+      </button>
+      <button class="tab-button focusable" data-tab="fiscale" aria-label="Servizi fiscali">
+        <span class="text-xl mr-2">📊</span>
+        <span>Area Fiscale</span>
+      </button>
+      <button class="tab-button focusable" data-tab="admin" aria-label="Servizi amministrativi">
+        <span class="text-xl mr-2">🏛️</span>
+        <span>Amministrativo</span>
+      </button>
+    </div>
+
+    <!-- Enhanced Content Sections -->
+    <div id="tab-legale" class="tab-content">
+      <!-- Legal Civil Services -->
+      <div class="glass-card p-8 mb-8">
+        <h3 class="section-title flex items-center mb-6">
+          <span class="text-3xl mr-3">📋</span>
+          Area Legale Civile
+        </h3>
+        <div class="responsive-grid">
+          <div class="service-item">
+            <div class="flex items-start space-x-4">
+              <div class="w-16 h-16 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                <span class="text-2xl">🏢</span>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-lg mb-2 text-primary">Diritto delle Società</h4>
+                <ul class="space-y-1 body-text">
+                  <li>• Fusioni e scissioni aziendali</li>
+                  <li>• Contrattualistica commerciale avanzata</li>
+                  <li>• Consulenza societaria specializzata</li>
+                  <li>• Governance e compliance aziendale</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <div class="service-item">
+            <div class="flex items-start space-x-4">
+              <div class="w-16 h-16 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                <span class="text-2xl">🏠</span>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-lg mb-2 text-primary">Diritto Immobiliare</h4>
+                <ul class="space-y-1 body-text">
+                  <li>• Compravendite e permute immobiliari</li>
+                  <li>• Contratti di locazione e comodato</li>
+                  <li>• Procedure di sfratto e recupero crediti</li>
+                  <li>• Diritti reali e servitù prediali</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <div class="service-item">
+            <div class="flex items-start space-x-4">
+              <div class="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-purple-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                <span class="text-2xl">👥</span>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-lg mb-2 text-primary">Diritto del Lavoro</h4>
+                <ul class="space-y-1 body-text">
+                  <li>• Vertenze lavorative e licenziamenti</li>
+                  <li>• Infortuni sul lavoro e malattie professionali</li>
+                  <li>• Condotta antisindacale e discriminazione</li>
+                  <li>• Contrattualistica e diritti dei lavoratori</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <div class="service-item">
+            <div class="flex items-start space-x-4">
+              <div class="w-16 h-16 bg-gradient-to-br from-pink-500/20 to-pink-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                <span class="text-2xl">👨‍👩‍👧‍👦</span>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-lg mb-2 text-primary">Diritto di Famiglia</h4>
+                <ul class="space-y-1 body-text">
+                  <li>• Separazioni consensuali e giudiziali</li>
+                  <li>• Assegni di mantenimento e divisione beni</li>
+                  <li>• Procedure di adozione e affidamento</li>
+                  <li>• Tutela dei minori e violenza domestica</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legal Criminal Services -->
+      <div class="glass-card p-8 mb-8">
+        <h3 class="section-title flex items-center mb-6">
+          <span class="text-3xl mr-3">⚖️</span>
+          Area Penale Specializzata
+        </h3>
         
-        let supabaseClient;
-        let currentUser = null;
-        let userProfile = null;
-
-        // Lazy flags
-        let newsLoaded = false;
-        let convenzioniLoaded = false;
-
-        // Refresh loop
-        let refreshInterval = null;
-
-        // Mobile menu state
-        let mobileMenuOpen = false;
-
-        // Attivazione via tastiera per "role=button"
-        function keyActivate(e, fnName, ...args) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                if (typeof window[fnName] === 'function') window[fnName](...args);
-            }
-        }
-
-        // === INIZIALIZZAZIONE ===
-        document.addEventListener('DOMContentLoaded', async () => {
-            console.log('🏠 HOME PAGE LOADED - MyApp Dashboard v5.0 Mobile-First');
-            
-            if (typeof supabase === 'undefined') {
-                console.error('❌ Supabase not loaded');
-                window.location.href = 'ofline.html';
-                return;
-            }
-            
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            
-            // Verifica autenticazione
-            await checkAuthentication();
-            setupEventListeners();
-            setupLazySections();
-            setupMobileMenu();
-
-            // Carica dati principali
-            await Promise.all([
-                loadTesseraData(),
-                loadRichieste(),
-                loadNotifications()
-            ]);
-
-            // Avvia refresh loop
-            startRefreshLoop();
-            
-            console.log('✅ Dashboard mobile-first pronta');
-        });
-
-        // === MOBILE MENU ===
-        function setupMobileMenu() {
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const mobileMenu = document.getElementById('mobileMenu');
-            
-            if (mobileMenuBtn && mobileMenu) {
-                mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-                
-                // Close menu when clicking outside
-                document.addEventListener('click', (e) => {
-                    if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
-                        closeMobileMenu();
-                    }
-                });
-            }
-        }
-
-        function toggleMobileMenu() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            
-            if (mobileMenu) {
-                mobileMenuOpen = !mobileMenuOpen;
-                
-                if (mobileMenuOpen) {
-                    mobileMenu.classList.remove('hidden');
-                    mobileMenu.classList.add('animate-slide-up');
-                    if (mobileMenuBtn) {
-                        mobileMenuBtn.innerHTML = `
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        `;
-                    }
-                } else {
-                    mobileMenu.classList.add('hidden');
-                    mobileMenu.classList.remove('animate-slide-up');
-                    if (mobileMenuBtn) {
-                        mobileMenuBtn.innerHTML = `
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                            </svg>
-                        `;
-                    }
-                }
-            }
-        }
-
-        function closeMobileMenu() {
-            if (mobileMenuOpen) {
-                toggleMobileMenu();
-            }
-        }
-
-        // === GESTIONE AUTENTICAZIONE ===
-        async function checkAuthentication() {
-            try {
-                const { data: { session } } = await supabaseClient.auth.getSession();
-                if (!session) {
-                    console.log('❌ Nessuna sessione attiva - redirect a ofline');
-                    window.location.href = 'ofline.html';
-                    return;
-                }
-                currentUser = session.user;
-                userProfile = await getUserProfile(currentUser.id);
-                if (!userProfile) {
-                    userProfile = await createUserProfile(currentUser);
-                }
-                if (userProfile.role === 'ADMIN' || userProfile.role === 'DIRIGENTE') {
-                    window.location.href = 'home_dirigenti.html';
-                    return;
-                }
-                updateUserInterface();
-            } catch (error) {
-                console.error('❌ Errore verifica auth:', error);
-                window.location.href = 'ofline.html';
-            }
-        }
-
-        async function getUserProfile(userId) {
-            try {
-                const { data, error } = await supabaseClient
-                    .from('user_profiles')
-                    .select('*')
-                    .eq('user_id', userId)
-                    .single();
-                if (error && error.code !== 'PGRST116') throw error;
-                return data;
-            } catch (error) {
-                console.warn('⚠️ Errore recupero profilo:', error);
-                return null;
-            }
-        }
-
-        // Fallback locale (read-only)
-        async function createUserProfile(user) {
-            return {
-                user_id: user.id,
-                email: user.email,
-                nome: user.user_metadata?.nome || 'Utente',
-                cognome: user.user_metadata?.cognome || '',
-                role: 'USER',
-                stato: 'ATTIVO',
-                created_at: user.created_at || null
-            };
-        }
-
-        // === LAZY SECTIONS ===
-        function setupLazySections() {
-            const newsEl = document.getElementById('newsSection');
-            const convEl = document.getElementById('convenzioniSection');
-
-            if (!('IntersectionObserver' in window)) {
-                loadNews(); loadConvenzioni();
-                newsLoaded = convenzioniLoaded = true;
-                return;
-            }
-
-            const io = new IntersectionObserver((entries, obs) => {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting) return;
-
-                    if (entry.target.id === 'newsSection' && !newsLoaded) {
-                        newsLoaded = true; loadNews(); obs.unobserve(entry.target);
-                    }
-                    if (entry.target.id === 'convenzioniSection' && !convenzioniLoaded) {
-                        convenzioniLoaded = true; loadConvenzioni(); obs.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.15, rootMargin: '0px 0px -5% 0px' });
-
-            if (newsEl) io.observe(newsEl);
-            if (convEl) io.observe(convEl);
-        }
-
-        // === REFRESH LOOP ===
-        function startRefreshLoop() {
-            if (refreshInterval) return;
-            refreshInterval = setInterval(async () => {
-                if (currentUser) {
-                    await Promise.all([loadNotifications(), loadRichieste()]);
-                }
-            }, 60000);
-        }
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-300 rounded-2xl p-6 mb-6">
+          <div class="flex items-start space-x-4">
+            <div class="w-20 h-20 bg-gradient-to-br from-blue-600/20 to-indigo-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <span class="text-3xl">🎖️</span>
+            </div>
+            <div>
+              <h4 class="text-xl font-bold text-blue-800 mb-3">Penale Militare</h4>
+              <p class="body-text text-blue-700 mb-3">
+                Consulenza e assistenza specializzata in procedimenti penali militari con copertura completa.
+              </p>
+              <div class="bg-blue-100 border border-blue-200 rounded-lg p-3">
+                <p class="font-semibold text-blue-800 text-sm">
+                  ✅ Copertura garantita anche in caso di dolo
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
         
-        function stopRefreshLoop() {
-            if (refreshInterval) {
-                clearInterval(refreshInterval);
-                refreshInterval = null;
-            }
-        }
+        <div class="responsive-grid">
+          <div class="service-item text-center">
+            <div class="w-16 h-16 bg-gradient-to-br from-orange-500/20 to-orange-600/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <span class="text-2xl">🏗️</span>
+            </div>
+            <h4 class="font-bold text-lg mb-2">Reati Edilizi</h4>
+            <p class="caption-text">Abusi edilizi e violazioni urbanistiche</p>
+          </div>
+          
+          <div class="service-item text-center">
+            <div class="w-16 h-16 bg-gradient-to-br from-red-500/20 to-red-600/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <span class="text-2xl">💰</span>
+            </div>
+            <h4 class="font-bold text-lg mb-2">Truffe e Frodi</h4>
+            <p class="caption-text">Reati contro il patrimonio e la persona</p>
+          </div>
+          
+          <div class="service-item text-center">
+            <div class="w-16 h-16 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <span class="text-2xl">🌍</span>
+            </div>
+            <h4 class="font-bold text-lg mb-2">Reati Ambientali</h4>
+            <p class="caption-text">Violazioni delle normative ambientali</p>
+          </div>
+          
+          <div class="service-item text-center">
+            <div class="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-purple-600/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <span class="text-2xl">👶</span>
+            </div>
+            <h4 class="font-bold text-lg mb-2">Tutela Minori</h4>
+            <p class="caption-text">Protezione dell'infanzia e diritti dei minori</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Fiscale -->
+    <div id="tab-fiscale" class="tab-content hidden">
+      <div class="glass-card p-8 mb-8">
+        <h3 class="section-title flex items-center mb-6">
+          <span class="text-3xl mr-3">📊</span>
+          Servizi Fiscali F.I.TE.S.C.
+        </h3>
         
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) stopRefreshLoop();
-            else startRefreshLoop();
-        });
-
-        // === DATI SEZIONI ===
-        async function loadTesseraData() {
-            try {
-                const { data: tessera, error } = await supabaseClient
-                    .from('tessere')
-                    .select('numero_tessera, stato')
-                    .eq('user_id', currentUser.id)
-                    .single();
-                const el = document.getElementById('numeroTessera');
-                if (error || !tessera) { 
-                    if (el) el.textContent = 'In gen...'; 
-                    return; 
-                }
-                if (el) el.textContent = tessera.numero_tessera ? 
-                    tessera.numero_tessera.slice(-8) : 'In gen...';
-            } catch {
-                const el = document.getElementById('numeroTessera');
-                if (el) el.textContent = 'Errore';
-            }
-        }
-
-        async function loadRichieste() {
-            try {
-                const { data: richieste, error } = await supabaseClient
-                    .from('richieste_personali')
-                    .select('*')
-                    .eq('user_id', currentUser.id)
-                    .order('created_at', { ascending: false })
-                    .limit(3);
-                if (error) throw error;
-                const attive = (richieste || []).filter(r => !['COMPLETATA', 'CHIUSA'].includes(r.stato)).length || 0;
-                const countEl = document.getElementById('richiesteCount');
-                if (countEl) countEl.textContent = attive;
-                displayRichieste(richieste || []);
-            } catch (error) {
-                console.error('❌ Errore caricamento richieste:', error);
-                displayRichieste([]);
-            }
-        }
-
-        async function loadNews() {
-            try {
-                const { data, error } = await supabaseClient
-                    .from('news')
-                    .select('id,titolo,sottotitolo,categoria,immagine_url,url_articolo,pubblicata,data_pubblicazione,created_at,visualizzazioni')
-                    .eq('pubblicata', true)
-                    .order('created_at', { ascending: false })
-                    .limit(3);
-                if (error) throw error;
-                displayNews(data || []);
-            } catch (error) {
-                console.error('❌ Errore caricamento news:', error);
-                displayNews([]);
-            }
-        }
-
-        async function loadNotifications() {
-            try {
-                const { count: unreadCount } = await supabaseClient
-                    .from('notifications')
-                    .select('id', { count: 'exact' })
-                    .eq('user_id', currentUser.id)
-                    .eq('read', false);
-                const { data, error } = await supabaseClient
-                    .from('notifications')
-                    .select('*')
-                    .eq('user_id', currentUser.id)
-                    .order('created_at', { ascending: false })
-                    .limit(10);
-                if (error) throw error;
-                updateNotificationBadge(unreadCount || 0);
-                displayNotifications(data || []);
-            } catch (error) {
-                console.error('❌ Errore caricamento notifiche:', error);
-                updateNotificationBadge(0);
-                displayNotifications([]);
-            }
-        }
-
-        async function loadConvenzioni() {
-            try {
-                const { data: convenzioni, error } = await supabaseClient
-                    .from('convenzioni')
-                    .select('id,nome_azienda,descrizione,categoria,copertura_geografica,attiva,in_evidenza,sconto_percentuale,created_at,valida_fino,visualizzazioni,logo_url,immagine_url,link_esterno')
-                    .eq('attiva', true)
-                    .order('created_at', { ascending: false })
-                    .limit(3);
-                if (error) throw error;
-                displayConvenzioni(convenzioni || []);
-            } catch (error) {
-                console.error('❌ Errore caricamento convenzioni:', error);
-                displayConvenzioni([]);
-            }
-        }
-
-        // === UI UPDATE PROFILO ===
-        function capitalizeInitial(str) {
-            if (!str) return '';
-            const s = String(str);
-            return s.charAt(0).toUpperCase() + s.slice(1);
-        }
-        
-        function updateUserInterface() {
-            if (!userProfile) return;
-            const rawFirst = userProfile.nome || 'Utente';
-            const firstName = capitalizeInitial(rawFirst);
-
-            // Desktop elements
-            const welcomeEl = document.getElementById('userWelcome');
-            const roleEl = document.getElementById('userRole');
-            if (welcomeEl) welcomeEl.textContent = `Ciao, ${firstName}!`;
-            if (roleEl) roleEl.textContent = getRoleLabel(userProfile.role);
-
-            // Mobile elements
-            const welcomeMobile = document.getElementById('userWelcomeMobile');
-            const roleMobile = document.getElementById('userRoleMobile');
-            if (welcomeMobile) welcomeMobile.textContent = `Ciao, ${firstName}!`;
-            if (roleMobile) roleMobile.textContent = getRoleLabel(userProfile.role);
-
-            // Name display
-            const nameDisplayEl = document.getElementById('userNameDisplay');
-            if (nameDisplayEl) nameDisplayEl.textContent = firstName;
-
-            // Avatar
-            const avatars = document.querySelectorAll('#userAvatar');
-            const initials = getInitials(`${userProfile.nome} ${userProfile.cognome}`);
-            avatars.forEach(a => a.textContent = initials);
-
-            // Stats
-            const memberSinceEl = document.getElementById('memberSince');
-            const statusEl = document.getElementById('profileStatus');
-            if (memberSinceEl) memberSinceEl.textContent = userProfile.created_at ? 
-                formatDate(userProfile.created_at) : '-';
-            if (statusEl) statusEl.textContent = getStatusLabel(userProfile.stato);
-        }
-
-        // === DISPLAY FUNCTIONS - Mobile Optimized ===
-        function displayRichieste(richieste) {
-            const container = document.getElementById('richiesteContainer');
-            if (!container) return;
-            
-            if (richieste.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-8 text-white">
-                        <div class="text-4xl mb-3">📋</div>
-                        <h3 class="text-lg font-bold mb-2">Nessuna richiesta</h3>
-                        <p class="text-white/70 text-sm mb-4">Non hai ancora inviato nessuna richiesta</p>
-                        <button onclick="goToRichieste()" class="btn-aurora py-2 px-4 rounded-xl text-sm">
-                            Invia la tua prima richiesta
-                        </button>
-                    </div>`;
-                return;
-            }
-            
-            container.innerHTML = richieste.map(richiesta => {
-                const statusColor = getRequestStatusColor(richiesta.stato);
-                const priorityColor = getPriorityColor(richiesta.priorita);
-                const dataCreazione = new Date(richiesta.created_at).toLocaleDateString('it-IT');
-                
-                return `
-                    <div class="glass-morphism rounded-xl p-3 hover:bg-white/10 transition-all cursor-pointer" 
-                         role="button" tabindex="0" aria-label="Apri richiesta ${escapeHtml(richiesta.titolo)}"
-                         onclick="viewRichiestaDetail('${richiesta.id}')"
-                         onkeydown="keyActivate(event,'viewRichiestaDetail','${richiesta.id}')">
-                        
-                        <div class="flex items-start justify-between mb-2">
-                            <div class="flex-grow min-w-0">
-                                <h4 class="text-white font-bold text-sm mb-1 line-clamp-2">${richiesta.titolo}</h4>
-                                <div class="flex items-center gap-2 text-xs text-white/70 mb-1 flex-wrap">
-                                    <span class="flex items-center gap-1">
-                                        <span class="priority-indicator ${priorityColor}"></span>
-                                        <span class="hidden sm:inline">${richiesta.priorita}</span>
-                                        <span class="sm:hidden">${richiesta.priorita.slice(0,3)}</span>
-                                    </span>
-                                    <span>📂 ${(richiesta.categoria || '').slice(0,8)}${richiesta.categoria?.length > 8 ? '...' : ''}</span>
-                                    <span class="hidden sm:inline">📅 ${dataCreazione}</span>
-                                </div>
-                            </div>
-                            <span class="px-2 py-1 rounded-full text-xs font-bold text-white ${statusColor} ml-2 flex-shrink-0">
-                                ${getStatusText(richiesta.stato).slice(0,8)}
-                            </span>
-                        </div>
-                        
-                        <p class="text-white/80 text-xs mb-2 line-clamp-2">
-                            ${richiesta.descrizione || 'Nessuna descrizione'}
-                        </p>
-                        
-                        <div class="flex items-center justify-between text-xs text-white/60">
-                            <span class="line-clamp-1">
-                                ${richiesta.dirigente_nome ? 
-                                    `👤 ${richiesta.dirigente_nome.slice(0,15)}${richiesta.dirigente_nome.length > 15 ? '...' : ''}` : 
-                                    '⏳ In attesa'}
-                            </span>
-                            <span class="ml-2 flex-shrink-0">
-                                ID: #${String(richiesta.id).slice(-6)}
-                            </span>
-                        </div>
-                    </div>`;
-            }).join('');
-        }
-
-        function displayNews(newsArray) {
-            const container = document.getElementById('newsContainer');
-            if (!container) return;
-
-            if (newsArray.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-6 text-gray-500">
-                        <div class="text-3xl mb-2">📰</div>
-                        <div class="text-sm">Nessuna notizia disponibile</div>
-                    </div>`;
-                return;
-            }
-
-            container.innerHTML = newsArray.map(n => {
-                const absDate = formatDate(n.data_pubblicazione || n.created_at);
-                const relDate = formatRelativeTime(n.data_pubblicazione || n.created_at);
-                const rawUrl = n.url_articolo ? n.url_articolo : '';
-                const safeUrl = sanitizeUrl(rawUrl);
-                const img = n.immagine_url || '';
-                const cat = n.categoria || 'GENERALE';
-                const encUrl = safeUrl ? encodeURIComponent(safeUrl) : '';
-
-                return `
-                    <div class="group border border-gray-200 hover:border-blue-200 bg-white/70 hover:bg-white rounded-xl p-3 mb-3 transition-colors cursor-pointer"
-                         role="button" tabindex="0" aria-label="Apri notizia ${escapeHtml(n.titolo)}"
-                         onclick="readNews('${n.id}','${encUrl}')"
-                         onkeydown="keyActivate(event,'readNews','${n.id}','${encUrl}')">
-                        
-                        <div class="flex gap-3 items-start">
-                            <div class="flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 border border-gray-200 w-16 h-16">
-                                ${img ? `<img src="${img}" alt="${escapeHtml(n.titolo)}" class="w-full h-full object-cover" loading="lazy" decoding="async">`
-                                      : `<div class="w-full h-full flex items-center justify-center text-lg" aria-hidden="true">📰</div>`}
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center gap-2 mb-1 flex-wrap">
-                                    <span class="inline-block text-xs font-bold bg-blue-600 text-white px-2 py-0.5 rounded">
-                                        ${cat.slice(0,8)}${cat.length > 8 ? '...' : ''}
-                                    </span>
-                                    <span class="text-xs text-gray-500 hidden sm:inline">📅 ${absDate}</span>
-                                    <span class="text-xs text-gray-500">• ${relDate}</span>
-                                </div>
-                                <h3 class="text-textDark font-semibold text-sm leading-snug mb-1 group-hover:underline line-clamp-2">
-                                    ${n.titolo}
-                                </h3>
-                                ${n.sottotitolo ? `<p class="text-gray-600 text-xs line-clamp-2">${n.sottotitolo}</p>` : ''}
-                                <div class="flex items-center justify-between mt-2">
-                                    <span class="text-xs text-gray-500">👁️ ${n.visualizzazioni || 0}</span>
-                                    <span class="text-blue-600 group-hover:text-blue-800 font-semibold text-xs">Apri →</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>`;
-            }).join('');
-        }
-
-        function displayConvenzioni(convenzioni) {
-            const container = document.getElementById('convenzioniContainer');
-            if (!container) return;
-
-            if (convenzioni.length === 0) {
-                container.innerHTML = `
-                    <div class="glass-morphism rounded-3xl p-8 col-span-full text-center">
-                        <div class="text-4xl mb-3">🤝</div>
-                        <h3 class="text-white text-lg font-bold mb-2">Nessuna convenzione disponibile</h3>
-                        <p class="text-white/70 text-sm">Le convenzioni verranno pubblicate a breve</p>
-                    </div>`;
-                return;
-            }
-
-            container.innerHTML = convenzioni.map(c => {
-                const excerpt = (c.descrizione || '').slice(0, 80) + ((c.descrizione||'').length > 80 ? '…' : '');
-                const sconto = c.sconto_percentuale ? `${c.sconto_percentuale}%` : '';
-                const inEvidenza = c.in_evidenza === true || c.in_evidenza === 'true';
-                const validaFino = c.valida_fino ? new Date(c.valida_fino) : null;
-                const isScaduta = validaFino && validaFino < new Date();
-                const img = c.immagine_url || c.logo_url || '';
-                const safeUrl = sanitizeUrl(c.link_esterno || '');
-                const encUrl = safeUrl ? encodeURIComponent(safeUrl) : '';
-
-                return `
-                    <div class="action-card p-0 overflow-hidden ${isScaduta ? 'opacity-75' : ''}" role="button" tabindex="0"
-                         aria-label="Apri convenzione ${escapeHtml(c.nome_azienda || 'Convenzione')}"
-                         onclick="openConvenzione('${c.id}','${encUrl}')"
-                         onkeydown="keyActivate(event,'openConvenzione','${c.id}','${encUrl}')">
-                        
-                        ${img ? `
-                            <div class="w-full bg-gray-100 overflow-hidden h-32">
-                                <img src="${img}" alt="${escapeHtml(c.nome_azienda || 'Convenzione')}" 
-                                     class="w-full h-full object-cover" loading="lazy" decoding="async">
-                            </div>` : ''
-                        }
-                        
-                        <div class="p-4">
-                            <div class="flex items-start justify-between mb-3">
-                                <div class="w-10 h-10 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center text-white text-sm font-bold">
-                                    ${sconto ? `-${sconto}` : '🤝'}
-                                </div>
-                                <div class="flex flex-col gap-1">
-                                    ${inEvidenza ? '<div class="bg-emerald-600 text-white px-2 py-1 rounded-full text-xs font-bold">TOP</div>' : ''}
-                                    ${isScaduta ? '<div class="bg-gray-500 text-white px-2 py-1 rounded-full text-xs font-bold">SCAD</div>' : ''}
-                                </div>
-                            </div>
-                            
-                            <h3 class="text-white text-base font-bold mb-2 line-clamp-2">
-                                ${c.nome_azienda || '-'}
-                            </h3>
-                            
-                            <p class="text-white/80 text-sm mb-3 line-clamp-3">${excerpt}</p>
-                            
-                            <div class="flex items-center justify-between text-xs text-white/60 mb-3">
-                                <span>📂 ${(c.categoria || 'Generale').slice(0,10)}</span>
-                                <span>🌍 ${(c.copertura_geografica || 'Nazionale').slice(0,8)}</span>
-                            </div>
-                            
-                            <div class="flex items-center justify-between">
-                                <span class="text-white/60 text-xs">👀 ${c.visualizzazioni || 0}</span>
-                                <span class="text-emerald-300 text-sm font-semibold">
-                                    ${isScaduta ? 'Non disponibile' : 'Scopri →'}
-                                </span>
-                            </div>
-                            
-                            ${validaFino ? `
-                                <div class="mt-3 pt-3 border-t border-white/10">
-                                    <div class="text-white/60 text-xs flex items-center gap-1">
-                                        <span class="${isScaduta ? 'text-red-400' : 'text-green-400'}">⏰</span>
-                                        ${isScaduta ? 'Scaduta il' : 'Valida fino al'} 
-                                        <span class="font-mono">${validaFino.toLocaleDateString('it-IT')}</span>
-                                    </div>
-                                </div>` : ''
-                            }
-                        </div>
-                    </div>`;
-            }).join('');
-        }
-
-        // === NOTIFICHE UI ===
-        function displayNotifications(notifications) {
-            const container = document.getElementById('notificationList');
-            if (!container) return;
-            
-            if (notifications.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-6 text-gray-500">
-                        <div class="text-3xl mb-2">🔔</div>
-                        <div class="text-sm">Nessuna notifica</div>
-                    </div>`;
-                return;
-            }
-            
-            container.innerHTML = notifications.map(n => `
-                <div class="p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer ${!n.read ? 'bg-blue-50 border-l-4 border-blue-600' : ''}" 
-                     onclick="markNotificationAsRead('${n.id}')">
-                    <div class="flex items-start gap-3">
-                        <div class="flex-shrink-0 w-2 h-2 rounded-full mt-2 ${!n.read ? 'bg-blue-600' : 'bg-gray-300'}"></div>
-                        <div class="flex-grow min-w-0">
-                            <h4 class="font-semibold text-textDark text-sm line-clamp-2">${n.title || 'Notifica'}</h4>
-                            <p class="text-gray-600 text-xs mt-1 line-clamp-2">${n.message || ''}</p>
-                            <div class="flex items-center gap-2 mt-1">
-                                <span class="text-gray-400 text-xs">${formatDateTime(n.created_at)}</span>
-                                <span class="text-gray-400 text-xs">• ${formatRelativeTime(n.created_at)}</span>
-                            </div>
-                        </div>
-                    </div>
+        <div class="space-y-6">
+          <div class="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-2xl p-6">
+            <div class="flex items-start space-x-4">
+              <div class="w-20 h-20 bg-gradient-to-br from-green-600/20 to-emerald-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                <span class="text-3xl">💼</span>
+              </div>
+              <div class="flex-1">
+                <h4 class="text-xl font-bold text-green-800 mb-3">Assistenza Fiscale Completa</h4>
+                <div class="responsive-grid">
+                  <div class="bg-white/50 rounded-lg p-4">
+                    <h5 class="font-semibold text-green-700 mb-2">📋 Dichiarazioni</h5>
+                    <ul class="body-text text-green-600 space-y-1">
+                      <li>• Modello 730 e Redditi PF</li>
+                      <li>• Compilazione e invio telematico</li>
+                      <li>• Controllo automatico e assistenza</li>
+                    </ul>
+                  </div>
+                  <div class="bg-white/50 rounded-lg p-4">
+                    <h5 class="font-semibold text-green-700 mb-2">📊 Calcoli Specializzati</h5>
+                    <ul class="body-text text-green-600 space-y-1">
+                      <li>• ISEE e DSU</li>
+                      <li>• RED (Redditi e Pensioni)</li>
+                      <li>• Simulazioni fiscali</li>
+                    </ul>
+                  </div>
+                  <div class="bg-white/50 rounded-lg p-4">
+                    <h5 class="font-semibold text-green-700 mb-2">🏠 Bonus e Detrazioni</h5>
+                    <ul class="body-text text-green-600 space-y-1">
+                      <li>• Superbonus e ristrutturazioni</li>
+                      <li>• Ecobonus e sismabonus</li>
+                      <li>• Bonus mobili e elettrodomestici</li>
+                    </ul>
+                  </div>
+                  <div class="bg-white/50 rounded-lg p-4">
+                    <h5 class="font-semibold text-green-700 mb-2">💡 Consulenza</h5>
+                    <ul class="body-text text-green-600 space-y-1">
+                      <li>• Pianificazione fiscale</li>
+                      <li>• Ottimizzazione tributaria</li>
+                      <li>• Assistenza specializzata</li>
+                    </ul>
+                  </div>
                 </div>
-            `).join('');
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-2xl p-6">
+            <div class="flex items-start space-x-4">
+              <div class="w-20 h-20 bg-gradient-to-br from-blue-600/20 to-cyan-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                <span class="text-3xl">🏛️</span>
+              </div>
+              <div class="flex-1">
+                <h4 class="text-xl font-bold text-blue-800 mb-3">Servizi di Patronato</h4>
+                <div class="responsive-grid">
+                  <div class="bg-white/50 rounded-lg p-4">
+                    <h5 class="font-semibold text-blue-700 mb-2">👴 Pensioni</h5>
+                    <ul class="body-text text-blue-600 space-y-1">
+                      <li>• Domande pensionistiche</li>
+                      <li>• Ricorsi INPS</li>
+                      <li>• Ricostruzione carriera</li>
+                    </ul>
+                  </div>
+                  <div class="bg-white/50 rounded-lg p-4">
+                    <h5 class="font-semibold text-blue-700 mb-2">💼 Disoccupazione</h5>
+                    <ul class="body-text text-blue-600 space-y-1">
+                      <li>• NASpI e DIS-COLL</li>
+                      <li>• Indennità di mobilità</li>
+                      <li>• Sussidi di disoccupazione</li>
+                    </ul>
+                  </div>
+                  <div class="bg-white/50 rounded-lg p-4">
+                    <h5 class="font-semibold text-blue-700 mb-2">👨‍👩‍👧‍👦 Famiglia</h5>
+                    <ul class="body-text text-blue-600 space-y-1">
+                      <li>• Assegni familiari (ANF)</li>
+                      <li>• Bonus famiglia</li>
+                      <li>• Congedi parentali</li>
+                    </ul>
+                  </div>
+                  <div class="bg-white/50 rounded-lg p-4">
+                    <h5 class="font-semibold text-blue-700 mb-2">🏥 Invalidità</h5>
+                    <ul class="body-text text-blue-600 space-y-1">
+                      <li>• Invalidità civile</li>
+                      <li>• Accompagnamento</li>
+                      <li>• Riconoscimento handicap</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Amministrativo -->
+    <div id="tab-admin" class="tab-content hidden">
+      <div class="glass-card p-8 mb-8">
+        <h3 class="section-title flex items-center mb-6">
+          <span class="text-3xl mr-3">🏛️</span>
+          Materie Amministrative
+        </h3>
+        
+        <div class="space-y-6">
+          <div class="bg-gradient-to-r from-purple-50 to-violet-50 border-2 border-purple-300 rounded-2xl p-6">
+            <div class="flex items-start space-x-4">
+              <div class="w-20 h-20 bg-gradient-to-br from-purple-600/20 to-violet-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                <span class="text-3xl">🎖️</span>
+              </div>
+              <div class="flex-1">
+                <h4 class="text-xl font-bold text-purple-800 mb-3">Procedure Militari Specializzate</h4>
+                <div class="responsive-grid">
+                  <div class="bg-white/50 rounded-lg p-4">
+                    <h5 class="font-semibold text-purple-700 mb-2">📋 Trasferimenti</h5>
+                    <ul class="body-text text-purple-600 space-y-1">
+                      <li>• Ricorsi art. 398 RGA</li>
+                      <li>• Contestazioni trasferimenti</li>
+                      <li>• Procedure di riassegnazione</li>
+                    </ul>
+                  </div>
+                  <div class="bg-white/50 rounded-lg p-4">
+                    <h5 class="font-semibold text-purple-700 mb-2">⚖️ Ricorsi</h5>
+                    <ul class="body-text text-purple-600 space-y-1">
+                      <li>• Ricorsi gerarchici</li>
+                      <li>• Impugnazioni atti amministrativi</li>
+                      <li>• Tutela diritti del personale</li>
+                    </ul>
+                  </div>
+                  <div class="bg-white/50 rounded-lg p-4">
+                    <h5 class="font-semibold text-purple-700 mb-2">⚠️ Procedure Disciplinari</h5>
+                    <ul class="body-text text-purple-600 space-y-1">
+                      <li>• Difesa in procedimenti disciplinari</li>
+                      <li>• Assistenza nelle udienze</li>
+                      <li>• Ricorsi contro sanzioni</li>
+                    </ul>
+                  </div>
+                  <div class="bg-white/50 rounded-lg p-4">
+                    <h5 class="font-semibold text-purple-700 mb-2">📊 Valutazioni</h5>
+                    <ul class="body-text text-purple-600 space-y-1">
+                      <li>• Contestazione rapporti informativi</li>
+                      <li>• Ricorsi contro valutazioni</li>
+                      <li>• Tutela della carriera</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-gradient-to-r from-orange-50 to-amber-50 border-2 border-orange-300 rounded-2xl p-6">
+            <div class="flex items-start space-x-4">
+              <div class="w-20 h-20 bg-gradient-to-br from-orange-600/20 to-amber-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                <span class="text-3xl">⚖️</span>
+              </div>
+              <div class="flex-1">
+                <h4 class="text-xl font-bold text-orange-800 mb-3">Ricorsi TAR</h4>
+                <div class="bg-white/50 rounded-lg p-4">
+                  <p class="body-text text-orange-700 mb-4">
+                    Assistenza qualificata per ricorsi al Tribunale Amministrativo Regionale con valutazione preliminare della fattibilità.
+                  </p>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <h5 class="font-semibold text-orange-700 mb-2">📋 Servizi Inclusi</h5>
+                      <ul class="body-text text-orange-600 space-y-1">
+                        <li>• Analisi fattibilità condivisa</li>
+                        <li>• Redazione ricorsi</li>
+                        <li>• Rappresentanza in giudizio</li>
+                        <li>• Assistenza nelle udienze</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h5 class="font-semibold text-orange-700 mb-2">⚖️ Materie Coperte</h5>
+                      <ul class="body-text text-orange-600 space-y-1">
+                        <li>• Concorsi pubblici</li>
+                        <li>• Procedimenti disciplinari</li>
+                        <li>• Diritti del personale</li>
+                        <li>• Atti amministrativi</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Benefits Section -->
+    <div class="glass-card p-8 mb-8">
+      <h3 class="section-title flex items-center mb-6">
+        <span class="text-3xl mr-3">✨</span>
+        Vantaggi e Garanzie Esclusive
+      </h3>
+      <div class="responsive-grid">
+        <div class="service-item">
+          <div class="flex items-start space-x-4">
+            <div class="w-16 h-16 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <span class="text-2xl">✅</span>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-bold text-lg mb-2 text-green-700">Copertura Nucleo Familiare</h4>
+              <p class="body-text">Assistenza estesa a tutti i componenti del nucleo familiare convivente, garantendo protezione completa per te e i tuoi cari.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="service-item">
+          <div class="flex items-start space-x-4">
+            <div class="w-16 h-16 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <span class="text-2xl">🌙</span>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-bold text-lg mb-2 text-blue-700">Tutela Fuori Servizio</h4>
+              <p class="body-text">Assistenza garantita anche per questioni personali e private, non solo per materie legate al servizio.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="service-item">
+          <div class="flex items-start space-x-4">
+            <div class="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-purple-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <span class="text-2xl">⚡</span>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-bold text-lg mb-2 text-purple-700">Risposta Rapida</h4>
+              <p class="body-text">Tempo di risposta garantito entro 24-72 ore lavorative per tutte le richieste di assistenza.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="service-item">
+          <div class="flex items-start space-x-4">
+            <div class="w-16 h-16 bg-gradient-to-br from-orange-500/20 to-orange-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <span class="text-2xl">🛡️</span>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-bold text-lg mb-2 text-orange-700">Copertura Anche per Dolo</h4>
+              <p class="body-text">Unico nel settore: assistenza penale garantita anche in caso di procedimenti per dolo, con limitazioni previste dalla legge.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Call to Action -->
+    <div class="glass-card p-8 mb-8 text-center">
+      <div class="max-w-3xl mx-auto">
+        <div class="w-20 h-20 bg-gradient-to-br from-aurora/20 to-cyan/20 rounded-full flex items-center justify-center mx-auto mb-6 animate-glow">
+          <span class="text-3xl">📞</span>
+        </div>
+        <h3 class="section-title text-center mb-4">
+          Richiedi Assistenza Specializzata
+        </h3>
+        <p class="body-text mb-8">
+          Compila il modulo di richiesta per ricevere supporto qualificato dai nostri consulenti specializzati. 
+          <strong class="text-aurora">Risposta garantita entro 48-72 ore lavorative.</strong>
+        </p>
+        <button id="openFormBtn" class="aurora-button focusable text-lg px-8 py-4">
+          <span class="relative z-10">📝 Apri Modulo di Richiesta</span>
+        </button>
+        <p class="caption-text mt-4 text-gray-600">
+          Servizio disponibile 24/7 per tutti gli iscritti al Sindacato Carabinieri
+        </p>
+      </div>
+    </div>
+
+    <!-- Enhanced Contacts -->
+    <div class="glass-card p-8">
+      <h3 class="section-title flex items-center mb-6">
+        <span class="text-3xl mr-3">📧</span>
+        Contatti e Informazioni
+      </h3>
+      <div class="responsive-grid">
+        <a href="mailto:info@assosafe.org" class="service-item hover:bg-blue-50/80 transition-all duration-300 group">
+          <div class="flex items-center space-x-4">
+            <div class="w-16 h-16 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+              <span class="text-2xl">✉️</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-lg mb-1">Email Ufficiale</h4>
+              <p class="caption-text text-blue-600">info@assosafe.org</p>
+              <p class="caption-text">Supporto tecnico e informazioni</p>
+            </div>
+          </div>
+        </a>
+        
+        <a href="https://www.bestbadge.org" target="_blank" rel="noopener noreferrer" class="service-item hover:bg-green-50/80 transition-all duration-300 group">
+          <div class="flex items-center space-x-4">
+            <div class="w-16 h-16 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+              <span class="text-2xl">🌐</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-lg mb-1">Sito Web Ufficiale</h4>
+              <p class="caption-text text-green-600">www.bestbadge.org</p>
+              <p class="caption-text">Portale servizi e documentazione</p>
+            </div>
+          </div>
+        </a>
+        
+        <div class="service-item">
+          <div class="flex items-center space-x-4">
+            <div class="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-purple-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <span class="text-2xl">🏢</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-lg mb-1">Partnership Istituzionale</h4>
+              <p class="caption-text text-purple-600">Fondazione ASSOSAFE</p>
+              <p class="caption-text">Ente accreditato e certificato</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="service-item">
+          <div class="flex items-center space-x-4">
+            <div class="w-16 h-16 bg-gradient-to-br from-orange-500/20 to-orange-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <span class="text-2xl">📋</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-lg mb-1">Certificazioni Qualità</h4>
+              <p class="caption-text text-orange-600">ISO 9001:2015, 14001:2015, 45001:2018</p>
+              <p class="caption-text">Standard internazionali di qualità</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Enhanced Modal -->
+  <div id="assistanceModal" class="fixed inset-0 modal-backdrop flex items-center justify-center z-50 hidden p-4">
+    <div class="modal-content w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8">
+      <div class="flex justify-between items-center mb-8">
+        <div>
+          <h3 class="text-2xl font-bold text-primary mb-2">📝 Richiesta Supporto Specializzato</h3>
+          <p class="caption-text">Compila tutti i campi per ricevere assistenza personalizzata</p>
+        </div>
+        <button id="closeModal" class="text-gray-400 hover:text-primary text-3xl font-bold transition-colors p-2" aria-label="Chiudi modulo">
+          ✕
+        </button>
+      </div>
+      
+      <form id="assistanceForm" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block body-text font-semibold mb-3">Nome e Cognome *</label>
+            <input name="nome" type="text" placeholder="Inserisci il tuo nome completo" required class="form-input w-full" aria-required="true">
+          </div>
+          
+          <div>
+            <label class="block body-text font-semibold mb-3">Email *</label>
+            <input name="email" type="email" placeholder="tua.email@example.com" required class="form-input w-full" aria-required="true">
+          </div>
+        </div>
+        
+        <div>
+          <label class="block body-text font-semibold mb-3">Tipo di Assistenza *</label>
+          <select name="tipo" required class="form-input w-full" aria-required="true">
+            <option value="">Seleziona la categoria di assistenza</option>
+            <option value="civile">📋 Diritto Civile (Società, Proprietà, Famiglia)</option>
+            <option value="penale">⚖️ Diritto Penale (incluso Penale Militare)</option>
+            <option value="lavoro">👥 Diritto del Lavoro</option>
+            <option value="fiscale">📊 Assistenza Fiscale e Tributaria</option>
+            <option value="patronato">🏛️ Servizi di Patronato</option>
+            <option value="amministrativo">🏛️ Diritto Amministrativo e TAR</option>
+            <option value="altro">❓ Altro (specificare nella descrizione)</option>
+          </select>
+        </div>
+        
+        <div>
+          <label class="block body-text font-semibold mb-3">Urgenza del Caso</label>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <label class="flex items-center space-x-3 p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-aurora transition-colors">
+              <input type="radio" name="urgenza" value="bassa" class="text-aurora">
+              <span class="body-text">🟢 Standard</span>
+            </label>
+            <label class="flex items-center space-x-3 p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-aurora transition-colors">
+              <input type="radio" name="urgenza" value="media" class="text-aurora">
+              <span class="body-text">🟡 Prioritaria</span>
+            </label>
+            <label class="flex items-center space-x-3 p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-aurora transition-colors">
+              <input type="radio" name="urgenza" value="alta" class="text-aurora">
+              <span class="body-text">🔴 Urgente</span>
+            </label>
+          </div>
+        </div>
+        
+        <div>
+          <label class="block body-text font-semibold mb-3">Descrizione del Caso *</label>
+          <textarea name="descrizione" rows="6" placeholder="Descrivi dettagliatamente la tua situazione, includendo:&#10;• Cronologia degli eventi&#10;• Documentazione disponibile&#10;• Obiettivi da raggiungere&#10;• Eventuali scadenze&#10;&#10;Più dettagli fornisci, più precisa sarà la consulenza..." required class="form-input w-full resize-vertical" aria-required="true"></textarea>
+          <p class="caption-text mt-2 text-gray-600">
+            💡 Suggerimento: includi date, nomi, numeri di protocollo e qualsiasi altro dettaglio rilevante
+          </p>
+        </div>
+        
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <div class="flex items-start space-x-3">
+            <span class="text-blue-500 text-xl">ℹ️</span>
+            <div>
+              <h4 class="font-semibold text-blue-800 mb-2">Informazioni sul Trattamento</h4>
+              <p class="caption-text text-blue-700">
+                I tuoi dati saranno trattati in conformità al GDPR per fornire assistenza legale specializzata. 
+                Riceverai risposta entro 24-72 ore lavorative.
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row gap-4">
+          <button type="button" id="cancelForm" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-4 rounded-xl transition-colors border border-gray-300">
+            Annulla
+          </button>
+          <button type="submit" class="flex-1 aurora-button text-lg py-4">
+            <span class="relative z-10">📨 Invia Richiesta</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    /* ===== CONFIGURATION ===== */
+    const APP_CONFIG = {
+      supabaseUrl: 'https://lycrgzptkdkksukcwrld.supabase.co',
+      supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5Y3JnenB0a2Rra3N1a2N3cmxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3ODQyMzAsImV4cCI6MjA2ODM2MDIzMH0.ZJGOXAMC3hKKrnwXHKEa2_Eh7ZpOKeLYvYlYneBiEfk'
+    };
+
+    /* ===== UTILITY FUNCTIONS ===== */
+    const showLoading = () => {
+      document.getElementById('loading').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    };
+    
+    const hideLoading = () => {
+      document.getElementById('loading').classList.add('hidden');
+      document.body.style.overflow = '';
+    };
+    
+    const showNotification = (message, type = 'info', duration = 5000) => {
+      const notification = document.createElement('div');
+      const colors = {
+        'success': 'bg-green-500',
+        'error': 'bg-red-500',
+        'warning': 'bg-yellow-500',
+        'info': 'bg-blue-500'
+      };
+      
+      notification.className = `notification ${colors[type] || colors.info}`;
+      notification.innerHTML = `
+        <div class="flex items-center justify-between">
+          <span class="flex-1">${message}</span>
+          <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white/80 hover:text-white font-bold text-lg" aria-label="Chiudi notifica">
+            ✕
+          </button>
+        </div>
+      `;
+      
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), duration);
+    };
+
+    /* ===== TAB SYSTEM ===== */
+    const initTabSystem = () => {
+      const tabButtons = document.querySelectorAll('.tab-button');
+      const tabContents = document.querySelectorAll('.tab-content');
+      
+      tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const targetTab = button.dataset.tab;
+          
+          // Remove active class from all buttons
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          
+          // Add active class to clicked button
+          button.classList.add('active');
+          
+          // Hide all tab contents
+          tabContents.forEach(content => content.classList.add('hidden'));
+          
+          // Show target tab content
+          const targetContent = document.getElementById(`tab-${targetTab}`);
+          if (targetContent) {
+            targetContent.classList.remove('hidden');
+            // Smooth scroll to content
+            targetContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+    };
+
+    /* ===== MODAL SYSTEM ===== */
+    const modal = document.getElementById('assistanceModal');
+    const openBtn = document.getElementById('openFormBtn');
+    const closeBtn = document.getElementById('closeModal');
+    const cancelBtn = document.getElementById('cancelForm');
+    const form = document.getElementById('assistanceForm');
+
+    const openModal = () => {
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      // Focus first input after animation
+      setTimeout(() => {
+        const firstInput = form.querySelector('input');
+        if (firstInput) firstInput.focus();
+      }, 200);
+    };
+
+    const closeModal = () => {
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+      form.reset();
+    };
+
+    // Event listeners for modal
+    openBtn?.addEventListener('click', openModal);
+    closeBtn?.addEventListener('click', closeModal);
+    cancelBtn?.addEventListener('click', closeModal);
+
+    // Close modal on backdrop click
+    modal?.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+        closeModal();
+      }
+    });
+
+    /* ===== FORM HANDLING ===== */
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
+      
+      try {
+        // Show loading state
+        submitBtn.innerHTML = '<span class="relative z-10">⏳ Invio in corso...</span>';
+        submitBtn.disabled = true;
+        
+        // Get form data
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        
+        // Validate required fields
+        if (!data.nome || !data.email || !data.tipo || !data.descrizione) {
+          throw new Error('Tutti i campi obbligatori devono essere compilati');
         }
         
-        function updateNotificationBadge(count) {
-            const badge = document.getElementById('notificationBadge');
-            const live = document.getElementById('notificationLive');
-            if (!badge) return;
-            
-            if (count > 0) {
-                const txt = count > 99 ? '99+' : String(count);
-                badge.textContent = txt;
-                badge.classList.remove('hidden');
-                if (live) live.textContent = `Hai ${txt} notifiche non lette`;
-            } else {
-                badge.classList.add('hidden');
-                if (live) live.textContent = 'Tutte le notifiche sono lette';
-            }
+        // Simulate API call (replace with actual implementation)
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        showNotification('✅ Richiesta inviata con successo! Ti contatteremo entro 24-72 ore lavorative.', 'success', 8000);
+        closeModal();
+        
+        // Log for debugging (remove in production)
+        console.log('Form submitted:', data);
+        
+      } catch (error) {
+        console.error('Form submission error:', error);
+        showNotification(`❌ ${error.message || 'Errore nell\'invio della richiesta. Riprova tra qualche minuto.'}`, 'error');
+      } finally {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+      }
+    });
+
+    /* ===== SMART NAVIGATION ===== */
+    async function smartBackNavigation() {
+      showLoading();
+      
+      try {
+        const { createClient } = window.supabase;
+        const supabase = createClient(APP_CONFIG.supabaseUrl, APP_CONFIG.supabaseKey);
+        
+        // Get current user
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        
+        if (authError || !user) {
+          // No user logged in, redirect to login
+          window.location.href = '../login.html';
+          return;
         }
+        
+        // Get user profile and roles
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('ruoli, nome, cognome')
+          .eq('id', user.id)
+          .single();
+        
+        if (profileError) {
+          console.error('Profile error:', profileError);
+          // Fallback to standard home
+          window.location.href = '../app/home.html';
+          return;
+        }
+        
+        const roles = profile?.ruoli || ['USER'];
+        const userName = profile?.nome || user.email?.split('@')[0] || 'Utente';
+        
+        // Navigate based on role hierarchy
+        if (roles.includes('DIRIGENTE') || roles.includes('ADMIN') || roles.includes('SUPER_ADMIN')) {
+          window.location.href = '../app/home_dirigenti.html';
+        } else {
+          window.location.href = '../app/home.html';
+        }
+        
+        // Show welcome message
+        setTimeout(() => {
+          showNotification(`👋 Bentornato, ${userName}!`, 'success', 3000);
+        }, 500);
+        
+      } catch (error) {
+        console.error('Navigation error:', error);
+        showNotification('❌ Errore di connessione. Reindirizzamento alla home generale.', 'error');
+        
+        // Fallback navigation
+        setTimeout(() => {
+          window.location.href = '../index.html';
+        }, 2000);
+      } finally {
+        hideLoading();
+      }
+    }
 
-        // === EVENT LISTENERS ===
-        function setupEventListeners() {
-            // Desktop logout
-            document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
-            // Mobile logout
-            document.getElementById('logoutBtnMobile')?.addEventListener('click', handleLogout);
-            
-            // Notifications
-            document.getElementById('notificationBtn')?.addEventListener('click', toggleNotificationDropdown);
-            document.getElementById('markAllRead')?.addEventListener('click', markAllNotificationsAsRead);
-
-            // Close notifications dropdown when clicking outside
-            document.addEventListener('click', (e) => {
-                const btn = document.getElementById('notificationBtn');
-                const dd = document.getElementById('notificationDropdown');
-                if (!btn?.contains(e.target) && !dd?.contains(e.target)) {
-                    dd?.classList.remove('show');
-                }
+    /* ===== ENHANCED INTERACTIONS ===== */
+    const initEnhancedInteractions = () => {
+      // Enhanced service item interactions
+      document.querySelectorAll('.service-item').forEach(item => {
+        item.addEventListener('mouseenter', () => {
+          item.style.transform = 'translateY(-4px) scale(1.02)';
+        });
+        
+        item.addEventListener('mouseleave', () => {
+          item.style.transform = 'translateY(0) scale(1)';
+        });
+      });
+      
+      // Smooth scroll for internal links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
             });
+          }
+        });
+      });
+      
+      // Enhanced form validation
+      document.querySelectorAll('.form-input').forEach(input => {
+        input.addEventListener('blur', () => {
+          if (input.required && !input.value.trim()) {
+            input.style.borderColor = '#ef4444';
+            input.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.1)';
+          } else {
+            input.style.borderColor = '';
+            input.style.boxShadow = '';
+          }
+        });
+        
+        input.addEventListener('input', () => {
+          if (input.style.borderColor === 'rgb(239, 68, 68)') {
+            input.style.borderColor = '';
+            input.style.boxShadow = '';
+          }
+        });
+      });
+    };
 
-            // Auth state changes
-            supabaseClient.auth.onAuthStateChange((event) => {
-                if (event === 'SIGNED_OUT') window.location.href = 'index.html';
-            });
+    /* ===== ACCESSIBILITY ENHANCEMENTS ===== */
+    const initAccessibility = () => {
+      // Add keyboard navigation for tab system
+      document.querySelectorAll('.tab-button').forEach((tab, index, tabs) => {
+        tab.addEventListener('keydown', (e) => {
+          let newIndex;
+          
+          switch(e.key) {
+            case 'ArrowRight':
+              newIndex = (index + 1) % tabs.length;
+              break;
+            case 'ArrowLeft':
+              newIndex = index === 0 ? tabs.length - 1 : index - 1;
+              break;
+            case 'Home':
+              newIndex = 0;
+              break;
+            case 'End':
+              newIndex = tabs.length - 1;
+              break;
+            default:
+              return;
+          }
+          
+          e.preventDefault();
+          tabs[newIndex].click();
+          tabs[newIndex].focus();
+        });
+      });
+      
+      // Announce important actions to screen readers
+      const announcer = document.createElement('div');
+      announcer.setAttribute('aria-live', 'polite');
+      announcer.setAttribute('aria-atomic', 'true');
+      announcer.className = 'sr-only';
+      document.body.appendChild(announcer);
+      
+      window.announce = (message) => {
+        announcer.textContent = message;
+        setTimeout(() => announcer.textContent = '', 1000);
+      };
+    };
 
-            // Handle orientation changes on mobile
-            window.addEventListener('orientationchange', () => {
-                setTimeout(() => {
-                    // Close mobile menu on orientation change
-                    closeMobileMenu();
-                }, 100);
-            });
-
-            // Handle scroll to hide/show mobile menu
-            let lastScrollY = window.scrollY;
-            window.addEventListener('scroll', () => {
-                const currentScrollY = window.scrollY;
-                if (currentScrollY > lastScrollY + 50) {
-                    // Scrolling down - close mobile menu
-                    closeMobileMenu();
-                }
-                lastScrollY = currentScrollY;
-            });
-        }
-
-        // === AZIONI ===
-        async function handleLogout() {
-            try { 
-                await supabaseClient.auth.signOut(); 
-                window.location.href = 'index.html'; 
-            } catch { 
-                window.location.href = 'index.html'; 
+    /* ===== PERFORMANCE OPTIMIZATIONS ===== */
+    const initPerformanceOptimizations = () => {
+      // Lazy load images if any
+      if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const img = entry.target;
+              if (img.dataset.src) {
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+                observer.unobserve(img);
+              }
             }
-        }
+          });
+        });
         
-        function toggleNotificationDropdown() {
-            const el = document.getElementById('notificationDropdown');
-            const btn = document.getElementById('notificationBtn');
-            if (el) {
-                const show = !el.classList.contains('show');
-                el.classList.toggle('show');
-                if (btn) btn.setAttribute('aria-expanded', show ? 'true' : 'false');
-            }
-        }
-        
-        async function markAllNotificationsAsRead() {
-            console.info('ℹ️ Read-only: nessun update al DB.');
-            document.getElementById('notificationDropdown')?.classList.remove('show');
-        }
-        
-        async function markNotificationAsRead() { 
-            console.info('ℹ️ Read-only: nessun update al DB.'); 
-        }
+        document.querySelectorAll('img[data-src]').forEach(img => {
+          imageObserver.observe(img);
+        });
+      }
+      
+      // Debounce resize events
+      let resizeTimeout;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          // Handle responsive adjustments if needed
+          console.log('Window resized, adjusting layout...');
+        }, 250);
+      });
+    };
 
-        function viewRichiestaDetail(id) {
-            window.location.href = `richieste.html?id=${id}`;
-        }
+    /* ===== INITIALIZATION ===== */
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('🌌 BestBadge Services - Aurora Enhanced 2025');
+      
+      // Initialize all systems
+      initTabSystem();
+      initEnhancedInteractions();
+      initAccessibility();
+      initPerformanceOptimizations();
+      
+      // Welcome message
+      setTimeout(() => {
+        showNotification('🌟 Servizi BestBadge caricati! Esplora tutte le aree di assistenza disponibili.', 'success', 4000);
+      }, 1000);
+      
+      // Add smooth entrance animation to main content
+      const mainContent = document.querySelector('main');
+      if (mainContent) {
+        mainContent.style.opacity = '0';
+        mainContent.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          mainContent.style.transition = 'all 0.6s ease-out';
+          mainContent.style.opacity = '1';
+          mainContent.style.transform = 'translateY(0)';
+        }, 100);
+      }
+    });
 
-        // === NAVIGAZIONE ===
-        function goToRichieste(){ window.location.href = 'richieste.html'; }
-        function goToTessera(){ window.location.href = 'tessera.html'; }
-        function goToProfilo(){ window.location.href = 'profilo.html'; }
-        function goToStrumenti(){ window.location.href = 'strumenti.html'; }
-        function goToVirgilio(){ window.location.href = 'virgilio.html'; }
-        function goToDirigenti(){ window.location.href = 'dirigenti.html'; }
-        function goToConvenzioni(){ window.location.href = 'https://www.carabinierinsc.it/regioni-convenzioni/veneto'; }
-        function goToFileBox(){ window.location.href = 'filebox.html'; }
-        function goToAssistenza(){ window.location.href = 'servizi.html'; }
-        function viewAllNews(){ window.location.href = 'news.html'; }
+    /* ===== ERROR HANDLING ===== */
+    window.addEventListener('error', (e) => {
+      console.error('Global error:', e.error);
+      showNotification('❌ Si è verificato un errore. Ricarica la pagina se il problema persiste.', 'error');
+    });
 
-        // Apri notizia: priorità all'URL esterno, fallback interno
-        function readNews(newsId, encodedUrl) {
-            const decoded = encodedUrl ? decodeURIComponent(encodedUrl) : null;
-            const url = sanitizeUrl(decoded);
-            if (url) { 
-                safeOpen(url); 
-            } else { 
-                window.location.href = `news.html?id=${newsId}`; 
-            }
-        }
+    window.addEventListener('unhandledrejection', (e) => {
+      console.error('Unhandled promise rejection:', e.reason);
+      e.preventDefault();
+      showNotification('⚠️ Errore di connessione. Verifica la tua connessione internet.', 'warning');
+    });
 
-        // Apri convenzione: se esiste link_esterno usa quello, altrimenti fallback interno
-        function openConvenzione(convenzioneId, encodedUrl) {
-            const decoded = encodedUrl ? decodeURIComponent(encodedUrl) : null;
-            const url = sanitizeUrl(decoded);
-            if (url) { 
-                safeOpen(url); 
-            } else { 
-                window.location.href = `convenzioni.html#${convenzioneId}`; 
-            }
-        }
+    /* ===== OFFLINE HANDLING ===== */
+    window.addEventListener('online', () => {
+      showNotification('✅ Connessione ristabilita!', 'success', 3000);
+    });
 
-        // === UTILITY ===
-        function getRoleLabel(role){ 
-            return ({USER:'Utente', DIRIGENTE:'Dirigente', ADMIN:'Amministratore'})[role] || 'Utente'; 
-        }
-        
-        function getStatusLabel(status){ 
-            return ({ATTIVO:'Attivo', SOSPESO:'Sospeso', INATTIVO:'Inattivo'})[status] || 'Sconosciuto'; 
-        }
-        
-        function getInitials(fullName){ 
-            if(!fullName) return 'U'; 
-            return fullName.split(' ').map(n=>n.charAt(0)).join('').toUpperCase().substring(0,2); 
-        }
-        
-        function getRequestStatusColor(stato){ 
-            return ({
-                RICEVUTA:'bg-blue-600', 
-                IN_ESAME:'bg-yellow-600', 
-                IN_LAVORAZIONE:'bg-orange-600', 
-                NECESSARIE_INFO:'bg-purple-600', 
-                COMPLETATA:'bg-green-600', 
-                CHIUSA:'bg-gray-600', 
-                ANNULLATA:'bg-red-600'
-            })[stato] || 'bg-gray-500'; 
-        }
-        
-        function getStatusText(stato){ 
-            return ({
-                RICEVUTA:'Ricevuta', 
-                IN_ESAME:'In Esame', 
-                IN_LAVORAZIONE:'In Lavorazione', 
-                NECESSARIE_INFO:'Info Richieste', 
-                COMPLETATA:'Completata', 
-                CHIUSA:'Chiusa', 
-                ANNULLATA:'Annullata'
-            })[stato] || stato; 
-        }
-        
-        function getPriorityColor(p){ 
-            return ({BASSA:'priority-bassa', NORMALE:'priority-normale', ALTA:'priority-alta'})[p] || 'priority-normale'; 
-        }
-        
-        function formatDate(s){ 
-            if(!s) return '-'; 
-            const d = new Date(s); 
-            return d.toLocaleDateString('it-IT'); 
-        }
-        
-        function formatDateTime(s){ 
-            if(!s) return '-'; 
-            const d = new Date(s); 
-            return d.toLocaleDateString('it-IT') + ' ' + d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}); 
-        }
-
-        // Relative time "3 h fa", "ieri", etc.
-        const rtf = new Intl.RelativeTimeFormat('it', { numeric:'auto' });
-        
-        function formatRelativeTime(dateString){
-            if (!dateString) return '';
-            const now = new Date();
-            const then = new Date(dateString);
-            const diffMs = then - now;
-            const abs = Math.abs(diffMs);
-
-            const minutes = Math.round(diffMs / (60*1000));
-            const hours   = Math.round(diffMs / (60*60*1000));
-            const days    = Math.round(diffMs / (24*60*60*1000));
-
-            if (abs < 60*1000) return 'ora';
-            if (abs < 60*60*1000) return rtf.format(minutes, 'minute');
-            if (abs < 24*60*60*1000) return rtf.format(hours, 'hour');
-            if (abs < 7*24*60*60*1000) return rtf.format(days, 'day');
-            // oltre: data breve
-            return then.toLocaleDateString('it-IT', { day:'2-digit', month:'short', year:'numeric' });
-        }
-
-        // URL sanitizer: consenti solo http/https
-        function sanitizeUrl(input){
-            if (!input) return null;
-            try {
-                const u = String(input).trim();
-                const url = new URL(u);
-                if (url.protocol === 'http:' || url.protocol === 'https:') return url.href;
-                return null;
-            } catch { 
-                return null; 
-            }
-        }
-
-        function safeOpen(url){ 
-            window.open(url, '_blank', 'noopener,noreferrer'); 
-        }
-        
-        function escapeHtml(str){ 
-            return String(str||'').replace(/[&<>"']/g, s => ({
-                '&':'&amp;',
-                '<':'&lt;',
-                '>':'&gt;',
-                '"':'&quot;',
-                "'":'&#39;'
-            }[s])); 
-        }
-
-        console.log('✅ MyApp Mobile-First Dashboard v5.0 Ready - Fully Responsive & Touch-Optimized');
-    </script>
+    window.addEventListener('offline', () => {
+      showNotification('📡 Connessione persa. Alcune funzionalità potrebbero non essere disponibili.', 'warning', 5000);
+    });
+  </script>
 </body>
 </html>
