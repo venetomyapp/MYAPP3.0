@@ -53,8 +53,9 @@
     <div class="container mx-auto flex justify-between items-center">
       <h1 class="text-white text-2xl font-bold">Allega Documento</h1>
       <div class="flex gap-2">
-        <a href="home.html" class="btn-cyber py-2 px-4 rounded-full">← Dashboard</a>
-        <a href="index.html" class="btn-cyber py-2 px-4 rounded-full">← Le Mie Richieste</a>
+        <!-- RIMOSSO: Torna alla Dashboard -->
+        <!-- Sostituito "Le Mie Richieste" con "Chiudi" che non esce dall'app -->
+        <button id="btnClose" class="btn-cyber py-2 px-4 rounded-full">✕ Chiudi</button>
       </div>
     </div>
   </header>
@@ -84,7 +85,7 @@
     // Config (stesse credenziali del tuo progetto)
     const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
-    const JOTFORM_URL = 'https://eu.jotform.com/form/252241461838356'; // in bianco
+    const JOTFORM_URL = 'https://eu.jotform.com/form/252241461838356'; // modulo in bianco
 
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -101,6 +102,39 @@
 
       // Link "apri in nuova scheda"
       document.getElementById('openNewTab').href = JOTFORM_URL;
+
+      // Chiudi "intelligente"
+      document.getElementById('btnClose').addEventListener('click', smartClose);
+    }
+
+    // Prova a chiudere la scheda se aperta via script; altrimenti torna alla pagina di provenienza (richieste.html)
+    function smartClose(){
+      // 1) prova a chiudere la finestra (funziona solo se aperta via window.open)
+      window.close();
+
+      // 2) fallback: torna indietro se possibile
+      setTimeout(() => {
+        // se abbiamo un referrer valido, usiamolo
+        if (document.referrer) {
+          try {
+            const u = new URL(document.referrer);
+            // se veniamo da richieste.html, torna lì
+            if (u.pathname.endsWith('richieste.html') || u.pathname.endsWith('/richieste')) {
+              location.href = document.referrer;
+              return;
+            }
+          } catch(_) {}
+        }
+
+        // 3) se c'è history, fai back
+        if (history.length > 1) {
+          history.back();
+          return;
+        }
+
+        // 4) ultima spiaggia: vai a richieste.html
+        location.href = 'richieste.html';
+      }, 80);
     }
   </script>
 </body>
