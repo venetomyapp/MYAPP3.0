@@ -275,6 +275,7 @@
         // Configurazione
         const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
+        // **Aggiornato**: form corretto
         const JOTFORM_URL = 'https://form.jotform.com/252241461838356';
 
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -424,13 +425,22 @@
             });
         }
 
+        // **AGGIORNATO**: passiamo anche user_id oltre all'email
         function openNewRequestForm() {
             const modal = document.getElementById('jotformModal');
             const iframe = document.getElementById('jotformFrame');
             
-            // Pre-compila con email utente se possibile
-            const urlWithEmail = `${JOTFORM_URL}?email=${encodeURIComponent(currentUser.email)}`;
-            iframe.src = urlWithEmail;
+            if (!currentUser || !currentUser.id) {
+                alert('Devi essere autenticato per inviare una richiesta.');
+                return;
+            }
+
+            const params = new URLSearchParams({
+                user_id: currentUser.id,
+                email: currentUser.email || ''
+            });
+
+            iframe.src = `${JOTFORM_URL}?${params.toString()}`;
             
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
@@ -494,7 +504,7 @@
             `;
         }
 
-        // Auto-refresh ogni 30 secondi
+        // Auto-refresh ogni 30 secondi (puoi rimuoverlo quando abiliti realtime)
         setInterval(() => {
             loadRichieste();
         }, 30000);
