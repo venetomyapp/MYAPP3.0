@@ -49,8 +49,24 @@
     .btn-aurora:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 20px 40px rgba(233,69,96,.4);border-color:rgba(233,69,96,.8)}
     .btn-cyber{background:var(--gradient-cyber);border:2px solid rgba(0,212,255,.3);color:#fff;font-weight:700}
     .btn-cyber:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 20px 40px rgba(0,212,255,.4);border-color:rgba(0,212,255,.8)}
-    .input-field{background:rgba(255,255,255,.95);border:2px solid rgba(255,255,255,.3);border-radius:15px;padding:14px 16px;font-size:16px;font-weight:600;transition:all .3s ease;width:100%}
-    .input-field:focus{outline:none;border-color:#e94560;box-shadow:0 0 0 4px rgba(233,69,96,.2);transform:scale(1.01)}
+
+    /* Campi più visibili */
+    .input-field{
+      background:rgba(255,255,255,.98);
+      border:2px solid #94a3b8; /* slate-400: visibile */
+      border-radius:14px;
+      padding:14px 16px;
+      font-size:16px;
+      font-weight:600;
+      transition:all .2s ease;
+      width:100%
+    }
+    .input-field:focus{
+      outline:none;
+      border-color:#e94560;               /* aurora */
+      box-shadow:0 0 0 3px rgba(233,69,96,.18);
+    }
+
     .filter-btn{padding:12px 24px;border-radius:25px;font-size:14px;font-weight:700;white-space:nowrap;transition:all .3s;cursor:pointer;border:2px solid}
     .filter-btn:not(.active){background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.3)}
     .filter-btn:not(.active):hover{background:rgba(255,255,255,.2);transform:translateY(-2px)}
@@ -58,7 +74,8 @@
     .spinner{width:40px;height:40px;border-radius:50%;border:4px solid rgba(255,255,255,.35);border-top-color:#e94560;animation:spin 1s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
     .line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-    /* Modal mobile-first */
+
+    /* Modal mobile-first (banner più basso) */
     .modal{position:fixed;inset:0;display:none;z-index:50}
     .modal.show{display:flex}
   </style>
@@ -127,17 +144,18 @@
   <!-- Toast -->
   <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 hidden px-4 py-2 rounded-full glass-card shadow-lg text-sm"></div>
 
-  <!-- Modal: Nuova Richiesta -->
+  <!-- Modal: Nuova Richiesta (banner più basso) -->
   <div id="newRequestModal" class="modal items-end sm:items-center justify-center bg-black/50">
-    <div class="bg-white w-full sm:max-w-xl sm:rounded-2xl sm:overflow-hidden rounded-t-3xl">
+    <div class="bg-white w-full sm:max-w-xl sm:rounded-2xl sm:overflow-hidden rounded-t-3xl
+                max-h-[78vh] sm:max-h-[72vh] flex flex-col">
       <!-- Header modal -->
       <div class="p-4 sm:p-5 border-b flex items-center justify-between">
         <h3 class="text-base sm:text-lg font-bold">Nuova Richiesta</h3>
         <button class="text-gray-600 hover:text-gray-800" onclick="closeNewRequestModal()" aria-label="Chiudi">✕</button>
       </div>
 
-      <!-- Body modal -->
-      <form id="newRequestForm" class="p-4 sm:p-5 grid gap-3 sm:gap-4" onsubmit="return submitNewRequest(event)">
+      <!-- Body modal (scroll interno) -->
+      <form id="newRequestForm" class="p-4 sm:p-5 grid gap-3 sm:gap-4 overflow-y-auto" onsubmit="return submitNewRequest(event)">
         <!-- Titolo -->
         <div>
           <label class="block text-sm font-semibold mb-1">Titolo <span class="text-red-600">*</span></label>
@@ -148,13 +166,15 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-sm font-semibold mb-1">Categoria</label>
-            <input id="f_categoria" class="input-field" type="text" placeholder="GENERALE" list="cats"/>
-            <datalist id="cats">
-              <option value="GENERALE"></option>
-              <option value="AMMINISTRATIVA"></option>
-              <option value="TECNOLOGICA"></option>
-              <option value="URGENZE"></option>
-            </datalist>
+            <select id="f_categoria" class="input-field">
+              <option value="GENERALE" selected>Generale</option>
+              <option value="LICENZE">Licenze</option>
+              <option value="DISCIPLINA">Disciplina</option>
+              <option value="CONTRATTO">Contratto</option>
+              <option value="FISCALE">Fiscale</option>
+              <option value="RICHIESTA_DI_CONTATTO">Richiesta di Contatto</option>
+              <option value="ALTRO">Altro</option>
+            </select>
           </div>
           <div>
             <label class="block text-sm font-semibold mb-1">Priorità</label>
@@ -166,10 +186,11 @@
           </div>
         </div>
 
-        <!-- Descrizione -->
+        <!-- Descrizione (leggermente più compatta) -->
         <div>
           <label class="block text-sm font-semibold mb-1">Descrizione</label>
-          <textarea id="f_descrizione" class="input-field" rows="4" placeholder="Descrivi la tua richiesta..."></textarea>
+          <textarea id="f_descrizione" class="input-field" rows="3" maxlength="1000" placeholder="Descrivi brevemente la tua richiesta..."></textarea>
+          <div class="text-xs text-gray-500 mt-1">Suggerimento: sii sintetico, potrai aggiungere dettagli in seguito.</div>
         </div>
 
         <!-- Contatti (prefill) -->
@@ -191,15 +212,15 @@
         <!-- Allega documenti -->
         <div class="flex items-center justify-between gap-3 py-2">
           <label class="flex items-center gap-3">
-            <input id="f_allega" type="checkbox" class="h-5 w-5 rounded border-gray-300">
+            <input id="f_allega" type="checkbox" class="h-5 w-5 rounded border-gray-400">
             <span class="text-sm font-semibold">Allego documenti dopo l’invio</span>
           </label>
           <span class="text-xs text-gray-500">Se selezionato, si aprirà la pagina “allega-documento”.</span>
         </div>
 
         <!-- Azioni -->
-        <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2">
-          <button type="button" class="px-4 py-3 rounded-xl border font-semibold" onclick="closeNewRequestModal()">Annulla</button>
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-1">
+          <button type="button" class="px-4 py-3 rounded-xl border-2 border-gray-400 font-semibold" onclick="closeNewRequestModal()">Annulla</button>
           <button id="submitBtn" type="submit" class="btn-aurora px-4 py-3 rounded-xl inline-flex items-center justify-center gap-2">
             <span id="submitSpinner" class="hidden spinner border-gray-300 border-t-aurora-500 !w-5 !h-5"></span>
             <span>Invia Richiesta</span>
@@ -413,7 +434,7 @@
 
       try {
         const titolo = (document.getElementById('f_titolo').value || '').trim();
-        const categoria = (document.getElementById('f_categoria').value || 'GENERALE').trim().toUpperCase() || 'GENERALE';
+        const categoria = (document.getElementById('f_categoria').value || 'GENERALE').trim().toUpperCase();
         const priorita = (document.getElementById('f_priorita').value || 'NORMALE').toUpperCase();
         const descrizione = (document.getElementById('f_descrizione').value || '').trim();
         const nome = (document.getElementById('f_nome').value || '').trim();
@@ -433,7 +454,6 @@
           nome_richiedente: nome || (currentProfile?.full_name || null),
           email_richiedente: email || (currentUser.email || null),
           telefono_richiedente: telefono || (currentProfile?.phone || null),
-          // stato usa il default DB ('RICEVUTA')
           download_file: allega ? 'si' : 'no'
         };
 
@@ -445,16 +465,13 @@
 
         if(error) throw error;
 
-        // Reset / chiudi modale
         document.getElementById('newRequestForm').reset();
         prefillForm();
         closeNewRequestModal();
 
-        // Aggiorna lista localmente (o arriva via realtime)
         if(data){ allRichieste.unshift(data); applySearchAndRender(); }
 
         if(allega){
-          // porta l'utente alla pagina per caricare i documenti
           window.location.href = 'allega-documento.html';
         }else{
           showToast('Richiesta inviata ✅');
