@@ -42,7 +42,6 @@
     }
     body{ background:var(--gradient-aurora); background-size:400% 400%; animation:aurora 20s ease infinite; min-height:100vh; }
     @keyframes aurora{0%,100%{background-position:0% 50%}25%{background-position:100% 50%}50%{background-position:100% 100%}75%{background-position:0% 100%}}
-    @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
     .text-ultra-visible{color:#fff;text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1);font-weight:800}
     .glass-morphism{background:rgba(255,255,255,.08);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.18);box-shadow:0 8px 32px rgba(31,38,135,.37)}
     .glass-card{background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.3)}
@@ -50,37 +49,40 @@
     .btn-aurora:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 20px 40px rgba(233,69,96,.4);border-color:rgba(233,69,96,.8)}
     .btn-cyber{background:var(--gradient-cyber);border:2px solid rgba(0,212,255,.3);color:#fff;font-weight:700}
     .btn-cyber:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 20px 40px rgba(0,212,255,.4);border-color:rgba(0,212,255,.8)}
-    .input-field{background:rgba(255,255,255,.95);border:2px solid rgba(255,255,255,.3);border-radius:15px;padding:14px 18px;font-size:16px;font-weight:600;transition:all .3s ease}
-    .input-field:focus{outline:none;border-color:#e94560;box-shadow:0 0 0 4px rgba(233,69,96,.2);transform:scale(1.02)}
+    .input-field{background:rgba(255,255,255,.95);border:2px solid rgba(255,255,255,.3);border-radius:15px;padding:14px 16px;font-size:16px;font-weight:600;transition:all .3s ease;width:100%}
+    .input-field:focus{outline:none;border-color:#e94560;box-shadow:0 0 0 4px rgba(233,69,96,.2);transform:scale(1.01)}
     .filter-btn{padding:12px 24px;border-radius:25px;font-size:14px;font-weight:700;white-space:nowrap;transition:all .3s;cursor:pointer;border:2px solid}
     .filter-btn:not(.active){background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.3)}
     .filter-btn:not(.active):hover{background:rgba(255,255,255,.2);transform:translateY(-2px)}
     .filter-btn.active{background:rgba(255,255,255,.95);color:#1a1a2e;border-color:#e94560;box-shadow:0 8px 25px rgba(233,69,96,.3);transform:translateY(-2px)}
-    .spinner{width:48px;height:48px;border-radius:50%;border:4px solid rgba(255,255,255,.35);border-top-color:#e94560;animation:spin 1s linear infinite}
+    .spinner{width:40px;height:40px;border-radius:50%;border:4px solid rgba(255,255,255,.35);border-top-color:#e94560;animation:spin 1s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
     .line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    /* Modal mobile-first */
+    .modal{position:fixed;inset:0;display:none;z-index:50}
+    .modal.show{display:flex}
   </style>
 </head>
 
 <body class="flex flex-col min-h-screen font-sans">
   <!-- Header -->
-  <header class="py-4 px-6 sticky top-0 z-50 glass-morphism">
-    <div class="container mx-auto flex justify-between items-center">
-      <h1 class="text-white text-2xl font-bold">Le Mie Richieste</h1>
-      <a href="home.html" class="btn-cyber py-2 px-4 rounded-full">← Dashboard</a>
+  <header class="py-4 px-4 sm:px-6 sticky top-0 z-50 glass-morphism">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+      <h1 class="text-white text-xl sm:text-2xl font-bold">Le Mie Richieste</h1>
+      <a href="home.html" class="btn-cyber py-2 px-4 rounded-full text-sm">← Dashboard</a>
     </div>
   </header>
 
-  <main class="flex-grow container mx-auto px-4 py-8">
+  <main class="flex-grow max-w-6xl mx-auto px-4 py-6 sm:py-8">
     <!-- CTA: Nuova Richiesta -->
-    <section class="mb-8">
-      <div class="glass-morphism rounded-3xl p-6">
-        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
-            <h2 class="text-ultra-visible text-2xl font-black mb-2">Hai bisogno di aiuto?</h2>
-            <p class="text-white/80">Invia una nuova richiesta al nostro team</p>
+    <section class="mb-6 sm:mb-8">
+      <div class="glass-morphism rounded-3xl p-4 sm:p-6">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6">
+          <div class="text-center md:text-left">
+            <h2 class="text-ultra-visible text-xl sm:text-2xl font-black mb-2">Hai bisogno di aiuto?</h2>
+            <p class="text-white/80 text-sm sm:text-base">Invia una nuova richiesta al nostro team</p>
           </div>
-          <button id="newRequestBtn" class="btn-aurora py-3 px-6 rounded-xl inline-flex items-center gap-2">
+          <button id="newRequestBtn" class="btn-aurora py-3 px-5 sm:px-6 rounded-xl inline-flex items-center gap-2 w-full md:w-auto justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
             Nuova Richiesta
           </button>
@@ -89,44 +91,128 @@
     </section>
 
     <!-- Filtri e ricerca -->
-    <section class="mb-6">
-      <div class="glass-morphism rounded-2xl p-4">
-        <div class="flex flex-col lg:flex-row gap-4 items-center justify-between">
-          <div class="flex gap-2 flex-wrap">
+    <section class="mb-4 sm:mb-6">
+      <div class="glass-morphism rounded-2xl p-3 sm:p-4">
+        <div class="flex flex-col lg:flex-row gap-3 sm:gap-4 items-center justify-between">
+          <div class="flex gap-2 flex-wrap w-full lg:w-auto justify-center lg:justify-start">
             <button class="filter-btn active" data-stato="all">Tutte</button>
             <button class="filter-btn" data-stato="RICEVUTA">Ricevute</button>
             <button class="filter-btn" data-stato="IN_ESAME">In Esame</button>
             <button class="filter-btn" data-stato="IN_LAVORAZIONE">In Lavorazione</button>
             <button class="filter-btn" data-stato="COMPLETATA">Completate</button>
           </div>
-          <input id="searchInput" type="text" placeholder="Cerca per titolo..." class="input-field text-sm w-64" />
+          <input id="searchInput" type="text" placeholder="Cerca per titolo..." class="input-field text-sm w-full sm:w-72" />
         </div>
       </div>
     </section>
 
     <!-- Lista richieste -->
     <section>
-      <div id="richiesteContainer" class="space-y-4">
-        <div class="text-center py-8">
+      <div id="richiesteContainer" class="space-y-3 sm:space-y-4">
+        <div class="text-center py-10">
           <div class="spinner mx-auto mb-4"></div>
           <p class="text-white">Caricamento richieste...</p>
         </div>
       </div>
 
-      <div id="emptyState" class="hidden glass-morphism rounded-3xl p-12 text-center">
-        <div class="text-6xl mb-4">📋</div>
-        <h3 class="text-white text-xl font-bold mb-2">Nessuna richiesta trovata</h3>
+      <div id="emptyState" class="hidden glass-morphism rounded-3xl p-8 sm:p-12 text-center mt-4">
+        <div class="text-5xl sm:text-6xl mb-4">📋</div>
+        <h3 class="text-white text-lg sm:text-xl font-bold mb-2">Nessuna richiesta trovata</h3>
         <p class="text-white/70 mb-6">Non hai ancora inviato nessuna richiesta</p>
-        <button class="btn-aurora py-3 px-6 rounded-xl" onclick="openNewRequestForm()">Invia la tua prima richiesta</button>
+        <button class="btn-aurora py-3 px-6 rounded-xl" onclick="openNewRequestModal()">Invia la tua prima richiesta</button>
       </div>
     </section>
   </main>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 hidden px-4 py-2 rounded-full glass-card shadow-lg text-sm"></div>
+
+  <!-- Modal: Nuova Richiesta -->
+  <div id="newRequestModal" class="modal items-end sm:items-center justify-center bg-black/50">
+    <div class="bg-white w-full sm:max-w-xl sm:rounded-2xl sm:overflow-hidden rounded-t-3xl">
+      <!-- Header modal -->
+      <div class="p-4 sm:p-5 border-b flex items-center justify-between">
+        <h3 class="text-base sm:text-lg font-bold">Nuova Richiesta</h3>
+        <button class="text-gray-600 hover:text-gray-800" onclick="closeNewRequestModal()" aria-label="Chiudi">✕</button>
+      </div>
+
+      <!-- Body modal -->
+      <form id="newRequestForm" class="p-4 sm:p-5 grid gap-3 sm:gap-4" onsubmit="return submitNewRequest(event)">
+        <!-- Titolo -->
+        <div>
+          <label class="block text-sm font-semibold mb-1">Titolo <span class="text-red-600">*</span></label>
+          <input id="f_titolo" class="input-field" type="text" placeholder="Es. Richiesta informazioni" required maxlength="255" />
+        </div>
+
+        <!-- Categoria + Priorità -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-sm font-semibold mb-1">Categoria</label>
+            <input id="f_categoria" class="input-field" type="text" placeholder="GENERALE" list="cats"/>
+            <datalist id="cats">
+              <option value="GENERALE"></option>
+              <option value="AMMINISTRATIVA"></option>
+              <option value="TECNOLOGICA"></option>
+              <option value="URGENZE"></option>
+            </datalist>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Priorità</label>
+            <select id="f_priorita" class="input-field">
+              <option value="NORMALE" selected>NORMALE</option>
+              <option value="BASSA">BASSA</option>
+              <option value="ALTA">ALTA</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Descrizione -->
+        <div>
+          <label class="block text-sm font-semibold mb-1">Descrizione</label>
+          <textarea id="f_descrizione" class="input-field" rows="4" placeholder="Descrivi la tua richiesta..."></textarea>
+        </div>
+
+        <!-- Contatti (prefill) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-sm font-semibold mb-1">Nome e Cognome</label>
+            <input id="f_nome" class="input-field" type="text" placeholder="Il tuo nome"/>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Telefono</label>
+            <input id="f_phone" class="input-field" type="tel" placeholder="Es. 3331234567"/>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">Email</label>
+          <input id="f_email" class="input-field" type="email" placeholder="nome@dominio.it"/>
+        </div>
+
+        <!-- Allega documenti -->
+        <div class="flex items-center justify-between gap-3 py-2">
+          <label class="flex items-center gap-3">
+            <input id="f_allega" type="checkbox" class="h-5 w-5 rounded border-gray-300">
+            <span class="text-sm font-semibold">Allego documenti dopo l’invio</span>
+          </label>
+          <span class="text-xs text-gray-500">Se selezionato, si aprirà la pagina “allega-documento”.</span>
+        </div>
+
+        <!-- Azioni -->
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2">
+          <button type="button" class="px-4 py-3 rounded-xl border font-semibold" onclick="closeNewRequestModal()">Annulla</button>
+          <button id="submitBtn" type="submit" class="btn-aurora px-4 py-3 rounded-xl inline-flex items-center justify-center gap-2">
+            <span id="submitSpinner" class="hidden spinner border-gray-300 border-t-aurora-500 !w-5 !h-5"></span>
+            <span>Invia Richiesta</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <script>
     // ========= Config =========
     const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
-
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // ========= Stato =========
@@ -142,6 +228,7 @@
         await loadRichieste();
         setupEventListeners();
         enableRealtime();
+        prefillForm();
       } catch (e) {
         console.error('Init error', e);
         showError('Errore durante il caricamento');
@@ -153,7 +240,7 @@
       if (error || !user) { window.location.href = 'auth.html'; return; }
       currentUser = user;
 
-      // Carica profilo per eventuali usi futuri (nome/telefono)
+      // Carica profilo per eventuale prefill
       const { data: prof } = await supabase
         .from('user_profiles')
         .select('full_name, phone')
@@ -215,20 +302,20 @@
         const d1 = r.created_at ? new Date(r.created_at).toLocaleDateString('it-IT') : '-';
         const d2 = r.updated_at ? new Date(r.updated_at).toLocaleDateString('it-IT') : d1;
         return `
-          <div class="glass-morphism rounded-2xl p-6 hover:shadow-lg transition-all cursor-pointer" onclick="showRichiestaDetail('${r.id}')">
-            <div class="flex items-start justify-between mb-4">
+          <div class="glass-morphism rounded-2xl p-4 sm:p-6 hover:shadow-lg transition-all cursor-pointer" onclick="showRichiestaDetail('${r.id}')">
+            <div class="flex items-start justify-between mb-3 sm:mb-4 gap-3">
               <div class="flex-grow min-w-0">
-                <h3 class="text-white text-lg font-bold mb-2 truncate">${escapeHTML(r.titolo)}</h3>
-                <div class="flex flex-wrap items-center gap-4 text-sm text-white/70 mb-2">
+                <h3 class="text-white text-base sm:text-lg font-bold mb-1 sm:mb-2 truncate">${escapeHTML(r.titolo)}</h3>
+                <div class="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-white/80 mb-1">
                   <span>📂 ${escapeHTML(r.categoria || 'GENERALE')}</span>
                   <span>📅 ${d1}</span>
                   <span>🎯 ${escapeHTML(r.priorita || 'NORMALE')}</span>
                 </div>
               </div>
-              <span class="px-3 py-1 rounded-full text-xs font-bold text-white ${statusColor}">${statusText}</span>
+              <span class="px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold text-white ${statusColor}">${statusText}</span>
             </div>
-            <p class="text-white/80 text-sm mb-4 line-clamp-2">${escapeHTML(r.descrizione || 'Nessuna descrizione')}</p>
-            <div class="flex items-center justify-between text-sm text-white/60">
+            <p class="text-white/80 text-sm mb-3 sm:mb-4 line-clamp-2">${escapeHTML(r.descrizione || 'Nessuna descrizione')}</p>
+            <div class="flex items-center justify-between text-xs sm:text-sm text-white/70">
               <div>${r.dirigente_nome ? `👤 Assegnata a: ${escapeHTML(r.dirigente_nome)}` : '👤 Non ancora assegnata'}</div>
               <div>Aggiornata: ${d2}</div>
             </div>
@@ -264,8 +351,7 @@
 
     // ========= Interazioni =========
     function setupEventListeners() {
-      document.getElementById('newRequestBtn').addEventListener('click', openNewRequestForm);
-      // Filtri
+      document.getElementById('newRequestBtn').addEventListener('click', openNewRequestModal);
       document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -274,6 +360,9 @@
         });
       });
       document.getElementById('searchInput').addEventListener('input', debounce(applySearchAndRender, 150));
+      // Chiudi modale con ESC/backdrop
+      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeNewRequestModal(); });
+      document.getElementById('newRequestModal').addEventListener('click', (e)=>{ if(e.target.id==='newRequestModal') closeNewRequestModal(); });
     }
 
     function activeStato() {
@@ -295,31 +384,119 @@
       renderRichieste();
     }
 
-    // ========= Navigazione =========
-    function openNewRequestForm() {
-      // Apre la pagina con il Jotform "a banner"
-      window.location.href = 'allega-documento.html';
+    // ========= Modal helpers =========
+    function openNewRequestModal(){
+      const m = document.getElementById('newRequestModal');
+      m.classList.add('show');
+      document.body.style.overflow='hidden';
+    }
+    function closeNewRequestModal(){
+      const m = document.getElementById('newRequestModal');
+      m.classList.remove('show');
+      document.body.style.overflow='auto';
+    }
+    function prefillForm(){
+      if(!currentUser) return;
+      document.getElementById('f_email').value = currentUser.email || '';
+      if(currentProfile?.full_name) document.getElementById('f_nome').value = currentProfile.full_name;
+      if(currentProfile?.phone) document.getElementById('f_phone').value = currentProfile.phone;
+      document.getElementById('f_categoria').value = 'GENERALE';
+      document.getElementById('f_priorita').value = 'NORMALE';
     }
 
+    // ========= Submit =========
+    async function submitNewRequest(e){
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      const spinner = document.getElementById('submitSpinner');
+      btn.disabled = true; spinner.classList.remove('hidden');
+
+      try {
+        const titolo = (document.getElementById('f_titolo').value || '').trim();
+        const categoria = (document.getElementById('f_categoria').value || 'GENERALE').trim().toUpperCase() || 'GENERALE';
+        const priorita = (document.getElementById('f_priorita').value || 'NORMALE').toUpperCase();
+        const descrizione = (document.getElementById('f_descrizione').value || '').trim();
+        const nome = (document.getElementById('f_nome').value || '').trim();
+        const telefono = (document.getElementById('f_phone').value || '').trim();
+        const email = (document.getElementById('f_email').value || '').trim();
+        const allega = document.getElementById('f_allega').checked;
+
+        if(!titolo){ throw new Error('Inserisci un titolo'); }
+        if(!['BASSA','NORMALE','ALTA'].includes(priorita)){ throw new Error('Priorità non valida'); }
+
+        const payload = {
+          user_id: currentUser.id,
+          titolo,
+          categoria,
+          priorita,
+          descrizione,
+          nome_richiedente: nome || (currentProfile?.full_name || null),
+          email_richiedente: email || (currentUser.email || null),
+          telefono_richiedente: telefono || (currentProfile?.phone || null),
+          // stato usa il default DB ('RICEVUTA')
+          download_file: allega ? 'si' : 'no'
+        };
+
+        const { data, error } = await supabase
+          .from('richieste_personali')
+          .insert(payload)
+          .select()
+          .single();
+
+        if(error) throw error;
+
+        // Reset / chiudi modale
+        document.getElementById('newRequestForm').reset();
+        prefillForm();
+        closeNewRequestModal();
+
+        // Aggiorna lista localmente (o arriva via realtime)
+        if(data){ allRichieste.unshift(data); applySearchAndRender(); }
+
+        if(allega){
+          // porta l'utente alla pagina per caricare i documenti
+          window.location.href = 'allega-documento.html';
+        }else{
+          showToast('Richiesta inviata ✅');
+        }
+      } catch(err){
+        console.error(err);
+        showToast(err.message || 'Errore durante l’invio');
+      } finally {
+        btn.disabled = false; spinner.classList.add('hidden');
+      }
+      return false;
+    }
+
+    // ========= Navigazione card =========
     function showRichiestaDetail(id) {
       window.location.href = `richiesta-detail.html?id=${id}`;
     }
 
-    // ========= Error UI =========
+    // ========= Error & Toast UI =========
     function showError(message) {
       const container = document.getElementById('richiesteContainer');
       container.innerHTML = `
-        <div class="glass-morphism rounded-3xl p-12 text-center">
+        <div class="glass-morphism rounded-3xl p-8 sm:p-12 text-center">
           <div class="text-6xl mb-4">❌</div>
           <h3 class="text-white text-xl font-bold mb-2">Errore</h3>
           <p class="text-white/70 mb-6">${escapeHTML(message)}</p>
           <button onclick="location.reload()" class="btn-aurora py-3 px-6 rounded-xl">Ricarica Pagina</button>
         </div>`;
     }
+    function showToast(text){
+      const t = document.getElementById('toast');
+      t.textContent = text;
+      t.classList.remove('hidden');
+      setTimeout(()=>t.classList.add('hidden'), 2200);
+    }
 
     // ========= Utils =========
     function escapeHTML(s=''){return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]))}
     function debounce(fn, ms){ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,args), ms); } }
+
+    // Backward compat dei vecchi bottoni
+    function openNewRequestForm(){ openNewRequestModal(); }
   </script>
 </body>
 </html>
