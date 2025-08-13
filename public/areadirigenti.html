@@ -1,424 +1,362 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Pagina in Costruzione - MyApp</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- CONFIGURAZIONE COLORI TAILWIND -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { inter: ['Inter','sans-serif'] },
-                    colors: {
-                        primary: '#1a1a2e',
-                        secondary: '#16213e', 
-                        accent: '#0f3460',
-                        aurora: '#e94560',
-                        cyan: '#00d4ff',
-                        magenta: '#ff006e',
-                        gold: '#ffd700',
-                        teal: '#03dac6',
-                        dark: '#0a0a23',
-                        light: '#f8fafc',
-                        success: '#10b981',
-                        textDark: '#1C1C1E',
-                        backgroundLight: '#F4F4F8',
-                    },
-                    screens: {
-                        'xs': '320px',
-                        'sm': '640px',
-                        'md': '768px',
-                        'lg': '1024px',
-                        'xl': '1280px',
-                        '2xl': '1536px',
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <!-- STILI -->
-    <style>
-        :root {
-            --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
-            --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
-            --safe-area-inset-top: env(safe-area-inset-top, 0);
-            --safe-area-inset-bottom: env(safe-area-inset-bottom, 0);
-            --safe-area-inset-left: env(safe-area-inset-left, 0);
-            --safe-area-inset-right: env(safe-area-inset-right, 0);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gestione Richieste — Dirigente</title>
 
-        * {
-            font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-        }
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Supabase JS v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        body {
-            background: var(--gradient-aurora);
-            background-size: 400% 400%;
-            animation: aurora 20s ease infinite;
-            min-height: 100vh;
-            min-height: 100dvh;
-            overflow-x: hidden;
-            padding-left: var(--safe-area-inset-left);
-            padding-right: var(--safe-area-inset-right);
+  <!-- Theme config (coerente con richiesta.html) -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1a1a2e',
+            secondary: '#16213e',
+            accent: '#0f3460',
+            aurora: '#e94560',
+            cyan: '#00d4ff',
+            magenta: '#ff006e',
+            gold: '#ffd700',
+            teal: '#03dac6',
+            dark: '#0a0a23',
+            light: '#f8fafc',
+            textDark: '#1C1C1E',
+            backgroundLight: '#F4F4F8',
+          }
         }
+      }
+    }
+  </script>
 
-        @keyframes aurora {
-            0%, 100% { background-position: 0% 50%; }
-            25% { background-position: 100% 50%; }
-            50% { background-position: 100% 100%; }
-            75% { background-position: 0% 100%; }
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        @keyframes bounce {
-            0%, 20%, 53%, 80%, 100% { transform: translateY(0px); }
-            40%, 43% { transform: translateY(-10px); }
-            70% { transform: translateY(-5px); }
-            90% { transform: translateY(-2px); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            * { 
-                animation-duration: 0.01ms !important; 
-                animation-iteration-count: 1 !important; 
-                transition-duration: 0.01ms !important; 
-                scroll-behavior: auto !important; 
-            }
-        }
-
-        /* Typography */
-        .text-ultra-visible {
-            color: #fff;
-            text-shadow: 0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1);
-            font-weight: 800;
-        }
-
-        .hero-title {
-            font-size: clamp(2rem, 8vw, 4rem);
-            font-weight: 900;
-            line-height: 1.1;
-        }
-
-        /* Glass effects */
-        .glass-morphism {
-            background: rgba(255,255,255,.08);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,.20);
-            box-shadow: 0 8px 32px rgba(31,38,135,.25);
-        }
-
-        .glass-card {
-            background: rgba(255,255,255,.95);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(0,0,0,.06);
-            border-radius: 24px;
-            box-shadow: 0 14px 30px rgba(0,0,0,.12);
-        }
-
-        /* Buttons */
-        .btn-aurora {
-            background: var(--gradient-magic);
-            color: #fff;
-            border: 2px solid rgba(233,69,96,.3);
-            transition: all .25s cubic-bezier(.4,0,.2,1);
-            font-weight: 700;
-            touch-action: manipulation;
-            min-height: 44px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-        }
-
-        @media (hover: hover) and (pointer: fine) {
-            .btn-aurora:hover {
-                transform: translateY(-2px) scale(1.02);
-                box-shadow: 0 16px 32px rgba(233,69,96,.35);
-                border-color: rgba(233,69,96,.7);
-            }
-        }
-
-        /* Animations */
-        .animate-fade-in {
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        .animate-bounce {
-            animation: bounce 2s infinite;
-        }
-
-        .animate-pulse {
-            animation: pulse 2s infinite;
-        }
-
-        .animate-float {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        /* Construction elements */
-        .construction-icon {
-            font-size: clamp(4rem, 12vw, 8rem);
-            margin-bottom: 1rem;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(255,255,255,.2);
-            border-radius: 4px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--gradient-magic);
-            width: 0%;
-            animation: progress 3s ease-in-out infinite;
-            border-radius: 4px;
-        }
-
-        @keyframes progress {
-            0% { width: 0%; }
-            50% { width: 75%; }
-            100% { width: 0%; }
-        }
-
-        /* Header with safe area */
-        .header-safe {
-            padding-top: max(16px, var(--safe-area-inset-top));
-        }
-
-        /* Mobile optimizations */
-        .mobile-section {
-            padding: 1rem;
-        }
-
-        @media (min-width: 640px) {
-            .mobile-section {
-                padding: 1.5rem;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .mobile-section {
-                padding: 2rem;
-            }
-        }
-
-        /* Footer with safe area */
-        .footer-safe {
-            padding-bottom: max(16px, var(--safe-area-inset-bottom));
-        }
-    </style>
+  <style>
+    :root {
+      --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
+      --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
+      --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
+    }
+    body { background: var(--gradient-aurora); background-size: 400% 400%; animation: aurora 20s ease infinite; min-height: 100vh; }
+    @keyframes aurora { 0%,100%{background-position:0% 50%} 25%{background-position:100% 50%} 50%{background-position:100% 100%} 75%{background-position:0% 100%} }
+    @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+    .text-ultra-visible { color:#fff; text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1); font-weight:800; }
+    .glass-morphism { background: rgba(255,255,255,.08); backdrop-filter: blur(12px); border:1px solid rgba(255,255,255,.18); box-shadow:0 8px 32px rgba(31,38,135,.37); }
+    .glass-card { background: rgba(255,255,255,.95); backdrop-filter: blur(16px); border:1px solid rgba(255,255,255,.3); }
+    .btn-aurora { background: var(--gradient-magic); color:#fff; border:2px solid rgba(233,69,96,.3); transition: all .4s cubic-bezier(.4,0,.2,1); font-weight:700; }
+    .btn-aurora:hover { transform: translateY(-3px) scale(1.05); box-shadow:0 20px 40px rgba(233,69,96,.4); border-color: rgba(233,69,96,.8); }
+    .btn-cyber { background: var(--gradient-cyber); border:2px solid rgba(0,212,255,.3); color:#fff; font-weight:700; }
+    .btn-cyber:hover { transform: translateY(-3px) scale(1.05); box-shadow:0 20px 40px rgba(0,212,255,.4); border-color: rgba(0,212,255,.8); }
+    .input-field { background: rgba(255,255,255,.95); border:2px solid rgba(255,255,255,.3); border-radius:15px; padding:14px 18px; font-size:16px; font-weight:600; transition: all .3s ease; }
+    .input-field:focus { outline:none; border-color:#e94560; box-shadow:0 0 0 4px rgba(233,69,96,.2); transform: scale(1.02); }
+    .filter-btn { padding:10px 18px; border-radius:9999px; font-size:13px; font-weight:800; white-space:nowrap; transition: all .3s; cursor:pointer; border:2px solid; }
+    .filter-btn:not(.active) { background: rgba(255,255,255,.1); color:#fff; border-color: rgba(255,255,255,.3); }
+    .filter-btn:not(.active):hover { background: rgba(255,255,255,.2); transform: translateY(-2px); }
+    .filter-btn.active { background: rgba(255,255,255,.95); color:#1a1a2e; border-color:#e94560; box-shadow: 0 8px 25px rgba(233,69,96,.3); transform: translateY(-2px); }
+    .spinner { width:48px; height:48px; border-radius:50%; border:4px solid rgba(255,255,255,.35); border-top-color:#e94560; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .line-clamp-2 { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .action-chip { padding:8px 12px; border-radius:9999px; font-weight:800; font-size:12px; border:2px solid rgba(255,255,255,.3); }
+  </style>
 </head>
 
-<body class="flex flex-col min-h-screen">
+<body class="flex flex-col min-h-screen font-sans">
+  <!-- Header -->
+  <header class="py-4 px-6 sticky top-0 z-50 glass-morphism">
+    <div class="container mx-auto flex items-center justify-between">
+      <h1 class="text-white text-2xl font-bold">Gestione Richieste</h1>
+      <div class="flex items-center gap-2">
+        <a href="home.html" class="btn-cyber py-2 px-4 rounded-full">← Dashboard</a>
+      </div>
+    </div>
+  </header>
 
-    <!-- HEADER -->
-    <header class="glass-morphism sticky top-0 z-40 header-safe">
-        <div class="px-4 py-3">
-            <div class="flex items-center justify-between max-w-6xl mx-auto">
-                <!-- Logo + Title -->
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-primary via-secondary to-accent rounded-xl flex items-center justify-center">
-                        <span class="text-white font-black text-lg">📊</span>
-                    </div>
-                    <div>
-                        <span class="text-ultra-visible text-lg md:text-xl font-black">MyApp</span>
-                        <div class="text-white text-xs flex items-center gap-2">
-                            <span class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
-                            <span>In Costruzione</span>
-                        </div>
-                    </div>
-                </div>
+  <main class="flex-grow container mx-auto px-4 py-6">
+    <!-- Barra azioni e filtri -->
+    <section class="mb-4">
+      <div class="glass-morphism rounded-2xl p-4">
+        <div class="flex flex-col xl:flex-row gap-4 items-center xl:items-end justify-between">
+          <!-- Filtri stato -->
+          <div class="flex gap-2 flex-wrap">
+            <button class="filter-btn active" data-stato="all">Tutte</button>
+            <button class="filter-btn" data-stato="RICEVUTA">Ricevute</button>
+            <button class="filter-btn" data-stato="IN_ESAME">In Esame</button>
+            <button class="filter-btn" data-stato="IN_LAVORAZIONE">In Lavorazione</button>
+            <button class="filter-btn" data-stato="NECESSARIE_INFO">Info Richieste</button>
+            <button class="filter-btn" data-stato="COMPLETATA">Completate</button>
+            <button class="filter-btn" data-stato="CHIUSA">Chiuse</button>
+            <button class="filter-btn" data-stato="ANNULLATA">Annullate</button>
+          </div>
 
-                <!-- Back Button -->
-                <button onclick="goBack()" class="btn-aurora px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                    <span class="hidden sm:inline">Indietro</span>
-                </button>
-            </div>
+          <!-- Assegnazione + Priorità + Ricerca -->
+          <div class="flex flex-wrap gap-2 w-full xl:w-auto">
+            <select id="assignedFilter" class="input-field text-sm w-full sm:w-48">
+              <option value="all">Assegnazione: Tutte</option>
+              <option value="mine">Assegnate a me</option>
+              <option value="unassigned">Non assegnate</option>
+            </select>
+            <select id="priorityFilter" class="input-field text-sm w-full sm:w-40">
+              <option value="all">Priorità: Tutte</option>
+              <option value="ALTA">Alta</option>
+              <option value="NORMALE">Normale</option>
+              <option value="BASSA">Bassa</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="Cerca titolo, email..." class="input-field text-sm w-full sm:w-64" />
+          </div>
         </div>
-    </header>
+      </div>
+    </section>
 
-    <!-- MAIN CONTENT -->
-    <main class="flex-grow flex items-center justify-center mobile-section">
-        <div class="max-w-4xl mx-auto w-full">
-            
-            <!-- Construction Card -->
-            <div class="glass-card p-8 md:p-12 text-center animate-fade-in">
-                
-                <!-- Construction Icon -->
-                <div class="construction-icon animate-bounce mb-6">
-                    🚧
-                </div>
-                
-                <!-- Title -->
-                <h1 class="hero-title text-textDark mb-6">
-                    Pagina in Costruzione
-                </h1>
-                
-                <!-- Description -->
-                <div class="space-y-4 mb-8">
-                    <p class="text-gray-600 text-lg md:text-xl">
-                        Stiamo lavorando duramente per portarti questa nuova funzionalità.
-                    </p>
-                    <p class="text-gray-500 text-base">
-                        La pagina sarà disponibile a breve con tutte le funzionalità che stai cercando.
-                    </p>
-                </div>
-
-                <!-- Progress Bar -->
-                <div class="mb-8">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-gray-600 text-sm font-semibold">Progresso</span>
-                        <span class="text-gray-500 text-sm">In lavorazione...</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill"></div>
-                    </div>
-                </div>
-
-                <!-- Features Coming Soon -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                    <div class="p-4 bg-gray-50 rounded-xl animate-float" style="animation-delay: 0s;">
-                        <div class="text-2xl mb-2">⚡</div>
-                        <h3 class="font-bold text-gray-800 mb-1">Veloce</h3>
-                        <p class="text-gray-600 text-sm">Prestazioni ottimizzate</p>
-                    </div>
-                    <div class="p-4 bg-gray-50 rounded-xl animate-float" style="animation-delay: 0.5s;">
-                        <div class="text-2xl mb-2">📱</div>
-                        <h3 class="font-bold text-gray-800 mb-1">Responsive</h3>
-                        <p class="text-gray-600 text-sm">Perfetto su ogni dispositivo</p>
-                    </div>
-                    <div class="p-4 bg-gray-50 rounded-xl animate-float" style="animation-delay: 1s;">
-                        <div class="text-2xl mb-2">🎨</div>
-                        <h3 class="font-bold text-gray-800 mb-1">Moderno</h3>
-                        <p class="text-gray-600 text-sm">Design all'avanguardia</p>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <button onclick="goBack()" class="btn-aurora px-6 py-3 rounded-xl font-bold flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                        </svg>
-                        Torna alla Dashboard
-                    </button>
-                    
-                    <button onclick="location.reload()" class="text-gray-600 hover:text-gray-800 font-semibold flex items-center gap-2 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                        </svg>
-                        Ricarica Pagina
-                    </button>
-                </div>
-
-            </div>
-
+    <!-- Lista richieste -->
+    <section>
+      <div id="listContainer" class="space-y-4">
+        <div class="text-center py-8">
+          <div class="spinner mx-auto mb-4"></div>
+          <p class="text-white">Caricamento richieste...</p>
         </div>
-    </main>
+      </div>
 
-    <!-- FOOTER -->
-    <footer class="glass-morphism footer-safe">
-        <div class="px-4 py-6">
-            <div class="text-center text-white max-w-6xl mx-auto">
-                <div class="mb-3">
-                    <span class="font-bold text-lg">MyApp</span>
-                    <span class="text-white/70 text-sm ml-2">Sempre in evoluzione</span>
-                </div>
-                <div class="flex justify-center items-center space-x-4 text-xs opacity-80 mb-4 flex-wrap">
-                    <span>© 2025 MyApp</span>
-                    <span class="hidden sm:inline">•</span>
-                    <span>Pagina Temporanea</span>
-                    <span class="hidden sm:inline">•</span>
-                    <span>Torna Presto</span>
-                </div>
-                <div class="flex justify-center space-x-2">
-                    <div class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
-                    <div class="w-2 h-2 bg-orange-500 rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
-                    <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse" style="animation-delay: 1s;"></div>
-                </div>
+      <div id="emptyState" class="hidden glass-morphism rounded-3xl p-12 text-center mt-6">
+        <div class="text-6xl mb-4">📋</div>
+        <h3 class="text-white text-xl font-bold mb-2">Nessuna richiesta trovata</h3>
+        <p class="text-white/70">Prova a cambiare i filtri o la ricerca.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal messaggio -->
+  <div id="msgModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
+    <div class="glass-card rounded-2xl w-full max-w-xl">
+      <div class="p-4 border-b flex items-center justify-between">
+        <h3 class="font-bold text-lg">Invia comunicazione</h3>
+        <button class="text-gray-600 hover:text-gray-800" onclick="closeMsgModal()">✕</button>
+      </div>
+      <div class="p-4">
+        <textarea id="msgText" class="w-full input-field" rows="5" placeholder="Scrivi un messaggio per il richiedente..."></textarea>
+      </div>
+      <div class="p-4 border-t flex justify-end gap-2">
+        <button class="px-4 py-2 rounded-xl" onclick="closeMsgModal()">Annulla</button>
+        <button class="btn-aurora px-4 py-2 rounded-xl" onclick="confirmSendMsg()">Invia</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 hidden px-4 py-2 rounded-full glass-card shadow-lg"></div>
+
+  <script>
+    // Configurazione Supabase (stessa del tuo progetto)
+    const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentUser = null;
+    let allRows = [];
+    let filtered = [];
+    let pendingMsgRequestId = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        await checkAuthAndRole();
+        await loadRows();
+        enableRealtime();
+        setupUI();
+      } catch (e) {
+        console.error(e);
+        showToast('Errore di inizializzazione');
+      }
+    });
+
+    async function checkAuthAndRole() {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (error || !user) return location.href = 'auth.html';
+      currentUser = user;
+      // (Opzionale) verifica ruolo su user_profiles
+      const { data: prof } = await supabase.from('user_profiles').select('role, full_name').eq('user_id', user.id).maybeSingle();
+      if (prof && !['DIRIGENTE','ADMIN'].includes(prof.role)) {
+        // fallback: consenti comunque se vuoi testare
+        console.warn('Utente senza ruolo dirigente/admin — accesso consentito solo per test');
+      }
+      currentUser.displayName = (prof?.full_name) || user.email || 'Dirigente';
+    }
+
+    async function loadRows() {
+      const { data, error } = await supabase
+        .from('richieste_personali')
+        .select('id,titolo,descrizione,categoria,priorita,stato,dirigente_assegnato_id,dirigente_nome,created_at,updated_at,user_id,email_richiedente')
+        .order('created_at', { ascending: false })
+        .limit(200);
+      if (error) throw error;
+      allRows = data || [];
+      filtered = [...allRows];
+      render();
+    }
+
+    function enableRealtime() {
+      supabase.channel('dirigente-gestione')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'richieste_personali' }, (payload) => {
+          const row = payload.new || payload.old;
+          if (!row) return;
+          if (payload.eventType === 'INSERT') allRows.unshift(payload.new);
+          if (payload.eventType === 'UPDATE') {
+            const i = allRows.findIndex(x => x.id === row.id);
+            if (i >= 0) allRows[i] = payload.new;
+          }
+          if (payload.eventType === 'DELETE') {
+            allRows = allRows.filter(x => x.id !== row.id);
+          }
+          applyFilters();
+        })
+        .subscribe();
+    }
+
+    function setupUI() {
+      // Stato pills
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          applyFilters();
+        })
+      });
+      // Assigned / Priority / Search
+      document.getElementById('assignedFilter').addEventListener('change', applyFilters);
+      document.getElementById('priorityFilter').addEventListener('change', applyFilters);
+      let t; document.getElementById('searchInput').addEventListener('input', (e) => { clearTimeout(t); t = setTimeout(applyFilters, 180); });
+    }
+
+    function activeStato() {
+      const a = document.querySelector('.filter-btn.active');
+      return a ? a.dataset.stato : 'all';
+    }
+
+    function applyFilters() {
+      const stato = activeStato();
+      const assigned = document.getElementById('assignedFilter').value;
+      const prio = document.getElementById('priorityFilter').value;
+      const q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+
+      filtered = allRows.filter(r => {
+        const okStato = (stato === 'all') ? true : r.stato === stato;
+        const okAssigned = assigned === 'all'
+          ? true
+          : (assigned === 'mine' ? r.dirigente_assegnato_id === currentUser.id : !r.dirigente_assegnato_id);
+        const okPrio = (prio === 'all') ? true : r.priorita === prio;
+        const blob = `${r.titolo||''} ${r.descrizione||''} ${r.categoria||''} ${r.email_richiedente||''}`.toLowerCase();
+        const okQ = q ? blob.includes(q) : true;
+        return okStato && okAssigned && okPrio && okQ;
+      });
+      render();
+    }
+
+    function render() {
+      const c = document.getElementById('listContainer');
+      const empty = document.getElementById('emptyState');
+      if (!filtered.length) { c.innerHTML = ''; empty.classList.remove('hidden'); return; }
+      empty.classList.add('hidden');
+      c.innerHTML = filtered.map(cardHTML).join('');
+    }
+
+    const esc = (s='') => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+
+    function cardHTML(r) {
+      const created = new Date(r.created_at).toLocaleDateString('it-IT');
+      const updated = new Date(r.updated_at).toLocaleDateString('it-IT');
+      const statusColor = getStatusColor(r.stato);
+      const statusText = getStatusText(r.stato);
+      const assigned = r.dirigente_nome ? `👤 ${esc(r.dirigente_nome)}` : '👤 Non assegnata';
+      return `
+        <div class="glass-morphism rounded-2xl p-6 hover:shadow-lg transition-all">
+          <div class="flex items-start justify-between gap-3 mb-3">
+            <div class="min-w-0">
+              <h3 class="text-white text-lg font-bold mb-1 truncate">${esc(r.titolo)}</h3>
+              <div class="flex flex-wrap items-center gap-3 text-sm text-white/80">
+                <span>📂 ${esc(r.categoria || 'GENERALE')}</span>
+                <span>📅 ${created}</span>
+                <span>🎯 ${esc(r.priorita || 'NORMALE')}</span>
+                ${r.email_richiedente ? `<span>✉️ ${esc(r.email_richiedente)}</span>` : ''}
+              </div>
             </div>
-        </div>
-    </footer>
+            <span class="px-3 py-1 rounded-full text-xs font-bold text-white ${statusColor}">${statusText}</span>
+          </div>
+          <p class="text-white/80 text-sm mb-4 line-clamp-2">${esc(r.descrizione || '—')}</p>
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm text-white/80">
+            <div>${assigned}</div>
+            <div class="flex flex-wrap gap-2">
+              <button class="action-chip hover:bg-white/10" onclick="assignToMe('${r.id}')">Assegnami</button>
+              <button class="action-chip hover:bg-white/10" onclick="changeStatus('${r.id}','IN_ESAME')">In Esame</button>
+              <button class="action-chip hover:bg-white/10" onclick="changeStatus('${r.id}','IN_LAVORAZIONE')">In Lavorazione</button>
+              <button class="action-chip hover:bg-white/10" onclick="changeStatus('${r.id}','NECESSARIE_INFO')">Richiedi Info</button>
+              <button class="action-chip hover:bg-white/10" onclick="changeStatus('${r.id}','COMPLETATA')">Completa</button>
+              <button class="action-chip hover:bg-white/10" onclick="openMsgModal('${r.id}')">Comunica</button>
+            </div>
+          </div>
+          <div class="mt-3 text-xs text-white/60">Aggiornata: ${updated}</div>
+        </div>`;
+    }
 
-    <!-- JAVASCRIPT -->
-    <script>
-        // Navigation functions
-        function goBack() {
-            if (window.history.length > 1) {
-                window.history.back();
-            } else {
-                // Fallback to dashboard
-                window.location.href = 'dashboard.html';
-            }
-        }
+    function getStatusColor(stato) {
+      const m = {
+        'RICEVUTA': 'bg-blue-500',
+        'IN_ESAME': 'bg-yellow-500',
+        'IN_LAVORAZIONE': 'bg-orange-500',
+        'NECESSARIE_INFO': 'bg-purple-500',
+        'COMPLETATA': 'bg-green-500',
+        'CHIUSA': 'bg-gray-500',
+        'ANNULLATA': 'bg-red-500'
+      }; return m[stato] || 'bg-gray-500';
+    }
+    function getStatusText(stato) {
+      const t = {
+        'RICEVUTA': 'Ricevuta',
+        'IN_ESAME': 'In Esame',
+        'IN_LAVORAZIONE': 'In Lavorazione',
+        'NECESSARIE_INFO': 'Info Richieste',
+        'COMPLETATA': 'Completata',
+        'CHIUSA': 'Chiusa',
+        'ANNULLATA': 'Annullata'
+      }; return t[stato] || stato;
+    }
 
-        // Add some interactive effects
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add click effect to floating cards
-            const floatingCards = document.querySelectorAll('.animate-float');
-            floatingCards.forEach((card, index) => {
-                card.addEventListener('click', function() {
-                    card.style.transform = 'scale(0.95)';
-                    setTimeout(() => {
-                        card.style.transform = '';
-                    }, 150);
-                });
-            });
+    async function assignToMe(id) {
+      try {
+        const nome = currentUser.displayName || currentUser.email || 'Dirigente';
+        const { error } = await supabase.rpc('assign_dirigente', { p_id: id, p_dirigente_id: currentUser.id, p_dirigente_nome: nome });
+        if (error) throw error;
+        showToast('Assegnata a te');
+      } catch (e) { console.error(e); showToast('Errore assegnazione'); }
+    }
 
-            // Console message for developers
-            console.log('🚧 MyApp - Pagina in Costruzione');
-            console.log('💡 Questa pagina sarà presto disponibile con nuove funzionalità!');
-        });
+    async function changeStatus(id, stato) {
+      try {
+        const { error } = await supabase.rpc('change_request_status', { p_id: id, p_new_stato: stato, p_note: null });
+        if (error) throw error;
+        showToast(`Stato aggiornato: ${getStatusText(stato)}`);
+      } catch (e) { console.error(e); showToast('Errore aggiornamento stato'); }
+    }
 
-        // Handle mobile orientations
-        window.addEventListener('orientationchange', function() {
-            setTimeout(() => {
-                window.scrollTo(0, 0);
-            }, 100);
-        });
+    function openMsgModal(id) { pendingMsgRequestId = id; document.getElementById('msgText').value=''; document.getElementById('msgModal').classList.remove('hidden'); }
+    function closeMsgModal() { pendingMsgRequestId=null; document.getElementById('msgModal').classList.add('hidden'); }
+    async function confirmSendMsg() {
+      const msg = document.getElementById('msgText').value.trim();
+      if (!msg || !pendingMsgRequestId) return closeMsgModal();
+      try {
+        const { error } = await supabase.rpc('add_communication', { p_id: pendingMsgRequestId, p_msg: msg });
+        if (error) throw error;
+        showToast('Messaggio inviato');
+      } catch (e) { console.error(e); showToast('Errore invio messaggio'); }
+      closeMsgModal();
+    }
 
-        // Keyboard navigation
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                goBack();
-            }
-            if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) {
-                // Allow default refresh behavior
-                return true;
-            }
-        });
-
-        console.log('✅ Pagina in Costruzione - MyApp Theme Loaded');
-    </script>
-
+    function showToast(text) {
+      const t = document.getElementById('toast');
+      t.textContent = text;
+      t.classList.remove('hidden');
+      setTimeout(() => t.classList.add('hidden'), 1800);
+    }
+  </script>
 </body>
 </html>
