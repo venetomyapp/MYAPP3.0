@@ -546,25 +546,11 @@
         <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
             <h2 class="section-title mb-4 text-center">🏗️ Area Amministrativa dirigenziale</h2>
             <div class="admin-grid">
-                <!-- NUOVO: Gestione Community Hub -->
-                <a href="admin-academy.html" class="function-card border-2 border-yellow-400 bg-white group" aria-label="Gestione Community Hub">
-                    <!-- Badge NEWS -->
-                    <div class="absolute top-2 right-2 inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-extrabold bg-gradient-to-br from-yellow-300 to-amber-400 text-gray-900 border border-white/70 shadow">
-                        <span>⭐</span><span class="hidden sm:inline">NEWS</span>
-                    </div>
-                    <!-- Logo grande -->
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-400 to-rose-500 flex items-center justify-center text-3xl mb-2 shadow-inner">
-                        🎓
-                    </div>
-                    <h4>Gestione Community Hub</h4>
-                    <p>Live, corsi, canali & risorse</p>
-                </a>
-
                <a href="gestione_richieste_utenti.html" class="function-card">
-                    <div class="text-4xl mb-2">📋</div>
-                    <h4>Gestione Richieste Utenti</h4>
-                    <p>Gestisci le richieste degli utenti</p>
-               </a>
+    <div class="text-4xl mb-2">📋</div>
+    <h4>Gestione Richieste Utenti</h4>
+    <p>Gestisci le richieste degli utenti</p>
+</a>
                 <a href="gestione-convenzioni.html" class="function-card">
                     <div class="text-4xl mb-2">🏷️</div>
                     <h4>Gestione Convenzioni</h4>
@@ -575,7 +561,14 @@
                     <h4>Gestione Notizie</h4>
                     <p>Pubblica e modifica news</p>
                 </a>
-            </div>
+            
+                <a href="admin-academy.html" class="function-card">
+                    <span class="badge absolute top-2 right-2">⭐ NEWS</span>
+                    <div class="text-4xl mb-2">🎓</div>
+                    <h4>Gestione Community Hub</h4>
+                    <p>Gestisci Academy &amp; Community</p>
+                </a>
+</div>
         </section>
 
         <!-- ULTIME NOTIZIE -->
@@ -628,7 +621,7 @@
             } 
         };
 
-        const escapeHTML = (s) => String(s ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;');
+        const escapeHTML = (s) => String(s ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;");
 
         const setText = (id, v) => { 
             const el = document.getElementById(id); 
