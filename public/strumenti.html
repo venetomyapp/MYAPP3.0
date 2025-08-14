@@ -441,10 +441,10 @@
             outline: none !important;
         }
 
-        /* BACK BUTTON */
+        /* BACK BUTTON (SPOSTATO IN BASSO A SINISTRA) */
         .back-btn {
             position: fixed;
-            top: 20px;
+            bottom: calc(90px + env(safe-area-inset-bottom));
             left: 20px;
             background: rgba(255,255,255,.2);
             color: white;
@@ -456,7 +456,7 @@
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(10px);
-            z-index: 50;
+            z-index: 150;
             transition: all .3s ease;
             text-decoration: none;
         }
@@ -516,8 +516,8 @@
 
 <body>
     <!-- Back Button -->
-    <a href="#" onclick="navigateBack()" class="back-btn">
-        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <a href="#" onclick="navigateBack()" class="back-btn" aria-label="Torna indietro">
+        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
         </svg>
     </a>
@@ -1670,7 +1670,7 @@
             // Recupero form
             document.getElementById('recupero-form').addEventListener('submit', async function(e) {
                 e.preventDefault();
-                await saveRecupero();
+                await saveRecupero(); // <-- alimenta la tabella "recuperi"
             });
 
             // Live update del riepilogo nel modal configurazione
