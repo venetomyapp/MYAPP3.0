@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Gestione Academy — MyApp (Dirigenti)</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#1a1a2e" />
+  <meta name="background-color" content="#1a1a2e" />
+
+  <!-- Icons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/public/icons/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/public/icons/icon-192x192.png" />
+  <link rel="apple-touch-icon" href="/public/icons/apple-touch-icon.png" />
+
+  <!-- Fonts + Tailwind -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { inter: ['Inter', 'sans-serif'] },
+          colors: {
+            primary: '#1a1a2e',
+            secondary: '#16213e',
+            accent: '#0f3460',
+            aurora: '#e94560',
+            cyan: '#00d4ff',
+            success: '#10b981',
+            gold: '#ffd700',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
+      --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
+      --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
+    }
+    * { font-family:'Inter',sans-serif; -webkit-tap-highlight-color:transparent; }
+    body {
+      background: var(--gradient-aurora);
+      background-size: 400% 400%;
+      animation: aurora 15s ease infinite;
+      margin:0; padding:0; overflow-x:hidden; padding-bottom: 90px;
+    }
+    @keyframes aurora { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+    .text-ultra-visible { color:#fff; text-shadow:0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1); font-weight:900; }
+    .card { background: rgba(255,255,255,.95); border:1px solid rgba(255,255,255,.3); border-radius:18px; box-shadow:0 10px 30px rgba(0,0,0,.1); }
+    .btn-aurora { background: var(--gradient-magic); color:#fff; border:2px solid rgba(233,69,96,.3); border-radius:14px; padding:10px 14px; font-weight:800; }
+    .btn-cyber { background: var(--gradient-cyber); color:#fff; border:2px solid rgba(0,212,255,.3); border-radius:14px; padding:10px 14px; font-weight:800; }
+    .btn-ghost { background: rgba(255,255,255,.9); border:2px solid rgba(0,0,0,.06); border-radius:14px; padding:10px 14px; font-weight:800; }
+    .switch { position:relative; width:42px; height:26px; background:#e5e7eb; border-radius:999px; transition:.2s; }
+    .switch::after { content:''; position:absolute; top:3px; left:3px; width:20px; height:20px; background:#fff; border-radius:50%; transition:.2s; box-shadow:0 1px 3px rgba(0,0,0,.2); }
+    .switch.on { background:#10b981; }
+    .switch.on::after { transform: translateX(16px); }
+    .bottom-nav { position:fixed; left:0; right:0; bottom:0; height:80px; background:rgba(255,255,255,.95); backdrop-filter:blur(18px); border-top:1px solid rgba(255,255,255,.3); display:flex; justify-content:space-around; align-items:center; z-index:100; }
+    .nav-item { display:flex; flex-direction:column; align-items:center; gap:2px; font-weight:800; color:#555; text-decoration:none; padding:8px 10px; border-radius:12px; }
+    .nav-item.active { background: var(--gradient-magic); color:#fff; transform:translateY(-3px); box-shadow:0 10px 25px rgba(233,69,96,.3); }
+    .main { padding:20px 16px; min-height:calc(100vh - 80px); }
+    .section { display:none; animation:fade .25s ease-out; } .section.active { display:block; }
+    @keyframes fade { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)} }
+    /* Back button bottom-left (non copre l’header) */
+    .back-btn {
+      position: fixed; left: 20px; bottom: calc(90px + env(safe-area-inset-bottom));
+      width: 52px; height: 52px; border-radius: 50%;
+      background: rgba(255,255,255,.2); border:2px solid rgba(255,255,255,.3); color:#fff;
+      display:flex; align-items:center; justify-content:center; backdrop-filter: blur(8px); z-index:150;
+    }
+    .input { background: rgba(255,255,255,.95) !important; border:2px solid rgba(255,255,255,.5) !important; border-radius:12px !important; padding:10px 12px !important; width:100%; }
+    .input:focus { border-color:#e94560 !important; outline:none !important; box-shadow:0 0 20px rgba(233,69,96,.25); }
+    .label { font-size:12px; font-weight:800; color:#444; margin-bottom:6px; }
+    .row { display:grid; grid-template-columns:1fr; gap:10px; }
+    @media(min-width:640px){ .row-2 { grid-template-columns:1fr 1fr; } .row-3 { grid-template-columns:1fr 1fr 1fr; } }
+  </style>
+</head>
+<body>
+  <!-- Back (non invasivo) -->
+  <a href="#" onclick="navigateBack()" class="back-btn" aria-label="Torna indietro">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+    </svg>
+  </a>
+
+  <div class="main">
+    <!-- HEADER -->
+    <div class="text-center mb-8">
+      <div class="w-20 h-20 bg-gradient-to-br from-aurora to-cyan rounded-full mx-auto mb-6 flex items-center justify-center">
+        <span class="text-3xl">🛠️</span>
+      </div>
+      <h1 class="text-3xl text-ultra-visible mb-2">Gestione Academy</h1>
+      <p class="text-ultra-visible opacity-90">Videoconferenze, corsi, canali, risorse — Area Dirigenti</p>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="section active">
+      <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="card p-5 text-center">
+          <div class="text-2xl font-black text-aurora" id="stat-live">0</div>
+          <div class="text-sm font-bold text-gray-600">Live totali</div>
+        </div>
+        <div class="card p-5 text-center">
+          <div class="text-2xl font-black text-cyan-500" id="stat-resources">0</div>
+          <div class="text-sm font-bold text-gray-600">Risorse totali</div>
+        </div>
+        <div class="card p-5 text-center">
+          <div class="text-2xl font-black text-success" id="stat-published">0</div>
+          <div class="text-sm font-bold text-gray-600">Pubblicate</div>
+        </div>
+        <div class="card p-5 text-center">
+          <div class="text-2xl font-black text-gold" id="stat-drafts">0</div>
+          <div class="text-sm font-bold text-gray-600">Bozze</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-4">
+        <div class="card p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-black text-gray-800">📅 Prossime Live (7 giorni)</h3>
+            <button class="btn-aurora" onclick="openLiveModal()">+ Nuova Live</button>
+          </div>
+          <div id="upcoming-live" class="space-y-3"></div>
+        </div>
+
+        <div class="card p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-black text-gray-800">🧰 Ultime Risorse</h3>
+            <button class="btn-cyber" onclick="openResModal()">+ Nuova Risorsa</button>
+          </div>
+          <div id="recent-resources" class="space-y-3"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE SESSIONS -->
+    <section id="live" class="section">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+        <h2 class="text-2xl font-black text-ultra-visible">🔴 Videoconferenze</h2>
+        <div class="flex gap-2">
+          <input id="live-q" class="input w-56" type="search" placeholder="Cerca titolo/host/track…" />
+          <select id="live-platform" class="input w-40">
+            <option value="">Piattaforma (tutte)</option>
+            <option>Zoom</option><option>Teams</option><option>Meet</option><option>YouTube Live</option><option>Custom</option>
+          </select>
+          <select id="live-pub" class="input w-40">
+            <option value="">Stato</option>
+            <option value="true">Pubblicate</option>
+            <option value="false">Bozze</option>
+          </select>
+          <button class="btn-ghost" onclick="openLiveModal()">+ Nuova</button>
+        </div>
+      </div>
+      <div id="live-list" class="space-y-3"></div>
+    </section>
+
+    <!-- LEARNING RESOURCES -->
+    <section id="resources" class="section">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+        <h2 class="text-2xl font-black text-ultra-visible">📚 Risorse</h2>
+        <div class="flex gap-2">
+          <input id="res-q" class="input w-56" type="search" placeholder="Cerca titolo/provider…" />
+          <select id="res-type" class="input w-44">
+            <option value="">Tutti i tipi</option>
+            <option value="course">Corso</option>
+            <option value="youtube_channel">Canale YouTube</option>
+            <option value="webinar">Webinar (registrato)</option>
+            <option value="document">Documento</option>
+            <option value="podcast">Podcast</option>
+            <option value="link">Link</option>
+            <option value="other">Altro</option>
+          </select>
+          <select id="res-pub" class="input w-40">
+            <option value="">Stato</option>
+            <option value="true">Pubblicate</option>
+            <option value="false">Bozze</option>
+          </select>
+          <button class="btn-ghost" onclick="openResModal()">+ Nuova</button>
+        </div>
+      </div>
+      <div id="res-list" class="space-y-3"></div>
+    </section>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <a href="#" class="nav-item active" data-target="dashboard" onclick="show('dashboard')">🏠<span class="text-[10px]">Home</span></a>
+    <a href="#" class="nav-item" data-target="live" onclick="show('live')">🔴<span class="text-[10px]">Live</span></a>
+    <a href="#" class="nav-item" data-target="resources" onclick="show('resources')">📚<span class="text-[10px]">Risorse</span></a>
+  </nav>
+
+  <!-- MODAL: LIVE -->
+  <div id="live-modal" class="fixed inset-0 bg-black/70 hidden z-[200] p-5 overflow-y-auto">
+    <div class="mx-auto max-w-xl card p-5">
+      <div class="flex justify-between items-center mb-3">
+        <h3 id="live-modal-title" class="text-xl font-black text-gray-800">Nuova Live</h3>
+        <button class="text-2xl font-black text-gray-400" onclick="closeLiveModal()">&times;</button>
+      </div>
+
+      <form id="live-form" class="space-y-3">
+        <input type="hidden" id="live-id" />
+        <div>
+          <div class="label">Titolo</div>
+          <input id="live-title" class="input" required />
+        </div>
+        <div>
+          <div class="label">Descrizione</div>
+          <textarea id="live-desc" class="input" rows="3" placeholder="Dettagli/agenda…"></textarea>
+        </div>
+        <div class="row row-2">
+          <div>
+            <div class="label">Piattaforma</div>
+            <select id="live-platform-input" class="input" required>
+              <option>Zoom</option><option>Teams</option><option>Meet</option><option>YouTube Live</option><option>Custom</option>
+            </select>
+          </div>
+          <div>
+            <div class="label">Passcode (opz.)</div>
+            <input id="live-passcode" class="input" />
+          </div>
+        </div>
+        <div>
+          <div class="label">Link di partecipazione</div>
+          <input id="live-url" class="input" type="url" required />
+        </div>
+        <div class="row row-2">
+          <div>
+            <div class="label">Inizio</div>
+            <input id="live-start" class="input" type="datetime-local" required />
+          </div>
+          <div>
+            <div class="label">Fine</div>
+            <input id="live-end" class="input" type="datetime-local" required />
+          </div>
+        </div>
+        <div class="row row-2">
+          <div>
+            <div class="label">Host</div>
+            <input id="live-host" class="input" />
+          </div>
+          <div>
+            <div class="label">Track (categoria)</div>
+            <input id="live-track" class="input" />
+          </div>
+        </div>
+        <div>
+          <div class="label">Tags (separati da virgola)</div>
+          <input id="live-tags" class="input" placeholder="es: ai, compliance, dev" />
+        </div>
+        <div>
+          <div class="label">Thumbnail URL (opz.)</div>
+          <input id="live-thumb" class="input" type="url" />
+        </div>
+        <div class="flex items-center justify-between mt-2">
+          <div class="flex items-center gap-3">
+            <div class="label">Pubblicato</div>
+            <div id="live-published-switch" class="switch" role="switch" aria-checked="false" tabindex="0"></div>
+          </div>
+          <div class="flex gap-2">
+            <button type="button" class="btn-ghost" onclick="closeLiveModal()">Annulla</button>
+            <button type="submit" class="btn-aurora">Salva</button>
+          </div>
+        </div>
+        <div id="live-delete-box" class="mt-2 hidden">
+          <button type="button" class="w-full bg-red-500 text-white rounded-xl py-2 font-black" onclick="deleteLive()">Elimina</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: RESOURCE -->
+  <div id="res-modal" class="fixed inset-0 bg-black/70 hidden z-[200] p-5 overflow-y-auto">
+    <div class="mx-auto max-w-xl card p-5">
+      <div class="flex justify-between items-center mb-3">
+        <h3 id="res-modal-title" class="text-xl font-black text-gray-800">Nuova Risorsa</h3>
+        <button class="text-2xl font-black text-gray-400" onclick="closeResModal()">&times;</button>
+      </div>
+
+      <form id="res-form" class="space-y-3">
+        <input type="hidden" id="res-id" />
+        <div class="row row-2">
+          <div>
+            <div class="label">Tipo</div>
+            <select id="res-type-input" class="input" required>
+              <option value="course">Corso</option>
+              <option value="youtube_channel">Canale YouTube</option>
+              <option value="webinar">Webinar</option>
+              <option value="document">Documento</option>
+              <option value="podcast">Podcast</option>
+              <option value="link" selected>Link</option>
+              <option value="other">Altro</option>
+            </select>
+          </div>
+          <div>
+            <div class="label">Provider</div>
+            <input id="res-provider" class="input" placeholder="es: Coursera, YouTube…" />
+          </div>
+        </div>
+        <div>
+          <div class="label">Titolo</div>
+          <input id="res-title" class="input" required />
+        </div>
+        <div>
+          <div class="label">URL</div>
+          <input id="res-url" type="url" class="input" required />
+        </div>
+        <div>
+          <div class="label">Descrizione</div>
+          <textarea id="res-desc" class="input" rows="3"></textarea>
+        </div>
+        <div class="row row-3">
+          <div>
+            <div class="label">Livello (solo corsi)</div>
+            <select id="res-level" class="input">
+              <option value="">—</option>
+              <option value="base">Base</option>
+              <option value="intermedio">Intermedio</option>
+              <option value="avanzato">Avanzato</option>
+            </select>
+          </div>
+          <div>
+            <div class="label">Durata (min, opz.)</div>
+            <input id="res-duration" type="number" min="0" class="input" />
+          </div>
+          <div>
+            <div class="label">Lingua (opz.)</div>
+            <input id="res-lang" class="input" placeholder="IT/EN…" />
+          </div>
+        </div>
+        <div>
+          <div class="label">Tags (virgola)</div>
+          <input id="res-tags" class="input" placeholder="es: sicurezza, cloud" />
+        </div>
+        <div>
+          <div class="label">Thumbnail URL (opz.)</div>
+          <input id="res-thumb" class="input" type="url" />
+        </div>
+        <div class="flex items-center justify-between mt-2">
+          <div class="flex items-center gap-3">
+            <div class="label">Pubblicato</div>
+            <div id="res-published-switch" class="switch" role="switch" aria-checked="false" tabindex="0"></div>
+          </div>
+          <div class="flex gap-2">
+            <button type="button" class="btn-ghost" onclick="closeResModal()">Annulla</button>
+            <button type="submit" class="btn-aurora">Salva</button>
+          </div>
+        </div>
+        <div id="res-delete-box" class="mt-2 hidden">
+          <button type="button" class="w-full bg-red-500 text-white rounded-xl py-2 font-black" onclick="deleteRes()">Elimina</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ===== Supabase config =====
+    const SUPABASE_URL = "https://pvzdilkozpspsnepedqc.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
+
+    // ===== State =====
+    let user = null;
+    let isAdmin = false;
+    let live = [];
+    let resources = [];
+    let editingLive = null;
+    let editingRes = null;
+
+    // ===== Init =====
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          // se vuoi forzare il login:
+          window.location.href = '../login-minimal.html';
+          return;
+        }
+        user = session.user;
+
+        // verifica ruolo via RPC (richiede function is_admin() creata nello schema)
+        try {
+          const { data: rpc } = await supabase.rpc('is_admin');
+          isAdmin = !!rpc;
+        } catch(e) {
+          console.warn('RPC is_admin non disponibile; proseguo comunque (assumo admin)');
+          isAdmin = true;
+        }
+
+        if (!isAdmin) {
+          alert('Non autorizzato. Verrai reindirizzato.');
+          window.location.href = '../home.html';
+          return;
+        }
+
+        await loadAll();
+        renderDashboard();
+        renderLiveList();
+        renderResList();
+        attachFilters();
+        console.log('✅ Admin Academy pronto');
+      } catch (e) {
+        console.error(e);
+        toast('Errore di inizializzazione', 'error');
+      }
+    });
+
+    async function loadAll(){
+      await Promise.all([loadLive(), loadResources()]);
+    }
+
+    async function loadLive(){
+      const { data, error } = await supabase
+        .from('live_sessions')
+        .select('*')
+        .order('start_at', { ascending: true });
+      if (error) { console.error(error); toast('Errore caricamento live','error'); return; }
+      live = data || [];
+      renderDashboard();
+      renderUpcoming();
+    }
+
+    async function loadResources(){
+      const { data, error } = await supabase
+        .from('learning_resources')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) { console.error(error); toast('Errore caricamento risorse','error'); return; }
+      resources = data || [];
+      renderDashboard();
+      renderRecentResources();
+    }
+
+    // ===== Dashboard tiles =====
+    function renderDashboard(){
+      const liveCount = live.length;
+      const resCount = resources.length;
+      const published = live.filter(x=>x.is_published).length + resources.filter(x=>x.is_published).length;
+      const drafts = liveCount + resCount - published;
+      document.getElementById('stat-live').textContent = liveCount;
+      document.getElementById('stat-resources').textContent = resCount;
+      document.getElementById('stat-published').textContent = published;
+      document.getElementById('stat-drafts').textContent = drafts;
+    }
+
+    function renderUpcoming(){
+      const seven = Date.now() + 7*24*3600*1000;
+      const upcoming = live.filter(l => new Date(l.start_at).getTime() <= seven && new Date(l.end_at).getTime() >= Date.now()).slice(0,5);
+      document.getElementById('upcoming-live').innerHTML =
+        upcoming.map(rowLiveCompact).join('') || emptyState('Nessuna live nei prossimi 7 giorni');
+    }
+
+    function renderRecentResources(){
+      const recent = resources.slice(0,5);
+      document.getElementById('recent-resources').innerHTML =
+        recent.map(rowResCompact).join('') || emptyState('Nessuna risorsa ancora');
+    }
+
+    // ===== Filters =====
+    function attachFilters(){
+      ['live-q','live-platform','live-pub','res-q','res-type','res-pub'].forEach(id=>{
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', ()=> {
+          if (id.startsWith('live')) renderLiveList();
+          else renderResList();
+        });
+      });
+    }
+
+    // ===== Lists =====
+    function renderLiveList(){
+      const q = (document.getElementById('live-q').value||'').toLowerCase();
+      const p = document.getElementById('live-platform').value;
+      const pub = document.getElementById('live-pub').value;
+      const list = live.filter(l=>{
+        const mq = !q || (l.title||'').toLowerCase().includes(q) || (l.host||'').toLowerCase().includes(q) || (l.track||'').toLowerCase().includes(q);
+        const mp = !p || l.platform === p;
+        const mpub = !pub || String(l.is_published) === pub;
+        return mq && mp && mpub;
+      });
+      document.getElementById('live-list').innerHTML = list.map(rowLive).join('') || emptyState('Nessuna live trovata');
+    }
+
+    function renderResList(){
+      const q = (document.getElementById('res-q').value||'').toLowerCase();
+      const t = document.getElementById('res-type').value;
+      const pub = document.getElementById('res-pub').value;
+      const list = resources.filter(r=>{
+        const mq = !q || (r.title||'').toLowerCase().includes(q) || (r.provider||'').toLowerCase().includes(q);
+        const mt = !t || r.type === t;
+        const mpub = !pub || String(r.is_published) === pub;
+        return mq && mt && mpub;
+      });
+      document.getElementById('res-list').innerHTML = list.map(rowRes).join('') || emptyState('Nessuna risorsa trovata');
+    }
+
+    // ===== Rows =====
+    function rowLiveCompact(l){
+      return `
+        <div class="card p-4 flex items-center justify-between">
+          <div>
+            <div class="text-sm font-bold text-gray-500">${fmtDT(l.start_at)} • ${l.platform}</div>
+            <div class="text-lg font-black text-gray-800">${escapeHtml(l.title)}</div>
+            <div class="text-xs text-gray-600">${escapeHtml(l.host||'')} ${l.track?`• ${escapeHtml(l.track)}`:''}</div>
+          </div>
+          <div class="flex items-center gap-3">
+            ${pubBadge(l.is_published)}
+            <button class="btn-ghost" onclick="openLiveModal('${l.id}')">Modifica</button>
+          </div>
+        </div>`;
+    }
+    function rowResCompact(r){
+      return `
+        <div class="card p-4 flex items-center justify-between">
+          <div>
+            <div class="text-sm font-bold text-gray-500">${escapeHtml(r.provider||'')}</div>
+            <div class="text-lg font-black text-gray-800">${escapeHtml(r.title)}</div>
+            <div class="text-xs text-gray-600">${escapeHtml(r.type)}${r.level?` • ${escapeHtml(r.level)}`:''}</div>
+          </div>
+          <div class="flex items-center gap-3">
+            ${pubBadge(r.is_published)}
+            <button class="btn-ghost" onclick="openResModal('${r.id}')">Modifica</button>
+          </div>
+        </div>`;
+    }
+    function rowLive(l){
+      return `
+        <div class="card p-4">
+          <div class="flex justify-between gap-3">
+            <div>
+              <div class="text-sm font-bold text-gray-500">${fmtDT(l.start_at)} → ${fmtDT(l.end_at)} • ${l.platform}</div>
+              <div class="text-lg font-black text-gray-800">${escapeHtml(l.title)}</div>
+              <div class="text-xs text-gray-600">${escapeHtml(l.host||'')} ${l.track?`• ${escapeHtml(l.track)}`:''}</div>
+              ${l.passcode?`<div class="text-xs font-bold text-gray-700 mt-1">Passcode: ${escapeHtml(l.passcode)}</div>`:''}
+              <div class="text-xs mt-2">${(l.tags||[]).map(t=>`<span class="inline-block bg-gray-100 border rounded-full px-2 py-0.5 mr-1 mb-1">${escapeHtml(t)}</span>`).join('')}</div>
+              ${l.join_url?`<div class="text-xs mt-2"><a class="text-blue-600 underline" href="${l.join_url}" target="_blank" rel="noopener">Apri link</a></div>`:''}
+            </div>
+            <div class="flex flex-col gap-2 min-w-[140px]">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gray-600">Pubblicato</span>
+                <div class="switch ${l.is_published?'on':''}" role="switch" aria-checked="${l.is_published}" onclick="toggleLivePublish('${l.id}', ${!l.is_published})"></div>
+              </div>
+              <button class="btn-ghost" onclick="openLiveModal('${l.id}')">Modifica</button>
+              <button class="bg-red-500 text-white rounded-xl py-2 font-black" onclick="confirmDeleteLive('${l.id}')">Elimina</button>
+            </div>
+          </div>
+        </div>`;
+    }
+    function rowRes(r){
+      return `
+        <div class="card p-4">
+          <div class="flex justify-between gap-3">
+            <div>
+              <div class="text-sm font-bold text-gray-500">${escapeHtml(r.provider||'')} • ${escapeHtml(r.type)}</div>
+              <div class="text-lg font-black text-gray-800">${escapeHtml(r.title)}</div>
+              <div class="text-xs text-gray-600">${r.level?`Livello: ${escapeHtml(r.level)} • `:''}${r.duration_minutes?`${r.duration_minutes} min • `:''}${escapeHtml(r.language||'')}</div>
+              <p class="text-sm text-gray-700 mt-1">${escapeHtml(r.description||'')}</p>
+              <div class="text-xs mt-2">${(r.tags||[]).map(t=>`<span class="inline-block bg-gray-100 border rounded-full px-2 py-0.5 mr-1 mb-1">${escapeHtml(t)}</span>`).join('')}</div>
+              ${r.url?`<div class="text-xs mt-2"><a class="text-blue-600 underline" href="${r.url}" target="_blank" rel="noopener">Apri</a></div>`:''}
+            </div>
+            <div class="flex flex-col gap-2 min-w-[140px]">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gray-600">Pubblicato</span>
+                <div class="switch ${r.is_published?'on':''}" role="switch" aria-checked="${r.is_published}" onclick="toggleResPublish('${r.id}', ${!r.is_published})"></div>
+              </div>
+              <button class="btn-ghost" onclick="openResModal('${r.id}')">Modifica</button>
+              <button class="bg-red-500 text-white rounded-xl py-2 font-black" onclick="confirmDeleteRes('${r.id}')">Elimina</button>
+            </div>
+          </div>
+        </div>`;
+    }
+    function pubBadge(isPub){ return `<span class="inline-flex items-center gap-1 text-xs font-bold ${isPub?'text-green-700':'text-gray-600'}">${isPub?'✅ Pubblicata':'📝 Bozza'}</span>`; }
+
+    // ===== LIVE: modal + CRUD =====
+    function openLiveModal(id=null){
+      const modal = document.getElementById('live-modal');
+      document.getElementById('live-form').reset();
+      document.getElementById('live-delete-box').classList.add('hidden');
+      setSwitch('live-published-switch', false);
+
+      if (id){
+        const l = live.find(x=>x.id===id); if(!l) return;
+        editingLive = l;
+        document.getElementById('live-modal-title').textContent = 'Modifica Live';
+        document.getElementById('live-id').value = l.id;
+        document.getElementById('live-title').value = l.title || '';
+        document.getElementById('live-desc').value = l.description || '';
+        document.getElementById('live-platform-input').value = l.platform || 'Zoom';
+        document.getElementById('live-passcode').value = l.passcode || '';
+        document.getElementById('live-url').value = l.join_url || '';
+        document.getElementById('live-start').value = toLocalInput(l.start_at);
+        document.getElementById('live-end').value = toLocalInput(l.end_at);
+        document.getElementById('live-host').value = l.host || '';
+        document.getElementById('live-track').value = l.track || '';
+        document.getElementById('live-tags').value = (l.tags||[]).join(', ');
+        document.getElementById('live-thumb').value = l.thumbnail_url || '';
+        setSwitch('live-published-switch', !!l.is_published);
+        document.getElementById('live-delete-box').classList.remove('hidden');
+      } else {
+        editingLive = null;
+        document.getElementById('live-modal-title').textContent = 'Nuova Live';
+      }
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLiveModal(){
+      document.getElementById('live-modal').classList.add('hidden');
+      document.body.style.overflow = '';
+      editingLive = null;
+    }
+
+    document.getElementById('live-form').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const payload = {
+        title: val('live-title'),
+        description: val('live-desc'),
+        platform: val('live-platform-input') || 'Zoom',
+        passcode: val('live-passcode') || null,
+        join_url: val('live-url'),
+        start_at: toISO(val('live-start')),
+        end_at: toISO(val('live-end')),
+        host: val('live-host') || null,
+        track: val('live-track') || null,
+        tags: splitTags(val('live-tags')),
+        thumbnail_url: val('live-thumb') || null,
+        is_published: getSwitch('live-published-switch')
+      };
+
+      if (!payload.title || !payload.join_url || !payload.start_at || !payload.end_at) {
+        toast('Compila i campi obbligatori', 'error'); return;
+      }
+      if (new Date(payload.end_at) <= new Date(payload.start_at)) {
+        toast('Fine deve essere dopo Inizio', 'error'); return;
+      }
+
+      try {
+        if (editingLive){
+          const { error } = await supabase.from('live_sessions').update(payload).eq('id', editingLive.id);
+          if (error) throw error;
+          toast('Live aggiornata!', 'success');
+        } else {
+          payload.created_by = user.id;
+          const { error } = await supabase.from('live_sessions').insert(payload);
+          if (error) throw error;
+          toast('Live creata!', 'success');
+        }
+        closeLiveModal();
+        await loadLive();
+        renderLiveList();
+        renderUpcoming();
+        renderDashboard();
+      } catch (e) {
+        console.error(e); toast('Errore salvataggio live', 'error');
+      }
+    });
+
+    function confirmDeleteLive(id){
+      if (!confirm('Eliminare questa live?')) return;
+      deleteLive(id);
+    }
+    async function deleteLive(id=null){
+      const targetId = id || (editingLive && editingLive.id);
+      if (!targetId) return;
+      try {
+        const { error } = await supabase.from('live_sessions').delete().eq('id', targetId);
+        if (error) throw error;
+        toast('Live eliminata','success');
+        closeLiveModal();
+        await loadLive();
+        renderLiveList();
+        renderUpcoming();
+        renderDashboard();
+      } catch(e){ console.error(e); toast('Errore eliminazione live','error'); }
+    }
+
+    async function toggleLivePublish(id, value){
+      try {
+        const { error } = await supabase.from('live_sessions').update({ is_published: !!value }).eq('id', id);
+        if (error) throw error;
+        const item = live.find(x=>x.id===id); if (item) item.is_published = !!value;
+        renderLiveList(); renderUpcoming(); renderDashboard();
+      } catch(e){ console.error(e); toast('Errore aggiornamento stato','error'); }
+    }
+
+    // ===== RESOURCES: modal + CRUD =====
+    function openResModal(id=null){
+      const modal = document.getElementById('res-modal');
+      document.getElementById('res-form').reset();
+      document.getElementById('res-delete-box').classList.add('hidden');
+      setSwitch('res-published-switch', false);
+
+      if (id){
+        const r = resources.find(x=>x.id===id); if(!r) return;
+        editingRes = r;
+        document.getElementById('res-modal-title').textContent = 'Modifica Risorsa';
+        document.getElementById('res-id').value = r.id;
+        document.getElementById('res-type-input').value = r.type || 'link';
+        document.getElementById('res-provider').value = r.provider || '';
+        document.getElementById('res-title').value = r.title || '';
+        document.getElementById('res-url').value = r.url || '';
+        document.getElementById('res-desc').value = r.description || '';
+        document.getElementById('res-level').value = r.level || '';
+        document.getElementById('res-duration').value = r.duration_minutes || '';
+        document.getElementById('res-lang').value = r.language || '';
+        document.getElementById('res-tags').value = (r.tags||[]).join(', ');
+        document.getElementById('res-thumb').value = r.thumbnail_url || '';
+        setSwitch('res-published-switch', !!r.is_published);
+        document.getElementById('res-delete-box').classList.remove('hidden');
+      } else {
+        editingRes = null;
+        document.getElementById('res-modal-title').textContent = 'Nuova Risorsa';
+      }
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeResModal(){
+      document.getElementById('res-modal').classList.add('hidden');
+      document.body.style.overflow = '';
+      editingRes = null;
+    }
+
+    document.getElementById('res-form').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const payload = {
+        type: val('res-type-input') || 'link',
+        provider: val('res-provider') || null,
+        title: val('res-title'),
+        url: val('res-url'),
+        description: val('res-desc') || null,
+        level: val('res-level') || null,
+        duration_minutes: numOrNull(val('res-duration')),
+        language: val('res-lang') || null,
+        tags: splitTags(val('res-tags')),
+        thumbnail_url: val('res-thumb') || null,
+        is_published: getSwitch('res-published-switch')
+      };
+
+      if (!payload.title || !payload.url) {
+        toast('Compila i campi obbligatori', 'error'); return;
+      }
+
+      try {
+        if (editingRes){
+          const { error } = await supabase.from('learning_resources').update(payload).eq('id', editingRes.id);
+          if (error) throw error;
+          toast('Risorsa aggiornata!', 'success');
+        } else {
+          payload.created_by = user.id;
+          const { error } = await supabase.from('learning_resources').insert(payload);
+          if (error) throw error;
+          toast('Risorsa creata!', 'success');
+        }
+        closeResModal();
+        await loadResources();
+        renderResList();
+        renderRecentResources();
+        renderDashboard();
+      } catch (e) {
+        console.error(e); toast('Errore salvataggio risorsa','error');
+      }
+    });
+
+    function confirmDeleteRes(id){
+      if (!confirm('Eliminare questa risorsa?')) return;
+      deleteRes(id);
+    }
+    async function deleteRes(id=null){
+      const targetId = id || (editingRes && editingRes.id);
+      if (!targetId) return;
+      try {
+        const { error } = await supabase.from('learning_resources').delete().eq('id', targetId);
+        if (error) throw error;
+        toast('Risorsa eliminata','success');
+        closeResModal();
+        await loadResources();
+        renderResList();
+        renderRecentResources();
+        renderDashboard();
+      } catch(e){ console.error(e); toast('Errore eliminazione risorsa','error'); }
+    }
+
+    async function toggleResPublish(id, value){
+      try {
+        const { error } = await supabase.from('learning_resources').update({ is_published: !!value }).eq('id', id);
+        if (error) throw error;
+        const item = resources.find(x=>x.id===id); if (item) item.is_published = !!value;
+        renderResList(); renderRecentResources(); renderDashboard();
+      } catch(e){ console.error(e); toast('Errore aggiornamento stato','error'); }
+    }
+
+    // ===== UI helpers =====
+    function show(id){
+      document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+      document.querySelector(`.nav-item[data-target="${id}"]`).classList.add('active');
+    }
+    function navigateBack(){ window.location.href = '../home_dirigenti.html'; }
+
+    function emptyState(t){ return `<div class="text-center text-white/90 font-bold py-6">${t}</div>`; }
+    function toast(msg, kind='info'){
+      const colors = { success:'bg-green-500', error:'bg-red-500', info:'bg-blue-500' };
+      const n = document.createElement('div');
+      n.className = `fixed top-6 right-6 ${colors[kind]} text-white px-5 py-3 rounded-xl font-black shadow-xl z-[300]`;
+      n.textContent = msg; document.body.appendChild(n);
+      setTimeout(()=>{ n.remove(); }, 2800);
+    }
+    function fmtDT(d){ const x=new Date(d); return x.toLocaleString('it-IT', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }); }
+    function escapeHtml(s){ return (s||'').toString().replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+    function val(id){ return (document.getElementById(id).value||'').trim(); }
+    function splitTags(s){ return (s||'').split(',').map(t=>t.trim()).filter(Boolean); }
+    function numOrNull(s){ const n = parseInt(s,10); return isNaN(n)?null:n; }
+    function toISO(local){ if(!local) return null; // 'YYYY-MM-DDTHH:mm'
+      const d = new Date(local); return d.toISOString(); }
+    function toLocalInput(d){ if(!d) return ''; const x=new Date(d);
+      const pad=n=>String(n).padStart(2,'0');
+      return `${x.getFullYear()}-${pad(x.getMonth()+1)}-${pad(x.getDate())}T${pad(x.getHours())}:${pad(x.getMinutes())}`;
+    }
+    function setSwitch(id, on){ const el=document.getElementById(id); el.classList.toggle('on', !!on); el.setAttribute('aria-checked', !!on); }
+    function getSwitch(id){ return document.getElementById(id).classList.contains('on'); }
+
+    // Switch toggle by keyboard
+    document.addEventListener('click', (e)=>{
+      if (e.target.classList.contains('switch')) {
+        e.target.classList.toggle('on');
+        e.target.setAttribute('aria-checked', e.target.classList.contains('on'));
+      }
+    });
+    document.addEventListener('keydown', (e)=>{
+      if (e.key === 'Escape'){
+        if (!document.getElementById('live-modal').classList.contains('hidden')) closeLiveModal();
+        if (!document.getElementById('res-modal').classList.contains('hidden')) closeResModal();
+      }
+    });
+
+    // Service worker (opzionale)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(()=>console.log('SW ok (admin)'))
+        .catch(()=>console.log('SW non disponibile'));
+    }
+  </script>
+</body>
+</html>
