@@ -70,7 +70,6 @@
     .main { padding:20px 16px; min-height:calc(100vh - 80px); }
     .section { display:none; animation:fade .25s ease-out; } .section.active { display:block; }
     @keyframes fade { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)} }
-    /* Back button bottom-left to avoid header overlap */
     .back-btn {
       position: fixed; left: 20px; bottom: calc(90px + env(safe-area-inset-bottom));
       width: 52px; height: 52px; border-radius: 50%;
@@ -228,10 +227,13 @@
   </div>
 
   <script>
-    // ===== Supabase config =====
+    // ===== Config =====
     const SUPABASE_URL = "https://pvzdilkozpspsnepedqc.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk";
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
+
+    // Demo flag: dati fittizi SOLO se passi ?demo=1 nell’URL
+    const DEMO = new URLSearchParams(location.search).has('demo');
 
     // ===== State =====
     let user = null;
@@ -255,13 +257,10 @@
     async function initUser() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        // Se vuoi forzare login:
-        // window.location.href = '../login-minimal.html';
-        console.warn('No session: demo mode available');
+        console.warn('No session: demo mode available via ?demo=1');
       } else {
         user = session.user;
       }
-      // Load favorites (local fallback)
       try {
         const raw = localStorage.getItem('academy_favs');
         if (raw) favorites = new Set(JSON.parse(raw));
@@ -277,7 +276,7 @@
       ]);
     }
 
-    // ===== Loaders con fallback demo =====
+    // ===== Loaders =====
     async function loadLive() {
       try {
         const { data, error } = await supabase.from('live_sessions')
@@ -286,16 +285,90 @@
           .limit(50);
         if (error) throw error;
         liveSessions = (data || []).map(normalizeLive);
-        if (!liveSessions.length) throw new Error('empty');
+        if (!liveSessions.length && DEMO) {
+          liveSessions = [
+            { id:'demo-live-1', title:'Aggiornamento Normativo Q4', start_at:addHours(2), end_at:addHours(3), platform:'Zoom', join_url:'https://zoom.us/j/123456789', host:'Ufficio Formazione', track:'Compliance', tags:['norme','compliance'], passcode:'', status:'scheduled' },
+            { id:'demo-live-2', title:'Q&A con la Direzione', start_at:addDays(1,10), end_at:addDays(1,11), platform:'Teams', join_url:'https://teams.microsoft.com/l/meetup-join/xxx', host:'Direzione', track:'Company', tags:['strategie','q&a'], passcode:'', status:'scheduled' },
+            { id:'demo-live-3', title:'Live Tech — AI Update', start_at:addDays(3,9), end_at:addDays(3,10), platform:'YouTube Live', join_url:'https://www.youtube.com/watch?v=dQw4w9WgXcQ', host:'Tech Guild', track:'Tech', tags:['ai','dev'], passcode:'', status:'scheduled' },
+          ].map(normalizeLive);
+        }
       } catch (e) {
-        // Demo
-        liveSessions = [
+        console.error('loadLive error:', e);
+        liveSessions = DEMO ? [
           { id:'demo-live-1', title:'Aggiornamento Normativo Q4', start_at:addHours(2), end_at:addHours(3), platform:'Zoom', join_url:'https://zoom.us/j/123456789', host:'Ufficio Formazione', track:'Compliance', tags:['norme','compliance'], passcode:'', status:'scheduled' },
           { id:'demo-live-2', title:'Q&A con la Direzione', start_at:addDays(1,10), end_at:addDays(1,11), platform:'Teams', join_url:'https://teams.microsoft.com/l/meetup-join/xxx', host:'Direzione', track:'Company', tags:['strategie','q&a'], passcode:'', status:'scheduled' },
           { id:'demo-live-3', title:'Live Tech — AI Update', start_at:addDays(3,9), end_at:addDays(3,10), platform:'YouTube Live', join_url:'https://www.youtube.com/watch?v=dQw4w9WgXcQ', host:'Tech Guild', track:'Tech', tags:['ai','dev'], passcode:'', status:'scheduled' },
-        ].map(normalizeLive);
+        ].map(normalizeLive) : [];
       }
     }
+
+    async function loadCourses() {
+      try {
+        const { data, error } = await supabase.from('learning_resources')
+          .select('*').eq('type','course').order('created_at', { ascending:false }).limit(100);
+        if (error) throw error;
+        courses = (data || []).map(normalizeResource);
+        if (!courses.length && DEMO) {
+          courses = [
+            { id:'demo-c-1', title:'Project Management Base', url:'#', provider:'Coursera', level:'base', duration_minutes:120, description:'Fondamenti e strumenti', tags:['management','organizzazione'] },
+            { id:'demo-c-2', title:'Cybersecurity Essentials', url:'#', provider:'edX', level:'intermedio', duration_minutes:180, description:'Minacce, mitigazioni', tags:['security','it'] },
+            { id:'demo-c-3', title:'Advanced Excel', url:'#', provider:'Udemy', level:'avanzato', duration_minutes:240, description:'Power Query, Pivot avanzate', tags:['excel','data'] },
+          ].map(normalizeResource);
+        }
+      } catch (e) {
+        console.error('loadCourses error:', e);
+        courses = DEMO ? [
+          { id:'demo-c-1', title:'Project Management Base', url:'#', provider:'Coursera', level:'base', duration_minutes:120, description:'Fondamenti e strumenti', tags:['management','organizzazione'] },
+          { id:'demo-c-2', title:'Cybersecurity Essentials', url:'#', provider:'edX', level:'intermedio', duration_minutes:180, description:'Minacce, mitigazioni', tags:['security','it'] },
+          { id:'demo-c-3', title:'Advanced Excel', url:'#', provider:'Udemy', level:'avanzato', duration_minutes:240, description:'Power Query, Pivot avanzate', tags:['excel','data'] },
+        ].map(normalizeResource) : [];
+      }
+    }
+
+    async function loadChannels() {
+      try {
+        const { data, error } = await supabase.from('learning_resources')
+          .select('*').eq('type','youtube_channel').order('created_at', { ascending:false }).limit(100);
+        if (error) throw error;
+        channels = (data || []).map(normalizeResource);
+        if (!channels.length && DEMO) {
+          channels = [
+            { id:'demo-y-1', title:'Computerphile', url:'https://www.youtube.com/@Computerphile', provider:'YouTube', description:'CS spiegata bene', tags:['cs','theory'] },
+            { id:'demo-y-2', title:'Fireship', url:'https://www.youtube.com/@Fireship', provider:'YouTube', description:'Dev in pillole', tags:['web','dev'] },
+            { id:'demo-y-3', title:'MIT OpenCourseWare', url:'https://www.youtube.com/@mitocw', provider:'YouTube', description:'Corsi universitari', tags:['università','ingegneria'] },
+          ].map(normalizeResource);
+        }
+      } catch (e) {
+        console.error('loadChannels error:', e);
+        channels = DEMO ? [
+          { id:'demo-y-1', title:'Computerphile', url:'https://www.youtube.com/@Computerphile', provider:'YouTube', description:'CS spiegata bene', tags:['cs','theory'] },
+          { id:'demo-y-2', title:'Fireship', url:'https://www.youtube.com/@Fireship', provider:'YouTube', description:'Dev in pillole', tags:['web','dev'] },
+          { id:'demo-y-3', title:'MIT OpenCourseWare', url:'https://www.youtube.com/@mitocw', provider:'YouTube', description:'Corsi universitari', tags:['università','ingegneria'] },
+        ].map(normalizeResource) : [];
+      }
+    }
+
+    async function loadLibrary() {
+      try {
+        const { data, error } = await supabase.from('learning_resources')
+          .select('*').neq('type','course').neq('type','youtube_channel').order('created_at', { ascending:false }).limit(200);
+        if (error) throw error;
+        library = (data || []).map(normalizeResource);
+        if (!library.length && DEMO) {
+          library = [
+            { id:'demo-l-1', title:'Guida OKR 2025 (PDF)', url:'#', provider:'Docs', type:'document', description:'Esempi e template', tags:['okr','strategy'] },
+            { id:'demo-l-2', title:'Podcast — Data Culture', url:'#', provider:'Podcast', type:'podcast', description:'Intervista a CDO', tags:['data','culture'] },
+          ].map(normalizeResource);
+        }
+      } catch (e) {
+        console.error('loadLibrary error:', e);
+        library = DEMO ? [
+          { id:'demo-l-1', title:'Guida OKR 2025 (PDF)', url:'#', provider:'Docs', type:'document', description:'Esempi e template', tags:['okr','strategy'] },
+          { id:'demo-l-2', title:'Podcast — Data Culture', url:'#', provider:'Podcast', type:'podcast', description:'Intervista a CDO', tags:['data','culture'] },
+        ].map(normalizeResource) : [];
+      }
+    }
+
     function normalizeLive(r){
       return {
         id: r.id,
@@ -309,52 +382,6 @@
         track: r.track || '',
         tags: r.tags || [],
         status: r.status || 'scheduled'
-      }
-    }
-
-    async function loadCourses() {
-      try {
-        const { data, error } = await supabase.from('learning_resources')
-          .select('*').eq('type','course').order('created_at', { ascending:false }).limit(100);
-        if (error) throw error;
-        courses = (data || []).map(normalizeResource);
-        if (!courses.length) throw new Error('empty');
-      } catch (e) {
-        courses = [
-          { id:'demo-c-1', title:'Project Management Base', url:'#', provider:'Coursera', level:'base', duration_minutes:120, description:'Fondamenti e strumenti', tags:['management','organizzazione'] },
-          { id:'demo-c-2', title:'Cybersecurity Essentials', url:'#', provider:'edX', level:'intermedio', duration_minutes:180, description:'Minacce, mitigazioni', tags:['security','it'] },
-          { id:'demo-c-3', title:'Advanced Excel', url:'#', provider:'Udemy', level:'avanzato', duration_minutes:240, description:'Power Query, Pivot avanzate', tags:['excel','data'] },
-        ].map(normalizeResource);
-      }
-    }
-
-    async function loadChannels() {
-      try {
-        const { data, error } = await supabase.from('learning_resources')
-          .select('*').eq('type','youtube_channel').order('created_at', { ascending:false }).limit(100);
-        if (error) throw error;
-        channels = (data || []).map(normalizeResource);
-        if (!channels.length) throw new Error('empty');
-      } catch (e) {
-        channels = [
-          { id:'demo-y-1', title:'Computerphile', url:'https://www.youtube.com/@Computerphile', provider:'YouTube', description:'CS spiegata bene', tags:['cs','theory'] },
-          { id:'demo-y-2', title:'Fireship', url:'https://www.youtube.com/@Fireship', provider:'YouTube', description:'Dev in pillole', tags:['web','dev'] },
-          { id:'demo-y-3', title:'MIT OpenCourseWare', url:'https://www.youtube.com/@mitocw', provider:'YouTube', description:'Corsi universitari', tags:['università','ingegneria'] },
-        ].map(normalizeResource);
-      }
-    }
-
-    async function loadLibrary() {
-      try {
-        const { data, error } = await supabase.from('learning_resources')
-          .select('*').neq('type','course').neq('type','youtube_channel').order('created_at', { ascending:false }).limit(200);
-        if (error) throw error;
-        library = (data || []).map(normalizeResource);
-      } catch (e) {
-        library = [
-          { id:'demo-l-1', title:'Guida OKR 2025 (PDF)', url:'#', provider:'Docs', type:'document', description:'Esempi e template', tags:['okr','strategy'] },
-          { id:'demo-l-2', title:'Podcast — Data Culture', url:'#', provider:'Podcast', type:'podcast', description:'Intervista a CDO', tags:['data','culture'] },
-        ].map(normalizeResource);
       }
     }
 
@@ -567,7 +594,6 @@
       if (id === 'stats') renderStats();
     }
     async function navigateBack(){
-      // riuso della logica semplice: torna alla home app
       window.location.href = '../home.html';
     }
 
@@ -608,13 +634,12 @@
       updateCounters();
     }
 
-    // ===== Favorites (DB or local) =====
+    // ===== Favorites (DB o local) =====
     async function toggleFavorite(id){
       if (favorites.has(id)) favorites.delete(id); else favorites.add(id);
       persistFavs();
       renderFeatured(); renderCourseList(); renderLibraryList();
       updateCounters();
-      // opzionale: salva su DB se la tabella esiste
       if (user) {
         try {
           const { error } = await supabase.from('user_bookmarks')
@@ -639,7 +664,6 @@
       if (statsChart) statsChart.destroy();
       statsChart = new Chart(ctx.getContext('2d'), { type:'doughnut', data,
         options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom' } } } });
-      // counters
       document.getElementById('stats-live-count').textContent = liveSessions.length;
       const avg = courses.length ? Math.min(100, Math.round((favorites.size / Math.max(1,courses.length)) * 100)) : 0;
       document.getElementById('stats-course-progress').textContent = `${avg}%`;
@@ -692,8 +716,7 @@
         if (u.hostname.includes('youtube.com')){
           if (u.searchParams.get('v')) return `https://www.youtube.com/embed/${u.searchParams.get('v')}`;
           if (u.pathname.startsWith('/@') || u.pathname.startsWith('/channel/')){
-            // embed live stream endpoint may not always show something, but is ok
-            return `https://www.youtube.com/embed/live_stream?${u.pathname.startsWith('/channel/')?'channel':'channel'}=${u.pathname.split('/').pop()}`;
+            return `https://www.youtube.com/embed/live_stream?channel=${u.pathname.split('/').pop()}`;
           }
         }
         if (u.hostname.includes('youtu.be')){
@@ -705,12 +728,12 @@
 
     // ===== Events =====
     window.addEventListener('online', ()=> toast('Connessione ripristinata'));
-    window.addEventListener('offline', ()=> toast('Sei offline (demo disponibile)'));
+    window.addEventListener('offline', ()=> toast('Sei offline (demo disponibile con ?demo=1)'));
 
     // ===== Bottom nav =====
     function showSection(id){ show(id); }
 
-    // ===== Service worker (opzionale; commenta se non hai /sw.js) =====
+    // ===== Service worker (opzionale) =====
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js')
         .then(()=>console.log('SW ok'))
