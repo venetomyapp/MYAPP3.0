@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Academy & Live — MyApp</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#1a1a2e" />
+  <meta name="background-color" content="#1a1a2e" />
+
+  <!-- Icons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/public/icons/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/public/icons/icon-192x192.png" />
+  <link rel="apple-touch-icon" href="/public/icons/apple-touch-icon.png" />
+
+  <!-- Fonts + Tailwind -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Supabase + Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { inter: ['Inter', 'sans-serif'] },
+          colors: {
+            primary: '#1a1a2e',
+            secondary: '#16213e',
+            accent: '#0f3460',
+            aurora: '#e94560',
+            cyan: '#00d4ff',
+            success: '#10b981',
+            gold: '#ffd700',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
+      --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
+      --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
+    }
+    * { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body {
+      background: var(--gradient-aurora);
+      background-size: 400% 400%;
+      animation: aurora 15s ease infinite;
+      margin: 0; padding: 0; overflow-x: hidden; padding-bottom: 90px;
+    }
+    @keyframes aurora { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+    .text-ultra-visible { color:#fff; text-shadow:0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1); font-weight: 900; }
+    .card { background: rgba(255,255,255,.95); border:1px solid rgba(255,255,255,.3); border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,.1); }
+    .btn-aurora { background: var(--gradient-magic); color:#fff; border:2px solid rgba(233,69,96,.3); border-radius:14px; padding:10px 14px; font-weight:800; }
+    .btn-cyber { background: var(--gradient-cyber); color:#fff; border:2px solid rgba(0,212,255,.3); border-radius:14px; padding:10px 14px; font-weight:800; }
+    .btn-ghost { background: rgba(255,255,255,.9); border:2px solid rgba(0,0,0,.06); border-radius:14px; padding:10px 14px; font-weight:800; }
+    .chip { background: rgba(255,255,255,.85); border:1px solid rgba(0,0,0,.06); border-radius:999px; padding:6px 10px; font-weight:700; font-size:12px; }
+    .bottom-nav { position:fixed; left:0; right:0; bottom:0; height:80px; background:rgba(255,255,255,.95); backdrop-filter:blur(18px); border-top:1px solid rgba(255,255,255,.3); display:flex; justify-content:space-around; align-items:center; z-index:100; }
+    .nav-item { display:flex; flex-direction:column; align-items:center; gap:2px; font-weight:800; color:#555; text-decoration:none; padding:8px 10px; border-radius:12px; }
+    .nav-item.active { background: var(--gradient-magic); color:#fff; transform:translateY(-3px); box-shadow:0 10px 25px rgba(233,69,96,.3); }
+    .main { padding:20px 16px; min-height:calc(100vh - 80px); }
+    .section { display:none; animation:fade .25s ease-out; } .section.active { display:block; }
+    @keyframes fade { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)} }
+    /* Back button bottom-left to avoid header overlap */
+    .back-btn {
+      position: fixed; left: 20px; bottom: calc(90px + env(safe-area-inset-bottom));
+      width: 52px; height: 52px; border-radius: 50%;
+      background: rgba(255,255,255,.2); border:2px solid rgba(255,255,255,.3); color:#fff;
+      display:flex; align-items:center; justify-content:center; backdrop-filter: blur(8px); z-index:150;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Back -->
+  <a href="#" onclick="navigateBack()" class="back-btn" aria-label="Torna indietro">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+    </svg>
+  </a>
+
+  <div class="main">
+    <!-- HEADER -->
+    <div class="text-center mb-8">
+      <div class="w-20 h-20 bg-gradient-to-br from-aurora to-cyan rounded-full mx-auto mb-6 flex items-center justify-center">
+        <span class="text-3xl">🎓</span>
+      </div>
+      <h1 class="text-3xl text-ultra-visible mb-2">Academy & Live</h1>
+      <p class="text-ultra-visible opacity-90">Videoconferenze, corsi online, canali e risorse</p>
+    </div>
+
+    <!-- SEZIONI -->
+    <div id="dashboard" class="section active">
+      <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="card p-5 text-center">
+          <div class="text-2xl font-black text-aurora" id="stat-live-today">0</div>
+          <div class="text-sm font-bold text-gray-600">Live di oggi</div>
+        </div>
+        <div class="card p-5 text-center">
+          <div class="text-2xl font-black text-cyan-500" id="stat-corsi-attivi">0</div>
+          <div class="text-sm font-bold text-gray-600">Corsi attivi</div>
+        </div>
+        <div class="card p-5 text-center">
+          <div class="text-2xl font-black text-success" id="stat-preferiti">0</div>
+          <div class="text-sm font-bold text-gray-600">Preferiti</div>
+        </div>
+        <div class="card p-5 text-center">
+          <div class="text-2xl font-black text-gold" id="stat-ore">0h</div>
+          <div class="text-sm font-bold text-gray-600">Ore formazione</div>
+        </div>
+      </div>
+
+      <div class="card p-5 mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-black text-gray-800">📅 Prossime Live</h3>
+          <button class="btn-aurora text-sm" onclick="showSection('live')">Vedi tutto</button>
+        </div>
+        <div id="upcoming-live" class="space-y-3"></div>
+      </div>
+
+      <div class="card p-5">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-black text-gray-800">🔥 Consigliati</h3>
+          <div class="flex gap-2">
+            <span class="chip">Corsi</span><span class="chip">YouTube</span><span class="chip">Webinar</span>
+          </div>
+        </div>
+        <div id="featured" class="grid grid-cols-1 gap-3"></div>
+      </div>
+    </div>
+
+    <div id="live" class="section">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
+        <h2 class="text-2xl font-black text-ultra-visible">🔴 Videoconferenze</h2>
+        <div class="flex gap-2">
+          <input id="live-search" type="search" placeholder="Cerca webinar, relatore..." class="w-56 bg-white/90 border border-white/50 rounded-xl px-4 py-2 text-sm">
+          <select id="live-platform" class="bg-white/90 border border-white/50 rounded-xl px-3 py-2 text-sm">
+            <option value="">Tutte le piattaforme</option>
+            <option>Zoom</option><option>Teams</option><option>Meet</option><option>YouTube Live</option>
+          </select>
+        </div>
+      </div>
+      <div id="live-list" class="space-y-3"></div>
+    </div>
+
+    <div id="courses" class="section">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
+        <h2 class="text-2xl font-black text-ultra-visible">📚 Corsi Online</h2>
+        <div class="flex gap-2">
+          <input id="course-search" type="search" placeholder="Cerca corso, autore..." class="w-56 bg-white/90 border border-white/50 rounded-xl px-4 py-2 text-sm">
+          <select id="course-level" class="bg-white/90 border border-white/50 rounded-xl px-3 py-2 text-sm">
+            <option value="">Tutti i livelli</option>
+            <option value="base">Base</option><option value="intermedio">Intermedio</option><option value="avanzato">Avanzato</option>
+          </select>
+        </div>
+      </div>
+      <div id="course-list" class="grid grid-cols-1 gap-3"></div>
+    </div>
+
+    <div id="channels" class="section">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-black text-ultra-visible">▶️ Canali YouTube</h2>
+        <input id="channel-search" type="search" placeholder="Cerca canale..." class="w-56 bg-white/90 border border-white/50 rounded-xl px-4 py-2 text-sm">
+      </div>
+      <div id="channel-list" class="grid grid-cols-1 gap-3"></div>
+    </div>
+
+    <div id="library" class="section">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-black text-ultra-visible">🗂️ Libreria</h2>
+        <input id="library-search" type="search" placeholder="Cerca risorsa..." class="w-56 bg-white/90 border border-white/50 rounded-xl px-4 py-2 text-sm">
+      </div>
+      <div id="library-list" class="grid grid-cols-1 gap-3"></div>
+    </div>
+
+    <div id="stats" class="section">
+      <h2 class="text-2xl font-black text-ultra-visible mb-4">📈 Statistiche</h2>
+      <div class="card p-5 mb-6">
+        <h3 class="text-lg font-black text-gray-800 mb-3">Tempo per categoria</h3>
+        <div style="position:relative; height:220px;"><canvas id="stats-chart"></canvas></div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="card p-5 text-center">
+          <div class="text-2xl font-black text-aurora" id="stats-live-count">0</div>
+          <div class="text-sm font-bold text-gray-600">Live seguite</div>
+        </div>
+        <div class="card p-5 text-center">
+          <div class="text-2xl font-black text-success" id="stats-course-progress">0%</div>
+          <div class="text-sm font-bold text-gray-600">Progresso medio corsi</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <a href="#" class="nav-item active" data-target="dashboard" onclick="show('dashboard')">🏠<span class="text-[10px]">Home</span></a>
+    <a href="#" class="nav-item" data-target="live" onclick="show('live')">🔴<span class="text-[10px]">Live</span></a>
+    <a href="#" class="nav-item" data-target="courses" onclick="show('courses')">📚<span class="text-[10px]">Corsi</span></a>
+    <a href="#" class="nav-item" data-target="channels" onclick="show('channels')">▶️<span class="text-[10px]">Canali</span></a>
+    <a href="#" class="nav-item" data-target="stats" onclick="show('stats')">📈<span class="text-[10px]">Stats</span></a>
+  </nav>
+
+  <!-- MODAL DETTAGLIO RISORSA -->
+  <div id="resource-modal" class="fixed inset-0 bg-black/70 hidden z-[200] p-5 overflow-y-auto">
+    <div class="mx-auto max-w-md card p-5">
+      <div class="flex justify-between items-center mb-3">
+        <h3 id="res-title" class="text-xl font-black text-gray-800">Titolo</h3>
+        <button class="text-2xl font-black text-gray-400" onclick="closeModal()">&times;</button>
+      </div>
+      <div id="res-embed" class="rounded-xl overflow-hidden mb-3 hidden"></div>
+      <p id="res-desc" class="text-sm text-gray-700 mb-3"></p>
+      <div id="res-tags" class="flex flex-wrap gap-2 mb-4"></div>
+      <div class="grid grid-cols-2 gap-2">
+        <a id="res-open" target="_blank" rel="noopener" class="btn-aurora text-center">Apri</a>
+        <button id="res-fav" class="btn-ghost" onclick="toggleFavActive()">☆ Preferito</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== Supabase config =====
+    const SUPABASE_URL = "https://pvzdilkozpspsnepedqc.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
+
+    // ===== State =====
+    let user = null;
+    let liveSessions = [];
+    let courses = [];
+    let channels = [];
+    let library = [];
+    let favorites = new Set(); // ids
+    let statsChart = null;
+    let modalResource = null;
+
+    // ===== Init =====
+    document.addEventListener('DOMContentLoaded', async () => {
+      await initUser();
+      await loadAll();
+      renderAll();
+      initFilters();
+      console.log('🌐 Academy & Live — ready');
+    });
+
+    async function initUser() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        // Se vuoi forzare login:
+        // window.location.href = '../login-minimal.html';
+        console.warn('No session: demo mode available');
+      } else {
+        user = session.user;
+      }
+      // Load favorites (local fallback)
+      try {
+        const raw = localStorage.getItem('academy_favs');
+        if (raw) favorites = new Set(JSON.parse(raw));
+      } catch(e) {}
+    }
+
+    async function loadAll() {
+      await Promise.all([
+        loadLive(),
+        loadCourses(),
+        loadChannels(),
+        loadLibrary()
+      ]);
+    }
+
+    // ===== Loaders con fallback demo =====
+    async function loadLive() {
+      try {
+        const { data, error } = await supabase.from('live_sessions')
+          .select('*')
+          .order('start_at', { ascending: true })
+          .limit(50);
+        if (error) throw error;
+        liveSessions = (data || []).map(normalizeLive);
+        if (!liveSessions.length) throw new Error('empty');
+      } catch (e) {
+        // Demo
+        liveSessions = [
+          { id:'demo-live-1', title:'Aggiornamento Normativo Q4', start_at:addHours(2), end_at:addHours(3), platform:'Zoom', join_url:'https://zoom.us/j/123456789', host:'Ufficio Formazione', track:'Compliance', tags:['norme','compliance'], passcode:'', status:'scheduled' },
+          { id:'demo-live-2', title:'Q&A con la Direzione', start_at:addDays(1,10), end_at:addDays(1,11), platform:'Teams', join_url:'https://teams.microsoft.com/l/meetup-join/xxx', host:'Direzione', track:'Company', tags:['strategie','q&a'], passcode:'', status:'scheduled' },
+          { id:'demo-live-3', title:'Live Tech — AI Update', start_at:addDays(3,9), end_at:addDays(3,10), platform:'YouTube Live', join_url:'https://www.youtube.com/watch?v=dQw4w9WgXcQ', host:'Tech Guild', track:'Tech', tags:['ai','dev'], passcode:'', status:'scheduled' },
+        ].map(normalizeLive);
+      }
+    }
+    function normalizeLive(r){
+      return {
+        id: r.id,
+        title: r.title || r.nome || 'Live',
+        start_at: r.start_at ? new Date(r.start_at) : new Date(),
+        end_at: r.end_at ? new Date(r.end_at) : addHoursTo(new Date(r.start_at||Date.now()),1),
+        platform: r.platform || r.piattaforma || 'Zoom',
+        join_url: r.join_url || r.link || '#',
+        passcode: r.passcode || '',
+        host: r.host || '',
+        track: r.track || '',
+        tags: r.tags || [],
+        status: r.status || 'scheduled'
+      }
+    }
+
+    async function loadCourses() {
+      try {
+        const { data, error } = await supabase.from('learning_resources')
+          .select('*').eq('type','course').order('created_at', { ascending:false }).limit(100);
+        if (error) throw error;
+        courses = (data || []).map(normalizeResource);
+        if (!courses.length) throw new Error('empty');
+      } catch (e) {
+        courses = [
+          { id:'demo-c-1', title:'Project Management Base', url:'#', provider:'Coursera', level:'base', duration_minutes:120, description:'Fondamenti e strumenti', tags:['management','organizzazione'] },
+          { id:'demo-c-2', title:'Cybersecurity Essentials', url:'#', provider:'edX', level:'intermedio', duration_minutes:180, description:'Minacce, mitigazioni', tags:['security','it'] },
+          { id:'demo-c-3', title:'Advanced Excel', url:'#', provider:'Udemy', level:'avanzato', duration_minutes:240, description:'Power Query, Pivot avanzate', tags:['excel','data'] },
+        ].map(normalizeResource);
+      }
+    }
+
+    async function loadChannels() {
+      try {
+        const { data, error } = await supabase.from('learning_resources')
+          .select('*').eq('type','youtube_channel').order('created_at', { ascending:false }).limit(100);
+        if (error) throw error;
+        channels = (data || []).map(normalizeResource);
+        if (!channels.length) throw new Error('empty');
+      } catch (e) {
+        channels = [
+          { id:'demo-y-1', title:'Computerphile', url:'https://www.youtube.com/@Computerphile', provider:'YouTube', description:'CS spiegata bene', tags:['cs','theory'] },
+          { id:'demo-y-2', title:'Fireship', url:'https://www.youtube.com/@Fireship', provider:'YouTube', description:'Dev in pillole', tags:['web','dev'] },
+          { id:'demo-y-3', title:'MIT OpenCourseWare', url:'https://www.youtube.com/@mitocw', provider:'YouTube', description:'Corsi universitari', tags:['università','ingegneria'] },
+        ].map(normalizeResource);
+      }
+    }
+
+    async function loadLibrary() {
+      try {
+        const { data, error } = await supabase.from('learning_resources')
+          .select('*').neq('type','course').neq('type','youtube_channel').order('created_at', { ascending:false }).limit(200);
+        if (error) throw error;
+        library = (data || []).map(normalizeResource);
+      } catch (e) {
+        library = [
+          { id:'demo-l-1', title:'Guida OKR 2025 (PDF)', url:'#', provider:'Docs', type:'document', description:'Esempi e template', tags:['okr','strategy'] },
+          { id:'demo-l-2', title:'Podcast — Data Culture', url:'#', provider:'Podcast', type:'podcast', description:'Intervista a CDO', tags:['data','culture'] },
+        ].map(normalizeResource);
+      }
+    }
+
+    function normalizeResource(r){
+      return {
+        id: r.id,
+        title: r.title || r.nome || 'Risorsa',
+        url: r.url || '#',
+        provider: r.provider || r.fornitore || '',
+        type: r.type || r.tipo || 'resource',
+        level: r.level || '',
+        duration_minutes: r.duration_minutes || null,
+        thumbnail_url: r.thumbnail_url || '',
+        description: r.description || '',
+        tags: r.tags || [],
+        language: r.language || 'IT',
+        created_at: r.created_at ? new Date(r.created_at) : new Date()
+      }
+    }
+
+    // ===== Rendering =====
+    function renderAll(){
+      renderStats();
+      renderUpcomingLive();
+      renderFeatured();
+      renderLiveList();
+      renderCourseList();
+      renderChannelList();
+      renderLibraryList();
+      updateCounters();
+    }
+
+    function updateCounters(){
+      const today = new Date();
+      const liveToday = liveSessions.filter(s => sameDay(s.start_at, today)).length;
+      document.getElementById('stat-live-today').textContent = liveToday;
+      document.getElementById('stat-corsi-attivi').textContent = courses.length;
+      document.getElementById('stat-preferiti').textContent = favorites.size;
+      const totalMin = (courses.reduce((a,c)=>a+(c.duration_minutes||0),0));
+      document.getElementById('stat-ore').textContent = Math.round(totalMin/60)+'h';
+    }
+
+    function renderUpcomingLive(){
+      const box = document.getElementById('upcoming-live');
+      const items = liveSessions.slice(0,3).map(s => liveCard(s)).join('');
+      box.innerHTML = items || emptyState('Nessuna live in programma');
+    }
+
+    function renderFeatured(){
+      const box = document.getElementById('featured');
+      const picks = [...courses.slice(0,2), ...channels.slice(0,1)];
+      box.innerHTML = picks.map(r => resourceRow(r)).join('') || emptyState('Nessun contenuto consigliato');
+    }
+
+    function renderLiveList(){
+      const q = (document.getElementById('live-search').value||'').toLowerCase();
+      const p = document.getElementById('live-platform').value;
+      const list = document.getElementById('live-list');
+      const filtered = liveSessions.filter(s => {
+        const matchQ = !q || s.title.toLowerCase().includes(q) || (s.host||'').toLowerCase().includes(q) || (s.track||'').toLowerCase().includes(q);
+        const matchP = !p || s.platform === p;
+        return matchQ && matchP;
+      });
+      list.innerHTML = filtered.map(s => liveRow(s)).join('') || emptyState('Nessuna live trovata');
+    }
+
+    function renderCourseList(){
+      const q = (document.getElementById('course-search').value||'').toLowerCase();
+      const lvl = document.getElementById('course-level').value;
+      const list = document.getElementById('course-list');
+      const filtered = courses.filter(c => {
+        const mQ = !q || c.title.toLowerCase().includes(q) || (c.provider||'').toLowerCase().includes(q);
+        const mL = !lvl || (c.level||'')===lvl;
+        return mQ && mL;
+      });
+      list.innerHTML = filtered.map(c => courseCard(c)).join('') || emptyState('Nessun corso trovato');
+    }
+
+    function renderChannelList(){
+      const q = (document.getElementById('channel-search').value||'').toLowerCase();
+      const list = document.getElementById('channel-list');
+      const filtered = channels.filter(c => !q || c.title.toLowerCase().includes(q));
+      list.innerHTML = filtered.map(c => channelCard(c)).join('') || emptyState('Nessun canale trovato');
+    }
+
+    function renderLibraryList(){
+      const q = (document.getElementById('library-search').value||'').toLowerCase();
+      const list = document.getElementById('library-list');
+      const filtered = library.filter(r => !q || r.title.toLowerCase().includes(q) || (r.provider||'').toLowerCase().includes(q));
+      list.innerHTML = filtered.map(r => resourceRow(r)).join('') || emptyState('Nessuna risorsa trovata');
+    }
+
+    function emptyState(t){ return `<div class="text-center text-white/90 font-bold py-6">${t}</div>`; }
+
+    // ===== UI Components =====
+    function liveCard(s){
+      return `
+        <div class="card p-4 flex items-center justify-between">
+          <div>
+            <div class="text-sm font-bold text-gray-500">${formatDateTime(s.start_at)} • ${s.platform}</div>
+            <div class="text-lg font-black text-gray-800 mt-1">${escapeHtml(s.title)}</div>
+            <div class="text-xs text-gray-600">${escapeHtml(s.host||'')} ${s.track?`• ${escapeHtml(s.track)}`:''}</div>
+            <div class="mt-2 flex flex-wrap gap-2">${(s.tags||[]).slice(0,3).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('')}</div>
+          </div>
+          <div class="flex flex-col gap-2">
+            <a class="btn-aurora text-center" target="_blank" rel="noopener" href="${s.join_url}">Partecipa</a>
+            <button class="btn-ghost" onclick="downloadICS('${s.id}')">Aggiungi 📆</button>
+          </div>
+        </div>`;
+    }
+
+    function liveRow(s){
+      return `
+        <div class="card p-4">
+          <div class="flex justify-between gap-3">
+            <div>
+              <div class="text-sm font-bold text-gray-500">${formatDateTime(s.start_at)} • ${s.platform}</div>
+              <div class="text-lg font-black text-gray-800">${escapeHtml(s.title)}</div>
+              <div class="text-xs text-gray-600">${escapeHtml(s.host||'')} ${s.track?`• ${escapeHtml(s.track)}`:''}</div>
+              ${(s.passcode?`<div class="text-xs font-bold text-gray-700 mt-1">Passcode: ${escapeHtml(s.passcode)}</div>`:'')}
+              <div class="mt-2 flex flex-wrap gap-2">${(s.tags||[]).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('')}</div>
+            </div>
+            <div class="flex flex-col gap-2 min-w-[120px]">
+              <a class="btn-aurora text-center" target="_blank" rel="noopener" href="${s.join_url}">Partecipa</a>
+              <button class="btn-ghost" onclick="downloadICS('${s.id}')">Aggiungi 📆</button>
+              <button class="btn-ghost" onclick="copyText('${s.join_url}')">Copia link</button>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function courseCard(c){
+      const fav = favorites.has(c.id) ? '★' : '☆';
+      return `
+        <div class="card p-4">
+          <div class="flex justify-between gap-3">
+            <div>
+              <div class="text-sm font-bold text-gray-500">${escapeHtml(c.provider||'')}</div>
+              <div class="text-lg font-black text-gray-800">${escapeHtml(c.title)}</div>
+              <div class="text-xs text-gray-600">${c.level?`Livello: ${escapeHtml(c.level)} • `:''}${c.duration_minutes?`${c.duration_minutes} min`:''}</div>
+              <p class="text-sm text-gray-700 mt-2">${escapeHtml(c.description||'')}</p>
+              <div class="mt-2 flex flex-wrap gap-2">${(c.tags||[]).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('')}</div>
+            </div>
+            <div class="flex flex-col gap-2 min-w-[120px]">
+              <a href="${c.url}" target="_blank" rel="noopener" class="btn-aurora text-center">Apri corso</a>
+              <button class="btn-ghost" onclick="openResource('${c.id}','course')">Dettagli</button>
+              <button class="btn-ghost" onclick="toggleFavorite('${c.id}')">${fav} Preferito</button>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function channelCard(c){
+      const embed = getYouTubeEmbed(c.url);
+      return `
+        <div class="card p-4">
+          <div class="flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm font-bold text-gray-500">${escapeHtml(c.provider||'YouTube')}</div>
+                <div class="text-lg font-black text-gray-800">${escapeHtml(c.title)}</div>
+              </div>
+              <a href="${c.url}" target="_blank" rel="noopener" class="btn-aurora">Visita</a>
+            </div>
+            ${embed ? `<div class="rounded-xl overflow-hidden"><iframe width="100%" height="200" src="${embed}" title="YouTube" frameborder="0" allowfullscreen></iframe></div>`:''}
+            <p class="text-sm text-gray-700">${escapeHtml(c.description||'')}</p>
+            <div class="flex flex-wrap gap-2">${(c.tags||[]).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('')}</div>
+          </div>
+        </div>`;
+    }
+
+    function resourceRow(r){
+      const fav = favorites.has(r.id) ? '★' : '☆';
+      return `
+        <div class="card p-4 flex items-center justify-between">
+          <div>
+            <div class="text-sm font-bold text-gray-500">${escapeHtml((r.provider||'').toString())}</div>
+            <div class="text-lg font-black text-gray-800">${escapeHtml(r.title)}</div>
+            <p class="text-sm text-gray-700 mt-2">${escapeHtml(r.description||'')}</p>
+            <div class="mt-2 flex flex-wrap gap-2">${(r.tags||[]).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('')}</div>
+          </div>
+          <div class="flex flex-col gap-2 min-w-[120px]">
+            <a href="${r.url}" target="_blank" rel="noopener" class="btn-aurora text-center">Apri</a>
+            <button class="btn-ghost" onclick="openResource('${r.id}','resource')">Dettagli</button>
+            <button class="btn-ghost" onclick="toggleFavorite('${r.id}')">${fav} Preferito</button>
+          </div>
+        </div>`;
+    }
+
+    // ===== Filters listeners =====
+    function initFilters(){
+      ['live-search','live-platform','course-search','course-level','channel-search','library-search']
+        .forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.addEventListener('input', () => {
+            if (id.startsWith('live')) renderLiveList();
+            else if (id.startsWith('course')) renderCourseList();
+            else if (id.startsWith('channel')) renderChannelList();
+            else if (id.startsWith('library')) renderLibraryList();
+          });
+        });
+    }
+
+    // ===== Navigation =====
+    function show(id){
+      document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+      document.querySelector(`.nav-item[data-target="${id}"]`).classList.add('active');
+      if (id === 'stats') renderStats();
+    }
+    async function navigateBack(){
+      // riuso della logica semplice: torna alla home app
+      window.location.href = '../home.html';
+    }
+
+    // ===== Resource modal =====
+    function openResource(id, kind){
+      const res = (kind==='course' ? courses : (library.find(x=>x.id===id) || courses.find(x=>x.id===id) || channels.find(x=>x.id===id)));
+      if (!res) return;
+      modalResource = res;
+      document.getElementById('res-title').textContent = res.title;
+      document.getElementById('res-desc').textContent = res.description || '';
+      document.getElementById('res-open').href = res.url;
+      const tags = (res.tags||[]).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('');
+      document.getElementById('res-tags').innerHTML = tags;
+      const embedBox = document.getElementById('res-embed');
+      const embed = getYouTubeEmbed(res.url);
+      if (embed) {
+        embedBox.innerHTML = `<iframe width="100%" height="200" src="${embed}" title="YouTube" frameborder="0" allowfullscreen></iframe>`;
+        embedBox.classList.remove('hidden');
+      } else {
+        embedBox.classList.add('hidden');
+        embedBox.innerHTML = '';
+      }
+      const favBtn = document.getElementById('res-fav');
+      favBtn.textContent = (favorites.has(res.id) ? '★' : '☆') + ' Preferito';
+      document.getElementById('resource-modal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal(){
+      document.getElementById('resource-modal').classList.add('hidden');
+      document.body.style.overflow = '';
+      modalResource = null;
+    }
+    function toggleFavActive(){
+      if (!modalResource) return;
+      toggleFavorite(modalResource.id);
+      const favBtn = document.getElementById('res-fav');
+      favBtn.textContent = (favorites.has(modalResource.id) ? '★' : '☆') + ' Preferito';
+      updateCounters();
+    }
+
+    // ===== Favorites (DB or local) =====
+    async function toggleFavorite(id){
+      if (favorites.has(id)) favorites.delete(id); else favorites.add(id);
+      persistFavs();
+      renderFeatured(); renderCourseList(); renderLibraryList();
+      updateCounters();
+      // opzionale: salva su DB se la tabella esiste
+      if (user) {
+        try {
+          const { error } = await supabase.from('user_bookmarks')
+            .upsert({ user_id: user.id, resource_id: id }, { onConflict:'user_id,resource_id' });
+          if (error) throw error;
+        } catch(e) { /* fallback silenzioso */ }
+      }
+    }
+    function persistFavs(){
+      try { localStorage.setItem('academy_favs', JSON.stringify([...favorites])); } catch(e) {}
+    }
+
+    // ===== Stats =====
+    function renderStats(){
+      const ctx = document.getElementById('stats-chart');
+      if (!ctx) return;
+      const data = {
+        labels: ['Live', 'Corsi', 'Canali', 'Libreria'],
+        datasets: [{ data: [liveSessions.length*60, courses.length*90, channels.length*30, library.length*20],
+          backgroundColor: ['#e94560','#00d4ff','#10b981','#ffd700'], borderColor:'#fff', borderWidth:2 }]
+      };
+      if (statsChart) statsChart.destroy();
+      statsChart = new Chart(ctx.getContext('2d'), { type:'doughnut', data,
+        options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom' } } } });
+      // counters
+      document.getElementById('stats-live-count').textContent = liveSessions.length;
+      const avg = courses.length ? Math.min(100, Math.round((favorites.size / Math.max(1,courses.length)) * 100)) : 0;
+      document.getElementById('stats-course-progress').textContent = `${avg}%`;
+    }
+
+    // ===== Helpers =====
+    function formatDateTime(d){
+      const dt = (d instanceof Date) ? d : new Date(d);
+      return dt.toLocaleString('it-IT', { weekday:'short', day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' });
+    }
+    function sameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
+    function addHours(h){ const d=new Date(); d.setHours(d.getHours()+h); return d; }
+    function addHoursTo(d,h){ const x=new Date(d); x.setHours(x.getHours()+h); return x; }
+    function addDays(days, hour=10){ const d=new Date(); d.setDate(d.getDate()+days); d.setHours(hour,0,0,0); return d; }
+    function escapeHtml(s){ return (s||'').toString().replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+    function copyText(t){ navigator.clipboard?.writeText(t).then(()=>toast('Link copiato!')); }
+    function toast(msg){
+      const n = document.createElement('div');
+      n.className = 'fixed top-6 right-6 bg-blue-500 text-white px-5 py-3 rounded-xl font-black shadow-xl z-[300]';
+      n.textContent = msg; document.body.appendChild(n);
+      setTimeout(()=>{ n.remove(); }, 2500);
+    }
+
+    // ICS download
+    function downloadICS(id){
+      const s = liveSessions.find(x=>x.id===id); if(!s) return;
+      const ics = [
+        'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//MyApp//Academy//IT',
+        'BEGIN:VEVENT',
+        `UID:${s.id}@myapp`,
+        `DTSTAMP:${icsDate(new Date())}`,
+        `DTSTART:${icsDate(s.start_at)}`,
+        `DTEND:${icsDate(s.end_at)}`,
+        `SUMMARY:${escapeICS(s.title)}`,
+        `DESCRIPTION:${escapeICS((s.host?`Host: ${s.host}\\n`:'') + (s.track?`Track: ${s.track}\\n`:'') + (s.join_url?`Join: ${s.join_url}`:''))}`,
+        'END:VEVENT','END:VCALENDAR'
+      ].join('\r\n');
+      const blob = new Blob([ics], { type:'text/calendar;charset=utf-8' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${s.title.replace(/\s+/g,'_')}.ics`; a.click();
+      URL.revokeObjectURL(a.href);
+    }
+    function icsDate(d){ const z = new Date(d); const pad=n=>String(n).padStart(2,'0'); return `${z.getUTCFullYear()}${pad(z.getUTCMonth()+1)}${pad(z.getUTCDate())}T${pad(z.getUTCHours())}${pad(z.getUTCMinutes())}${pad(z.getUTCSeconds())}Z`; }
+    function escapeICS(s){ return (s||'').toString().replace(/([,;])/g,'\\$1').replace(/\n/g,'\\n'); }
+
+    // YouTube helper
+    function getYouTubeEmbed(url){
+      if(!url) return null;
+      try{
+        const u = new URL(url);
+        if (u.hostname.includes('youtube.com')){
+          if (u.searchParams.get('v')) return `https://www.youtube.com/embed/${u.searchParams.get('v')}`;
+          if (u.pathname.startsWith('/@') || u.pathname.startsWith('/channel/')){
+            // embed live stream endpoint may not always show something, but is ok
+            return `https://www.youtube.com/embed/live_stream?${u.pathname.startsWith('/channel/')?'channel':'channel'}=${u.pathname.split('/').pop()}`;
+          }
+        }
+        if (u.hostname.includes('youtu.be')){
+          const id = u.pathname.replace('/',''); if (id) return `https://www.youtube.com/embed/${id}`;
+        }
+      }catch(e){}
+      return null;
+    }
+
+    // ===== Events =====
+    window.addEventListener('online', ()=> toast('Connessione ripristinata'));
+    window.addEventListener('offline', ()=> toast('Sei offline (demo disponibile)'));
+
+    // ===== Bottom nav =====
+    function showSection(id){ show(id); }
+
+    // ===== Service worker (opzionale; commenta se non hai /sw.js) =====
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(()=>console.log('SW ok'))
+        .catch(()=>console.log('SW non disponibile'));
+    }
+  </script>
+</body>
+</html>
