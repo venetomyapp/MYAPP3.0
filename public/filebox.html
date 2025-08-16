@@ -394,9 +394,7 @@
 
     // Utils
     const $ = s => document.querySelector(s);
-    const $$ = s => Array.from(document.querySelectorAll(s));
-    const show = el => el.classList.remove('hidden');
-    const hide = el => el.classList.add('hidden');
+    const $ = s => Array.from(document.querySelectorAll(s));
     const humanSize = b => {
       if (!Number.isFinite(b)) return '--';
       const u = ['B','KB','MB','GB','TB']; let i=0; while(b>=1024 && i<u.length-1){ b/=1024; i++; }
@@ -471,9 +469,14 @@
       }
     }
 
-    $('#tabFiles').addEventListener('click', () => switchTab('files'));
-    $('#tabDownloads').addEventListener('click', () => switchTab('downloads'));
-    $('#tabManage').addEventListener('click', () => switchTab('manage'));
+    // Tab event listeners with safe binding
+    const tabFiles = $('#tabFiles');
+    const tabDownloads = $('#tabDownloads');
+    const tabManage = $('#tabManage');
+    
+    if (tabFiles) tabFiles.addEventListener('click', () => switchTab('files'));
+    if (tabDownloads) tabDownloads.addEventListener('click', () => switchTab('downloads'));
+    if (tabManage) tabManage.addEventListener('click', () => switchTab('manage'));
 
     // Auth + routing
     async function checkAuth(){
@@ -508,10 +511,12 @@
         
         // Show/hide management tab
         const manageTab = $('#tabManage');
-        if (isAdmin) {
-          manageTab.classList.remove('hidden');
-        } else {
-          manageTab.classList.add('hidden');
+        if (manageTab) {
+          if (isAdmin) {
+            manageTab.classList.remove('hidden');
+          } else {
+            manageTab.classList.add('hidden');
+          }
         }
       }catch(e){
         console.error('Error checking admin privileges:', e);
@@ -534,11 +539,14 @@
       return target;
     }
 
-    $('#backBtn')?.addEventListener('click', async ()=> { window.location.href = await resolveHomePath(); });
+    const backBtn = $('#backBtn');
+    if (backBtn) {
+      backBtn.addEventListener('click', async ()=> { window.location.href = await resolveHomePath(); });
+    }
 
     // Load MEGA files
     async function loadMega(){
-      show($('#loading'));
+      safeShow($('#loading'));
       try{
         const folder = MegaFile.fromURL(MEGA_FOLDER_URL);
         await new Promise((res, rej)=> folder.loadAttributes(err => err ? rej(err) : res()));
@@ -569,13 +577,16 @@
         updateStats();
       }catch(err){
         console.error('Errore MEGA:', err);
-        $('#filesContainer').innerHTML = `
-          <div class="glass-card rounded-xl sm:rounded-2xl p-4 sm:p-6 col-span-full">
-            <p class="text-error font-semibold text-sm sm:text-base">Impossibile leggere la cartella MEGA.</p>
-            <p class="text-muted mt-2 text-xs sm:text-sm">Controlla che il link sia pubblico e riprova.</p>
-          </div>`;
+        const container = $('#filesContainer');
+        if (container) {
+          container.innerHTML = `
+            <div class="glass-card rounded-xl sm:rounded-2xl p-4 sm:p-6 col-span-full">
+              <p class="text-error font-semibold text-sm sm:text-base">Impossibile leggere la cartella MEGA.</p>
+              <p class="text-muted mt-2 text-xs sm:text-sm">Controlla che il link sia pubblico e riprova.</p>
+            </div>`;
+        }
       }finally{
-        hide($('#loading'));
+        safeHide($('#loading'));
       }
     }
 
@@ -600,11 +611,14 @@
         }
       }catch(err){
         console.error('Errore download links:', err);
-        $('#downloadsContainer').innerHTML = `
-          <div class="glass-card rounded-xl sm:rounded-2xl p-4 sm:p-6 col-span-full">
-            <p class="text-error font-semibold text-sm sm:text-base">Errore nel caricamento dei link.</p>
-            <p class="text-muted mt-2 text-xs sm:text-sm">Riprova più tardi o contatta l'amministratore.</p>
-          </div>`;
+        const container = $('#downloadsContainer');
+        if (container) {
+          container.innerHTML = `
+            <div class="glass-card rounded-xl sm:rounded-2xl p-4 sm:p-6 col-span-full">
+              <p class="text-error font-semibold text-sm sm:text-base">Errore nel caricamento dei link.</p>
+              <p class="text-muted mt-2 text-xs sm:text-sm">Riprova più tardi o contatta l'amministratore.</p>
+            </div>`;
+        }
       }
     }
 
@@ -623,22 +637,34 @@
         renderManagementLinks(data || []);
       }catch(err){
         console.error('Errore caricamento gestione:', err);
-        $('#manageContainer').innerHTML = `
-          <div class="glass-card rounded-xl sm:rounded-2xl p-4 sm:p-6 col-span-full">
-            <p class="text-error font-semibold text-sm sm:text-base">Errore nel caricamento della gestione.</p>
-          </div>`;
+        const container = $('#manageContainer');
+        if (container) {
+          container.innerHTML = `
+            <div class="glass-card rounded-xl sm:rounded-2xl p-4 sm:p-6 col-span-full">
+              <p class="text-error font-semibold text-sm sm:text-base">Errore nel caricamento della gestione.</p>
+            </div>`;
+        }
       }
     }
 
     async function saveLink(){
       if (!isAdmin) return;
       
-      const titolo = $('#linkTitolo').value.trim();
-      const descrizione = $('#linkDescrizione').value.trim();
-      const url = $('#linkUrl').value.trim();
-      const tipo = $('#linkTipo').value;
-      const orderIndex = parseInt($('#linkOrder').value) || 0;
-      const attivo = $('#linkAttivo').checked;
+      const linkTitolo = $('#linkTitolo');
+      const linkDescrizione = $('#linkDescrizione');
+      const linkUrl = $('#linkUrl');
+      const linkTipo = $('#linkTipo');
+      const linkOrder = $('#linkOrder');
+      const linkAttivo = $('#linkAttivo');
+      
+      if (!linkTitolo || !linkUrl) return;
+      
+      const titolo = linkTitolo.value.trim();
+      const descrizione = linkDescrizione ? linkDescrizione.value.trim() : '';
+      const url = linkUrl.value.trim();
+      const tipo = linkTipo ? linkTipo.value : 'Download';
+      const orderIndex = linkOrder ? parseInt(linkOrder.value) || 0 : 0;
+      const attivo = linkAttivo ? linkAttivo.checked : true;
       
       if (!titolo || !url) {
         alert('Titolo e URL sono obbligatori');
@@ -707,38 +733,59 @@
       if (!isAdmin) return;
       
       editingLinkId = link.id;
-      $('#linkTitolo').value = link.titolo || '';
-      $('#linkDescrizione').value = link.descrizione || '';
-      $('#linkUrl').value = link.url || '';
-      $('#linkTipo').value = link.tipo_transfer || 'Download';
-      $('#linkOrder').value = link.order_index || 0;
-      $('#linkAttivo').checked = link.attivo !== false;
+      const linkTitolo = $('#linkTitolo');
+      const linkDescrizione = $('#linkDescrizione');
+      const linkUrl = $('#linkUrl');
+      const linkTipo = $('#linkTipo');
+      const linkOrder = $('#linkOrder');
+      const linkAttivo = $('#linkAttivo');
+      const formIcon = $('#formIcon');
+      const formTitle = $('#formTitle');
+      const submitBtn = $('#submitBtn');
+      const cancelBtn = $('#cancelBtn');
       
-      $('#formIcon').textContent = '✏️';
-      $('#formTitle').textContent = 'Modifica Link';
-      $('#submitBtn').textContent = 'Aggiorna Link';
-      show($('#cancelBtn'));
+      if (linkTitolo) linkTitolo.value = link.titolo || '';
+      if (linkDescrizione) linkDescrizione.value = link.descrizione || '';
+      if (linkUrl) linkUrl.value = link.url || '';
+      if (linkTipo) linkTipo.value = link.tipo_transfer || 'Download';
+      if (linkOrder) linkOrder.value = link.order_index || 0;
+      if (linkAttivo) linkAttivo.checked = link.attivo !== false;
+      
+      if (formIcon) formIcon.textContent = '✏️';
+      if (formTitle) formTitle.textContent = 'Modifica Link';
+      if (submitBtn) submitBtn.textContent = 'Aggiorna Link';
+      safeShow(cancelBtn);
       
       // Scroll to form
-      $('#linkForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const linkForm = $('#linkForm');
+      if (linkForm) linkForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function resetForm(){
       editingLinkId = null;
-      $('#linkForm').reset();
-      $('#linkAttivo').checked = true;
-      $('#linkOrder').value = 0;
+      const linkForm = $('#linkForm');
+      const linkAttivo = $('#linkAttivo');
+      const linkOrder = $('#linkOrder');
+      const formIcon = $('#formIcon');
+      const formTitle = $('#formTitle');
+      const submitBtn = $('#submitBtn');
+      const cancelBtn = $('#cancelBtn');
       
-      $('#formIcon').textContent = '➕';
-      $('#formTitle').textContent = 'Aggiungi Nuovo Link';
-      $('#submitBtn').textContent = 'Salva Link';
-      hide($('#cancelBtn'));
+      if (linkForm) linkForm.reset();
+      if (linkAttivo) linkAttivo.checked = true;
+      if (linkOrder) linkOrder.value = 0;
+      
+      if (formIcon) formIcon.textContent = '➕';
+      if (formTitle) formTitle.textContent = 'Aggiungi Nuovo Link';
+      if (submitBtn) submitBtn.textContent = 'Salva Link';
+      safeHide(cancelBtn);
     }
 
     // Render files
     function renderFiles(){
-      const q = $('#searchInput').value.trim().toLowerCase();
-      const activeType = $$('.filterBtn').find(b=>b.classList.contains('active'))?.dataset.type || 'all';
+      const searchInput = $('#searchInput');
+      const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
+      const activeType = $('.filterBtn').find(b=>b.classList.contains('active'))?.dataset.type || 'all';
 
       const filtered = allFiles.filter(f=>{
         const matchText = !q || f.name.toLowerCase().includes(q) || f.ext.includes(q);
@@ -747,12 +794,16 @@
       });
 
       const container = $('#filesContainer');
+      const emptyState = $('#emptyState');
+      
+      if (!container) return;
+
       if (!filtered.length){
         container.innerHTML = '';
-        show($('#emptyState'));
+        safeShow(emptyState);
         return;
       }
-      hide($('#emptyState'));
+      safeHide(emptyState);
 
       const iconFor = t => ({ doc:'📄', img:'🖼️', vid:'🎬', aud:'🎧', other:'📦' }[t] || '📦');
 
@@ -768,7 +819,8 @@
         </button>
       `).join('');
 
-      $$('#filesContainer .file-tile').forEach(btn=>{
+      // Re-bind file tile events
+      $('#filesContainer .file-tile').forEach(btn=>{
         btn.addEventListener('click', ()=>{
           const name = decodeURIComponent(btn.dataset.name);
           const fileObj = allFiles.find(x=>x.name===name);
@@ -780,12 +832,16 @@
     // Render downloads
     function renderDownloads(){
       const container = $('#downloadsContainer');
+      const emptyDownloads = $('#emptyDownloads');
+      
+      if (!container) return;
+      
       if (!downloadLinks.length){
         container.innerHTML = '';
-        show($('#emptyDownloads'));
+        safeShow(emptyDownloads);
         return;
       }
-      hide($('#emptyDownloads'));
+      safeHide(emptyDownloads);
 
       container.innerHTML = downloadLinks.map(link=>`
         <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="download-tile glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 text-left w-full block hover:no-underline">
@@ -877,12 +933,19 @@
 
     // Viewer (same as before but mobile optimized)
     async function openViewer(file){
-      show($('#viewer'));
-      hide($('#viewerBody'));
-      show($('#viewerLoading'));
-      $('#viewerName').textContent = file.name;
-      $('#viewerMeta').textContent = `${file.ext.toUpperCase()} • ${humanSize(file.size)}`;
-      $('#viewerBody').innerHTML = '';
+      const viewer = $('#viewer');
+      const viewerBody = $('#viewerBody');
+      const viewerLoading = $('#viewerLoading');
+      const viewerName = $('#viewerName');
+      const viewerMeta = $('#viewerMeta');
+      
+      safeShow(viewer);
+      safeHide(viewerBody);
+      safeShow(viewerLoading);
+      
+      if (viewerName) viewerName.textContent = file.name;
+      if (viewerMeta) viewerMeta.textContent = `${file.ext.toUpperCase()} • ${humanSize(file.size)}`;
+      if (viewerBody) viewerBody.innerHTML = '';
 
       if (lastObjectURL){
         try { URL.revokeObjectURL(lastObjectURL); } catch {}
@@ -891,64 +954,75 @@
 
       try{
         if (Number.isFinite(file.size) && file.size > PREVIEW_SIZE_LIMIT){
-          $('#viewerBody').innerHTML = `
-            <div class="w-full h-full flex items-center justify-center p-4 sm:p-6 text-center">
-              <div>
-                <p class="text-primary font-semibold mb-2 text-sm sm:text-base">Anteprima disattivata per file di grandi dimensioni.</p>
-                <p class="text-muted text-xs sm:text-sm">Usa "Scarica" per aprirlo in locale.</p>
-              </div>
-            </div>`;
+          if (viewerBody) {
+            viewerBody.innerHTML = `
+              <div class="w-full h-full flex items-center justify-center p-4 sm:p-6 text-center">
+                <div>
+                  <p class="text-primary font-semibold mb-2 text-sm sm:text-base">Anteprima disattivata per file di grandi dimensioni.</p>
+                  <p class="text-muted text-xs sm:text-sm">Usa "Scarica" per aprirlo in locale.</p>
+                </div>
+              </div>`;
+          }
           const streamUrl = await ensureDownloadURL(file);
-          const a = $('#downloadBtn');
-          a.removeAttribute('download');
-          a.href = streamUrl;
+          const downloadBtn = $('#downloadBtn');
+          if (downloadBtn) {
+            downloadBtn.removeAttribute('download');
+            downloadBtn.href = streamUrl;
+          }
         } else {
           const data = await new Promise((res, rej)=> file.megaFile.download((err, bytes)=> err ? rej(err) : res(bytes)));
           const blob = new Blob([data], { type: mimeFromExt(file.ext) });
           const url = URL.createObjectURL(blob);
           lastObjectURL = url;
 
-          const a = $('#downloadBtn');
-          a.href = url;
-          a.setAttribute('download', file.name);
+          const downloadBtn = $('#downloadBtn');
+          if (downloadBtn) {
+            downloadBtn.href = url;
+            downloadBtn.setAttribute('download', file.name);
+          }
 
-          const body = $('#viewerBody');
-          if (file.type==='img'){
-            body.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-gray-50"><img src="${url}" class="max-w-full max-h-full object-contain" alt="${file.name}"/></div>`;
-          } else if (file.type==='vid'){
-            body.innerHTML = `<video src="${url}" controls class="w-full h-full bg-black rounded-b-xl sm:rounded-b-2xl"></video>`;
-          } else if (file.type==='aud'){
-            body.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-gray-50 p-4"><audio src="${url}" controls class="w-full max-w-xl"></audio></div>`;
-          } else if (file.ext==='pdf'){
-            body.innerHTML = `<iframe src="${url}" class="w-full h-full rounded-b-xl sm:rounded-b-2xl" title="${file.name}" referrerpolicy="no-referrer"></iframe>`;
-          } else {
-            body.innerHTML = `
-              <div class="w-full h-full flex items-center justify-center p-4 sm:p-6 text-center">
-                <div>
-                  <p class="text-primary font-semibold mb-2 text-sm sm:text-base">Anteprima non disponibile per questo formato.</p>
-                  <p class="text-muted text-xs sm:text-sm">Clicca su "Scarica" per aprire il file.</p>
-                </div>
-              </div>`;
+          if (viewerBody) {
+            if (file.type==='img'){
+              viewerBody.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-gray-50"><img src="${url}" class="max-w-full max-h-full object-contain" alt="${file.name}"/></div>`;
+            } else if (file.type==='vid'){
+              viewerBody.innerHTML = `<video src="${url}" controls class="w-full h-full bg-black rounded-b-xl sm:rounded-b-2xl"></video>`;
+            } else if (file.type==='aud'){
+              viewerBody.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-gray-50 p-4"><audio src="${url}" controls class="w-full max-w-xl"></audio></div>`;
+            } else if (file.ext==='pdf'){
+              viewerBody.innerHTML = `<iframe src="${url}" class="w-full h-full rounded-b-xl sm:rounded-b-2xl" title="${file.name}" referrerpolicy="no-referrer"></iframe>`;
+            } else {
+              viewerBody.innerHTML = `
+                <div class="w-full h-full flex items-center justify-center p-4 sm:p-6 text-center">
+                  <div>
+                    <p class="text-primary font-semibold mb-2 text-sm sm:text-base">Anteprima non disponibile per questo formato.</p>
+                    <p class="text-muted text-xs sm:text-sm">Clicca su "Scarica" per aprire il file.</p>
+                  </div>
+                </div>`;
+            }
           }
         }
       }catch(e){
         console.error('Preview error:', e);
-        $('#viewerBody').innerHTML = `
-          <div class="w-full h-full flex items-center justify-center p-4 sm:p-6 text-center">
-            <div>
-              <p class="text-error font-semibold mb-2 text-sm sm:text-base">Impossibile caricare l'anteprima.</p>
-              <p class="text-muted text-xs sm:text-sm">Prova a scaricare il file.</p>
-            </div>
-          </div>`;
+        if (viewerBody) {
+          viewerBody.innerHTML = `
+            <div class="w-full h-full flex items-center justify-center p-4 sm:p-6 text-center">
+              <div>
+                <p class="text-error font-semibold mb-2 text-sm sm:text-base">Impossibile caricare l'anteprima.</p>
+                <p class="text-muted text-xs sm:text-sm">Prova a scaricare il file.</p>
+              </div>
+            </div>`;
+        }
         try {
           const streamUrl = await ensureDownloadURL(file);
-          const a = $('#downloadBtn');
-          a.removeAttribute('download');
-          a.href = streamUrl;
+          const downloadBtn = $('#downloadBtn');
+          if (downloadBtn) {
+            downloadBtn.removeAttribute('download');
+            downloadBtn.href = streamUrl;
+          }
         } catch {}
       }finally{
-        hide($('#viewerLoading'));
-        show($('#viewerBody'));
+        safeHide(viewerLoading);
+        safeShow(viewerBody);
       }
     }
 
@@ -963,21 +1037,34 @@
       });
     }
 
-    $('#closeViewer').addEventListener('click', ()=>{
-      try {
-        const media = $('#viewerBody video, #viewerBody audio');
-        media?.pause?.();
-      } catch {}
-      $('#viewerBody').innerHTML = '';
-      hide($('#viewer'));
-      if (lastObjectURL){
-        try { URL.revokeObjectURL(lastObjectURL); } catch {}
-        lastObjectURL = null;
-      }
-    });
+    const closeViewer = $('#closeViewer');
+    if (closeViewer) {
+      closeViewer.addEventListener('click', ()=>{
+        try {
+          const media = $('#viewerBody video, #viewerBody audio');
+          media?.pause?.();
+        } catch {}
+        const viewerBody = $('#viewerBody');
+        if (viewerBody) viewerBody.innerHTML = '';
+        safeHide($('#viewer'));
+        if (lastObjectURL){
+          try { URL.revokeObjectURL(lastObjectURL); } catch {}
+          lastObjectURL = null;
+        }
+      });
+    }
 
     function updateDownloadStats(){
       $('#downloadCount').textContent = downloadLinks.length || '--';
+    }
+
+    // Safe DOM utilities
+    function safeShow(el) {
+      if (el) el.classList.remove('hidden');
+    }
+    
+    function safeHide(el) {
+      if (el) el.classList.add('hidden');
     }
 
     // Event listeners
@@ -1014,6 +1101,7 @@
     // Initialize
     (async ()=>{
       await checkAuth();
+      bindEventListeners();
       await Promise.all([loadMega(), loadDownloadLinks()]);
     })();
 
