@@ -65,37 +65,22 @@
             75% { background-position: 0% 100%; }
         }
 
-        @keyframes tessera-shimmer {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        @keyframes tessera-rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         .text-ultra-visible {
             color: #ffffff;
             text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
             font-weight: 800;
         }
-
         .text-white {
             text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
         }
-
         .glass-morphism {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.18);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         }
-
         .btn-aurora {
             background: var(--gradient-magic);
             color: white;
@@ -103,316 +88,80 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 700;
         }
-
         .btn-aurora:hover {
             transform: translateY(-3px) scale(1.05);
             box-shadow: 0 20px 40px rgba(233, 69, 96, 0.4);
             border-color: rgba(233, 69, 96, 0.8);
         }
-
-        .btn-cyber {
-            background: var(--gradient-cyber);
-            border: 2px solid rgba(0, 212, 255, 0.3);
-            color: white;
-            font-weight: 700;
-        }
-
-        .btn-cyber:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.4);
-            border-color: rgba(0, 212, 255, 0.8);
-        }
-
         .spinner {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
+            width: 24px; height: 24px; border-radius: 50%;
             border: 3px solid rgba(255, 255, 255, 0.35);
             border-top-color: #ffffff;
             animation: spin 1s linear infinite;
         }
-
         #pageLoader {
-            position: fixed;
-            inset: 0;
-            background: rgba(10, 10, 35, 0.6);
-            backdrop-filter: blur(2px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 60;
+            position: fixed; inset: 0; background: rgba(10, 10, 35, 0.6);
+            backdrop-filter: blur(2px); display: none; align-items: center; justify-content: center; z-index: 60;
         }
 
-        /* =============================================== */
-        /* TESSERA DIGITALE DESIGN */
-        /* =============================================== */
-
-        .tessera-container {
-            perspective: 1000px;
-            transform-style: preserve-3d;
-        }
-
+        /* Tessera */
+        .tessera-container { perspective: 1000px; transform-style: preserve-3d; }
         .tessera-card {
-            width: 100%;
-            max-width: 380px;
-            height: 240px;
-            background: var(--gradient-tessera);
-            border-radius: 20px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.15),
-                0 8px 20px rgba(233, 69, 96, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            transform-style: preserve-3d;
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%; max-width: 380px; height: 240px; background: var(--gradient-tessera);
+            border-radius: 20px; position: relative; overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,.15), 0 8px 20px rgba(233,69,96,.1), inset 0 1px 0 rgba(255,255,255,.8);
+            border: 2px solid rgba(255, 255, 255, 0.3); transform-style: preserve-3d;
+            transition: all .6s cubic-bezier(.4,0,.2,1);
         }
-
-        .tessera-card:hover {
-            transform: rotateY(5deg) rotateX(5deg) translateZ(10px);
-            box-shadow: 
-                0 30px 60px rgba(0, 0, 0, 0.25),
-                0 15px 30px rgba(233, 69, 96, 0.2);
-        }
-
+        .tessera-card:hover { transform: rotateY(5deg) rotateX(5deg) translateZ(10px); }
         .tessera-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, 
-                rgba(233, 69, 96, 0.1) 0%, 
-                rgba(0, 212, 255, 0.05) 25%, 
-                rgba(255, 215, 0, 0.05) 50%, 
-                rgba(3, 218, 198, 0.1) 100%);
-            z-index: 1;
+            content:''; position:absolute; inset:0;
+            background: linear-gradient(135deg, rgba(233,69,96,.1) 0%, rgba(0,212,255,.05) 25%, rgba(255,215,0,.05) 50%, rgba(3,218,198,.1) 100%);
+            z-index:1;
         }
-
-        .tessera-content {
-            position: relative;
-            z-index: 2;
-            padding: 1.5rem;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Logo MyApp */
+        .tessera-content { position:relative; z-index:2; padding:1.5rem; height:100%; display:flex; flex-direction:column; }
         .tessera-logo {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #1a1a2e, #e94560);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.8);
-            z-index: 10;
+            position:absolute; top:1rem; right:1rem; width:50px; height:50px;
+            background:linear-gradient(135deg,#1a1a2e,#e94560); border-radius:50%;
+            display:flex; align-items:center; justify-content:center; box-shadow:0 8px 16px rgba(0,0,0,.2);
+            border:2px solid rgba(255,255,255,.8); z-index:10;
         }
-
-        .tessera-logo::before {
-            content: '🎯';
-            font-size: 1.2rem;
-        }
-
-        /* Header */
-        .tessera-header {
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-
-        .tessera-title {
-            font-size: 1.1rem;
-            font-weight: 900;
-            color: #1a1a2e;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.25rem;
-        }
-
-        .tessera-subtitle {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #e94560;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* User Section */
-        .tessera-user {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            flex: 1;
-        }
-
+        .tessera-logo::before { content:'🎯'; font-size:1.2rem; }
+        .tessera-header { text-align:center; margin-bottom:1rem; }
+        .tessera-title { font-size:1.1rem; font-weight:900; color:#1a1a2e; text-transform:uppercase; letter-spacing:1px; margin-bottom:.25rem; }
+        .tessera-subtitle { font-size:.85rem; font-weight:700; color:#e94560; text-transform:uppercase; letter-spacing:.5px; }
+        .tessera-user { display:flex; align-items:center; gap:1rem; margin-bottom:1rem; flex:1; }
         .tessera-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #1a1a2e, #e94560);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.1rem;
-            font-weight: 900;
-            border: 2px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            flex-shrink: 0;
+            width:50px; height:50px; border-radius:50%; background:linear-gradient(135deg,#1a1a2e,#e94560);
+            display:flex; align-items:center; justify-content:center; color:white; font-size:1.1rem; font-weight:900;
+            border:2px solid rgba(255,255,255,.9); box-shadow:0 4px 8px rgba(0,0,0,.1); flex-shrink:0;
         }
+        .tessera-user-info { flex:1; min-width:0; }
+        .tessera-user-name { font-size:1rem; font-weight:800; color:#1a1a2e; margin-bottom:.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .tessera-user-email { font-size:.75rem; color:#6b7280; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .tessera-number { background:linear-gradient(135deg,#0f3460,#1a1a2e); color:white; text-align:center; padding:.5rem; border-radius:10px; margin-bottom:1rem; border:1px solid rgba(255,255,255,.2); }
+        .tessera-number-label { font-size:.7rem; opacity:.9; margin-bottom:.2rem; font-weight:600; }
+        .tessera-number-value { font-size:1rem; font-weight:900; letter-spacing:1px; }
+        .tessera-footer { display:flex; justify-content:space-between; align-items:center; font-size:.7rem; color:#6b7280; font-weight:600; }
+        .tessera-status-active { color:#10b981; font-weight:700; }
+        .tessera-status-expired { color:#ef4444; font-weight:700; }
+        .tessera-status-suspended { color:#f59e0b; font-weight:700; }
 
-        .tessera-user-info {
-            flex: 1;
-            min-width: 0;
-        }
+        /* QR */
+        .qr-section { margin-top: 2rem; text-align: center; }
+        .qr-container { display: inline-block; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 20px; padding: 1.5rem; border: 3px solid rgba(233, 69, 96, 0.2); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1); margin-bottom: 1rem; }
+        .qr-code { width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
+        .qr-code img, .qr-code svg { border-radius: 8px; }
+        .qr-placeholder { background: linear-gradient(45deg, #f3f4f6, #e5e7eb); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #6b7280; font-weight: 700; font-size: 0.9rem; }
 
-        .tessera-user-name {
-            font-size: 1rem;
-            font-weight: 800;
-            color: #1a1a2e;
-            margin-bottom: 0.2rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        /* Actions: ora 1 sola colonna (solo PDF) */
+        .actions-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 2rem; }
 
-        .tessera-user-email {
-            font-size: 0.75rem;
-            color: #6b7280;
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* Numero Tessera */
-        .tessera-number {
-            background: linear-gradient(135deg, #0f3460, #1a1a2e);
-            color: white;
-            text-align: center;
-            padding: 0.5rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .tessera-number-label {
-            font-size: 0.7rem;
-            opacity: 0.9;
-            margin-bottom: 0.2rem;
-            font-weight: 600;
-        }
-
-        .tessera-number-value {
-            font-size: 1rem;
-            font-weight: 900;
-            letter-spacing: 1px;
-        }
-
-        /* Footer Info */
-        .tessera-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.7rem;
-            color: #6b7280;
-            font-weight: 600;
-        }
-
-        .tessera-status-active {
-            color: #10b981;
-            font-weight: 700;
-        }
-
-        .tessera-status-expired {
-            color: #ef4444;
-            font-weight: 700;
-        }
-
-        .tessera-status-suspended {
-            color: #f59e0b;
-            font-weight: 700;
-        }
-
-        /* QR Code Section */
-        .qr-section {
-            margin-top: 2rem;
-            text-align: center;
-        }
-
-        .qr-container {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 1.5rem;
-            border: 3px solid rgba(233, 69, 96, 0.2);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-            margin-bottom: 1rem;
-        }
-
-        .qr-code {
-            width: 120px;
-            height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-        }
-
-        .qr-code img {
-            border-radius: 8px;
-        }
-
-        .qr-placeholder {
-            background: linear-gradient(45deg, #f3f4f6, #e5e7eb);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #6b7280;
-            font-weight: 700;
-            font-size: 0.9rem;
-        }
-
-        /* Actions */
-        .actions-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        /* Responsive */
         @media (max-width: 640px) {
-            .tessera-card {
-                max-width: 340px;
-                height: 220px;
-            }
-            
-            .tessera-content {
-                padding: 1.2rem;
-            }
-            
-            .tessera-logo {
-                width: 40px;
-                height: 40px;
-            }
-            
-            .tessera-avatar {
-                width: 45px;
-                height: 45px;
-                font-size: 1rem;
-            }
+            .tessera-card { max-width: 340px; height: 220px; }
+            .tessera-content { padding: 1.2rem; }
+            .tessera-logo { width: 40px; height: 40px; }
+            .tessera-avatar { width: 45px; height: 45px; font-size: 1rem; }
         }
     </style>
 </head>
@@ -455,7 +204,6 @@
                     
                     <!-- Content -->
                     <div class="tessera-content">
-                        <!-- Header -->
                         <div class="tessera-header">
                             <div class="tessera-title">MyApp</div>
                             <div class="tessera-subtitle">Tessera Digitale</div>
@@ -497,9 +245,7 @@
         <section class="qr-section">
             <div class="qr-container">
                 <div id="qrCode" class="qr-code">
-                    <div class="qr-placeholder w-full h-full">
-                        QR
-                    </div>
+                    <div class="qr-placeholder w-full h-full">QR</div>
                 </div>
             </div>
             <p class="text-white text-sm font-semibold opacity-90">
@@ -535,7 +281,6 @@
                     </div>
                 </div>
 
-                <!-- Note se presenti -->
                 <div id="noteSection" class="mt-4 hidden">
                     <div class="text-white opacity-80 text-xs mb-2">Note:</div>
                     <div class="text-white text-sm bg-white bg-opacity-10 rounded-lg p-2" id="tesseraNote"></div>
@@ -551,13 +296,6 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                     PDF
-                </button>
-
-                <button id="shareButton" class="btn-cyber py-3 px-4 rounded-xl flex items-center justify-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
-                    </svg>
-                    Condividi
                 </button>
             </div>
         </section>
@@ -600,7 +338,6 @@
         const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
 
-        // Configurazione globale dell'app
         window.APP_CONFIG = {
             SUPABASE: {
                 client: null,
@@ -612,10 +349,7 @@
                     return this.client;
                 }
             },
-            TABLES: {
-                USER_PROFILES: 'user_profiles',
-                TESSERE: 'tessere'
-            },
+            TABLES: { USER_PROFILES: 'user_profiles', TESSERE: 'tessere' },
             AUTH: {
                 async getCurrentUser() {
                     const client = APP_CONFIG.SUPABASE.getClient();
@@ -627,11 +361,7 @@
                     const user = await this.getCurrentUser();
                     if (!user) return null;
                     const client = APP_CONFIG.SUPABASE.getClient();
-                    const { data, error } = await client
-                        .from('user_profiles')
-                        .select('*')
-                        .eq('user_id', user.id)
-                        .single();
+                    const { data, error } = await client.from('user_profiles').select('*').eq('user_id', user.id).single();
                     if (error) throw error;
                     return data;
                 },
@@ -644,33 +374,22 @@
                     return true;
                 },
                 async logout() {
-                    try {
-                        await APP_CONFIG.SUPABASE.getClient().auth.signOut();
-                        window.location.replace('auth.html');
-                    } catch (error) {
-                        console.error('Errore logout:', error);
-                    }
+                    try { await APP_CONFIG.SUPABASE.getClient().auth.signOut(); window.location.replace('auth.html'); }
+                    catch (error) { console.error('Errore logout:', error); }
                 }
             },
             NOTIFICATIONS: {
                 showToast: function(msg, type='info') {
                     console.log(`[${type.toUpperCase()}] ${msg}`);
-                    
                     const toast = document.createElement('div');
                     toast.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 max-w-sm font-semibold ${
                         type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500'
                     } text-white`;
                     toast.textContent = msg;
-                    
                     document.body.appendChild(toast);
-                    
                     setTimeout(() => {
                         toast.style.opacity = '0';
-                        setTimeout(() => {
-                            if (document.body.contains(toast)) {
-                                document.body.removeChild(toast);
-                            }
-                        }, 300);
+                        setTimeout(() => { if (document.body.contains(toast)) document.body.removeChild(toast); }, 300);
                     }, 3000);
                 }
             }
@@ -685,54 +404,61 @@
         let currentProfile = null;
         let currentTessera = null;
 
-        function showLoader() {
-            const loader = document.getElementById('pageLoader');
-            if (loader) loader.style.display = 'flex';
+        function showLoader() { const el = document.getElementById('pageLoader'); if (el) el.style.display = 'flex'; }
+        function hideLoader() { const el = document.getElementById('pageLoader'); if (el) el.style.display = 'none'; }
+
+        // ===== Utility nome (minuscolo + iniziali maiuscole) =====
+        function formatName(raw) {
+            if (!raw) return '';
+            // Normalizza spazi, tutto minuscolo di base
+            const s = String(raw).trim().toLowerCase().replace(/\s+/g, ' ');
+            // Per ogni parola, gestisci anche trattini e apostrofi
+            const cap = (w) => {
+                return w.split("-").map(part =>
+                    part.split("'").map(p => p ? p.charAt(0).toUpperCase() + p.slice(1) : p).join("'")
+                ).join("-");
+            };
+            return s.split(' ').map(cap).join(' ');
         }
 
-        function hideLoader() {
-            const loader = document.getElementById('pageLoader');
-            if (loader) loader.style.display = 'none';
+        function getInitials(fullName) {
+            if (!fullName) return '--';
+            const parts = fullName.trim().split(/\s+/);
+            if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+            return fullName.substring(0, 2).toUpperCase();
+        }
+        function formatDate(dateString) {
+            if (!dateString) return '--/--/----';
+            try { return new Date(dateString).toLocaleDateString('it-IT'); }
+            catch { return '--/--/----'; }
+        }
+        function getStatusInfo(stato, dataScadenza) {
+            const oggi = new Date();
+            const scadenza = new Date(dataScadenza);
+            if (stato === 'SOSPESA') return { text: '⚠️ SOSPESA', className: 'tessera-status-suspended' };
+            if (scadenza < oggi) return { text: '❌ SCADUTA', className: 'tessera-status-expired' };
+            const trentaGiorni = new Date(); trentaGiorni.setDate(oggi.getDate() + 30);
+            if (scadenza <= trentaGiorni) return { text: '⚠️ IN SCADENZA', className: 'tessera-status-suspended' };
+            return { text: '✓ ATTIVA', className: 'tessera-status-active' };
         }
 
-        // ========================================
-        // UTILITÀ NAVIGATION
-        // ========================================
-
-        function getCorrectHomePage(userRole) {
-            if (userRole === 'DIRIGENTE' || userRole === 'ADMIN') {
-                return 'home_dirigenti.html';
-            }
-            return 'home.html';
-        }
-
+        // ===== NAV =====
+        function getCorrectHomePage(userRole) { return (userRole === 'DIRIGENTE' || userRole === 'ADMIN') ? 'home_dirigenti.html' : 'home.html'; }
         function setupNavigation() {
             if (!currentProfile) return;
-
             const homePage = getCorrectHomePage(currentProfile.role);
-            
-            // Aggiorna tutti i link alla home
             document.getElementById('logoHomeLink').href = homePage;
             document.getElementById('backHomeLink').href = homePage;
             document.getElementById('navHomeLink').href = homePage;
-            
-            console.log(`✅ Navigation setup: ${currentProfile.role} → ${homePage}`);
         }
 
-        // ========================================
-        // CARICAMENTO DATI TESSERA
-        // ========================================
-
+        // ===== LOAD DATA =====
         async function loadTesseraData() {
             try {
                 currentUser = await APP_CONFIG.AUTH.getCurrentUser();
                 currentProfile = await APP_CONFIG.AUTH.getUserProfile();
+                if (!currentUser || !currentProfile) throw new Error('Impossibile caricare i dati utente');
 
-                if (!currentUser || !currentProfile) {
-                    throw new Error('Impossibile caricare i dati utente');
-                }
-
-                // Carica tessera dal database
                 const client = APP_CONFIG.SUPABASE.getClient();
                 const { data: tessera, error } = await client
                     .from('tessere')
@@ -741,16 +467,14 @@
                     .single();
 
                 if (error) {
-                    if (error.code === 'PGRST116') {
-                        throw new Error('Tessera non trovata. Contatta l\'amministratore per richiedere una tessera.');
-                    }
+                    if (error.code === 'PGRST116') throw new Error('Tessera non trovata. Contatta l\'amministratore per richiedere una tessera.');
                     throw error;
                 }
 
                 currentTessera = tessera;
                 updateTesseraDisplay();
                 generateQRCode();
-                setupNavigation(); // Setup navigation basata sul ruolo
+                setupNavigation();
 
             } catch (error) {
                 console.error('Errore caricamento tessera:', error);
@@ -761,133 +485,91 @@
         function updateTesseraDisplay() {
             if (!currentTessera || !currentProfile) return;
 
-            // Dati utente
-            const fullName = currentTessera.nome_completo || currentProfile.full_name || 'Nome Utente';
+            const rawName = currentTessera.nome_completo || currentProfile.full_name || 'Nome Utente';
+            const formattedName = formatName(rawName);
             const email = currentTessera.email || currentProfile.email || '';
-            const initials = getInitials(fullName);
+            const initials = getInitials(formattedName);
 
-            // Aggiorna interfaccia tessera
             document.getElementById('userInitials').textContent = initials;
-            document.getElementById('userName').textContent = fullName;
+            document.getElementById('userName').textContent = formattedName;
             document.getElementById('userEmail').textContent = email;
             document.getElementById('tesseraNumber').textContent = currentTessera.numero_tessera || '000000';
 
-            // Tipo e date
             document.getElementById('tesseraType').textContent = currentTessera.tipo || 'STANDARD';
             document.getElementById('tesseraEmissione').textContent = formatDate(currentTessera.data_emissione);
 
-            // Stato tessera
             const statusInfo = getStatusInfo(currentTessera.stato, currentTessera.data_scadenza);
             const statusElement = document.getElementById('tesseraStatus');
             statusElement.textContent = statusInfo.text;
             statusElement.className = statusInfo.className;
 
-            // Dettagli
             document.getElementById('detailType').textContent = currentTessera.tipo || 'STANDARD';
             document.getElementById('detailEmissione').textContent = formatDate(currentTessera.data_emissione);
             document.getElementById('detailScadenza').textContent = formatDate(currentTessera.data_scadenza);
             document.getElementById('detailStato').textContent = currentTessera.stato || 'ATTIVA';
             document.getElementById('detailTelefono').textContent = currentTessera.telefono || currentProfile.telefono || '---';
 
-            // Note se presenti
             if (currentTessera.note) {
                 document.getElementById('noteSection').classList.remove('hidden');
                 document.getElementById('tesseraNote').textContent = currentTessera.note;
             }
         }
 
-        function getInitials(fullName) {
-            if (!fullName) return '--';
-            const parts = fullName.split(' ');
-            if (parts.length >= 2) {
-                return (parts[0][0] + parts[1][0]).toUpperCase();
-            }
-            return fullName.substring(0, 2).toUpperCase();
-        }
-
-        function formatDate(dateString) {
-            if (!dateString) return '--/--/----';
-            try {
-                const date = new Date(dateString);
-                return date.toLocaleDateString('it-IT');
-            } catch (error) {
-                return '--/--/----';
-            }
-        }
-
-        function getStatusInfo(stato, dataScadenza) {
-            const oggi = new Date();
-            const scadenza = new Date(dataScadenza);
-
-            if (stato === 'SOSPESA') {
-                return {
-                    text: '⚠️ SOSPESA',
-                    className: 'tessera-status-suspended'
-                };
-            }
-
-            if (scadenza < oggi) {
-                return {
-                    text: '❌ SCADUTA',
-                    className: 'tessera-status-expired'
-                };
-            }
-
-            // Controlla se scade nei prossimi 30 giorni
-            const trentaGiorni = new Date();
-            trentaGiorni.setDate(oggi.getDate() + 30);
-            
-            if (scadenza <= trentaGiorni) {
-                return {
-                    text: '⚠️ IN SCADENZA',
-                    className: 'tessera-status-suspended'
-                };
-            }
-
-            return {
-                text: '✓ ATTIVA',
-                className: 'tessera-status-active'
-            };
-        }
-
-        // ========================================
-        // QR CODE GENERATION
-        // ========================================
-
+        // ===== QR CODE (UTF-8 + AUTO-SIZE) =====
         function generateQRCode() {
             if (!currentTessera) return;
 
             try {
-                const qrData = JSON.stringify({
+                const formattedName = formatName(currentTessera.nome_completo);
+                const qrPayload = {
+                    v: 1,
                     app: 'MyApp',
-                    tessera: currentTessera.numero_tessera,
-                    nome: currentTessera.nome_completo,
+                    numero_tessera: currentTessera.numero_tessera,
+                    nome: formattedName,
                     email: currentTessera.email,
+                    tipo: currentTessera.tipo,
                     emissione: currentTessera.data_emissione,
                     scadenza: currentTessera.data_scadenza,
                     stato: currentTessera.stato,
-                    timestamp: new Date().toISOString()
-                });
+                    uid: currentTessera.user_id,
+                    ts: new Date().toISOString()
+                };
+                const qrData = JSON.stringify(qrPayload);
 
-                const qr = qrcode(4, 'M');
+                // UTF-8
+                if (qrcode && qrcode.stringToBytes && qrcode.stringToBytesFuncs) {
+                    qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
+                }
+
+                // Auto versione
+                const qr = qrcode(0, 'M');
                 qr.addData(qrData);
                 qr.make();
 
+                // Autosize
                 const qrElement = document.getElementById('qrCode');
-                qrElement.innerHTML = qr.createImgTag(3, 0, "QR Code Tessera MyApp");
-                
-                const img = qrElement.querySelector('img');
-                if (img) {
-                    img.style.width = '120px';
-                    img.style.height = '120px';
-                    img.style.borderRadius = '8px';
+                const targetSize = Math.max(100, Math.min(qrElement.clientWidth || 120, 160));
+                const modules = qr.getModuleCount();
+                const marginModules = 2;
+                let cellSize = Math.floor(targetSize / (modules + marginModules * 2));
+                if (cellSize < 2) cellSize = 2;
+
+                qrElement.innerHTML = qr.createSvgTag(cellSize, marginModules);
+
+                const svg = qrElement.querySelector('svg');
+                if (svg) {
+                    const pxSize = (modules + marginModules * 2) * cellSize;
+                    svg.setAttribute('width', String(pxSize));
+                    svg.setAttribute('height', String(pxSize));
+                    svg.style.borderRadius = '8px';
+                    svg.setAttribute('role', 'img');
+                    svg.setAttribute('aria-label', 'QR Code Tessera MyApp');
                 }
 
-                console.log('✅ QR Code generato con successo');
+                console.log('✅ QR Code generato (UTF-8 + autosize)');
 
             } catch (error) {
                 console.error('Errore generazione QR Code:', error);
-                
                 const qrElement = document.getElementById('qrCode');
                 qrElement.innerHTML = `
                     <div class="qr-placeholder w-full h-full">
@@ -900,72 +582,44 @@
             }
         }
 
-        // ========================================
-        // PDF GENERATION
-        // ========================================
-
+        // ===== PDF =====
         async function downloadPDF() {
             try {
-                console.log('📄 Avvio generazione PDF...');
-                
-                if (!window.jspdf || !window.html2canvas) {
-                    throw new Error('Librerie PDF non caricate');
-                }
-
+                if (!window.jspdf || !window.html2canvas) throw new Error('Librerie PDF non caricate');
                 APP_CONFIG.NOTIFICATIONS.showToast('Generazione PDF in corso...', 'info');
 
                 const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: 'a4'
-                });
+                const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-                // Cattura la tessera
                 const tesseraElement = document.getElementById('tesseraCard');
-                
                 const originalStyle = tesseraElement.style.cssText;
                 tesseraElement.style.animation = 'none';
                 tesseraElement.style.transform = 'none';
                 
                 const canvas = await html2canvas(tesseraElement, {
-                    scale: 3,
-                    useCORS: true,
-                    backgroundColor: '#ffffff',
-                    logging: false,
-                    allowTaint: false,
-                    foreignObjectRendering: true
+                    scale: 3, useCORS: true, backgroundColor: '#ffffff',
+                    logging: false, allowTaint: false, foreignObjectRendering: true
                 });
 
                 tesseraElement.style.cssText = originalStyle;
 
                 const imgData = canvas.toDataURL('image/png', 1.0);
-                
-                const pdfWidth = 210;
-                const pdfHeight = 297;
-                const imgWidth = 180;
+                const pdfWidth = 210, pdfHeight = 297, imgWidth = 180;
                 const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                const x = (pdfWidth - imgWidth) / 2;
-                const y = 40;
+                const x = (pdfWidth - imgWidth) / 2, y = 40;
                 
-                pdf.setFontSize(24);
-                pdf.setTextColor(26, 26, 46);
+                pdf.setFontSize(24); pdf.setTextColor(26, 26, 46);
                 pdf.text('Tessera Digitale MyApp', pdfWidth / 2, 25, { align: 'center' });
-                
-                pdf.setFontSize(12);
-                pdf.setTextColor(100, 100, 100);
+                pdf.setFontSize(12); pdf.setTextColor(100, 100, 100);
                 pdf.text(`Tessera N° ${currentTessera.numero_tessera}`, pdfWidth / 2, 35, { align: 'center' });
-                
                 pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
                 
                 const infoY = y + imgHeight + 20;
-                pdf.setFontSize(14);
-                pdf.setTextColor(26, 26, 46);
+                const prettyName = formatName(currentTessera.nome_completo);
+                pdf.setFontSize(14); pdf.setTextColor(26, 26, 46);
                 pdf.text('Informazioni Tessera:', 20, infoY);
-                
-                pdf.setFontSize(10);
-                pdf.setTextColor(60, 60, 60);
-                pdf.text(`Nome: ${currentTessera.nome_completo}`, 20, infoY + 10);
+                pdf.setFontSize(10); pdf.setTextColor(60, 60, 60);
+                pdf.text(`Nome: ${prettyName}`, 20, infoY + 10);
                 pdf.text(`Email: ${currentTessera.email}`, 20, infoY + 20);
                 pdf.text(`Numero Tessera: ${currentTessera.numero_tessera}`, 20, infoY + 30);
                 pdf.text(`Tipo: ${currentTessera.tipo}`, 20, infoY + 40);
@@ -973,16 +627,14 @@
                 pdf.text(`Data Scadenza: ${formatDate(currentTessera.data_scadenza)}`, 20, infoY + 60);
                 pdf.text(`Stato: ${currentTessera.stato}`, 20, infoY + 70);
                 
-                pdf.setFontSize(8);
-                pdf.setTextColor(120, 120, 120);
+                pdf.setFontSize(8); pdf.setTextColor(120, 120, 120);
                 pdf.text(`Documento generato il ${new Date().toLocaleDateString('it-IT')} alle ${new Date().toLocaleTimeString('it-IT')}`, pdfWidth / 2, pdfHeight - 20, { align: 'center' });
                 pdf.text('MyApp - Tessera Digitale Ufficiale', pdfWidth / 2, pdfHeight - 10, { align: 'center' });
                 
-                const filename = `tessera_myapp_${currentTessera.numero_tessera}_${new Date().getTime()}.pdf`;
+                const filename = `tessera_myapp_${currentTessera.numero_tessera}_${Date.now()}.pdf`;
                 pdf.save(filename);
 
                 APP_CONFIG.NOTIFICATIONS.showToast('PDF generato con successo!', 'success');
-                console.log('✅ PDF generato:', filename);
 
             } catch (error) {
                 console.error('❌ Errore generazione PDF:', error);
@@ -990,92 +642,12 @@
             }
         }
 
-        // ========================================
-        // CONDIVISIONE: TESSERA COME IMMAGINE
-        // ========================================
-
-        function canvasToBlob(canvas) {
-            return new Promise(resolve => canvas.toBlob(b => resolve(b), 'image/png', 1.0));
-        }
-
-        async function shareTesseraImage() {
-            try {
-                if (!window.html2canvas) throw new Error('Libreria html2canvas non disponibile');
-
-                const card = document.getElementById('tesseraCard');
-
-                // Disabilita animazioni durante la cattura
-                const prevStyle = card.style.cssText;
-                card.style.animation = 'none';
-                card.style.transform = 'none';
-
-                const canvas = await html2canvas(card, {
-                    scale: 3,
-                    useCORS: true,
-                    backgroundColor: null,
-                    logging: false,
-                    allowTaint: false,
-                    foreignObjectRendering: true
-                });
-
-                // Ripristina stile
-                card.style.cssText = prevStyle;
-
-                const blob = await canvasToBlob(canvas);
-                if (!blob) throw new Error('Impossibile creare immagine dalla tessera');
-
-                const filename = `tessera_${currentTessera?.numero_tessera || 'myapp'}.png`;
-                const file = new File([blob], filename, { type: 'image/png' });
-
-                // 1) Web Share API con file (Android/iOS supportati)
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    await navigator.share({
-                        files: [file],
-                        title: 'Tessera Digitale MyApp',
-                        text: `Tessera N° ${currentTessera?.numero_tessera || ''} - MyApp`
-                    });
-                    console.log('✅ Immagine condivisa con Web Share API');
-                    return;
-                }
-
-                // 2) Copia immagine negli appunti (alcuni desktop browser)
-                if (navigator.clipboard && window.ClipboardItem && window.isSecureContext) {
-                    await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-                    APP_CONFIG.NOTIFICATIONS.showToast('Immagine copiata negli appunti! Incollala dove vuoi.', 'success');
-                    return;
-                }
-
-                // 3) Download come fallback universale
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                APP_CONFIG.NOTIFICATIONS.showToast('Immagine scaricata. Condividila dalla galleria.', 'info');
-
-            } catch (error) {
-                console.error('Errore condivisione immagine:', error);
-                APP_CONFIG.NOTIFICATIONS.showToast('Impossibile condividere ora. Riprova.', 'error');
-            }
-        }
-
-        // ========================================
-        // EVENT HANDLERS
-        // ========================================
-
+        // ===== EVENTS =====
         function setupEventHandlers() {
             document.getElementById('downloadPDF').addEventListener('click', downloadPDF);
-            // Condivisione come immagine PNG
-            document.getElementById('shareButton').addEventListener('click', shareTesseraImage);
         }
 
-        // ========================================
-        // INIZIALIZZAZIONE PRINCIPALE
-        // ========================================
-
+        // ===== INIT =====
         async function initializePage() {
             try {
                 showLoader();
@@ -1093,12 +665,8 @@
                 } else {
                     APP_CONFIG.NOTIFICATIONS.showToast('Errore nel caricamento della tessera', 'error');
                 }
-                if (error.message === 'Utente non autenticato') {
-                    window.location.replace('auth.html');
-                }
-            } finally {
-                hideLoader();
-            }
+                if (error.message === 'Utente non autenticato') window.location.replace('auth.html');
+            } finally { hideLoader(); }
         }
 
         document.addEventListener('DOMContentLoaded', initializePage);
