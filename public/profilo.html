@@ -1,1650 +1,869 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profilo - MyApp</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- CONFIGURAZIONE COLORI TAILWIND -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1a1a2e',
-                        secondary: '#16213e',
-                        accent: '#0f3460',
-                        aurora: '#e94560',
-                        cyan: '#00d4ff',
-                        magenta: '#ff006e',
-                        gold: '#ffd700',
-                        teal: '#03dac6',
-                        dark: '#0a0a23',
-                        light: '#f8fafc',
-                        textDark: '#1C1C1E',
-                        backgroundLight: '#F4F4F8',
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <!-- STILI CSS COMPLETI -->
-    <style>
-        :root {
-            --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
-            --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
-            --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profilo - MyApp</title>
 
-        body {
-            background: var(--gradient-aurora);
-            background-size: 400% 400%;
-            animation: aurora 20s ease infinite;
-            min-height: 100vh;
-        }
+  <!-- Tailwind CSS (per prod consigliato CSS compilato) -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-        @keyframes aurora {
-            0%, 100% { background-position: 0% 50%; }
-            25% { background-position: 100% 50%; }
-            50% { background-position: 100% 100%; }
-            75% { background-position: 0% 100%; }
-        }
+  <!-- Supabase JS v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1a1a2e',
+            secondary: '#16213e',
+            accent: '#0f3460',
+            aurora: '#e94560',
+            cyan: '#00d4ff',
+            magenta: '#ff006e',
+            gold: '#ffd700',
+            teal: '#03dac6',
+            dark: '#0a0a23',
+            light: '#f8fafc',
+            textDark: '#1C1C1E',
+            backgroundLight: '#F4F4F8',
+          }
         }
+      }
+    }
+  </script>
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .text-ultra-visible {
-            color: #ffffff;
-            text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
-            font-weight: 800;
-        }
-
-        .text-white {
-            text-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 1);
-        }
-
-        .glass-morphism {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .btn-aurora {
-            background: var(--gradient-magic);
-            color: white;
-            border: 2px solid rgba(233, 69, 96, 0.3);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: 700;
-        }
-
-        .btn-aurora:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(233, 69, 96, 0.4);
-            border-color: rgba(233, 69, 96, 0.8);
-        }
-
-        .btn-cyber {
-            background: var(--gradient-cyber);
-            border: 2px solid rgba(0, 212, 255, 0.3);
-            color: white;
-            font-weight: 700;
-        }
-
-        .btn-cyber:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.4);
-            border-color: rgba(0, 212, 255, 0.8);
-        }
-
-        .input-field {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(16px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 15px;
-            padding: 14px 18px;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .input-field:focus {
-            outline: none;
-            border-color: #e94560;
-            box-shadow: 0 0 0 4px rgba(233, 69, 96, 0.2);
-            transform: scale(1.02);
-        }
-
-        .input-field:disabled {
-            background: rgba(255, 255, 255, 0.7);
-            color: #666;
-            cursor: not-allowed;
-        }
-
-        .input-field.editable {
-            background: rgba(255, 255, 255, 0.98);
-            border-color: rgba(0, 212, 255, 0.5);
-        }
-
-        .input-field.editable:focus {
-            border-color: #00d4ff;
-            box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.2);
-        }
-
-        .role-badge {
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border: 2px solid;
-            transition: all 0.3s ease;
-        }
-
-        .role-user {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            color: white;
-            border-color: rgba(59, 130, 246, 0.3);
-        }
-
-        .role-dirigente {
-            background: linear-gradient(135deg, #10b981, #047857);
-            color: white;
-            border-color: rgba(16, 185, 129, 0.3);
-        }
-
-        .role-admin {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: white;
-            border-color: rgba(245, 158, 11, 0.3);
-        }
-
-        .avatar-upload {
-            position: relative;
-            width: 150px;
-            height: 150px;
-            margin: 0 auto;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 4px solid rgba(233, 69, 96, 0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .avatar-upload:hover {
-            border-color: rgba(233, 69, 96, 0.8);
-            transform: scale(1.05);
-        }
-
-        .avatar-upload img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .avatar-upload-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            color: white;
-            font-size: 14px;
-            text-align: center;
-            padding: 10px;
-        }
-
-        .avatar-upload:hover .avatar-upload-overlay {
-            opacity: 1;
-        }
-
-        .spinner {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border: 3px solid rgba(255, 255, 255, 0.35);
-            border-top-color: #ffffff;
-            animation: spin 1s linear infinite;
-        }
-
-        .loading-skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 12px;
-        }
-
-        #pageLoader {
-            position: fixed;
-            inset: 0;
-            background: rgba(10, 10, 35, 0.6);
-            backdrop-filter: blur(2px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 60;
-        }
-
-        .stat-item {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .stat-item:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-5px);
-        }
-
-        .security-section {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 25px;
-        }
-
-        .change-password-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(4px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 70;
-        }
-
-        .modal-content {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 400px;
-            width: 90%;
-            position: relative;
-        }
-
-        .field-status {
-            font-size: 12px;
-            margin-top: 4px;
-            min-height: 16px;
-        }
-
-        .field-modified {
-            color: #00d4ff;
-        }
-
-        .field-required {
-            color: #e94560;
-        }
-
-        .field-optional {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        @media (max-width: 640px) {
-            .avatar-upload {
-                width: 120px;
-                height: 120px;
-            }
-        }
-    </style>
+  <style>
+    :root {
+      --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
+      --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
+      --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
+    }
+    body { background: var(--gradient-aurora); background-size: 400% 400%; animation: aurora 20s ease infinite; min-height: 100vh; }
+    @keyframes aurora { 0%,100%{background-position:0% 50%} 25%{background-position:100% 50%} 50%{background-position:100% 100%} 75%{background-position:0% 100%} }
+    @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+    @keyframes spin { to { transform: rotate(360deg) } }
+    .text-ultra-visible{ color:#fff; text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1); font-weight:800 }
+    .text-white{ text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1) }
+    .glass-morphism{ background:rgba(255,255,255,.08); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,.18); box-shadow:0 8px 32px 0 rgba(31,38,135,.37) }
+    .glass-card{ background:rgba(255,255,255,.95); backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,.3) }
+    .btn-aurora{ background:var(--gradient-magic); color:#fff; border:2px solid rgba(233,69,96,.3); transition:all .4s cubic-bezier(.4,0,.2,1); font-weight:700 }
+    .btn-aurora:hover{ transform:translateY(-3px) scale(1.05); box-shadow:0 20px 40px rgba(233,69,96,.4); border-color:rgba(233,69,96,.8) }
+    .btn-cyber{ background:var(--gradient-cyber); border:2px solid rgba(0,212,255,.3); color:#fff; font-weight:700 }
+    .btn-cyber:hover{ transform:translateY(-3px) scale(1.05); box-shadow:0 20px 40px rgba(0,212,255,.4); border-color:rgba(0,212,255,.8) }
+    .input-field{ background:rgba(255,255,255,.95); backdrop-filter:blur(16px); border:2px solid rgba(255,255,255,.3); border-radius:15px; padding:14px 18px; font-size:16px; font-weight:600; transition:.3s }
+    .input-field:focus{ outline:none; border-color:#e94560; box-shadow:0 0 0 4px rgba(233,69,96,.2); transform:scale(1.02) }
+    .input-field:disabled{ background:rgba(255,255,255,.7); color:#666; cursor:not-allowed }
+    .input-field.editable{ background:rgba(255,255,255,.98); border-color:rgba(0,212,255,.5) }
+    .input-field.editable:focus{ border-color:#00d4ff; box-shadow:0 0 0 4px rgba(0,212,255,.2) }
+    .role-badge{ display:inline-block; padding:8px 16px; border-radius:20px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; border:2px solid; transition:.3s }
+    .role-user{ background:linear-gradient(135deg,#3b82f6,#1d4ed8); color:#fff; border-color:rgba(59,130,246,.3) }
+    .role-dirigente{ background:linear-gradient(135deg,#10b981,#047857); color:#fff; border-color:rgba(16,185,129,.3) }
+    .role-admin{ background:linear-gradient(135deg,#f59e0b,#d97706); color:#fff; border-color:rgba(245,158,11,.3) }
+    .avatar-upload{ position:relative; width:150px; height:150px; margin:0 auto; border-radius:50%; overflow:hidden; border:4px solid rgba(233,69,96,.3); cursor:pointer; transition:.3s }
+    .avatar-upload:hover{ border-color:rgba(233,69,96,.8); transform:scale(1.05) }
+    .avatar-upload img{ width:100%; height:100%; object-fit:cover }
+    .avatar-upload-overlay{ position:absolute; inset:0; background:rgba(0,0,0,.7); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .3s; color:#fff; font-size:14px; text-align:center; padding:10px }
+    .avatar-upload:hover .avatar-upload-overlay{ opacity:1 }
+    .spinner{ width:24px; height:24px; border-radius:50%; border:3px solid rgba(255,255,255,.35); border-top-color:#fff; animation:spin 1s linear infinite }
+    .loading-skeleton{ background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; border-radius:12px }
+    #pageLoader{ position:fixed; inset:0; background:rgba(10,10,35,.6); backdrop-filter:blur(2px); display:none; align-items:center; justify-content:center; z-index:60 }
+    .stat-item{ background:rgba(255,255,255,.1); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.2); border-radius:15px; padding:20px; text-align:center; transition:.3s }
+    .stat-item:hover{ background:rgba(255,255,255,.15); transform:translateY(-5px) }
+    .security-section{ background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:20px; padding:25px }
+    .change-password-modal{ position:fixed; inset:0; background:rgba(0,0,0,.8); backdrop-filter:blur(4px); display:none; align-items:center; justify-content:center; z-index:70 }
+    .modal-content{ background:rgba(255,255,255,.95); backdrop-filter:blur(20px); border-radius:20px; padding:30px; max-width:400px; width:90%; position:relative }
+    .field-status{ font-size:12px; margin-top:4px; min-height:16px }
+    .field-modified{ color:#00d4ff }
+    .field-required{ color:#e94560 }
+    .field-optional{ color:rgba(255,255,255,.7) }
+    @media (max-width:640px){ .avatar-upload{ width:120px; height:120px } }
+  </style>
 </head>
 
 <body class="flex flex-col min-h-screen font-sans">
-    <!-- Loader -->
-    <div id="pageLoader">
-        <div class="glass-card p-6 rounded-2xl flex items-center gap-4">
-            <div class="spinner"></div>
-            <div class="text-dark text-lg font-semibold">Caricamento profilo...</div>
-        </div>
+  <!-- Loader -->
+  <div id="pageLoader">
+    <div class="glass-card p-6 rounded-2xl flex items-center gap-4">
+      <div class="spinner"></div>
+      <div class="text-dark text-lg font-semibold">Caricamento profilo...</div>
     </div>
+  </div>
 
-    <!-- Header -->
-    <header class="py-4 px-6 sticky top-0 z-50 glass-morphism">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center">
-                <a href="#" id="logoHomeLink" class="text-white text-2xl font-bold">MyApp</a>
-                <span class="ml-4 text-white opacity-80">/ Profilo</span>
-            </div>
-            <div class="flex items-center gap-4">
-                <a href="#" id="backHomeLink" class="text-white opacity-80 hover:opacity-100 transition-opacity">
-                    ← Torna alla Home
-                </a>
-            </div>
-        </div>
-    </header>
-
-    <main class="flex-grow container mx-auto px-4 py-8">
-        <!-- Profile Header -->
-        <section class="mb-12">
-            <div class="glass-morphism rounded-3xl p-8 md:p-12">
-                <div class="flex flex-col md:flex-row items-center gap-8">
-                    <!-- Avatar Section -->
-                    <div class="flex-shrink-0">
-                        <div class="avatar-upload" onclick="triggerAvatarUpload()">
-                            <img id="avatarImage" src="" alt="Avatar" style="display: none;">
-                            <div id="avatarPlaceholder" class="w-full h-full bg-primary flex items-center justify-center">
-                                <span id="avatarInitials" class="text-white text-4xl font-bold">--</span>
-                            </div>
-                            <div class="avatar-upload-overlay">
-                                <div>
-                                    📷<br>
-                                    Cambia Foto
-                                </div>
-                            </div>
-                        </div>
-                        <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)">
-                    </div>
-
-                    <!-- User Info -->
-                    <div class="flex-grow text-center md:text-left">
-                        <h1 class="text-ultra-visible text-4xl md:text-5xl font-black mb-4">
-                            <span id="userFullName">Caricamento...</span>
-                        </h1>
-                        <p class="text-white text-lg mb-4" id="userEmail">email@esempio.com</p>
-                        <div class="flex flex-wrap gap-4 justify-center md:justify-start">
-                            <span id="userRoleBadge" class="role-badge role-user">USER</span>
-                            <span class="role-badge" style="background: rgba(0, 212, 255, 0.2); color: #00d4ff; border-color: rgba(0, 212, 255, 0.3);">
-                                <span id="userStatus">ATTIVO</span>
-                            </span>
-                            <span class="role-badge" style="background: rgba(255, 215, 0, 0.2); color: #ffd700; border-color: rgba(255, 215, 0, 0.3);">
-                                Tessera: <span id="userTessera">--</span>
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Quick Stats -->
-                    <div class="flex-shrink-0 grid grid-cols-2 gap-4">
-                        <div class="stat-item">
-                            <div class="text-3xl font-bold text-white" id="totalRequests">--</div>
-                            <div class="text-white opacity-80 text-sm">Richieste</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="text-3xl font-bold text-white" id="profileCompletion">--</div>
-                            <div class="text-white opacity-80 text-sm">Completato</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Profile Form -->
-        <section class="mb-12">
-            <div class="glass-morphism rounded-3xl p-8">
-                <div class="flex justify-between items-center mb-8">
-                    <h2 class="text-ultra-visible text-3xl font-black">Informazioni Personali</h2>
-                    <button id="editProfileBtn" class="btn-aurora py-2 px-6 rounded-xl">
-                        <span id="editBtnText">✏️ Modifica</span>
-                        <span id="editBtnSpinner" class="hidden flex items-center gap-2">
-                            <div class="spinner"></div>
-                            Salvataggio...
-                        </span>
-                    </button>
-                </div>
-
-                <form id="profileForm" class="space-y-6">
-                    <!-- Sezione Dati Non Modificabili -->
-                    <div class="bg-black/20 rounded-2xl p-6 border border-white/10">
-                        <h3 class="text-white text-xl font-bold mb-4 flex items-center gap-2">
-                            🔒 Dati Non Modificabili
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-white text-sm font-semibold mb-2">Nome *</label>
-                                <input 
-                                    type="text" 
-                                    id="inputNome" 
-                                    name="nome"
-                                    class="input-field w-full" 
-                                    disabled
-                                    required
-                                >
-                                <div class="field-status text-white opacity-60">
-                                    🚫 Il nome non può essere modificato
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-white text-sm font-semibold mb-2">Cognome *</label>
-                                <input 
-                                    type="text" 
-                                    id="inputCognome" 
-                                    name="cognome"
-                                    class="input-field w-full" 
-                                    disabled
-                                    required
-                                >
-                                <div class="field-status text-white opacity-60">
-                                    🚫 Il cognome non può essere modificato
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-white text-sm font-semibold mb-2">Data di Nascita *</label>
-                                <input 
-                                    type="date" 
-                                    id="inputDataNascita" 
-                                    name="data_nascita"
-                                    class="input-field w-full" 
-                                    disabled
-                                    required
-                                >
-                                <div class="field-status text-white opacity-60">
-                                    🚫 La data di nascita non può essere modificata
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-white text-sm font-semibold mb-2">Luogo di Nascita *</label>
-                                <input 
-                                    type="text" 
-                                    id="inputLuogoNascita" 
-                                    name="luogo_nascita"
-                                    class="input-field w-full" 
-                                    disabled
-                                    required
-                                >
-                                <div class="field-status text-white opacity-60">
-                                    🚫 Il luogo di nascita non può essere modificato
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Sezione Contatti (Modificabile) -->
-                    <div class="bg-cyan/10 rounded-2xl p-6 border border-cyan/20">
-                        <h3 class="text-white text-xl font-bold mb-4 flex items-center gap-2">
-                            📧 Informazioni di Contatto
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-white text-sm font-semibold mb-2">Email *</label>
-                                <input 
-                                    type="email" 
-                                    id="inputEmail" 
-                                    name="email"
-                                    class="input-field w-full" 
-                                    disabled
-                                    required
-                                >
-                                <div id="emailStatus" class="field-status field-optional">
-                                    📧 Email principale del tuo account
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-white text-sm font-semibold mb-2">Telefono *</label>
-                                <input 
-                                    type="tel" 
-                                    id="inputTelefono" 
-                                    name="telefono"
-                                    class="input-field w-full" 
-                                    placeholder="+39 123 456 7890"
-                                    disabled
-                                >
-                                <div id="telefonoStatus" class="field-status field-optional">
-                                    📱 Numero di telefono principale
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Sezione Informazioni Personali (Modificabile) -->
-                    <div class="bg-aurora/10 rounded-2xl p-6 border border-aurora/20">
-                        <h3 class="text-white text-xl font-bold mb-4 flex items-center gap-2">
-                            👤 Informazioni Personali
-                        </h3>
-                        <div class="space-y-6">
-                            <div>
-                                <label class="block text-white text-sm font-semibold mb-2">Codice Fiscale</label>
-                                <input 
-                                    type="text" 
-                                    id="inputCodiceFiscale" 
-                                    name="codice_fiscale"
-                                    class="input-field w-full" 
-                                    placeholder="RSSMRA85M01H501Z"
-                                    maxlength="16"
-                                    disabled
-                                >
-                                <div id="codiceFiscaleStatus" class="field-status field-optional">
-                                    🆔 Codice fiscale italiano
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block text-white text-sm font-semibold mb-2">Indirizzo Completo</label>
-                                <input 
-                                    type="text" 
-                                    id="inputIndirizzo" 
-                                    name="indirizzo"
-                                    class="input-field w-full" 
-                                    placeholder="Via Roma, 123"
-                                    disabled
-                                >
-                                <div id="indirizzoStatus" class="field-status field-optional">
-                                    🏠 Indirizzo di residenza
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div>
-                                    <label class="block text-white text-sm font-semibold mb-2">Città</label>
-                                    <input 
-                                        type="text" 
-                                        id="inputCitta" 
-                                        name="citta"
-                                        class="input-field w-full" 
-                                        placeholder="Roma"
-                                        disabled
-                                    >
-                                    <div id="cittaStatus" class="field-status field-optional">
-                                        🏙️ Città di residenza
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-white text-sm font-semibold mb-2">CAP</label>
-                                    <input 
-                                        type="text" 
-                                        id="inputCap" 
-                                        name="cap"
-                                        class="input-field w-full" 
-                                        placeholder="00100"
-                                        maxlength="5"
-                                        disabled
-                                    >
-                                    <div id="capStatus" class="field-status field-optional">
-                                        📮 Codice avviamento postale
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-white text-sm font-semibold mb-2">Provincia</label>
-                                    <input 
-                                        type="text" 
-                                        id="inputProvincia" 
-                                        name="provincia"
-                                        class="input-field w-full" 
-                                        placeholder="RM"
-                                        maxlength="2"
-                                        disabled
-                                    >
-                                    <div id="provinciaStatus" class="field-status field-optional">
-                                        🗺️ Sigla provincia (es. RM, MI)
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block text-white text-sm font-semibold mb-2">Bio / Descrizione</label>
-                                <textarea 
-                                    id="inputBio" 
-                                    name="bio"
-                                    class="input-field w-full h-24 resize-none" 
-                                    placeholder="Raccontaci qualcosa di te..."
-                                    disabled
-                                ></textarea>
-                                <div id="bioStatus" class="field-status field-optional">
-                                    📝 Breve descrizione personale (opzionale)
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Save/Cancel Buttons (hidden initially) -->
-                    <div id="formActions" class="hidden flex gap-4 pt-4">
-                        <button type="submit" class="btn-aurora py-3 px-6 rounded-xl flex-1">
-                            💾 Salva Modifiche
-                        </button>
-                        <button type="button" id="cancelEditBtn" class="btn-cyber py-3 px-6 rounded-xl">
-                            ❌ Annulla
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </section>
-
-        <!-- Security Section -->
-        <section class="mb-12">
-            <div class="glass-morphism rounded-3xl p-8">
-                <h2 class="text-ultra-visible text-3xl font-black mb-8">Sicurezza e Privacy</h2>
-                
-                <div class="space-y-6">
-                    <div class="security-section">
-                        <h3 class="text-white text-xl font-bold mb-4">🔐 Password</h3>
-                        <p class="text-white opacity-90 mb-4">
-                            Mantieni il tuo account sicuro aggiornando regolarmente la password.
-                        </p>
-                        <button id="changePasswordBtn" class="btn-aurora py-2 px-6 rounded-xl">
-                            Cambia Password
-                        </button>
-                    </div>
-
-                    <div class="security-section">
-                        <h3 class="text-white text-xl font-bold mb-4">📧 Preferenze Email</h3>
-                        <div class="space-y-3">
-                            <label class="flex items-center text-white">
-                                <input type="checkbox" id="emailNews" class="mr-3" checked>
-                                Ricevi notifiche di nuove notizie
-                            </label>
-                            <label class="flex items-center text-white">
-                                <input type="checkbox" id="emailEvents" class="mr-3" checked>
-                                Ricevi inviti agli eventi
-                            </label>
-                            <label class="flex items-center text-white">
-                                <input type="checkbox" id="emailUpdates" class="mr-3" checked>
-                                Ricevi aggiornamenti importanti
-                            </label>
-                        </div>
-                        <button id="savePreferencesBtn" class="btn-cyber py-2 px-6 rounded-xl mt-4">
-                            Salva Preferenze
-                        </button>
-                    </div>
-
-                    <div class="security-section">
-                        <h3 class="text-white text-xl font-bold mb-4">🗑️ Account</h3>
-                        <p class="text-white opacity-90 mb-4">
-                            Se desideri eliminare il tuo account, contatta l'amministratore.
-                        </p>
-                        <button id="deleteAccountBtn" class="bg-red-600 hover:bg-red-700 text-white py-2 px-6 rounded-xl transition-colors">
-                            Richiedi Cancellazione Account
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Activity Log -->
-        <section class="mb-12">
-            <div class="glass-morphism rounded-3xl p-8">
-                <h2 class="text-ultra-visible text-3xl font-black mb-8">Attività Recente</h2>
-                <div id="activityLog" class="space-y-4">
-                    <div class="loading-skeleton h-16"></div>
-                    <div class="loading-skeleton h-16"></div>
-                    <div class="loading-skeleton h-16"></div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Change Password Modal -->
-    <div id="changePasswordModal" class="change-password-modal">
-        <div class="modal-content">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-dark text-xl font-bold">🔐 Cambia Password</h3>
-                <button onclick="closePasswordModal()" class="text-gray-500 hover:text-gray-700 text-2xl">×</button>
-            </div>
-
-            <form id="changePasswordForm" class="space-y-4">
-                <div>
-                    <label class="block text-dark text-sm font-semibold mb-2">Password Attuale</label>
-                    <input 
-                        type="password" 
-                        id="currentPassword" 
-                        name="current_password"
-                        class="input-field w-full" 
-                        required
-                    >
-                </div>
-
-                <div>
-                    <label class="block text-dark text-sm font-semibold mb-2">Nuova Password</label>
-                    <input 
-                        type="password" 
-                        id="newPassword" 
-                        name="new_password"
-                        class="input-field w-full" 
-                        minlength="8"
-                        required
-                    >
-                </div>
-
-                <div>
-                    <label class="block text-dark text-sm font-semibold mb-2">Conferma Nuova Password</label>
-                    <input 
-                        type="password" 
-                        id="confirmNewPassword" 
-                        name="confirm_new_password"
-                        class="input-field w-full" 
-                        minlength="8"
-                        required
-                    >
-                </div>
-
-                <div class="flex gap-4 pt-4">
-                    <button type="submit" class="btn-aurora py-2 px-4 rounded-xl flex-1">
-                        <span id="changePasswordBtnText">🔐 Cambia Password</span>
-                        <span id="changePasswordSpinner" class="hidden flex items-center gap-2">
-                            <div class="spinner"></div>
-                            Aggiornamento...
-                        </span>
-                    </button>
-                    <button type="button" onclick="closePasswordModal()" class="btn-cyber py-2 px-4 rounded-xl">
-                        Annulla
-                    </button>
-                </div>
-            </form>
-        </div>
+  <!-- Header -->
+  <header class="py-4 px-6 sticky top-0 z-50 glass-morphism">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center">
+        <a href="#" id="logoHomeLink" class="text-white text-2xl font-bold">MyApp</a>
+        <span class="ml-4 text-white opacity-80">/ Profilo</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="#" id="backHomeLink" class="text-white opacity-80 hover:opacity-100 transition-opacity">← Torna alla Home</a>
+      </div>
     </div>
+  </header>
 
-    <!-- Footer Navigazione -->
-    <nav class="py-4 px-6 sticky bottom-0 z-40 glass-morphism">
-        <div class="container mx-auto">
-            <div class="flex justify-between items-center">
-                <a href="#" id="navHomeLink" class="flex flex-col items-center text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                    </svg>
-                    <span class="text-xs mt-1">Home</span>
-                </a>
-                <a href="profilo.html" class="flex flex-col items-center text-aurora">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                    <span class="text-xs mt-1 text-white">Profilo</span>
-                </a>
-                <a href="tessera.html" class="flex flex-col items-center text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    <span class="text-xs mt-1">Tessera</span>
-                </a>
-                <a href="convenzioni.html" class="flex flex-col items-center text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span class="text-xs mt-1">Convenzioni</span>
-                </a>
+  <main class="flex-grow container mx-auto px-4 py-8">
+    <!-- Profile Header -->
+    <section class="mb-12">
+      <div class="glass-morphism rounded-3xl p-8 md:p-12">
+        <div class="flex flex-col md:flex-row items-center gap-8">
+          <!-- Avatar -->
+          <div class="flex-shrink-0">
+            <div class="avatar-upload" onclick="triggerAvatarUpload()">
+              <img id="avatarImage" src="" alt="Avatar" style="display:none;">
+              <div id="avatarPlaceholder" class="w-full h-full bg-primary flex items-center justify-center">
+                <span id="avatarInitials" class="text-white text-4xl font-bold">--</span>
+              </div>
+              <div class="avatar-upload-overlay">
+                <div>📷<br/>Cambia Foto</div>
+              </div>
             </div>
+            <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
+          </div>
+
+          <!-- User Info -->
+          <div class="flex-grow text-center md:text-left">
+            <h1 class="text-ultra-visible text-4xl md:text-5xl font-black mb-4">
+              <span id="userFullName">Caricamento...</span>
+            </h1>
+            <p class="text-white text-lg mb-4" id="userEmail">email@esempio.com</p>
+            <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+              <span id="userRoleBadge" class="role-badge role-user">USER</span>
+              <span class="role-badge" style="background: rgba(0, 212, 255, 0.2); color: #00d4ff; border-color: rgba(0, 212, 255, 0.3);">
+                <span id="userStatus">ATTIVO</span>
+              </span>
+              <span class="role-badge" style="background: rgba(255, 215, 0, 0.2); color: #ffd700; border-color: rgba(255, 215, 0, 0.3);">
+                Tessera: <span id="userTessera">--</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Quick Stats -->
+          <div class="flex-shrink-0 grid grid-cols-2 gap-4">
+            <div class="stat-item">
+              <div class="text-3xl font-bold text-white" id="totalRequests">--</div>
+              <div class="text-white opacity-80 text-sm">Richieste</div>
+            </div>
+            <div class="stat-item">
+              <div class="text-3xl font-bold text-white" id="profileCompletion">--</div>
+              <div class="text-white opacity-80 text-sm">Completato</div>
+            </div>
+          </div>
         </div>
-    </nav>
+      </div>
+    </section>
 
-    <!-- CONFIGURAZIONE SUPABASE -->
-    <script>
-        const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
+    <!-- Profile Form -->
+    <section class="mb-12">
+      <div class="glass-morphism rounded-3xl p-8">
+        <div class="flex justify-between items-center mb-8">
+          <h2 class="text-ultra-visible text-3xl font-black">Informazioni Personali</h2>
+          <button id="editProfileBtn" class="btn-aurora py-2 px-6 rounded-xl">
+            <span id="editBtnText">✏️ Modifica</span>
+            <span id="editBtnSpinner" class="hidden flex items-center gap-2">
+              <div class="spinner"></div> Salvataggio...
+            </span>
+          </button>
+        </div>
 
-        // Configurazione globale dell'app
-        window.APP_CONFIG = {
-            SUPABASE: {
-                client: null,
-                getClient: function() {
-                    if (!this.client) {
-                        this.client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                        console.log('✅ Supabase client inizializzato');
-                    }
-                    return this.client;
-                }
-            },
-            TABLES: {
-                NEWS: 'news',
-                CONVENZIONI: 'convenzioni',
-                RICHIESTE: 'richieste',
-                USER_PROFILES: 'user_profiles',
-                TESSERE: 'tessere',
-                DOCUMENTI: 'documenti'
-            },
-            AUTH: {
-                async getCurrentUser() {
-                    const client = APP_CONFIG.SUPABASE.getClient();
-                    const { data, error } = await client.auth.getUser();
-                    if (error) throw error;
-                    return data?.user || null;
-                },
-                async getUserProfile() {
-                    const user = await this.getCurrentUser();
-                    if (!user) return null;
-                    const client = APP_CONFIG.SUPABASE.getClient();
-                    const { data, error } = await client
-                        .from('user_profiles')
-                        .select('*')
-                        .eq('user_id', user.id)
-                        .single();
-                    if (error) throw error;
-                    return data;
-                },
-                async protectPage() {
-                    const { data: { session } } = await APP_CONFIG.SUPABASE.getClient().auth.getSession();
-                    if (!session) {
-                        window.location.replace('auth.html');
-                        throw new Error('Utente non autenticato');
-                    }
-                    return true;
-                },
-                async logout() {
-                    try {
-                        await APP_CONFIG.SUPABASE.getClient().auth.signOut();
-                        window.location.replace('auth.html');
-                    } catch (error) {
-                        console.error('Errore logout:', error);
-                    }
-                }
-            },
-            NOTIFICATIONS: {
-                showToast: function(msg, type='info') {
-                    console.log(`[${type.toUpperCase()}] ${msg}`);
-                    
-                    const toast = document.createElement('div');
-                    toast.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 max-w-sm font-semibold ${
-                        type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500'
-                    } text-white`;
-                    toast.textContent = msg;
-                    
-                    document.body.appendChild(toast);
-                    
-                    setTimeout(() => {
-                        toast.style.opacity = '0';
-                        setTimeout(() => {
-                            if (document.body.contains(toast)) {
-                                document.body.removeChild(toast);
-                            }
-                        }, 300);
-                    }, 3000);
-                }
+        <form id="profileForm" class="space-y-6">
+          <!-- Non modificabili -->
+          <div class="bg-black/20 rounded-2xl p-6 border border-white/10">
+            <h3 class="text-white text-xl font-bold mb-4 flex items-center gap-2">🔒 Dati Non Modificabili</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-white text-sm font-semibold mb-2">Nome *</label>
+                <input type="text" id="inputNome" name="nome" class="input-field w-full" disabled required>
+                <div class="field-status text-white opacity-60">🚫 Il nome non può essere modificato</div>
+              </div>
+              <div>
+                <label class="block text-white text-sm font-semibold mb-2">Cognome *</label>
+                <input type="text" id="inputCognome" name="cognome" class="input-field w-full" disabled required>
+                <div class="field-status text-white opacity-60">🚫 Il cognome non può essere modificato</div>
+              </div>
+              <div>
+                <label class="block text-white text-sm font-semibold mb-2">Data di Nascita *</label>
+                <input type="date" id="inputDataNascita" name="data_nascita" class="input-field w-full" disabled required>
+                <div class="field-status text-white opacity-60">🚫 La data di nascita non può essere modificata</div>
+              </div>
+              <div>
+                <label class="block text-white text-sm font-semibold mb-2">Luogo di Nascita *</label>
+                <input type="text" id="inputLuogoNascita" name="luogo_nascita" class="input-field w-full" disabled required>
+                <div class="field-status text-white opacity-60">🚫 Il luogo di nascita non può essere modificato</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contatti (email visibile ma non editabile) -->
+          <div class="bg-cyan/10 rounded-2xl p-6 border border-cyan/20">
+            <h3 class="text-white text-xl font-bold mb-4 flex items-center gap-2">📧 Informazioni di Contatto</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-white text-sm font-semibold mb-2">Email *</label>
+                <input type="email" id="inputEmail" name="email" class="input-field w-full" disabled required>
+                <div id="emailStatus" class="field-status field-optional">📧 Email principale del tuo account</div>
+              </div>
+              <div>
+                <label class="block text-white text-sm font-semibold mb-2">Telefono *</label>
+                <input type="tel" id="inputTelefono" name="telefono" class="input-field w-full" placeholder="+39 123 456 7890" disabled>
+                <div id="telefonoStatus" class="field-status field-optional">📱 Numero di telefono principale</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Informazioni personali (modificabili) -->
+          <div class="bg-aurora/10 rounded-2xl p-6 border border-aurora/20">
+            <h3 class="text-white text-xl font-bold mb-4 flex items-center gap-2">👤 Informazioni Personali</h3>
+            <div class="space-y-6">
+              <div>
+                <label class="block text-white text-sm font-semibold mb-2">Codice Fiscale</label>
+                <input type="text" id="inputCodiceFiscale" name="codice_fiscale" class="input-field w-full" placeholder="RSSMRA85M01H501Z" maxlength="16" disabled>
+                <div id="codiceFiscaleStatus" class="field-status field-optional">🆔 Codice fiscale italiano</div>
+              </div>
+              <div>
+                <label class="block text-white text-sm font-semibold mb-2">Indirizzo Completo</label>
+                <input type="text" id="inputIndirizzo" name="indirizzo" class="input-field w-full" placeholder="Via Roma, 123" disabled>
+                <div id="indirizzoStatus" class="field-status field-optional">🏠 Indirizzo di residenza</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <label class="block text-white text-sm font-semibold mb-2">Città</label>
+                  <input type="text" id="inputCitta" name="citta" class="input-field w-full" placeholder="Roma" disabled>
+                  <div id="cittaStatus" class="field-status field-optional">🏙️ Città di residenza</div>
+                </div>
+                <div>
+                  <label class="block text-white text-sm font-semibold mb-2">CAP</label>
+                  <input type="text" id="inputCap" name="cap" class="input-field w-full" placeholder="00100" maxlength="5" disabled>
+                  <div id="capStatus" class="field-status field-optional">📮 Codice avviamento postale</div>
+                </div>
+                <div>
+                  <label class="block text-white text-sm font-semibold mb-2">Provincia</label>
+                  <input type="text" id="inputProvincia" name="provincia" class="input-field w-full" placeholder="RM" maxlength="2" disabled>
+                  <div id="provinciaStatus" class="field-status field-optional">🗺️ Sigla provincia (es. RM, MI)</div>
+                </div>
+              </div>
+              <div>
+                <label class="block text-white text-sm font-semibold mb-2">Bio / Descrizione</label>
+                <textarea id="inputBio" name="bio" class="input-field w-full h-24 resize-none" placeholder="Raccontaci qualcosa di te..." disabled></textarea>
+                <div id="bioStatus" class="field-status field-optional">📝 Breve descrizione personale (opzionale)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Save/Cancel -->
+          <div id="formActions" class="hidden flex gap-4 pt-4">
+            <button type="submit" class="btn-aurora py-3 px-6 rounded-xl flex-1">💾 Salva Modifiche</button>
+            <button type="button" id="cancelEditBtn" class="btn-cyber py-3 px-6 rounded-xl">❌ Annulla</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Security -->
+    <section class="mb-12">
+      <div class="glass-morphism rounded-3xl p-8">
+        <h2 class="text-ultra-visible text-3xl font-black mb-8">Sicurezza e Privacy</h2>
+        <div class="space-y-6">
+          <div class="security-section">
+            <h3 class="text-white text-xl font-bold mb-4">🔐 Password</h3>
+            <p class="text-white opacity-90 mb-4">Mantieni il tuo account sicuro aggiornando regolarmente la password.</p>
+            <button id="changePasswordBtn" class="btn-aurora py-2 px-6 rounded-xl">Cambia Password</button>
+          </div>
+          <div class="security-section">
+            <h3 class="text-white text-xl font-bold mb-4">📧 Preferenze Email</h3>
+            <div class="space-y-3">
+              <label class="flex items-center text-white"><input type="checkbox" id="emailNews" class="mr-3" checked>Ricevi notifiche di nuove notizie</label>
+              <label class="flex items-center text-white"><input type="checkbox" id="emailEvents" class="mr-3" checked>Ricevi inviti agli eventi</label>
+              <label class="flex items-center text-white"><input type="checkbox" id="emailUpdates" class="mr-3" checked>Ricevi aggiornamenti importanti</label>
+            </div>
+            <button id="savePreferencesBtn" class="btn-cyber py-2 px-6 rounded-xl mt-4">Salva Preferenze</button>
+          </div>
+          <div class="security-section">
+            <h3 class="text-white text-xl font-bold mb-4">🗑️ Account</h3>
+            <p class="text-white opacity-90 mb-4">Se desideri eliminare il tuo account, contatta l'amministratore.</p>
+            <button id="deleteAccountBtn" class="bg-red-600 hover:bg-red-700 text-white py-2 px-6 rounded-xl transition-colors">Richiedi Cancellazione Account</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Activity Log -->
+    <section class="mb-12">
+      <div class="glass-morphism rounded-3xl p-8">
+        <h2 class="text-ultra-visible text-3xl font-black mb-8">Attività Recente</h2>
+        <div id="activityLog" class="space-y-4">
+          <div class="loading-skeleton h-16"></div>
+          <div class="loading-skeleton h-16"></div>
+          <div class="loading-skeleton h-16"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Change Password Modal -->
+  <div id="changePasswordModal" class="change-password-modal">
+    <div class="modal-content">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-dark text-xl font-bold">🔐 Cambia Password</h3>
+        <button onclick="closePasswordModal()" class="text-gray-500 hover:text-gray-700 text-2xl">×</button>
+      </div>
+      <form id="changePasswordForm" class="space-y-4">
+        <div>
+          <label class="block text-dark text-sm font-semibold mb-2">Password Attuale</label>
+          <input type="password" id="currentPassword" name="current_password" class="input-field w-full" required>
+        </div>
+        <div>
+          <label class="block text-dark text-sm font-semibold mb-2">Nuova Password</label>
+          <input type="password" id="newPassword" name="new_password" class="input-field w-full" minlength="8" required>
+        </div>
+        <div>
+          <label class="block text-dark text-sm font-semibold mb-2">Conferma Nuova Password</label>
+          <input type="password" id="confirmNewPassword" name="confirm_new_password" class="input-field w-full" minlength="8" required>
+        </div>
+        <div class="flex gap-4 pt-4">
+          <button type="submit" class="btn-aurora py-2 px-4 rounded-xl flex-1">
+            <span id="changePasswordBtnText">🔐 Cambia Password</span>
+            <span id="changePasswordSpinner" class="hidden flex items-center gap-2"><div class="spinner"></div> Aggiornamento...</span>
+          </button>
+          <button type="button" onclick="closePasswordModal()" class="btn-cyber py-2 px-4 rounded-xl">Annulla</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer Nav -->
+  <nav class="py-4 px-6 sticky bottom-0 z-40 glass-morphism">
+    <div class="container mx-auto">
+      <div class="flex justify-between items-center">
+        <a href="#" id="navHomeLink" class="flex flex-col items-center text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          <span class="text-xs mt-1">Home</span>
+        </a>
+        <a href="profilo.html" class="flex flex-col items-center text-aurora">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          <span class="text-xs mt-1 text-white">Profilo</span>
+        </a>
+        <a href="tessera.html" class="flex flex-col items-center text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <span class="text-xs mt-1">Tessera</span>
+        </a>
+        <a href="convenzioni.html" class="flex flex-col items-center text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span class="text-xs mt-1">Convenzioni</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- APP CONFIG -->
+  <script>
+    const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
+
+    const $id = (id) => document.getElementById(id);
+    const show = (el) => el && el.classList.remove('hidden');
+    const hide = (el) => el && el.classList.add('hidden');
+
+    window.APP_CONFIG = {
+      SUPABASE: {
+        client: null,
+        getClient() {
+          if (!this.client) {
+            this.client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('✅ Supabase client inizializzato');
+          }
+          return this.client;
+        }
+      },
+      TABLES: {
+        NEWS: 'news',
+        CONVENZIONI: 'convenzioni',
+        RICHIESTE: 'richieste_personali', // <— cambia se usi un altro nome
+        USER_PROFILES: 'user_profiles',
+        TESSERE: 'tessere',
+        DOCUMENTI: 'documenti'
+      },
+      AUTH: {
+        async getCurrentUser() {
+          const client = APP_CONFIG.SUPABASE.getClient();
+          const { data, error } = await client.auth.getUser();
+          if (error) throw error;
+          return data?.user || null;
+        },
+        async getUserProfile() {
+          const user = await this.getCurrentUser();
+          if (!user) return null;
+          const { data, error } = await APP_CONFIG.SUPABASE.getClient()
+            .from('user_profiles')
+            .select('*')
+            .eq('user_id', user.id)   // <-- owner = user_id
+            .single();
+          if (error) throw error;
+          return data;
+        },
+        async protectPage() {
+          const { data: { session } } = await APP_CONFIG.SUPABASE.getClient().auth.getSession();
+          if (!session) {
+            window.location.replace('auth.html');
+            throw new Error('Utente non autenticato');
+          }
+          return true;
+        },
+        async logout() {
+          try {
+            await APP_CONFIG.SUPABASE.getClient().auth.signOut();
+            window.location.replace('auth.html');
+          } catch (error) {
+            console.error('Errore logout:', error);
+          }
+        }
+      },
+      NOTIFICATIONS: {
+        showToast(msg, type='info') {
+          console.log(`[${type.toUpperCase()}] ${msg}`);
+          const toast = document.createElement('div');
+          toast.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 max-w-sm font-semibold ${
+            type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500'
+          } text-white`;
+          toast.textContent = msg;
+          document.body.appendChild(toast);
+          setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
+        }
+      }
+    };
+
+    console.log('✅ APP_CONFIG incorporato e pronto');
+  </script>
+
+  <!-- PAGE LOGIC -->
+  <script>
+    let currentUser = null;
+    let currentProfile = null;
+    let isEditing = false;
+    let originalData = {};
+    let modifiedFields = new Set();
+
+    function showLoader(){ const l=$id('pageLoader'); if(l) l.style.display='flex' }
+    function hideLoader(){ const l=$id('pageLoader'); if(l) l.style.display='none' }
+
+    function getRoleBadgeHTML(role) {
+      const r = (role || 'USER').toString().toUpperCase();
+      const map = { ADMIN: 'role-admin', DIRIGENTE: 'role-dirigente', USER: 'role-user' };
+      return `role-badge ${map[r] || 'role-user'}`;
+    }
+
+    function getCorrectHomePage(userRole) {
+      const r = (userRole || '').toString().toLowerCase();
+      return (r === 'dirigente' || r === 'admin') ? 'home_dirigenti.html' : 'home.html';
+    }
+
+    function setupNavigation() {
+      if (!currentProfile) return;
+      const homePage = getCorrectHomePage(currentProfile.role);
+      const el1=$id('logoHomeLink'), el2=$id('backHomeLink'), el3=$id('navHomeLink');
+      if(el1) el1.href = homePage; if(el2) el2.href = homePage; if(el3) el3.href = homePage;
+      console.log(`✅ Navigation setup: ${currentProfile.role} → ${homePage}`);
+    }
+
+    function triggerAvatarUpload(){
+      if(!isEditing){ APP_CONFIG.NOTIFICATIONS.showToast('Abilita la modalità modifica per cambiare l\'avatar', 'warning'); return; }
+      $id('avatarInput')?.click();
+    }
+
+    async function handleAvatarUpload(event){
+      const file = event.target.files?.[0]; if(!file) return;
+      if (file.size > 5*1024*1024) { APP_CONFIG.NOTIFICATIONS.showToast('Immagine max 5MB', 'error'); return; }
+      if (!file.type.startsWith('image/')) { APP_CONFIG.NOTIFICATIONS.showToast('File immagine non valido', 'error'); return; }
+      const reader = new FileReader();
+      reader.onload = (e)=>{
+        const avatarImage=$id('avatarImage'), ph=$id('avatarPlaceholder');
+        if(avatarImage && ph){ avatarImage.src=e.target.result; avatarImage.style.display='block'; ph.style.display='none'; }
+      };
+      reader.readAsDataURL(file);
+      APP_CONFIG.NOTIFICATIONS.showToast('Avatar aggiornato! Ricorda di salvare.', 'success');
+    }
+
+    function updateFieldStatus(fieldId, isModified=false){
+      const statusEl = $id(fieldId + 'Status'); if(!statusEl) return;
+      if (isModified) {
+        statusEl.textContent = '✏️ Campo modificato - ricorda di salvare';
+        statusEl.className = 'field-status field-modified';
+        modifiedFields.add(fieldId);
+      } else {
+        const field = $id(fieldId);
+        if (field && field.disabled) {
+          statusEl.textContent = getOriginalFieldDescription(fieldId);
+          statusEl.className = 'field-status field-optional';
+        }
+        modifiedFields.delete(fieldId);
+      }
+    }
+
+    function getOriginalFieldDescription(fieldId){
+      const d = {
+        'inputCodiceFiscale': '🆔 Codice fiscale italiano',
+        'inputIndirizzo': '🏠 Indirizzo di residenza',
+        'inputCitta': '🏙️ Città di residenza',
+        'inputCap': '📮 Codice avviamento postale',
+        'inputProvincia': '🗺️ Sigla provincia (es. RM, MI)',
+        'inputBio': '📝 Breve descrizione personale (opzionale)'
+      };
+      return d[fieldId] || '';
+    }
+
+    function setupFieldTracking(){
+      const editable = ['inputTelefono','inputCodiceFiscale','inputIndirizzo','inputCitta','inputCap','inputProvincia','inputBio'];
+      editable.forEach(id=>{
+        const f=$id(id);
+        if(f){
+          f.addEventListener('input', ()=>{
+            if(isEditing){
+              const original = (originalData[f.name] ?? '').toString();
+              const current = (f.value ?? '').toString().trim();
+              updateFieldStatus(id, current !== original);
             }
+          });
+        }
+      });
+    }
+
+    async function loadUserData(){
+      currentUser = await APP_CONFIG.AUTH.getCurrentUser();
+      currentProfile = await APP_CONFIG.AUTH.getUserProfile();
+      if (!currentProfile) throw new Error('Impossibile caricare il profilo utente');
+      originalData = { ...currentProfile };
+      updateProfileDisplay();
+      await loadUserStats();
+      await loadUserTessera();
+      setupNavigation();
+    }
+
+    function updateProfileDisplay(){
+      const fullName = currentProfile.full_name || `${currentProfile.nome || ''} ${currentProfile.cognome || ''}`.trim() || 'Utente';
+      $id('userFullName').textContent = fullName;
+      $id('userEmail').textContent = currentProfile.email || '';
+
+      const roleBadge = $id('userRoleBadge');
+      if (roleBadge){ roleBadge.className = getRoleBadgeHTML(currentProfile.role); roleBadge.textContent = (currentProfile.role || 'USER').toUpperCase(); }
+
+      $id('userStatus').textContent = currentProfile.stato || 'ATTIVO';
+
+      const initials = ((currentProfile.nome?.[0] || '') + (currentProfile.cognome?.[0] || '')).toUpperCase() || '??';
+      $id('avatarInitials').textContent = initials;
+
+      const avatarImage=$id('avatarImage'), ph=$id('avatarPlaceholder');
+      if (currentProfile.avatar_url && avatarImage && ph) {
+        avatarImage.src = currentProfile.avatar_url; avatarImage.style.display='block'; ph.style.display='none';
+      } else if (avatarImage && ph) {
+        avatarImage.style.display='none'; ph.style.display='flex';
+      }
+
+      // Mappa campi
+      $id('inputNome').value = currentProfile.nome || '';
+      $id('inputCognome').value = currentProfile.cognome || '';
+      $id('inputEmail').value = currentProfile.email || '';
+      $id('inputTelefono').value = currentProfile.telefono || '';
+      $id('inputDataNascita').value = currentProfile.data_nascita || '';
+      $id('inputLuogoNascita').value = currentProfile.luogo_nascita || '';
+      $id('inputCodiceFiscale').value = currentProfile.codice_fiscale || '';
+      $id('inputIndirizzo').value = currentProfile.indirizzo || '';
+      $id('inputCitta').value = currentProfile.citta || '';
+      $id('inputCap').value = currentProfile.cap || '';
+      $id('inputProvincia').value = currentProfile.provincia || '';
+      $id('inputBio').value = currentProfile.bio || '';
+
+      console.log('✅ Profilo visualizzato:', {
+        nome: currentProfile.nome,
+        cognome: currentProfile.cognome,
+        email: currentProfile.email,
+        role: currentProfile.role,
+        stato: currentProfile.stato
+      });
+    }
+
+    async function loadUserStats(){
+      try {
+        const client = APP_CONFIG.SUPABASE.getClient();
+        // Count richieste dell'utente (tabella configurata)
+        let totalRequests = 0;
+        try {
+          const { count, error: richiesteError } = await client
+            .from(APP_CONFIG.TABLES.RICHIESTE)
+            .select('id', { count: 'exact', head: true })
+            .eq('user_id', currentUser.id);
+          if (!richiesteError) totalRequests = count ?? 0;
+        } catch { /* tabella non presente, ignora */ }
+
+        // Completamento profilo
+        const completionFields = ['nome','cognome','email','telefono','data_nascita','luogo_nascita','codice_fiscale','indirizzo','citta','cap','provincia'];
+        const completed = completionFields.filter(f => {
+          const v = currentProfile[f];
+          return v && v.toString().trim() !== '';
+        });
+        const completionPercentage = Math.round((completed.length / completionFields.length) * 100);
+
+        $id('totalRequests').textContent = totalRequests;
+        $id('profileCompletion').textContent = `${completionPercentage}%`;
+        console.log(`📊 Profilo completato: ${completed.length}/${completionFields.length} campi (${completionPercentage}%)`);
+      } catch (e) {
+        console.error('Errore caricamento statistiche:', e);
+        $id('totalRequests').textContent = '--';
+        $id('profileCompletion').textContent = '--';
+      }
+    }
+
+    async function loadUserTessera(){
+      try {
+        const { data: tessera, error } = await APP_CONFIG.SUPABASE.getClient()
+          .from('tessere')
+          .select('numero_tessera')
+          .eq('user_id', currentUser.id)
+          .single();
+        $id('userTessera').textContent = (!error && tessera) ? tessera.numero_tessera : 'Non assegnata';
+      } catch (e) {
+        console.error('Errore caricamento tessera:', e);
+        $id('userTessera').textContent = '--';
+      }
+    }
+
+    function toggleEditMode(){
+      isEditing = !isEditing;
+      const editable = ['inputTelefono','inputCodiceFiscale','inputIndirizzo','inputCitta','inputCap','inputProvincia','inputBio'];
+      const editBtn = $id('editProfileBtn');
+      const formActions = $id('formActions');
+
+      editable.forEach(id=>{
+        const f=$id(id);
+        if (f){ f.disabled = !isEditing; f.classList.toggle('editable', isEditing); }
+      });
+
+      if (isEditing) {
+        if (editBtn){ editBtn.innerHTML = '❌ Annulla Modifica'; editBtn.className = 'bg-red-600 hover:bg-red-700 text-white py-2 px-6 rounded-xl transition-colors'; }
+        formActions && formActions.classList.remove('hidden');
+      } else {
+        if (editBtn){ editBtn.innerHTML = '✏️ Modifica'; editBtn.className = 'btn-aurora py-2 px-6 rounded-xl'; }
+        formActions && formActions.classList.add('hidden');
+        resetForm(); modifiedFields.clear();
+      }
+    }
+
+    function resetForm(){
+      $id('inputEmail').value = originalData.email || '';
+      $id('inputTelefono').value = originalData.telefono || '';
+      $id('inputCodiceFiscale').value = originalData.codice_fiscale || '';
+      $id('inputIndirizzo').value = originalData.indirizzo || '';
+      $id('inputCitta').value = originalData.citta || '';
+      $id('inputCap').value = originalData.cap || '';
+      $id('inputProvincia').value = originalData.provincia || '';
+      $id('inputBio').value = originalData.bio || '';
+
+      ['Telefono','CodiceFiscale','Indirizzo','Citta','Cap','Provincia','Bio'].forEach(f=>updateFieldStatus('input'+f,false));
+
+      const avatarImage=$id('avatarImage'), ph=$id('avatarPlaceholder');
+      if (originalData.avatar_url && avatarImage && ph) { avatarImage.src = originalData.avatar_url; avatarImage.style.display='block'; ph.style.display='none'; }
+      else if (avatarImage && ph) { avatarImage.style.display='none'; ph.style.display='flex'; }
+    }
+
+    async function saveProfile(e){
+      e.preventDefault();
+      const editBtnText=$id('editBtnText'), editBtnSpinner=$id('editBtnSpinner');
+      editBtnText && editBtnText.classList.add('hidden');
+      editBtnSpinner && editBtnSpinner.classList.remove('hidden');
+
+      try {
+        const updateData = {
+          telefono: ($id('inputTelefono')?.value ?? '').trim(),
+          codice_fiscale: ($id('inputCodiceFiscale')?.value ?? '').trim().toUpperCase(),
+          indirizzo: ($id('inputIndirizzo')?.value ?? '').trim(),
+          citta: ($id('inputCitta')?.value ?? '').trim(),
+          cap: ($id('inputCap')?.value ?? '').trim(),
+          provincia: ($id('inputProvincia')?.value ?? '').trim().toUpperCase(),
+          bio: ($id('inputBio')?.value ?? '').trim(),
+          updated_at: new Date().toISOString()
         };
 
-        console.log('✅ APP_CONFIG incorporato e pronto');
-    </script>
+        // Validazioni basic
+        if (updateData.cap && !/^\d{5}$/.test(updateData.cap)) throw new Error('Il CAP deve essere composto da 5 cifre');
+        if (updateData.provincia && !/^[A-Z]{2}$/.test(updateData.provincia)) throw new Error('La provincia deve avere 2 lettere maiuscole');
+        if (updateData.codice_fiscale && !/^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$/.test(updateData.codice_fiscale)) throw new Error('Formato codice fiscale non valido');
+        if (updateData.telefono && !/^[\+]?[0-9\s\-\(\)]{8,15}$/.test(updateData.telefono)) throw new Error('Formato telefono non valido');
 
-    <!-- LOGICA PAGINA PROFILO -->
-    <script>
-        let currentUser = null;
-        let currentProfile = null;
-        let isEditing = false;
-        let originalData = {};
-        let modifiedFields = new Set();
+        // Rimuovi stringhe vuote (salva NULL)
+        for (const k of Object.keys(updateData)) if (updateData[k] === '') updateData[k] = null;
 
-        function showLoader() {
-            const loader = document.getElementById('pageLoader');
-            if (loader) loader.style.display = 'flex';
+        const { data, error } = await APP_CONFIG.SUPABASE.getClient()
+          .from('user_profiles')
+          .update(updateData)
+          .eq('user_id', currentUser.id)  // RLS: owner = user_id
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        currentProfile = { ...currentProfile, ...data };
+        originalData = { ...currentProfile };
+        APP_CONFIG.NOTIFICATIONS.showToast('Profilo aggiornato con successo!', 'success');
+
+        await loadUserStats();
+        if (data.email && $id('userEmail')?.textContent !== data.email) $id('userEmail').textContent = data.email;
+
+        toggleEditMode();
+      } catch (err) {
+        console.error('Errore salvataggio profilo:', err);
+        APP_CONFIG.NOTIFICATIONS.showToast(`Errore: ${err.message ?? err}`, 'error');
+      } finally {
+        editBtnText && editBtnText.classList.remove('hidden');
+        editBtnSpinner && editBtnSpinner.classList.add('hidden');
+      }
+    }
+
+    async function loadActivityLog(){
+      const container = $id('activityLog');
+      try {
+        container.innerHTML = `
+          <div class="glass-card p-4 rounded-xl">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl">👤</span>
+                <div>
+                  <div class="text-dark font-semibold">Profilo aggiornato</div>
+                  <div class="text-gray-600 text-sm">${new Date(currentProfile.updated_at).toLocaleDateString('it-IT')}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="glass-card p-4 rounded-xl">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl">🎯</span>
+                <div>
+                  <div class="text-dark font-semibold">Account creato</div>
+                  <div class="text-gray-600 text-sm">${new Date(currentProfile.created_at).toLocaleDateString('it-IT')}</div>
+                </div>
+              </div>
+            </div>
+          </div>`;
+      } catch (e) {
+        console.error('Errore caricamento log attività:', e);
+        container.innerHTML = `<div class="text-center py-8"><div class="text-white opacity-70 text-sm">Nessuna attività registrata</div></div>`;
+      }
+    }
+
+    function openPasswordModal(){ const m=$id('changePasswordModal'); if(m) m.style.display='flex' }
+    function closePasswordModal(){ const m=$id('changePasswordModal'); if(m) m.style.display='none'; $id('changePasswordForm')?.reset() }
+
+    async function changePassword(e){
+      e.preventDefault();
+      const np=$id('newPassword')?.value ?? '', cnp=$id('confirmNewPassword')?.value ?? '';
+      if (np !== cnp){ APP_CONFIG.NOTIFICATIONS.showToast('Le nuove password non coincidono', 'error'); return; }
+      if (np.length < 8){ APP_CONFIG.NOTIFICATIONS.showToast('La password deve contenere almeno 8 caratteri', 'error'); return; }
+      const btnText=$id('changePasswordBtnText'), btnSpinner=$id('changePasswordSpinner');
+      btnText && btnText.classList.add('hidden'); btnSpinner && btnSpinner.classList.remove('hidden');
+      try{
+        const { error } = await APP_CONFIG.SUPABASE.getClient().auth.updateUser({ password: np });
+        if (error) throw error;
+        APP_CONFIG.NOTIFICATIONS.showToast('Password aggiornata con successo!', 'success');
+        closePasswordModal();
+      }catch(err){
+        console.error('Errore cambio password:', err);
+        APP_CONFIG.NOTIFICATIONS.showToast('Errore nel cambio password', 'error');
+      }finally{
+        btnText && btnText.classList.remove('hidden'); btnSpinner && btnSpinner.classList.add('hidden');
+      }
+    }
+
+    async function savePreferences(){
+      try{
+        const preferences = {
+          email_news: $id('emailNews')?.checked ?? true,
+          email_events: $id('emailEvents')?.checked ?? true,
+          email_updates: $id('emailUpdates')?.checked ?? true
+        };
+        const currentSettings = currentProfile.settings || {};
+        const newSettings = { ...currentSettings, notifications: preferences };
+
+        const { data, error } = await APP_CONFIG.SUPABASE.getClient()
+          .from('user_profiles')
+          .update({ settings: newSettings, updated_at: new Date().toISOString() })
+          .eq('user_id', currentUser.id)
+          .select()
+          .single();
+
+        if (error) throw error;
+        currentProfile.settings = data.settings;
+        APP_CONFIG.NOTIFICATIONS.showToast('Preferenze salvate!', 'success');
+      }catch(err){
+        console.error('Errore salvataggio preferenze:', err);
+        APP_CONFIG.NOTIFICATIONS.showToast('Errore nel salvataggio delle preferenze', 'error');
+      }
+    }
+
+    function loadPreferences(){
+      try{
+        const prefs = currentProfile?.settings?.notifications;
+        if (prefs){
+          if ($id('emailNews')) $id('emailNews').checked = prefs.email_news ?? true;
+          if ($id('emailEvents')) $id('emailEvents').checked = prefs.email_events ?? true;
+          if ($id('emailUpdates')) $id('emailUpdates').checked = prefs.email_updates ?? true;
         }
-
-        function hideLoader() {
-            const loader = document.getElementById('pageLoader');
-            if (loader) loader.style.display = 'none';
-        }
-
-        function getRoleBadgeHTML(role) {
-            let className = 'role-user';
-            if (role === 'ADMIN') className = 'role-admin';
-            else if (role === 'DIRIGENTE') className = 'role-dirigente';
-            return `role-badge ${className}`;
-        }
-
-        // ========================================
-        // UTILITÀ NAVIGATION
-        // ========================================
-
-        function getCorrectHomePage(userRole) {
-            if (userRole === 'DIRIGENTE' || userRole === 'ADMIN') {
-                return 'home_dirigenti.html';
-            }
-            return 'home.html';
-        }
-
-        function setupNavigation() {
-            if (!currentProfile) return;
-
-            const homePage = getCorrectHomePage(currentProfile.role);
-            
-            // Aggiorna tutti i link alla home
-            document.getElementById('logoHomeLink').href = homePage;
-            document.getElementById('backHomeLink').href = homePage;
-            document.getElementById('navHomeLink').href = homePage;
-            
-            console.log(`✅ Navigation setup: ${currentProfile.role} → ${homePage}`);
-        }
-
-        // ========================================
-        // GESTIONE AVATAR
-        // ========================================
-
-        function triggerAvatarUpload() {
-            if (!isEditing) {
-                APP_CONFIG.NOTIFICATIONS.showToast('Abilita la modalità modifica per cambiare l\'avatar', 'warning');
-                return;
-            }
-            document.getElementById('avatarInput').click();
-        }
-
-        async function handleAvatarUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            // Validazioni
-            if (file.size > 5 * 1024 * 1024) { // 5MB
-                APP_CONFIG.NOTIFICATIONS.showToast('L\'immagine deve essere inferiore a 5MB', 'error');
-                return;
-            }
-
-            if (!file.type.startsWith('image/')) {
-                APP_CONFIG.NOTIFICATIONS.showToast('Seleziona un file immagine valido', 'error');
-                return;
-            }
-
-            try {
-                // Mostra preview
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const avatarImage = document.getElementById('avatarImage');
-                    const avatarPlaceholder = document.getElementById('avatarPlaceholder');
-                    
-                    avatarImage.src = e.target.result;
-                    avatarImage.style.display = 'block';
-                    avatarPlaceholder.style.display = 'none';
-                };
-                reader.readAsDataURL(file);
-
-                APP_CONFIG.NOTIFICATIONS.showToast('Avatar aggiornato! Ricorda di salvare le modifiche.', 'success');
-
-            } catch (error) {
-                console.error('Errore caricamento avatar:', error);
-                APP_CONFIG.NOTIFICATIONS.showToast('Errore nel caricamento dell\'avatar', 'error');
-            }
-        }
-
-        // ========================================
-        // GESTIONE TRACKING MODIFICHE
-        // ========================================
-
-        function updateFieldStatus(fieldId, isModified = false) {
-            const statusElement = document.getElementById(fieldId + 'Status');
-            if (!statusElement) return;
-
-            if (isModified) {
-                statusElement.textContent = '✏️ Campo modificato - ricorda di salvare';
-                statusElement.className = 'field-status field-modified';
-                modifiedFields.add(fieldId);
-            } else {
-                // Reset to original status
-                const field = document.getElementById(fieldId);
-                if (field && field.disabled) {
-                    if (fieldId === 'inputEmail') {
-                        statusElement.textContent = '📧 Email principale del tuo account';
-                    } else if (fieldId === 'inputTelefono') {
-                        statusElement.textContent = '📱 Numero di telefono principale';
-                    } else {
-                        statusElement.textContent = getOriginalFieldDescription(fieldId);
-                    }
-                    statusElement.className = 'field-status field-optional';
-                }
-                modifiedFields.delete(fieldId);
-            }
-        }
-
-        function getOriginalFieldDescription(fieldId) {
-            const descriptions = {
-                'inputCodiceFiscale': '🆔 Codice fiscale italiano',
-                'inputIndirizzo': '🏠 Indirizzo di residenza',
-                'inputCitta': '🏙️ Città di residenza',
-                'inputCap': '📮 Codice avviamento postale',
-                'inputProvincia': '🗺️ Sigla provincia (es. RM, MI)',
-                'inputBio': '📝 Breve descrizione personale (opzionale)'
-            };
-            return descriptions[fieldId] || '';
-        }
-
-        function setupFieldTracking() {
-            const editableFields = [
-                'inputEmail', 'inputTelefono', 'inputCodiceFiscale', 'inputIndirizzo', 
-                'inputCitta', 'inputCap', 'inputProvincia', 'inputBio'
-            ];
-
-            editableFields.forEach(fieldId => {
-                const field = document.getElementById(fieldId);
-                if (field) {
-                    field.addEventListener('input', function() {
-                        if (isEditing) {
-                            const originalValue = originalData[field.name] || '';
-                            const currentValue = field.value.trim();
-                            updateFieldStatus(fieldId, currentValue !== originalValue);
-                        }
-                    });
-                }
-            });
-        }
-
-        // ========================================
-        // CARICAMENTO DATI
-        // ========================================
-
-        async function loadUserData() {
-            try {
-                currentUser = await APP_CONFIG.AUTH.getCurrentUser();
-                currentProfile = await APP_CONFIG.AUTH.getUserProfile();
-
-                if (!currentProfile) {
-                    throw new Error('Impossibile caricare il profilo utente');
-                }
-
-                // Salva dati originali per reset
-                originalData = { ...currentProfile };
-
-                // Aggiorna interfaccia
-                updateProfileDisplay();
-                await loadUserStats();
-                await loadUserTessera();
-                setupNavigation(); // Setup navigation basata sul ruolo
-
-            } catch (error) {
-                console.error('Errore caricamento dati utente:', error);
-                throw error;
-            }
-        }
-
-        function updateProfileDisplay() {
-            // Header - usa i campi corretti della TUA tabella
-            const fullName = currentProfile.full_name || `${currentProfile.nome || ''} ${currentProfile.cognome || ''}`.trim() || 'Utente';
-            document.getElementById('userFullName').textContent = fullName;
-            document.getElementById('userEmail').textContent = currentProfile.email || '';
-            
-            // Role badge - usa i valori della constraint check
-            const roleBadge = document.getElementById('userRoleBadge');
-            roleBadge.className = getRoleBadgeHTML(currentProfile.role);
-            roleBadge.textContent = currentProfile.role || 'USER';
-            
-            // Status - usa i valori della constraint check (ATTIVO, SOSPESO, INATTIVO)
-            const statusText = currentProfile.stato || 'ATTIVO';
-            document.getElementById('userStatus').textContent = statusText;
-            
-            // Avatar e iniziali
-            const initials = (currentProfile.nome?.[0] || '') + (currentProfile.cognome?.[0] || '');
-            document.getElementById('avatarInitials').textContent = initials.toUpperCase() || '??';
-            
-            // Gestione avatar
-            if (currentProfile.avatar_url) {
-                const avatarImage = document.getElementById('avatarImage');
-                const avatarPlaceholder = document.getElementById('avatarPlaceholder');
-                
-                avatarImage.src = currentProfile.avatar_url;
-                avatarImage.style.display = 'block';
-                avatarPlaceholder.style.display = 'none';
-            } else {
-                // Mostra iniziali come avatar di default
-                const avatarImage = document.getElementById('avatarImage');
-                const avatarPlaceholder = document.getElementById('avatarPlaceholder');
-                
-                avatarImage.style.display = 'none';
-                avatarPlaceholder.style.display = 'flex';
-            }
-
-            // Form fields - mappati esattamente sui campi della tua tabella
-            document.getElementById('inputNome').value = currentProfile.nome || '';
-            document.getElementById('inputCognome').value = currentProfile.cognome || '';
-            document.getElementById('inputEmail').value = currentProfile.email || '';
-            document.getElementById('inputTelefono').value = currentProfile.telefono || '';
-            document.getElementById('inputDataNascita').value = currentProfile.data_nascita || '';
-            document.getElementById('inputLuogoNascita').value = currentProfile.luogo_nascita || '';
-            document.getElementById('inputCodiceFiscale').value = currentProfile.codice_fiscale || '';
-            document.getElementById('inputIndirizzo').value = currentProfile.indirizzo || '';
-            document.getElementById('inputCitta').value = currentProfile.citta || '';
-            document.getElementById('inputCap').value = currentProfile.cap || '';
-            document.getElementById('inputProvincia').value = currentProfile.provincia || '';
-            document.getElementById('inputBio').value = currentProfile.bio || '';
-
-            console.log('✅ Profilo visualizzato:', {
-                nome: currentProfile.nome,
-                cognome: currentProfile.cognome,
-                email: currentProfile.email,
-                role: currentProfile.role,
-                stato: currentProfile.stato
-            });
-        }
-
-        async function loadUserStats() {
-            try {
-                const client = APP_CONFIG.SUPABASE.getClient();
-                
-                // Conta richieste utente se la tabella esiste
-                let totalRequests = 0;
-                try {
-                    const { data: richieste, error: richiesteError } = await client
-                        .from('richieste')
-                        .select('id', { count: 'exact' })
-                        .eq('user_id', currentUser.id);
-                    
-                    if (!richiesteError) {
-                        totalRequests = richieste?.length || 0;
-                    }
-                } catch (error) {
-                    console.warn('Tabella richieste non trovata');
-                }
-
-                // Calcola completamento profilo - basato sui campi EFFETTIVI della tua tabella
-                // Campi essenziali per un profilo completo
-                const completionFields = [
-                    'nome', 'cognome', 'email', 'telefono', 'data_nascita', 
-                    'luogo_nascita', 'codice_fiscale', 'indirizzo', 'citta', 'cap', 'provincia'
-                ];
-                
-                // Conta i campi compilati (non null e non vuoti)
-                const completedFields = completionFields.filter(field => {
-                    const value = currentProfile[field];
-                    return value && value.toString().trim() !== '';
-                });
-                
-                const completionPercentage = Math.round((completedFields.length / completionFields.length) * 100);
-
-                // Aggiorna interfaccia
-                document.getElementById('totalRequests').textContent = totalRequests;
-                document.getElementById('profileCompletion').textContent = `${completionPercentage}%`;
-
-                console.log(`📊 Profilo completato: ${completedFields.length}/${completionFields.length} campi (${completionPercentage}%)`);
-
-            } catch (error) {
-                console.error('Errore caricamento statistiche:', error);
-                document.getElementById('totalRequests').textContent = '--';
-                document.getElementById('profileCompletion').textContent = '--';
-            }
-        }
-
-        async function loadUserTessera() {
-            try {
-                const client = APP_CONFIG.SUPABASE.getClient();
-                
-                // Cerca tessera utente
-                const { data: tessera, error } = await client
-                    .from('tessere')
-                    .select('numero_tessera')
-                    .eq('user_id', currentUser.id)
-                    .single();
-
-                if (!error && tessera) {
-                    document.getElementById('userTessera').textContent = tessera.numero_tessera;
-                } else {
-                    document.getElementById('userTessera').textContent = 'Non assegnata';
-                }
-
-            } catch (error) {
-                console.error('Errore caricamento tessera:', error);
-                document.getElementById('userTessera').textContent = '--';
-            }
-        }
-
-        // ========================================
-        // GESTIONE MODIFICA PROFILO
-        // ========================================
-
-        function toggleEditMode() {
-            isEditing = !isEditing;
-            
-            // Campi modificabili secondo le tue specifiche
-            // NUOVA IMPLEMENTAZIONE: email e telefono modificabili + altri campi
-            const editableFields = [
-                'inputEmail', 'inputTelefono', 'inputCodiceFiscale', 'inputIndirizzo', 
-                'inputCitta', 'inputCap', 'inputProvincia', 'inputBio'
-            ];
-            const editBtn = document.getElementById('editProfileBtn');
-            const formActions = document.getElementById('formActions');
-            
-            editableFields.forEach(fieldId => {
-                const field = document.getElementById(fieldId);
-                if (field) {
-                    field.disabled = !isEditing;
-                    if (isEditing) {
-                        field.classList.add('editable');
-                        // Per email e telefono, mostra indicazione speciale
-                        if (fieldId === 'inputEmail' || fieldId === 'inputTelefono') {
-                            updateFieldStatus(fieldId.replace('input', '').toLowerCase() + 'Status', false);
-                        }
-                    } else {
-                        field.classList.remove('editable');
-                    }
-                }
-            });
-            
-            if (isEditing) {
-                editBtn.innerHTML = '❌ Annulla Modifica';
-                editBtn.className = 'bg-red-600 hover:bg-red-700 text-white py-2 px-6 rounded-xl transition-colors';
-                formActions.classList.remove('hidden');
-            } else {
-                editBtn.innerHTML = '✏️ Modifica';
-                editBtn.className = 'btn-aurora py-2 px-6 rounded-xl';
-                formActions.classList.add('hidden');
-                
-                // Reset ai valori originali
-                resetForm();
-                modifiedFields.clear();
-            }
-        }
-
-        function resetForm() {
-            // Reset tutti i campi modificabili
-            document.getElementById('inputEmail').value = originalData.email || '';
-            document.getElementById('inputTelefono').value = originalData.telefono || '';
-            document.getElementById('inputCodiceFiscale').value = originalData.codice_fiscale || '';
-            document.getElementById('inputIndirizzo').value = originalData.indirizzo || '';
-            document.getElementById('inputCitta').value = originalData.citta || '';
-            document.getElementById('inputCap').value = originalData.cap || '';
-            document.getElementById('inputProvincia').value = originalData.provincia || '';
-            document.getElementById('inputBio').value = originalData.bio || '';
-            
-            // Reset status dei campi
-            ['Email', 'Telefono', 'CodiceFiscale', 'Indirizzo', 'Citta', 'Cap', 'Provincia', 'Bio'].forEach(field => {
-                updateFieldStatus('input' + field, false);
-            });
-            
-            // Reset avatar se era stato cambiato
-            if (originalData.avatar_url) {
-                const avatarImage = document.getElementById('avatarImage');
-                const avatarPlaceholder = document.getElementById('avatarPlaceholder');
-                
-                avatarImage.src = originalData.avatar_url;
-                avatarImage.style.display = 'block';
-                avatarPlaceholder.style.display = 'none';
-            } else {
-                const avatarImage = document.getElementById('avatarImage');
-                const avatarPlaceholder = document.getElementById('avatarPlaceholder');
-                
-                avatarImage.style.display = 'none';
-                avatarPlaceholder.style.display = 'flex';
-            }
-        }
-
-        async function saveProfile(event) {
-            event.preventDefault();
-            
-            try {
-                const editBtnText = document.getElementById('editBtnText');
-                const editBtnSpinner = document.getElementById('editBtnSpinner');
-                
-                editBtnText.classList.add('hidden');
-                editBtnSpinner.classList.remove('hidden');
-
-                const client = APP_CONFIG.SUPABASE.getClient();
-                
-                // Prepara dati per l'aggiornamento - MAPPATI sulla tua tabella esatta
-                const updateData = {
-                    email: document.getElementById('inputEmail').value.trim(),
-                    telefono: document.getElementById('inputTelefono').value.trim(),
-                    codice_fiscale: document.getElementById('inputCodiceFiscale').value.trim().toUpperCase(),
-                    indirizzo: document.getElementById('inputIndirizzo').value.trim(),
-                    citta: document.getElementById('inputCitta').value.trim(),
-                    cap: document.getElementById('inputCap').value.trim(),
-                    provincia: document.getElementById('inputProvincia').value.trim().toUpperCase(),
-                    bio: document.getElementById('inputBio').value.trim(),
-                    updated_at: new Date().toISOString()
-                };
-
-                // Aggiorna full_name se nome e cognome esistono
-                if (currentProfile.nome && currentProfile.cognome) {
-                    updateData.full_name = `${currentProfile.nome} ${currentProfile.cognome}`;
-                }
-
-                // Validazioni specifiche per la tua tabella
-                const cap = updateData.cap;
-                if (cap && cap !== '' && !/^\d{5}$/.test(cap)) {
-                    throw new Error('Il CAP deve essere composto da 5 cifre');
-                }
-
-                const provincia = updateData.provincia;
-                if (provincia && provincia !== '' && !/^[A-Z]{2}$/.test(provincia)) {
-                    throw new Error('La provincia deve essere composta da 2 lettere maiuscole (es. RM)');
-                }
-
-                const codiceFiscale = updateData.codice_fiscale;
-                if (codiceFiscale && codiceFiscale !== '' && !/^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$/.test(codiceFiscale)) {
-                    throw new Error('Formato codice fiscale non valido');
-                }
-
-                const email = updateData.email;
-                if (!email || email === '') {
-                    throw new Error('L\'email è obbligatoria');
-                }
-                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                    throw new Error('Formato email non valido');
-                }
-
-                const telefono = updateData.telefono;
-                if (telefono && telefono !== '' && !/^[\+]?[0-9\s\-\(\)]{8,15}$/.test(telefono)) {
-                    throw new Error('Formato telefono non valido');
-                }
-
-                // Rimuovi campi vuoti per evitare di sovrascrivere con stringhe vuote
-                Object.keys(updateData).forEach(key => {
-                    if (updateData[key] === '' && key !== 'email') {
-                        updateData[key] = null;
-                    }
-                });
-
-                console.log('💾 Dati da aggiornare:', updateData);
-
-                // IMPORTANTE: Se email è cambiata, aggiorna anche l'auth di Supabase
-                if (updateData.email !== originalData.email && updateData.email) {
-                    console.log('🔄 Aggiornamento email nell\'autenticazione...');
-                    
-                    const { error: authError } = await client.auth.updateUser({
-                        email: updateData.email
-                    });
-
-                    if (authError) {
-                        throw new Error('Errore aggiornamento email: ' + authError.message);
-                    }
-
-                    APP_CONFIG.NOTIFICATIONS.showToast('Email aggiornata! Controlla la nuova email per confermare.', 'warning');
-                }
-
-                // Aggiorna profilo
-                const { error } = await client
-                    .from('user_profiles')
-                    .update(updateData)
-                    .eq('user_id', currentUser.id);
-
-                if (error) throw error;
-
-                // Aggiorna dati locali
-                currentProfile = { ...currentProfile, ...updateData };
-                originalData = { ...currentProfile };
-
-                APP_CONFIG.NOTIFICATIONS.showToast('Profilo aggiornato con successo!', 'success');
-                
-                // Ricalcola completamento
-                await loadUserStats();
-                
-                // Aggiorna display header se email è cambiata
-                if (updateData.email !== document.getElementById('userEmail').textContent) {
-                    document.getElementById('userEmail').textContent = updateData.email;
-                }
-                
-                toggleEditMode(); // Disabilita modalità modifica
-
-            } catch (error) {
-                console.error('Errore salvataggio profilo:', error);
-                APP_CONFIG.NOTIFICATIONS.showToast(`Errore: ${error.message}`, 'error');
-            } finally {
-                const editBtnText = document.getElementById('editBtnText');
-                const editBtnSpinner = document.getElementById('editBtnSpinner');
-                
-                editBtnText.classList.remove('hidden');
-                editBtnSpinner.classList.add('hidden');
-            }
-        }
-
-        async function loadActivityLog() {
-            const container = document.getElementById('activityLog');
-            
-            try {
-                // Mostra attività generiche
-                container.innerHTML = `
-                    <div class="glass-card p-4 rounded-xl">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <span class="text-2xl">👤</span>
-                                <div>
-                                    <div class="text-dark font-semibold">Profilo aggiornato</div>
-                                    <div class="text-gray-600 text-sm">${new Date(currentProfile.updated_at).toLocaleDateString('it-IT')}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="glass-card p-4 rounded-xl">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <span class="text-2xl">🎯</span>
-                                <div>
-                                    <div class="text-dark font-semibold">Account creato</div>
-                                    <div class="text-gray-600 text-sm">${new Date(currentProfile.created_at).toLocaleDateString('it-IT')}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>`;
-
-            } catch (error) {
-                console.error('Errore caricamento log attività:', error);
-                container.innerHTML = `
-                    <div class="text-center py-8">
-                        <div class="text-white opacity-70 text-sm">Nessuna attività registrata</div>
-                    </div>`;
-            }
-        }
-
-        // ========================================
-        // GESTIONE CAMBIO PASSWORD
-        // ========================================
-
-        function openPasswordModal() {
-            document.getElementById('changePasswordModal').style.display = 'flex';
-        }
-
-        function closePasswordModal() {
-            document.getElementById('changePasswordModal').style.display = 'none';
-            document.getElementById('changePasswordForm').reset();
-        }
-
-        async function changePassword(event) {
-            event.preventDefault();
-            
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
-            
-            // Validazioni
-            if (newPassword !== confirmNewPassword) {
-                APP_CONFIG.NOTIFICATIONS.showToast('Le nuove password non coincidono', 'error');
-                return;
-            }
-            
-            if (newPassword.length < 8) {
-                APP_CONFIG.NOTIFICATIONS.showToast('La password deve contenere almeno 8 caratteri', 'error');
-                return;
-            }
-
-            try {
-                const btnText = document.getElementById('changePasswordBtnText');
-                const btnSpinner = document.getElementById('changePasswordSpinner');
-                
-                btnText.classList.add('hidden');
-                btnSpinner.classList.remove('hidden');
-
-                const client = APP_CONFIG.SUPABASE.getClient();
-                
-                // Cambia password
-                const { error } = await client.auth.updateUser({
-                    password: newPassword
-                });
-
-                if (error) throw error;
-
-                APP_CONFIG.NOTIFICATIONS.showToast('Password aggiornata con successo!', 'success');
-                closePasswordModal();
-
-            } catch (error) {
-                console.error('Errore cambio password:', error);
-                APP_CONFIG.NOTIFICATIONS.showToast('Errore nel cambio password', 'error');
-            } finally {
-                const btnText = document.getElementById('changePasswordBtnText');
-                const btnSpinner = document.getElementById('changePasswordSpinner');
-                
-                btnText.classList.remove('hidden');
-                btnSpinner.classList.add('hidden');
-            }
-        }
-
-        // ========================================
-        // GESTIONE PREFERENZE
-        // ========================================
-
-        async function savePreferences() {
-            try {
-                const preferences = {
-                    email_news: document.getElementById('emailNews').checked,
-                    email_events: document.getElementById('emailEvents').checked,
-                    email_updates: document.getElementById('emailUpdates').checked
-                };
-
-                // Salva nelle settings del profilo (campo jsonb)
-                const client = APP_CONFIG.SUPABASE.getClient();
-                const currentSettings = currentProfile.settings || {};
-                const newSettings = { ...currentSettings, notifications: preferences };
-
-                const { error } = await client
-                    .from('user_profiles')
-                    .update({ 
-                        settings: newSettings,
-                        updated_at: new Date().toISOString()
-                    })
-                    .eq('user_id', currentUser.id);
-
-                if (error) throw error;
-
-                currentProfile.settings = newSettings;
-                APP_CONFIG.NOTIFICATIONS.showToast('Preferenze salvate!', 'success');
-
-            } catch (error) {
-                console.error('Errore salvataggio preferenze:', error);
-                APP_CONFIG.NOTIFICATIONS.showToast('Errore nel salvataggio delle preferenze', 'error');
-            }
-        }
-
-        function loadPreferences() {
-            try {
-                const settings = currentProfile.settings;
-                if (settings && settings.notifications) {
-                    const prefs = settings.notifications;
-                    
-                    document.getElementById('emailNews').checked = prefs.email_news ?? true;
-                    document.getElementById('emailEvents').checked = prefs.email_events ?? true;
-                    document.getElementById('emailUpdates').checked = prefs.email_updates ?? true;
-                }
-            } catch (error) {
-                console.error('Errore caricamento preferenze:', error);
-            }
-        }
-
-        // ========================================
-        // GESTIONE CANCELLAZIONE ACCOUNT
-        // ========================================
-
-        function requestAccountDeletion() {
-            if (confirm('Sei sicuro di voler richiedere la cancellazione del tuo account? Questa azione non può essere annullata.')) {
-                // Crea una richiesta di cancellazione
-                createDeletionRequest();
-            }
-        }
-
-        async function createDeletionRequest() {
-            try {
-                const client = APP_CONFIG.SUPABASE.getClient();
-                
-                // Crea una richiesta nella tabella richieste se esiste
-                try {
-                    const { error } = await client
-                        .from('richieste')
-                        .insert([{
-                            user_id: currentUser.id,
-                            tipo_richiesta: 'CANCELLAZIONE_ACCOUNT',
-                            oggetto: 'Richiesta cancellazione account',
-                            descrizione: `L'utente ${currentProfile.full_name} (${currentProfile.email}) ha richiesto la cancellazione del proprio account.`,
-                            priorita: 'ALTA',
-                            stato: 'APERTA'
-                        }]);
-
-                    if (error) throw error;
-                    APP_CONFIG.NOTIFICATIONS.showToast('Richiesta inviata all\'amministratore', 'warning');
-                } catch (error) {
-                    // Se la tabella non esiste, mostra solo un messaggio
-                    APP_CONFIG.NOTIFICATIONS.showToast('Contatta l\'amministratore per la cancellazione dell\'account', 'warning');
-                }
-                
-            } catch (error) {
-                console.error('Errore richiesta cancellazione:', error);
-                APP_CONFIG.NOTIFICATIONS.showToast('Errore nell\'invio della richiesta', 'error');
-            }
-        }
-
-        // ========================================
-        // EVENT HANDLERS
-        // ========================================
-
-        function setupEventHandlers() {
-            // Edit profile button
-            document.getElementById('editProfileBtn').addEventListener('click', toggleEditMode);
-            
-            // Cancel edit button
-            document.getElementById('cancelEditBtn').addEventListener('click', toggleEditMode);
-            
-            // Profile form
-            document.getElementById('profileForm').addEventListener('submit', saveProfile);
-            
-            // Change password
-            document.getElementById('changePasswordBtn').addEventListener('click', openPasswordModal);
-            document.getElementById('changePasswordForm').addEventListener('submit', changePassword);
-            
-            // Save preferences
-            document.getElementById('savePreferencesBtn').addEventListener('click', savePreferences);
-            
-            // Delete account
-            document.getElementById('deleteAccountBtn').addEventListener('click', requestAccountDeletion);
-
-            // Setup field tracking for modifications
-            setupFieldTracking();
-        }
-
-        // ========================================
-        // INIZIALIZZAZIONE PRINCIPALE
-        // ========================================
-
-        async function initializePage() {
-            try {
-                showLoader();
-
-                // Proteggi la pagina (controlla autenticazione)
-                await APP_CONFIG.AUTH.protectPage();
-
-                // Carica dati utente
-                await loadUserData();
-
-                // Carica contenuti in parallelo
-                await Promise.all([
-                    loadActivityLog()
-                ]);
-
-                // Carica preferenze
-                loadPreferences();
-
-                // Setup event handlers
-                setupEventHandlers();
-
-                console.log('✅ Pagina profilo inizializzata correttamente');
-                
-            } catch (error) {
-                console.error('❌ Errore inizializzazione:', error);
-                APP_CONFIG.NOTIFICATIONS.showToast('Errore nel caricamento della pagina', 'error');
-                
-                // Redirect to auth se non autenticato
-                if (error.message === 'Utente non autenticato') {
-                    window.location.replace('auth.html');
-                }
-            } finally {
-                hideLoader();
-            }
-        }
-
-        // Avvia l'app quando il DOM è pronto
-        document.addEventListener('DOMContentLoaded', initializePage);
-    </script>
+      }catch(e){ console.error('Errore caricamento preferenze:', e); }
+    }
+
+    function requestAccountDeletion(){
+      if (confirm('Sei sicuro di voler richiedere la cancellazione del tuo account?')) createDeletionRequest();
+    }
+
+    async function createDeletionRequest(){
+      try{
+        const { error } = await APP_CONFIG.SUPABASE.getClient()
+          .from(APP_CONFIG.TABLES.RICHIESTE)
+          .insert([{
+            user_id: currentUser.id,
+            tipo_richiesta: 'CANCELLAZIONE_ACCOUNT',
+            oggetto: 'Richiesta cancellazione account',
+            descrizione: `L'utente ${currentProfile.full_name || currentProfile.nome + ' ' + currentProfile.cognome} (${currentProfile.email}) ha richiesto la cancellazione del proprio account.`,
+            priorita: 'ALTA',
+            stato: 'APERTA'
+          }]);
+        if (error) throw error;
+        APP_CONFIG.NOTIFICATIONS.showToast('Richiesta inviata all\'amministratore', 'warning');
+      }catch{
+        APP_CONFIG.NOTIFICATIONS.showToast('Contatta l\'amministratore per la cancellazione dell\'account', 'warning');
+      }
+    }
+
+    function setupEventHandlers(){
+      $id('editProfileBtn')?.addEventListener('click', toggleEditMode);
+      $id('cancelEditBtn')?.addEventListener('click', toggleEditMode);
+      $id('profileForm')?.addEventListener('submit', saveProfile);
+      $id('changePasswordBtn')?.addEventListener('click', openPasswordModal);
+      $id('changePasswordForm')?.addEventListener('submit', changePassword);
+      $id('savePreferencesBtn')?.addEventListener('click', savePreferences);
+      $id('deleteAccountBtn')?.addEventListener('click', requestAccountDeletion);
+      setupFieldTracking();
+    }
+
+    async function initializePage(){
+      try{
+        showLoader();
+        await APP_CONFIG.AUTH.protectPage();
+        await loadUserData();
+        await Promise.all([ loadActivityLog() ]);
+        loadPreferences();
+        setupEventHandlers();
+        console.log('✅ Pagina profilo inizializzata correttamente');
+      }catch(error){
+        console.error('❌ Errore inizializzazione:', error);
+        APP_CONFIG.NOTIFICATIONS.showToast('Errore nel caricamento della pagina', 'error');
+        if (error.message === 'Utente non autenticato') window.location.replace('auth.html');
+      }finally{
+        hideLoader();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', initializePage);
+  </script>
 </body>
 </html>
