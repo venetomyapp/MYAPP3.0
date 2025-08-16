@@ -1073,11 +1073,9 @@
   </div>
 
   <script>
-    /* ===== CONFIGURATION ===== */
-    const APP_CONFIG = {
-      supabaseUrl: 'https://lycrgzptkdkksukcwrld.supabase.co',
-      supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5Y3JnenB0a2Rra3N1a2N3cmxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3ODQyMzAsImV4cCI6MjA2ODM2MDIzMH0.ZJGOXAMC3hKKrnwXHKEa2_Eh7ZpOKeLYvYlYneBiEfk'
-    };
+    /* ===== CONFIGURAZIONE CORRETTA ===== */
+    const SUPABASE_URL = "https://pvzdilkozpspsnepedqc.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk";
 
     /* ===== UTILITY FUNCTIONS ===== */
     const showLoading = () => {
@@ -1221,60 +1219,88 @@
       }
     });
 
-    /* ===== SMART NAVIGATION ===== */
+    /* ===== SMART NAVIGATION CORRETTA ===== */
     async function smartBackNavigation() {
       showLoading();
       
       try {
+        // Usa la configurazione corretta
         const { createClient } = window.supabase;
-        const supabase = createClient(APP_CONFIG.supabaseUrl, APP_CONFIG.supabaseKey);
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
-        // Get current user
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        // Verifica sessione corrente
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         
-        if (authError || !user) {
-          // No user logged in, redirect to login
-          window.location.href = '../login.html';
+        if (sessionError) {
+          console.warn('Errore sessione:', sessionError);
+          // Fallback diretto alla home invece del login
+          window.location.href = '../home.html';
           return;
         }
         
-        // Get user profile and roles
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('ruoli, nome, cognome')
-          .eq('id', user.id)
-          .single();
-        
-        if (profileError) {
-          console.error('Profile error:', profileError);
-          // Fallback to standard home
-          window.location.href = '../app/home.html';
+        if (!session || !session.user) {
+          console.log('Nessuna sessione attiva, reindirizzo alla home');
+          window.location.href = '../home.html';
           return;
         }
         
-        const roles = profile?.ruoli || ['USER'];
-        const userName = profile?.nome || user.email?.split('@')[0] || 'Utente';
+        const user = session.user;
+        console.log('✅ Sessione attiva per utente:', user.id);
         
-        // Navigate based on role hierarchy
-        if (roles.includes('DIRIGENTE') || roles.includes('ADMIN') || roles.includes('SUPER_ADMIN')) {
-          window.location.href = '../app/home_dirigenti.html';
-        } else {
-          window.location.href = '../app/home.html';
+        // Cerca nel database con la tabella corretta
+        try {
+          const { data: profile, error: profileError } = await supabase
+            .from('user_profiles')  // Tabella corretta
+            .select('role, nome, cognome')  // Colonne corrette
+            .eq('user_id', user.id)
+            .single();
+          
+          let userRole = 'USER';
+          let userName = 'Utente';
+          
+          if (profile && !profileError) {
+            userRole = profile.role || 'USER';
+            userName = profile.nome || user.email?.split('@')[0] || 'Utente';
+          } else {
+            // Fallback ai metadati utente
+            userRole = user.user_metadata?.role || user.app_metadata?.role || 'USER';
+            userName = user.user_metadata?.nome || user.email?.split('@')[0] || 'Utente';
+          }
+          
+          console.log('👤 Ruolo utente:', userRole);
+          
+          // Navigazione basata sul ruolo
+          if (userRole === 'DIRIGENTE' || userRole === 'ADMIN' || userRole === 'SUPER_ADMIN') {
+            window.location.href = '../home_dirigenti.html';
+          } else {
+            window.location.href = '../home.html';
+          }
+          
+          // Messaggio di benvenuto
+          setTimeout(() => {
+            showNotification(`👋 Bentornato, ${userName}!`, 'success', 3000);
+          }, 500);
+          
+        } catch (profileError) {
+          console.warn('Errore caricamento profilo:', profileError);
+          // Fallback basato sui metadati utente
+          const userRole = user.user_metadata?.role || user.app_metadata?.role || 'USER';
+          
+          if (userRole === 'DIRIGENTE' || userRole === 'ADMIN') {
+            window.location.href = '../home_dirigenti.html';
+          } else {
+            window.location.href = '../home.html';
+          }
         }
-        
-        // Show welcome message
-        setTimeout(() => {
-          showNotification(`👋 Bentornato, ${userName}!`, 'success', 3000);
-        }, 500);
         
       } catch (error) {
-        console.error('Navigation error:', error);
-        showNotification('❌ Errore di connessione. Reindirizzamento alla home generale.', 'error');
+        console.error('❌ Errore nella navigazione intelligente:', error);
+        showNotification('⚠️ Errore di connessione. Reindirizzamento alla home.', 'warning');
         
-        // Fallback navigation
+        // Fallback sicuro alla home generale
         setTimeout(() => {
-          window.location.href = '../index.html';
-        }, 2000);
+          window.location.href = '../home.html';
+        }, 1500);
       } finally {
         hideLoading();
       }
@@ -1406,7 +1432,7 @@
 
     /* ===== INITIALIZATION ===== */
     document.addEventListener('DOMContentLoaded', () => {
-      console.log('🌌 BestBadge Services - Aurora Enhanced 2025');
+      console.log('🌌 BestBadge Services - Aurora Enhanced 2025 (FIXED)');
       
       // Initialize all systems
       initTabSystem();
