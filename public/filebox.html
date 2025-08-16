@@ -17,33 +17,14 @@
   <meta name="apple-mobile-web-app-title" content="MyApp">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 
-  <!-- Fonts & Tailwind (ok per test/dev; in produzione usa la build CLI) -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary:'#1a1a2e', secondary:'#16213e', accent:'#0f3460', aurora:'#e94560',
-            cyan:'#00d4ff', magenta:'#ff006e', gold:'#ffd700', teal:'#03dac6',
-            dark:'#0a0a23', light:'#f8fafc', muted:'#64748b', success:'#00ea8d',
-            warning:'#ffb800', error:'#ff4757',
-          },
-          fontFamily:{ sans:['Inter','system-ui','sans-serif'] },
-          screens:{ xs:'320px', sm:'640px', md:'768px', lg:'1024px', xl:'1280px', '2xl':'1536px' },
-          fontSize:{
-            'fluid-xs':'clamp(.75rem,2vw,.875rem)','fluid-sm':'clamp(.875rem,2.5vw,1rem)',
-            'fluid-base':'clamp(1rem,2.5vw,1.125rem)','fluid-lg':'clamp(1.125rem,3vw,1.25rem)',
-            'fluid-xl':'clamp(1.25rem,3.5vw,1.5rem)','fluid-2xl':'clamp(1.5rem,4vw,2rem)',
-            'fluid-3xl':'clamp(1.875rem,5vw,2.5rem)','fluid-4xl':'clamp(2.25rem,6vw,3rem)'
-          }
-        }
-      }
-    }
-  </script>
+
+  <!-- Tailwind CSS compilato (build di produzione) -->
+  <!-- Genera /styles.css con Tailwind CLI o PostCSS e includi i tuoi colori custom nel tailwind.config.js -->
+  <link rel="stylesheet" href="/styles.css">
 
   <style>
     :root{
@@ -77,7 +58,7 @@
     .tab-btn.active{ background:rgba(255,255,255,.95); color:#1a1a2e; }
     .download-pulse{ animation:downloadPulse 2s infinite; }
     @keyframes downloadPulse{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
-    /* Mobile optimizations */
+    /* Mobile */
     @media (max-width: 640px) {
       .mobile-stack { flex-direction: column !important; }
       .mobile-full { width: 100% !important; }
@@ -97,7 +78,7 @@
 </head>
 <body>
 
-  <!-- Header - Mobile Optimized -->
+  <!-- Header -->
   <header class="w-full px-3 sm:px-4 py-3 sm:py-4 relative z-10">
     <div class="max-w-6xl mx-auto flex justify-center items-center">
       <div class="flex items-center space-x-2 sm:space-x-3">
@@ -129,7 +110,7 @@
 
   <!-- Main -->
   <main class="max-w-6xl mx-auto px-3 sm:px-4 pb-8 sm:pb-10">
-    <!-- Tab Navigation -->
+    <!-- Tabs -->
     <div class="flex gap-2 mb-4 sm:mb-6 fade-in overflow-x-auto">
       <button id="tabFiles" class="tab-btn active px-3 sm:px-4 py-2 rounded-full font-bold text-xs sm:text-sm whitespace-nowrap flex items-center gap-2">
         <span>📁</span> File Cartella
@@ -144,14 +125,12 @@
 
     <!-- Files Section -->
     <div id="filesSection">
-      <!-- Intro / Search -->
       <section class="glass-strong rounded-2xl sm:rounded-3xl p-4 sm:p-6 mb-4 sm:mb-6 text-center fade-in">
         <h2 class="text-ultra-visible text-lg sm:text-xl lg:text-2xl font-extrabold mb-2">Documenti in cartella</h2>
         <p class="text-ultra-visible text-sm sm:fluid-base mb-4">Visualizza e scarica i file senza uscire dalla pagina</p>
 
-        <!-- Search and Filters -->
         <div class="grid gap-3 sm:gap-4 mb-4">
-          <!-- Search Bar -->
+          <!-- Search -->
           <div class="glass-card rounded-xl sm:rounded-2xl p-2 sm:p-3">
             <div class="flex items-center space-x-2 sm:space-x-3">
               <svg class="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
@@ -187,7 +166,6 @@
 
       <!-- Files Grid -->
       <section id="filesContainer" class="grid mobile-grid-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 fade-in">
-        <!-- Loading skeletons -->
         <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 loading-skeleton h-24 sm:h-28"></div>
         <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 loading-skeleton h-24 sm:h-28 mobile-hidden"></div>
         <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 loading-skeleton h-24 sm:h-28 mobile-hidden"></div>
@@ -217,15 +195,12 @@
         </div>
       </section>
 
-      <!-- Downloads Grid -->
       <section id="downloadsContainer" class="grid mobile-grid-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 fade-in">
-        <!-- Loading skeletons -->
         <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 loading-skeleton h-32 sm:h-36"></div>
         <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 loading-skeleton h-32 sm:h-36 mobile-hidden"></div>
         <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 loading-skeleton h-32 sm:h-36 mobile-hidden"></div>
       </section>
 
-      <!-- Empty Downloads -->
       <div id="emptyDownloads" class="text-center py-12 sm:py-16 hidden">
         <div class="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-r from-muted to-gray-400 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
           <span class="text-2xl sm:text-4xl">📥</span>
@@ -235,7 +210,7 @@
       </div>
     </div>
 
-    <!-- Management Section (Admin/Dirigenti only) -->
+    <!-- Management Section -->
     <div id="manageSection" class="hidden">
       <section class="glass-strong rounded-2xl sm:rounded-3xl p-4 sm:p-6 mb-4 sm:mb-6 text-center fade-in">
         <div class="flex items-center justify-center gap-3 mb-4">
@@ -254,28 +229,24 @@
 
         <form id="linkForm" class="space-y-4">
           <input type="hidden" id="editId" value="">
-
           <div>
             <label for="linkTitolo" class="block text-primary font-semibold mb-2 text-sm">Titolo *</label>
             <input type="text" id="linkTitolo" required maxlength="255"
                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-aurora focus:border-aurora outline-none text-sm"
                    placeholder="es. Materiale Corso Base">
           </div>
-
           <div>
             <label for="linkDescrizione" class="block text-primary font-semibold mb-2 text-sm">Descrizione</label>
             <textarea id="linkDescrizione" rows="3" maxlength="500"
                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-aurora focus:border-aurora outline-none text-sm resize-none"
                       placeholder="Descrizione opzionale del contenuto..."></textarea>
           </div>
-
           <div>
             <label for="linkUrl" class="block text-primary font-semibold mb-2 text-sm">URL *</label>
             <input type="url" id="linkUrl" required
                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-aurora focus:border-aurora outline-none text-sm"
                    placeholder="https://mega.nz/file/...">
           </div>
-
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label for="linkTipo" class="block text-primary font-semibold mb-2 text-sm">Tipo Transfer</label>
@@ -290,21 +261,18 @@
                 <option value="GitHub">GitHub</option>
               </select>
             </div>
-
             <div>
               <label for="linkOrder" class="block text-primary font-semibold mb-2 text-sm">Ordine</label>
               <input type="number" id="linkOrder" min="0" max="999" value="0"
                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-aurora focus:border-aurora outline-none text-sm">
             </div>
           </div>
-
           <div class="flex items-center gap-4">
             <label class="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" id="linkAttivo" checked class="w-4 h-4 text-aurora border-gray-300 rounded focus:ring-aurora">
               <span class="text-primary font-medium text-sm">Link attivo</span>
             </label>
           </div>
-
           <div class="flex gap-2 pt-4">
             <button type="submit" id="submitBtn" class="bg-gradient-to-r from-aurora to-magenta text-white px-4 py-2 rounded-lg font-bold text-sm hover:scale-105 transition-transform mobile-full">
               Salva Link
@@ -324,9 +292,7 @@
             🔄 Aggiorna
           </button>
         </div>
-
         <div id="manageContainer" class="grid mobile-grid-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4"></div>
-
         <div id="emptyManage" class="text-center py-12 sm:py-16 hidden">
           <div class="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-r from-muted to-gray-400 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
             <span class="text-2xl sm:text-4xl">📝</span>
@@ -381,8 +347,8 @@
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // === UTILS ===
-    const $  = (sel, root = document) => root.querySelector(sel);                // un elemento
-    const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel)); // lista elementi
+    const $  = (sel, root = document) => root.querySelector(sel);
+    const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
     const humanSize = b => {
       if (!Number.isFinite(b)) return '--';
@@ -393,11 +359,9 @@
 
     function show(el){ if (el) el.classList.remove('hidden'); }
     function hide(el){ if (el) el.classList.add('hidden'); }
-    // alias per retrocompatibilità con codice esistente
-    const safeShow = show;
-    const safeHide = hide;
+    const safeShow = show, safeHide = hide;
 
-    // State
+    // === STATE ===
     let currentUser = null;
     let allFiles = [];
     let downloadLinks = [];
@@ -437,7 +401,6 @@
       return map[ext] || 'application/octet-stream';
     };
 
-    // Transfer platform icons
     const getTransferIcon = (url) => {
       const urlLower = url.toLowerCase();
       if (urlLower.includes('mega.nz') || urlLower.includes('mega.co')) return '☁️';
@@ -450,7 +413,78 @@
       return '🔗';
     };
 
-    // Tab switching
+    // === AUTH & ROLE ===
+    const PROFILES_TABLE = 'user_profiles';
+
+    async function checkAuth(){
+      try{
+        const { data:{ user } } = await supabase.auth.getUser();
+        currentUser = user || null;
+        if (user) await checkAdminPrivileges();
+      }catch(e){ /* ignore */ }
+    }
+
+    async function checkAdminPrivileges(){
+      try{
+        const meta = currentUser?.user_metadata || {};
+        const metaRole = String(meta.role || meta.ruolo || meta.profilo || '').toUpperCase();
+
+        let dbRole = '';
+        let dbStato = '';
+        if (currentUser?.id) {
+          const { data, error, status } = await supabase
+            .from(PROFILES_TABLE)
+            .select('role, stato')
+            .eq('user_id', currentUser.id)
+            .limit(1)
+            .maybeSingle();
+
+          if (error) {
+            console.warn('user_profiles lookup failed', { status, error });
+          } else if (data) {
+            dbRole  = String(data.role || '').toUpperCase();   // USER | DIRIGENTE | ADMIN
+            dbStato = String(data.stato || '').toUpperCase();  // ATTIVO | SOSPESO | INATTIVO
+          }
+        }
+
+        const effRole  = (dbRole || metaRole || 'USER').toUpperCase();
+        const effStato = (dbStato || 'ATTIVO').toUpperCase();
+
+        isAdmin = (effStato === 'ATTIVO') && (effRole === 'ADMIN' || effRole === 'DIRIGENTE');
+
+      } catch (e) {
+        console.error('checkAdminPrivileges() error:', e);
+      } finally {
+        const manageTab = $('#tabManage');
+        if (manageTab) manageTab.classList.toggle('hidden', !isAdmin);
+      }
+    }
+
+    async function resolveHomePath(){
+      let target = 'home.html';
+      try{
+        if (!currentUser) return target;
+
+        const meta = currentUser.user_metadata || {};
+        const metaRole = String(meta.role || meta.ruolo || meta.profilo || '').toUpperCase();
+        if (metaRole === 'DIRIGENTE') return 'home_dirigenti.html';
+
+        const { data, error } = await supabase
+          .from(PROFILES_TABLE)
+          .select('role')
+          .eq('user_id', currentUser.id)
+          .limit(1)
+          .maybeSingle();
+
+        if (!error && data) {
+          const role = String(data.role || '').toUpperCase();
+          if (role === 'DIRIGENTE') target = 'home_dirigenti.html';
+        }
+      }catch(e){}
+      return target;
+    }
+
+    // === UI: Tabs & Navigation ===
     function switchTab(tab) {
       activeTab = tab;
       $$('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -460,93 +494,28 @@
       hide($('#manageSection'));
 
       if (tab === 'files') {
-        $('#tabFiles').classList.add('active');
+        $('#tabFiles')?.classList.add('active');
         show($('#filesSection'));
       } else if (tab === 'downloads') {
-        $('#tabDownloads').classList.add('active');
+        $('#tabDownloads')?.classList.add('active');
         show($('#downloadsSection'));
       } else if (tab === 'manage') {
-        $('#tabManage').classList.add('active');
+        $('#tabManage')?.classList.add('active');
         show($('#manageSection'));
       }
     }
 
-    // Tab event listeners
     const tabFiles = $('#tabFiles');
     const tabDownloads = $('#tabDownloads');
     const tabManage = $('#tabManage');
-
-    if (tabFiles) tabFiles.addEventListener('click', () => switchTab('files'));
-    if (tabDownloads) tabDownloads.addEventListener('click', () => switchTab('downloads'));
-    if (tabManage) tabManage.addEventListener('click', () => switchTab('manage'));
-
-    // Auth + routing
-    async function checkAuth(){
-      try{
-        const { data:{ user } } = await supabase.auth.getUser();
-        currentUser = user || null;
-
-        // Check admin privileges
-        if (user) {
-          await checkAdminPrivileges();
-        }
-      }catch(e){ /* ignore */ }
-    }
-
-    async function checkAdminPrivileges(){
-      try{
-        // Check user metadata first
-        const meta = currentUser?.user_metadata || {};
-        const rawRole = (meta.profilo || meta.ruolo || meta.role || '').toString().toLowerCase();
-        if (rawRole.includes('dirigente') || rawRole.includes('admin')) {
-          isAdmin = true;
-        } else if (currentUser?.id) {
-          // Check database profile
-          const { data } = await supabase.from('user_profiles').select('ruolo,profilo,tipo').eq('user_id', currentUser.id).maybeSingle();
-          if (data){
-            const role = (data.ruolo||data.profilo||data.tipo||'').toLowerCase();
-            if (role.includes('dirigente') || role.includes('admin')) {
-              isAdmin = true;
-            }
-          }
-        }
-
-        // Show/hide management tab
-        const manageTab = $('#tabManage');
-        if (manageTab) {
-          if (isAdmin) {
-            manageTab.classList.remove('hidden');
-          } else {
-            manageTab.classList.add('hidden');
-          }
-        }
-      }catch(e){
-        console.error('Error checking admin privileges:', e);
-      }
-    }
-
-    async function resolveHomePath(){
-      let target = 'home.html';
-      try{
-        if (!currentUser) return target;
-        const meta = currentUser.user_metadata || {};
-        const rawRole = (meta.profilo || meta.ruolo || meta.role || '').toString().toLowerCase();
-        if (rawRole.includes('dirigente')) return 'home_dirigenti.html';
-        const { data } = await supabase.from('user_profiles').select('ruolo,profilo,tipo').eq('user_id', currentUser.id).maybeSingle();
-        if (data){
-          const role = (data.ruolo||data.profilo||data.tipo||'').toLowerCase();
-          if (role.includes('dirigente')) target = 'home_dirigenti.html';
-        }
-      }catch(e){}
-      return target;
-    }
+    tabFiles?.addEventListener('click', () => switchTab('files'));
+    tabDownloads?.addEventListener('click', () => switchTab('downloads'));
+    tabManage?.addEventListener('click', () => switchTab('manage'));
 
     const backBtn = $('#backBtn');
-    if (backBtn) {
-      backBtn.addEventListener('click', async ()=> { window.location.href = await resolveHomePath(); });
-    }
+    backBtn?.addEventListener('click', async ()=> { window.location.href = await resolveHomePath(); });
 
-    // Load MEGA files
+    // === Data: MEGA ===
     async function loadMega(){
       safeShow($('#loading'));
       try{
@@ -592,7 +561,7 @@
       }
     }
 
-    // Load download links
+    // === Data: Download Links ===
     async function loadDownloadLinks(){
       try{
         const { data, error } = await supabase
@@ -607,10 +576,7 @@
         renderDownloads();
         updateDownloadStats();
 
-        // Load all links for management if admin
-        if (isAdmin) {
-          await loadAllLinksForManagement();
-        }
+        if (isAdmin) await loadAllLinksForManagement();
       }catch(err){
         console.error('Errore download links:', err);
         const container = $('#downloadsContainer');
@@ -624,10 +590,8 @@
       }
     }
 
-    // Management functions
     async function loadAllLinksForManagement(){
       if (!isAdmin) return;
-
       try{
         const { data, error } = await supabase
           .from('download_links')
@@ -635,7 +599,6 @@
           .order('order_index', { ascending: true });
 
         if (error) throw error;
-
         renderManagementLinks(data || []);
       }catch(err){
         console.error('Errore caricamento gestione:', err);
@@ -686,25 +649,16 @@
 
         let result;
         if (editingLinkId) {
-          // Update existing link
-          result = await supabase
-            .from('download_links')
-            .update(linkData)
-            .eq('id', editingLinkId);
+          result = await supabase.from('download_links').update(linkData).eq('id', editingLinkId);
         } else {
-          // Create new link
           linkData.created_at = new Date().toISOString();
-          result = await supabase
-            .from('download_links')
-            .insert([linkData]);
+          result = await supabase.from('download_links').insert([linkData]);
         }
 
         if (result.error) throw result.error;
 
-        // Reset form and reload
         resetForm();
         await loadDownloadLinks();
-
         alert(editingLinkId ? 'Link aggiornato con successo!' : 'Link aggiunto con successo!');
       } catch (err) {
         console.error('Errore salvataggio:', err);
@@ -714,15 +668,9 @@
 
     async function deleteLink(id){
       if (!isAdmin || !confirm('Sei sicuro di voler eliminare questo link?')) return;
-
       try {
-        const { error } = await supabase
-          .from('download_links')
-          .delete()
-          .eq('id', id);
-
+        const { error } = await supabase.from('download_links').delete().eq('id', id);
         if (error) throw error;
-
         await loadDownloadLinks();
         alert('Link eliminato con successo!');
       } catch (err) {
@@ -758,9 +706,7 @@
       if (submitBtn) submitBtn.textContent = 'Aggiorna Link';
       safeShow(cancelBtn);
 
-      // Scroll to form
-      const linkForm = $('#linkForm');
-      if (linkForm) linkForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      $('#linkForm')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function resetForm(){
@@ -783,7 +729,7 @@
       safeHide(cancelBtn);
     }
 
-    // Render files
+    // === Renderers ===
     function renderFiles(){
       const searchInput = $('#searchInput');
       const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
@@ -820,7 +766,6 @@
         </button>
       `).join('');
 
-      // Re-bind file tile events
       $$('#filesContainer .file-tile').forEach(btn=>{
         btn.addEventListener('click', ()=>{
           const name = decodeURIComponent(btn.dataset.name);
@@ -830,11 +775,9 @@
       });
     }
 
-    // Render downloads
     function renderDownloads(){
       const container = $('#downloadsContainer');
       const emptyDownloads = $('#emptyDownloads');
-
       if (!container) return;
 
       if (!downloadLinks.length){
@@ -866,16 +809,12 @@
     function updateStats(){
       const total = allFiles.length;
       const sizeSum = allFiles.reduce((a,b)=> a + (Number.isFinite(b.size)? b.size : 0), 0);
-      const elTot = $('#statTot');
-      const elSize = $('#statSize');
-      if (elTot) elTot.textContent = total || '--';
-      if (elSize) elSize.textContent = total ? humanSize(sizeSum) : '--';
+      $('#statTot') && ($('#statTot').textContent = total || '--');
+      $('#statSize') && ($('#statSize').textContent = total ? humanSize(sizeSum) : '--');
     }
 
-    // Render management links
     function renderManagementLinks(links){
       if (!isAdmin) return;
-
       const container = $('#manageContainer');
       const empty = $('#emptyManage');
       if (!container) return;
@@ -898,9 +837,7 @@
                   ${link.descrizione ? `<div class="text-muted text-xs sm:text-sm mt-1 line-clamp-2">${link.descrizione}</div>` : ''}
                   <div class="flex items-center gap-4 mt-2">
                     <span class="text-xs text-cyan font-medium">${link.tipo_transfer || 'Download'}</span>
-                    <span class="text-xs ${link.attivo ? 'text-success' : 'text-error'} font-medium">
-                      ${link.attivo ? '✅ Attivo' : '❌ Disattivo'}
-                    </span>
+                    <span class="text-xs ${link.attivo ? 'text-success' : 'text-error'} font-medium">${link.attivo ? '✅ Attivo' : '❌ Disattivo'}</span>
                     <span class="text-xs text-muted">Ord: ${link.order_index || 0}</span>
                   </div>
                 </div>
@@ -922,7 +859,6 @@
         </div>
       `).join('');
 
-      // Bind management events
       $$('.editLinkBtn').forEach(btn=>{
         btn.addEventListener('click', ()=>{
           const linkData = JSON.parse(btn.dataset.link.replace(/&apos;/g, "'"));
@@ -937,7 +873,7 @@
       });
     }
 
-    // Viewer
+    // === Viewer ===
     async function openViewer(file){
       const viewer = $('#viewer');
       const viewerBody = $('#viewerBody');
@@ -1043,29 +979,26 @@
       });
     }
 
-    const closeViewer = $('#closeViewer');
-    if (closeViewer) {
-      closeViewer.addEventListener('click', ()=>{
-        try {
-          const media = $('#viewerBody video, #viewerBody audio');
-          media?.pause?.();
-        } catch {}
-        const viewerBody = $('#viewerBody');
-        if (viewerBody) viewerBody.innerHTML = '';
-        hide($('#viewer'));
-        if (lastObjectURL){
-          try { URL.revokeObjectURL(lastObjectURL); } catch {}
-          lastObjectURL = null;
-        }
-      });
-    }
+    $('#closeViewer')?.addEventListener('click', ()=>{
+      try {
+        const media = $('#viewerBody video, #viewerBody audio');
+        media?.pause?.();
+      } catch {}
+      const viewerBody = $('#viewerBody');
+      if (viewerBody) viewerBody.innerHTML = '';
+      hide($('#viewer'));
+      if (lastObjectURL){
+        try { URL.revokeObjectURL(lastObjectURL); } catch {}
+        lastObjectURL = null;
+      }
+    });
 
     function updateDownloadStats(){
       const el = $('#downloadCount');
       if (el) el.textContent = downloadLinks.length || '--';
     }
 
-    // Event listeners
+    // === Events wiring ===
     $$('.filterBtn').forEach(btn=>{
       btn.addEventListener('click', ()=>{
         $$('.filterBtn').forEach(b=>b.classList.remove('active'));
@@ -1076,44 +1009,34 @@
 
     let searchTimeout;
     const searchInput = $('#searchInput');
-    if (searchInput) {
-      searchInput.addEventListener('input', ()=>{
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(renderFiles, 250);
-      });
-    }
+    searchInput?.addEventListener('input', ()=>{
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(renderFiles, 250);
+    });
 
     const linkForm = $('#linkForm');
-    if (linkForm) {
-      linkForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (isAdmin) saveLink();
-      });
-    }
+    linkForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (isAdmin) saveLink();
+    });
 
-    const cancelBtn = $('#cancelBtn');
-    if (cancelBtn) {
-      cancelBtn.addEventListener('click', resetForm);
-    }
+    $('#cancelBtn')?.addEventListener('click', resetForm);
 
-    const refreshLinksBtn = $('#refreshLinks');
-    if (refreshLinksBtn) {
-      refreshLinksBtn.addEventListener('click', async () => {
-        if (isAdmin) {
-          show($('#loading'));
-          await loadDownloadLinks();
-          hide($('#loading'));
-        }
-      });
-    }
+    $('#refreshLinks')?.addEventListener('click', async () => {
+      if (isAdmin) {
+        show($('#loading'));
+        await loadDownloadLinks();
+        hide($('#loading'));
+      }
+    });
 
-    // Initialize
+    // === Init ===
     (async ()=>{
       await checkAuth();
       await Promise.all([loadMega(), loadDownloadLinks()]);
     })();
 
-    // Cleanup
+    // === Cleanup ===
     window.addEventListener('beforeunload', ()=>{
       if (lastObjectURL){
         try { URL.revokeObjectURL(lastObjectURL); } catch {}
