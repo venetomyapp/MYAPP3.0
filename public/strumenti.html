@@ -92,7 +92,7 @@
             margin: 0;
             padding: 0;
             overflow-x: hidden;
-            padding-bottom: 80px; /* Space for bottom nav */
+            padding-bottom: 80px;
         }
 
         @keyframes aurora {
@@ -137,6 +137,11 @@
             border-color: rgba(233,69,96,.6); 
         }
 
+        .btn-aurora:active {
+            transform: translateY(0) scale(0.98);
+            transition: all .1s ease;
+        }
+
         .btn-cyber { 
             background: var(--gradient-cyber); 
             border: 2px solid rgba(0,212,255,.3); 
@@ -149,6 +154,11 @@
             transform: translateY(-2px) scale(1.02); 
             box-shadow: 0 15px 35px rgba(0,212,255,.4); 
             border-color: rgba(0,212,255,.6); 
+        }
+
+        .btn-cyber:active {
+            transform: translateY(0) scale(0.98);
+            transition: all .1s ease;
         }
 
         .btn-cyan { 
@@ -165,6 +175,11 @@
             border-color: rgba(0,212,255,.6); 
         }
 
+        .btn-cyan:active {
+            transform: translateY(0) scale(0.98);
+            transition: all .1s ease;
+        }
+
         .btn-success { 
             background: var(--gradient-success); 
             border: 2px solid rgba(16,185,129,.3); 
@@ -179,7 +194,12 @@
             border-color: rgba(16,185,129,.6); 
         }
 
-        /* BOTTOM NAVIGATION */
+        .btn-success:active {
+            transform: translateY(0) scale(0.98);
+            transition: all .1s ease;
+        }
+
+        /* ENHANCED BOTTOM NAVIGATION */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -195,6 +215,7 @@
             align-items: center;
             justify-content: space-around;
             padding: 0 10px;
+            transition: all .3s cubic-bezier(.4,0,.2,1);
         }
 
         .nav-item {
@@ -204,16 +225,36 @@
             justify-content: center;
             padding: 8px;
             border-radius: 16px;
-            transition: all .3s ease;
+            transition: all .3s cubic-bezier(.4,0,.2,1);
             cursor: pointer;
             min-width: 60px;
             text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: var(--gradient-magic);
+            border-radius: 50%;
+            transition: all .4s cubic-bezier(.4,0,.2,1);
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+
+        .nav-item.active::before {
+            width: 100%;
+            height: 100%;
         }
 
         .nav-item.active {
-            background: var(--gradient-magic);
             color: white;
-            transform: translateY(-3px);
+            transform: translateY(-3px) scale(1.05);
             box-shadow: 0 10px 25px rgba(233,69,96,.3);
         }
 
@@ -223,12 +264,17 @@
 
         .nav-item:not(.active):hover {
             background: rgba(233,69,96,.1);
-            transform: translateY(-1px);
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .nav-item:active {
+            transform: translateY(-1px) scale(0.95);
         }
 
         .nav-icon {
             font-size: 20px;
             margin-bottom: 2px;
+            transition: all .3s ease;
         }
 
         .nav-label {
@@ -236,27 +282,78 @@
             font-weight: 600;
         }
 
-        /* MAIN CONTENT AREA */
+        /* ENHANCED MAIN CONTENT AREA */
         .main-content {
             padding: 20px 16px;
             min-height: calc(100vh - 80px);
+            position: relative;
         }
 
         .section {
             display: none;
-            animation: slideIn 0.3s ease-out;
+            animation: slideInRight 0.4s cubic-bezier(.4,0,.2,1);
+            position: relative;
         }
 
         .section.active {
             display: block;
         }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
+        .section.slide-left {
+            animation: slideInLeft 0.4s cubic-bezier(.4,0,.2,1);
         }
 
-        /* MOBILE CALENDAR */
+        .section.slide-right {
+            animation: slideInRight 0.4s cubic-bezier(.4,0,.2,1);
+        }
+
+        @keyframes slideInRight {
+            from { 
+                opacity: 0; 
+                transform: translateX(100px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0); 
+            }
+        }
+
+        @keyframes slideInLeft {
+            from { 
+                opacity: 0; 
+                transform: translateX(-100px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0); 
+            }
+        }
+
+        /* PULL TO REFRESH */
+        .pull-to-refresh {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,.9);
+            border-radius: 50px;
+            padding: 10px 20px;
+            backdrop-filter: blur(10px);
+            transition: all .3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .pull-to-refresh.visible {
+            opacity: 1;
+            top: 20px;
+        }
+
+        .pull-to-refresh.loading {
+            animation: pulse 1.5s infinite;
+        }
+
+        /* ENHANCED CALENDAR */
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -280,8 +377,29 @@
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            transition: all .2s ease;
+            transition: all .3s cubic-bezier(.4,0,.2,1);
             border: 1px solid rgba(255,255,255,.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calendar-day::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(233,69,96,.2);
+            border-radius: 50%;
+            transition: all .3s ease;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+
+        .calendar-day:active::before {
+            width: 120%;
+            height: 120%;
         }
 
         .calendar-day:active {
@@ -338,15 +456,15 @@
             color: white !important; 
             border-left: 4px solid white !important; 
             box-shadow: 0 0 20px rgba(233,69,96,.6) !important;
-            animation: pulse 2s infinite;
+            animation: todayPulse 2s infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        @keyframes todayPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(233,69,96,.6); }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(233,69,96,.8); }
         }
 
-        /* CARDS */
+        /* ENHANCED CARDS */
         .stat-card {
             background: rgba(255,255,255,.95);
             backdrop-filter: blur(16px);
@@ -354,11 +472,28 @@
             padding: 20px;
             border: 1px solid rgba(255,255,255,.3);
             box-shadow: 0 10px 30px rgba(0,0,0,.1);
-            transition: all .3s ease;
+            transition: all .3s cubic-bezier(.4,0,.2,1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent);
+            transition: left .6s ease;
+        }
+
+        .stat-card:active::before {
+            left: 100%;
         }
 
         .stat-card:active {
-            transform: translateY(-2px);
+            transform: translateY(-2px) scale(1.02);
             box-shadow: 0 15px 35px rgba(0,0,0,.15);
         }
 
@@ -375,7 +510,7 @@
             margin-top: 4px;
         }
 
-        /* LIST ITEMS */
+        /* ENHANCED LIST ITEMS */
         .list-item {
             background: rgba(255,255,255,.9);
             border-radius: 16px;
@@ -383,7 +518,22 @@
             margin-bottom: 12px;
             border: 1px solid rgba(255,255,255,.3);
             box-shadow: 0 4px 20px rgba(0,0,0,.05);
-            transition: all .2s ease;
+            transition: all .3s cubic-bezier(.4,0,.2,1);
+            position: relative;
+            overflow: hidden;
+            transform: translateX(0);
+        }
+
+        .list-item.swipe-left {
+            transform: translateX(-100px);
+            background: #ef4444;
+            color: white;
+        }
+
+        .list-item.swipe-right {
+            transform: translateX(100px);
+            background: #10b981;
+            color: white;
         }
 
         .list-item:active {
@@ -391,7 +541,30 @@
             box-shadow: 0 2px 10px rgba(0,0,0,.1);
         }
 
-        /* MODAL */
+        .swipe-action {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity .3s ease;
+        }
+
+        .swipe-action.left {
+            right: 20px;
+        }
+
+        .swipe-action.right {
+            left: 20px;
+        }
+
+        .list-item.swipe-left .swipe-action.left,
+        .list-item.swipe-right .swipe-action.right {
+            opacity: 1;
+        }
+
+        /* ENHANCED MODAL */
         .modal {
             display: none;
             position: fixed;
@@ -411,6 +584,12 @@
             align-items: flex-start;
             justify-content: center;
             padding-top: 40px;
+            animation: modalFadeIn .3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .modal-content {
@@ -421,9 +600,17 @@
             max-width: 400px;
             box-shadow: 0 25px 50px rgba(0,0,0,.3);
             backdrop-filter: blur(20px);
+            transform: translateY(50px);
+            animation: modalSlideUp .4s cubic-bezier(.4,0,.2,1) forwards;
         }
 
-        /* FORM ELEMENTS */
+        @keyframes modalSlideUp {
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        /* ENHANCED FORM ELEMENTS */
         input, select, textarea {
             background: rgba(255,255,255,.95) !important;
             border: 2px solid rgba(255,255,255,.5) !important;
@@ -431,7 +618,7 @@
             padding: 12px 16px !important;
             font-size: 16px !important;
             width: 100%;
-            transition: all .3s ease;
+            transition: all .3s cubic-bezier(.4,0,.2,1);
         }
 
         input:focus, select:focus, textarea:focus {
@@ -439,9 +626,38 @@
             border-color: #e94560 !important;
             box-shadow: 0 0 20px rgba(233,69,96,.3) !important;
             outline: none !important;
+            transform: scale(1.02);
         }
 
-        /* BACK BUTTON (SPOSTATO IN BASSO A SINISTRA) */
+        /* FLOATING ACTION BUTTON */
+        .fab {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-magic);
+            color: white;
+            border: none;
+            font-size: 24px;
+            box-shadow: 0 8px 20px rgba(233,69,96,.4);
+            transition: all .3s cubic-bezier(.4,0,.2,1);
+            z-index: 150;
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .fab.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .fab:active {
+            transform: scale(0.9);
+        }
+
+        /* ENHANCED BACK BUTTON */
         .back-btn {
             position: fixed;
             bottom: calc(90px + env(safe-area-inset-bottom));
@@ -457,7 +673,7 @@
             justify-content: center;
             backdrop-filter: blur(10px);
             z-index: 150;
-            transition: all .3s ease;
+            transition: all .3s cubic-bezier(.4,0,.2,1);
             text-decoration: none;
         }
 
@@ -484,10 +700,11 @@
             }
         }
 
-        /* LOADING STATES */
+        /* ENHANCED LOADING STATES */
         .loading {
             opacity: 0.6;
             pointer-events: none;
+            position: relative;
         }
 
         .loading::after {
@@ -511,10 +728,116 @@
         .hidden {
             display: none !important;
         }
+
+        /* PROGRESS INDICATORS */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--gradient-magic);
+            z-index: 1000;
+            transition: width .3s ease;
+            opacity: 0;
+        }
+
+        .progress-bar.visible {
+            opacity: 1;
+        }
+
+        /* HAPTIC FEEDBACK INDICATOR */
+        .haptic-feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: rgba(255,255,255,.9);
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .haptic-feedback.active {
+            animation: hapticPulse .6s ease;
+        }
+
+        @keyframes hapticPulse {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+        }
+
+        /* CONTEXTUAL QUICK ACTIONS */
+        .quick-actions {
+            position: fixed;
+            bottom: 160px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            opacity: 0;
+            transform: scale(0);
+            transition: all .3s cubic-bezier(.4,0,.2,1);
+            z-index: 140;
+        }
+
+        .quick-actions.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .quick-action {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,.2);
+            transition: all .3s ease;
+        }
+
+        .quick-action:active {
+            transform: scale(0.9);
+        }
+
+        /* NAVIGATION BREADCRUMBS */
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: rgba(255,255,255,.8);
+        }
+
+        .breadcrumb {
+            background: rgba(255,255,255,.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .breadcrumb.active {
+            background: rgba(255,255,255,.2);
+            font-weight: bold;
+        }
     </style>
 </head>
 
 <body>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progress-bar"></div>
+
+    <!-- Haptic Feedback Indicator -->
+    <div class="haptic-feedback" id="haptic-feedback">✨</div>
+
     <!-- Back Button -->
     <a href="#" onclick="navigateBack()" class="back-btn" aria-label="Torna indietro">
         <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -522,11 +845,29 @@
         </svg>
     </a>
 
+    <!-- Floating Action Button -->
+    <button class="fab" id="main-fab" onclick="showQuickActions()">+</button>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions" id="quick-actions">
+        <button class="quick-action btn-aurora" onclick="openModal('turno')" title="Nuovo Turno">✨</button>
+        <button class="quick-action btn-cyber" onclick="openModal('licenza')" title="Nuova Licenza">🏖️</button>
+        <button class="quick-action btn-cyan" onclick="openModal('recupero')" title="Nuovo Recupero">🔄</button>
+    </div>
+
     <!-- Main Content -->
     <div class="main-content">
+        <!-- Pull to Refresh Indicator -->
+        <div class="pull-to-refresh" id="pull-refresh">
+            <span>🔄 Aggiorna</span>
+        </div>
         
         <!-- DASHBOARD SECTION -->
         <div id="dashboard-section" class="section active">
+            <div class="breadcrumbs">
+                <div class="breadcrumb active">🏠 Dashboard</div>
+            </div>
+
             <div class="text-center mb-8">
                 <div class="w-20 h-20 bg-gradient-to-br from-aurora to-cyan rounded-full mx-auto mb-6 flex items-center justify-center">
                     <span class="text-3xl">🛠️</span>
@@ -537,21 +878,21 @@
 
             <!-- Quick Stats -->
             <div class="grid grid-cols-2 gap-4 mb-6">
-                <div class="stat-card text-center">
+                <div class="stat-card text-center" onclick="showSection('calendar')">
                     <div class="stat-value" id="dashboard-turni-mese">0</div>
                     <div class="stat-label">Turni Mese</div>
                 </div>
-                <div class="stat-card text-center">
+                <div class="stat-card text-center" onclick="showSection('statistics')">
                     <div class="stat-value" id="dashboard-ore-mese">0</div>
                     <div class="stat-label">Ore Mese</div>
                 </div>
-                <div class="stat-card text-center">
+                <div class="stat-card text-center" onclick="showSection('licenses')">
                     <div class="stat-value" id="dashboard-licenze-residue">32</div>
                     <div class="stat-label">Licenze Residue</div>
                 </div>
-                <div class="stat-card text-center">
+                <div class="stat-card text-center" onclick="showSection('recuperi')">
                     <div class="stat-value" id="dashboard-straordinario">0</div>
-                    <div class="stat-label">Ore Straord.</div>
+                    <div class="stat-label">Giorni Recupero</div>
                 </div>
             </div>
 
@@ -587,6 +928,11 @@
 
         <!-- CALENDAR SECTION -->
         <div id="calendar-section" class="section">
+            <div class="breadcrumbs">
+                <div class="breadcrumb" onclick="showSection('dashboard')">🏠 Dashboard</div>
+                <div class="breadcrumb active">📅 Calendario</div>
+            </div>
+
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-black text-ultra-visible" id="calendar-title">📅 Gennaio 2025</h2>
                 <div class="flex gap-2">
@@ -608,6 +954,11 @@
 
         <!-- LICENSES SECTION -->
         <div id="licenses-section" class="section">
+            <div class="breadcrumbs">
+                <div class="breadcrumb" onclick="showSection('dashboard')">🏠 Dashboard</div>
+                <div class="breadcrumb active">🏖️ Licenze</div>
+            </div>
+
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-black text-ultra-visible">🏖️ Licenze</h2>
                 <div class="flex gap-2">
@@ -662,6 +1013,11 @@
 
         <!-- RECUPERI SECTION -->
         <div id="recuperi-section" class="section">
+            <div class="breadcrumbs">
+                <div class="breadcrumb" onclick="showSection('dashboard')">🏠 Dashboard</div>
+                <div class="breadcrumb active">🔄 Recuperi</div>
+            </div>
+
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-black text-ultra-visible">🔄 Recuperi</h2>
                 <button onclick="openModal('recupero')" class="btn-cyan px-4 py-2 rounded-xl font-bold">+</button>
@@ -670,8 +1026,8 @@
             <!-- Recuperi Summary -->
             <div class="grid grid-cols-2 gap-4 mb-4">
                 <div class="stat-card text-center">
-                    <div class="stat-value text-cyan" id="recuperi-ore-totali">0</div>
-                    <div class="stat-label">Ore Totali</div>
+                    <div class="stat-value text-cyan" id="recuperi-giorni-totali">0</div>
+                    <div class="stat-label">Giorni Totali</div>
                 </div>
                 <div class="stat-card text-center">
                     <div class="stat-value text-gold" id="recuperi-count">0</div>
@@ -685,19 +1041,19 @@
                 <div class="grid grid-cols-2 gap-3 text-sm">
                     <div class="flex justify-between">
                         <span class="font-semibold">🎄 Festività:</span>
-                        <span class="font-bold text-cyan" id="recuperi-festivita">0h</span>
+                        <span class="font-bold text-cyan" id="recuperi-festivita">0gg</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="font-semibold">📅 Settimana:</span>
-                        <span class="font-bold text-cyan" id="recuperi-settimana">0h</span>
+                        <span class="font-bold text-cyan" id="recuperi-settimana">0gg</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="font-semibold">⏰ Straordinario:</span>
-                        <span class="font-bold text-cyan" id="recuperi-straordinario">0h</span>
+                        <span class="font-bold text-cyan" id="recuperi-straordinario">0gg</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="font-semibold">🎯 Altro:</span>
-                        <span class="font-bold text-cyan" id="recuperi-altro">0h</span>
+                        <span class="font-bold text-cyan" id="recuperi-altro">0gg</span>
                     </div>
                 </div>
             </div>
@@ -712,6 +1068,11 @@
 
         <!-- STATISTICS SECTION -->
         <div id="statistics-section" class="section">
+            <div class="breadcrumbs">
+                <div class="breadcrumb" onclick="showSection('dashboard')">🏠 Dashboard</div>
+                <div class="breadcrumb active">📊 Statistiche</div>
+            </div>
+
             <h2 class="text-2xl font-black text-ultra-visible mb-6">📊 Statistiche</h2>
 
             <!-- Monthly Stats -->
@@ -727,8 +1088,8 @@
                         <span class="font-bold text-aurora" id="stats-ore-mese">0</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="font-semibold text-gray-700">Straordinario:</span>
-                        <span class="font-bold text-aurora" id="stats-straordinario-mese">0h</span>
+                        <span class="font-semibold text-gray-700">Giorni Recupero:</span>
+                        <span class="font-bold text-aurora" id="stats-straordinario-mese">0gg</span>
                     </div>
                 </div>
                 <button onclick="exportPDF()" class="w-full btn-aurora py-3 rounded-xl font-bold mt-4">
@@ -948,7 +1309,7 @@
                         <option value="">Seleziona tipo...</option>
                         <option value="festivita">🎄 Festività</option>
                         <option value="settimana_del">📅 Settimana del...</option>
-                        <option value="straordinario">⏰ Ore Straordinario</option>
+                        <option value="straordinario">⏰ Giorni Straordinario</option>
                         <option value="altro">🎯 Altro</option>
                     </select>
                 </div>
@@ -957,9 +1318,9 @@
                     <input type="date" id="recupero-data" required>
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">⏰ Ore</label>
-                    <input type="number" id="recupero-ore" min="1" max="24" step="0.5" value="8" required>
-                    <div class="text-xs text-gray-500 mt-1">Ore da recuperare (max 24)</div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">📊 Giorni</label>
+                    <input type="number" id="recupero-giorni" min="1" max="30" step="1" value="1" required>
+                    <div class="text-xs text-gray-500 mt-1">Giorni da recuperare (max 30)</div>
                 </div>
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">📝 Descrizione</label>
@@ -997,10 +1358,23 @@
         let editingLicenza = null;
         let editingRecupero = null;
         let turniChart = null;
+        let currentSection = 'dashboard';
+        let navigationHistory = ['dashboard'];
+        let isQuickActionsVisible = false;
+        let lastDirection = 'right';
+
+        // ======================= ENHANCED NAVIGATION =======================
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let touchStartY = 0;
+        let touchEndY = 0;
+        const swipeThreshold = 80;
+        let pullStartY = 0;
+        let isPulling = false;
 
         // ======================= INIZIALIZZAZIONE =======================
         document.addEventListener('DOMContentLoaded', async function() {
-            console.log('🚀 Inizializzazione MyApp Strumenti Mobile...');
+            console.log('🚀 Inizializzazione MyApp Strumenti Mobile Enhanced...');
             
             await initializeUser();
             if (currentUser) {
@@ -1012,13 +1386,445 @@
                 updateRecuperiList();
                 updateStatistics();
                 initChart();
+                initEnhancedFeatures();
             }
 
-            // Form listeners
             setupFormListeners();
+            setupEnhancedGestures();
             
-            console.log('✅ Inizializzazione completata');
+            console.log('✅ Inizializzazione Enhanced completata');
         });
+
+        function initEnhancedFeatures() {
+            // Show FAB after delay
+            setTimeout(() => {
+                document.getElementById('main-fab').classList.add('visible');
+            }, 1000);
+
+            // Initialize haptic feedback if supported
+            if ('vibrate' in navigator) {
+                console.log('✅ Haptic feedback disponibile');
+            }
+
+            // Initialize intersection observer for animations
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    });
+                });
+
+                // Observe stat cards for scroll animations
+                document.querySelectorAll('.stat-card').forEach(card => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.6s ease';
+                    observer.observe(card);
+                });
+            }
+        }
+
+        function setupEnhancedGestures() {
+            // Enhanced touch events
+            document.addEventListener('touchstart', handleTouchStart, { passive: false });
+            document.addEventListener('touchmove', handleTouchMove, { passive: false });
+            document.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+            // Pull to refresh setup
+            const mainContent = document.querySelector('.main-content');
+            mainContent.addEventListener('scroll', handleScroll, { passive: true });
+
+            // Long press detection
+            let longPressTimer;
+            document.addEventListener('touchstart', function(e) {
+                longPressTimer = setTimeout(() => {
+                    if (e.target.closest('.list-item')) {
+                        handleLongPress(e.target.closest('.list-item'));
+                    }
+                }, 500);
+            });
+
+            document.addEventListener('touchend', function() {
+                clearTimeout(longPressTimer);
+            });
+
+            // Swipe to delete for list items
+            setupSwipeToDelete();
+        }
+
+        function handleTouchStart(e) {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+            
+            // Pull to refresh detection
+            const mainContent = document.querySelector('.main-content');
+            if (mainContent.scrollTop === 0) {
+                pullStartY = e.changedTouches[0].screenY;
+                isPulling = true;
+            }
+        }
+
+        function handleTouchMove(e) {
+            if (isPulling) {
+                const currentY = e.changedTouches[0].screenY;
+                const pullDistance = Math.max(0, currentY - pullStartY);
+                
+                if (pullDistance > 50) {
+                    const pullRefresh = document.getElementById('pull-refresh');
+                    pullRefresh.classList.add('visible');
+                    
+                    if (pullDistance > 100) {
+                        pullRefresh.classList.add('loading');
+                        e.preventDefault();
+                    }
+                }
+            }
+        }
+
+        function handleTouchEnd(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+            
+            // Pull to refresh
+            if (isPulling) {
+                const pullDistance = touchEndY - pullStartY;
+                const pullRefresh = document.getElementById('pull-refresh');
+                
+                if (pullDistance > 100) {
+                    triggerHapticFeedback();
+                    refreshData();
+                }
+                
+                pullRefresh.classList.remove('visible', 'loading');
+                isPulling = false;
+            }
+            
+            handleSwipe();
+        }
+
+        function handleScroll(e) {
+            const scrollTop = e.target.scrollTop;
+            
+            // Hide/show FAB based on scroll
+            const fab = document.getElementById('main-fab');
+            if (scrollTop > 100) {
+                fab.style.opacity = '0.7';
+            } else {
+                fab.style.opacity = '1';
+            }
+        }
+
+        function handleSwipe() {
+            const swipeX = touchEndX - touchStartX;
+            const swipeY = touchEndY - touchStartY;
+            
+            // Check if it's more horizontal than vertical
+            if (Math.abs(swipeX) > Math.abs(swipeY) && Math.abs(swipeX) > swipeThreshold) {
+                const sections = ['dashboard', 'calendar', 'licenses', 'recuperi', 'statistics'];
+                const currentIndex = sections.indexOf(currentSection);
+                
+                if (swipeX > 0 && currentIndex > 0) {
+                    // Swipe right - previous section
+                    lastDirection = 'left';
+                    showSection(sections[currentIndex - 1]);
+                    triggerHapticFeedback();
+                } else if (swipeX < 0 && currentIndex < sections.length - 1) {
+                    // Swipe left - next section
+                    lastDirection = 'right';
+                    showSection(sections[currentIndex + 1]);
+                    triggerHapticFeedback();
+                }
+            }
+        }
+
+        function setupSwipeToDelete() {
+            let startX = 0;
+            let currentX = 0;
+            let isDragging = false;
+            let currentItem = null;
+
+            document.addEventListener('touchstart', function(e) {
+                const listItem = e.target.closest('.list-item');
+                if (listItem && listItem.onclick) {
+                    startX = e.touches[0].clientX;
+                    currentItem = listItem;
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchmove', function(e) {
+                if (!currentItem) return;
+                
+                currentX = e.touches[0].clientX;
+                const diff = currentX - startX;
+                
+                if (Math.abs(diff) > 20) {
+                    isDragging = true;
+                    e.preventDefault();
+                    
+                    if (diff < -50) {
+                        currentItem.classList.add('swipe-left');
+                        currentItem.innerHTML += '<div class="swipe-action left">🗑️</div>';
+                    } else if (diff > 50) {
+                        currentItem.classList.add('swipe-right');
+                        currentItem.innerHTML += '<div class="swipe-action right">✏️</div>';
+                    } else {
+                        currentItem.classList.remove('swipe-left', 'swipe-right');
+                        currentItem.querySelectorAll('.swipe-action').forEach(el => el.remove());
+                    }
+                }
+            });
+
+            document.addEventListener('touchend', function(e) {
+                if (isDragging && currentItem) {
+                    const diff = currentX - startX;
+                    
+                    if (diff < -100) {
+                        // Delete action
+                        triggerHapticFeedback();
+                        handleSwipeDelete(currentItem);
+                    } else if (diff > 100) {
+                        // Edit action
+                        triggerHapticFeedback();
+                        handleSwipeEdit(currentItem);
+                    }
+                    
+                    setTimeout(() => {
+                        if (currentItem) {
+                            currentItem.classList.remove('swipe-left', 'swipe-right');
+                            currentItem.querySelectorAll('.swipe-action').forEach(el => el.remove());
+                        }
+                    }, 300);
+                }
+                
+                isDragging = false;
+                currentItem = null;
+            }, { passive: true });
+        }
+
+        function handleSwipeDelete(item) {
+            // Determina il tipo di item e chiama la funzione di delete appropriata
+            if (item.onclick && item.onclick.toString().includes('editTurno')) {
+                // È un turno
+                const turnoId = item.onclick.toString().match(/'([^']+)'/)[1];
+                const turno = turniData.find(t => t.id === turnoId);
+                if (turno && confirm('Elimina questo turno?')) {
+                    editingTurno = turno;
+                    deleteTurno();
+                }
+            } else if (item.onclick && item.onclick.toString().includes('editLicenza')) {
+                // È una licenza
+                const licenzaId = item.onclick.toString().match(/'([^']+)'/)[1];
+                const licenza = licenzeData.find(l => l.id === licenzaId);
+                if (licenza && confirm('Elimina questa licenza?')) {
+                    editingLicenza = licenza;
+                    deleteLicenza();
+                }
+            } else if (item.onclick && item.onclick.toString().includes('editRecupero')) {
+                // È un recupero
+                const recuperoId = item.onclick.toString().match(/'([^']+)'/)[1];
+                const recupero = recuperiData.find(r => r.id === recuperoId);
+                if (recupero && confirm('Elimina questo recupero?')) {
+                    editingRecupero = recupero;
+                    deleteRecupero();
+                }
+            }
+        }
+
+        function handleSwipeEdit(item) {
+            // Simula un click per aprire l'edit
+            if (item.onclick) {
+                item.onclick();
+            }
+        }
+
+        function handleLongPress(item) {
+            triggerHapticFeedback('heavy');
+            showContextMenu(item);
+        }
+
+        function showContextMenu(item) {
+            // Implementazione del menu contestuale
+            const contextMenu = document.createElement('div');
+            contextMenu.className = 'context-menu';
+            contextMenu.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                border-radius: 16px;
+                padding: 20px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                z-index: 1000;
+                min-width: 200px;
+            `;
+            
+            contextMenu.innerHTML = `
+                <div class="text-center">
+                    <button onclick="this.closest('.context-menu').remove()" class="w-full p-3 bg-blue-500 text-white rounded-lg mb-2">✏️ Modifica</button>
+                    <button onclick="this.closest('.context-menu').remove()" class="w-full p-3 bg-red-500 text-white rounded-lg mb-2">🗑️ Elimina</button>
+                    <button onclick="this.closest('.context-menu').remove()" class="w-full p-3 bg-gray-500 text-white rounded-lg">❌ Annulla</button>
+                </div>
+            `;
+            
+            document.body.appendChild(contextMenu);
+            
+            setTimeout(() => {
+                contextMenu.remove();
+            }, 3000);
+        }
+
+        async function refreshData() {
+            showProgress(true);
+            
+            try {
+                await loadAllData();
+                updateDashboard();
+                updateCalendar();
+                updateLicensesList();
+                updateRecuperiList();
+                updateStatistics();
+                updateChart();
+                
+                showNotification('Dati aggiornati!', 'success');
+            } catch (error) {
+                showNotification('Errore aggiornamento', 'error');
+            } finally {
+                showProgress(false);
+            }
+        }
+
+        function triggerHapticFeedback(type = 'light') {
+            if ('vibrate' in navigator) {
+                const patterns = {
+                    light: [10],
+                    medium: [50],
+                    heavy: [100],
+                    success: [50, 50, 100],
+                    error: [100, 50, 100, 50, 100]
+                };
+                navigator.vibrate(patterns[type] || patterns.light);
+            }
+            
+            // Visual feedback
+            const indicator = document.getElementById('haptic-feedback');
+            const icons = {
+                light: '✨',
+                medium: '⚡',
+                heavy: '💥',
+                success: '✅',
+                error: '❌'
+            };
+            
+            indicator.textContent = icons[type] || icons.light;
+            indicator.classList.add('active');
+            
+            setTimeout(() => {
+                indicator.classList.remove('active');
+            }, 600);
+        }
+
+        function showProgress(visible) {
+            const progressBar = document.getElementById('progress-bar');
+            if (visible) {
+                progressBar.style.width = '0%';
+                progressBar.classList.add('visible');
+                
+                // Animate progress
+                let width = 0;
+                const interval = setInterval(() => {
+                    width += Math.random() * 10;
+                    if (width >= 90) {
+                        clearInterval(interval);
+                        width = 90;
+                    }
+                    progressBar.style.width = width + '%';
+                }, 100);
+                
+                progressBar._interval = interval;
+            } else {
+                if (progressBar._interval) {
+                    clearInterval(progressBar._interval);
+                }
+                progressBar.style.width = '100%';
+                setTimeout(() => {
+                    progressBar.classList.remove('visible');
+                }, 300);
+            }
+        }
+
+        function showQuickActions() {
+            const quickActions = document.getElementById('quick-actions');
+            const fab = document.getElementById('main-fab');
+            
+            isQuickActionsVisible = !isQuickActionsVisible;
+            
+            if (isQuickActionsVisible) {
+                quickActions.classList.add('visible');
+                fab.style.transform = 'rotate(45deg)';
+                triggerHapticFeedback('medium');
+            } else {
+                quickActions.classList.remove('visible');
+                fab.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // ======================= ENHANCED NAVIGATION =======================
+        function showSection(sectionName) {
+            const previousSection = currentSection;
+            currentSection = sectionName;
+            
+            // Update navigation history
+            if (navigationHistory[navigationHistory.length - 1] !== sectionName) {
+                navigationHistory.push(sectionName);
+                if (navigationHistory.length > 10) {
+                    navigationHistory.shift();
+                }
+            }
+            
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-section="${sectionName}"]`).classList.add('active');
+
+            // Update sections with enhanced animations
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active', 'slide-left', 'slide-right');
+            });
+            
+            const newSection = document.getElementById(`${sectionName}-section`);
+            newSection.classList.add('active');
+            
+            // Apply slide direction based on navigation
+            if (lastDirection === 'left') {
+                newSection.classList.add('slide-left');
+            } else {
+                newSection.classList.add('slide-right');
+            }
+
+            // Load section specific data
+            if (sectionName === 'calendar') {
+                updateCalendar();
+            } else if (sectionName === 'licenses') {
+                updateLicensesList();
+            } else if (sectionName === 'recuperi') {
+                updateRecuperiList();
+            } else if (sectionName === 'statistics') {
+                updateStatistics();
+                updateChart();
+            }
+            
+            // Hide quick actions if visible
+            if (isQuickActionsVisible) {
+                showQuickActions();
+            }
+            
+            triggerHapticFeedback();
+        }
 
         async function initializeUser() {
             try {
@@ -1033,33 +1839,6 @@
                 console.error('❌ Errore inizializzazione:', error);
                 showNotification('Errore nel caricamento', 'error');
                 window.location.href = '../login-minimal.html';
-            }
-        }
-
-        // ======================= NAVIGAZIONE SEZIONI =======================
-        function showSection(sectionName) {
-            // Update nav items
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            document.querySelector(`[data-section="${sectionName}"]`).classList.add('active');
-
-            // Update sections
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.getElementById(`${sectionName}-section`).classList.add('active');
-
-            // Load section specific data
-            if (sectionName === 'calendar') {
-                updateCalendar();
-            } else if (sectionName === 'licenses') {
-                updateLicensesList();
-            } else if (sectionName === 'recuperi') {
-                updateRecuperiList();
-            } else if (sectionName === 'statistics') {
-                updateStatistics();
-                updateChart();
             }
         }
 
@@ -1155,7 +1934,6 @@
                 }
 
                 if (!config) {
-                    // Crea configurazione di default
                     userLicenseConfig = {
                         anno: annoCorrente,
                         giorni_ordinarie: 32,
@@ -1172,7 +1950,6 @@
                 console.log('✅ Configurazione licenze caricata:', userLicenseConfig);
             } catch (error) {
                 console.error('❌ Errore caricamento configurazione licenze:', error);
-                // Fallback a valori di default
                 userLicenseConfig = {
                     anno: new Date().getFullYear(),
                     giorni_ordinarie: 32,
@@ -1211,13 +1988,11 @@
         function updateLicenseConfigUI() {
             if (!userLicenseConfig) return;
 
-            // Update anno corrente
             document.getElementById('anno-corrente').textContent = userLicenseConfig.anno;
             document.getElementById('config-ordinarie-totali').textContent = userLicenseConfig.giorni_ordinarie;
             document.getElementById('config-speciali-totali').textContent = userLicenseConfig.giorni_speciali;
             document.getElementById('config-residui-precedenti').textContent = userLicenseConfig.residui_anno_precedente;
 
-            // Update form fields
             document.getElementById('config-anno').value = userLicenseConfig.anno;
             document.getElementById('config-ordinarie').value = userLicenseConfig.giorni_ordinarie;
             document.getElementById('config-speciali').value = userLicenseConfig.giorni_speciali;
@@ -1230,7 +2005,6 @@
         function updateLicenseCalculations() {
             if (!userLicenseConfig) return;
 
-            // Calcola licenze utilizzate nell'anno corrente
             const licenzeAnno = licenzeData.filter(l => 
                 new Date(l.data_inizio).getFullYear() === userLicenseConfig.anno
             );
@@ -1243,22 +2017,16 @@
                 .filter(l => ['speciale', 'straordinaria', 'permesso'].includes(l.tipo_licenza))
                 .reduce((acc, l) => acc + (l.giorni_totali || 0), 0);
 
-            // Calcola totali disponibili (configurazione + residui)
             const ordinarieTotali = userLicenseConfig.giorni_ordinarie + userLicenseConfig.residui_anno_precedente;
             const specialiTotali = userLicenseConfig.giorni_speciali;
 
-            // Calcola residui
             const ordinarieResidue = Math.max(0, ordinarieTotali - ordinariesUtilizzate);
             const specialiResidue = Math.max(0, specialiTotali - specialiUtilizzate);
 
-            // Update UI
             document.getElementById('licenze-ordinarie-residue').textContent = ordinarieResidue;
             document.getElementById('licenze-speciali-residue').textContent = specialiResidue;
-
-            // Update dashboard
             document.getElementById('dashboard-licenze-residue').textContent = ordinarieResidue + specialiResidue;
 
-            // Update riepilogo nel modal
             if (document.getElementById('riepilogo-ordinarie')) {
                 document.getElementById('riepilogo-ordinarie').textContent = ordinarieTotali;
                 document.getElementById('riepilogo-speciali').textContent = specialiTotali;
@@ -1270,15 +2038,13 @@
         // ======================= DASHBOARD =======================
         function updateDashboard() {
             const turniMese = turniData.length;
-            const oreMese = turniMese * 8; // Assumendo 8h per turno
-            const straordinario = Math.max(0, oreMese - 160);
+            const oreMese = turniMese * 8;
+            const giorniRecupero = recuperiData.reduce((acc, r) => acc + (r.ore_recupero || 1), 0); // Ora in giorni
             
-            // Update dashboard stats
             document.getElementById('dashboard-turni-mese').textContent = turniMese;
             document.getElementById('dashboard-ore-mese').textContent = oreMese;
-            document.getElementById('dashboard-straordinario').textContent = straordinario;
+            document.getElementById('dashboard-straordinario').textContent = giorniRecupero;
             
-            // Update recent activity
             updateRecentActivity();
         }
 
@@ -1300,7 +2066,6 @@
                 return;
             }
 
-            // Show last 3 activities
             const allActivities = [
                 ...turniData.map(t => ({
                     type: 'turno',
@@ -1320,7 +2085,7 @@
                     type: 'recupero',
                     date: r.data_maturazione,
                     title: `Recupero ${getRecuperoName(r.tipo_recupero)}`,
-                    subtitle: `${formatDate(r.data_maturazione)} - ${r.ore_recupero || 8}h`,
+                    subtitle: `${formatDate(r.data_maturazione)} - ${r.ore_recupero || 1}gg`,
                     icon: getRecuperoIcon(r.tipo_recupero)
                 }))
             ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3);
@@ -1406,6 +2171,7 @@
                 currentMonth = 11;
                 currentYear--;
             }
+            triggerHapticFeedback();
             loadTurniFromDB().then(() => {
                 updateCalendar();
                 updateDashboard();
@@ -1418,6 +2184,7 @@
                 currentMonth = 0;
                 currentYear++;
             }
+            triggerHapticFeedback();
             loadTurniFromDB().then(() => {
                 updateCalendar();
                 updateDashboard();
@@ -1425,6 +2192,7 @@
         }
 
         function openDayModal(dateStr, turnoId) {
+            triggerHapticFeedback();
             if (turnoId && turnoId !== 'null') {
                 editTurno(turnoId, dateStr);
             } else {
@@ -1465,7 +2233,6 @@
                 </div>
             `).join('');
 
-            // Aggiorna i calcoli
             updateLicenseCalculations();
         }
 
@@ -1489,7 +2256,7 @@
                                     ${getRecuperoName(recupero.tipo_recupero)}
                                 </div>
                                 <div class="text-sm text-gray-600">
-                                    ${formatDate(recupero.data_maturazione)} - ${recupero.ore_recupero || 8}h
+                                    ${formatDate(recupero.data_maturazione)} - ${recupero.ore_recupero || 1}gg
                                 </div>
                                 <div class="text-sm text-gray-500 mt-1">${recupero.descrizione}</div>
                             </div>
@@ -1499,42 +2266,39 @@
                 `).join('');
             }
 
-            // Aggiorna i contatori
             updateRecuperiCalculations();
         }
 
         function updateRecuperiCalculations() {
-            const oreTotali = recuperiData.reduce((acc, r) => acc + (r.ore_recupero || 8), 0);
+            const giorniTotali = recuperiData.reduce((acc, r) => acc + (r.ore_recupero || 1), 0);
             const count = recuperiData.length;
 
-            // Calcola per tipo
-            const oreFestivita = recuperiData.filter(r => r.tipo_recupero === 'festivita')
-                                           .reduce((acc, r) => acc + (r.ore_recupero || 8), 0);
-            const oreSettimana = recuperiData.filter(r => r.tipo_recupero === 'settimana_del')
-                                           .reduce((acc, r) => acc + (r.ore_recupero || 8), 0);
-            const oreStraordinario = recuperiData.filter(r => r.tipo_recupero === 'straordinario')
-                                               .reduce((acc, r) => acc + (r.ore_recupero || 8), 0);
-            const oreAltro = recuperiData.filter(r => r.tipo_recupero === 'altro')
-                                       .reduce((acc, r) => acc + (r.ore_recupero || 8), 0);
+            const giorniFestivita = recuperiData.filter(r => r.tipo_recupero === 'festivita')
+                                               .reduce((acc, r) => acc + (r.ore_recupero || 1), 0);
+            const giorniSettimana = recuperiData.filter(r => r.tipo_recupero === 'settimana_del')
+                                               .reduce((acc, r) => acc + (r.ore_recupero || 1), 0);
+            const giorniStraordinario = recuperiData.filter(r => r.tipo_recupero === 'straordinario')
+                                                   .reduce((acc, r) => acc + (r.ore_recupero || 1), 0);
+            const giorniAltro = recuperiData.filter(r => r.tipo_recupero === 'altro')
+                                           .reduce((acc, r) => acc + (r.ore_recupero || 1), 0);
 
-            // Aggiorna UI
-            document.getElementById('recuperi-ore-totali').textContent = oreTotali;
+            document.getElementById('recuperi-giorni-totali').textContent = giorniTotali;
             document.getElementById('recuperi-count').textContent = count;
-            document.getElementById('recuperi-festivita').textContent = `${oreFestivita}h`;
-            document.getElementById('recuperi-settimana').textContent = `${oreSettimana}h`;
-            document.getElementById('recuperi-straordinario').textContent = `${oreStraordinario}h`;
-            document.getElementById('recuperi-altro').textContent = `${oreAltro}h`;
+            document.getElementById('recuperi-festivita').textContent = `${giorniFestivita}gg`;
+            document.getElementById('recuperi-settimana').textContent = `${giorniSettimana}gg`;
+            document.getElementById('recuperi-straordinario').textContent = `${giorniStraordinario}gg`;
+            document.getElementById('recuperi-altro').textContent = `${giorniAltro}gg`;
         }
 
         // ======================= STATISTICHE =======================
         function updateStatistics() {
             const turniMese = turniData.length;
             const oreMese = turniMese * 8;
-            const straordinario = Math.max(0, oreMese - 160);
+            const giorniRecupero = recuperiData.reduce((acc, r) => acc + (r.ore_recupero || 1), 0);
             
             document.getElementById('stats-turni-mese').textContent = turniMese;
             document.getElementById('stats-ore-mese').textContent = oreMese;
-            document.getElementById('stats-straordinario-mese').textContent = `${straordinario}h`;
+            document.getElementById('stats-straordinario-mese').textContent = `${giorniRecupero}gg`;
         }
 
         function initChart() {
@@ -1609,8 +2373,14 @@
 
         // ======================= MODAL MANAGEMENT =======================
         function openModal(type) {
+            triggerHapticFeedback();
             document.getElementById(`${type}-modal`).classList.add('active');
             document.body.style.overflow = 'hidden';
+            
+            // Hide quick actions if open
+            if (isQuickActionsVisible) {
+                showQuickActions();
+            }
         }
 
         function closeModal(type) {
@@ -1638,9 +2408,8 @@
                 document.getElementById('recupero-id').value = '';
                 document.getElementById('recupero-modal-title').textContent = '🔄 Nuovo Recupero';
                 document.getElementById('recupero-delete-section').classList.add('hidden');
-                document.getElementById('recupero-ore').value = '8'; // Reset a valore di default
+                document.getElementById('recupero-giorni').value = '1';
             } else if (type === 'config-licenze') {
-                // Reset configurazione licenze ai valori attuali
                 if (userLicenseConfig) {
                     updateLicenseConfigUI();
                 }
@@ -1649,31 +2418,26 @@
 
         // ======================= FORM HANDLING =======================
         function setupFormListeners() {
-            // Turno form
             document.getElementById('turno-form').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 await saveTurno();
             });
 
-            // Licenza form
             document.getElementById('licenza-form').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 await saveLicenza();
             });
 
-            // Config licenze form
             document.getElementById('config-licenze-form').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 await saveConfigLicenze();
             });
 
-            // Recupero form
             document.getElementById('recupero-form').addEventListener('submit', async function(e) {
                 e.preventDefault();
-                await saveRecupero(); // <-- alimenta la tabella "recuperi"
+                await saveRecupero();
             });
 
-            // Live update del riepilogo nel modal configurazione
             ['config-ordinarie', 'config-speciali', 'config-residui'].forEach(id => {
                 const element = document.getElementById(id);
                 if (element) {
@@ -1681,7 +2445,6 @@
                 }
             });
 
-            // Modal click outside to close
             document.addEventListener('click', function(e) {
                 if (e.target.classList.contains('modal')) {
                     const modalType = e.target.id.replace('-modal', '');
@@ -1689,7 +2452,6 @@
                 }
             });
 
-            // ESC key to close modal
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     const activeModal = document.querySelector('.modal.active');
@@ -1700,7 +2462,6 @@
                 }
             });
 
-            // Load data when changing year in config
             const configAnno = document.getElementById('config-anno');
             if (configAnno) {
                 configAnno.addEventListener('change', function() {
@@ -1737,6 +2498,7 @@
 
                     if (error) throw error;
                     showNotification('Turno aggiornato!', 'success');
+                    triggerHapticFeedback('success');
                 } else {
                     const { error } = await supabase
                         .from('turni')
@@ -1749,6 +2511,7 @@
 
                     if (error) throw error;
                     showNotification('Turno salvato!', 'success');
+                    triggerHapticFeedback('success');
                 }
 
                 closeModal('turno');
@@ -1761,6 +2524,7 @@
             } catch (error) {
                 console.error('Errore salvataggio turno:', error);
                 showNotification('Errore nel salvataggio', 'error');
+                triggerHapticFeedback('error');
             } finally {
                 showLoading(false);
             }
@@ -1789,7 +2553,6 @@
 
                 const giorni = calculateDaysBetween(licenzaData.dataInizio, licenzaData.dataFine);
 
-                // Verifica disponibilità giorni
                 if (!editingLicenza && userLicenseConfig) {
                     const annoLicenza = new Date(licenzaData.dataInizio).getFullYear();
                     const licenzeAnno = licenzeData.filter(l => 
@@ -1823,6 +2586,7 @@
 
                     if (error) throw error;
                     showNotification('Licenza aggiornata!', 'success');
+                    triggerHapticFeedback('success');
                 } else {
                     const { error } = await supabase
                         .from('licenze')
@@ -1837,6 +2601,7 @@
 
                     if (error) throw error;
                     showNotification('Licenza programmata!', 'success');
+                    triggerHapticFeedback('success');
                 }
 
                 closeModal('licenza');
@@ -1848,6 +2613,7 @@
             } catch (error) {
                 console.error('Errore salvataggio licenza:', error);
                 showNotification('Errore nel salvataggio', 'error');
+                triggerHapticFeedback('error');
             } finally {
                 showLoading(false);
             }
@@ -1865,7 +2631,6 @@
                     anzianita_servizio: parseInt(document.getElementById('config-anzianita').value)
                 };
 
-                // Validazione
                 if (newConfig.giorni_ordinarie < 0 || newConfig.giorni_ordinarie > 50) {
                     showNotification('Giorni ordinarie non validi (0-50)', 'error');
                     return;
@@ -1881,17 +2646,20 @@
 
                 if (saved) {
                     showNotification('Configurazione salvata!', 'success');
+                    triggerHapticFeedback('success');
                     closeModal('config-licenze');
                     updateLicenseConfigUI();
                     updateLicensesList();
                     updateDashboard();
                 } else {
                     showNotification('Errore nel salvataggio', 'error');
+                    triggerHapticFeedback('error');
                 }
 
             } catch (error) {
                 console.error('Errore salvataggio configurazione:', error);
                 showNotification('Errore nel salvataggio', 'error');
+                triggerHapticFeedback('error');
             } finally {
                 showLoading(false);
             }
@@ -1902,7 +2670,6 @@
             const speciali = parseInt(document.getElementById('config-speciali').value) || 0;
             const residui = parseInt(document.getElementById('config-residui').value) || 0;
 
-            // Calcola licenze utilizzate per l'anno selezionato
             const annoSelezionato = parseInt(document.getElementById('config-anno').value);
             const licenzeAnno = licenzeData.filter(l => 
                 new Date(l.data_inizio).getFullYear() === annoSelezionato
@@ -1926,17 +2693,17 @@
                 const recuperoData = {
                     tipo: document.getElementById('recupero-tipo').value,
                     data: document.getElementById('recupero-data').value,
-                    ore: parseFloat(document.getElementById('recupero-ore').value),
+                    giorni: parseInt(document.getElementById('recupero-giorni').value),
                     descrizione: document.getElementById('recupero-descrizione').value
                 };
 
-                if (!recuperoData.tipo || !recuperoData.data || !recuperoData.ore || !recuperoData.descrizione) {
+                if (!recuperoData.tipo || !recuperoData.data || !recuperoData.giorni || !recuperoData.descrizione) {
                     showNotification('Compila tutti i campi obbligatori', 'error');
                     return;
                 }
 
-                if (recuperoData.ore <= 0 || recuperoData.ore > 24) {
-                    showNotification('Le ore devono essere tra 1 e 24', 'error');
+                if (recuperoData.giorni <= 0 || recuperoData.giorni > 30) {
+                    showNotification('I giorni devono essere tra 1 e 30', 'error');
                     return;
                 }
 
@@ -1946,7 +2713,7 @@
                         .update({
                             tipo_recupero: recuperoData.tipo,
                             data_maturazione: recuperoData.data,
-                            ore_recupero: recuperoData.ore,
+                            ore_recupero: recuperoData.giorni, // Manteniamo il nome colonna originale
                             descrizione: recuperoData.descrizione
                         })
                         .eq('id', editingRecupero.id)
@@ -1954,6 +2721,7 @@
 
                     if (error) throw error;
                     showNotification('Recupero aggiornato!', 'success');
+                    triggerHapticFeedback('success');
                 } else {
                     const { error } = await supabase
                         .from('recuperi')
@@ -1961,12 +2729,13 @@
                             user_id: currentUser.id,
                             tipo_recupero: recuperoData.tipo,
                             data_maturazione: recuperoData.data,
-                            ore_recupero: recuperoData.ore,
+                            ore_recupero: recuperoData.giorni, // Manteniamo il nome colonna originale
                             descrizione: recuperoData.descrizione
                         });
 
                     if (error) throw error;
                     showNotification('Recupero registrato!', 'success');
+                    triggerHapticFeedback('success');
                 }
 
                 closeModal('recupero');
@@ -1977,6 +2746,7 @@
             } catch (error) {
                 console.error('Errore salvataggio recupero:', error);
                 showNotification('Errore nel salvataggio', 'error');
+                triggerHapticFeedback('error');
             } finally {
                 showLoading(false);
             }
@@ -2020,7 +2790,7 @@
             document.getElementById('recupero-id').value = recupero.id;
             document.getElementById('recupero-tipo').value = recupero.tipo_recupero;
             document.getElementById('recupero-data').value = recupero.data_maturazione;
-            document.getElementById('recupero-ore').value = recupero.ore_recupero || 8;
+            document.getElementById('recupero-giorni').value = recupero.ore_recupero || 1;
             document.getElementById('recupero-descrizione').value = recupero.descrizione || '';
             document.getElementById('recupero-modal-title').textContent = '✏️ Modifica Recupero';
             document.getElementById('recupero-delete-section').classList.remove('hidden');
@@ -2045,6 +2815,7 @@
                 if (error) throw error;
                 
                 showNotification('Turno eliminato!', 'success');
+                triggerHapticFeedback('success');
                 closeModal('turno');
                 await loadTurniFromDB();
                 updateCalendar();
@@ -2055,6 +2826,7 @@
             } catch (error) {
                 console.error('Errore eliminazione turno:', error);
                 showNotification('Errore nell\'eliminazione', 'error');
+                triggerHapticFeedback('error');
             } finally {
                 showLoading(false);
             }
@@ -2077,6 +2849,7 @@
                 if (error) throw error;
                 
                 showNotification('Licenza eliminata!', 'success');
+                triggerHapticFeedback('success');
                 closeModal('licenza');
                 await loadLicenzeFromDB();
                 updateLicensesList();
@@ -2086,6 +2859,7 @@
             } catch (error) {
                 console.error('Errore eliminazione licenza:', error);
                 showNotification('Errore nell\'eliminazione', 'error');
+                triggerHapticFeedback('error');
             } finally {
                 showLoading(false);
             }
@@ -2108,6 +2882,7 @@
                 if (error) throw error;
                 
                 showNotification('Recupero eliminato!', 'success');
+                triggerHapticFeedback('success');
                 closeModal('recupero');
                 await loadRecuperiFromDB();
                 updateRecuperiList();
@@ -2116,6 +2891,7 @@
             } catch (error) {
                 console.error('Errore eliminazione recupero:', error);
                 showNotification('Errore nell\'eliminazione', 'error');
+                triggerHapticFeedback('error');
             } finally {
                 showLoading(false);
             }
@@ -2129,6 +2905,7 @@
             }
             
             showNotification('Generazione PDF in corso...', 'info');
+            triggerHapticFeedback();
             
             setTimeout(() => {
                 try {
@@ -2143,19 +2920,22 @@
                     doc.text(`Generato il: ${today}`, 20, 45);
                     doc.text(`Turni effettuati: ${turniData.length}`, 20, 65);
                     doc.text(`Ore totali: ${turniData.length * 8}`, 20, 80);
-                    doc.text(`Straordinario: ${Math.max(0, (turniData.length * 8) - 160)}h`, 20, 95);
+                    doc.text(`Giorni recupero: ${recuperiData.reduce((acc, r) => acc + (r.ore_recupero || 1), 0)}gg`, 20, 95);
                     
                     doc.save(`report-${monthNames[currentMonth].toLowerCase()}-${currentYear}.pdf`);
                     showNotification('PDF generato con successo!', 'success');
+                    triggerHapticFeedback('success');
                 } catch (error) {
                     console.error('Errore generazione PDF:', error);
                     showNotification('Errore nella generazione PDF', 'error');
+                    triggerHapticFeedback('error');
                 }
             }, 1000);
         }
 
         function exportExcel(tipo) {
             showNotification('Export Excel in corso...', 'info');
+            triggerHapticFeedback();
             
             setTimeout(() => {
                 try {
@@ -2173,9 +2953,9 @@
                             csvContent += `${getLicenzaName(licenza.tipo_licenza)},${formatDate(licenza.data_inizio)},${formatDate(licenza.data_fine)},${licenza.giorni_totali || 0},${licenza.note || ''}\n`;
                         });
                     } else if (tipo === 'recuperi') {
-                        csvContent = 'Tipo,Data,Ore,Descrizione\n';
+                        csvContent = 'Tipo,Data,Giorni,Descrizione\n';
                         recuperiData.forEach(recupero => {
-                            csvContent += `${getRecuperoName(recupero.tipo_recupero)},${formatDate(recupero.data_maturazione)},${recupero.ore_recupero || 8},${recupero.descrizione || ''}\n`;
+                            csvContent += `${getRecuperoName(recupero.tipo_recupero)},${formatDate(recupero.data_maturazione)},${recupero.ore_recupero || 1},${recupero.descrizione || ''}\n`;
                         });
                     }
                     
@@ -2190,9 +2970,11 @@
                     document.body.removeChild(link);
                     
                     showNotification('Export completato!', 'success');
+                    triggerHapticFeedback('success');
                 } catch (error) {
                     console.error('Errore export:', error);
                     showNotification('Errore nell\'export', 'error');
+                    triggerHapticFeedback('error');
                 }
             }, 500);
         }
@@ -2268,7 +3050,7 @@
             const names = {
                 festivita: 'Festività',
                 settimana_del: 'Settimana del...',
-                straordinario: 'Ore Straordinario',
+                straordinario: 'Giorni Straordinario',
                 altro: 'Altro'
             };
             return names[tipo] || 'Recupero';
@@ -2346,6 +3128,7 @@
 
         async function navigateBack() {
             try {
+                triggerHapticFeedback();
                 const role = await getUserRole();
                 if (role === 'DIRIGENTE' || role === 'ADMIN') {
                     window.location.href = '../home_dirigenti.html';
@@ -2389,41 +3172,7 @@
             }, 4000);
         }
 
-        // ======================= TOUCH GESTURES =======================
-        let touchStartX = 0;
-        let touchEndX = 0;
-        const swipeThreshold = 50;
-
-        document.addEventListener('touchstart', function(e) {
-            touchStartX = e.changedTouches[0].screenX;
-        }, { passive: true });
-
-        document.addEventListener('touchend', function(e) {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        }, { passive: true });
-
-        function handleSwipe() {
-            const swipeDistance = touchEndX - touchStartX;
-            
-            if (Math.abs(swipeDistance) > swipeThreshold) {
-                const currentSection = document.querySelector('.section.active').id;
-                const sections = ['dashboard-section', 'calendar-section', 'licenses-section', 'recuperi-section', 'statistics-section'];
-                const currentIndex = sections.indexOf(currentSection);
-                
-                if (swipeDistance > 0 && currentIndex > 0) {
-                    // Swipe right - previous section
-                    const newSection = sections[currentIndex - 1].replace('-section', '');
-                    showSection(newSection);
-                } else if (swipeDistance < 0 && currentIndex < sections.length - 1) {
-                    // Swipe left - next section
-                    const newSection = sections[currentIndex + 1].replace('-section', '');
-                    showSection(newSection);
-                }
-            }
-        }
-
-        // ======================= OFFLINE HANDLING =======================
+        // ======================= PERFORMANCE & ACCESSIBILITY =======================
         window.addEventListener('online', function() {
             showNotification('Connessione ripristinata', 'success');
             if (currentUser) loadAllData();
@@ -2433,7 +3182,6 @@
             showNotification('Modalità offline attiva', 'info');
         });
 
-        // ======================= ERROR HANDLING =======================
         window.addEventListener('error', function(e) {
             console.error('Errore globale:', e.error);
             showNotification('Si è verificato un errore', 'error');
@@ -2444,14 +3192,12 @@
             showNotification('Errore di connessione', 'error');
         });
 
-        // ======================= SERVICE WORKER =======================
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js')
                 .then(() => console.log('✅ Service Worker registrato'))
                 .catch(() => console.log('⚠️ Service Worker non disponibile'));
         }
 
-        // ======================= ORIENTATION CHANGE =======================
         window.addEventListener('orientationchange', function() {
             setTimeout(() => {
                 if (turniChart) {
@@ -2461,7 +3207,6 @@
             }, 500);
         });
 
-        // ======================= PERFORMANCE MONITORING =======================
         window.addEventListener('load', function() {
             setTimeout(() => {
                 if ('performance' in window) {
@@ -2471,7 +3216,7 @@
             }, 0);
         });
 
-        console.log('🌐 MyApp Strumenti Mobile - Sistema caricato');
+        console.log('🌐 MyApp Strumenti Mobile Enhanced - Sistema caricato');
     </script>
 </body>
 </html>
