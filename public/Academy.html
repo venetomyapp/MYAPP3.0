@@ -482,7 +482,7 @@
           <div class="feature-card p-8">
             <h3 class="text-2xl font-black text-gray-800 mb-6">⚡ Quick Actions</h3>
             <div class="grid grid-cols-2 gap-4">
-              <button class="btn-aurora" onclick="show('live')">Join Live</button>
+              <button class="btn-aurora" onclick="joinNextLive()">Join Live</button>
               <button class="btn-cyber" onclick="show('courses')">Nuovo Corso</button>
               <button class="btn-ghost" onclick="show('library')">Sfoglia Risorse</button>
               <button class="btn-ghost" onclick="show('stats')">Vedi Stats</button>
@@ -598,7 +598,7 @@
   </div>
 
   <!-- Floating Action Button -->
-  <button class="floating-action" onclick="show('live')" title="Quick Join Live">
+  <button class="floating-action" onclick="joinNextLive()" title="Quick Join Next Live">
     🔴
   </button>
 
@@ -678,20 +678,19 @@
           .limit(50);
         if (error) throw error;
         liveSessions = (data || []).map(normalizeLive);
-        if (!liveSessions.length && DEMO) {
-          liveSessions = [
-            { id:'demo-live-1', title:'🎯 Aggiornamento Normativo Q4', start_at:addHours(2), end_at:addHours(3), platform:'Zoom', join_url:'https://zoom.us/j/123456789', host:'Ufficio Formazione', track:'Compliance', tags:['norme','compliance'], passcode:'', status:'scheduled' },
-            { id:'demo-live-2', title:'💼 Q&A con la Direzione', start_at:addDays(1,10), end_at:addDays(1,11), platform:'Teams', join_url:'https://teams.microsoft.com/l/meetup-join/xxx', host:'Direzione', track:'Company', tags:['strategie','q&a'], passcode:'', status:'scheduled' },
-            { id:'demo-live-3', title:'🤖 Live Tech — AI Update', start_at:addDays(3,9), end_at:addDays(3,10), platform:'YouTube Live', join_url:'https://www.youtube.com/watch?v=dQw4w9WgXcQ', host:'Tech Guild', track:'Tech', tags:['ai','dev'], passcode:'', status:'scheduled' },
-          ].map(normalizeLive);
-        }
       } catch (e) {
         console.error('loadLive error:', e);
-        liveSessions = DEMO ? [
+        liveSessions = [];
+      }
+      
+      // Aggiungi sempre dati demo se non ci sono contenuti sufficienti
+      if (liveSessions.length < 3) {
+        const demoLive = [
           { id:'demo-live-1', title:'🎯 Aggiornamento Normativo Q4', start_at:addHours(2), end_at:addHours(3), platform:'Zoom', join_url:'https://zoom.us/j/123456789', host:'Ufficio Formazione', track:'Compliance', tags:['norme','compliance'], passcode:'', status:'scheduled' },
           { id:'demo-live-2', title:'💼 Q&A con la Direzione', start_at:addDays(1,10), end_at:addDays(1,11), platform:'Teams', join_url:'https://teams.microsoft.com/l/meetup-join/xxx', host:'Direzione', track:'Company', tags:['strategie','q&a'], passcode:'', status:'scheduled' },
           { id:'demo-live-3', title:'🤖 Live Tech — AI Update', start_at:addDays(3,9), end_at:addDays(3,10), platform:'YouTube Live', join_url:'https://www.youtube.com/watch?v=dQw4w9WgXcQ', host:'Tech Guild', track:'Tech', tags:['ai','dev'], passcode:'', status:'scheduled' },
-        ].map(normalizeLive) : [];
+        ].map(normalizeLive);
+        liveSessions = [...liveSessions, ...demoLive];
       }
     }
 
@@ -701,20 +700,19 @@
           .select('*').eq('type','course').order('created_at', { ascending:false }).limit(100);
         if (error) throw error;
         courses = (data || []).map(normalizeResource);
-        if (!courses.length && DEMO) {
-          courses = [
-            { id:'demo-c-1', title:'🚀 Project Management Avanzato', url:'#', provider:'Coursera', level:'base', duration_minutes:120, description:'Metodologie agili e strumenti moderni per gestire progetti complessi', tags:['management','agile','scrum'] },
-            { id:'demo-c-2', title:'🔐 Cybersecurity Essentials', url:'#', provider:'edX', level:'intermedio', duration_minutes:180, description:'Protezione dati, threat analysis e incident response', tags:['security','it','privacy'] },
-            { id:'demo-c-3', title:'📊 Advanced Excel & Data Analysis', url:'#', provider:'Udemy', level:'avanzato', duration_minutes:240, description:'Power Query, Pivot avanzate, Dashboard e automazioni', tags:['excel','data','analytics'] },
-          ].map(normalizeResource);
-        }
       } catch (e) {
         console.error('loadCourses error:', e);
-        courses = DEMO ? [
+        courses = [];
+      }
+      
+      // Aggiungi sempre dati demo se non ci sono contenuti sufficienti
+      if (courses.length < 3) {
+        const demoCourses = [
           { id:'demo-c-1', title:'🚀 Project Management Avanzato', url:'#', provider:'Coursera', level:'base', duration_minutes:120, description:'Metodologie agili e strumenti moderni per gestire progetti complessi', tags:['management','agile','scrum'] },
           { id:'demo-c-2', title:'🔐 Cybersecurity Essentials', url:'#', provider:'edX', level:'intermedio', duration_minutes:180, description:'Protezione dati, threat analysis e incident response', tags:['security','it','privacy'] },
           { id:'demo-c-3', title:'📊 Advanced Excel & Data Analysis', url:'#', provider:'Udemy', level:'avanzato', duration_minutes:240, description:'Power Query, Pivot avanzate, Dashboard e automazioni', tags:['excel','data','analytics'] },
-        ].map(normalizeResource) : [];
+        ].map(normalizeResource);
+        courses = [...courses, ...demoCourses];
       }
     }
 
@@ -724,20 +722,19 @@
           .select('*').eq('type','youtube_channel').order('created_at', { ascending:false }).limit(100);
         if (error) throw error;
         channels = (data || []).map(normalizeResource);
-        if (!channels.length && DEMO) {
-          channels = [
-            { id:'demo-y-1', title:'💻 Computerphile', url:'https://www.youtube.com/@Computerphile', provider:'YouTube', description:'Computer Science spiegata in modo semplice e coinvolgente', tags:['cs','teoria','algoritmi'] },
-            { id:'demo-y-2', title:'🔥 Fireship', url:'https://www.youtube.com/@Fireship', provider:'YouTube', description:'Web development, tutorial rapidi e news tech', tags:['web','frontend','javascript'] },
-            { id:'demo-y-3', title:'🎓 MIT OpenCourseWare', url:'https://www.youtube.com/@mitocw', provider:'YouTube', description:'Corsi universitari completi del MIT', tags:['università','ingegneria','matematica'] },
-          ].map(normalizeResource);
-        }
       } catch (e) {
         console.error('loadChannels error:', e);
-        channels = DEMO ? [
+        channels = [];
+      }
+      
+      // Aggiungi sempre dati demo se non ci sono contenuti sufficienti
+      if (channels.length < 3) {
+        const demoChannels = [
           { id:'demo-y-1', title:'💻 Computerphile', url:'https://www.youtube.com/@Computerphile', provider:'YouTube', description:'Computer Science spiegata in modo semplice e coinvolgente', tags:['cs','teoria','algoritmi'] },
           { id:'demo-y-2', title:'🔥 Fireship', url:'https://www.youtube.com/@Fireship', provider:'YouTube', description:'Web development, tutorial rapidi e news tech', tags:['web','frontend','javascript'] },
           { id:'demo-y-3', title:'🎓 MIT OpenCourseWare', url:'https://www.youtube.com/@mitocw', provider:'YouTube', description:'Corsi universitari completi del MIT', tags:['università','ingegneria','matematica'] },
-        ].map(normalizeResource) : [];
+        ].map(normalizeResource);
+        channels = [...channels, ...demoChannels];
       }
     }
 
@@ -747,20 +744,19 @@
           .select('*').neq('type','course').neq('type','youtube_channel').order('created_at', { ascending:false }).limit(200);
         if (error) throw error;
         library = (data || []).map(normalizeResource);
-        if (!library.length && DEMO) {
-          library = [
-            { id:'demo-l-1', title:'📋 Guida OKR 2025 (PDF)', url:'#', provider:'Company Docs', type:'document', description:'Template e esempi pratici per implementare OKR efficaci', tags:['okr','strategy','planning'] },
-            { id:'demo-l-2', title:'🎧 Podcast — Data Culture Revolution', url:'#', provider:'Tech Podcast', type:'podcast', description:'Intervista esclusiva con CDO delle migliori aziende tech', tags:['data','culture','leadership'] },
-            { id:'demo-l-3', title:'🔗 API Documentation Hub', url:'#', provider:'DevDocs', type:'documentation', description:'Documentazione completa delle API interne', tags:['api','development','docs'] },
-          ].map(normalizeResource);
-        }
       } catch (e) {
         console.error('loadLibrary error:', e);
-        library = DEMO ? [
+        library = [];
+      }
+      
+      // Aggiungi sempre dati demo se non ci sono contenuti sufficienti
+      if (library.length < 3) {
+        const demoLibrary = [
           { id:'demo-l-1', title:'📋 Guida OKR 2025 (PDF)', url:'#', provider:'Company Docs', type:'document', description:'Template e esempi pratici per implementare OKR efficaci', tags:['okr','strategy','planning'] },
           { id:'demo-l-2', title:'🎧 Podcast — Data Culture Revolution', url:'#', provider:'Tech Podcast', type:'podcast', description:'Intervista esclusiva con CDO delle migliori aziende tech', tags:['data','culture','leadership'] },
           { id:'demo-l-3', title:'🔗 API Documentation Hub', url:'#', provider:'DevDocs', type:'documentation', description:'Documentazione completa delle API interne', tags:['api','development','docs'] },
-        ].map(normalizeResource) : [];
+        ].map(normalizeResource);
+        library = [...library, ...demoLibrary];
       }
     }
 
@@ -892,7 +888,7 @@
             <div class="font-black text-gray-800">${escapeHtml(r.title)}</div>
             <div class="text-xs text-gray-600">${escapeHtml(r.description||'').slice(0,60)}...</div>
           </div>
-          <a href="${r.url}" target="_blank" rel="noopener" class="btn-aurora text-sm">Apri</a>
+          <button class="btn-aurora text-sm" onclick="openResource('${r.id}','${r.type||'resource'}')">Apri</button>
         </div>`;
     }
 
@@ -1009,6 +1005,17 @@
 
     async function navigateBack(){
       window.location.href = '../home.html';
+    }
+
+    function joinNextLive(){
+      const nextLive = liveSessions.find(s => s.start_at > new Date());
+      if (nextLive) {
+        window.open(nextLive.join_url, '_blank');
+        toast('Entrando nella live: ' + nextLive.title + ' 🔴');
+      } else {
+        show('live');
+        toast('Controlla tutte le live disponibili 📅');
+      }
     }
 
     // ===== Filters listeners =====
