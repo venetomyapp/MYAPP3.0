@@ -79,6 +79,8 @@
     .btn-primary{width:100%;background:var(--gradient-magic);color:#fff;border:none;padding:16px 24px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;transition:.2s;margin-bottom:1rem}
     .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(233,69,96,.3)}
     .btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none}
+    .btn-secondary{width:100%;background:#fff;color:#1f2937;border:2px solid #e5e7eb;padding:16px 24px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;transition:.2s}
+    .btn-secondary:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,0,0,.08)}
     .message{padding:12px 16px;border-radius:8px;margin-bottom:1rem;font-size:14px;font-weight:600;text-align:center;border:2px solid}
     .message-error{background:rgba(220,38,38,.1);color:#dc2626;border-color:rgba(220,38,38,.3)}
     .message-success{background:rgba(22,163,74,.1);color:#16a34a;border-color:rgba(22,163,74,.3)}
@@ -107,6 +109,15 @@
     }
     /* focus super visibile */
     .focus-outline:focus{outline:3px solid #00d4ff;outline-offset:2px}
+
+    /* === OVERLAY VERIFICA EMAIL (mobile bottom sheet) === */
+    .verify-overlay{position:fixed;inset:0;display:none;align-items:flex-end;justify-content:center;background:rgba(10,10,25,.55);backdrop-filter:blur(2px);z-index:10000}
+    .verify-sheet{width:100%;max-width:28rem;background:#fff;border-radius:18px 18px 0 0;padding:1.25rem 1.25rem 1.5rem;box-shadow:0 -10px 30px rgba(0,0,0,.15);animation:slideUp .25s ease-out}
+    @media (min-width:640px){
+      .verify-overlay{align-items:center}
+      .verify-sheet{border-radius:18px}
+    }
+    @keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
@@ -117,6 +128,23 @@
       <div class="loading-spinner" style="width:40px;height:40px;margin:0 auto 1rem;"></div>
       <div class="text-lg font-semibold text-gray-800">Autenticazione in corso...</div>
       <div class="text-sm text-gray-600 mt-2">Attendere prego</div>
+    </div>
+  </div>
+
+  <!-- OVERLAY VERIFICA EMAIL -->
+  <div id="verifyOverlay" class="verify-overlay" aria-hidden="true">
+    <div class="verify-sheet" role="dialog" aria-modal="true" aria-labelledby="verifyTitle">
+      <div class="text-4xl mb-2">📬</div>
+      <h2 id="verifyTitle" class="text-xl font-extrabold text-gray-900">Conferma la tua email</h2>
+      <p class="text-sm text-gray-700 mt-2">
+        Ti abbiamo inviato un messaggio a <strong id="verifyEmail" class="font-semibold"></strong>.<br/>
+        Apri l’email e clicca <em>“Conferma il tuo indirizzo”</em>. Dopo la conferma, torna qui ed effettua l’accesso.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
+        <button id="openMailBtn" type="button" class="btn-primary">Apri app email</button>
+        <button id="goLoginBtn" type="button" class="btn-secondary">Ok, vai al login</button>
+      </div>
+      <button id="resendBtn" type="button" class="w-full text-sm text-gray-500 underline mt-3">Non hai ricevuto l’email? Reinvia</button>
     </div>
   </div>
 
@@ -248,7 +276,7 @@
     // === CONFIGURAZIONE SUPABASE ===
     const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
-    const REMEMBER_PRIVACY = true; // imposta a false se NON vuoi ricordare l'accettazione
+    const REMEMBER_PRIVACY = true;
 
     let supabaseClient;
     let isProcessing = false;
@@ -260,17 +288,21 @@
       supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       console.log('✅ Supabase client inizializzato');
 
-      // UI init
       initPasswordToggles();
       initPrivacyGates();
       initDynamicButtonStates();
-
-      // Verifica sessione
-      await checkExistingSession();
-
-      // Setup listeners form
       setupFormListeners();
 
+      // Banner post-verifica (se torna dal link)
+      const qs = new URLSearchParams(window.location.search);
+      if (qs.get('verified') === '1') {
+        switchToLogin();
+        showMessage('Email verificata! Ora puoi accedere con le tue credenziali.', 'success');
+        // pulisco la query senza ricaricare
+        history.replaceState({}, '', window.location.pathname);
+      }
+
+      await checkExistingSession();
       console.log('✅ Sistema di autenticazione pronto');
     });
 
@@ -305,13 +337,9 @@
 
     // === LISTENERS FORM ===
     function setupFormListeners() {
-      const loginForm = document.getElementById('loginForm');
-      if (loginForm) loginForm.addEventListener('submit', handleLogin);
+      document.getElementById('loginForm')?.addEventListener('submit', handleLogin);
+      document.getElementById('registerForm')?.addEventListener('submit', handleRegister);
 
-      const registerForm = document.getElementById('registerForm');
-      if (registerForm) registerForm.addEventListener('submit', handleRegister);
-
-      // validazione conferma password live
       const confirmPassword = document.getElementById('confirmPassword');
       const registerPassword = document.getElementById('registerPassword');
       if (confirmPassword && registerPassword) {
@@ -321,6 +349,30 @@
           this.style.boxShadow = same ? 'none' : '0 0 0 3px rgba(220,38,38,.1)';
         });
       }
+
+      // Overlay actions
+      document.getElementById('openMailBtn')?.addEventListener('click', () => {
+        // Tentativo generico di aprire app email (fallback non intrusivo)
+        window.location.href = 'mailto:';
+      });
+      document.getElementById('goLoginBtn')?.addEventListener('click', () => {
+        hideVerifyOverlay();
+        switchToLogin();
+        document.getElementById('loginPassword')?.focus();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      document.getElementById('resendBtn')?.addEventListener('click', async () => {
+        const email = document.getElementById('verifyEmail')?.textContent || '';
+        if (!email) return;
+        try {
+          const { error } = await supabaseClient.auth.resend({ type: 'signup', email });
+          if (error) throw error;
+          showMessage('Email di conferma reinviata ✅', 'success');
+        } catch (err) {
+          console.error('Reinvio email fallito:', err);
+          showMessage('Impossibile reinviare l’email. Riprova più tardi.', 'error');
+        }
+      });
     }
 
     // === TOGGLE PASSWORD ===
@@ -346,7 +398,6 @@
       const loginPrivacy = document.getElementById('loginPrivacy');
       const registerPrivacy = document.getElementById('registerPrivacy');
 
-      // precheck da localStorage
       if (REMEMBER_PRIVACY && localStorage.getItem('privacyAccepted') === 'true') {
         if (loginPrivacy) loginPrivacy.checked = true;
         if (registerPrivacy) registerPrivacy.checked = true;
@@ -369,8 +420,7 @@
     function initDynamicButtonStates() {
       const ids = ['loginEmail','loginPassword','registerNome','registerCognome','registerEmail','registerDataNascita','registerLuogoNascita','registerPassword','confirmPassword'];
       ids.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener('input', updateButtonsEnabled);
+        document.getElementById(id)?.addEventListener('input', updateButtonsEnabled);
       });
       updateButtonsEnabled();
     }
@@ -383,7 +433,7 @@
       const loginBtn = document.getElementById('loginBtn');
       if (loginBtn) loginBtn.disabled = !(loginEmail && loginPassword && loginPrivacy);
 
-      // register (minimo gating privacy + campi base non vuoti)
+      // register
       const nome = document.getElementById('registerNome')?.value.trim();
       const cognome = document.getElementById('registerCognome')?.value.trim();
       const email = document.getElementById('registerEmail')?.value.trim();
@@ -426,7 +476,6 @@
         if (error) throw error;
         if (!data.user) throw new Error('Errore durante l’autenticazione');
 
-        // profilo per redirect
         const { data: profile, error: profileError } = await supabaseClient
           .from('user_profiles')
           .select('role, full_name')
@@ -440,7 +489,6 @@
         }
 
         showMessage('Login effettuato con successo!', 'success');
-
         const redirectUrl = (profile?.role === 'ADMIN' || profile?.role === 'DIRIGENTE') ? 'home_dirigenti.html' : 'home.html';
         showLoadingOverlay();
         setTimeout(() => { window.location.href = redirectUrl; }, 1200);
@@ -474,23 +522,10 @@
       const confirmPassword = document.getElementById('confirmPassword').value;
       const privacyOk = document.getElementById('registerPrivacy').checked;
 
-      if (!privacyOk) {
-        showMessage('Devi accettare l’Informativa Privacy per procedere.', 'error');
-        isProcessing = false;
-        return;
-      }
-      if (!nome || !cognome || !email || !dataNascita || !luogoNascita || !password) {
-        showMessage('Compila tutti i campi obbligatori', 'error');
-        isProcessing = false; return;
-      }
-      if (password !== confirmPassword) {
-        showMessage('Le password non coincidono', 'error');
-        isProcessing = false; return;
-      }
-      if (password.length < 6) {
-        showMessage('La password deve essere di almeno 6 caratteri', 'error');
-        isProcessing = false; return;
-      }
+      if (!privacyOk) { showMessage('Devi accettare l’Informativa Privacy per procedere.', 'error'); isProcessing = false; return; }
+      if (!nome || !cognome || !email || !dataNascita || !luogoNascita || !password) { showMessage('Compila tutti i campi obbligatori', 'error'); isProcessing = false; return; }
+      if (password !== confirmPassword) { showMessage('Le password non coincidono', 'error'); isProcessing = false; return; }
+      if (password.length < 6) { showMessage('La password deve essere di almeno 6 caratteri', 'error'); isProcessing = false; return; }
 
       // maggiorenne
       const birth = new Date(dataNascita);
@@ -498,21 +533,20 @@
       let age = now.getFullYear() - birth.getFullYear();
       const m = now.getMonth() - birth.getMonth();
       if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) age--;
-      if (age < 18) {
-        showMessage('Devi essere maggiorenne per registrarti', 'error');
-        isProcessing = false; return;
-      }
+      if (age < 18) { showMessage('Devi essere maggiorenne per registrarti', 'error'); isProcessing = false; return; }
 
       try {
         showLoadingButton('registerBtn', true);
         showMessage('Registrazione in corso...', 'info');
 
-        // Registrazione con metadati incl. privacy
+        // Redirect alla STESSA pagina con flag verified=1 dopo il click sull’email
+        const redirectTo = `${window.location.origin}${window.location.pathname}?verified=1`;
+
         const { data, error } = await supabaseClient.auth.signUp({
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/conferma-email.html`,
+            emailRedirectTo: redirectTo,
             data: {
               nome, cognome, data_nascita: dataNascita, luogo_nascita: luogoNascita, telefono,
               privacy_accepted_at: new Date().toISOString()
@@ -522,43 +556,13 @@
         if (error) throw error;
         if (!data.user) throw new Error('Errore durante la registrazione');
 
-        // profilo
-        const { error: profileError } = await supabaseClient
-          .from('user_profiles')
-          .insert([{
-            user_id: data.user.id,
-            email, nome, cognome, full_name: `${nome} ${cognome}`,
-            telefono: telefono || null,
-            data_nascita: dataNascita,
-            luogo_nascita: luogoNascita,
-            role: 'USER',
-            stato: 'ATTIVO'
-          }]);
-        if (profileError) console.error('❌ Errore creazione profilo:', profileError);
-
-        // tessera
-        const numeroTessera = await generateTesseraNumber();
-        const { error: tesseraError } = await supabaseClient
-          .from('tessere')
-          .insert([{
-            user_id: data.user.id,
-            numero_tessera: numeroTessera,
-            nome_completo: `${nome} ${cognome}`,
-            email, telefono: telefono || null,
-            data_emissione: new Date().toISOString().split('T')[0],
-            data_scadenza: new Date(Date.now() + 365*24*60*60*1000).toISOString().split('T')[0],
-            stato: 'ATTIVA', tipo: 'STANDARD',
-            qr_code_data: `MYAPP-${numeroTessera}-${data.user.id}`
-          }]);
-        if (tesseraError) console.error('❌ Errore creazione tessera:', tesseraError);
-
-        if (data.user.email_confirmed_at) {
-          showMessage('Registrazione completata! Reindirizzamento...', 'success');
-          setTimeout(()=>{ window.location.href='home.html'; }, 1500);
-        } else {
-          showMessage('Registrazione completata! Controlla la tua email per confermare l’account.', 'success');
-          setTimeout(()=>{ switchToLogin(); }, 2500);
-        }
+        // Mostra overlay istruzioni + ritorno al login
+        showVerifyOverlay(email);
+        switchToLogin();
+        document.getElementById('loginEmail').value = email;
+        document.getElementById('loginPassword').value = '';
+        document.getElementById('loginPassword').focus();
+        showMessage(`Registrazione avviata! Controlla la tua email (${email}) e conferma l’account.`, 'success');
 
       } catch (err) {
         console.error('❌ Errore registrazione:', err);
@@ -572,14 +576,6 @@
         showLoadingButton('registerBtn', false);
         isProcessing = false;
       }
-    }
-
-    // === GENERA NUMERO TESSERA ===
-    async function generateTesseraNumber(){
-      const year = new Date().getFullYear();
-      const { count } = await supabaseClient.from('tessere').select('*',{ count:'exact', head:true });
-      const nextNumber = (count || 0) + 1;
-      return `MYAPP-${year}-${nextNumber.toString().padStart(4,'0')}`;
     }
 
     // === UI HELPERS ===
@@ -624,6 +620,19 @@
       else{ btn.disabled=false; btn.textContent = (buttonId==='loginBtn')?'Accedi':'Registrati'; }
     }
     function showLoadingOverlay(){ document.getElementById('loadingOverlay').style.display='flex'; }
+
+    // Overlay helpers
+    function showVerifyOverlay(email){
+      document.getElementById('verifyEmail').textContent = email || '';
+      const ov = document.getElementById('verifyOverlay');
+      ov.style.display = 'flex';
+      ov.setAttribute('aria-hidden','false');
+    }
+    function hideVerifyOverlay(){
+      const ov = document.getElementById('verifyOverlay');
+      ov.style.display = 'none';
+      ov.setAttribute('aria-hidden','true');
+    }
   </script>
 </body>
 </html>
