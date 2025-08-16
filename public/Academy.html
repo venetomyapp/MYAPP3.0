@@ -384,7 +384,7 @@
   <section class="hero-section min-h-screen flex flex-col">
     <!-- Header with floating back button -->
     <div class="relative z-10 p-6">
-      <a href="../home.html" class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white hover:bg-white/30 transition-all duration-300">
+      <a href="#" onclick="navigateBack()" class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white hover:bg-white/30 transition-all duration-300">
         <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
         </svg>
@@ -469,7 +469,7 @@
           <!-- Consigliati -->
           <div class="feature-card p-8">
             <div class="flex items-center justify-between mb-6">
-              <h3 class="text-2xl font-black text-gray-800">🔥 Contenuti Hot</h3>
+              <h3 class="text-2xl font-black text-gray-800">🌟 In Evidenza</h3>
               <div class="flex gap-2">
                 <span class="chip">Trending</span>
                 <span class="chip">New</span>
@@ -1005,6 +1005,10 @@
       hero.scrollIntoView({ behavior: 'smooth', block: 'end' });
       
       if (id === 'stats') renderStats();
+    }
+
+    async function navigateBack(){
+      window.location.href = '../home.html';
     }
 
     // ===== Filters listeners =====
