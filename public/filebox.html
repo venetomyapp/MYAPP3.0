@@ -61,7 +61,8 @@
     .container{width:var(--container); margin-inline:auto}
     .section{margin-block: var(--space-4)}
     .stack{display:flex; gap:var(--space-2); align-items:center}
-    .pill-row{display:flex; gap:10px; overflow:auto; padding-bottom:6px}
+    .pill-row{display:flex; gap:10px; overflow:auto; padding-bottom:6px; margin-top:12px;} /* <— spazio aumentato */
+    @media (min-width:768px){ .pill-row{ margin-top:14px; } }                      /* <— spazio leggermente + su tablet/desktop */
 
     /* Header */
     header{position:relative; padding:14px 0}
@@ -321,7 +322,7 @@
       </div>
     </section>
 
-    <!-- Management Section (solo se admin: il JS mostra il tab) -->
+    <!-- Management Section (solo se admin) -->
     <section id="manageSection" class="hidden">
       <div class="glass-strong p-16 mb-8 center">
         <div class="stack center" style="justify-content:center; margin-bottom:10px; font-size:22px">⚙️</div>
@@ -603,7 +604,8 @@
           .select('*').eq('attivo', true).order('order_index', { ascending:true });
         if (error) throw error;
         downloadLinks = data || [];
-        renderDownloads(); updateDownloadStats();
+        renderDownloads();
+        updateDownloadStats();   // <— AGGIUNTO
         if (isAdmin) await loadAllLinksForManagement();
       }catch(err){
         console.error('Errore download links:', err);
@@ -627,6 +629,12 @@
             <p style="color:var(--error); font-weight:800">Errore nel caricamento della gestione.</p>
           </div>`;
       }
+    }
+
+    // Aggiorna il contatore dei link download  <— AGGIUNTO
+    function updateDownloadStats(){
+      const el = document.querySelector('#downloadCount');
+      if (el) el.textContent = (Array.isArray(downloadLinks) ? downloadLinks.length : 0) || '--';
     }
 
     async function saveLink(){
