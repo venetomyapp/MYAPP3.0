@@ -17,7 +17,7 @@
   <meta name="apple-mobile-web-app-title" content="MyApp">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 
-  <!-- Fonts & Tailwind -->
+  <!-- Fonts & Tailwind (ok per test/dev; in produzione usa la build CLI) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -77,7 +77,6 @@
     .tab-btn.active{ background:rgba(255,255,255,.95); color:#1a1a2e; }
     .download-pulse{ animation:downloadPulse 2s infinite; }
     @keyframes downloadPulse{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
-    
     /* Mobile optimizations */
     @media (max-width: 640px) {
       .mobile-stack { flex-direction: column !important; }
@@ -89,10 +88,9 @@
       .mobile-gap-3 { gap: 0.75rem !important; }
       .mobile-text-sm { font-size: 0.875rem !important; }
     }
-    
-    @media (prefers-reduced-motion:reduce){ 
-      *{animation:none!important; transition:none!important} 
-      body::before{animation:none} 
+    @media (prefers-reduced-motion:reduce){
+      *{animation:none!important; transition:none!important}
+      body::before{animation:none}
       .download-pulse{animation:none}
     }
   </style>
@@ -131,7 +129,6 @@
 
   <!-- Main -->
   <main class="max-w-6xl mx-auto px-3 sm:px-4 pb-8 sm:pb-10">
-    
     <!-- Tab Navigation -->
     <div class="flex gap-2 mb-4 sm:mb-6 fade-in overflow-x-auto">
       <button id="tabFiles" class="tab-btn active px-3 sm:px-4 py-2 rounded-full font-bold text-xs sm:text-sm whitespace-nowrap flex items-center gap-2">
@@ -151,8 +148,8 @@
       <section class="glass-strong rounded-2xl sm:rounded-3xl p-4 sm:p-6 mb-4 sm:mb-6 text-center fade-in">
         <h2 class="text-ultra-visible text-lg sm:text-xl lg:text-2xl font-extrabold mb-2">Documenti in cartella</h2>
         <p class="text-ultra-visible text-sm sm:fluid-base mb-4">Visualizza e scarica i file senza uscire dalla pagina</p>
-        
-        <!-- Search and Filters - Mobile Stacked -->
+
+        <!-- Search and Filters -->
         <div class="grid gap-3 sm:gap-4 mb-4">
           <!-- Search Bar -->
           <div class="glass-card rounded-xl sm:rounded-2xl p-2 sm:p-3">
@@ -164,8 +161,8 @@
               <input id="searchInput" type="text" class="w-full outline-none bg-transparent text-xs sm:text-sm lg:fluid-base text-primary" placeholder="Cerca per nome o estensione..." maxlength="100" autocomplete="off">
             </div>
           </div>
-          
-          <!-- Filters - Horizontal Scroll on Mobile -->
+
+          <!-- Filters -->
           <div class="flex gap-2 overflow-x-auto pb-2">
             <button class="filterBtn category-filter active px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap" data-type="all">Tutti</button>
             <button class="filterBtn category-filter px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap" data-type="doc">📄 Doc</button>
@@ -236,6 +233,8 @@
         <h3 class="text-lg sm:fluid-xl font-black text-ultra-visible mb-4">Nessun link disponibile</h3>
         <p class="text-cyan text-sm sm:fluid-base">I link di download verranno aggiunti dalla direzione</p>
       </div>
+    </div>
+
     <!-- Management Section (Admin/Dirigenti only) -->
     <div id="manageSection" class="hidden">
       <section class="glass-strong rounded-2xl sm:rounded-3xl p-4 sm:p-6 mb-4 sm:mb-6 text-center fade-in">
@@ -252,31 +251,31 @@
           <span id="formIcon">➕</span>
           <span id="formTitle">Aggiungi Nuovo Link</span>
         </h3>
-        
+
         <form id="linkForm" class="space-y-4">
           <input type="hidden" id="editId" value="">
-          
+
           <div>
             <label for="linkTitolo" class="block text-primary font-semibold mb-2 text-sm">Titolo *</label>
-            <input type="text" id="linkTitolo" required maxlength="255" 
+            <input type="text" id="linkTitolo" required maxlength="255"
                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-aurora focus:border-aurora outline-none text-sm"
                    placeholder="es. Materiale Corso Base">
           </div>
-          
+
           <div>
             <label for="linkDescrizione" class="block text-primary font-semibold mb-2 text-sm">Descrizione</label>
             <textarea id="linkDescrizione" rows="3" maxlength="500"
                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-aurora focus:border-aurora outline-none text-sm resize-none"
                       placeholder="Descrizione opzionale del contenuto..."></textarea>
           </div>
-          
+
           <div>
             <label for="linkUrl" class="block text-primary font-semibold mb-2 text-sm">URL *</label>
-            <input type="url" id="linkUrl" required 
+            <input type="url" id="linkUrl" required
                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-aurora focus:border-aurora outline-none text-sm"
                    placeholder="https://mega.nz/file/...">
           </div>
-          
+
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label for="linkTipo" class="block text-primary font-semibold mb-2 text-sm">Tipo Transfer</label>
@@ -291,21 +290,21 @@
                 <option value="GitHub">GitHub</option>
               </select>
             </div>
-            
+
             <div>
               <label for="linkOrder" class="block text-primary font-semibold mb-2 text-sm">Ordine</label>
               <input type="number" id="linkOrder" min="0" max="999" value="0"
                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-aurora focus:border-aurora outline-none text-sm">
             </div>
           </div>
-          
+
           <div class="flex items-center gap-4">
             <label class="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" id="linkAttivo" checked class="w-4 h-4 text-aurora border-gray-300 rounded focus:ring-aurora">
               <span class="text-primary font-medium text-sm">Link attivo</span>
             </label>
           </div>
-          
+
           <div class="flex gap-2 pt-4">
             <button type="submit" id="submitBtn" class="bg-gradient-to-r from-aurora to-magenta text-white px-4 py-2 rounded-lg font-bold text-sm hover:scale-105 transition-transform mobile-full">
               Salva Link
@@ -325,11 +324,9 @@
             🔄 Aggiorna
           </button>
         </div>
-        
-        <div id="manageContainer" class="grid mobile-grid-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4">
-          <!-- Management cards will be rendered here -->
-        </div>
-        
+
+        <div id="manageContainer" class="grid mobile-grid-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4"></div>
+
         <div id="emptyManage" class="text-center py-12 sm:py-16 hidden">
           <div class="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-r from-muted to-gray-400 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
             <span class="text-2xl sm:text-4xl">📝</span>
@@ -383,6 +380,23 @@
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
     const supabase = createClient(supabaseUrl, supabaseKey);
 
+    // === UTILS ===
+    const $  = (sel, root = document) => root.querySelector(sel);                // un elemento
+    const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel)); // lista elementi
+
+    const humanSize = b => {
+      if (!Number.isFinite(b)) return '--';
+      const u = ['B','KB','MB','GB','TB']; let i=0;
+      while(b>=1024 && i<u.length-1){ b/=1024; i++; }
+      return `${b.toFixed( b<10&&i>0 ? 1 : 0)} ${u[i]}`;
+    };
+
+    function show(el){ if (el) el.classList.remove('hidden'); }
+    function hide(el){ if (el) el.classList.add('hidden'); }
+    // alias per retrocompatibilità con codice esistente
+    const safeShow = show;
+    const safeHide = hide;
+
     // State
     let currentUser = null;
     let allFiles = [];
@@ -392,22 +406,13 @@
     let isAdmin = false;
     let editingLinkId = null;
 
-    // Utils
-    const $ = s => document.querySelector(s);
-    const $ = s => Array.from(document.querySelectorAll(s));
-    const humanSize = b => {
-      if (!Number.isFinite(b)) return '--';
-      const u = ['B','KB','MB','GB','TB']; let i=0; while(b>=1024 && i<u.length-1){ b/=1024; i++; }
-      return `${b.toFixed( b<10&&i>0 ? 1 : 0)} ${u[i]}`;
-    };
-
     const EXT_MAP = {
       doc: ['pdf','doc','docx','xls','xlsx','ppt','pptx','txt','odt','ods','csv'],
       img: ['jpg','jpeg','png','gif','webp','svg'],
       vid: ['mp4','webm','mkv','mov','avi','m4v'],
       aud: ['mp3','wav','ogg','m4a','flac']
     };
-    
+
     const detectType = (ext) => {
       ext = ext.toLowerCase();
       if (EXT_MAP.img.includes(ext)) return 'img';
@@ -416,7 +421,7 @@
       if (EXT_MAP.doc.includes(ext)) return 'doc';
       return 'other';
     };
-    
+
     const mimeFromExt = (ext) => {
       ext = ext.toLowerCase();
       const map = {
@@ -448,15 +453,12 @@
     // Tab switching
     function switchTab(tab) {
       activeTab = tab;
-      
-      // Update tab buttons
-      $('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      
-      // Hide all sections
+      $$('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
       hide($('#filesSection'));
       hide($('#downloadsSection'));
       hide($('#manageSection'));
-      
+
       if (tab === 'files') {
         $('#tabFiles').classList.add('active');
         show($('#filesSection'));
@@ -469,11 +471,11 @@
       }
     }
 
-    // Tab event listeners with safe binding
+    // Tab event listeners
     const tabFiles = $('#tabFiles');
     const tabDownloads = $('#tabDownloads');
     const tabManage = $('#tabManage');
-    
+
     if (tabFiles) tabFiles.addEventListener('click', () => switchTab('files'));
     if (tabDownloads) tabDownloads.addEventListener('click', () => switchTab('downloads'));
     if (tabManage) tabManage.addEventListener('click', () => switchTab('manage'));
@@ -483,7 +485,7 @@
       try{
         const { data:{ user } } = await supabase.auth.getUser();
         currentUser = user || null;
-        
+
         // Check admin privileges
         if (user) {
           await checkAdminPrivileges();
@@ -494,11 +496,11 @@
     async function checkAdminPrivileges(){
       try{
         // Check user metadata first
-        const meta = currentUser.user_metadata || {};
+        const meta = currentUser?.user_metadata || {};
         const rawRole = (meta.profilo || meta.ruolo || meta.role || '').toString().toLowerCase();
         if (rawRole.includes('dirigente') || rawRole.includes('admin')) {
           isAdmin = true;
-        } else {
+        } else if (currentUser?.id) {
           // Check database profile
           const { data } = await supabase.from('user_profiles').select('ruolo,profilo,tipo').eq('user_id', currentUser.id).maybeSingle();
           if (data){
@@ -508,7 +510,7 @@
             }
           }
         }
-        
+
         // Show/hide management tab
         const manageTab = $('#tabManage');
         if (manageTab) {
@@ -598,13 +600,13 @@
           .select('*')
           .eq('attivo', true)
           .order('order_index', { ascending: true });
-        
+
         if (error) throw error;
-        
+
         downloadLinks = data || [];
         renderDownloads();
         updateDownloadStats();
-        
+
         // Load all links for management if admin
         if (isAdmin) {
           await loadAllLinksForManagement();
@@ -625,15 +627,15 @@
     // Management functions
     async function loadAllLinksForManagement(){
       if (!isAdmin) return;
-      
+
       try{
         const { data, error } = await supabase
           .from('download_links')
           .select('*')
           .order('order_index', { ascending: true });
-        
+
         if (error) throw error;
-        
+
         renderManagementLinks(data || []);
       }catch(err){
         console.error('Errore caricamento gestione:', err);
@@ -649,28 +651,28 @@
 
     async function saveLink(){
       if (!isAdmin) return;
-      
+
       const linkTitolo = $('#linkTitolo');
       const linkDescrizione = $('#linkDescrizione');
       const linkUrl = $('#linkUrl');
       const linkTipo = $('#linkTipo');
       const linkOrder = $('#linkOrder');
       const linkAttivo = $('#linkAttivo');
-      
+
       if (!linkTitolo || !linkUrl) return;
-      
+
       const titolo = linkTitolo.value.trim();
       const descrizione = linkDescrizione ? linkDescrizione.value.trim() : '';
       const url = linkUrl.value.trim();
       const tipo = linkTipo ? linkTipo.value : 'Download';
       const orderIndex = linkOrder ? parseInt(linkOrder.value) || 0 : 0;
       const attivo = linkAttivo ? linkAttivo.checked : true;
-      
+
       if (!titolo || !url) {
         alert('Titolo e URL sono obbligatori');
         return;
       }
-      
+
       try {
         const linkData = {
           titolo,
@@ -681,7 +683,7 @@
           attivo,
           updated_at: new Date().toISOString()
         };
-        
+
         let result;
         if (editingLinkId) {
           // Update existing link
@@ -696,13 +698,13 @@
             .from('download_links')
             .insert([linkData]);
         }
-        
+
         if (result.error) throw result.error;
-        
+
         // Reset form and reload
         resetForm();
         await loadDownloadLinks();
-        
+
         alert(editingLinkId ? 'Link aggiornato con successo!' : 'Link aggiunto con successo!');
       } catch (err) {
         console.error('Errore salvataggio:', err);
@@ -712,15 +714,15 @@
 
     async function deleteLink(id){
       if (!isAdmin || !confirm('Sei sicuro di voler eliminare questo link?')) return;
-      
+
       try {
         const { error } = await supabase
           .from('download_links')
           .delete()
           .eq('id', id);
-        
+
         if (error) throw error;
-        
+
         await loadDownloadLinks();
         alert('Link eliminato con successo!');
       } catch (err) {
@@ -731,7 +733,7 @@
 
     function editLink(link){
       if (!isAdmin) return;
-      
+
       editingLinkId = link.id;
       const linkTitolo = $('#linkTitolo');
       const linkDescrizione = $('#linkDescrizione');
@@ -743,19 +745,19 @@
       const formTitle = $('#formTitle');
       const submitBtn = $('#submitBtn');
       const cancelBtn = $('#cancelBtn');
-      
+
       if (linkTitolo) linkTitolo.value = link.titolo || '';
       if (linkDescrizione) linkDescrizione.value = link.descrizione || '';
       if (linkUrl) linkUrl.value = link.url || '';
       if (linkTipo) linkTipo.value = link.tipo_transfer || 'Download';
       if (linkOrder) linkOrder.value = link.order_index || 0;
       if (linkAttivo) linkAttivo.checked = link.attivo !== false;
-      
+
       if (formIcon) formIcon.textContent = '✏️';
       if (formTitle) formTitle.textContent = 'Modifica Link';
       if (submitBtn) submitBtn.textContent = 'Aggiorna Link';
       safeShow(cancelBtn);
-      
+
       // Scroll to form
       const linkForm = $('#linkForm');
       if (linkForm) linkForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -770,11 +772,11 @@
       const formTitle = $('#formTitle');
       const submitBtn = $('#submitBtn');
       const cancelBtn = $('#cancelBtn');
-      
+
       if (linkForm) linkForm.reset();
       if (linkAttivo) linkAttivo.checked = true;
       if (linkOrder) linkOrder.value = 0;
-      
+
       if (formIcon) formIcon.textContent = '➕';
       if (formTitle) formTitle.textContent = 'Aggiungi Nuovo Link';
       if (submitBtn) submitBtn.textContent = 'Salva Link';
@@ -785,7 +787,7 @@
     function renderFiles(){
       const searchInput = $('#searchInput');
       const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
-      const activeType = $('.filterBtn').find(b=>b.classList.contains('active'))?.dataset.type || 'all';
+      const activeType = $$('.filterBtn').find(b=>b.classList.contains('active'))?.dataset.type || 'all';
 
       const filtered = allFiles.filter(f=>{
         const matchText = !q || f.name.toLowerCase().includes(q) || f.ext.includes(q);
@@ -795,7 +797,6 @@
 
       const container = $('#filesContainer');
       const emptyState = $('#emptyState');
-      
       if (!container) return;
 
       if (!filtered.length){
@@ -820,7 +821,7 @@
       `).join('');
 
       // Re-bind file tile events
-      $('#filesContainer .file-tile').forEach(btn=>{
+      $$('#filesContainer .file-tile').forEach(btn=>{
         btn.addEventListener('click', ()=>{
           const name = decodeURIComponent(btn.dataset.name);
           const fileObj = allFiles.find(x=>x.name===name);
@@ -833,9 +834,9 @@
     function renderDownloads(){
       const container = $('#downloadsContainer');
       const emptyDownloads = $('#emptyDownloads');
-      
+
       if (!container) return;
-      
+
       if (!downloadLinks.length){
         container.innerHTML = '';
         safeShow(emptyDownloads);
@@ -865,21 +866,26 @@
     function updateStats(){
       const total = allFiles.length;
       const sizeSum = allFiles.reduce((a,b)=> a + (Number.isFinite(b.size)? b.size : 0), 0);
-      $('#statTot').textContent = total || '--';
-      $('#statSize').textContent = total ? humanSize(sizeSum) : '--';
+      const elTot = $('#statTot');
+      const elSize = $('#statSize');
+      if (elTot) elTot.textContent = total || '--';
+      if (elSize) elSize.textContent = total ? humanSize(sizeSum) : '--';
     }
 
     // Render management links
     function renderManagementLinks(links){
       if (!isAdmin) return;
-      
+
       const container = $('#manageContainer');
+      const empty = $('#emptyManage');
+      if (!container) return;
+
       if (!links.length){
         container.innerHTML = '';
-        show($('#emptyManage'));
+        show(empty);
         return;
       }
-      hide($('#emptyManage'));
+      hide(empty);
 
       container.innerHTML = links.map(link=>`
         <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4">
@@ -917,32 +923,32 @@
       `).join('');
 
       // Bind management events
-      $('.editLinkBtn').forEach(btn=>{
+      $$('.editLinkBtn').forEach(btn=>{
         btn.addEventListener('click', ()=>{
           const linkData = JSON.parse(btn.dataset.link.replace(/&apos;/g, "'"));
           editLink(linkData);
         });
       });
 
-      $('.deleteLinkBtn').forEach(btn=>{
+      $$('.deleteLinkBtn').forEach(btn=>{
         btn.addEventListener('click', ()=>{
           deleteLink(parseInt(btn.dataset.id));
         });
       });
     }
 
-    // Viewer (same as before but mobile optimized)
+    // Viewer
     async function openViewer(file){
       const viewer = $('#viewer');
       const viewerBody = $('#viewerBody');
       const viewerLoading = $('#viewerLoading');
       const viewerName = $('#viewerName');
       const viewerMeta = $('#viewerMeta');
-      
-      safeShow(viewer);
-      safeHide(viewerBody);
-      safeShow(viewerLoading);
-      
+
+      show(viewer);
+      hide(viewerBody);
+      show(viewerLoading);
+
       if (viewerName) viewerName.textContent = file.name;
       if (viewerMeta) viewerMeta.textContent = `${file.ext.toUpperCase()} • ${humanSize(file.size)}`;
       if (viewerBody) viewerBody.innerHTML = '';
@@ -1021,8 +1027,8 @@
           }
         } catch {}
       }finally{
-        safeHide(viewerLoading);
-        safeShow(viewerBody);
+        hide(viewerLoading);
+        show(viewerBody);
       }
     }
 
@@ -1046,7 +1052,7 @@
         } catch {}
         const viewerBody = $('#viewerBody');
         if (viewerBody) viewerBody.innerHTML = '';
-        safeHide($('#viewer'));
+        hide($('#viewer'));
         if (lastObjectURL){
           try { URL.revokeObjectURL(lastObjectURL); } catch {}
           lastObjectURL = null;
@@ -1055,53 +1061,55 @@
     }
 
     function updateDownloadStats(){
-      $('#downloadCount').textContent = downloadLinks.length || '--';
-    }
-
-    // Safe DOM utilities
-    function safeShow(el) {
-      if (el) el.classList.remove('hidden');
-    }
-    
-    function safeHide(el) {
-      if (el) el.classList.add('hidden');
+      const el = $('#downloadCount');
+      if (el) el.textContent = downloadLinks.length || '--';
     }
 
     // Event listeners
-    $('.filterBtn').forEach(btn=>{
+    $$('.filterBtn').forEach(btn=>{
       btn.addEventListener('click', ()=>{
-        $('.filterBtn').forEach(b=>b.classList.remove('active'));
+        $$('.filterBtn').forEach(b=>b.classList.remove('active'));
         btn.classList.add('active');
         renderFiles();
       });
     });
-    
+
     let searchTimeout;
-    $('#searchInput').addEventListener('input', ()=>{ 
-      clearTimeout(searchTimeout); 
-      searchTimeout = setTimeout(renderFiles, 250); 
-    });
+    const searchInput = $('#searchInput');
+    if (searchInput) {
+      searchInput.addEventListener('input', ()=>{
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(renderFiles, 250);
+      });
+    }
 
-    // Management form events
-    $('#linkForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (isAdmin) saveLink();
-    });
+    const linkForm = $('#linkForm');
+    if (linkForm) {
+      linkForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (isAdmin) saveLink();
+      });
+    }
 
-    $('#cancelBtn').addEventListener('click', resetForm);
+    const cancelBtn = $('#cancelBtn');
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', resetForm);
+    }
 
-    $('#refreshLinks').addEventListener('click', async () => {
-      if (isAdmin) {
-        show($('#loading'));
-        await loadDownloadLinks();
-        hide($('#loading'));
-      }
-    });
+    const refreshLinksBtn = $('#refreshLinks');
+    if (refreshLinksBtn) {
+      refreshLinksBtn.addEventListener('click', async () => {
+        if (isAdmin) {
+          show($('#loading'));
+          await loadDownloadLinks();
+          hide($('#loading'));
+        }
+      });
+    }
 
     // Initialize
     (async ()=>{
       await checkAuth();
-      bindEventListeners();
       await Promise.all([loadMega(), loadDownloadLinks()]);
     })();
 
