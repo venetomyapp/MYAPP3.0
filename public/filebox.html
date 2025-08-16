@@ -10,7 +10,7 @@
   <meta name="theme-color" content="#1a1a2e">
   <link rel="icon" href="/icons/favicon.ico" type="image/x-icon">
 
-  <!-- PWA generica + iOS -->
+  <!-- iOS -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -20,236 +20,341 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-  <!-- Tailwind CSS compilato (file accanto a questo HTML) -->
-  <link rel="stylesheet" href="./styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
 
   <style>
+    /* ========== THEME ========== */
     :root{
-      --gradient-aurora: linear-gradient(135deg,#1a1a2e 0%,#16213e 25%,#0f3460 50%,#e94560 75%,#00d4ff 100%);
-      --gradient-magic: linear-gradient(135deg,#ff006e 0%,#e94560 50%,#03dac6 100%);
-      --gradient-ocean: linear-gradient(135deg,#16213e 0%,#0f3460 50%,#00d4ff 100%);
-      --shadow-glass: 0 8px 32px 0 rgba(31,38,135,.37);
-      --border-glass: 1px solid rgba(255,255,255,.18);
+      --primary:#1a1a2e; --secondary:#16213e; --accent:#0f3460; --aurora:#e94560;
+      --cyan:#00d4ff; --magenta:#ff006e; --teal:#03dac6;
+      --dark:#0a0a23; --light:#f8fafc; --muted:#64748b; --success:#00ea8d; --error:#ff4757;
+      --bg-aurora: linear-gradient(135deg,#1a1a2e 0%,#16213e 25%,#0f3460 50%,#e94560 75%,#00d4ff 100%);
+      --glass-bg: rgba(255,255,255,.95);
+      --glass-strong: rgba(255,255,255,.12);
+      --glass-border: 1px solid rgba(255,255,255,.18);
+      --glass-shadow: 0 8px 32px rgba(31,38,135,.37);
+      --radius: 16px; --radius-lg: 20px; --radius-xl: 24px;
+      --space-1: 6px; --space-2: 10px; --space-3: 14px; --space-4: 18px; --space-5: 24px; --space-6: 32px;
+      --container: min(1180px, 100% - 24px);
     }
-    *{scroll-behavior:smooth}
-    body{background:var(--gradient-aurora); min-height:100vh; font-family:'Inter',system-ui,sans-serif; overflow-x:hidden; position:relative;}
-    body::before{content:''; position:fixed; inset:0; background:var(--gradient-aurora); animation:aurora 20s ease-in-out infinite; z-index:-2;}
+
+    *{box-sizing:border-box}
+    html,body{margin:0}
+    body{
+      min-height:100vh; font-family:'Inter',system-ui,sans-serif; color:var(--primary);
+      background:var(--bg-aurora); overflow-x:hidden; position:relative;
+    }
+    body::before{
+      content:""; position:fixed; inset:0; z-index:-2; background:var(--bg-aurora);
+      animation:aurora 20s ease-in-out infinite;
+    }
     @keyframes aurora{
       0%,100%{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 25%,#0f3460 50%,#e94560 75%,#00d4ff 100%)}
       25%{background:linear-gradient(135deg,#16213e 0%,#0f3460 25%,#e94560 50%,#00d4ff 75%,#1a1a2e 100%)}
       50%{background:linear-gradient(135deg,#0f3460 0%,#e94560 25%,#00d4ff 50%,#1a1a2e 75%,#16213e 100%)}
       75%{background:linear-gradient(135deg,#e94560 0%,#00d4ff 25%,#1a1a2e 50%,#16213e 75%,#0f3460 100%)}
     }
-    .glass-card{ background:rgba(255,255,255,.95); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,.2); box-shadow:var(--shadow-glass); }
-    .glass-strong{ background:rgba(255,255,255,.12); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:var(--border-glass); box-shadow:var(--shadow-glass); }
-    .text-ultra-visible{ color:#fff; text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1); font-weight:800;}
-    .file-tile, .download-tile{ transition:transform .2s ease, box-shadow .2s ease }
-    .file-tile:hover, .download-tile:hover{ transform:translateY(-4px); box-shadow:0 16px 40px rgba(0,0,0,.15);}
-    .fade-in{ animation:fadeIn .6s ease-out both; opacity:0 }
-    @keyframes fadeIn{ from{opacity:0; transform:translateY(20px)} to{opacity:1; transform:translateY(0)} }
-    .loading-skeleton{ background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size:200% 100%; animation:loading 1.5s infinite; border-radius:12px; }
-    @keyframes loading{ 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-    .category-filter{ background:rgba(255,255,255,.85); color:#0a0a23; border:1px solid rgba(0,0,0,.06); }
-    .category-filter.active{ background:linear-gradient(90deg,#e94560,#ff006e); color:#fff; box-shadow:0 8px 24px rgba(233,69,96,.25); }
-    .tab-btn{ background:rgba(255,255,255,.15); color:#fff; border:1px solid rgba(255,255,255,.2); backdrop-filter:blur(10px); }
-    .tab-btn.active{ background:rgba(255,255,255,.95); color:#1a1a2e; }
-    .download-pulse{ animation:downloadPulse 2s infinite; }
-    @keyframes downloadPulse{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
-    /* Mobile */
-    @media (max-width: 640px) {
-      .mobile-stack { flex-direction: column !important; }
-      .mobile-full { width: 100% !important; }
-      .mobile-text-center { text-align: center !important; }
-      .mobile-hidden { display: none !important; }
-      .mobile-grid-1 { grid-template-columns: 1fr !important; }
-      .mobile-p-3 { padding: 0.75rem !important; }
-      .mobile-gap-3 { gap: 0.75rem !important; }
-      .mobile-text-sm { font-size: 0.875rem !important; }
+    .hidden{display:none !important}
+    .text-ultra-visible{color:#fff;text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1);font-weight:800}
+
+    /* ========== LAYOUT ========== */
+    .container{width:var(--container); margin-inline:auto}
+    .section{margin-block: var(--space-4)}
+    .stack{display:flex; gap:var(--space-2); align-items:center}
+    .pill-row{display:flex; gap:10px; overflow:auto; padding-bottom:6px}
+
+    /* Header */
+    header{position:relative; padding:14px 0}
+    .brand{display:flex; gap:10px; align-items:center; justify-content:center}
+    .brand-icon{width:40px; height:40px; border-radius:50%; background:linear-gradient(90deg,var(--cyan),var(--teal)); display:grid; place-items:center; color:#fff; font-size:20px}
+    .brand-title{font-weight:900; font-size: clamp(18px,3vw,22px)}
+    #backBtn{
+      position:absolute; left:8px; top:50%; transform:translateY(-50%);
+      color:#fff; padding:6px; border-radius:10px; transition:transform .15s ease, opacity .15s ease;
+      opacity:.95;
     }
-    @media (prefers-reduced-motion:reduce){
-      *{animation:none!important; transition:none!important}
-      body::before{animation:none}
-      .download-pulse{animation:none}
+    #backBtn:hover{transform:translateY(-50%) scale(1.05); opacity:1}
+    #backBtn svg{width:22px; height:22px}
+
+    /* Cards / glass */
+    .glass-card{
+      background:var(--glass-bg); border:1px solid rgba(0,0,0,.06);
+      border-radius: var(--radius-lg); box-shadow: var(--glass-shadow);
+    }
+    .glass-strong{
+      background:var(--glass-strong); border:var(--glass-border);
+      border-radius: var(--radius-xl); box-shadow: var(--glass-shadow);
+    }
+
+    /* Tabs */
+    .tabs{display:flex; gap:10px; margin-bottom:16px; overflow:auto}
+    .tab-btn{
+      --bg: rgba(255,255,255,.15); --fg:#fff; --bd: rgba(255,255,255,.25);
+      background:var(--bg); color:var(--fg); border:1px solid var(--bd);
+      backdrop-filter: blur(10px); border-radius:999px; font-weight:800; font-size:13px;
+      padding:8px 12px; display:inline-flex; align-items:center; gap:8px; cursor:pointer; white-space:nowrap;
+      transition: transform .15s ease, background-color .2s ease, color .2s ease;
+    }
+    .tab-btn:hover{transform:translateY(-1px)}
+    .tab-btn.active{--bg:#fff; --fg:var(--primary); --bd:#fff}
+
+    /* Search + Filters block */
+    .search-card{padding:12px}
+    .searchbar{display:flex; align-items:center; gap:10px}
+    .searchbar svg{width:18px; height:18px; color:var(--primary); flex:0 0 auto}
+    .searchbar input{
+      flex:1; border:none; outline:none; background:transparent;
+      font-size:14px; color:var(--primary)
+    }
+    .category-filter{
+      background:rgba(255,255,255,.9); color:var(--dark); border:1px solid rgba(0,0,0,.06);
+      padding:8px 12px; border-radius:999px; font-weight:800; font-size:13px; cursor:pointer;
+      transition:transform .15s ease, box-shadow .15s ease, background-color .15s ease, color .15s ease;
+    }
+    .category-filter:hover{transform:translateY(-1px)}
+    .category-filter.active{
+      background:linear-gradient(90deg,var(--aurora),var(--magenta)); color:#fff;
+      box-shadow:0 8px 24px rgba(233,69,96,.25);
+    }
+
+    /* Stats */
+    .stats{display:flex; gap:32px; justify-content:center}
+    .stat{ text-align:center }
+    .stat .value{ color:#fff; font-weight:900; font-size: clamp(22px,4vw,32px) }
+    .stat .label{ color:var(--cyan); font-weight:800; font-size:12px }
+
+    /* Grids */
+    .grid-files,.grid-downloads,.grid-manage{
+      display:grid; gap:12px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    /* Tiles */
+    .file-tile,.download-tile{
+      display:block; padding:14px; border-radius:18px; background:#fff; border:1px solid #eef1f4;
+      box-shadow:0 6px 20px rgba(0,0,0,.06);
+      transition:transform .15s ease, box-shadow .15s ease;
+      text-decoration:none; color:inherit;
+    }
+    .file-tile:hover,.download-tile:hover{ transform:translateY(-4px); box-shadow:0 16px 40px rgba(0,0,0,.12) }
+    .tile-row{ display:flex; gap:12px; align-items:flex-start }
+    .tile-ico{
+      width:48px; height:48px; border-radius:14px;
+      background:linear-gradient(90deg,var(--cyan),var(--teal));
+      display:grid; place-items:center; font-size:22px; color:#fff; flex:0 0 auto;
+    }
+    .tile-title{ font-weight:800; color:var(--primary); font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+    .tile-meta{ font-size:12px; color:var(--muted); margin-top:4px }
+
+    /* Empty states */
+    .empty{ text-align:center; padding:48px 0 }
+    .empty .ico{ width:84px; height:84px; display:grid; place-items:center; border-radius:50%;
+      background:linear-gradient(90deg,#94a3b8,#cbd5e1); color:#0f172a; font-size:30px; margin-inline:auto  }
+    .empty h3{ color:#fff; font-size: clamp(18px,3vw,24px); font-weight:900; margin: 10px 0 }
+    .empty p{ color:var(--cyan); font-weight:600 }
+
+    /* Viewer */
+    #viewer{ position:fixed; inset:0; background:rgba(0,0,0,.7); display:none; z-index:50 }
+    #viewer.active{ display:block }
+    .viewer-wrap{ position:absolute; inset:0; padding:12px; display:grid; place-items:center }
+    .viewer-card{ width:min(100%,1100px); height: min(82vh, 820px); display:flex; flex-direction:column }
+    .viewer-head{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      border-bottom:1px solid #e5e7eb; padding:10px 12px; border-top-left-radius:inherit; border-top-right-radius:inherit;
+    }
+    .viewer-file{ display:flex; gap:10px; align-items:center; min-width:0 }
+    .viewer-file .ico{ width:36px; height:36px; border-radius:10px; background:linear-gradient(90deg,var(--cyan),var(--teal)); display:grid; place-items:center }
+    .viewer-name{ font-weight:800; color:var(--primary); font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+    .viewer-meta{ color:var(--muted); font-size:12px }
+    .viewer-body{ position:relative; flex:1; }
+    .viewer-loading{ position:absolute; inset:0; display:grid; place-items:center }
+    .spinner{ width:40px; height:40px; border-radius:50%; border:3px solid transparent; border-bottom-color:var(--aurora); animation:spin 1s linear infinite }
+    @keyframes spin { to { transform:rotate(360deg) } }
+    #viewerBody{ width:100%; height:100%; display:grid; place-items:center; }
+    #viewerBody > *{ max-width:100%; max-height:100%; }
+    #viewerBody img{ object-fit:contain }
+    #viewerBody video{ width:100%; height:100%; object-fit:contain; background:#000; border-bottom-left-radius:inherit; border-bottom-right-radius:inherit }
+    #viewerBody iframe{ width:100%; height:100%; border:0; border-bottom-left-radius:inherit; border-bottom-right-radius:inherit }
+
+    /* Buttons */
+    .btn{ border:0; border-radius:999px; padding:8px 12px; font-weight:800; font-size:13px; cursor:pointer }
+    .btn-primary{ color:#fff; background:linear-gradient(90deg,var(--aurora),var(--magenta)) }
+    .btn-ghost{ color:var(--primary); background:#f4f6f8 }
+    .btn-success{ color:#fff; background:linear-gradient(90deg,var(--success),var(--teal)) }
+    .badge{ display:inline-block; border-radius:999px; font-size:11px; padding:4px 8px; font-weight:800; color:#fff }
+    .badge-green{ background:linear-gradient(90deg,var(--success),var(--teal)) }
+
+    /* Utilities */
+    .center{text-align:center}
+    .muted{color:var(--muted)}
+    .mt-8{margin-top:var(--space-6)}
+    .mb-8{margin-bottom:var(--space-6)}
+    .mb-4{margin-bottom:var(--space-3)}
+    .p-12{padding:12px}
+    .p-16{padding:16px}
+
+    /* Responsive tweaks */
+    @media (max-width: 640px){
+      header{padding:12px 0}
+      .viewer-card{height: 80vh}
+      .tile-ico{width:44px;height:44px;font-size:20px}
+      .tab-btn{font-size:12px;padding:7px 10px}
+      #backBtn{left:6px}
+    }
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none !important; transition:none !important}
     }
   </style>
 </head>
 <body>
 
   <!-- Header -->
-  <header class="w-full px-3 sm:px-4 py-3 sm:py-4 relative z-10">
-    <div class="max-w-6xl mx-auto flex justify-center items-center">
-      <div class="flex items-center space-x-2 sm:space-x-3">
-     <button id="backBtn" class="back-left text-ultra-visible hover:text-cyan transition-colors p-1" aria-label="Indietro">
-          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-          </svg>
-        </button>
-        <div class="flex items-center space-x-2">
-          <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-cyan to-teal rounded-full flex items-center justify-center">
-            <svg class="w-4 h-4 sm:w-6 sm:h-6 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M10 4H4a2 2 0 0 0-2 2v1h20V7a2 2 0 0 0-2-2h-8l-2-1z"></path>
-              <path d="M22 9H2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9z"></path>
-            </svg>
-          </div>
-          <h1 class="text-lg sm:text-xl lg:fluid-xl font-black text-ultra-visible">FileBox</h1>
-        </div>
+  <header>
+    <div class="container">
+      <button id="backBtn" aria-label="Indietro" class="text-ultra-visible">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+      <div class="brand">
+        <div class="brand-icon">📦</div>
+        <h1 class="brand-title text-ultra-visible">FileBox</h1>
       </div>
     </div>
   </header>
 
   <!-- Loading overlay -->
-  <div id="loading" class="fixed inset-0 bg-primary/90 flex items-center justify-center z-50 hidden">
-    <div class="glass-card rounded-xl p-4 sm:p-6 text-center mx-3">
-      <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-aurora mx-auto mb-4"></div>
-      <p class="text-aurora font-bold text-sm sm:text-base">Caricamento...</p>
+  <div id="loading" class="hidden" style="position:fixed; inset:0; display:grid; place-items:center; background:rgba(26,26,46,.9); z-index:60">
+    <div class="glass-card" style="padding:18px 22px; text-align:center">
+      <div class="spinner" style="margin:0 auto 12px"></div>
+      <p style="color:var(--aurora); font-weight:800">Caricamento…</p>
     </div>
   </div>
 
   <!-- Main -->
-  <main class="max-w-6xl mx-auto px-3 sm:px-4 pb-8 sm:pb-10">
+  <main class="container section">
     <!-- Tabs -->
-    <div class="flex gap-2 mb-4 sm:mb-6 fade-in overflow-x-auto">
-      <button id="tabFiles" class="tab-btn active px-3 sm:px-4 py-2 rounded-full font-bold text-xs sm:text-sm whitespace-nowrap flex items-center gap-2">
-        <span>📁</span> File Cartella
-      </button>
-      <button id="tabDownloads" class="tab-btn px-3 sm:px-4 py-2 rounded-full font-bold text-xs sm:text-sm whitespace-nowrap flex items-center gap-2">
-        <span>💾</span> Download
-      </button>
-      <button id="tabManage" class="tab-btn px-3 sm:px-4 py-2 rounded-full font-bold text-xs sm:text-sm whitespace-nowrap flex items-center gap-2 hidden">
-        <span>⚙️</span> Gestione
-      </button>
+    <div class="tabs">
+      <button id="tabFiles" class="tab-btn active"><span>📁</span> File Cartella</button>
+      <button id="tabDownloads" class="tab-btn"><span>💾</span> Download</button>
+      <button id="tabManage" class="tab-btn hidden"><span>⚙️</span> Gestione</button>
     </div>
 
     <!-- Files Section -->
-    <div id="filesSection">
-      <section class="glass-strong rounded-2xl sm:rounded-3xl p-4 sm:p-6 mb-4 sm:mb-6 text-center fade-in">
-        <h2 class="text-ultra-visible text-lg sm:text-xl lg:text-2xl font-extrabold mb-2">Documenti in cartella</h2>
-        <p class="text-ultra-visible text-sm sm:fluid-base mb-4">Visualizza e scarica i file senza uscire dalla pagina</p>
+    <section id="filesSection">
+      <div class="glass-strong p-16 mb-8 center">
+        <h2 class="text-ultra-visible" style="font-size:clamp(18px,3vw,24px); font-weight:900; margin:0 0 6px">Documenti in cartella</h2>
+        <p class="text-ultra-visible muted" style="margin:0 0 14px; font-size:14px">Visualizza e scarica i file senza uscire dalla pagina</p>
 
-        <div class="grid gap-3 sm:gap-4 mb-4">
-          <!-- Search -->
-          <div class="glass-card rounded-xl sm:rounded-2xl p-2 sm:p-3">
-            <div class="flex items-center space-x-2 sm:space-x-3">
-              <svg class="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+        <!-- Search + filters -->
+        <div class="section">
+          <div class="glass-card search-card">
+            <div class="searchbar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
                 <circle cx="11" cy="11" r="7" stroke-width="2"></circle>
                 <path d="M20 20l-3.5-3.5" stroke-width="2" stroke-linecap="round"></path>
               </svg>
-              <input id="searchInput" type="text" class="w-full outline-none bg-transparent text-xs sm:text-sm lg:fluid-base text-primary" placeholder="Cerca per nome o estensione..." maxlength="100" autocomplete="off">
+              <input id="searchInput" type="text" placeholder="Cerca per nome o estensione..." maxlength="100" autocomplete="off">
             </div>
           </div>
 
-          <!-- Filters -->
-          <div class="flex gap-2 overflow-x-auto pb-2">
-            <button class="filterBtn category-filter active px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap" data-type="all">Tutti</button>
-            <button class="filterBtn category-filter px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap" data-type="doc">📄 Doc</button>
-            <button class="filterBtn category-filter px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap" data-type="img">🖼️ Img</button>
-            <button class="filterBtn category-filter px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap" data-type="vid">🎬 Video</button>
-            <button class="filterBtn category-filter px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap" data-type="aud">🎧 Audio</button>
+          <div class="pill-row">
+            <button class="filterBtn category-filter active" data-type="all">Tutti</button>
+            <button class="filterBtn category-filter" data-type="doc">📄 Doc</button>
+            <button class="filterBtn category-filter" data-type="img">🖼️ Img</button>
+            <button class="filterBtn category-filter" data-type="vid">🎬 Video</button>
+            <button class="filterBtn category-filter" data-type="aud">🎧 Audio</button>
           </div>
         </div>
 
         <!-- Stats -->
-        <div class="flex justify-center gap-4 sm:gap-8">
-          <div class="text-center">
-            <div id="statTot" class="text-lg sm:text-xl lg:fluid-2xl font-black text-ultra-visible">--</div>
-            <div class="text-xs sm:fluid-xs text-cyan font-bold">File</div>
+        <div class="stats">
+          <div class="stat">
+            <div id="statTot" class="value">--</div>
+            <div class="label">File</div>
           </div>
-          <div class="text-center">
-            <div id="statSize" class="text-lg sm:text-xl lg:fluid-2xl font-black text-ultra-visible">--</div>
-            <div class="text-xs sm:fluid-xs text-cyan font-bold">Dimensione</div>
+          <div class="stat">
+            <div id="statSize" class="value">--</div>
+            <div class="label">Dimensione</div>
           </div>
         </div>
-      </section>
+      </div>
 
       <!-- Files Grid -->
-      <section id="filesContainer" class="grid mobile-grid-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 fade-in">
-        <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 loading-skeleton h-24 sm:h-28"></div>
-        <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 loading-skeleton h-24 sm:h-28 mobile-hidden"></div>
-        <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 loading-skeleton h-24 sm:h-28 mobile-hidden"></div>
-      </section>
-
-      <!-- Empty State -->
-      <div id="emptyState" class="text-center py-12 sm:py-16 hidden">
-        <div class="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-r from-muted to-gray-400 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
-          <span class="text-2xl sm:text-4xl">🗂️</span>
-        </div>
-        <h3 class="text-lg sm:fluid-xl font-black text-ultra-visible mb-4">Nessun file trovato</h3>
-        <p class="text-cyan text-sm sm:fluid-base">Prova a cambiare filtri o ricerca</p>
+      <div id="filesContainer" class="grid-files">
+        <!-- skeletons -->
+        <div class="glass-card" style="height:96px; border-radius:18px"></div>
+        <div class="glass-card" style="height:96px; border-radius:18px"></div>
+        <div class="glass-card" style="height:96px; border-radius:18px"></div>
       </div>
-    </div>
+
+      <!-- Empty -->
+      <div id="emptyState" class="empty hidden">
+        <div class="ico">🗂️</div>
+        <h3 class="text-ultra-visible">Nessun file trovato</h3>
+        <p>Prova a cambiare filtri o ricerca</p>
+      </div>
+    </section>
 
     <!-- Downloads Section -->
-    <div id="downloadsSection" class="hidden">
-      <section class="glass-strong rounded-2xl sm:rounded-3xl p-4 sm:p-6 mb-4 sm:mb-6 text-center fade-in">
-        <div class="flex items-center justify-center gap-3 mb-4">
-          <span class="text-2xl sm:text-3xl download-pulse">💾</span>
-          <h2 class="text-ultra-visible text-lg sm:text-xl lg:text-2xl font-extrabold">Link Download</h2>
+    <section id="downloadsSection" class="hidden">
+      <div class="glass-strong p-16 mb-8 center">
+        <div class="stack center" style="justify-content:center; margin-bottom:10px; font-size:22px">💾</div>
+        <h2 class="text-ultra-visible" style="font-size:clamp(18px,3vw,24px); font-weight:900; margin:0 0 6px">Link Download</h2>
+        <p class="text-ultra-visible muted" style="margin:0 0 14px; font-size:14px">Accedi ai link di download condivisi</p>
+        <div class="stat">
+          <div id="downloadCount" class="value">--</div>
+          <div class="label">Link disponibili</div>
         </div>
-        <p class="text-ultra-visible text-sm sm:fluid-base mb-4">Accedi ai link di download condivisi</p>
-        <div class="text-center">
-          <div id="downloadCount" class="text-lg sm:text-xl lg:fluid-2xl font-black text-ultra-visible">--</div>
-          <div class="text-xs sm:fluid-xs text-cyan font-bold">Link disponibili</div>
-        </div>
-      </section>
-
-      <section id="downloadsContainer" class="grid mobile-grid-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 fade-in">
-        <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 loading-skeleton h-32 sm:h-36"></div>
-        <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 loading-skeleton h-32 sm:h-36 mobile-hidden"></div>
-        <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 loading-skeleton h-32 sm:h-36 mobile-hidden"></div>
-      </section>
-
-      <div id="emptyDownloads" class="text-center py-12 sm:py-16 hidden">
-        <div class="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-r from-muted to-gray-400 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
-          <span class="text-2xl sm:text-4xl">📥</span>
-        </div>
-        <h3 class="text-lg sm:fluid-xl font-black text-ultra-visible mb-4">Nessun link disponibile</h3>
-        <p class="text-cyan text-sm sm:fluid-base">I link di download verranno aggiunti dalla direzione</p>
       </div>
-    </div>
 
-    <!-- Management Section -->
-    <div id="manageSection" class="hidden">
-      <section class="glass-strong rounded-2xl sm:rounded-3xl p-4 sm:p-6 mb-4 sm:mb-6 text-center fade-in">
-        <div class="flex items-center justify-center gap-3 mb-4">
-          <span class="text-2xl sm:text-3xl">⚙️</span>
-          <h2 class="text-ultra-visible text-lg sm:text-xl lg:text-2xl font-extrabold">Gestione Download</h2>
-        </div>
-        <p class="text-ultra-visible text-sm sm:fluid-base mb-4">Aggiungi, modifica ed elimina i link di download</p>
-      </section>
+      <div id="downloadsContainer" class="grid-downloads">
+        <div class="glass-card" style="height:120px; border-radius:18px"></div>
+        <div class="glass-card" style="height:120px; border-radius:18px"></div>
+        <div class="glass-card" style="height:120px; border-radius:18px"></div>
+      </div>
 
-      <!-- Add/Edit Form -->
-      <section class="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 mb-4 sm:mb-6 fade-in">
-        <h3 class="text-primary text-lg font-bold mb-4 flex items-center gap-2">
-          <span id="formIcon">➕</span>
-          <span id="formTitle">Aggiungi Nuovo Link</span>
+      <div id="emptyDownloads" class="empty hidden">
+        <div class="ico">📥</div>
+        <h3 class="text-ultra-visible">Nessun link disponibile</h3>
+        <p>I link di download verranno aggiunti dalla direzione</p>
+      </div>
+    </section>
+
+    <!-- Management Section (solo se admin: il JS mostra il tab) -->
+    <section id="manageSection" class="hidden">
+      <div class="glass-strong p-16 mb-8 center">
+        <div class="stack center" style="justify-content:center; margin-bottom:10px; font-size:22px">⚙️</div>
+        <h2 class="text-ultra-visible" style="font-size:clamp(18px,3vw,24px); font-weight:900; margin:0 0 6px">Gestione Download</h2>
+        <p class="text-ultra-visible muted" style="margin:0 0 14px; font-size:14px">Aggiungi, modifica ed elimina i link di download</p>
+      </div>
+
+      <div class="glass-card p-16 mb-8">
+        <h3 class="stack" style="color:var(--primary); font-weight:800; font-size:16px; margin:0 0 14px">
+          <span id="formIcon">➕</span><span id="formTitle">Aggiungi Nuovo Link</span>
         </h3>
 
-        <form id="linkForm" class="space-y-4">
+        <form id="linkForm" class="form">
           <input type="hidden" id="editId" value="">
-          <div>
-            <label for="linkTitolo" class="block text-primary font-semibold mb-2 text-sm">Titolo *</label>
-            <input type="text" id="linkTitolo" required maxlength="255"
-                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-aurora focus:border-aurora outline-none text-sm"
-                   placeholder="es. Materiale Corso Base">
+          <div class="grid-2" style="display:grid; gap:12px; grid-template-columns:1fr">
+            <label class="field">
+              <div class="label">Titolo *</div>
+              <input type="text" id="linkTitolo" required maxlength="255" placeholder="es. Materiale Corso Base">
+            </label>
+            <label class="field">
+              <div class="label">Descrizione</div>
+              <textarea id="linkDescrizione" rows="3" maxlength="500" placeholder="Descrizione opzionale del contenuto..."></textarea>
+            </label>
+            <label class="field">
+              <div class="label">URL *</div>
+              <input type="url" id="linkUrl" required placeholder="https://mega.nz/file/...">
+            </label>
           </div>
-          <div>
-            <label for="linkDescrizione" class="block text-primary font-semibold mb-2 text-sm">Descrizione</label>
-            <textarea id="linkDescrizione" rows="3" maxlength="500"
-                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-aurora focus:border-aurora outline-none text-sm resize-none"
-                      placeholder="Descrizione opzionale del contenuto..."></textarea>
-          </div>
-          <div>
-            <label for="linkUrl" class="block text-primary font-semibold mb-2 text-sm">URL *</label>
-            <input type="url" id="linkUrl" required
-                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-aurora focus:border-aurora outline-none text-sm"
-                   placeholder="https://mega.nz/file/...">
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label for="linkTipo" class="block text-primary font-semibold mb-2 text-sm">Tipo Transfer</label>
-              <select id="linkTipo" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-aurora focus:border-aurora outline-none text-sm">
+
+          <div class="grid-2" style="display:grid; gap:12px; grid-template-columns:1fr 1fr; margin-top:12px">
+            <label class="field">
+              <div class="label">Tipo Transfer</div>
+              <select id="linkTipo">
                 <option value="Download">Download</option>
                 <option value="MEGA">MEGA</option>
                 <option value="Google Drive">Google Drive</option>
@@ -259,77 +364,77 @@
                 <option value="MediaFire">MediaFire</option>
                 <option value="GitHub">GitHub</option>
               </select>
-            </div>
-            <div>
-              <label for="linkOrder" class="block text-primary font-semibold mb-2 text-sm">Ordine</label>
-              <input type="number" id="linkOrder" min="0" max="999" value="0"
-                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-aurora focus:border-aurora outline-none text-sm">
-            </div>
-          </div>
-          <div class="flex items-center gap-4">
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" id="linkAttivo" checked class="w-4 h-4 text-aurora border-gray-300 rounded focus:ring-aurora">
-              <span class="text-primary font-medium text-sm">Link attivo</span>
+            </label>
+            <label class="field">
+              <div class="label">Ordine</div>
+              <input type="number" id="linkOrder" min="0" max="999" value="0">
             </label>
           </div>
-          <div class="flex gap-2 pt-4">
-            <button type="submit" id="submitBtn" class="bg-gradient-to-r from-aurora to-magenta text-white px-4 py-2 rounded-lg font-bold text-sm hover:scale-105 transition-transform mobile-full">
-              Salva Link
-            </button>
-            <button type="button" id="cancelBtn" class="bg-gray-100 hover:bg-gray-200 text-primary px-4 py-2 rounded-lg font-bold text-sm mobile-full hidden">
-              Annulla
-            </button>
+
+          <label class="stack" style="margin-top:10px; align-items:center">
+            <input type="checkbox" id="linkAttivo" checked>
+            <span style="font-weight:600; color:var(--primary); font-size:14px">Link attivo</span>
+          </label>
+
+          <div class="stack" style="gap:10px; margin-top:16px; flex-wrap:wrap">
+            <button type="submit" id="submitBtn" class="btn btn-primary">Salva Link</button>
+            <button type="button" id="cancelBtn" class="btn btn-ghost hidden">Annulla</button>
           </div>
         </form>
-      </section>
+      </div>
 
-      <!-- Links Management Grid -->
-      <section class="fade-in">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-ultra-visible text-lg font-bold">Link Esistenti</h3>
-          <button id="refreshLinks" class="bg-gradient-to-r from-cyan to-teal text-white px-3 py-2 rounded-lg font-bold text-xs hover:scale-105 transition-transform">
-            🔄 Aggiorna
-          </button>
-        </div>
-        <div id="manageContainer" class="grid mobile-grid-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4"></div>
-        <div id="emptyManage" class="text-center py-12 sm:py-16 hidden">
-          <div class="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-r from-muted to-gray-400 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
-            <span class="text-2xl sm:text-4xl">📝</span>
-          </div>
-          <h3 class="text-lg sm:fluid-xl font-black text-ultra-visible mb-4">Nessun link configurato</h3>
-          <p class="text-cyan text-sm sm:fluid-base">Aggiungi il primo link usando il form sopra</p>
-        </div>
-      </section>
-    </div>
+      <div class="stack" style="justify-content:space-between; margin-bottom:12px">
+        <h3 class="text-ultra-visible" style="font-size:18px">Link Esistenti</h3>
+        <button id="refreshLinks" class="btn btn-success">🔄 Aggiorna</button>
+      </div>
+
+      <div id="manageContainer" class="grid-manage"></div>
+
+      <div id="emptyManage" class="empty hidden">
+        <div class="ico">📝</div>
+        <h3 class="text-ultra-visible">Nessun link configurato</h3>
+        <p>Aggiungi il primo link usando il form sopra</p>
+      </div>
+    </section>
   </main>
 
   <!-- Modal Viewer -->
-  <div id="viewer" class="fixed inset-0 bg-black/70 hidden z-50">
-    <div class="absolute inset-0 p-2 sm:p-4 flex items-center justify-center">
-      <div class="glass-card rounded-xl sm:rounded-2xl w-full max-w-5xl h-[85vh] sm:h-[80vh] flex flex-col">
-        <div class="p-2 sm:p-3 flex items-center justify-between border-b border-gray-200 mobile-stack mobile-gap-3">
-          <div class="flex items-center gap-2 sm:gap-3 mobile-full">
-            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-r from-cyan to-teal flex items-center justify-center">📄</div>
-            <div class="min-w-0 flex-1">
-              <div id="viewerName" class="font-bold text-primary text-sm sm:text-base truncate"></div>
-              <div id="viewerMeta" class="text-xs sm:text-sm text-muted"></div>
+  <div id="viewer">
+    <div class="viewer-wrap">
+      <div class="glass-card viewer-card">
+        <div class="viewer-head">
+          <div class="viewer-file">
+            <div class="ico">📄</div>
+            <div style="min-width:0">
+              <div id="viewerName" class="viewer-name"></div>
+              <div id="viewerMeta" class="viewer-meta"></div>
             </div>
           </div>
-          <div class="flex items-center gap-2 mobile-full">
-            <a id="downloadBtn" class="bg-gradient-to-r from-aurora to-magenta text-white px-2 sm:px-3 py-1 sm:py-2 rounded-full font-bold text-xs sm:text-sm mobile-full mobile-text-center" download>Scarica</a>
-            <button id="closeViewer" class="bg-gray-100 hover:bg-gray-200 text-primary px-2 sm:px-3 py-1 sm:py-2 rounded-full font-bold text-xs sm:text-sm">Chiudi</button>
+          <div class="stack" style="flex-wrap:wrap">
+            <a id="downloadBtn" class="btn btn-primary" download>Scarica</a>
+            <button id="closeViewer" class="btn btn-ghost">Chiudi</button>
           </div>
         </div>
-        <div class="flex-1 relative">
-          <div id="viewerLoading" class="absolute inset-0 flex flex-col items-center justify-center">
-            <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-aurora mb-4"></div>
-            <p class="text-aurora font-bold text-sm sm:text-base">Caricamento…</p>
+        <div class="viewer-body">
+          <div id="viewerLoading" class="viewer-loading">
+            <div class="spinner"></div>
           </div>
-          <div id="viewerBody" class="w-full h-full hidden"></div>
+          <div id="viewerBody" class="hidden"></div>
         </div>
       </div>
     </div>
   </div>
+
+  <style>
+    /* Form elements */
+    .field .label{font-weight:700; color:var(--primary); font-size:13px; margin-bottom:6px}
+    .field input,.field textarea,.field select{
+      width:100%; padding:10px 12px; border-radius:10px; border:1px solid #dfe3e8; outline:none;
+      font-size:14px; color:var(--primary); background:#fff; transition:border-color .15s ease, box-shadow .15s ease
+    }
+    .field textarea{resize:vertical}
+    .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--aurora); box-shadow:0 0 0 3px rgba(233,69,96,.15)}
+  </style>
 
   <!-- Scripts -->
   <script type="module">
@@ -348,17 +453,14 @@
     // === UTILS ===
     const $  = (sel, root = document) => root.querySelector(sel);
     const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
-
+    const show = el => el && el.classList.remove('hidden');
+    const hide = el => el && el.classList.add('hidden');
     const humanSize = b => {
       if (!Number.isFinite(b)) return '--';
       const u = ['B','KB','MB','GB','TB']; let i=0;
       while(b>=1024 && i<u.length-1){ b/=1024; i++; }
       return `${b.toFixed( b<10&&i>0 ? 1 : 0)} ${u[i]}`;
     };
-
-    function show(el){ if (el) el.classList.remove('hidden'); }
-    function hide(el){ if (el) el.classList.add('hidden'); }
-    const safeShow = show, safeHide = hide;
 
     // === STATE ===
     let currentUser = null;
@@ -375,7 +477,6 @@
       vid: ['mp4','webm','mkv','mov','avi','m4v'],
       aud: ['mp3','wav','ogg','m4a','flac']
     };
-
     const detectType = (ext) => {
       ext = ext.toLowerCase();
       if (EXT_MAP.img.includes(ext)) return 'img';
@@ -384,7 +485,6 @@
       if (EXT_MAP.doc.includes(ext)) return 'doc';
       return 'other';
     };
-
     const mimeFromExt = (ext) => {
       ext = ext.toLowerCase();
       const map = {
@@ -422,115 +522,62 @@
         if (user) await checkAdminPrivileges();
       }catch(e){ /* ignore */ }
     }
-
     async function checkAdminPrivileges(){
       try{
         const meta = currentUser?.user_metadata || {};
         const metaRole = String(meta.role || meta.ruolo || meta.profilo || '').toUpperCase();
 
-        let dbRole = '';
-        let dbStato = '';
+        let dbRole = ''; let dbStato = '';
         if (currentUser?.id) {
-          const { data, error, status } = await supabase
-            .from(PROFILES_TABLE)
-            .select('role, stato')
-            .eq('user_id', currentUser.id)
-            .limit(1)
-            .maybeSingle();
-
-          if (error) {
-            console.warn('user_profiles lookup failed', { status, error });
-          } else if (data) {
-            dbRole  = String(data.role || '').toUpperCase();   // USER | DIRIGENTE | ADMIN
-            dbStato = String(data.stato || '').toUpperCase();  // ATTIVO | SOSPESO | INATTIVO
-          }
+          const { data, error } = await supabase
+            .from(PROFILES_TABLE).select('role, stato').eq('user_id', currentUser.id).limit(1).maybeSingle();
+          if (!error && data) { dbRole = String(data.role||'').toUpperCase(); dbStato = String(data.stato||'').toUpperCase(); }
         }
-
         const effRole  = (dbRole || metaRole || 'USER').toUpperCase();
         const effStato = (dbStato || 'ATTIVO').toUpperCase();
-
         isAdmin = (effStato === 'ATTIVO') && (effRole === 'ADMIN' || effRole === 'DIRIGENTE');
-
-      } catch (e) {
-        console.error('checkAdminPrivileges() error:', e);
       } finally {
-        const manageTab = $('#tabManage');
-        if (manageTab) manageTab.classList.toggle('hidden', !isAdmin);
+        $('#tabManage')?.classList.toggle('hidden', !isAdmin);
       }
     }
-
     async function resolveHomePath(){
       let target = 'home.html';
       try{
         if (!currentUser) return target;
-
         const meta = currentUser.user_metadata || {};
         const metaRole = String(meta.role || meta.ruolo || meta.profilo || '').toUpperCase();
         if (metaRole === 'DIRIGENTE') return 'home_dirigenti.html';
-
-        const { data, error } = await supabase
-          .from(PROFILES_TABLE)
-          .select('role')
-          .eq('user_id', currentUser.id)
-          .limit(1)
-          .maybeSingle();
-
-        if (!error && data) {
-          const role = String(data.role || '').toUpperCase();
-          if (role === 'DIRIGENTE') target = 'home_dirigenti.html';
-        }
+        const { data, error } = await supabase.from(PROFILES_TABLE).select('role').eq('user_id', currentUser.id).limit(1).maybeSingle();
+        if (!error && data) { const role = String(data.role||'').toUpperCase(); if (role === 'DIRIGENTE') target='home_dirigenti.html'; }
       }catch(e){}
       return target;
     }
 
-    // === UI: Tabs & Navigation ===
+    // === Tabs ===
     function switchTab(tab) {
       activeTab = tab;
-      $$('.tab-btn').forEach(btn => btn.classList.remove('active'));
-
-      hide($('#filesSection'));
-      hide($('#downloadsSection'));
-      hide($('#manageSection'));
-
-      if (tab === 'files') {
-        $('#tabFiles')?.classList.add('active');
-        show($('#filesSection'));
-      } else if (tab === 'downloads') {
-        $('#tabDownloads')?.classList.add('active');
-        show($('#downloadsSection'));
-      } else if (tab === 'manage') {
-        $('#tabManage')?.classList.add('active');
-        show($('#manageSection'));
-      }
+      $$('.tab-btn').forEach(b=>b.classList.remove('active'));
+      hide($('#filesSection')); hide($('#downloadsSection')); hide($('#manageSection'));
+      if (tab==='files'){ $('#tabFiles')?.classList.add('active'); show($('#filesSection')); }
+      if (tab==='downloads'){ $('#tabDownloads')?.classList.add('active'); show($('#downloadsSection')); }
+      if (tab==='manage'){ $('#tabManage')?.classList.add('active'); show($('#manageSection')); }
     }
+    $('#tabFiles')?.addEventListener('click', ()=>switchTab('files'));
+    $('#tabDownloads')?.addEventListener('click', ()=>switchTab('downloads'));
+    $('#tabManage')?.addEventListener('click', ()=>switchTab('manage'));
+    $('#backBtn')?.addEventListener('click', async ()=>{ window.location.href = await resolveHomePath(); });
 
-    $('#tabFiles')?.addEventListener('click', () => switchTab('files'));
-    $('#tabDownloads')?.addEventListener('click', () => switchTab('downloads'));
-    $('#tabManage')?.addEventListener('click', () => switchTab('manage'));
-
-    $('#backBtn')?.addEventListener('click', async ()=> { window.location.href = await resolveHomePath(); });
-
-    // === Data: MEGA ===
+    // === MEGA ===
     async function loadMega(){
-      safeShow($('#loading'));
+      show($('#loading'));
       try{
         const folder = MegaFile.fromURL(MEGA_FOLDER_URL);
         await new Promise((res, rej)=> folder.loadAttributes(err => err ? rej(err) : res()));
-
         const flatten = async (node) => {
-          if (!node) return [];
-          if (!node.directory) return [node];
-          const children = node.children || [];
-          const out = [];
-          for (const ch of children){
-            const arr = await flatten(ch);
-            out.push(...arr);
-          }
-          return out;
+          if (!node) return []; if (!node.directory) return [node];
+          const ch = node.children || []; const out=[]; for (const c of ch) out.push(...await flatten(c)); return out;
         };
-
         const files = (await flatten(folder)).filter(f => !f.directory);
-
         allFiles = files.map(f=>{
           const name = f.name || 'file';
           const ext = (name.split('.').pop() || '').toLowerCase();
@@ -538,229 +585,123 @@
           const size = Number.isFinite(f.size) ? f.size : NaN;
           return { name, ext, size, type, megaFile: f };
         });
-
-        renderFiles();
-        updateStats();
+        renderFiles(); updateStats();
       }catch(err){
         console.error('Errore MEGA:', err);
-        const container = $('#filesContainer');
-        if (container) {
-          container.innerHTML = `
-            <div class="glass-card rounded-xl sm:rounded-2xl p-4 sm:p-6 col-span-full">
-              <p class="text-error font-semibold text-sm sm:text-base">Impossibile leggere la cartella MEGA.</p>
-              <p class="text-muted mt-2 text-xs sm:text-sm">Controlla che il link sia pubblico e riprova.</p>
-            </div>`;
-        }
-      }finally{
-        safeHide($('#loading'));
-      }
+        $('#filesContainer').innerHTML = `
+          <div class="glass-card" style="grid-column:1/-1; padding:16px">
+            <p style="color:var(--error); font-weight:800">Impossibile leggere la cartella MEGA.</p>
+            <p class="muted" style="font-size:14px">Controlla che il link sia pubblico e riprova.</p>
+          </div>`;
+      }finally{ hide($('#loading')); }
     }
 
-    // === Data: Download Links ===
+    // === Download links ===
     async function loadDownloadLinks(){
       try{
-        const { data, error } = await supabase
-          .from('download_links')
-          .select('*')
-          .eq('attivo', true)
-          .order('order_index', { ascending: true });
-
+        const { data, error } = await supabase.from('download_links')
+          .select('*').eq('attivo', true).order('order_index', { ascending:true });
         if (error) throw error;
-
         downloadLinks = data || [];
-        renderDownloads();
-        updateDownloadStats();
-
+        renderDownloads(); updateDownloadStats();
         if (isAdmin) await loadAllLinksForManagement();
       }catch(err){
         console.error('Errore download links:', err);
-        const container = $('#downloadsContainer');
-        if (container) {
-          container.innerHTML = `
-            <div class="glass-card rounded-xl sm:rounded-2xl p-4 sm:p-6 col-span-full">
-              <p class="text-error font-semibold text-sm sm:text-base">Errore nel caricamento dei link.</p>
-              <p class="text-muted mt-2 text-xs sm:text-sm">Riprova più tardi o contatta l'amministratore.</p>
-            </div>`;
-        }
+        $('#downloadsContainer').innerHTML = `
+          <div class="glass-card" style="grid-column:1/-1; padding:16px">
+            <p style="color:var(--error); font-weight:800">Errore nel caricamento dei link.</p>
+            <p class="muted" style="font-size:14px">Riprova più tardi o contatta l'amministratore.</p>
+          </div>`;
       }
     }
-
     async function loadAllLinksForManagement(){
       if (!isAdmin) return;
       try{
-        const { data, error } = await supabase
-          .from('download_links')
-          .select('*')
-          .order('order_index', { ascending: true });
-
+        const { data, error } = await supabase.from('download_links').select('*').order('order_index',{ascending:true});
         if (error) throw error;
         renderManagementLinks(data || []);
       }catch(err){
-        console.error('Errore caricamento gestione:', err);
-        const container = $('#manageContainer');
-        if (container) {
-          container.innerHTML = `
-            <div class="glass-card rounded-xl sm:rounded-2xl p-4 sm:p-6 col-span-full">
-              <p class="text-error font-semibold text-sm sm:text-base">Errore nel caricamento della gestione.</p>
-            </div>`;
-        }
+        console.error('Errore gestione:', err);
+        $('#manageContainer').innerHTML = `
+          <div class="glass-card" style="grid-column:1/-1; padding:16px">
+            <p style="color:var(--error); font-weight:800">Errore nel caricamento della gestione.</p>
+          </div>`;
       }
     }
 
     async function saveLink(){
       if (!isAdmin) return;
-
-      const linkTitolo = $('#linkTitolo');
-      const linkDescrizione = $('#linkDescrizione');
-      const linkUrl = $('#linkUrl');
-      const linkTipo = $('#linkTipo');
-      const linkOrder = $('#linkOrder');
-      const linkAttivo = $('#linkAttivo');
-
-      if (!linkTitolo || !linkUrl) return;
-
-      const titolo = linkTitolo.value.trim();
-      const descrizione = linkDescrizione ? linkDescrizione.value.trim() : '';
-      const url = linkUrl.value.trim();
-      const tipo = linkTipo ? linkTipo.value : 'Download';
-      const orderIndex = linkOrder ? parseInt(linkOrder.value) || 0 : 0;
-      const attivo = linkAttivo ? linkAttivo.checked : true;
-
-      if (!titolo || !url) {
-        alert('Titolo e URL sono obbligatori');
-        return;
-      }
-
-      try {
-        const linkData = {
-          titolo,
-          descrizione: descrizione || null,
-          url,
-          tipo_transfer: tipo,
-          order_index: orderIndex,
-          attivo,
-          updated_at: new Date().toISOString()
-        };
-
+      const titolo = $('#linkTitolo')?.value.trim();
+      const descrizione = $('#linkDescrizione')?.value.trim() || '';
+      const url = $('#linkUrl')?.value.trim();
+      const tipo = $('#linkTipo')?.value || 'Download';
+      const orderIndex = parseInt($('#linkOrder')?.value) || 0;
+      const attivo = $('#linkAttivo')?.checked ?? true;
+      if (!titolo || !url){ alert('Titolo e URL sono obbligatori'); return; }
+      try{
+        const payload = { titolo, descrizione: descrizione || null, url, tipo_transfer: tipo, order_index: orderIndex, attivo, updated_at:new Date().toISOString() };
         let result;
-        if (editingLinkId) {
-          result = await supabase.from('download_links').update(linkData).eq('id', editingLinkId);
-        } else {
-          linkData.created_at = new Date().toISOString();
-          result = await supabase.from('download_links').insert([linkData]);
-        }
-
+        if (editingLinkId){ result = await supabase.from('download_links').update(payload).eq('id', editingLinkId); }
+        else { payload.created_at=new Date().toISOString(); result = await supabase.from('download_links').insert([payload]); }
         if (result.error) throw result.error;
-
-        resetForm();
-        await loadDownloadLinks();
-        alert(editingLinkId ? 'Link aggiornato con successo!' : 'Link aggiunto con successo!');
-      } catch (err) {
-        console.error('Errore salvataggio:', err);
-        alert('Errore nel salvataggio: ' + (err.message || 'Errore sconosciuto'));
-      }
+        resetForm(); await loadDownloadLinks(); alert(editingLinkId ? 'Link aggiornato!' : 'Link aggiunto!');
+      }catch(e){ console.error(e); alert('Errore salvataggio: ' + (e.message||'Sconosciuto')); }
     }
-
     async function deleteLink(id){
-      if (!isAdmin || !confirm('Sei sicuro di voler eliminare questo link?')) return;
-      try {
-        const { error } = await supabase.from('download_links').delete().eq('id', id);
-        if (error) throw error;
-        await loadDownloadLinks();
-        alert('Link eliminato con successo!');
-      } catch (err) {
-        console.error('Errore eliminazione:', err);
-        alert('Errore nell\'eliminazione: ' + (err.message || 'Errore sconosciuto'));
-      }
+      if (!isAdmin || !confirm('Eliminare questo link?')) return;
+      try{ const { error } = await supabase.from('download_links').delete().eq('id', id);
+        if (error) throw error; await loadDownloadLinks(); alert('Link eliminato!'); }
+      catch(e){ console.error(e); alert('Errore eliminazione: ' + (e.message||'Sconosciuto')); }
     }
-
     function editLink(link){
       if (!isAdmin) return;
-
       editingLinkId = link.id;
-      const linkTitolo = $('#linkTitolo');
-      const linkDescrizione = $('#linkDescrizione');
-      const linkUrl = $('#linkUrl');
-      const linkTipo = $('#linkTipo');
-      const linkOrder = $('#linkOrder');
-      const linkAttivo = $('#linkAttivo');
-      const formIcon = $('#formIcon');
-      const formTitle = $('#formTitle');
-      const submitBtn = $('#submitBtn');
-      const cancelBtn = $('#cancelBtn');
-
-      if (linkTitolo) linkTitolo.value = link.titolo || '';
-      if (linkDescrizione) linkDescrizione.value = link.descrizione || '';
-      if (linkUrl) linkUrl.value = link.url || '';
-      if (linkTipo) linkTipo.value = link.tipo_transfer || 'Download';
-      if (linkOrder) linkOrder.value = link.order_index || 0;
-      if (linkAttivo) linkAttivo.checked = link.attivo !== false;
-
-      if (formIcon) formIcon.textContent = '✏️';
-      if (formTitle) formTitle.textContent = 'Modifica Link';
-      if (submitBtn) submitBtn.textContent = 'Aggiorna Link';
-      safeShow(cancelBtn);
-
-      $('#linkForm')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      $('#linkTitolo').value = link.titolo || '';
+      $('#linkDescrizione').value = link.descrizione || '';
+      $('#linkUrl').value = link.url || '';
+      $('#linkTipo').value = link.tipo_transfer || 'Download';
+      $('#linkOrder').value = link.order_index || 0;
+      $('#linkAttivo').checked = link.attivo !== false;
+      $('#formIcon').textContent = '✏️';
+      $('#formTitle').textContent = 'Modifica Link';
+      $('#submitBtn').textContent = 'Aggiorna Link';
+      show($('#cancelBtn'));
+      $('#linkForm').scrollIntoView({behavior:'smooth',block:'start'});
     }
-
     function resetForm(){
       editingLinkId = null;
-      const linkForm = $('#linkForm');
-      const linkAttivo = $('#linkAttivo');
-      const linkOrder = $('#linkOrder');
-      const formIcon = $('#formIcon');
-      const formTitle = $('#formTitle');
-      const submitBtn = $('#submitBtn');
-      const cancelBtn = $('#cancelBtn');
-
-      if (linkForm) linkForm.reset();
-      if (linkAttivo) linkAttivo.checked = true;
-      if (linkOrder) linkOrder.value = 0;
-
-      if (formIcon) formIcon.textContent = '➕';
-      if (formTitle) formTitle.textContent = 'Aggiungi Nuovo Link';
-      if (submitBtn) submitBtn.textContent = 'Salva Link';
-      safeHide(cancelBtn);
+      $('#linkForm').reset();
+      $('#linkAttivo').checked = true;
+      $('#linkOrder').value = 0;
+      $('#formIcon').textContent = '➕';
+      $('#formTitle').textContent = 'Aggiungi Nuovo Link';
+      $('#submitBtn').textContent = 'Salva Link';
+      hide($('#cancelBtn'));
     }
 
     // === Renderers ===
     function renderFiles(){
-      const searchInput = $('#searchInput');
-      const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
+      const q = ($('#searchInput')?.value || '').trim().toLowerCase();
       const activeType = $$('.filterBtn').find(b=>b.classList.contains('active'))?.dataset.type || 'all';
-
       const filtered = allFiles.filter(f=>{
         const matchText = !q || f.name.toLowerCase().includes(q) || f.ext.includes(q);
         const matchType = activeType==='all' || f.type===activeType;
         return matchText && matchType;
       });
-
-      const container = $('#filesContainer');
-      const emptyState = $('#emptyState');
-      if (!container) return;
-
-      if (!filtered.length){
-        container.innerHTML = '';
-        safeShow(emptyState);
-        return;
-      }
-      safeHide(emptyState);
-
-      const iconFor = t => ({ doc:'📄', img:'🖼️', vid:'🎬', aud:'🎧', other:'📦' }[t] || '📦');
-
+      const container = $('#filesContainer'); const empty = $('#emptyState');
+      if (!filtered.length){ container.innerHTML=''; show(empty); return; }
+      hide(empty);
+      const iconFor = t => ({doc:'📄',img:'🖼️',vid:'🎬',aud:'🎧',other:'📦'}[t] || '📦');
       container.innerHTML = filtered.map(f=>`
-        <button class="file-tile glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 text-left w-full" data-name="${encodeURIComponent(f.name)}" aria-label="Apri ${f.name}">
-          <div class="flex items-start gap-2 sm:gap-3">
-            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-r from-cyan to-teal flex items-center justify-center text-lg sm:text-xl flex-shrink-0">${iconFor(f.type)}</div>
-            <div class="flex-1 min-w-0">
-              <div class="font-bold text-primary text-sm sm:text-base truncate" title="${f.name}">${f.name}</div>
-              <div class="text-muted text-xs sm:fluid-xs mt-1">${f.ext.toUpperCase()} • ${humanSize(f.size)}</div>
+        <button class="file-tile" data-name="${encodeURIComponent(f.name)}" aria-label="Apri ${f.name}">
+          <div class="tile-row">
+            <div class="tile-ico">${iconFor(f.type)}</div>
+            <div style="min-width:0; flex:1">
+              <div class="tile-title" title="${f.name}">${f.name}</div>
+              <div class="tile-meta">${f.ext.toUpperCase()} • ${humanSize(f.size)}</div>
             </div>
           </div>
-        </button>
-      `).join('');
-
+        </button>`).join('');
       $$('#filesContainer .file-tile').forEach(btn=>{
         btn.addEventListener('click', ()=>{
           const name = decodeURIComponent(btn.dataset.name);
@@ -771,258 +712,139 @@
     }
 
     function renderDownloads(){
-      const container = $('#downloadsContainer');
-      const emptyDownloads = $('#emptyDownloads');
-      if (!container) return;
-
-      if (!downloadLinks.length){
-        container.innerHTML = '';
-        safeShow(emptyDownloads);
-        return;
-      }
-      safeHide(emptyDownloads);
-
+      const container = $('#downloadsContainer'); const empty = $('#emptyDownloads');
+      if (!downloadLinks.length){ container.innerHTML=''; show(empty); return; }
+      hide(empty);
       container.innerHTML = downloadLinks.map(link=>`
-        <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="download-tile glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 text-left w-full block hover:no-underline">
-          <div class="flex items-start gap-2 sm:gap-3">
-            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-r from-aurora to-magenta flex items-center justify-center text-lg sm:text-xl flex-shrink-0">${getTransferIcon(link.url)}</div>
-            <div class="flex-1 min-w-0">
-              <div class="font-bold text-primary text-sm sm:text-base mb-1" title="${link.titolo}">${link.titolo}</div>
-              ${link.descrizione ? `<div class="text-muted text-xs sm:text-sm mb-2 line-clamp-2">${link.descrizione}</div>` : ''}
-              <div class="flex items-center justify-between">
-                <div class="text-xs text-cyan font-medium">Clicca per scaricare</div>
-                <div class="bg-gradient-to-r from-success to-teal text-white px-2 py-1 rounded-full text-xs font-bold">
-                  ${link.tipo_transfer || 'Download'}
-                </div>
+        <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="download-tile">
+          <div class="tile-row">
+            <div class="tile-ico">🔗</div>
+            <div style="min-width:0; flex:1">
+              <div class="tile-title" title="${link.titolo}">${link.titolo}</div>
+              ${link.descrizione ? `<div class="tile-meta" title="${link.descrizione}">${link.descrizione}</div>` : ''}
+              <div class="tile-meta" style="display:flex; justify-content:space-between; align-items:center; margin-top:6px">
+                <span style="color:var(--cyan); font-weight:700; font-size:12px">Clicca per scaricare</span>
+                <span class="badge badge-green">${link.tipo_transfer || 'Download'}</span>
               </div>
             </div>
           </div>
-        </a>
-      `).join('');
+        </a>`).join('');
     }
 
     function updateStats(){
       const total = allFiles.length;
       const sizeSum = allFiles.reduce((a,b)=> a + (Number.isFinite(b.size)? b.size : 0), 0);
-      $('#statTot') && ($('#statTot').textContent = total || '--');
-      $('#statSize') && ($('#statSize').textContent = total ? humanSize(sizeSum) : '--');
+      $('#statTot').textContent = total || '--';
+      $('#statSize').textContent = total ? humanSize(sizeSum) : '--';
     }
-
     function renderManagementLinks(links){
       if (!isAdmin) return;
-      const container = $('#manageContainer');
-      const empty = $('#emptyManage');
-      if (!container) return;
-
-      if (!links.length){
-        container.innerHTML = '';
-        show(empty);
-        return;
-      }
+      const container = $('#manageContainer'); const empty = $('#emptyManage');
+      if (!links.length){ container.innerHTML=''; show(empty); return; }
       hide(empty);
-
       container.innerHTML = links.map(link=>`
-        <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4">
-          <div class="flex items-start gap-3">
-            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-r from-aurora to-magenta flex items-center justify-center text-lg sm:text-xl flex-shrink-0">${getTransferIcon(link.url)}</div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-start justify-between gap-2">
-                <div class="min-w-0 flex-1">
-                  <div class="font-bold text-primary text-sm sm:text-base truncate" title="${link.titolo}">${link.titolo}</div>
-                  ${link.descrizione ? `<div class="text-muted text-xs sm:text-sm mt-1 line-clamp-2">${link.descrizione}</div>` : ''}
-                  <div class="flex items-center gap-4 mt-2">
-                    <span class="text-xs text-cyan font-medium">${link.tipo_transfer || 'Download'}</span>
-                    <span class="text-xs ${link.attivo ? 'text-success' : 'text-error'} font-medium">${link.attivo ? '✅ Attivo' : '❌ Disattivo'}</span>
-                    <span class="text-xs text-muted">Ord: ${link.order_index || 0}</span>
-                  </div>
-                </div>
-                ${link.attivo ? '' : '<div class="text-xl opacity-50">🚫</div>'}
+        <div class="file-tile">
+          <div class="tile-row">
+            <div class="tile-ico">🔗</div>
+            <div style="min-width:0; flex:1">
+              <div class="tile-title" title="${link.titolo}">${link.titolo}</div>
+              ${link.descrizione ? `<div class="tile-meta" title="${link.descrizione}">${link.descrizione}</div>` : ''}
+              <div class="tile-meta" style="display:flex; gap:16px; align-items:center; margin-top:6px">
+                <span style="color:var(--cyan); font-weight:700">${link.tipo_transfer || 'Download'}</span>
+                <span style="color:${link.attivo ? 'var(--success)' : 'var(--error)'}; font-weight:700">${link.attivo ? '✅ Attivo' : '❌ Disattivo'}</span>
+                <span class="muted">Ord: ${link.order_index || 0}</span>
               </div>
-              <div class="flex gap-2 mt-3">
-                <button class="editLinkBtn bg-gradient-to-r from-cyan to-teal text-white px-2 py-1 rounded text-xs font-bold hover:scale-105 transition-transform" data-link='${JSON.stringify(link).replace(/'/g, "&apos;")}'>
-                  ✏️ Modifica
-                </button>
-                <button class="deleteLinkBtn bg-gradient-to-r from-error to-aurora text-white px-2 py-1 rounded text-xs font-bold hover:scale-105 transition-transform" data-id="${link.id}">
-                  🗑️ Elimina
-                </button>
-                <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-r from-success to-teal text-white px-2 py-1 rounded text-xs font-bold hover:scale-105 transition-transform">
-                  🔗 Testa
-                </a>
+              <div class="stack" style="gap:8px; margin-top:10px; flex-wrap:wrap">
+                <button class="btn btn-success editLinkBtn" data-link='${JSON.stringify(link).replace(/'/g, "&apos;")}'>✏️ Modifica</button>
+                <button class="btn btn-primary deleteLinkBtn" data-id="${link.id}">🗑️ Elimina</button>
+                <a class="btn btn-ghost" href="${link.url}" target="_blank" rel="noopener noreferrer">🔗 Testa</a>
               </div>
             </div>
           </div>
-        </div>
-      `).join('');
-
+        </div>`).join('');
       $$('.editLinkBtn').forEach(btn=>{
         btn.addEventListener('click', ()=>{
           const linkData = JSON.parse(btn.dataset.link.replace(/&apos;/g, "'"));
           editLink(linkData);
         });
       });
-
       $$('.deleteLinkBtn').forEach(btn=>{
-        btn.addEventListener('click', ()=>{
-          deleteLink(parseInt(btn.dataset.id));
-        });
+        btn.addEventListener('click', ()=> deleteLink(parseInt(btn.dataset.id)) );
       });
     }
 
     // === Viewer ===
     async function openViewer(file){
-      const viewer = $('#viewer');
-      const viewerBody = $('#viewerBody');
-      const viewerLoading = $('#viewerLoading');
-      const viewerName = $('#viewerName');
-      const viewerMeta = $('#viewerMeta');
-
-      show(viewer);
-      hide(viewerBody);
-      show(viewerLoading);
-
-      if (viewerName) viewerName.textContent = file.name;
-      if (viewerMeta) viewerMeta.textContent = `${file.ext.toUpperCase()} • ${humanSize(file.size)}`;
-      if (viewerBody) viewerBody.innerHTML = '';
-
-      if (lastObjectURL){
-        try { URL.revokeObjectURL(lastObjectURL); } catch {}
-        lastObjectURL = null;
-      }
+      const viewer = $('#viewer'), viewerBody = $('#viewerBody'),
+            viewerLoading = $('#viewerLoading'), viewerName = $('#viewerName'), viewerMeta = $('#viewerMeta');
+      viewer.classList.add('active'); hide(viewerBody); show(viewerLoading);
+      viewerName.textContent = file.name; viewerMeta.textContent = `${file.ext.toUpperCase()} • ${humanSize(file.size)}`;
+      viewerBody.innerHTML = '';
+      if (lastObjectURL){ try{ URL.revokeObjectURL(lastObjectURL); }catch{} lastObjectURL=null; }
 
       try{
         if (Number.isFinite(file.size) && file.size > PREVIEW_SIZE_LIMIT){
-          if (viewerBody) {
-            viewerBody.innerHTML = `
-              <div class="w-full h-full flex items-center justify-center p-4 sm:p-6 text-center">
-                <div>
-                  <p class="text-primary font-semibold mb-2 text-sm sm:text-base">Anteprima disattivata per file di grandi dimensioni.</p>
-                  <p class="text-muted text-xs sm:text-sm">Usa "Scarica" per aprirlo in locale.</p>
-                </div>
-              </div>`;
-          }
+          viewerBody.innerHTML = `<div class="muted" style="text-align:center; padding:20px">
+            <p style="font-weight:700; color:var(--primary)">Anteprima disattivata per file di grandi dimensioni.</p>
+            <p>Usa "Scarica" per aprirlo in locale.</p></div>`;
           const streamUrl = await ensureDownloadURL(file);
-          const downloadBtn = $('#downloadBtn');
-          if (downloadBtn) {
-            downloadBtn.removeAttribute('download');
-            downloadBtn.href = streamUrl;
-          }
+          const btn = $('#downloadBtn'); btn.removeAttribute('download'); btn.href = streamUrl;
         } else {
           const data = await new Promise((res, rej)=> file.megaFile.download((err, bytes)=> err ? rej(err) : res(bytes)));
           const blob = new Blob([data], { type: mimeFromExt(file.ext) });
-          const url = URL.createObjectURL(blob);
-          lastObjectURL = url;
-
-          const downloadBtn = $('#downloadBtn');
-          if (downloadBtn) {
-            downloadBtn.href = url;
-            downloadBtn.setAttribute('download', file.name);
-          }
-
-          if (viewerBody) {
-            if (file.type==='img'){
-              viewerBody.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-gray-50"><img src="${url}" class="max-w-full max-h-full object-contain" alt="${file.name}"/></div>`;
-            } else if (file.type==='vid'){
-              viewerBody.innerHTML = `<video src="${url}" controls class="w-full h-full bg-black rounded-b-xl sm:rounded-b-2xl"></video>`;
-            } else if (file.type==='aud'){
-              viewerBody.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-gray-50 p-4"><audio src="${url}" controls class="w-full max-w-xl"></audio></div>`;
-            } else if (file.ext==='pdf'){
-              viewerBody.innerHTML = `<iframe src="${url}" class="w-full h-full rounded-b-xl sm:rounded-b-2xl" title="${file.name}" referrerpolicy="no-referrer"></iframe>`;
-            } else {
-              viewerBody.innerHTML = `
-                <div class="w-full h-full flex items-center justify-center p-4 sm:p-6 text-center">
-                  <div>
-                    <p class="text-primary font-semibold mb-2 text-sm sm:text-base">Anteprima non disponibile per questo formato.</p>
-                    <p class="text-muted text-xs sm:text-sm">Clicca su "Scarica" per aprire il file.</p>
-                  </div>
-                </div>`;
-            }
+          const url = URL.createObjectURL(blob); lastObjectURL = url;
+          const btn = $('#downloadBtn'); btn.href = url; btn.setAttribute('download', file.name);
+          if (file.type==='img'){
+            viewerBody.innerHTML = `<img src="${url}" alt="${file.name}">`;
+          } else if (file.type==='vid'){
+            viewerBody.innerHTML = `<video src="${url}" controls></video>`;
+          } else if (file.type==='aud'){
+            viewerBody.innerHTML = `<div style="width:100%; display:grid; place-items:center; padding:16px; background:#f1f5f9"><audio src="${url}" controls style="width:min(720px,100%)"></audio></div>`;
+          } else if (file.ext==='pdf'){
+            viewerBody.innerHTML = `<iframe src="${url}" title="${file.name}" referrerpolicy="no-referrer"></iframe>`;
+          } else {
+            viewerBody.innerHTML = `<div class="muted" style="text-align:center; padding:20px">
+              <p style="font-weight:700; color:var(--primary)">Anteprima non disponibile per questo formato.</p>
+              <p>Clicca su "Scarica" per aprire il file.</p></div>`;
           }
         }
       }catch(e){
         console.error('Preview error:', e);
-        if (viewerBody) {
-          viewerBody.innerHTML = `
-            <div class="w-full h-full flex items-center justify-center p-4 sm:p-6 text-center">
-              <div>
-                <p class="text-error font-semibold mb-2 text-sm sm:text-base">Impossibile caricare l'anteprima.</p>
-                <p class="text-muted text-xs sm:text-sm">Prova a scaricare il file.</p>
-              </div>
-            </div>`;
-        }
-        try {
-          const streamUrl = await ensureDownloadURL(file);
-          const downloadBtn = $('#downloadBtn');
-          if (downloadBtn) {
-            downloadBtn.removeAttribute('download');
-            downloadBtn.href = streamUrl;
-          }
-        } catch {}
-      }finally{
-        hide(viewerLoading);
-        show(viewerBody);
-      }
-    }
-
-    async function ensureDownloadURL(file){
-      return await new Promise((resolve, reject)=>{
+        viewerBody.innerHTML = `<div class="muted" style="text-align:center; padding:20px">
+          <p style="font-weight:700; color:var(--error)">Impossibile caricare l'anteprima.</p>
+          <p>Prova a scaricare il file.</p></div>`;
         try{
-          file.megaFile.link((err, url)=>{
-            if (err || !url) return reject(err || new Error('No URL'));
-            resolve(url);
-          });
-        }catch(e){ reject(e); }
+          const streamUrl = await ensureDownloadURL(file);
+          const btn = $('#downloadBtn'); btn.removeAttribute('download'); btn.href = streamUrl;
+        }catch{}
+      }finally{ hide(viewerLoading); show(viewerBody); }
+    }
+    async function ensureDownloadURL(file){
+      return await new Promise((resolve,reject)=>{
+        try{ file.megaFile.link((err,url)=> err||!url ? reject(err||new Error('No URL')) : resolve(url) ); }
+        catch(e){ reject(e); }
       });
     }
-
     $('#closeViewer')?.addEventListener('click', ()=>{
-      try {
-        const media = $('#viewerBody video, #viewerBody audio');
-        media?.pause?.();
-      } catch {}
-      const viewerBody = $('#viewerBody');
-      if (viewerBody) viewerBody.innerHTML = '';
-      hide($('#viewer'));
-      if (lastObjectURL){
-        try { URL.revokeObjectURL(lastObjectURL); } catch {}
-        lastObjectURL = null;
-      }
+      try{ $('#viewerBody video')?.pause(); $('#viewerBody audio')?.pause(); }catch{}
+      $('#viewerBody').innerHTML=''; $('#viewer').classList.remove('active');
+      if (lastObjectURL){ try{ URL.revokeObjectURL(lastObjectURL); }catch{} lastObjectURL=null; }
     });
 
-    function updateDownloadStats(){
-      const el = $('#downloadCount');
-      if (el) el.textContent = downloadLinks.length || '--';
-    }
-
-    // === Events wiring ===
+    // === Events ===
     $$('.filterBtn').forEach(btn=>{
       btn.addEventListener('click', ()=>{
         $$('.filterBtn').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        renderFiles();
+        btn.classList.add('active'); renderFiles();
       });
     });
-
-    let searchTimeout;
-    const searchInput = $('#searchInput');
-    searchInput?.addEventListener('input', ()=>{
-      clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(renderFiles, 250);
+    let searchTimeout; $('#searchInput')?.addEventListener('input', ()=>{
+      clearTimeout(searchTimeout); searchTimeout = setTimeout(renderFiles, 250);
     });
-
-    const linkForm = $('#linkForm');
-    linkForm?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (isAdmin) saveLink();
-    });
-
+    $('#linkForm')?.addEventListener('submit', e=>{ e.preventDefault(); if (isAdmin) saveLink(); });
     $('#cancelBtn')?.addEventListener('click', resetForm);
-
-    $('#refreshLinks')?.addEventListener('click', async () => {
-      if (isAdmin) {
-        show($('#loading'));
-        await loadDownloadLinks();
-        hide($('#loading'));
-      }
+    $('#refreshLinks')?.addEventListener('click', async ()=>{
+      if (isAdmin){ show($('#loading')); await loadDownloadLinks(); hide($('#loading')); }
     });
 
     // === Init ===
@@ -1031,12 +853,8 @@
       await Promise.all([loadMega(), loadDownloadLinks()]);
     })();
 
-    // === Cleanup ===
-    window.addEventListener('beforeunload', ()=>{
-      if (lastObjectURL){
-        try { URL.revokeObjectURL(lastObjectURL); } catch {}
-      }
-    });
+    // Cleanup
+    window.addEventListener('beforeunload', ()=>{ if (lastObjectURL){ try{ URL.revokeObjectURL(lastObjectURL); }catch{} }});
   </script>
 </body>
 </html>
