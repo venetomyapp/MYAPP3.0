@@ -49,178 +49,571 @@
       --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
       --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
       --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
+      --gradient-hero: linear-gradient(135deg, #1a1a2e 0%, #e94560 50%, #00d4ff 100%);
     }
-    * { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+    
+    * { 
+      font-family: 'Inter', sans-serif; 
+      -webkit-tap-highlight-color: transparent; 
+      scroll-behavior: smooth;
+    }
+    
     body {
       background: var(--gradient-aurora);
       background-size: 400% 400%;
-      animation: aurora 15s ease infinite;
-      margin: 0; padding: 0; overflow-x: hidden; padding-bottom: 90px;
+      animation: aurora 20s ease infinite;
+      margin: 0; 
+      padding: 0; 
+      overflow-x: hidden;
     }
-    @keyframes aurora { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-    .text-ultra-visible { color:#fff; text-shadow:0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1); font-weight: 900; }
-    .card { background: rgba(255,255,255,.95); border:1px solid rgba(255,255,255,.3); border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,.1); }
-    .btn-aurora { background: var(--gradient-magic); color:#fff; border:2px solid rgba(233,69,96,.3); border-radius:14px; padding:10px 14px; font-weight:800; }
-    .btn-cyber { background: var(--gradient-cyber); color:#fff; border:2px solid rgba(0,212,255,.3); border-radius:14px; padding:10px 14px; font-weight:800; }
-    .btn-ghost { background: rgba(255,255,255,.9); border:2px solid rgba(0,0,0,.06); border-radius:14px; padding:10px 14px; font-weight:800; }
-    .chip { background: rgba(255,255,255,.85); border:1px solid rgba(0,0,0,.06); border-radius:999px; padding:6px 10px; font-weight:700; font-size:12px; }
-    .bottom-nav { position:fixed; left:0; right:0; bottom:0; height:80px; background:rgba(255,255,255,.95); backdrop-filter:blur(18px); border-top:1px solid rgba(255,255,255,.3); display:flex; justify-content:space-around; align-items:center; z-index:100; }
-    .nav-item { display:flex; flex-direction:column; align-items:center; gap:2px; font-weight:800; color:#555; text-decoration:none; padding:8px 10px; border-radius:12px; }
-    .nav-item.active { background: var(--gradient-magic); color:#fff; transform:translateY(-3px); box-shadow:0 10px 25px rgba(233,69,96,.3); }
-    .main { padding:20px 16px; min-height:calc(100vh - 80px); }
-    .section { display:none; animation:fade .25s ease-out; } .section.active { display:block; }
-    @keyframes fade { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)} }
-    .back-btn {
-      position: fixed; left: 20px; bottom: calc(90px + env(safe-area-inset-bottom));
-      width: 52px; height: 52px; border-radius: 50%;
-      background: rgba(255,255,255,.2); border:2px solid rgba(255,255,255,.3); color:#fff;
-      display:flex; align-items:center; justify-content:center; backdrop-filter: blur(8px); z-index:150;
+    
+    @keyframes aurora { 
+      0%{background-position:0% 50%} 
+      50%{background-position:100% 50%} 
+      100%{background-position:0% 50%} 
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(1deg); }
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(233, 69, 96, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(233, 69, 96, 0.6), 0 0 60px rgba(0, 212, 255, 0.4); }
+    }
+    
+    @keyframes slide-in {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .text-ultra-visible { 
+      color:#fff; 
+      text-shadow:0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1); 
+      font-weight: 900; 
+    }
+    
+    .glass-card { 
+      background: rgba(255,255,255,.95); 
+      border:1px solid rgba(255,255,255,.3); 
+      border-radius:24px; 
+      box-shadow:0 20px 60px rgba(0,0,0,.1), 0 10px 30px rgba(0,0,0,.05); 
+      backdrop-filter: blur(20px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .glass-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow:0 30px 80px rgba(0,0,0,.15), 0 15px 40px rgba(0,0,0,.1);
+    }
+    
+    .feature-card {
+      background: rgba(255,255,255,.98);
+      border:2px solid rgba(255,255,255,.4);
+      border-radius:28px;
+      box-shadow:0 25px 50px rgba(0,0,0,.08);
+      backdrop-filter: blur(25px);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(233,69,96,0.05) 0%, rgba(0,212,255,0.05) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-12px) scale(1.03);
+      box-shadow:0 40px 80px rgba(0,0,0,.12), 0 20px 40px rgba(233,69,96,.15);
+      border-color: rgba(233,69,96,.3);
+    }
+    
+    .btn-aurora { 
+      background: var(--gradient-magic); 
+      color:#fff; 
+      border:2px solid rgba(233,69,96,.3); 
+      border-radius:18px; 
+      padding:14px 28px; 
+      font-weight:800;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-aurora::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    .btn-aurora:hover::before {
+      left: 100%;
+    }
+    
+    .btn-aurora:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(233,69,96,.4);
+    }
+    
+    .btn-cyber { 
+      background: var(--gradient-cyber); 
+      color:#fff; 
+      border:2px solid rgba(0,212,255,.3); 
+      border-radius:18px; 
+      padding:14px 28px; 
+      font-weight:800;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-cyber:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0,212,255,.4);
+    }
+    
+    .btn-ghost { 
+      background: rgba(255,255,255,.95); 
+      border:2px solid rgba(0,0,0,.08); 
+      border-radius:18px; 
+      padding:14px 28px; 
+      font-weight:800;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-ghost:hover {
+      background: rgba(255,255,255,1);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0,0,0,.1);
+    }
+    
+    .chip { 
+      background: rgba(255,255,255,.9); 
+      border:1px solid rgba(0,0,0,.08); 
+      border-radius:999px; 
+      padding:8px 16px; 
+      font-weight:700; 
+      font-size:12px;
+      transition: all 0.3s ease;
+    }
+    
+    .chip:hover {
+      background: rgba(233,69,96,.1);
+      border-color: rgba(233,69,96,.3);
+      transform: scale(1.05);
+    }
+
+    .hero-section {
+      background: var(--gradient-hero);
+      background-size: 400% 400%;
+      animation: aurora 25s ease infinite;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: float 20s ease-in-out infinite;
+    }
+    
+    .nav-pill {
+      background: rgba(255,255,255,.15);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 20px;
+      padding: 12px 24px;
+      color: white;
+      font-weight: 700;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .nav-pill::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--gradient-magic);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .nav-pill.active::before,
+    .nav-pill:hover::before {
+      opacity: 1;
+    }
+    
+    .nav-pill.active,
+    .nav-pill:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(233,69,96,.3);
+    }
+    
+    .nav-pill span {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    
+    .stat-card {
+      background: rgba(255,255,255,.95);
+      border-radius: 24px;
+      padding: 32px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(233,69,96,0.1), rgba(0,212,255,0.1));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .stat-card:hover::before {
+      opacity: 1;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-8px) rotate(1deg);
+      box-shadow: 0 25px 50px rgba(0,0,0,.15);
+    }
+    
+    .section { 
+      display: none; 
+      animation: slide-in 0.6s cubic-bezier(0.4, 0, 0.2, 1); 
+    } 
+    
+    .section.active { 
+      display: block; 
+    }
+    
+    .floating-action {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--gradient-magic);
+      color: white;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 10px 25px rgba(233,69,96,.3);
+      z-index: 1000;
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+    
+    .floating-action:hover {
+      transform: scale(1.1) rotate(90deg);
+      box-shadow: 0 15px 35px rgba(233,69,96,.5);
+    }
+    
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+    
+    .section-content {
+      padding: 0 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    @media (max-width: 768px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+      
+      .feature-card {
+        padding: 20px;
+      }
+    }
+
+    .live-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background: #ff4444;
+      border-radius: 50%;
+      animation: pulse-glow 1.5s ease-in-out infinite;
+      margin-right: 8px;
     }
   </style>
 </head>
 <body>
 
-  <!-- Back -->
-  <a href="#" onclick="navigateBack()" class="back-btn" aria-label="Torna indietro">
-    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-    </svg>
-  </a>
-
-  <div class="main">
-    <!-- HEADER -->
-    <div class="text-center mb-8">
-      <div class="w-20 h-20 bg-gradient-to-br from-aurora to-cyan rounded-full mx-auto mb-6 flex items-center justify-center">
-        <span class="text-3xl">🎓</span>
-      </div>
-      <h1 class="text-3xl text-ultra-visible mb-2">Academy & Live</h1>
-      <p class="text-ultra-visible opacity-90">Videoconferenze, corsi online, canali e risorse</p>
+  <!-- Hero Section -->
+  <section class="hero-section min-h-screen flex flex-col">
+    <!-- Header with floating back button -->
+    <div class="relative z-10 p-6">
+      <a href="../home.html" class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white hover:bg-white/30 transition-all duration-300">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </a>
     </div>
 
-    <!-- SEZIONI -->
-    <div id="dashboard" class="section active">
-      <div class="grid grid-cols-2 gap-4 mb-6">
-        <div class="card p-5 text-center">
-          <div class="text-2xl font-black text-aurora" id="stat-live-today">0</div>
+    <!-- Hero Content -->
+    <div class="flex-1 flex flex-col justify-center items-center text-center px-6 relative z-10">
+      <div class="mb-8">
+        <div class="w-32 h-32 bg-gradient-to-br from-white/20 to-white/10 rounded-full mx-auto mb-8 flex items-center justify-center backdrop-blur-lg border border-white/20 animate-float">
+          <span class="text-6xl">🎓</span>
+        </div>
+        <h1 class="text-5xl md:text-6xl text-ultra-visible mb-4 leading-tight">Academy & Live</h1>
+        <p class="text-xl text-white/90 mb-8 max-w-2xl">La tua piattaforma di formazione completa: videoconferenze, corsi online, canali YouTube e risorse all'avanguardia</p>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="stats-grid w-full max-w-4xl mb-12">
+        <div class="stat-card">
+          <div class="text-4xl font-black text-aurora mb-2" id="stat-live-today">0</div>
           <div class="text-sm font-bold text-gray-600">Live di oggi</div>
         </div>
-        <div class="card p-5 text-center">
-          <div class="text-2xl font-black text-cyan-500" id="stat-corsi-attivi">0</div>
+        <div class="stat-card">
+          <div class="text-4xl font-black text-cyan-500 mb-2" id="stat-corsi-attivi">0</div>
           <div class="text-sm font-bold text-gray-600">Corsi attivi</div>
         </div>
-        <div class="card p-5 text-center">
-          <div class="text-2xl font-black text-success" id="stat-preferiti">0</div>
-          <div class="text-sm font-bold text-gray-600">Preferiti</div>
+        <div class="stat-card">
+          <div class="text-4xl font-black text-success mb-2" id="stat-preferiti">0</div>
+          <div class="text-sm font-bold text-gray-600">Nei preferiti</div>
         </div>
-        <div class="card p-5 text-center">
-          <div class="text-2xl font-black text-gold" id="stat-ore">0h</div>
+        <div class="stat-card">
+          <div class="text-4xl font-black text-gold mb-2" id="stat-ore">0h</div>
           <div class="text-sm font-bold text-gray-600">Ore formazione</div>
         </div>
       </div>
 
-      <div class="card p-5 mb-6">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-black text-gray-800">📅 Prossime Live</h3>
-          <button class="btn-aurora text-sm" onclick="showSection('live')">Vedi tutto</button>
+      <!-- Navigation Pills -->
+      <div class="flex flex-wrap gap-4 justify-center max-w-4xl">
+        <div class="nav-pill active" onclick="show('dashboard')" data-target="dashboard">
+          <span>🏠 Dashboard</span>
         </div>
-        <div id="upcoming-live" class="space-y-3"></div>
+        <div class="nav-pill" onclick="show('live')" data-target="live">
+          <span>🔴 Live Sessions</span>
+        </div>
+        <div class="nav-pill" onclick="show('courses')" data-target="courses">
+          <span>📚 Corsi Online</span>
+        </div>
+        <div class="nav-pill" onclick="show('channels')" data-target="channels">
+          <span>▶️ Canali YouTube</span>
+        </div>
+        <div class="nav-pill" onclick="show('library')" data-target="library">
+          <span>🗂️ Libreria</span>
+        </div>
+        <div class="nav-pill" onclick="show('stats')" data-target="stats">
+          <span>📈 Analytics</span>
+        </div>
       </div>
+    </div>
+  </section>
 
-      <div class="card p-5">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-black text-gray-800">🔥 Consigliati</h3>
-          <div class="flex gap-2">
-            <span class="chip">Corsi</span><span class="chip">YouTube</span><span class="chip">Webinar</span>
+  <!-- Content Sections -->
+  <div class="min-h-screen bg-gradient-to-b from-transparent to-black/20">
+    
+    <!-- Dashboard -->
+    <div id="dashboard" class="section active">
+      <div class="section-content py-16">
+        <h2 class="text-4xl font-black text-ultra-visible mb-8 text-center">🚀 Dashboard Panoramica</h2>
+        
+        <div class="content-grid">
+          <!-- Prossime Live -->
+          <div class="feature-card p-8">
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="text-2xl font-black text-gray-800 flex items-center">
+                <span class="live-indicator"></span>
+                📅 Prossime Live
+              </h3>
+              <button class="btn-aurora" onclick="show('live')">Vedi tutto</button>
+            </div>
+            <div id="upcoming-live" class="space-y-4"></div>
+          </div>
+
+          <!-- Consigliati -->
+          <div class="feature-card p-8">
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="text-2xl font-black text-gray-800">🔥 Contenuti Hot</h3>
+              <div class="flex gap-2">
+                <span class="chip">Trending</span>
+                <span class="chip">New</span>
+              </div>
+            </div>
+            <div id="featured" class="space-y-4"></div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="feature-card p-8">
+            <h3 class="text-2xl font-black text-gray-800 mb-6">⚡ Quick Actions</h3>
+            <div class="grid grid-cols-2 gap-4">
+              <button class="btn-aurora" onclick="show('live')">Join Live</button>
+              <button class="btn-cyber" onclick="show('courses')">Nuovo Corso</button>
+              <button class="btn-ghost" onclick="show('library')">Sfoglia Risorse</button>
+              <button class="btn-ghost" onclick="show('stats')">Vedi Stats</button>
+            </div>
+          </div>
+
+          <!-- Activity Feed -->
+          <div class="feature-card p-8">
+            <h3 class="text-2xl font-black text-gray-800 mb-6">📊 Attività Recente</h3>
+            <div class="space-y-3" id="activity-feed">
+              <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                <span class="text-2xl">🎯</span>
+                <div>
+                  <div class="font-bold text-sm">Corso completato</div>
+                  <div class="text-xs text-gray-600">Project Management Base</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                <span class="text-2xl">📺</span>
+                <div>
+                  <div class="font-bold text-sm">Live session partecipata</div>
+                  <div class="text-xs text-gray-600">Q&A con la Direzione</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div id="featured" class="grid grid-cols-1 gap-3"></div>
       </div>
     </div>
 
+    <!-- Live Sessions -->
     <div id="live" class="section">
-      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
-        <h2 class="text-2xl font-black text-ultra-visible">🔴 Videoconferenze</h2>
-        <div class="flex gap-2">
-          <input id="live-search" type="search" placeholder="Cerca webinar, relatore..." class="w-56 bg-white/90 border border-white/50 rounded-xl px-4 py-2 text-sm">
-          <select id="live-platform" class="bg-white/90 border border-white/50 rounded-xl px-3 py-2 text-sm">
-            <option value="">Tutte le piattaforme</option>
-            <option>Zoom</option><option>Teams</option><option>Meet</option><option>YouTube Live</option>
-          </select>
+      <div class="section-content py-16">
+        <div class="flex flex-col md:flex-row gap-6 items-center justify-between mb-8">
+          <h2 class="text-4xl font-black text-ultra-visible flex items-center">
+            <span class="live-indicator"></span>
+            🔴 Live Sessions
+          </h2>
+          <div class="flex gap-4">
+            <input id="live-search" type="search" placeholder="Cerca webinar, relatore..." class="w-64 bg-white/90 border-2 border-white/50 rounded-2xl px-6 py-3 text-sm font-semibold backdrop-blur-lg">
+            <select id="live-platform" class="bg-white/90 border-2 border-white/50 rounded-2xl px-4 py-3 text-sm font-semibold backdrop-blur-lg">
+              <option value="">Tutte le piattaforme</option>
+              <option>Zoom</option><option>Teams</option><option>Meet</option><option>YouTube Live</option>
+            </select>
+          </div>
         </div>
+        <div id="live-list" class="content-grid"></div>
       </div>
-      <div id="live-list" class="space-y-3"></div>
     </div>
 
+    <!-- Courses -->
     <div id="courses" class="section">
-      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
-        <h2 class="text-2xl font-black text-ultra-visible">📚 Corsi Online</h2>
-        <div class="flex gap-2">
-          <input id="course-search" type="search" placeholder="Cerca corso, autore..." class="w-56 bg-white/90 border border-white/50 rounded-xl px-4 py-2 text-sm">
-          <select id="course-level" class="bg-white/90 border border-white/50 rounded-xl px-3 py-2 text-sm">
-            <option value="">Tutti i livelli</option>
-            <option value="base">Base</option><option value="intermedio">Intermedio</option><option value="avanzato">Avanzato</option>
-          </select>
+      <div class="section-content py-16">
+        <div class="flex flex-col md:flex-row gap-6 items-center justify-between mb-8">
+          <h2 class="text-4xl font-black text-ultra-visible">📚 Corsi Online</h2>
+          <div class="flex gap-4">
+            <input id="course-search" type="search" placeholder="Cerca corso, autore..." class="w-64 bg-white/90 border-2 border-white/50 rounded-2xl px-6 py-3 text-sm font-semibold backdrop-blur-lg">
+            <select id="course-level" class="bg-white/90 border-2 border-white/50 rounded-2xl px-4 py-3 text-sm font-semibold backdrop-blur-lg">
+              <option value="">Tutti i livelli</option>
+              <option value="base">Base</option><option value="intermedio">Intermedio</option><option value="avanzato">Avanzato</option>
+            </select>
+          </div>
         </div>
+        <div id="course-list" class="content-grid"></div>
       </div>
-      <div id="course-list" class="grid grid-cols-1 gap-3"></div>
     </div>
 
+    <!-- Channels -->
     <div id="channels" class="section">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-2xl font-black text-ultra-visible">▶️ Canali YouTube</h2>
-        <input id="channel-search" type="search" placeholder="Cerca canale..." class="w-56 bg-white/90 border border-white/50 rounded-xl px-4 py-2 text-sm">
-      </div>
-      <div id="channel-list" class="grid grid-cols-1 gap-3"></div>
-    </div>
-
-    <div id="library" class="section">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-2xl font-black text-ultra-visible">🗂️ Libreria</h2>
-        <input id="library-search" type="search" placeholder="Cerca risorsa..." class="w-56 bg-white/90 border border-white/50 rounded-xl px-4 py-2 text-sm">
-      </div>
-      <div id="library-list" class="grid grid-cols-1 gap-3"></div>
-    </div>
-
-    <div id="stats" class="section">
-      <h2 class="text-2xl font-black text-ultra-visible mb-4">📈 Statistiche</h2>
-      <div class="card p-5 mb-6">
-        <h3 class="text-lg font-black text-gray-800 mb-3">Tempo per categoria</h3>
-        <div style="position:relative; height:220px;"><canvas id="stats-chart"></canvas></div>
-      </div>
-      <div class="grid grid-cols-2 gap-4">
-        <div class="card p-5 text-center">
-          <div class="text-2xl font-black text-aurora" id="stats-live-count">0</div>
-          <div class="text-sm font-bold text-gray-600">Live seguite</div>
+      <div class="section-content py-16">
+        <div class="flex items-center justify-between mb-8">
+          <h2 class="text-4xl font-black text-ultra-visible">▶️ Canali YouTube</h2>
+          <input id="channel-search" type="search" placeholder="Cerca canale..." class="w-64 bg-white/90 border-2 border-white/50 rounded-2xl px-6 py-3 text-sm font-semibold backdrop-blur-lg">
         </div>
-        <div class="card p-5 text-center">
-          <div class="text-2xl font-black text-success" id="stats-course-progress">0%</div>
-          <div class="text-sm font-bold text-gray-600">Progresso medio corsi</div>
+        <div id="channel-list" class="content-grid"></div>
+      </div>
+    </div>
+
+    <!-- Library -->
+    <div id="library" class="section">
+      <div class="section-content py-16">
+        <div class="flex items-center justify-between mb-8">
+          <h2 class="text-4xl font-black text-ultra-visible">🗂️ Libreria Risorse</h2>
+          <input id="library-search" type="search" placeholder="Cerca risorsa..." class="w-64 bg-white/90 border-2 border-white/50 rounded-2xl px-6 py-3 text-sm font-semibold backdrop-blur-lg">
+        </div>
+        <div id="library-list" class="content-grid"></div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div id="stats" class="section">
+      <div class="section-content py-16">
+        <h2 class="text-4xl font-black text-ultra-visible mb-8 text-center">📈 Analytics & Insights</h2>
+        
+        <div class="content-grid">
+          <div class="feature-card p-8 md:col-span-2">
+            <h3 class="text-2xl font-black text-gray-800 mb-6">Distribuzione Tempo per Categoria</h3>
+            <div style="position:relative; height:300px;"><canvas id="stats-chart"></canvas></div>
+          </div>
+          
+          <div class="feature-card p-8 text-center">
+            <div class="text-5xl font-black text-aurora mb-4" id="stats-live-count">0</div>
+            <div class="text-lg font-bold text-gray-600">Live Totali Seguite</div>
+          </div>
+          
+          <div class="feature-card p-8 text-center">
+            <div class="text-5xl font-black text-success mb-4" id="stats-course-progress">0%</div>
+            <div class="text-lg font-bold text-gray-600">Progresso Medio Corsi</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Bottom Nav -->
-  <nav class="bottom-nav">
-    <a href="#" class="nav-item active" data-target="dashboard" onclick="show('dashboard')">🏠<span class="text-[10px]">Home</span></a>
-    <a href="#" class="nav-item" data-target="live" onclick="show('live')">🔴<span class="text-[10px]">Live</span></a>
-    <a href="#" class="nav-item" data-target="courses" onclick="show('courses')">📚<span class="text-[10px]">Corsi</span></a>
-    <a href="#" class="nav-item" data-target="channels" onclick="show('channels')">▶️<span class="text-[10px]">Canali</span></a>
-    <a href="#" class="nav-item" data-target="stats" onclick="show('stats')">📈<span class="text-[10px]">Stats</span></a>
-  </nav>
+  <!-- Floating Action Button -->
+  <button class="floating-action" onclick="show('live')" title="Quick Join Live">
+    🔴
+  </button>
 
   <!-- MODAL DETTAGLIO RISORSA -->
-  <div id="resource-modal" class="fixed inset-0 bg-black/70 hidden z-[200] p-5 overflow-y-auto">
-    <div class="mx-auto max-w-md card p-5">
-      <div class="flex justify-between items-center mb-3">
-        <h3 id="res-title" class="text-xl font-black text-gray-800">Titolo</h3>
-        <button class="text-2xl font-black text-gray-400" onclick="closeModal()">&times;</button>
+  <div id="resource-modal" class="fixed inset-0 bg-black/70 hidden z-[200] p-5 overflow-y-auto backdrop-blur-sm">
+    <div class="mx-auto max-w-lg glass-card p-8 my-8">
+      <div class="flex justify-between items-center mb-6">
+        <h3 id="res-title" class="text-2xl font-black text-gray-800">Titolo</h3>
+        <button class="text-3xl font-black text-gray-400 hover:text-gray-600 transition-colors" onclick="closeModal()">&times;</button>
       </div>
-      <div id="res-embed" class="rounded-xl overflow-hidden mb-3 hidden"></div>
-      <p id="res-desc" class="text-sm text-gray-700 mb-3"></p>
-      <div id="res-tags" class="flex flex-wrap gap-2 mb-4"></div>
-      <div class="grid grid-cols-2 gap-2">
-        <a id="res-open" target="_blank" rel="noopener" class="btn-aurora text-center">Apri</a>
+      <div id="res-embed" class="rounded-2xl overflow-hidden mb-6 hidden"></div>
+      <p id="res-desc" class="text-gray-700 mb-6 leading-relaxed"></p>
+      <div id="res-tags" class="flex flex-wrap gap-2 mb-6"></div>
+      <div class="grid grid-cols-2 gap-4">
+        <a id="res-open" target="_blank" rel="noopener" class="btn-aurora text-center">Apri Risorsa</a>
         <button id="res-fav" class="btn-ghost" onclick="toggleFavActive()">☆ Preferito</button>
       </div>
     </div>
@@ -232,7 +625,7 @@
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk";
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
 
-    // Demo flag: dati fittizi SOLO se passi ?demo=1 nell’URL
+    // Demo flag: dati fittizi SOLO se passi ?demo=1 nell'URL
     const DEMO = new URLSearchParams(location.search).has('demo');
 
     // ===== State =====
@@ -251,7 +644,7 @@
       await loadAll();
       renderAll();
       initFilters();
-      console.log('🌐 Academy & Live — ready');
+      console.log('🌐 Academy & Live — Enhanced Version Ready!');
     });
 
     async function initUser() {
@@ -287,17 +680,17 @@
         liveSessions = (data || []).map(normalizeLive);
         if (!liveSessions.length && DEMO) {
           liveSessions = [
-            { id:'demo-live-1', title:'Aggiornamento Normativo Q4', start_at:addHours(2), end_at:addHours(3), platform:'Zoom', join_url:'https://zoom.us/j/123456789', host:'Ufficio Formazione', track:'Compliance', tags:['norme','compliance'], passcode:'', status:'scheduled' },
-            { id:'demo-live-2', title:'Q&A con la Direzione', start_at:addDays(1,10), end_at:addDays(1,11), platform:'Teams', join_url:'https://teams.microsoft.com/l/meetup-join/xxx', host:'Direzione', track:'Company', tags:['strategie','q&a'], passcode:'', status:'scheduled' },
-            { id:'demo-live-3', title:'Live Tech — AI Update', start_at:addDays(3,9), end_at:addDays(3,10), platform:'YouTube Live', join_url:'https://www.youtube.com/watch?v=dQw4w9WgXcQ', host:'Tech Guild', track:'Tech', tags:['ai','dev'], passcode:'', status:'scheduled' },
+            { id:'demo-live-1', title:'🎯 Aggiornamento Normativo Q4', start_at:addHours(2), end_at:addHours(3), platform:'Zoom', join_url:'https://zoom.us/j/123456789', host:'Ufficio Formazione', track:'Compliance', tags:['norme','compliance'], passcode:'', status:'scheduled' },
+            { id:'demo-live-2', title:'💼 Q&A con la Direzione', start_at:addDays(1,10), end_at:addDays(1,11), platform:'Teams', join_url:'https://teams.microsoft.com/l/meetup-join/xxx', host:'Direzione', track:'Company', tags:['strategie','q&a'], passcode:'', status:'scheduled' },
+            { id:'demo-live-3', title:'🤖 Live Tech — AI Update', start_at:addDays(3,9), end_at:addDays(3,10), platform:'YouTube Live', join_url:'https://www.youtube.com/watch?v=dQw4w9WgXcQ', host:'Tech Guild', track:'Tech', tags:['ai','dev'], passcode:'', status:'scheduled' },
           ].map(normalizeLive);
         }
       } catch (e) {
         console.error('loadLive error:', e);
         liveSessions = DEMO ? [
-          { id:'demo-live-1', title:'Aggiornamento Normativo Q4', start_at:addHours(2), end_at:addHours(3), platform:'Zoom', join_url:'https://zoom.us/j/123456789', host:'Ufficio Formazione', track:'Compliance', tags:['norme','compliance'], passcode:'', status:'scheduled' },
-          { id:'demo-live-2', title:'Q&A con la Direzione', start_at:addDays(1,10), end_at:addDays(1,11), platform:'Teams', join_url:'https://teams.microsoft.com/l/meetup-join/xxx', host:'Direzione', track:'Company', tags:['strategie','q&a'], passcode:'', status:'scheduled' },
-          { id:'demo-live-3', title:'Live Tech — AI Update', start_at:addDays(3,9), end_at:addDays(3,10), platform:'YouTube Live', join_url:'https://www.youtube.com/watch?v=dQw4w9WgXcQ', host:'Tech Guild', track:'Tech', tags:['ai','dev'], passcode:'', status:'scheduled' },
+          { id:'demo-live-1', title:'🎯 Aggiornamento Normativo Q4', start_at:addHours(2), end_at:addHours(3), platform:'Zoom', join_url:'https://zoom.us/j/123456789', host:'Ufficio Formazione', track:'Compliance', tags:['norme','compliance'], passcode:'', status:'scheduled' },
+          { id:'demo-live-2', title:'💼 Q&A con la Direzione', start_at:addDays(1,10), end_at:addDays(1,11), platform:'Teams', join_url:'https://teams.microsoft.com/l/meetup-join/xxx', host:'Direzione', track:'Company', tags:['strategie','q&a'], passcode:'', status:'scheduled' },
+          { id:'demo-live-3', title:'🤖 Live Tech — AI Update', start_at:addDays(3,9), end_at:addDays(3,10), platform:'YouTube Live', join_url:'https://www.youtube.com/watch?v=dQw4w9WgXcQ', host:'Tech Guild', track:'Tech', tags:['ai','dev'], passcode:'', status:'scheduled' },
         ].map(normalizeLive) : [];
       }
     }
@@ -310,17 +703,17 @@
         courses = (data || []).map(normalizeResource);
         if (!courses.length && DEMO) {
           courses = [
-            { id:'demo-c-1', title:'Project Management Base', url:'#', provider:'Coursera', level:'base', duration_minutes:120, description:'Fondamenti e strumenti', tags:['management','organizzazione'] },
-            { id:'demo-c-2', title:'Cybersecurity Essentials', url:'#', provider:'edX', level:'intermedio', duration_minutes:180, description:'Minacce, mitigazioni', tags:['security','it'] },
-            { id:'demo-c-3', title:'Advanced Excel', url:'#', provider:'Udemy', level:'avanzato', duration_minutes:240, description:'Power Query, Pivot avanzate', tags:['excel','data'] },
+            { id:'demo-c-1', title:'🚀 Project Management Avanzato', url:'#', provider:'Coursera', level:'base', duration_minutes:120, description:'Metodologie agili e strumenti moderni per gestire progetti complessi', tags:['management','agile','scrum'] },
+            { id:'demo-c-2', title:'🔐 Cybersecurity Essentials', url:'#', provider:'edX', level:'intermedio', duration_minutes:180, description:'Protezione dati, threat analysis e incident response', tags:['security','it','privacy'] },
+            { id:'demo-c-3', title:'📊 Advanced Excel & Data Analysis', url:'#', provider:'Udemy', level:'avanzato', duration_minutes:240, description:'Power Query, Pivot avanzate, Dashboard e automazioni', tags:['excel','data','analytics'] },
           ].map(normalizeResource);
         }
       } catch (e) {
         console.error('loadCourses error:', e);
         courses = DEMO ? [
-          { id:'demo-c-1', title:'Project Management Base', url:'#', provider:'Coursera', level:'base', duration_minutes:120, description:'Fondamenti e strumenti', tags:['management','organizzazione'] },
-          { id:'demo-c-2', title:'Cybersecurity Essentials', url:'#', provider:'edX', level:'intermedio', duration_minutes:180, description:'Minacce, mitigazioni', tags:['security','it'] },
-          { id:'demo-c-3', title:'Advanced Excel', url:'#', provider:'Udemy', level:'avanzato', duration_minutes:240, description:'Power Query, Pivot avanzate', tags:['excel','data'] },
+          { id:'demo-c-1', title:'🚀 Project Management Avanzato', url:'#', provider:'Coursera', level:'base', duration_minutes:120, description:'Metodologie agili e strumenti moderni per gestire progetti complessi', tags:['management','agile','scrum'] },
+          { id:'demo-c-2', title:'🔐 Cybersecurity Essentials', url:'#', provider:'edX', level:'intermedio', duration_minutes:180, description:'Protezione dati, threat analysis e incident response', tags:['security','it','privacy'] },
+          { id:'demo-c-3', title:'📊 Advanced Excel & Data Analysis', url:'#', provider:'Udemy', level:'avanzato', duration_minutes:240, description:'Power Query, Pivot avanzate, Dashboard e automazioni', tags:['excel','data','analytics'] },
         ].map(normalizeResource) : [];
       }
     }
@@ -333,17 +726,17 @@
         channels = (data || []).map(normalizeResource);
         if (!channels.length && DEMO) {
           channels = [
-            { id:'demo-y-1', title:'Computerphile', url:'https://www.youtube.com/@Computerphile', provider:'YouTube', description:'CS spiegata bene', tags:['cs','theory'] },
-            { id:'demo-y-2', title:'Fireship', url:'https://www.youtube.com/@Fireship', provider:'YouTube', description:'Dev in pillole', tags:['web','dev'] },
-            { id:'demo-y-3', title:'MIT OpenCourseWare', url:'https://www.youtube.com/@mitocw', provider:'YouTube', description:'Corsi universitari', tags:['università','ingegneria'] },
+            { id:'demo-y-1', title:'💻 Computerphile', url:'https://www.youtube.com/@Computerphile', provider:'YouTube', description:'Computer Science spiegata in modo semplice e coinvolgente', tags:['cs','teoria','algoritmi'] },
+            { id:'demo-y-2', title:'🔥 Fireship', url:'https://www.youtube.com/@Fireship', provider:'YouTube', description:'Web development, tutorial rapidi e news tech', tags:['web','frontend','javascript'] },
+            { id:'demo-y-3', title:'🎓 MIT OpenCourseWare', url:'https://www.youtube.com/@mitocw', provider:'YouTube', description:'Corsi universitari completi del MIT', tags:['università','ingegneria','matematica'] },
           ].map(normalizeResource);
         }
       } catch (e) {
         console.error('loadChannels error:', e);
         channels = DEMO ? [
-          { id:'demo-y-1', title:'Computerphile', url:'https://www.youtube.com/@Computerphile', provider:'YouTube', description:'CS spiegata bene', tags:['cs','theory'] },
-          { id:'demo-y-2', title:'Fireship', url:'https://www.youtube.com/@Fireship', provider:'YouTube', description:'Dev in pillole', tags:['web','dev'] },
-          { id:'demo-y-3', title:'MIT OpenCourseWare', url:'https://www.youtube.com/@mitocw', provider:'YouTube', description:'Corsi universitari', tags:['università','ingegneria'] },
+          { id:'demo-y-1', title:'💻 Computerphile', url:'https://www.youtube.com/@Computerphile', provider:'YouTube', description:'Computer Science spiegata in modo semplice e coinvolgente', tags:['cs','teoria','algoritmi'] },
+          { id:'demo-y-2', title:'🔥 Fireship', url:'https://www.youtube.com/@Fireship', provider:'YouTube', description:'Web development, tutorial rapidi e news tech', tags:['web','frontend','javascript'] },
+          { id:'demo-y-3', title:'🎓 MIT OpenCourseWare', url:'https://www.youtube.com/@mitocw', provider:'YouTube', description:'Corsi universitari completi del MIT', tags:['università','ingegneria','matematica'] },
         ].map(normalizeResource) : [];
       }
     }
@@ -356,15 +749,17 @@
         library = (data || []).map(normalizeResource);
         if (!library.length && DEMO) {
           library = [
-            { id:'demo-l-1', title:'Guida OKR 2025 (PDF)', url:'#', provider:'Docs', type:'document', description:'Esempi e template', tags:['okr','strategy'] },
-            { id:'demo-l-2', title:'Podcast — Data Culture', url:'#', provider:'Podcast', type:'podcast', description:'Intervista a CDO', tags:['data','culture'] },
+            { id:'demo-l-1', title:'📋 Guida OKR 2025 (PDF)', url:'#', provider:'Company Docs', type:'document', description:'Template e esempi pratici per implementare OKR efficaci', tags:['okr','strategy','planning'] },
+            { id:'demo-l-2', title:'🎧 Podcast — Data Culture Revolution', url:'#', provider:'Tech Podcast', type:'podcast', description:'Intervista esclusiva con CDO delle migliori aziende tech', tags:['data','culture','leadership'] },
+            { id:'demo-l-3', title:'🔗 API Documentation Hub', url:'#', provider:'DevDocs', type:'documentation', description:'Documentazione completa delle API interne', tags:['api','development','docs'] },
           ].map(normalizeResource);
         }
       } catch (e) {
         console.error('loadLibrary error:', e);
         library = DEMO ? [
-          { id:'demo-l-1', title:'Guida OKR 2025 (PDF)', url:'#', provider:'Docs', type:'document', description:'Esempi e template', tags:['okr','strategy'] },
-          { id:'demo-l-2', title:'Podcast — Data Culture', url:'#', provider:'Podcast', type:'podcast', description:'Intervista a CDO', tags:['data','culture'] },
+          { id:'demo-l-1', title:'📋 Guida OKR 2025 (PDF)', url:'#', provider:'Company Docs', type:'document', description:'Template e esempi pratici per implementare OKR efficaci', tags:['okr','strategy','planning'] },
+          { id:'demo-l-2', title:'🎧 Podcast — Data Culture Revolution', url:'#', provider:'Tech Podcast', type:'podcast', description:'Intervista esclusiva con CDO delle migliori aziende tech', tags:['data','culture','leadership'] },
+          { id:'demo-l-3', title:'🔗 API Documentation Hub', url:'#', provider:'DevDocs', type:'documentation', description:'Documentazione completa delle API interne', tags:['api','development','docs'] },
         ].map(normalizeResource) : [];
       }
     }
@@ -372,7 +767,7 @@
     function normalizeLive(r){
       return {
         id: r.id,
-        title: r.title || r.nome || 'Live',
+        title: r.title || r.nome || 'Live Session',
         start_at: r.start_at ? new Date(r.start_at) : new Date(),
         end_at: r.end_at ? new Date(r.end_at) : addHoursTo(new Date(r.start_at||Date.now()),1),
         platform: r.platform || r.piattaforma || 'Zoom',
@@ -426,14 +821,14 @@
 
     function renderUpcomingLive(){
       const box = document.getElementById('upcoming-live');
-      const items = liveSessions.slice(0,3).map(s => liveCard(s)).join('');
+      const items = liveSessions.slice(0,3).map(s => compactLiveCard(s)).join('');
       box.innerHTML = items || emptyState('Nessuna live in programma');
     }
 
     function renderFeatured(){
       const box = document.getElementById('featured');
       const picks = [...courses.slice(0,2), ...channels.slice(0,1)];
-      box.innerHTML = picks.map(r => resourceRow(r)).join('') || emptyState('Nessun contenuto consigliato');
+      box.innerHTML = picks.map(r => compactResourceCard(r)).join('') || emptyState('Nessun contenuto consigliato');
     }
 
     function renderLiveList(){
@@ -445,7 +840,7 @@
         const matchP = !p || s.platform === p;
         return matchQ && matchP;
       });
-      list.innerHTML = filtered.map(s => liveRow(s)).join('') || emptyState('Nessuna live trovata');
+      list.innerHTML = filtered.map(s => liveCard(s)).join('') || emptyState('Nessuna live trovata');
     }
 
     function renderCourseList(){
@@ -470,44 +865,55 @@
     function renderLibraryList(){
       const q = (document.getElementById('library-search').value||'').toLowerCase();
       const list = document.getElementById('library-list');
-      const filtered = library.filter(r => !q || r.title.toLowerCase().includes(q) || (r.provider||'').toLowerCase().includes(q));
-      list.innerHTML = filtered.map(r => resourceRow(r)).join('') || emptyState('Nessuna risorsa trovata');
+      const filtered = library.filter(r => !q || r.title.toLowerCase().includes(q) || (r.provider||'').toLowerCase().includes(r));
+      list.innerHTML = filtered.map(r => resourceCard(r)).join('') || emptyState('Nessuna risorsa trovata');
     }
 
-    function emptyState(t){ return `<div class="text-center text-white/90 font-bold py-6">${t}</div>`; }
+    function emptyState(t){ return `<div class="text-center text-white/90 font-bold py-12 text-xl">${t}</div>`; }
 
-    // ===== UI Components =====
-    function liveCard(s){
+    // ===== Enhanced UI Components =====
+    function compactLiveCard(s){
       return `
-        <div class="card p-4 flex items-center justify-between">
+        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
           <div>
-            <div class="text-sm font-bold text-gray-500">${formatDateTime(s.start_at)} • ${s.platform}</div>
-            <div class="text-lg font-black text-gray-800 mt-1">${escapeHtml(s.title)}</div>
+            <div class="text-sm font-bold text-gray-500 mb-1">${formatDateTime(s.start_at)} • ${s.platform}</div>
+            <div class="font-black text-gray-800">${escapeHtml(s.title)}</div>
             <div class="text-xs text-gray-600">${escapeHtml(s.host||'')} ${s.track?`• ${escapeHtml(s.track)}`:''}</div>
-            <div class="mt-2 flex flex-wrap gap-2">${(s.tags||[]).slice(0,3).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('')}</div>
           </div>
-          <div class="flex flex-col gap-2">
-            <a class="btn-aurora text-center" target="_blank" rel="noopener" href="${s.join_url}">Partecipa</a>
-            <button class="btn-ghost" onclick="downloadICS('${s.id}')">Aggiungi 📆</button>
-          </div>
+          <a class="btn-aurora text-sm" target="_blank" rel="noopener" href="${s.join_url}">Join</a>
         </div>`;
     }
 
-    function liveRow(s){
+    function compactResourceCard(r){
       return `
-        <div class="card p-4">
-          <div class="flex justify-between gap-3">
-            <div>
-              <div class="text-sm font-bold text-gray-500">${formatDateTime(s.start_at)} • ${s.platform}</div>
-              <div class="text-lg font-black text-gray-800">${escapeHtml(s.title)}</div>
-              <div class="text-xs text-gray-600">${escapeHtml(s.host||'')} ${s.track?`• ${escapeHtml(s.track)}`:''}</div>
-              ${(s.passcode?`<div class="text-xs font-bold text-gray-700 mt-1">Passcode: ${escapeHtml(s.passcode)}</div>`:'')}
-              <div class="mt-2 flex flex-wrap gap-2">${(s.tags||[]).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('')}</div>
+        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+          <div>
+            <div class="text-sm font-bold text-gray-500 mb-1">${escapeHtml((r.provider||'').toString())}</div>
+            <div class="font-black text-gray-800">${escapeHtml(r.title)}</div>
+            <div class="text-xs text-gray-600">${escapeHtml(r.description||'').slice(0,60)}...</div>
+          </div>
+          <a href="${r.url}" target="_blank" rel="noopener" class="btn-aurora text-sm">Apri</a>
+        </div>`;
+    }
+
+    function liveCard(s){
+      return `
+        <div class="feature-card p-6">
+          <div class="flex justify-between items-start gap-4">
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="live-indicator"></span>
+                <span class="text-sm font-bold text-gray-500">${formatDateTime(s.start_at)} • ${s.platform}</span>
+              </div>
+              <h4 class="text-xl font-black text-gray-800 mb-2">${escapeHtml(s.title)}</h4>
+              <p class="text-sm text-gray-600 mb-3">${escapeHtml(s.host||'')} ${s.track?`• ${escapeHtml(s.track)}`:''}</p>
+              ${(s.passcode?`<div class="text-xs font-bold text-gray-700 mb-3 p-2 bg-yellow-50 rounded-lg">🔐 Passcode: ${escapeHtml(s.passcode)}</div>`:'')}
+              <div class="flex flex-wrap gap-2">${(s.tags||[]).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('')}</div>
             </div>
-            <div class="flex flex-col gap-2 min-w-[120px]">
-              <a class="btn-aurora text-center" target="_blank" rel="noopener" href="${s.join_url}">Partecipa</a>
-              <button class="btn-ghost" onclick="downloadICS('${s.id}')">Aggiungi 📆</button>
-              <button class="btn-ghost" onclick="copyText('${s.join_url}')">Copia link</button>
+            <div class="flex flex-col gap-3 min-w-[140px]">
+              <a class="btn-aurora text-center text-sm" target="_blank" rel="noopener" href="${s.join_url}">🚀 Partecipa</a>
+              <button class="btn-ghost text-sm" onclick="downloadICS('${s.id}')">📅 Calendario</button>
+              <button class="btn-ghost text-sm" onclick="copyText('${s.join_url}')">🔗 Copia Link</button>
             </div>
           </div>
         </div>`;
@@ -515,20 +921,27 @@
 
     function courseCard(c){
       const fav = favorites.has(c.id) ? '★' : '☆';
+      const levelColors = { base: 'bg-green-100 text-green-800', intermedio: 'bg-yellow-100 text-yellow-800', avanzato: 'bg-red-100 text-red-800' };
       return `
-        <div class="card p-4">
-          <div class="flex justify-between gap-3">
-            <div>
-              <div class="text-sm font-bold text-gray-500">${escapeHtml(c.provider||'')}</div>
-              <div class="text-lg font-black text-gray-800">${escapeHtml(c.title)}</div>
-              <div class="text-xs text-gray-600">${c.level?`Livello: ${escapeHtml(c.level)} • `:''}${c.duration_minutes?`${c.duration_minutes} min`:''}</div>
-              <p class="text-sm text-gray-700 mt-2">${escapeHtml(c.description||'')}</p>
-              <div class="mt-2 flex flex-wrap gap-2">${(c.tags||[]).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('')}</div>
+        <div class="feature-card p-6">
+          <div class="flex justify-between items-start gap-4">
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="text-sm font-bold text-gray-500">${escapeHtml(c.provider||'')}</span>
+                ${c.level ? `<span class="text-xs px-2 py-1 rounded-full font-bold ${levelColors[c.level] || 'bg-gray-100 text-gray-800'}">${escapeHtml(c.level)}</span>` : ''}
+              </div>
+              <h4 class="text-xl font-black text-gray-800 mb-3">${escapeHtml(c.title)}</h4>
+              <p class="text-sm text-gray-700 mb-3 leading-relaxed">${escapeHtml(c.description||'')}</p>
+              <div class="flex items-center gap-4 text-xs text-gray-600 mb-3">
+                ${c.duration_minutes ? `<span>⏱️ ${c.duration_minutes} min</span>` : ''}
+                <span>🌍 ${c.language || 'IT'}</span>
+              </div>
+              <div class="flex flex-wrap gap-2">${(c.tags||[]).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('')}</div>
             </div>
-            <div class="flex flex-col gap-2 min-w-[120px]">
-              <a href="${c.url}" target="_blank" rel="noopener" class="btn-aurora text-center">Apri corso</a>
-              <button class="btn-ghost" onclick="openResource('${c.id}','course')">Dettagli</button>
-              <button class="btn-ghost" onclick="toggleFavorite('${c.id}')">${fav} Preferito</button>
+            <div class="flex flex-col gap-3 min-w-[140px]">
+              <a href="${c.url}" target="_blank" rel="noopener" class="btn-aurora text-center text-sm">🎯 Inizia Corso</a>
+              <button class="btn-ghost text-sm" onclick="openResource('${c.id}','course')">📖 Dettagli</button>
+              <button class="btn-ghost text-sm" onclick="toggleFavorite('${c.id}')">${fav} Preferito</button>
             </div>
           </div>
         </div>`;
@@ -537,38 +950,61 @@
     function channelCard(c){
       const embed = getYouTubeEmbed(c.url);
       return `
-        <div class="card p-4">
-          <div class="flex flex-col gap-3">
+        <div class="feature-card p-6">
+          <div class="flex flex-col gap-4">
             <div class="flex items-center justify-between">
               <div>
-                <div class="text-sm font-bold text-gray-500">${escapeHtml(c.provider||'YouTube')}</div>
-                <div class="text-lg font-black text-gray-800">${escapeHtml(c.title)}</div>
+                <div class="text-sm font-bold text-gray-500 mb-1">${escapeHtml(c.provider||'YouTube')}</div>
+                <h4 class="text-xl font-black text-gray-800">${escapeHtml(c.title)}</h4>
               </div>
-              <a href="${c.url}" target="_blank" rel="noopener" class="btn-aurora">Visita</a>
+              <a href="${c.url}" target="_blank" rel="noopener" class="btn-aurora">🎬 Visita</a>
             </div>
-            ${embed ? `<div class="rounded-xl overflow-hidden"><iframe width="100%" height="200" src="${embed}" title="YouTube" frameborder="0" allowfullscreen></iframe></div>`:''}
-            <p class="text-sm text-gray-700">${escapeHtml(c.description||'')}</p>
+            ${embed ? `<div class="rounded-2xl overflow-hidden shadow-lg"><iframe width="100%" height="240" src="${embed}" title="YouTube" frameborder="0" allowfullscreen></iframe></div>`:''}
+            <p class="text-sm text-gray-700 leading-relaxed">${escapeHtml(c.description||'')}</p>
             <div class="flex flex-wrap gap-2">${(c.tags||[]).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('')}</div>
           </div>
         </div>`;
     }
 
-    function resourceRow(r){
+    function resourceCard(r){
       const fav = favorites.has(r.id) ? '★' : '☆';
+      const typeIcons = { document: '📄', podcast: '🎧', video: '🎥', tool: '🛠️', documentation: '📚' };
       return `
-        <div class="card p-4 flex items-center justify-between">
-          <div>
-            <div class="text-sm font-bold text-gray-500">${escapeHtml((r.provider||'').toString())}</div>
-            <div class="text-lg font-black text-gray-800">${escapeHtml(r.title)}</div>
-            <p class="text-sm text-gray-700 mt-2">${escapeHtml(r.description||'')}</p>
-            <div class="mt-2 flex flex-wrap gap-2">${(r.tags||[]).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('')}</div>
-          </div>
-          <div class="flex flex-col gap-2 min-w-[120px]">
-            <a href="${r.url}" target="_blank" rel="noopener" class="btn-aurora text-center">Apri</a>
-            <button class="btn-ghost" onclick="openResource('${r.id}','resource')">Dettagli</button>
-            <button class="btn-ghost" onclick="toggleFavorite('${r.id}')">${fav} Preferito</button>
+        <div class="feature-card p-6">
+          <div class="flex justify-between items-start gap-4">
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2">
+                <span>${typeIcons[r.type] || '📦'}</span>
+                <span class="text-sm font-bold text-gray-500">${escapeHtml((r.provider||'').toString())}</span>
+              </div>
+              <h4 class="text-xl font-black text-gray-800 mb-3">${escapeHtml(r.title)}</h4>
+              <p class="text-sm text-gray-700 mb-3 leading-relaxed">${escapeHtml(r.description||'')}</p>
+              <div class="flex flex-wrap gap-2">${(r.tags||[]).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('')}</div>
+            </div>
+            <div class="flex flex-col gap-3 min-w-[140px]">
+              <a href="${r.url}" target="_blank" rel="noopener" class="btn-aurora text-center text-sm">🚀 Apri</a>
+              <button class="btn-ghost text-sm" onclick="openResource('${r.id}','resource')">📖 Dettagli</button>
+              <button class="btn-ghost text-sm" onclick="toggleFavorite('${r.id}')">${fav} Preferito</button>
+            </div>
           </div>
         </div>`;
+    }
+
+    // ===== Navigation Enhancement =====
+    function show(id){
+      // Hide all sections
+      document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      
+      // Update nav pills
+      document.querySelectorAll('.nav-pill').forEach(n=>n.classList.remove('active'));
+      document.querySelector(`.nav-pill[data-target="${id}"]`).classList.add('active');
+      
+      // Scroll to content
+      const hero = document.querySelector('.hero-section');
+      hero.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      
+      if (id === 'stats') renderStats();
     }
 
     // ===== Filters listeners =====
@@ -585,18 +1021,6 @@
         });
     }
 
-    // ===== Navigation =====
-    function show(id){
-      document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-      document.querySelector(`.nav-item[data-target="${id}"]`).classList.add('active');
-      if (id === 'stats') renderStats();
-    }
-    async function navigateBack(){
-      window.location.href = '../home.html';
-    }
-
     // ===== Resource modal =====
     function openResource(id, kind){
       const res = (kind==='course' ? courses : (library.find(x=>x.id===id) || courses.find(x=>x.id===id) || channels.find(x=>x.id===id)));
@@ -610,7 +1034,7 @@
       const embedBox = document.getElementById('res-embed');
       const embed = getYouTubeEmbed(res.url);
       if (embed) {
-        embedBox.innerHTML = `<iframe width="100%" height="200" src="${embed}" title="YouTube" frameborder="0" allowfullscreen></iframe>`;
+        embedBox.innerHTML = `<iframe width="100%" height="240" src="${embed}" title="YouTube" frameborder="0" allowfullscreen></iframe>`;
         embedBox.classList.remove('hidden');
       } else {
         embedBox.classList.add('hidden');
@@ -621,11 +1045,13 @@
       document.getElementById('resource-modal').classList.remove('hidden');
       document.body.style.overflow = 'hidden';
     }
+    
     function closeModal(){
       document.getElementById('resource-modal').classList.add('hidden');
       document.body.style.overflow = '';
       modalResource = null;
     }
+    
     function toggleFavActive(){
       if (!modalResource) return;
       toggleFavorite(modalResource.id);
@@ -648,6 +1074,7 @@
         } catch(e) { /* fallback silenzioso */ }
       }
     }
+    
     function persistFavs(){
       try { localStorage.setItem('academy_favs', JSON.stringify([...favorites])); } catch(e) {}
     }
@@ -657,13 +1084,34 @@
       const ctx = document.getElementById('stats-chart');
       if (!ctx) return;
       const data = {
-        labels: ['Live', 'Corsi', 'Canali', 'Libreria'],
-        datasets: [{ data: [liveSessions.length*60, courses.length*90, channels.length*30, library.length*20],
-          backgroundColor: ['#e94560','#00d4ff','#10b981','#ffd700'], borderColor:'#fff', borderWidth:2 }]
+        labels: ['Live Sessions', 'Corsi Online', 'Canali YouTube', 'Risorse Libreria'],
+        datasets: [{ 
+          data: [liveSessions.length*60, courses.length*90, channels.length*30, library.length*20],
+          backgroundColor: ['#e94560','#00d4ff','#10b981','#ffd700'], 
+          borderColor:'#fff', 
+          borderWidth:3,
+          hoverBorderWidth: 5
+        }]
       };
       if (statsChart) statsChart.destroy();
-      statsChart = new Chart(ctx.getContext('2d'), { type:'doughnut', data,
-        options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom' } } } });
+      statsChart = new Chart(ctx.getContext('2d'), { 
+        type:'doughnut', 
+        data,
+        options:{ 
+          responsive:true, 
+          maintainAspectRatio:false, 
+          plugins:{ 
+            legend:{ 
+              position:'bottom',
+              labels: {
+                font: { weight: 'bold', size: 14 },
+                padding: 20
+              }
+            } 
+          },
+          cutout: '60%'
+        } 
+      });
       document.getElementById('stats-live-count').textContent = liveSessions.length;
       const avg = courses.length ? Math.min(100, Math.round((favorites.size / Math.max(1,courses.length)) * 100)) : 0;
       document.getElementById('stats-course-progress').textContent = `${avg}%`;
@@ -674,22 +1122,36 @@
       const dt = (d instanceof Date) ? d : new Date(d);
       return dt.toLocaleString('it-IT', { weekday:'short', day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' });
     }
-    function sameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
+    
+    function sameDay(a,b){ 
+      return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); 
+    }
+    
     function addHours(h){ const d=new Date(); d.setHours(d.getHours()+h); return d; }
     function addHoursTo(d,h){ const x=new Date(d); x.setHours(x.getHours()+h); return x; }
     function addDays(days, hour=10){ const d=new Date(); d.setDate(d.getDate()+days); d.setHours(hour,0,0,0); return d; }
     function escapeHtml(s){ return (s||'').toString().replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-    function copyText(t){ navigator.clipboard?.writeText(t).then(()=>toast('Link copiato!')); }
+    
+    function copyText(t){ 
+      navigator.clipboard?.writeText(t).then(()=>toast('Link copiato negli appunti! 🎉')); 
+    }
+    
     function toast(msg){
       const n = document.createElement('div');
-      n.className = 'fixed top-6 right-6 bg-blue-500 text-white px-5 py-3 rounded-xl font-black shadow-xl z-[300]';
-      n.textContent = msg; document.body.appendChild(n);
-      setTimeout(()=>{ n.remove(); }, 2500);
+      n.className = 'fixed top-6 right-6 bg-gradient-to-r from-aurora to-cyan text-white px-6 py-4 rounded-2xl font-black shadow-2xl z-[300] transform translate-x-full';
+      n.textContent = msg; 
+      document.body.appendChild(n);
+      setTimeout(() => n.style.transform = 'translateX(0)', 100);
+      setTimeout(()=>{ 
+        n.style.transform = 'translateX(full)';
+        setTimeout(() => n.remove(), 300);
+      }, 3000);
     }
 
     // ICS download
     function downloadICS(id){
-      const s = liveSessions.find(x=>x.id===id); if(!s) return;
+      const s = liveSessions.find(x=>x.id===id); 
+      if(!s) return;
       const ics = [
         'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//MyApp//Academy//IT',
         'BEGIN:VEVENT',
@@ -702,11 +1164,23 @@
         'END:VEVENT','END:VCALENDAR'
       ].join('\r\n');
       const blob = new Blob([ics], { type:'text/calendar;charset=utf-8' });
-      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${s.title.replace(/\s+/g,'_')}.ics`; a.click();
+      const a = document.createElement('a'); 
+      a.href = URL.createObjectURL(blob); 
+      a.download = `${s.title.replace(/\s+/g,'_')}.ics`; 
+      a.click();
       URL.revokeObjectURL(a.href);
+      toast('Evento aggiunto al calendario! 📅');
     }
-    function icsDate(d){ const z = new Date(d); const pad=n=>String(n).padStart(2,'0'); return `${z.getUTCFullYear()}${pad(z.getUTCMonth()+1)}${pad(z.getUTCDate())}T${pad(z.getUTCHours())}${pad(z.getUTCMinutes())}${pad(z.getUTCSeconds())}Z`; }
-    function escapeICS(s){ return (s||'').toString().replace(/([,;])/g,'\\$1').replace(/\n/g,'\\n'); }
+    
+    function icsDate(d){ 
+      const z = new Date(d); 
+      const pad=n=>String(n).padStart(2,'0'); 
+      return `${z.getUTCFullYear()}${pad(z.getUTCMonth()+1)}${pad(z.getUTCDate())}T${pad(z.getUTCHours())}${pad(z.getUTCMinutes())}${pad(z.getUTCSeconds())}Z`; 
+    }
+    
+    function escapeICS(s){ 
+      return (s||'').toString().replace(/([,;])/g,'\\$1').replace(/\n/g,'\\n'); 
+    }
 
     // YouTube helper
     function getYouTubeEmbed(url){
@@ -720,25 +1194,34 @@
           }
         }
         if (u.hostname.includes('youtu.be')){
-          const id = u.pathname.replace('/',''); if (id) return `https://www.youtube.com/embed/${id}`;
+          const id = u.pathname.replace('/',''); 
+          if (id) return `https://www.youtube.com/embed/${id}`;
         }
       }catch(e){}
       return null;
     }
 
     // ===== Events =====
-    window.addEventListener('online', ()=> toast('Connessione ripristinata'));
-    window.addEventListener('offline', ()=> toast('Sei offline (demo disponibile con ?demo=1)'));
-
-    // ===== Bottom nav =====
-    function showSection(id){ show(id); }
+    window.addEventListener('online', ()=> toast('Connessione ripristinata! 🌐'));
+    window.addEventListener('offline', ()=> toast('Modalità offline attiva 📱'));
 
     // ===== Service worker (opzionale) =====
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js')
-        .then(()=>console.log('SW ok'))
-        .catch(()=>console.log('SW non disponibile'));
+        .then(()=>console.log('SW registered successfully'))
+        .catch(()=>console.log('SW registration failed'));
     }
+
+    // Smooth scroll behavior
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
   </script>
 </body>
 </html>
