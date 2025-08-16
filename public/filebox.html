@@ -61,8 +61,8 @@
     .container{width:var(--container); margin-inline:auto}
     .section{margin-block: var(--space-4)}
     .stack{display:flex; gap:var(--space-2); align-items:center}
-    .pill-row{display:flex; gap:10px; overflow:auto; padding-bottom:6px; margin-top:12px;} /* <— spazio aumentato */
-    @media (min-width:768px){ .pill-row{ margin-top:14px; } }                      /* <— spazio leggermente + su tablet/desktop */
+    .pill-row{display:flex; gap:10px; overflow:auto; padding-bottom:6px; margin-top:12px;} /* spazio aumentato */
+    @media (min-width:768px){ .pill-row{ margin-top:14px; } }                         /* leggermente più ampio su tablet/desktop */
 
     /* Header */
     header{position:relative; padding:14px 0}
@@ -541,16 +541,37 @@
         $('#tabManage')?.classList.toggle('hidden', !isAdmin);
       }
     }
-    async function resolveHomePath(){
+
+    // --- NUOVA resolveHomePath: sempre aggiorna user/ruolo prima di decidere ---
+    async function resolveHomePath(forceFresh = false){
+      let user = currentUser;
+      if (!user || forceFresh) {
+        try {
+          const { data:{ user: u } } = await supabase.auth.getUser();
+          user = u || null;
+          currentUser = user;
+        } catch { /* ignore */ }
+      }
       let target = 'home.html';
-      try{
-        if (!currentUser) return target;
-        const meta = currentUser.user_metadata || {};
-        const metaRole = String(meta.role || meta.ruolo || meta.profilo || '').toUpperCase();
-        if (metaRole === 'DIRIGENTE') return 'home_dirigenti.html';
-        const { data, error } = await supabase.from(PROFILES_TABLE).select('role').eq('user_id', currentUser.id).limit(1).maybeSingle();
-        if (!error && data) { const role = String(data.role||'').toUpperCase(); if (role === 'DIRIGENTE') target='home_dirigenti.html'; }
-      }catch(e){}
+      if (!user) return target;
+
+      const meta = user.user_metadata || {};
+      const metaRole = String(meta.role || meta.ruolo || meta.profilo || '').toUpperCase();
+      if (metaRole === 'DIRIGENTE' || metaRole === 'ADMIN') return 'home_dirigenti.html';
+
+      try {
+        const { data, error } = await supabase
+          .from(PROFILES_TABLE)
+          .select('role')
+          .eq('user_id', user.id)
+          .limit(1)
+          .maybeSingle();
+        if (!error) {
+          const dbRole = String(data?.role || '').toUpperCase();
+          if (dbRole === 'DIRIGENTE' || dbRole === 'ADMIN') return 'home_dirigenti.html';
+        }
+      } catch { /* ignore */ }
+
       return target;
     }
 
@@ -566,7 +587,22 @@
     $('#tabFiles')?.addEventListener('click', ()=>switchTab('files'));
     $('#tabDownloads')?.addEventListener('click', ()=>switchTab('downloads'));
     $('#tabManage')?.addEventListener('click', ()=>switchTab('manage'));
-    $('#backBtn')?.addEventListener('click', async ()=>{ window.location.href = await resolveHomePath(); });
+
+    // --- NUOVO handler tasto Indietro: evita doppio salto e doppi click ---
+    let backNavigating = false;
+    $('#backBtn')?.addEventListener('click', async (e)=>{
+      e.preventDefault();
+      if (backNavigating) return;
+      backNavigating = true;
+      show($('#loading'));
+      try{
+        const dest = await resolveHomePath(true); // ruolo fresco
+        window.location.replace(dest);            // non aggiunge una voce in history
+      } finally {
+        hide($('#loading'));
+        backNavigating = false;
+      }
+    });
 
     // === MEGA ===
     async function loadMega(){
@@ -605,7 +641,7 @@
         if (error) throw error;
         downloadLinks = data || [];
         renderDownloads();
-        updateDownloadStats();   // <— AGGIUNTO
+        updateDownloadStats();   // contatore link
         if (isAdmin) await loadAllLinksForManagement();
       }catch(err){
         console.error('Errore download links:', err);
@@ -631,7 +667,7 @@
       }
     }
 
-    // Aggiorna il contatore dei link download  <— AGGIUNTO
+    // Aggiorna il contatore dei link download
     function updateDownloadStats(){
       const el = document.querySelector('#downloadCount');
       if (el) el.textContent = (Array.isArray(downloadLinks) ? downloadLinks.length : 0) || '--';
