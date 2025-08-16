@@ -22,9 +22,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS compilato (build di produzione) -->
-  <!-- Genera /styles.css con Tailwind CLI o PostCSS e includi i tuoi colori custom nel tailwind.config.js -->
-  <link rel="stylesheet" href="/styles.css">
+  <!-- Tailwind CSS compilato (file accanto a questo HTML) -->
+  <link rel="stylesheet" href="./styles.css">
 
   <style>
     :root{
@@ -505,15 +504,11 @@
       }
     }
 
-    const tabFiles = $('#tabFiles');
-    const tabDownloads = $('#tabDownloads');
-    const tabManage = $('#tabManage');
-    tabFiles?.addEventListener('click', () => switchTab('files'));
-    tabDownloads?.addEventListener('click', () => switchTab('downloads'));
-    tabManage?.addEventListener('click', () => switchTab('manage'));
+    $('#tabFiles')?.addEventListener('click', () => switchTab('files'));
+    $('#tabDownloads')?.addEventListener('click', () => switchTab('downloads'));
+    $('#tabManage')?.addEventListener('click', () => switchTab('manage'));
 
-    const backBtn = $('#backBtn');
-    backBtn?.addEventListener('click', async ()=> { window.location.href = await resolveHomePath(); });
+    $('#backBtn')?.addEventListener('click', async ()=> { window.location.href = await resolveHomePath(); });
 
     // === Data: MEGA ===
     async function loadMega(){
