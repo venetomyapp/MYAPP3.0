@@ -17,7 +17,7 @@
   <meta name="apple-mobile-web-app-title" content="MyApp">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 
-  <!-- Fonts & Tailwind (CDN per prototipo; in produzione usa build) -->
+  <!-- Fonts & Tailwind -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -65,41 +65,60 @@
     .glass-card{ background:rgba(255,255,255,.95); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,.2); box-shadow:var(--shadow-glass); }
     .glass-strong{ background:rgba(255,255,255,.12); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:var(--border-glass); box-shadow:var(--shadow-glass); }
     .text-ultra-visible{ color:#fff; text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1); font-weight:800;}
-    .file-tile{ transition:transform .2s ease, box-shadow .2s ease }
-    .file-tile:hover{ transform:translateY(-4px); box-shadow:0 16px 40px rgba(0,0,0,.15);}
+    .file-tile, .download-tile{ transition:transform .2s ease, box-shadow .2s ease }
+    .file-tile:hover, .download-tile:hover{ transform:translateY(-4px); box-shadow:0 16px 40px rgba(0,0,0,.15);}
     .fade-in{ animation:fadeIn .6s ease-out both; opacity:0 }
     @keyframes fadeIn{ from{opacity:0; transform:translateY(20px)} to{opacity:1; transform:translateY(0)} }
     .loading-skeleton{ background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size:200% 100%; animation:loading 1.5s infinite; border-radius:12px; }
     @keyframes loading{ 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-    /* Stato attivo per i filtri */
     .category-filter{ background:rgba(255,255,255,.85); color:#0a0a23; border:1px solid rgba(0,0,0,.06); }
     .category-filter.active{ background:linear-gradient(90deg,#e94560,#ff006e); color:#fff; box-shadow:0 8px 24px rgba(233,69,96,.25); }
-    @media (prefers-reduced-motion:reduce){ *{animation:none!important; transition:none!important} body::before{animation:none} }
+    .tab-btn{ background:rgba(255,255,255,.15); color:#fff; border:1px solid rgba(255,255,255,.2); backdrop-filter:blur(10px); }
+    .tab-btn.active{ background:rgba(255,255,255,.95); color:#1a1a2e; }
+    .download-pulse{ animation:downloadPulse 2s infinite; }
+    @keyframes downloadPulse{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+    
+    /* Mobile optimizations */
+    @media (max-width: 640px) {
+      .mobile-stack { flex-direction: column !important; }
+      .mobile-full { width: 100% !important; }
+      .mobile-text-center { text-align: center !important; }
+      .mobile-hidden { display: none !important; }
+      .mobile-grid-1 { grid-template-columns: 1fr !important; }
+      .mobile-p-3 { padding: 0.75rem !important; }
+      .mobile-gap-3 { gap: 0.75rem !important; }
+      .mobile-text-sm { font-size: 0.875rem !important; }
+    }
+    
+    @media (prefers-reduced-motion:reduce){ 
+      *{animation:none!important; transition:none!important} 
+      body::before{animation:none} 
+      .download-pulse{animation:none}
+    }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
-  <header class="w-full px-4 py-4 relative z-10">
-    <div class="max-w-4xl mx-auto flex justify-between items-center">
-      <div class="flex items-center space-x-3">
-        <button id="backBtn" class="text-ultra-visible hover:text-cyan transition-colors" aria-label="Indietro">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+  <!-- Header - Mobile Optimized -->
+  <header class="w-full px-3 sm:px-4 py-3 sm:py-4 relative z-10">
+    <div class="max-w-6xl mx-auto flex justify-between items-center mobile-stack mobile-gap-3">
+      <div class="flex items-center space-x-2 sm:space-x-3 mobile-full mobile-text-center">
+        <button id="backBtn" class="text-ultra-visible hover:text-cyan transition-colors p-1" aria-label="Indietro">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
           </svg>
         </button>
         <div class="flex items-center space-x-2">
-          <div class="w-10 h-10 bg-gradient-to-r from-cyan to-teal rounded-full flex items-center justify-center">
-            <!-- Folder icon inline -->
-            <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-cyan to-teal rounded-full flex items-center justify-center">
+            <svg class="w-4 h-4 sm:w-6 sm:h-6 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M10 4H4a2 2 0 0 0-2 2v1h20V7a2 2 0 0 0-2-2h-8l-2-1z"></path>
               <path d="M22 9H2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9z"></path>
             </svg>
           </div>
-          <h1 class="fluid-xl font-black text-ultra-visible">FileBox</h1>
+          <h1 class="text-lg sm:text-xl lg:fluid-xl font-black text-ultra-visible">FileBox</h1>
         </div>
       </div>
-      <button id="logoutBtn" class="bg-gradient-to-r from-error to-aurora text-white fluid-sm px-3 py-2 rounded-full font-bold transition-all hover:scale-105 shadow-lg hidden">
+      <button id="logoutBtn" class="bg-gradient-to-r from-error to-aurora text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-full font-bold transition-all hover:scale-105 shadow-lg hidden mobile-full">
         Logout
       </button>
     </div>
@@ -107,88 +126,140 @@
 
   <!-- Loading overlay -->
   <div id="loading" class="fixed inset-0 bg-primary/90 flex items-center justify-center z-50 hidden">
-    <div class="glass-card rounded-xl p-6 text-center">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-aurora mx-auto mb-4"></div>
-      <p class="text-aurora font-bold">Caricamento documenti...</p>
+    <div class="glass-card rounded-xl p-4 sm:p-6 text-center mx-3">
+      <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-aurora mx-auto mb-4"></div>
+      <p class="text-aurora font-bold text-sm sm:text-base">Caricamento...</p>
     </div>
   </div>
 
   <!-- Main -->
-  <main class="max-w-4xl mx-auto px-4 pb-10">
-    <!-- Intro / Search -->
-    <section class="glass-strong rounded-3xl p-6 mb-6 text-center fade-in">
-      <h2 class="text-ultra-visible text-2xl font-extrabold mb-2">Documenti in cartella</h2>
-      <p class="text-ultra-visible fluid-base mb-4">Visualizza e scarica i file senza uscire dalla pagina</p>
-      <div class="grid md:grid-cols-3 gap-4 items-center">
-        <div class="md:col-span-2 glass-card rounded-2xl p-3">
-          <div class="flex items-center space-x-3">
-            <!-- Search icon inline -->
-            <svg class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-              <circle cx="11" cy="11" r="7" stroke-width="2"></circle>
-              <path d="M20 20l-3.5-3.5" stroke-width="2" stroke-linecap="round"></path>
-            </svg>
-            <input id="searchInput" type="text" class="w-full outline-none bg-transparent fluid-base text-primary" placeholder="Cerca per nome o estensione..." maxlength="100" autocomplete="off">
+  <main class="max-w-6xl mx-auto px-3 sm:px-4 pb-8 sm:pb-10">
+    
+    <!-- Tab Navigation -->
+    <div class="flex gap-2 mb-4 sm:mb-6 fade-in overflow-x-auto">
+      <button id="tabFiles" class="tab-btn active px-3 sm:px-4 py-2 rounded-full font-bold text-xs sm:text-sm whitespace-nowrap flex items-center gap-2">
+        <span>📁</span> File Cartella
+      </button>
+      <button id="tabDownloads" class="tab-btn px-3 sm:px-4 py-2 rounded-full font-bold text-xs sm:text-sm whitespace-nowrap flex items-center gap-2">
+        <span>💾</span> Download
+      </button>
+    </div>
+
+    <!-- Files Section -->
+    <div id="filesSection">
+      <!-- Intro / Search -->
+      <section class="glass-strong rounded-2xl sm:rounded-3xl p-4 sm:p-6 mb-4 sm:mb-6 text-center fade-in">
+        <h2 class="text-ultra-visible text-lg sm:text-xl lg:text-2xl font-extrabold mb-2">Documenti in cartella</h2>
+        <p class="text-ultra-visible text-sm sm:fluid-base mb-4">Visualizza e scarica i file senza uscire dalla pagina</p>
+        
+        <!-- Search and Filters - Mobile Stacked -->
+        <div class="grid gap-3 sm:gap-4 mb-4">
+          <!-- Search Bar -->
+          <div class="glass-card rounded-xl sm:rounded-2xl p-2 sm:p-3">
+            <div class="flex items-center space-x-2 sm:space-x-3">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" stroke-width="2"></circle>
+                <path d="M20 20l-3.5-3.5" stroke-width="2" stroke-linecap="round"></path>
+              </svg>
+              <input id="searchInput" type="text" class="w-full outline-none bg-transparent text-xs sm:text-sm lg:fluid-base text-primary" placeholder="Cerca per nome o estensione..." maxlength="100" autocomplete="off">
+            </div>
+          </div>
+          
+          <!-- Filters - Horizontal Scroll on Mobile -->
+          <div class="flex gap-2 overflow-x-auto pb-2">
+            <button class="filterBtn category-filter active px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap" data-type="all">Tutti</button>
+            <button class="filterBtn category-filter px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap" data-type="doc">📄 Doc</button>
+            <button class="filterBtn category-filter px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap" data-type="img">🖼️ Img</button>
+            <button class="filterBtn category-filter px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap" data-type="vid">🎬 Video</button>
+            <button class="filterBtn category-filter px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap" data-type="aud">🎧 Audio</button>
           </div>
         </div>
-        <div class="flex gap-2 overflow-x-auto">
-          <button class="filterBtn category-filter active px-4 py-2 rounded-full fluid-sm font-bold" data-type="all">Tutti</button>
-          <button class="filterBtn category-filter px-4 py-2 rounded-full fluid-sm font-bold" data-type="doc">📄 Documenti</button>
-          <button class="filterBtn category-filter px-4 py-2 rounded-full fluid-sm font-bold" data-type="img">🖼️ Immagini</button>
-          <button class="filterBtn category-filter px-4 py-2 rounded-full fluid-sm font-bold" data-type="vid">🎬 Video</button>
-          <button class="filterBtn category-filter px-4 py-2 rounded-full fluid-sm font-bold" data-type="aud">🎧 Audio</button>
-        </div>
-      </div>
-      <div class="mt-4 flex justify-center gap-8">
-        <div class="text-center">
-          <div id="statTot" class="fluid-2xl font-black text-ultra-visible">--</div>
-          <div class="fluid-xs text-cyan font-bold">File</div>
-        </div>
-        <div class="text-center">
-          <div id="statSize" class="fluid-2xl font-black text-ultra-visible">--</div>
-          <div class="fluid-xs text-cyan font-bold">Dimensione totale</div>
-        </div>
-      </div>
-    </section>
 
-    <!-- Grid -->
-    <section id="filesContainer" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 fade-in">
-      <!-- skeletons -->
-      <div class="glass-card rounded-2xl p-4 loading-skeleton h-28"></div>
-      <div class="glass-card rounded-2xl p-4 loading-skeleton h-28"></div>
-      <div class="glass-card rounded-2xl p-4 loading-skeleton h-28"></div>
-    </section>
+        <!-- Stats -->
+        <div class="flex justify-center gap-4 sm:gap-8">
+          <div class="text-center">
+            <div id="statTot" class="text-lg sm:text-xl lg:fluid-2xl font-black text-ultra-visible">--</div>
+            <div class="text-xs sm:fluid-xs text-cyan font-bold">File</div>
+          </div>
+          <div class="text-center">
+            <div id="statSize" class="text-lg sm:text-xl lg:fluid-2xl font-black text-ultra-visible">--</div>
+            <div class="text-xs sm:fluid-xs text-cyan font-bold">Dimensione</div>
+          </div>
+        </div>
+      </section>
 
-    <!-- Empty -->
-    <div id="emptyState" class="text-center py-16 hidden">
-      <div class="w-24 h-24 bg-gradient-to-r from-muted to-gray-400 rounded-full flex items-center justify-center mx-auto mb-6">
-        <span class="text-4xl">🗂️</span>
+      <!-- Files Grid -->
+      <section id="filesContainer" class="grid mobile-grid-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 fade-in">
+        <!-- Loading skeletons -->
+        <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 loading-skeleton h-24 sm:h-28"></div>
+        <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 loading-skeleton h-24 sm:h-28 mobile-hidden"></div>
+        <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 loading-skeleton h-24 sm:h-28 mobile-hidden"></div>
+      </section>
+
+      <!-- Empty State -->
+      <div id="emptyState" class="text-center py-12 sm:py-16 hidden">
+        <div class="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-r from-muted to-gray-400 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+          <span class="text-2xl sm:text-4xl">🗂️</span>
+        </div>
+        <h3 class="text-lg sm:fluid-xl font-black text-ultra-visible mb-4">Nessun file trovato</h3>
+        <p class="text-cyan text-sm sm:fluid-base">Prova a cambiare filtri o ricerca</p>
       </div>
-      <h3 class="fluid-xl font-black text-ultra-visible mb-4">Nessun file trovato</h3>
-      <p class="text-cyan fluid-base">Prova a cambiare filtri o ricerca</p>
+    </div>
+
+    <!-- Downloads Section -->
+    <div id="downloadsSection" class="hidden">
+      <section class="glass-strong rounded-2xl sm:rounded-3xl p-4 sm:p-6 mb-4 sm:mb-6 text-center fade-in">
+        <div class="flex items-center justify-center gap-3 mb-4">
+          <span class="text-2xl sm:text-3xl download-pulse">💾</span>
+          <h2 class="text-ultra-visible text-lg sm:text-xl lg:text-2xl font-extrabold">Link Download</h2>
+        </div>
+        <p class="text-ultra-visible text-sm sm:fluid-base mb-4">Accedi ai link di download condivisi</p>
+        <div class="text-center">
+          <div id="downloadCount" class="text-lg sm:text-xl lg:fluid-2xl font-black text-ultra-visible">--</div>
+          <div class="text-xs sm:fluid-xs text-cyan font-bold">Link disponibili</div>
+        </div>
+      </section>
+
+      <!-- Downloads Grid -->
+      <section id="downloadsContainer" class="grid mobile-grid-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 fade-in">
+        <!-- Loading skeletons -->
+        <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 loading-skeleton h-32 sm:h-36"></div>
+        <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 loading-skeleton h-32 sm:h-36 mobile-hidden"></div>
+        <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 loading-skeleton h-32 sm:h-36 mobile-hidden"></div>
+      </section>
+
+      <!-- Empty Downloads -->
+      <div id="emptyDownloads" class="text-center py-12 sm:py-16 hidden">
+        <div class="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-r from-muted to-gray-400 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+          <span class="text-2xl sm:text-4xl">📥</span>
+        </div>
+        <h3 class="text-lg sm:fluid-xl font-black text-ultra-visible mb-4">Nessun link disponibile</h3>
+        <p class="text-cyan text-sm sm:fluid-base">I link di download verranno aggiunti dalla direzione</p>
+      </div>
     </div>
   </main>
 
   <!-- Modal Viewer -->
   <div id="viewer" class="fixed inset-0 bg-black/70 hidden z-50">
-    <div class="absolute inset-0 p-4 flex items-center justify-center">
-      <div class="glass-card rounded-2xl w-full max-w-5xl h-[80vh] flex flex-col">
-        <div class="p-3 flex items-center justify-between border-b border-gray-200">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-lg bg-gradient-to-r from-cyan to-teal flex items-center justify-center">📄</div>
-            <div>
-              <div id="viewerName" class="font-bold text-primary"></div>
-              <div id="viewerMeta" class="text-sm text-muted"></div>
+    <div class="absolute inset-0 p-2 sm:p-4 flex items-center justify-center">
+      <div class="glass-card rounded-xl sm:rounded-2xl w-full max-w-5xl h-[85vh] sm:h-[80vh] flex flex-col">
+        <div class="p-2 sm:p-3 flex items-center justify-between border-b border-gray-200 mobile-stack mobile-gap-3">
+          <div class="flex items-center gap-2 sm:gap-3 mobile-full">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-r from-cyan to-teal flex items-center justify-center">📄</div>
+            <div class="min-w-0 flex-1">
+              <div id="viewerName" class="font-bold text-primary text-sm sm:text-base truncate"></div>
+              <div id="viewerMeta" class="text-xs sm:text-sm text-muted"></div>
             </div>
           </div>
-          <div class="flex items-center gap-2">
-            <a id="downloadBtn" class="bg-gradient-to-r from-aurora to-magenta text-white px-3 py-2 rounded-full font-bold" download>Scarica</a>
-            <button id="closeViewer" class="bg-gray-100 hover:bg-gray-200 text-primary px-3 py-2 rounded-full font-bold">Chiudi</button>
+          <div class="flex items-center gap-2 mobile-full">
+            <a id="downloadBtn" class="bg-gradient-to-r from-aurora to-magenta text-white px-2 sm:px-3 py-1 sm:py-2 rounded-full font-bold text-xs sm:text-sm mobile-full mobile-text-center" download>Scarica</a>
+            <button id="closeViewer" class="bg-gray-100 hover:bg-gray-200 text-primary px-2 sm:px-3 py-1 sm:py-2 rounded-full font-bold text-xs sm:text-sm">Chiudi</button>
           </div>
         </div>
         <div class="flex-1 relative">
           <div id="viewerLoading" class="absolute inset-0 flex flex-col items-center justify-center">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-aurora mb-4"></div>
-            <p class="text-aurora font-bold">Decrittazione/Caricamento…</p>
+            <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-aurora mb-4"></div>
+            <p class="text-aurora font-bold text-sm sm:text-base">Caricamento…</p>
           </div>
           <div id="viewerBody" class="w-full h-full hidden"></div>
         </div>
@@ -202,19 +273,20 @@
     import { File as MegaFile } from 'https://unpkg.com/megajs/dist/main.browser-es.mjs';
 
     // === CONFIG ===
-    // Tua cartella MEGA pubblica:
     const MEGA_FOLDER_URL = 'https://mega.nz/folder/figRhbTT#dw0ZS1lb6sv8l-CHVfNSTA';
-    const PREVIEW_SIZE_LIMIT = 100 * 1024 * 1024; // 100MB, sopra mostra solo opzione download
+    const PREVIEW_SIZE_LIMIT = 100 * 1024 * 1024; // 100MB
 
-    // Supabase (per routing del tasto indietro)
+    // Supabase
     const supabaseUrl = 'https://pvzdilkozpspsnepedqc.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Stato
+    // State
     let currentUser = null;
-    let allFiles = []; // {name, size, ext, type, megaFile}
-    let lastObjectURL = null; // per cleanup
+    let allFiles = [];
+    let downloadLinks = [];
+    let lastObjectURL = null;
+    let activeTab = 'files';
 
     // Utils
     const $ = s => document.querySelector(s);
@@ -233,6 +305,7 @@
       vid: ['mp4','webm','mkv','mov','avi','m4v'],
       aud: ['mp3','wav','ogg','m4a','flac']
     };
+    
     const detectType = (ext) => {
       ext = ext.toLowerCase();
       if (EXT_MAP.img.includes(ext)) return 'img';
@@ -241,6 +314,7 @@
       if (EXT_MAP.doc.includes(ext)) return 'doc';
       return 'other';
     };
+    
     const mimeFromExt = (ext) => {
       ext = ext.toLowerCase();
       const map = {
@@ -256,7 +330,40 @@
       return map[ext] || 'application/octet-stream';
     };
 
-    // Auth + back routing
+    // Transfer platform icons
+    const getTransferIcon = (url) => {
+      const urlLower = url.toLowerCase();
+      if (urlLower.includes('mega.nz') || urlLower.includes('mega.co')) return '☁️';
+      if (urlLower.includes('drive.google.com') || urlLower.includes('docs.google.com')) return '📁';
+      if (urlLower.includes('wetransfer.com')) return '📤';
+      if (urlLower.includes('dropbox.com')) return '📦';
+      if (urlLower.includes('onedrive') || urlLower.includes('sharepoint')) return '📋';
+      if (urlLower.includes('mediafire.com')) return '🔥';
+      if (urlLower.includes('github.com')) return '🐙';
+      return '🔗';
+    };
+
+    // Tab switching
+    function switchTab(tab) {
+      activeTab = tab;
+      
+      // Update tab buttons
+      $$('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      if (tab === 'files') {
+        $('#tabFiles').classList.add('active');
+        show($('#filesSection'));
+        hide($('#downloadsSection'));
+      } else {
+        $('#tabDownloads').classList.add('active');
+        hide($('#filesSection'));
+        show($('#downloadsSection'));
+      }
+    }
+
+    $('#tabFiles').addEventListener('click', () => switchTab('files'));
+    $('#tabDownloads').addEventListener('click', () => switchTab('downloads'));
+
+    // Auth + routing
     async function checkAuth(){
       try{
         const { data:{ user } } = await supabase.auth.getUser();
@@ -265,6 +372,7 @@
         if (logoutBtn) (user ? logoutBtn.classList.remove('hidden') : logoutBtn.classList.add('hidden'));
       }catch(e){ /* ignore */ }
     }
+
     async function resolveHomePath(){
       let target = 'home.html';
       try{
@@ -280,19 +388,19 @@
       }catch(e){}
       return target;
     }
+
     $('#backBtn')?.addEventListener('click', async ()=> { window.location.href = await resolveHomePath(); });
     $('#logoutBtn')?.addEventListener('click', async ()=>{
       if (confirm('Sei sicuro di voler uscire?')){ await supabase.auth.signOut(); location.href='login.html'; }
     });
 
-    // Caricamento cartella MEGA
+    // Load MEGA files
     async function loadMega(){
       show($('#loading'));
       try{
         const folder = MegaFile.fromURL(MEGA_FOLDER_URL);
         await new Promise((res, rej)=> folder.loadAttributes(err => err ? rej(err) : res()));
 
-        // Flatten di tutti i file (anche sottocartelle)
         const flatten = async (node) => {
           if (!node) return [];
           if (!node.directory) return [node];
@@ -315,22 +423,46 @@
           return { name, ext, size, type, megaFile: f };
         });
 
-        render();
+        renderFiles();
         updateStats();
       }catch(err){
         console.error('Errore MEGA:', err);
         $('#filesContainer').innerHTML = `
-          <div class="glass-card rounded-2xl p-6 col-span-full">
-            <p class="text-error font-semibold">Impossibile leggere la cartella MEGA.</p>
-            <p class="text-muted mt-2">Controlla che il link sia pubblico (ID+KEY) e riprova.</p>
+          <div class="glass-card rounded-xl sm:rounded-2xl p-4 sm:p-6 col-span-full">
+            <p class="text-error font-semibold text-sm sm:text-base">Impossibile leggere la cartella MEGA.</p>
+            <p class="text-muted mt-2 text-xs sm:text-sm">Controlla che il link sia pubblico e riprova.</p>
           </div>`;
       }finally{
         hide($('#loading'));
       }
     }
 
-    // Render grid
-    function render(){
+    // Load download links
+    async function loadDownloadLinks(){
+      try{
+        const { data, error } = await supabase
+          .from('download_links')
+          .select('*')
+          .eq('attivo', true)
+          .order('order_index', { ascending: true });
+        
+        if (error) throw error;
+        
+        downloadLinks = data || [];
+        renderDownloads();
+        updateDownloadStats();
+      }catch(err){
+        console.error('Errore download links:', err);
+        $('#downloadsContainer').innerHTML = `
+          <div class="glass-card rounded-xl sm:rounded-2xl p-4 sm:p-6 col-span-full">
+            <p class="text-error font-semibold text-sm sm:text-base">Errore nel caricamento dei link.</p>
+            <p class="text-muted mt-2 text-xs sm:text-sm">Riprova più tardi o contatta l'amministratore.</p>
+          </div>`;
+      }
+    }
+
+    // Render files
+    function renderFiles(){
       const q = $('#searchInput').value.trim().toLowerCase();
       const activeType = $$('.filterBtn').find(b=>b.classList.contains('active'))?.dataset.type || 'all';
 
@@ -351,18 +483,17 @@
       const iconFor = t => ({ doc:'📄', img:'🖼️', vid:'🎬', aud:'🎧', other:'📦' }[t] || '📦');
 
       container.innerHTML = filtered.map(f=>`
-        <button class="file-tile glass-card rounded-2xl p-4 text-left" data-name="${encodeURIComponent(f.name)}" aria-label="Apri ${f.name}">
-          <div class="flex items-start gap-3">
-            <div class="w-12 h-12 rounded-xl bg-gradient-to-r from-cyan to-teal flex items-center justify-center text-xl">${iconFor(f.type)}</div>
+        <button class="file-tile glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 text-left w-full" data-name="${encodeURIComponent(f.name)}" aria-label="Apri ${f.name}">
+          <div class="flex items-start gap-2 sm:gap-3">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-r from-cyan to-teal flex items-center justify-center text-lg sm:text-xl flex-shrink-0">${iconFor(f.type)}</div>
             <div class="flex-1 min-w-0">
-              <div class="font-bold text-primary truncate" title="${f.name}">${f.name}</div>
-              <div class="text-muted fluid-xs mt-1">${f.ext.toUpperCase()} • ${humanSize(f.size)}</div>
+              <div class="font-bold text-primary text-sm sm:text-base truncate" title="${f.name}">${f.name}</div>
+              <div class="text-muted text-xs sm:fluid-xs mt-1">${f.ext.toUpperCase()} • ${humanSize(f.size)}</div>
             </div>
           </div>
         </button>
       `).join('');
 
-      // bind open
       $$('#filesContainer .file-tile').forEach(btn=>{
         btn.addEventListener('click', ()=>{
           const name = decodeURIComponent(btn.dataset.name);
@@ -372,6 +503,35 @@
       });
     }
 
+    // Render downloads
+    function renderDownloads(){
+      const container = $('#downloadsContainer');
+      if (!downloadLinks.length){
+        container.innerHTML = '';
+        show($('#emptyDownloads'));
+        return;
+      }
+      hide($('#emptyDownloads'));
+
+      container.innerHTML = downloadLinks.map(link=>`
+        <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="download-tile glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 text-left w-full block hover:no-underline">
+          <div class="flex items-start gap-2 sm:gap-3">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-r from-aurora to-magenta flex items-center justify-center text-lg sm:text-xl flex-shrink-0">${getTransferIcon(link.url)}</div>
+            <div class="flex-1 min-w-0">
+              <div class="font-bold text-primary text-sm sm:text-base mb-1" title="${link.titolo}">${link.titolo}</div>
+              ${link.descrizione ? `<div class="text-muted text-xs sm:text-sm mb-2 line-clamp-2">${link.descrizione}</div>` : ''}
+              <div class="flex items-center justify-between">
+                <div class="text-xs text-cyan font-medium">Clicca per scaricare</div>
+                <div class="bg-gradient-to-r from-success to-teal text-white px-2 py-1 rounded-full text-xs font-bold">
+                  ${link.tipo_transfer || 'Download'}
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+      `).join('');
+    }
+
     function updateStats(){
       const total = allFiles.length;
       const sizeSum = allFiles.reduce((a,b)=> a + (Number.isFinite(b.size)? b.size : 0), 0);
@@ -379,7 +539,11 @@
       $('#statSize').textContent = total ? humanSize(sizeSum) : '--';
     }
 
-    // Viewer
+    function updateDownloadStats(){
+      $('#downloadCount').textContent = downloadLinks.length || '--';
+    }
+
+    // Viewer (same as before but mobile optimized)
     async function openViewer(file){
       show($('#viewer'));
       hide($('#viewerBody'));
@@ -388,7 +552,6 @@
       $('#viewerMeta').textContent = `${file.ext.toUpperCase()} • ${humanSize(file.size)}`;
       $('#viewerBody').innerHTML = '';
 
-      // pulisco eventuale URL precedente
       if (lastObjectURL){
         try { URL.revokeObjectURL(lastObjectURL); } catch {}
         lastObjectURL = null;
@@ -397,16 +560,15 @@
       try{
         if (Number.isFinite(file.size) && file.size > PREVIEW_SIZE_LIMIT){
           $('#viewerBody').innerHTML = `
-            <div class="w-full h-full flex items-center justify-center p-6 text-center">
+            <div class="w-full h-full flex items-center justify-center p-4 sm:p-6 text-center">
               <div>
-                <p class="text-primary font-semibold mb-2">Anteprima disattivata per file di grandi dimensioni.</p>
-                <p class="text-muted">Usa “Scarica” per aprirlo in locale.</p>
+                <p class="text-primary font-semibold mb-2 text-sm sm:text-base">Anteprima disattivata per file di grandi dimensioni.</p>
+                <p class="text-muted text-xs sm:text-sm">Usa "Scarica" per aprirlo in locale.</p>
               </div>
             </div>`;
-          // comunque preparo il download “diretto” via streaming MEGA
           const streamUrl = await ensureDownloadURL(file);
           const a = $('#downloadBtn');
-          a.removeAttribute('download'); // lascia gestione al browser
+          a.removeAttribute('download');
           a.href = streamUrl;
         } else {
           const data = await new Promise((res, rej)=> file.megaFile.download((err, bytes)=> err ? rej(err) : res(bytes)));
@@ -414,27 +576,25 @@
           const url = URL.createObjectURL(blob);
           lastObjectURL = url;
 
-          // Download btn: scarica il blob (nessun target _blank => niente pagina data:)
           const a = $('#downloadBtn');
           a.href = url;
           a.setAttribute('download', file.name);
 
-          // Render viewer content nella stessa pagina che ha creato il blob
           const body = $('#viewerBody');
           if (file.type==='img'){
             body.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-gray-50"><img src="${url}" class="max-w-full max-h-full object-contain" alt="${file.name}"/></div>`;
           } else if (file.type==='vid'){
-            body.innerHTML = `<video src="${url}" controls class="w-full h-full bg-black rounded-b-2xl"></video>`;
+            body.innerHTML = `<video src="${url}" controls class="w-full h-full bg-black rounded-b-xl sm:rounded-b-2xl"></video>`;
           } else if (file.type==='aud'){
-            body.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-gray-50"><audio src="${url}" controls class="w-full max-w-xl"></audio></div>`;
+            body.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-gray-50 p-4"><audio src="${url}" controls class="w-full max-w-xl"></audio></div>`;
           } else if (file.ext==='pdf'){
-            body.innerHTML = `<iframe src="${url}" class="w-full h-full rounded-b-2xl" title="${file.name}" referrerpolicy="no-referrer"></iframe>`;
+            body.innerHTML = `<iframe src="${url}" class="w-full h-full rounded-b-xl sm:rounded-b-2xl" title="${file.name}" referrerpolicy="no-referrer"></iframe>`;
           } else {
             body.innerHTML = `
-              <div class="w-full h-full flex items-center justify-center p-6 text-center">
+              <div class="w-full h-full flex items-center justify-center p-4 sm:p-6 text-center">
                 <div>
-                  <p class="text-primary font-semibold mb-2">Anteprima non disponibile per questo formato.</p>
-                  <p class="text-muted">Clicca su “Scarica” per aprire il file.</p>
+                  <p class="text-primary font-semibold mb-2 text-sm sm:text-base">Anteprima non disponibile per questo formato.</p>
+                  <p class="text-muted text-xs sm:text-sm">Clicca su "Scarica" per aprire il file.</p>
                 </div>
               </div>`;
           }
@@ -442,13 +602,12 @@
       }catch(e){
         console.error('Preview error:', e);
         $('#viewerBody').innerHTML = `
-          <div class="w-full h-full flex items-center justify-center p-6 text-center">
+          <div class="w-full h-full flex items-center justify-center p-4 sm:p-6 text-center">
             <div>
-              <p class="text-error font-semibold mb-2">Impossibile caricare l’anteprima.</p>
-              <p class="text-muted">Prova a scaricare il file.</p>
+              <p class="text-error font-semibold mb-2 text-sm sm:text-base">Impossibile caricare l'anteprima.</p>
+              <p class="text-muted text-xs sm:text-sm">Prova a scaricare il file.</p>
             </div>
           </div>`;
-        // Fallback: link diretto/stream se possibile
         try {
           const streamUrl = await ensureDownloadURL(file);
           const a = $('#downloadBtn');
@@ -461,7 +620,6 @@
       }
     }
 
-    // Ottiene (se possibile) un URL “stream” diretto da MEGA per file grandi
     async function ensureDownloadURL(file){
       return await new Promise((resolve, reject)=>{
         try{
@@ -486,23 +644,28 @@
       }
     });
 
-    // Filtri e ricerca
+    // Event listeners
     $$('.filterBtn').forEach(btn=>{
       btn.addEventListener('click', ()=>{
         $$('.filterBtn').forEach(b=>b.classList.remove('active'));
         btn.classList.add('active');
-        render();
+        renderFiles();
       });
     });
-    let t; $('#searchInput').addEventListener('input', ()=>{ clearTimeout(t); t = setTimeout(render, 250); });
+    
+    let searchTimeout;
+    $('#searchInput').addEventListener('input', ()=>{ 
+      clearTimeout(searchTimeout); 
+      searchTimeout = setTimeout(renderFiles, 250); 
+    });
 
-    // Init
+    // Initialize
     (async ()=>{
       await checkAuth();
-      await loadMega();
+      await Promise.all([loadMega(), loadDownloadLinks()]);
     })();
 
-    // pulizia all'uscita
+    // Cleanup
     window.addEventListener('beforeunload', ()=>{
       if (lastObjectURL){
         try { URL.revokeObjectURL(lastObjectURL); } catch {}
