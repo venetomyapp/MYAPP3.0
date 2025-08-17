@@ -1,17 +1,46 @@
-// api/chat.js - Versione semplificata compatibile con Vercel
+// api/chat.js - Virgilio Expert: Assistente Sindacale Carabinieri
 
-// FONTI PINNATE per ogni argomento
-const PINNED_SOURCES = {
+// FONTI UFFICIALI PER AMBITO (dal prompt professionale)
+const EXPERT_SOURCES = {
   disciplina: [
     {
-      title: 'Guida Tecnica — Procedure disciplinari (2023) — Difesa',
+      title: 'Guida Tecnica "Procedure disciplinari" (2023) — Ministero della Difesa',
       url: 'https://www.difesa.it/assets/allegati/6105/06_guida_tecnica_disciplina_anno_2023.pdf',
     },
   ],
+  com: [
+    {
+      title: 'Supplemento al n.3 — Arma dei Carabinieri',
+      url: 'https://www.carabinieri.it/docs/default-source/default-document-library/supplemento-al-n-3.pdf?sfvrsn=811b6d23_0',
+    },
+  ],
+  tuom: [
+    { title: 'Ministero della Difesa — Sezione normativa', url: 'https://www.difesa.it' },
+  ],
+  leggi: [
+    { title: 'Gazzetta Ufficiale della Repubblica Italiana', url: 'https://www.gazzettaufficiale.it' },
+  ],
+  tulps: [
+    { title: 'Ministero dell\'Interno — Sezione normativa', url: 'https://www.interno.gov.it' },
+  ],
+  cds: [
+    { title: 'Ministero dei Trasporti — Portale normativo', url: 'https://www.mit.gov.it' },
+  ],
+  civile: [
+    { title: 'Ministero della Giustizia — Sezione codici', url: 'https://www.giustizia.it' },
+  ],
+  regolamento_generale: [
+    { title: 'Arma dei Carabinieri — Sezione istituzionale', url: 'https://www.carabinieri.it' },
+  ],
+  regolamento_organico: [
+    { title: 'Arma dei Carabinieri — Documenti ufficiali', url: 'https://www.carabinieri.it' },
+  ],
   concorsi: [
-    { title: 'Arma — Area Concorsi', url: 'https://www.carabinieri.it/concorsi/area-concorsi' },
-    { title: 'Extranet Arma — Domande online', url: 'https://extranet.carabinieri.it/concorsionline20' },
-    { title: 'INPA — Portale reclutamento', url: 'https://www.inpa.gov.it' },
+    { title: 'Area Concorsi ufficiale Arma dei Carabinieri', url: 'https://www.carabinieri.it/concorsi/area-concorsi' },
+    { title: 'Portale domande online Extranet Carabinieri', url: 'https://extranet.carabinieri.it/concorsionline20' },
+    { title: 'INPA — Portale del reclutamento pubblico', url: 'https://www.inpa.gov.it' },
+    { title: 'Concorsi Ministero della Difesa', url: 'https://concorsi.difesa.it' },
+    { title: 'Gazzetta Ufficiale — Pubblicazione bandi', url: 'https://www.gazzettaufficiale.it' },
   ],
   pensioni: [
     {
@@ -22,53 +51,134 @@ const PINNED_SOURCES = {
       title: 'INPS — Pensione di privilegio',
       url: 'https://www.inps.it/it/it/dettaglio-scheda.it.schede-servizio-strumento.schede-servizi.pensione-di-privilegio-50626.pensione-di-privilegio.html',
     },
-  ],
-  com: [
     {
-      title: 'COM — Supplemento al n.3 — Carabinieri',
-      url: 'https://www.carabinieri.it/docs/default-source/default-document-library/supplemento-al-n-3.pdf?sfvrsn=811b6d23_0',
+      title: 'INPS — Accredito contributi figurativi servizio militare',
+      url: 'https://www.inps.it/it/it/dettaglio-scheda.it.schede-servizio-strumento.schede-servizi.accredito-dei-contributi-figurativi-per-il-servizio-militare-obbligatorio-50013.accredito-dei-contributi-figurativi-per-il-servizio-militare-obbligatorio.html',
     },
   ],
-  generale: [
-    { title: 'Arma dei Carabinieri — Sito istituzionale', url: 'https://www.carabinieri.it' },
-    { title: 'Gazzetta Ufficiale della Repubblica Italiana', url: 'https://www.gazzettaufficiale.it' },
-  ],
+};
+
+// DIRIGENTI SINDACALI (dal database interno)
+const DIRIGENTI = {
+  veneto: {
+    regionale: [
+      'Antonio Grande – Segretario Generale Regionale – 335 147 0886 – antoniogrande81@gmail.com',
+      'Andrea Modolo – Segretario Generale Regionale Aggiunto – 377 096 9168 – andreamodolo.85@gmail.com',
+      'Niccolò Foroni – Segretario Regionale – 340 727 9855 – nforoni86@gmail.com',
+      'Massimo Salciccioli – Segretario Regionale – 331 369 1024 – contemax1970@gmail.com',
+      'Massimiliano Riccio – Segretario Generale Provinciale – 331 364 7088 – max.riccio2015@tiscali.it',
+      'Gianluca Sciuto – Segretario Generale Provinciale – 340 817 3344 – gianluca.sciuto@live.it'
+    ],
+    email: 'veneto@carabinierinsc.it'
+  },
+  treviso: {
+    provinciale: [
+      'Andrea Modolo – Segretario Generale Provinciale – 377 096 9168 – andreamodolo.85@gmail.com',
+      'Aldo Capua – Segretario Provinciale – 3207025658',
+      'Niccolò Foroni – Segretario Generale Provinciale – 340 727 9855 – nforoni86@gmail.com',
+      'Errante Christian – Segretario Generale Provinciale – 3893167040 – christian91m@hotmail.it'
+    ],
+    email: 'treviso@carabinierinsc.it'
+  }
 };
 
 const CONTACT_LINK = 'https://myapp31.vercel.app/richieste.html';
 
-// Rileva il topic dalla domanda
-function detectTopic(query = '') {
+// EXPERT SYSTEM PROMPT COMPLETO
+const EXPERT_SYSTEM_PROMPT = `Sei un assistente virtuale professionale per il personale dell'Arma dei Carabinieri e il Sindacato. Rispondi con competenza su tutti gli aspetti della professione, attingendo sempre alle fonti ufficiali indicate salvo che per l'elenco dirigenti (già caricato internamente).
+
+### AMBITI DI COMPETENZA E FONTI UFFICIALI
+
+1. **Disciplina Militare** - Tipologie di sanzioni, strumenti, principi e procedure
+2. **Codice dell'Ordinamento Militare (COM)** - Doveri, diritti, gerarchia, avanzamenti  
+3. **Testo Unico dell'Ordinamento Militare (TUOM)** - Disposizioni generali e specifiche
+4. **Leggi Ordinarie e Speciali** - Applicabili alle Forze Armate e all'Arma
+5. **TULPS** - Testo Unico Leggi Pubblica Sicurezza
+6. **Codice della Strada (CdS)** - Norme sulla circolazione, competenze
+7. **Codice Civile** - Aspetti di rilevanza civile per militari
+8. **Regolamento Generale Arma** - Disposizioni interne e organizzative
+9. **Regolamento Organico Arma** - Struttura e funzioni  
+10. **Concorsi nell'Arma** - Bandi, procedure, requisiti per tutti i ruoli
+11. **Pensioni Militari** - Requisiti, calcolo, sistemi, coefficienti di trasformazione
+
+### GESTIONE DIRIGENTI
+Quando richiesto informazioni sui dirigenti, chiedi sempre:
+a) Livello (regionale/provinciale)  
+b) Se provinciale, specificare la provincia
+
+### STILE E RESPONSABILITÀ
+- Linguaggio professionale, chiaro e puntuale
+- Cita sempre la fonte ufficiale con link diretto  
+- Usa elenchi e struttura ordinata per maggiore chiarezza
+- Non fornire consulenza legale individuale
+- Se l'informazione non è nelle fonti indicate, rimanda al dirigente competente
+
+Rispondi sempre in italiano, con tono rispettoso e istituzionale.`;
+
+// Rileva il topic dalla domanda (versione expert)
+function detectExpertTopic(query = '') {
   const q = query.toLowerCase();
-  if (/dirigent[ei]|regionale|provinciale/.test(q)) return 'dirigenti';
-  if (/disciplina|sanzion/i.test(q)) return 'disciplina';
-  if (/\bcom\b|ordinamento\s+militar/i.test(q)) return 'com';
-  if (/concors/i.test(q)) return 'concorsi';
-  if (/pension/i.test(q) || /ausiliar/i.test(q) || /\briserv[ae]\b/.test(q) || /\btfs\b/.test(q)) return 'pensioni';
+  
+  // Dirigenti
+  if (/dirigent[ei]|regionale|provinciale|contatt|sindacat/i.test(q)) return 'dirigenti';
+  
+  // Ambiti tecnici specifici
+  if (/disciplina|sanzion|procediment.*disciplinar/i.test(q)) return 'disciplina';
+  if (/\bcom\b|ordinamento\s+militar|doveri|diritti|gerarchia|avanzament/i.test(q)) return 'com';
+  if (/tuom|testo\s+unico\s+(dell'|dell')?ordinamento/i.test(q)) return 'tuom';
+  if (/gazzetta|legge|decreto|normattiva|disposizion/i.test(q)) return 'leggi';
+  if (/tulps|pubblica\s+sicurezza|porto\s+armi/i.test(q)) return 'tulps';
+  if (/codice\s+della\s+strada|cds\b|circolazion|patente/i.test(q)) return 'cds';
+  if (/codice\s+civile|civile\b|contratt/i.test(q)) return 'civile';
+  if (/regolamento\s+generale/i.test(q)) return 'regolamento_generale';
+  if (/regolamento\s+organico|struttura.*arma|organizzazion/i.test(q)) return 'regolamento_organico';
+  
+  // Concorsi (keywords estese)
+  if (/concors|bando|allievi|ufficiali|maresciall|atleti|reclutament|selezione/i.test(q)) return 'concorsi';
+  
+  // Pensioni (keywords estese)  
+  if (/pension|ausiliar|riserv|tfs|tfr|contribut|requisit.*pensionist|coefficent|età.*pensiona|inps/i.test(q)) return 'pensioni';
+  
+  // Licenze/istanze (nuovo)
+  if (/licenz|istanza|pratica|permess|autorizzazion|domanda/i.test(q)) return 'licenze_istanze';
+  
   return 'generale';
 }
 
-// System prompt per OpenAI
-function buildSystemPrompt(topic) {
-  const sources = PINNED_SOURCES[topic] || PINNED_SOURCES.generale;
-  const sourcesList = sources.map((s, i) => `[${i + 1}] ${s.title} — ${s.url}`).join('\n');
+// Gestione dirigenti con lista completa
+function handleDirigentiQuery(query) {
+  const q = query.toLowerCase();
+  let response = '';
   
-  return `Sei Virgilio, assistente virtuale professionale per il personale dell'Arma dei Carabinieri e il Sindacato.
+  if (q.includes('treviso')) {
+    response = `**DIRIGENTI PROVINCIA DI TREVISO:**\n\n${DIRIGENTI.treviso.provinciale.join('\n')}\n\n**Email:** ${DIRIGENTI.treviso.email}`;
+  } else if (q.includes('veneto') || q.includes('regionale')) {
+    response = `**DIRIGENTI REGIONE VENETO:**\n\n${DIRIGENTI.veneto.regionale.join('\n')}\n\n**Email:** ${DIRIGENTI.veneto.email}`;
+  } else {
+    response = `Per fornirti i contatti corretti, specifica:\n\n**a) Livello:** regionale o provinciale\n**b) Se provinciale:** indica la provincia\n\n**Esempio:** "Dirigenti provinciali di Treviso" oppure "Dirigenti regionali Veneto"`;
+  }
+  
+  return response + `\n\nPer altre province o regioni, invia una richiesta specifica tramite: ${CONTACT_LINK}`;
+}
 
-REGOLE:
-- Rispondi in italiano con tono chiaro e istituzionale
-- Non fornire consulenza legale individuale
-- Cita sempre le fonti usando [1][2][3]
-- Se l'informazione non è nelle fonti, dichiaralo e rimanda al dirigente competente
+// System prompt dinamico con fonti specifiche
+function buildExpertSystemPrompt(topic) {
+  let contextSources = '';
+  
+  if (topic !== 'dirigenti' && topic !== 'generale') {
+    const sources = EXPERT_SOURCES[topic] || [];
+    if (sources.length > 0) {
+      contextSources = '\n\n### FONTI UFFICIALI DISPONIBILI:\n' + 
+        sources.map((s, i) => `[${i + 1}] ${s.title}\nURL: ${s.url}`).join('\n\n');
+    }
+  }
+  
+  return EXPERT_SYSTEM_PROMPT + contextSources + '\n\nCita sempre le fonti con [1][2][3] quando pertinente.';
+}
 
-FONTI UFFICIALI DISPONIBILI:
-${sourcesList}
-
-AMBITI COPERTI:
-- Disciplina Militare, COM, Concorsi, Pensioni Militari, Normative generali
-- Per dirigenti: chiedi prima livello (regionale/provinciale) e provincia se applicabile
-
-${topic === 'pensioni' ? '\nSTRUMENTI PENSIONI:\n• CUSI — Applicativo interforze (simulazioni)\n• MyINPS — "La mia pensione futura"\n• Calcolatore Altroconsumo — https://www.altroconsumo.it/soldi/lavoro-pensione/calcola-risparmia/calcolarepensioni' : ''}`;
+// Chiusura speciale per licenze/istanze
+function getLicenseClosing() {
+  return `\n\nPuoi verificare tutti i dettagli consultando direttamente la fonte ufficiale indicata. Per questa pratica ti consiglio di contattare il dirigente di zona: specifica se regionale o provinciale e di quale provincia. Puoi inviare subito la tua richiesta tramite questo link: ${CONTACT_LINK}\n\n**Per problemi in dettaglio contatta il tuo dirigente di zona.**`;
 }
 
 export default async function handler(req, res) {
@@ -101,8 +211,6 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Token mancante' });
     }
 
-    const token = authHeader.split(' ')[1];
-    
     // Verifica token con Supabase
     const supabaseResponse = await fetch(`${process.env.SUPABASE_URL}/auth/v1/user`, {
       headers: {
@@ -121,8 +229,8 @@ export default async function handler(req, res) {
     const { 
       messages = [], 
       model = 'gpt-4o-mini', 
-      max_tokens = 600, 
-      temperature = 0.3 
+      max_tokens = 800, 
+      temperature = 0.2 
     } = req.body;
 
     if (!Array.isArray(messages) || messages.length === 0) {
@@ -131,17 +239,34 @@ export default async function handler(req, res) {
 
     // Rileva il topic dall'ultimo messaggio utente
     const lastUserMessage = messages.filter(m => m.role === 'user').pop()?.content || '';
-    const topic = detectTopic(lastUserMessage);
+    const topic = detectExpertTopic(lastUserMessage);
 
-    // Costruisci il prompt con fonti
-    const systemPrompt = buildSystemPrompt(topic);
+    // Gestione speciale per dirigenti (risposta diretta)
+    if (topic === 'dirigenti') {
+      const dirigentiResponse = handleDirigentiQuery(lastUserMessage);
+      
+      return res.status(200).json({
+        choices: [{
+          message: {
+            content: dirigentiResponse,
+            role: 'assistant'
+          }
+        }],
+        usage: { total_tokens: 50 },
+        expert_topic: topic,
+        direct_response: true
+      });
+    }
+
+    // Costruisci il prompt expert con fonti specifiche
+    const expertPrompt = buildExpertSystemPrompt(topic);
     
     const openaiMessages = [
-      { role: 'system', content: systemPrompt },
+      { role: 'system', content: expertPrompt },
       ...messages
     ];
 
-    // Chiamata a OpenAI
+    // Chiamata a OpenAI con parametri expert
     const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -153,7 +278,9 @@ export default async function handler(req, res) {
         messages: openaiMessages,
         max_tokens,
         temperature,
-        user: user.id
+        user: user.id,
+        presence_penalty: 0.1,
+        frequency_penalty: 0.1
       })
     });
 
@@ -168,28 +295,34 @@ export default async function handler(req, res) {
 
     const openaiData = await openaiResponse.json();
 
-    // Post-processing della risposta
+    // Post-processing expert della risposta
     if (openaiData?.choices?.[0]?.message?.content) {
       let content = openaiData.choices[0].message.content;
 
-      // Aggiungi strumenti per pensioni
+      // Aggiungi strumenti per pensioni (expert mode)
       if (topic === 'pensioni') {
-        content += '\n\nStrumenti utili:\n• CUSI — Applicativo interforze (simulazioni ausiliaria/riserva)\n• MyINPS — "La mia pensione futura"\n• Calcolatore Altroconsumo — https://www.altroconsumo.it/soldi/lavoro-pensione/calcola-risparmia/calcolarepensioni';
+        content += '\n\n**CALCOLATORI ATTENDIBILI:**\n• **APPLICATIVO CUSI** (Centro Unico Stipendiale Interforze) - Solo per personale militare a 2 anni dalla pensione\n• **MyINPS** - Sezione "La mia pensione futura" (riservato agli iscritti)\n• **Simulatore Altroconsumo** - https://www.altroconsumo.it/soldi/lavoro-pensione/calcola-risparmia/calcolarepensioni';
       }
 
-      // Aggiungi link contatti per licenze/istanze
-      if (lastUserMessage.toLowerCase().includes('licenz') || lastUserMessage.toLowerCase().includes('istanza')) {
-        content += `\n\nPer questa pratica contatta il dirigente di zona: ${CONTACT_LINK}`;
+      // Chiusura speciale per licenze/istanze
+      if (topic === 'licenze_istanze') {
+        content += getLicenseClosing();
       }
 
-      // Aggiungi fonti in fondo
-      const sources = PINNED_SOURCES[topic] || PINNED_SOURCES.generale;
-      content += '\n\nFonti:\n' + sources.map((s, i) => `[${i + 1}] ${s.title} — ${s.url}`).join('\n');
+      // Aggiungi fonti expert in fondo
+      const sources = EXPERT_SOURCES[topic];
+      if (sources && sources.length > 0) {
+        content += '\n\n**FONTI UFFICIALI:**\n' + sources.map((s, i) => `[${i + 1}] ${s.title}\n    ${s.url}`).join('\n');
+      }
 
       openaiData.choices[0].message.content = content;
     }
 
-    // Log della conversazione (opzionale, senza bloccare se fallisce)
+    // Aggiungi metadati expert
+    openaiData.expert_topic = topic;
+    openaiData.sources_count = EXPERT_SOURCES[topic]?.length || 0;
+
+    // Log della conversazione expert
     try {
       await fetch(`${process.env.SUPABASE_URL}/rest/v1/chat_logs`, {
         method: 'POST',
@@ -205,6 +338,7 @@ export default async function handler(req, res) {
           query: lastUserMessage,
           response: openaiData.choices[0]?.message?.content?.substring(0, 1000),
           tokens_used: openaiData.usage?.total_tokens,
+          expert_mode: true,
           created_at: new Date().toISOString()
         })
       });
@@ -215,7 +349,7 @@ export default async function handler(req, res) {
     return res.status(200).json(openaiData);
 
   } catch (error) {
-    console.error('API Error:', error);
+    console.error('Expert API Error:', error);
     return res.status(500).json({ 
       error: 'Errore interno del server',
       message: error.message 
