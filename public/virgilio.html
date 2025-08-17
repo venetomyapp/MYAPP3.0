@@ -1,400 +1,618 @@
-<script type="module">
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <title>Virgilio - MyApp</title>
 
-  // ⚙️ Supabase
-  const supabaseUrl = 'https://pvzdilkozpspsnepedqc.supabase.co';
-  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
-  const supabase = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: true, autoRefreshToken: true } });
+  <!-- Favicon robottino inline -->
+  <link rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23e94560'/%3E%3Ccircle cx='22' cy='26' r='3' fill='white'/%3E%3Ccircle cx='42' cy='26' r='3' fill='white'/%3E%3Crect x='28' y='35' width='8' height='4' rx='2' fill='white'/%3E%3Cpath d='M20 45 Q32 50 44 45' stroke='white' stroke-width='2' fill='none'/%3E%3Crect x='15' y='12' width='6' height='8' rx='3' fill='%2300d4ff'/%3E%3Crect x='43' y='12' width='6' height='8' rx='3' fill='%2300d4ff'/%3E%3C/svg%3E">
 
-  // 🔌 Chatbot config: proxy same-origin su Vercel
-  const CHATBOT_CONFIG = {
-    apiEndpoint: '/api/chat',
-    apiEndpointLocal: 'http://localhost:3001/api/chat',
-    maxTokens: 650,
-    temperature: 0.3,
-    model: 'gpt-4o-mini',
-    maxHistory: 12,
-    retryAttempts: 3,
-    retryDelay: 1000
-  };
-
-  // 📚 Policy di ricerca (istituzionale, IT, ultimi 2-3 anni)
-  const SEARCH_CONSTRAINTS = {
-    search_language: 'it',
-    search_domains: [
-      'carabinieri.it','difesa.it','gazzettaufficiale.it','giustizia.it','governo.it',
-      'interno.gov.it','mit.gov.it','inpa.gov.it','concorsi.difesa.it',
-      'altalex.com','diritto.it','cortedicassazione.it','consigliodistato.it'
-    ],
-    search_exclude_domains: ['wikipedia.org','facebook.com','x.com','twitter.com','instagram.com','forum.','blog.'],
-    search_timeframe: '3y',          // ultimi 3 anni
-    search_filetypes: ['pdf','doc','docx'],
-    require_citations: true
-  };
-
-  // ✉️ Nota finale per licenze/istanze
-  const CLOSING_NOTE =
-    'Puoi verificare tutti i dettagli consultando direttamente la fonte ufficiale indicata. ' +
-    'Per questa pratica ti consiglio di contattare il dirigente di zona: specifica se regionale o provinciale e di quale provincia. ' +
-    'Puoi inviare subito la tua richiesta tramite questo link: https://myapp31.vercel.app/richieste.html\n\n' +
-    'Per problemi in dettaglio contatta il tuo dirigente di zona.';
-
-  // Rileva intent “licenze/istanze”
-  function isLicenzeIstanzeTopic(text) {
-    return /licenz|istanza|permess|conged|matern|patern|porto\s*(d['’]|\s)?armi|tulps|autorizz|pratica/i.test(text || '');
-  }
-
-  // Stato
-  let currentUser = null;
-  let conversationHistory = [];
-  let isProcessing = false;
-  let totalTokensUsed = 0;
-  let dirigenti = [];
-
-  // DOM
-  const messagesContainer = document.getElementById('chatMessages');
-  const messageInput = document.getElementById('messageInput');
-  const sendButton = document.getElementById('sendButton');
-  const typingIndicator = document.getElementById('typingIndicator');
-  const statusDot = document.getElementById('statusDot');
-  const statusText = document.getElementById('statusText');
-  const tokenCount = document.getElementById('tokenCount');
-  const charCount = document.getElementById('charCount');
-  const alertContainer = document.getElementById('alertContainer');
-
-  // Utils UI
-  function showAlert(message, type) {
-    if (!type) type = 'info';
-    const el = document.createElement('div');
-    el.className = 'alert alert-' + type;
-    el.textContent = message;
-    alertContainer.appendChild(el);
-    setTimeout(() => el.remove(), 5000);
-  }
-  function updateConnectionStatus(connected) {
-    if (connected) { statusDot.className = 'status-dot'; statusText.textContent = 'Connesso'; }
-    else { statusDot.className = 'status-dot disconnected'; statusText.textContent = 'Offline'; }
-  }
-  function syncOnlineStatus(){ updateConnectionStatus(navigator.onLine); }
-  window.addEventListener('online', syncOnlineStatus);
-  window.addEventListener('offline', syncOnlineStatus);
-
-  function updateCharCount(){ const c = messageInput.value.length; charCount.textContent = c; charCount.style.color = c>400 ? '#ef4444':'#6b7280'; }
-  function updateSendButton(){ const has = messageInput.value.trim().length>0; sendButton.disabled = !has || isProcessing; }
-  function autoResizeTextarea(){ messageInput.style.height='auto'; messageInput.style.height = Math.min(messageInput.scrollHeight,120) + 'px'; }
-  function scrollToBottom(){ messagesContainer.scrollTop = messagesContainer.scrollHeight; }
-  function showTyping(){ typingIndicator.classList.remove('hidden'); scrollToBottom(); }
-  function hideTyping(){ typingIndicator.classList.add('hidden'); }
-  function formatTime(){ return new Date().toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'}); }
-  function escapeHtml(t){ const d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
-  function formatMessage(t){
-    return escapeHtml(t).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/\n/g,'<br>');
-  }
-
-  function addMessage(content, type, hasWebSearch){
-    if(!type) type='bot';
-    const m = document.createElement('div');
-    m.className = 'message message-' + type;
-    let badge = (hasWebSearch && type === 'bot') ? '<div class="web-search-badge">🌐 Ricerca Web</div>' : '';
-    if (type === 'user') {
-      m.innerHTML =
-        '<div class="avatar avatar-user">👤</div>' +
-        '<div class="message-content content-user">' +
-          '<div>' + escapeHtml(content) + '</div>' +
-          '<div class="message-time">' + formatTime() + '</div>' +
-        '</div>';
-    } else if (type === 'system') {
-      const safe = formatMessage(content);
-      m.innerHTML =
-        '<div class="avatar avatar-system">ℹ️</div>' +
-        '<div class="message-content content-system">' +
-          '<div>' + safe + '</div>' +
-          '<div class="message-time">' + formatTime() + '</div>' +
-        '</div>';
-    } else {
-      m.innerHTML =
-        '<div class="avatar avatar-bot">🤖</div>' +
-        '<div class="message-content content-bot">' +
-          badge +
-          '<div>' + formatMessage(content) + '</div>' +
-          '<div class="message-time">' + formatTime() + '</div>' +
-        '</div>';
+  <!-- Tailwind (ok per test/dev) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    if (typeof tailwind !== 'undefined') {
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#1a1a2e',
+              secondary: '#16213e',
+              accent: '#0f3460',
+              aurora: '#e94560',
+              cyan: '#00d4ff',
+              magenta: '#ff006e',
+              gold: '#ffd700',
+              teal: '#03dac6',
+              dark: '#0a0a23',
+              light: '#f8fafc'
+            },
+            fontSize: {
+              'fluid-sm': 'clamp(0.9rem, 0.88rem + 0.2vw, 1rem)',
+              'fluid-base': 'clamp(1rem, 0.96rem + 0.4vw, 1.125rem)',
+              'fluid-lg': 'clamp(1.125rem, 1.05rem + 0.6vw, 1.375rem)',
+              'fluid-xl': 'clamp(1.25rem, 1.15rem + 1vw, 1.75rem)',
+              'fluid-2xl': 'clamp(1.5rem, 1.3rem + 1.5vw, 2rem)'
+            }
+          }
+        }
+      };
     }
-    messagesContainer.appendChild(m);
-    scrollToBottom();
-  }
+  </script>
 
-  // Dirigenti
-  async function loadDirigenti(){
-    try{
-      const { data, error } = await supabase
-        .from('organico_dirigentisindacali')
-        .select('*')
-        .order('id', { ascending: true });
-      if(error) throw error;
-      dirigenti = data || [];
-      console.log('✅ Dirigenti caricati:', dirigenti.length);
-    }catch(err){
-      console.error('❌ Errore caricamento dirigenti:', err);
-      dirigenti = [
-        { nome_cognome:'Antonio Grande', ruolo:'Segretario Generale Regionale - Veneto', email:'veneto@carabinierinsic.it', telefono:'3351470886' }
-      ];
+  <style>
+    :root{
+      --gradient-bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
+      --shadow-elevated: 0 8px 25px rgba(0,0,0,.15);
+      --header-h: 60px;
+      --safe-top: env(safe-area-inset-top);
+      --safe-bottom: env(safe-area-inset-bottom);
     }
-  }
 
-  // Auth
-  async function verificaAutenticazione(){
-    try{
-      const { data:{ session } } = await supabase.auth.getSession();
-      if(!session){
-        console.log('❌ Nessuna sessione attiva');
-        window.location.href = '../login.html';
+    * { box-sizing: border-box; -webkit-tap-highlight-color: rgba(233,69,96,.2); }
+    html, body { height: 100%; }
+    body{
+      margin:0;
+      background: var(--gradient-bg);
+      background-size: 400% 400%;
+      animation: gradientShift 30s ease infinite;
+      min-height: 100dvh;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+      color: #111827;
+      overflow-x: hidden;
+    }
+    @keyframes gradientShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+
+    .app-shell{
+      min-height: calc(100dvh - var(--safe-top));
+      padding-top: max(8px, var(--safe-top));
+      padding-bottom: max(8px, var(--safe-bottom));
+    }
+
+    /* Header */
+    .header{
+      position: sticky; top: 0; z-index: 30; height: var(--header-h);
+      background: rgba(255,255,255,.12);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+    .back-button{ width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+      color:#fff; background: rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.25); transition:.15s; }
+    .back-button:active{ transform: scale(.96) }
+    .back-button:hover{ background: rgba(255,255,255,.22); color:#e94560; }
+
+    /* Card chat */
+    .chat-card{
+      background: #fff; border-radius: 20px; box-shadow: var(--shadow-elevated);
+      width: 100%; max-width: 980px;
+      height: calc(100dvh - var(--header-h) - var(--safe-top) - var(--safe-bottom) - 2rem);
+      display:flex; flex-direction: column; overflow: hidden; margin: 0 auto;
+    }
+    .chat-header{
+      background: linear-gradient(135deg, #e94560, #00d4ff);
+      color: #fff; padding: 1.2rem; text-align: center; flex: 0 0 auto;
+    }
+    .chat-scroll{
+      flex: 1 1 auto; overflow-y: auto; padding: .9rem clamp(.5rem, 2vw, 1rem);
+      scroll-behavior:smooth; -webkit-overflow-scrolling:touch;
+    }
+    .chat-scroll::-webkit-scrollbar{ width:6px }
+    .chat-scroll::-webkit-scrollbar-thumb{ background:#e94560; border-radius:4px }
+
+    .message{ display:flex; gap:.75rem; margin-bottom: clamp(.9rem, .6rem + .8vw, 1.35rem); }
+    .message-user{ flex-direction: row-reverse; }
+    .bubble{ max-width: 78%; padding: .9rem 1.1rem; border-radius: 16px; word-wrap: break-word; overflow-wrap: anywhere; font-size: var(--fs, 1rem); line-height: 1.6 }
+    .avatar{ width:40px; height:40px; min-width:40px; border-radius: 999px; display:flex; align-items:center; justify-content:center; font-size: 1.15rem; color:#fff }
+    .a-bot{ background: linear-gradient(135deg, #00d4ff, #03dac6) }
+    .a-user{ background: linear-gradient(135deg, #e94560, #ff006e) }
+    .a-sys { background: linear-gradient(135deg, #ffd700, #ff8c00) }
+
+    .b-bot{ background:#f8f9fa; color:#1f2937; border-bottom-left-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,.08) }
+    .b-user{ background: linear-gradient(135deg, #e94560, #ff006e); color:#fff; border-bottom-right-radius: 6px; box-shadow: 0 2px 8px rgba(233,69,96,.35) }
+    .b-sys { background: linear-gradient(135deg, #ffd700, #ff8c00); color:#fff; border-bottom-left-radius: 6px; box-shadow: 0 2px 8px rgba(255,215,0,.35) }
+
+    .time{ font-size:.75rem; opacity:.75; margin-top:.45rem }
+
+    .typing{ display:flex; gap:.75rem; padding:.6rem 0 }
+    .dots{ display:flex; gap:5px; background:#f8f9fa; padding:.7rem .9rem; border-radius:16px; border-bottom-left-radius:6px }
+    .dots > i{ width:8px; height:8px; background:#6b7280; border-radius:50%; animation: b 1.5s infinite }
+    .dots > i:nth-child(2){ animation-delay: .3s } .dots > i:nth-child(3){ animation-delay: .6s }
+    @keyframes b{ 0%,60%,100%{transform:none} 30%{transform: translateY(-8px)} }
+
+    .composer{ flex:0 0 auto; border-top:1px solid #e5e7eb; background:#f8f9fa; padding: .7rem clamp(.5rem, 2vw, 1rem); }
+    .composer-inner{ display:flex; gap:.6rem; align-items: flex-end; }
+    textarea{
+      flex:1; resize:none; min-height: 48px; max-height: 140px;
+      border:2px solid #e5e7eb; border-radius: 12px; padding: .85rem 1rem;
+      font-size: var(--fs, 1rem); outline: none; background: #fff;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    textarea:focus{ border-color: #e94560; box-shadow: 0 0 0 3px rgba(233,69,96,.12) }
+
+    .send{
+      width: 48px; height:48px; min-width:48px; border: none; border-radius: 12px; cursor: pointer;
+      display:flex; align-items:center; justify-content:center;
+      color:#fff; background: linear-gradient(135deg, #e94560, #00d4ff);
+      box-shadow: 0 2px 10px rgba(233,69,96,.35);
+      transition: transform .12s, box-shadow .12s, opacity .12s;
+      touch-action: manipulation;
+    }
+    .send:disabled{ opacity:.5; cursor:not-allowed; box-shadow: none }
+    .send:active{ transform: scale(.96) }
+
+    .status{
+      display:flex; justify-content:space-between; align-items:center; gap:.6rem;
+      padding: .55rem clamp(.5rem, 2vw, 1rem); background:#f8f9fa; border-top: 1px solid #e5e7eb;
+      font-size: .82rem; color:#6b7280;
+    }
+    .dot{ width:10px; height:10px; border-radius:50%; background:#10b981 }
+    .dot.off{ background:#ef4444 }
+
+    .web-badge{ display:inline-block; background: linear-gradient(135deg,#00d4ff,#03dac6); color:#fff;
+      font-size:.75rem; font-weight:600; padding:.2rem .6rem; border-radius: 999px; margin-bottom: .35rem }
+
+    /* Auth overlay (blocca tutto finché non loggato) */
+    .auth-guard{
+      position: fixed; inset: 0; z-index: 50;
+      display: grid; place-items: center;
+      background: rgba(10,10,35,.7);
+      backdrop-filter: blur(6px);
+    }
+    .auth-card{
+      background: #fff; border-radius: 16px; box-shadow: var(--shadow-elevated);
+      padding: 1.25rem 1.1rem; width: min(92vw, 480px);
+      text-align: center;
+    }
+
+    /* Mobile-first tweaks */
+    @media (max-width: 480px){
+      .chat-card{ border-radius: 14px }
+      .bubble{ max-width: 90% }
+    }
+    @media (prefers-color-scheme: dark){
+      body{ color:#e5e7eb }
+      .chat-card{ background:#0f172a }
+      .chat-header{ background: linear-gradient(135deg,#ef4444,#06b6d4) }
+      .b-bot{ background:#111827; color:#e5e7eb }
+      .composer{ background:#0b1222; border-color:#1f2937 }
+      textarea{ background:#0b1222; color:#e5e7eb; border-color:#1f2937 }
+      .status{ background:#0b1222; border-color:#1f2937; color:#9ca3af }
+      .dots{ background:#111827 }
+      .auth-card{ background:#0b1222; color:#e5e7eb }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Header -->
+    <header class="header">
+      <div class="max-w-6xl mx-auto h-full px-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <button class="back-button" type="button" aria-label="Torna indietro" onclick="history.back()">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <h1 class="text-white font-semibold text-fluid-lg">Virgilio</h1>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="clearChatBtn" class="hidden sm:inline-flex px-3 py-2 rounded-lg bg-white/90 hover:bg-white text-gray-800 text-sm font-medium transition">
+            🗑️ Pulisci
+          </button>
+          <button id="helpBtn" class="px-3 py-2 rounded-lg bg-white/90 hover:bg-white text-gray-800 text-sm font-medium transition">
+            ❓ Aiuto
+          </button>
+          <button id="logoutBtn" class="px-3 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm font-semibold transition">
+            Esci
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main card -->
+    <main class="px-2 sm:px-4 py-4">
+      <section class="chat-card">
+        <!-- Chat title -->
+        <div class="chat-header">
+          <div class="flex items-center justify-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-white/25 grid place-items-center text-2xl">🤖</div>
+            <div>
+              <h2 class="text-fluid-xl font-bold">Virgilio</h2>
+              <p class="text-white/90 text-fluid-sm">Il tuo assistente sindacale AI</p>
+            </div>
+          </div>
+          <p class="mt-1 text-white/90 text-fluid-sm">Contratti • Diritti • Procedure • Ricerca web istituzionale 🌐</p>
+        </div>
+
+        <!-- Alerts -->
+        <div id="alertContainer" class="px-3 pt-2"></div>
+
+        <!-- Messages -->
+        <div id="chatMessages" class="chat-scroll" role="log" aria-live="polite" aria-relevant="additions">
+          <div class="message">
+            <div class="avatar a-bot">🤖</div>
+            <div class="bubble b-bot">
+              <div>
+                Ciao! Sono <strong>Virgilio</strong> ✨. Posso aiutarti su normativa, disciplina, concorsi, licenze e contatti sindacali.
+                <br><br>
+                Esempi:
+                <ul class="list-disc ml-5 mt-1">
+                  <li>“Come funzionano i permessi per malattia?”</li>
+                  <li>“Ultime novità sul contratto 2025”</li>
+                  <li>“Dirigenti regionali Veneto” o “Dirigenti provinciali Treviso”</li>
+                </ul>
+              </div>
+              <div class="time">Ora</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Typing -->
+        <div id="typingIndicator" class="typing hidden" aria-hidden="true">
+          <div class="avatar a-bot">🤖</div>
+          <div class="dots"><i></i><i></i><i></i></div>
+        </div>
+
+        <!-- Composer -->
+        <div class="composer">
+          <div class="composer-inner">
+            <textarea id="messageInput" placeholder="✨ Scrivi la tua domanda…" rows="1" maxlength="500" aria-label="Scrivi il messaggio"></textarea>
+            <button id="sendButton" class="send" type="button" aria-label="Invia" disabled>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="status">
+          <div class="flex items-center gap-2">
+            <span id="statusDot" class="dot"></span>
+            <span id="statusText">Connesso</span>
+          </div>
+          <div class="text-right">Token: <span id="tokenCount">0</span> • Caratteri: <span id="charCount">0</span>/500</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Auth guard (mostrato finché l'utente non è loggato) -->
+  <div id="authGuard" class="auth-guard hidden" aria-live="polite">
+    <div class="auth-card">
+      <h3 class="text-fluid-lg font-bold mb-1">Accesso richiesto</h3>
+      <p class="text-fluid-sm opacity-80">Per utilizzare Virgilio devi effettuare l’accesso.</p>
+      <a href="/login.html"
+         class="mt-3 inline-flex items-center justify-center px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
+        Vai al login
+      </a>
+    </div>
+  </div>
+
+  <!-- App JS -->
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    // ===== Supabase (usa i tuoi valori) =====
+    const supabaseUrl = 'https://pvzdilkozpspsnepedqc.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
+    const supabase = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: true, autoRefreshToken: true } });
+
+    // ===== Config chatbot =====
+    const CHATBOT_CONFIG = {
+      apiEndpoint: '/api/chat',
+      apiEndpointLocal: 'http://localhost:3001/api/chat',
+      maxTokens: 500,
+      temperature: 0.7,
+      model: 'gpt-4o-mini',
+      maxHistory: 10,
+      retryAttempts: 3,
+      retryDelay: 1000
+    };
+
+    // Stato UI
+    let conversationHistory = [];
+    let isProcessing = false;
+    let totalTokensUsed = 0;
+    let dirigenti = [];
+
+    // DOM
+    const messagesContainer = document.getElementById('chatMessages');
+    const messageInput = document.getElementById('messageInput');
+    const sendButton = document.getElementById('sendButton');
+    const typingIndicator = document.getElementById('typingIndicator');
+    const statusDot = document.getElementById('statusDot');
+    const statusText = document.getElementById('statusText');
+    const tokenCount = document.getElementById('tokenCount');
+    const charCount = document.getElementById('charCount');
+    const alertContainer = document.getElementById('alertContainer');
+    const helpBtn = document.getElementById('helpBtn');
+    const clearChatBtn = document.getElementById('clearChatBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const authGuard = document.getElementById('authGuard');
+
+    // ===== Utils =====
+    const escapeHtml = (t) => {
+      const d = document.createElement('div'); d.textContent = t; return d.innerHTML;
+    };
+    const formatMessage = (t) => escapeHtml(t).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/\n/g,'<br>');
+    const formatTime = () => new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+    const showTyping = () => { typingIndicator.classList.remove('hidden'); messagesContainer.scrollTop = messagesContainer.scrollHeight; };
+    const hideTyping = () => typingIndicator.classList.add('hidden');
+    const showAlert = (msg, type='info') => {
+      const el = document.createElement('div');
+      el.className = `rounded-xl px-3 py-2 mb-2 ${type==='error' ? 'bg-red-50 text-red-700 border border-red-200' : type==='success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-blue-50 text-blue-700 border border-blue-200'}`;
+      el.textContent = msg;
+      alertContainer.appendChild(el);
+      setTimeout(()=>el.remove(), 5000);
+    };
+    const updateConnectionStatus = (online) => {
+      statusDot.classList.toggle('off', !online);
+      statusText.textContent = online ? 'Connesso' : 'Offline';
+    };
+    const autoResize = () => { messageInput.style.height='auto'; messageInput.style.height = Math.min(messageInput.scrollHeight, 140) + 'px'; };
+
+    const addMessage = (content, type='bot', hasWeb=false) => {
+      const m = document.createElement('div');
+      m.className = `message ${type==='user' ? 'message-user' : ''}`;
+      let avatarClass = 'a-bot', bubbleClass = 'b-bot', avatarEmoji = '🤖';
+      if (type === 'user'){ avatarClass='a-user'; bubbleClass='b-user'; avatarEmoji='👤'; }
+      else if (type === 'system'){ avatarClass='a-sys'; bubbleClass='b-sys'; avatarEmoji='ℹ️'; }
+      const badge = (hasWeb && type==='bot') ? '<span class="web-badge">🌐 Ricerca Web</span><br/>' : '';
+      m.innerHTML = `
+        <div class="avatar ${avatarClass}">${avatarEmoji}</div>
+        <div class="bubble ${bubbleClass}">
+          ${badge}<div>${type === 'user' ? escapeHtml(content) : formatMessage(content)}</div>
+          <div class="time">${formatTime()}</div>
+        </div>`;
+      messagesContainer.appendChild(m);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    };
+
+    // ===== Dirigenti helpers =====
+    const REGIONI = ["abruzzo","basilicata","calabria","campania","emilia-romagna","friuli venezia giulia","lazio","liguria","lombardia","marche","molise","piemonte","puglia","sardegna","sicilia","toscana","trentino-alto adige","umbria","valle d'aosta","valle d’aosta","veneto"];
+    const norm = (s)=> (s||"").toString().normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+    function parseDirigentiQuery(q){
+      const has = /(dirigent[ei]|segreteria|segretar[io]|\breferent[ei]\b|contatti.*dirigenti)/i.test(q);
+      if(!has) return null;
+      const x = norm(q);
+      let livello = null; if(/\bregionale?\b/i.test(q)) livello='regionale'; if(/\bprovinciale?\b/i.test(q)||/\bprovincia\b/i.test(q)) livello='provinciale';
+      let regione = null; for(const r of REGIONI){ if(x.includes(norm(r))) { regione = r.replace(/valle d.?aosta/i, "Valle d'Aosta"); break; } }
+      let provincia = null;
+      const m = q.match(/provincia\s+di\s+([A-Za-zÀ-ÖØ-öø-ÿ'\s\-]+)/i) || q.match(/\b(?:a|di)\s+([A-Z][a-zÀ-ÖØ-öø-ÿ'\-]{3,})/);
+      if(m) provincia = m[1].trim();
+      return { livello, regione, provincia };
+    }
+    const inferLivello = (ruolo)=> {
+      const r = norm(ruolo||''); if(/provincial/.test(r)) return 'provinciale'; if(/regional/.test(r)) return 'regionale'; return null;
+    };
+    const matchesRegione = (d, regione)=> !regione || norm(d.regione||'').includes(norm(regione)) || norm(d.ruolo||'').includes(norm(regione));
+    const matchesProvincia = (d, provincia)=> !provincia || norm(d.provincia||'').includes(norm(provincia)) || norm(d.ruolo||'').includes(norm(provincia));
+    const matchesLivello = (d, livello)=> !livello || (inferLivello(d.ruolo)||norm(d.livello||'')).includes(norm(livello));
+    const formatDirigente = (d)=> {
+      const nome = escapeHtml(d.nome_cognome || d.nome || "");
+      const ruolo = escapeHtml(d.ruolo || "");
+      const email = escapeHtml(d.email || "");
+      const tel = escapeHtml(d.telefono || d.tel || "");
+      const reg = d.regione ? ` (${escapeHtml(d.regione)})` : "";
+      const prov = d.provincia ? ` — ${escapeHtml(d.provincia)}` : "";
+      const mailto = email ? ` — <a href="mailto:${email}">${email}</a>` : "";
+      const telto = tel ? ` — <a href="tel:${tel}">${tel}</a>` : "";
+      return `• <strong>${nome}</strong> — ${ruolo}${reg}${prov}${mailto}${telto}`;
+    };
+    const renderDirigenti = (list, header)=> {
+      const html = (list && list.length) ? list.map(formatDirigente).join('<br><br>') : "Nessun dirigente trovato con i criteri indicati.";
+      addMessage((header ? `<strong>${escapeHtml(header)}</strong><br><br>` : '') + html, 'system');
+    };
+
+    // ===== Data: dirigenti =====
+    async function loadDirigenti(){
+      try{
+        const { data, error } = await supabase.from('organico_dirigentisindacali').select('*').order('id',{ascending:true});
+        if(error) throw error;
+        dirigenti = data || [];
+        console.log('✅ Dirigenti caricati:', dirigenti.length);
+      }catch(err){
+        console.error('❌ Errore dirigenti:', err);
+        // Fallback minimo
+        dirigenti = [
+          { nome_cognome:'Antonio Grande', ruolo:'Segretario Generale Regionale - Veneto', email:'veneto@carabinierinsic.it', telefono:'3351470886', regione:'Veneto' }
+        ];
+      }
+    }
+
+    // ===== Auth =====
+    async function ensureAuthOrRedirect(){
+      try{
+        const { data: { session } } = await supabase.auth.getSession();
+        if(!session){
+          // blocca UI e chiedi login
+          authGuard.classList.remove('hidden');
+          // hard redirect per compatibilità
+          setTimeout(()=> { location.href = '/login.html'; }, 600);
+          return null;
+        }
+        authGuard.classList.add('hidden');
+        console.log('✅ Utente autenticato:', session.user.email);
+        return session.user;
+      }catch(e){
+        console.error('❌ Errore auth:', e);
+        authGuard.classList.remove('hidden');
+        setTimeout(()=> { location.href = '/login.html'; }, 400);
         return null;
       }
-      console.log('✅ Utente autenticato:', session.user.email);
-      return session.user;
-    }catch(err){
-      console.error('❌ Errore verifica auth:', err);
-      window.location.href = '../login.html';
-      return null;
     }
-  }
 
-  // Help
-  window.showHelp = function(){
-    const help =
-      '🆘 <strong>Aiuto Virgilio</strong><br><br>' +
-      '<strong>Comandi disponibili:</strong><br>' +
-      '• Usa i pulsanti rapidi per domande frequenti<br>' +
-      '• Scrivi domande in linguaggio naturale<br>' +
-      '• Chiedi informazioni su contratti e diritti<br>' +
-      '• Per dirigenti sindacali scrivi "dirigenti"<br><br>' +
-      '<strong>Contatti di emergenza:</strong><br>' +
-      '📞 Telefono: 06-123456789<br>' +
-      '📧 Email: assistenza@sindacato.it<br><br>' +
-      '<em>Virgilio è sempre qui per aiutarti! ✨</em>';
-    addMessage(help, 'system');
-  };
-
-  async function tentaRefreshSessione(){
-    try {
-      const { data, error } = await supabase.auth.refreshSession();
-      if (error) throw error;
-      return data?.session;
-    } catch {
-      return null;
+    // ===== Help, Logout, Clear =====
+    function showHelp(){
+      const help =
+        '🆘 <strong>Aiuto Virgilio</strong><br><br>' +
+        'Comandi utili:<br>' +
+        '• Domande in linguaggio naturale (normativa, disciplina, concorsi, licenze).<br>' +
+        '• “Dirigenti regionali Veneto” oppure “Dirigenti provinciali Treviso”.<br><br>' +
+        'Per inviare una richiesta: <a class="underline font-semibold" href="/richieste.html">/richieste.html</a>';
+      addMessage(help, 'system');
     }
-  }
+    async function logout(){
+      try{ await supabase.auth.signOut(); }catch(_) {}
+      location.href = '/login.html';
+    }
+    function clearChat(){
+      if(!confirm('Vuoi davvero cancellare la conversazione?')) return;
+      conversationHistory = []; totalTokensUsed = 0; tokenCount.textContent = '0';
+      const msgs = messagesContainer.querySelectorAll('.message'); msgs.forEach((el,i)=>{ if(i>0) el.remove(); });
+      showAlert('Chat cancellata. ✨', 'success');
+    }
 
-  // 🔎 Self-check ENV sul server con Authorization
-  async function infraCheck() {
-    try {
-      const { data:{ session } } = await supabase.auth.getSession();
-      const token = session?.access_token;
-      const r = await fetch('/api/whoami', { headers: token ? { Authorization: 'Bearer ' + token } : {} });
-      const j = await r.json();
-      console.log('[WHOAMI]', r.status, j);
-      if (!j?.env?.SUPABASE_URL || !j?.env?.SUPABASE_ANON_KEY) {
-        showAlert('Server: variabili Supabase mancanti in questo deploy.', 'error');
+    // ===== Send =====
+    function updateCounters(){
+      const c = messageInput.value.length; charCount.textContent = c; charCount.style.color = c>400 ? '#ef4444' : '';
+      sendButton.disabled = !messageInput.value.trim() || isProcessing;
+    }
+    function needsWebSearchFor(q){
+      return /(?:\bultim[eaie]\b|\bnews\b|aggiornamenti|oggi|attuale|corrente|novit[àa]|contratto 2025|aumenti|stipendio 2025)/i.test(q);
+    }
+
+    async function sendMessage(){
+      const text = messageInput.value.trim();
+      if(!text || isProcessing) return;
+
+      isProcessing = true; updateCounters();
+      addMessage(text, 'user');
+      conversationHistory.push({ role:'user', content: text });
+
+      messageInput.value = ''; updateCounters(); autoResize();
+
+      // — Dirigenti (parsing locale con filtro)
+      const qInfo = parseDirigentiQuery(text);
+      if(qInfo){
+        const { livello, regione, provincia } = qInfo;
+        if(!dirigenti.length){
+          addMessage('Al momento non riesco a leggere l’elenco dirigenti. Riprova più tardi.', 'system');
+          isProcessing=false; updateCounters(); return;
+        }
+        if (!livello && !regione && !provincia){
+          addMessage('Vuoi i contatti <strong>regionali</strong> o di una <strong>provincia</strong>? (es. "dirigenti provinciali Treviso")', 'system');
+          isProcessing=false; updateCounters(); return;
+        }
+        if ((livello === 'provinciale' || /provincia/i.test(text)) && !provincia){
+          addMessage('Per i dirigenti <strong>provinciali</strong>, indica la <strong>provincia</strong> (es. "Treviso").', 'system');
+          isProcessing=false; updateCounters(); return;
+        }
+        let results = dirigenti.filter(d => matchesLivello(d, livello) && matchesRegione(d, regione) && matchesProvincia(d, provincia));
+        if(!results.length && livello){ results = dirigenti.filter(d => matchesRegione(d, regione) && matchesProvincia(d, provincia)); }
+        let header = 'Dirigenti';
+        if (livello) header += ` ${livello}`;
+        if (provincia) header += ` — Provincia di ${provincia}`;
+        else if (regione) header += ` — ${regione[0].toUpperCase() + regione.slice(1)}`;
+        renderDirigenti(results.slice(0,20), header);
+        isProcessing=false; updateCounters(); return;
       }
-    } catch (e) {
-      console.warn('whoami check failed', e);
-    }
-  }
 
-  // ✉️ Send
-  async function sendMessage(){
-    const message = messageInput.value.trim();
-    if(!message || isProcessing) return;
+      // — Chiamata backend
+      showTyping();
+      try{
+        let { data:{ session } } = await supabase.auth.getSession();
+        if(!session) throw new Error('Sessione scaduta');
 
-    isProcessing = true; updateSendButton();
+        const apiEndpoint = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+          ? CHATBOT_CONFIG.apiEndpointLocal
+          : CHATBOT_CONFIG.apiEndpoint;
 
-    addMessage(message, 'user');
-    conversationHistory.push({ role:'user', content: message });
+        const requestBody = {
+          messages: conversationHistory.slice(-CHATBOT_CONFIG.maxHistory),
+          model: CHATBOT_CONFIG.model,
+          max_tokens: CHATBOT_CONFIG.maxTokens,
+          temperature: CHATBOT_CONFIG.temperature,
+          system_context: 'Sei Virgilio, assistente AI del Sindacato Carabinieri. Rispondi in modo conciso e professionale.',
+          enable_web_search: needsWebSearchFor(text),
+          web_search_query: needsWebSearchFor(text) ? text : null
+        };
 
-    messageInput.value=''; updateCharCount(); updateSendButton(); autoResizeTextarea();
+        let lastErr = null;
+        for(let attempt=0; attempt<CHATBOT_CONFIG.retryAttempts; attempt++){
+          try{
+            const resp = await fetch(apiEndpoint, {
+              method:'POST',
+              headers:{ 'Content-Type':'application/json', 'Authorization': 'Bearer '+session.access_token },
+              body: JSON.stringify(requestBody)
+            });
+            if(resp.status === 401 && attempt < CHATBOT_CONFIG.retryAttempts-1){
+              const { data } = await supabase.auth.refreshSession();
+              if (data?.session){ session = data.session; continue; }
+            }
+            if(!resp.ok){
+              let msg = 'HTTP '+resp.status;
+              try{ const j = await resp.json(); if(j?.error) msg = j.error; }catch{}
+              throw new Error(msg);
+            }
+            const data = await resp.json();
+            const botResponse = data?.choices?.[0]?.message?.content;
+            if(!botResponse) throw new Error('Risposta API non valida');
 
-    // comando locale: dirigenti
-    if(/^\s*(dirigenti|contatti\s+dirigenti)\s*$/i.test(message)){
-      if(dirigenti && dirigenti.length){
-        const list = dirigenti.slice(0,12).map(d => {
-          const nome = escapeHtml(d.nome_cognome||'');
-          const ruolo = escapeHtml(d.ruolo||'');
-          const email = escapeHtml(d.email||'');
-          const tel = escapeHtml(d.telefono||'');
-          return `• <strong>${nome}</strong> — ${ruolo}<br>Email: ${email} — Tel: ${tel}`;
-        }).join('<br><br>');
-        addMessage(list, 'system');
-      } else {
-        addMessage('Nessun dirigente trovato al momento. Riprova più tardi.', 'system');
-      }
-      isProcessing=false; updateSendButton(); return;
-    }
-
-    showTyping();
-
-    try{
-      let { data:{ session } } = await supabase.auth.getSession();
-      if(!session){ throw new Error('Sessione scaduta'); }
-
-      const apiEndpoint =
-        (window.location.hostname==='localhost' || window.location.hostname==='127.0.0.1')
-        ? CHATBOT_CONFIG.apiEndpointLocal
-        : CHATBOT_CONFIG.apiEndpoint;
-
-      // trigger ricerca web anche su parole chiave classiche
-      const needsWebSearch =
-        /(?:\bultim[eaie]\b|\bnews\b|aggiornamenti|oggi|attuale|corrente|novit[àa]|contratto\s*202[4-6]|aumenti|stipendio\s*202[4-6]|bando|concorso|circolare|gazzetta)/i
-        .test(message);
-
-      const requestBody = {
-        messages: conversationHistory.slice(-CHATBOT_CONFIG.maxHistory),
-        model: CHATBOT_CONFIG.model,
-        max_tokens: CHATBOT_CONFIG.maxTokens,
-        temperature: CHATBOT_CONFIG.temperature,
-        system_context:
-          'Sei Virgilio, assistente AI del Sindacato Carabinieri. ' +
-          'Rispondi in italiano, tono istituzionale, conciso e puntuale. ' +
-          'Cita sempre la fonte ufficiale con link diretto quando fai riferimento a norme o atti. ' +
-          'Se non trovi la norma esatta, indica la procedura per reperirla su siti istituzionali.',
-        enable_web_search: needsWebSearch,
-        web_search_query: needsWebSearch ? message : null,
-
-        // policy di ricerca
-        ...SEARCH_CONSTRAINTS
-      };
-
-      // 🔧 DEBUG utile
-      console.log('[DEBUG] origin:', location.origin);
-      console.log('[DEBUG] endpoint:', apiEndpoint);
-      console.log('[DEBUG] web?', needsWebSearch);
-
-      let lastError = null;
-      for(let attempt=0; attempt<CHATBOT_CONFIG.retryAttempts; attempt++){
-        try{
-          const resp = await fetch(apiEndpoint, {
-            method:'POST',
-            headers:{
-              'Content-Type':'application/json',
-              'Authorization':'Bearer ' + session.access_token
-            },
-            body: JSON.stringify(requestBody)
-          });
-
-          if(resp.status === 401 && attempt < CHATBOT_CONFIG.retryAttempts-1){
-            const refreshed = await tentaRefreshSessione();
-            if (refreshed) { session = refreshed; continue; }
-          }
-
-          if(!resp.ok){
-            let msg = 'HTTP ' + resp.status;
-            try{
-              const j = await resp.json();
-              if(j && j.error) msg = j.error;
-            }catch{}
-            throw new Error(msg);
-          }
-
-          const data = await resp.json();
-          if(!data.choices?.[0]?.message){
-            throw new Error('Risposta API non valida');
-          }
-
-          let botResponse = data.choices[0].message.content || '';
-          const hasWebSearch = !!data.web_search_performed;
-
-          // aggiunta nota finale per licenze/istanze
-          if (isLicenzeIstanzeTopic(message)) {
-            botResponse = botResponse + '\n\n' + CLOSING_NOTE;
-          }
-
-          addMessage(botResponse, 'bot', hasWebSearch);
-          conversationHistory.push({ role:'assistant', content: botResponse });
-
-          if(data.usage?.total_tokens){
-            totalTokensUsed += data.usage.total_tokens;
-            tokenCount.textContent = totalTokensUsed.toLocaleString();
-          }
-          lastError = null;
-          break;
-        }catch(err){
-          lastError = err;
-          console.warn('Tentativo fallito:', err.message);
-          if(attempt < CHATBOT_CONFIG.retryAttempts-1){
-            await new Promise(r => setTimeout(r, CHATBOT_CONFIG.retryDelay*(attempt+1)));
+            addMessage(botResponse, 'bot', !!data.web_search_performed);
+            conversationHistory.push({ role:'assistant', content: botResponse });
+            if(data.usage){ totalTokensUsed += (data.usage.total_tokens || 0); tokenCount.textContent = totalTokensUsed.toLocaleString(); }
+            lastErr = null;
+            break;
+          }catch(e){
+            lastErr = e; await new Promise(r => setTimeout(r, CHATBOT_CONFIG.retryDelay*(attempt+1)));
           }
         }
+        if(lastErr) throw lastErr;
+      }catch(err){
+        console.error('Errore invio:', err);
+        conversationHistory.pop();
+        let msg = 'Errore di connessione';
+        if(/scadut/i.test(err.message)) msg = 'Sessione scaduta, effettua di nuovo il login';
+        else if(/invalid|expired|401/i.test(err.message)) msg = 'Token non valido o scaduto';
+        else if(/network|fetch/i.test(err.message)) msg = 'Problema di rete, riprova';
+        else if(/500/.test(err.message)) msg = 'Servizio temporaneamente non disponibile';
+        else if(err.message) msg = err.message;
+        showAlert(msg, 'error');
+      }finally{
+        hideTyping();
+        isProcessing=false; updateCounters(); messageInput.focus();
       }
-      if(lastError) throw lastError;
-      syncOnlineStatus();
-    }catch(err){
-      console.error('Errore invio:', err);
-      conversationHistory.pop();
-      let msg = 'Errore di connessione';
-      if(/scadut/i.test(err.message)) msg = 'Sessione scaduta, riaccedi';
-      else if(/invalid|expired|401/i.test(err.message)) msg = 'Token non valido o scaduto';
-      else if(/network|fetch/i.test(err.message)) msg = 'Problema di rete, riprova';
-      else if(/500/.test(err.message)) msg = 'Servizio temporaneamente non disponibile';
-      else if(err.message) msg = err.message;
-      showAlert(msg, 'error');
-      syncOnlineStatus();
-    }finally{
-      hideTyping();
-      isProcessing=false; updateSendButton(); messageInput.focus();
     }
-  }
 
-  // Check proxy /api/chat all'avvio + infraCheck
-  async function checkProxy(){
-    try {
-      const r = await fetch('/api/chat', { method:'OPTIONS' });
-      if (r.status !== 200 && r.status !== 405) {
-        showAlert('Attenzione: /api/chat non è raggiungibile ('+r.status+').', 'error');
-      }
-    } catch {
-      showAlert('Impossibile contattare /api/chat (controlla il deploy).', 'error');
+    // ===== Init =====
+    function bindUI(){
+      messageInput.addEventListener('input', ()=>{ autoResize(); updateCounters(); });
+      messageInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); } });
+      sendButton.addEventListener('click', sendMessage);
+      helpBtn.addEventListener('click', showHelp);
+      clearChatBtn.addEventListener('click', clearChat);
+      logoutBtn.addEventListener('click', logout);
+      updateCounters();
     }
-  }
 
-  // Init
-  document.addEventListener('DOMContentLoaded', async function(){
-    document.getElementById('loading').classList.remove('hidden');
-    try{
-      syncOnlineStatus();
+    async function boot(){
+      // Blocca UI se non loggato
+      const user = await ensureAuthOrRedirect();
+      if(!user) return; // lo splash farà redirect
 
-      await checkProxy();
-      currentUser = await verificaAutenticazione();
-      if(!currentUser) return;
+      // Online/offline
+      updateConnectionStatus(navigator.onLine);
+      window.addEventListener('online', ()=>updateConnectionStatus(true));
+      window.addEventListener('offline', ()=>updateConnectionStatus(false));
 
-      await infraCheck();     // <— verifica ENV server con Authorization
+      // Carica dirigenti
       await loadDirigenti();
 
-      messageInput.addEventListener('input', () => { updateCharCount(); updateSendButton(); autoResizeTextarea(); });
-      messageInput.addEventListener('keypress', e => { if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); }});
-      sendButton.addEventListener('click', sendMessage);
+      // Verifica proxy /api/chat (OPTIONAL, non blocking)
+      try{
+        const r = await fetch('/api/chat', { method:'OPTIONS' });
+        if (r.status !== 200 && r.status !== 405) showAlert('Attenzione: /api/chat non è raggiungibile', 'error');
+      }catch{ showAlert('Impossibile contattare /api/chat', 'error'); }
 
-      // clear chat
-      document.getElementById('clearChatBtn').addEventListener('click', function(){
-        if(confirm('Vuoi davvero cancellare tutta la conversazione?')){
-          conversationHistory=[]; totalTokensUsed=0; tokenCount.textContent='0';
-          const msgs = messagesContainer.querySelectorAll('.message');
-          msgs.forEach((msg, i) => { if(i>0) msg.remove(); });
-          showAlert('Chat cancellata con successo! ✨', 'success');
-        }
-      });
-
-      messageInput.focus();
-      updateSendButton();
-      console.log('🤖✨ Virgilio inizializzato!');
-    }catch(err){
-      console.error('Errore init:', err);
-      showAlert('Errore di inizializzazione. Ricarica la pagina.', 'error');
-    }finally{
-      document.getElementById('loading').classList.add('hidden');
+      bindUI();
+      console.log('🤖✨ Virgilio pronto.');
     }
-  });
 
-  // Error handlers
-  window.addEventListener('error', e => { console.error('Errore JS:', e.error); showAlert('Si è verificato un errore imprevisto', 'error'); });
-  window.addEventListener('unhandledrejection', e => { console.error('Promise rejected:', e.reason); showAlert('Errore di rete o server', 'error'); });
-</script>
+    // Avvio
+    document.addEventListener('DOMContentLoaded', boot);
+  </script>
+</body>
+</html>
