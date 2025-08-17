@@ -1,271 +1,440 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0"/>
-  <title>Virgilio - MyApp</title>
+// /api/chat.js — Chat “guidata” con fonti ufficiali + web search istituzionale
+// ENV richieste: SUPABASE_URL, SUPABASE_ANON_KEY, OPENAI_API_KEY, (opz.) TAVILY_API_KEY
 
-  <!-- Favicon: robottino -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23e94560'/%3E%3Ccircle cx='22' cy='26' r='3' fill='white'/%3E%3Ccircle cx='42' cy='26' r='3' fill='white'/%3E%3Crect x='28' y='35' width='8' height='4' rx='2' fill='white'/%3E%3Cpath d='M20 45 Q32 50 44 45' stroke='white' stroke-width='2' fill='none'/%3E%3Crect x='15' y='12' width='6' height='8' rx='3' fill='%2300d4ff'/%3E%3Crect x='43' y='12' width='6' height='8' rx='3' fill='%2300d4ff'/%3E%3C/svg%3E">
+export const config = { runtime: 'nodejs18.x' };
 
-  <!-- Tailwind (dev/test) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    if (typeof tailwind !== 'undefined') {
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              aurora: '#e94560'
-            }
-          }
-        }
-      };
+// ------------------------ ENV ------------------------
+const SUPABASE_URL =
+  process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_ANON_KEY =
+  process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const TAVILY_API_KEY = process.env.TAVILY_API_KEY;
+
+// ------------------------ COSTANTI ------------------------
+const CONTACT_LINK = 'https://myapp31.vercel.app/richieste.html';
+const truncate = (s, n) => (s && s.length > n ? s.slice(0, n) + '…' : s || '');
+
+// FONTI PINNATE (ufficiali) — coprono TUTTI gli ambiti del tuo prompt
+const PINNED = {
+  disciplina: [
+    {
+      title: 'Guida Tecnica — Procedure disciplinari (2023) — Difesa',
+      url: 'https://www.difesa.it/assets/allegati/6105/06_guida_tecnica_disciplina_anno_2023.pdf',
+    },
+  ],
+  com: [
+    {
+      title: 'COM — Supplemento al n.3 — Carabinieri',
+      url: 'https://www.carabinieri.it/docs/default-source/default-document-library/supplemento-al-n-3.pdf?sfvrsn=811b6d23_0',
+    },
+  ],
+  tuom: [
+    { title: "TUOM — Ministero della Difesa (sezione normativa)", url: "https://www.difesa.it" },
+  ],
+  leggi: [
+    { title: 'Gazzetta Ufficiale della Repubblica Italiana', url: 'https://www.gazzettaufficiale.it' },
+  ],
+  tulps: [
+    { title: 'Ministero dell’Interno — Normativa (TULPS)', url: 'https://www.interno.gov.it' },
+  ],
+  cds: [
+    { title: 'MIT — Portale normativo (Codice della Strada)', url: 'https://www.mit.gov.it' },
+  ],
+  civile: [
+    { title: 'Ministero della Giustizia — Codici (Codice Civile)', url: 'https://www.giustizia.it' },
+  ],
+  regolamento_generale: [
+    { title: 'Arma dei Carabinieri — Sito istituzionale', url: 'https://www.carabinieri.it' },
+  ],
+  regolamento_organico: [
+    { title: 'Arma dei Carabinieri — Documenti ufficiali', url: 'https://www.carabinieri.it' },
+  ],
+  concorsi: [
+    { title: 'Arma — Area Concorsi', url: 'https://www.carabinieri.it/concorsi/area-concorsi' },
+    { title: 'Extranet Arma — Domande online', url: 'https://extranet.carabinieri.it/concorsionline20' },
+    { title: 'INPA — Portale reclutamento', url: 'https://www.inpa.gov.it' },
+    { title: 'Concorsi Difesa', url: 'https://concorsi.difesa.it' },
+    { title: 'Gazzetta Ufficiale — Concorsi', url: 'https://www.gazzettaufficiale.it' },
+  ],
+  pensioni: [
+    {
+      title: 'INPS — Requisiti pensionistici comparto Difesa, Sicurezza e Soccorso',
+      url: 'https://www.inps.it/it/it/dettaglio-approfondimento.schede-informative.50727.requisiti-pensionistici-per-il-personale-comparto-difesa-sicurezza-e-soccorso-pubblico.html',
+    },
+    {
+      title: 'INPS — Pensione di privilegio',
+      url: 'https://www.inps.it/it/it/dettaglio-scheda.it.schede-servizio-strumento.schede-servizi.pensione-di-privilegio-50626.pensione-di-privilegio.html',
+    },
+    {
+      title: 'INPS — Accredito contributi figurativi servizio militare obbligatorio',
+      url: 'https://www.inps.it/it/it/dettaglio-scheda.it.schede-servizio-strumento.schede-servizi.accredito-dei-contributi-figurativi-per-il-servizio-militare-obbligatorio-50013.accredito-dei-contributi-figurativi-per-il-servizio-militare-obbligatorio.html',
+    },
+  ],
+};
+
+const DEFAULT_GOOD_DOMAINS = [
+  'carabinieri.it',
+  'difesa.it',
+  'gazzettaufficiale.it',
+  'giustizia.it',
+  'governo.it',
+  'interno.gov.it',
+  'funzionepubblica.gov.it',
+  'aranagenzia.it',
+  'mef.gov.it',
+  'noipa.mef.gov.it',
+  'inps.it',
+  'normattiva.it',
+  'senato.it',
+  'camera.it',
+  'mit.gov.it',
+  'poliziadistato.it',
+  'questure.poliziadistato.it',
+  'inpa.gov.it',
+  'concorsi.difesa.it',
+  // eccezione “strumento attendibile” (non istituzionale) ammessa SOLO per pensioni:
+  // sarà agganciata dinamicamente se topic === 'pensioni'
+];
+
+const DEFAULT_EXCLUDE_DOMAINS = [
+  'wikipedia.org',
+  'britannica.com',
+  'facebook.com',
+  'x.com',
+  'twitter.com',
+  'instagram.com',
+  'linkedin.com',
+  'youtube.com',
+  'tiktok.com',
+];
+
+const PREFERRED_FILE_EXT = ['.pdf', '.doc', '.docx'];
+
+// ------------------------ UTILS ------------------------
+function getHostname(u = '') {
+  try { return new URL(u).hostname.toLowerCase(); } catch { return ''; }
+}
+function hostEndsWith(host, domain) {
+  return host === domain || host.endsWith('.' + domain);
+}
+function hasPreferredExt(u = '') {
+  const ul = u.toLowerCase();
+  return PREFERRED_FILE_EXT.some((ext) => ul.endsWith(ext));
+}
+function scoreWebResult(r, goodDomains = DEFAULT_GOOD_DOMAINS, excludeDomains = DEFAULT_EXCLUDE_DOMAINS) {
+  const host = getHostname(r.url);
+  const t = (r.title || '').toLowerCase();
+  const c = (r.content || '').toLowerCase();
+  let s = 0;
+  if (goodDomains.some((d) => hostEndsWith(host, d))) s += 8;
+  if (hasPreferredExt(r.url)) s += 3;
+  if (/(2025|2024|2023)/.test(t + ' ' + c)) s += 2;
+  if (excludeDomains.some((d) => hostEndsWith(host, d))) s -= 6;
+  return s;
+}
+function withinYears(dateStr, years = 3) {
+  if (!dateStr) return true;
+  const d = new Date(dateStr);
+  if (isNaN(d)) return true;
+  const cutoff = new Date();
+  cutoff.setFullYear(cutoff.getFullYear() - years);
+  return d >= cutoff;
+}
+
+function detectTopic(q) {
+  const x = (q || '').toLowerCase();
+  if (/dirigent[ei]|regionale|provinciale/.test(x)) return 'dirigenti';
+  if (/disciplina|sanzion/i.test(x)) return 'disciplina';
+  if (/\bcom\b|ordinamento\s+militar/i.test(x)) return 'com';
+  if (/tuom|testo\s+unico\s+(dell'|dell’)?ordinamento/i.test(x)) return 'tuom';
+  if (/gazzetta|legge|decreto|normattiva/i.test(x)) return 'leggi';
+  if (/tulps|pubblica\s+sicurezza|porto\s+armi/i.test(x)) return 'tulps';
+  if (/codice\s+della\s+strada|cds\b/i.test(x)) return 'cds';
+  if (/codice\s+civile|civile\b/.test(x)) return 'civile';
+  if (/regolamento\s+generale/i.test(x)) return 'regolamento_generale';
+  if (/regolamento\s+organico/i.test(x)) return 'regolamento_organico';
+  if (/concors/i.test(x)) return 'concorsi';
+  if (/licenz|istanza|pratica|permess/i.test(x)) return 'licenze_istanze';
+  if (/pension/i.test(x) || /ausiliar/i.test(x) || /\briserv[ae]\b/.test(x) || /\btfs\b/.test(x) || /figurativ/i.test(x) || /privilegi/i.test(x)) return 'pensioni';
+  return 'generico';
+}
+function pinnedForTopic(topic) {
+  return PINNED[topic] || [];
+}
+
+function buildSystemPreamble(topic) {
+  const base =
+    'Sei un assistente virtuale professionale per il personale dell’Arma dei Carabinieri e il Sindacato. ' +
+    'Rispondi in italiano con tono chiaro e istituzionale. Non fornire consulenza legale individuale. ' +
+    'Cita sempre le fonti ufficiali disponibili usando riferimenti [1][2][3]. ' +
+    'Se l’informazione non è nelle fonti indicate, dichiaralo e rimanda al dirigente competente.\n\n';
+  const dirigentiNote =
+    'Se l’utente chiede contatti dei dirigenti, chiedi prima: (a) livello (regionale/provinciale); (b) se provinciale, la provincia. ' +
+    "L'elenco dirigenti è gestito internamente dal sistema.\n\n";
+  const ambiti =
+    'Ambiti coperti e fonti: Disciplina Militare (Difesa), COM (Carabinieri), TUOM (Difesa), ' +
+    'Leggi (Gazzetta Ufficiale), TULPS (Interno), Codice della Strada (MIT), Codice Civile (Giustizia), ' +
+    'Regolamenti Arma (carabinieri.it), Concorsi (Carabinieri/Extranet/INPA/Difesa/GU), ' +
+    'Pensioni Militari (INPS). Monitora gli aggiornamenti normativi e, per le pensioni, i coefficienti di trasformazione (aggiornamento biennale).\n';
+  return base + dirigentiNote + ambiti;
+}
+
+function closingForLicenzeIstanze() {
+  return (
+    `\n\nPuoi verificare tutti i dettagli consultando direttamente la fonte ufficiale indicata. ` +
+    `Per questa pratica ti consiglio di contattare il dirigente di zona: specifica se regionale o provinciale e di quale provincia. ` +
+    `Puoi inviare subito la tua richiesta tramite questo link: ${CONTACT_LINK}\n\n` +
+    `Per problemi in dettaglio contatta il tuo dirigente di zona.`
+  );
+}
+
+function enrichQuery(raw, topic, filetypes = []) {
+  const extHint = Array.isArray(filetypes) && filetypes.length
+    ? ` ${filetypes.map((f) => `filetype:${f}`).join(' OR ')}`
+    : ' filetype:pdf OR filetype:doc OR filetype:docx';
+
+  if (topic === 'pensioni') {
+    return `${raw} pensioni militari comparto difesa sicurezza INPS coefficienti di trasformazione 2023..2025${extHint}`;
+  }
+  return `${raw} Italia carabinieri normativa ufficiale 2023..2025${extHint}`;
+}
+
+// ------------------------ TAVILY ------------------------
+async function tavilySearch(query, {
+  include_domains = DEFAULT_GOOD_DOMAINS,
+  exclude_domains = DEFAULT_EXCLUDE_DOMAINS,
+  max_results = 8,
+  years = 3,
+  filetypes = []
+} = {}) {
+  if (!TAVILY_API_KEY) return { used: false, results: [] };
+
+  const payload = {
+    api_key: TAVILY_API_KEY,
+    query,
+    search_depth: 'advanced',
+    include_answer: false,
+    max_results,
+    include_domains,
+    exclude_domains,
+  };
+
+  const resp = await fetch('https://api.tavily.com/search', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!resp.ok) {
+    const t = await resp.text().catch(() => '');
+    return { used: true, results: [], error: `Tavily ${resp.status}: ${t.slice(0, 200)}` };
+  }
+
+  const j = await resp.json();
+  const arr = Array.isArray(j.results) ? j.results : [];
+
+  const filtered = arr.filter((r) => {
+    const host = getHostname(r.url);
+    if (!host) return false;
+    if (exclude_domains.some((d) => hostEndsWith(host, d))) return false;
+    if (!withinYears(r.published_date, years)) return false;
+    if (Array.isArray(filetypes) && filetypes.length) {
+      const ok = filetypes.some((ft) => r.url?.toLowerCase().endsWith('.' + ft.toLowerCase()));
+      if (!ok) return false;
     }
-  </script>
+    return true;
+  });
 
-  <style>
-    :root{
-      --gradient: linear-gradient(135deg,#1a1a2e 0%,#16213e 25%,#0f3460 50%,#e94560 75%,#00d4ff 100%);
-      --header-h: 60px;
-      --safe-top: env(safe-area-inset-top);
-      --safe-bottom: env(safe-area-inset-bottom);
-    }
-    body{
-      min-height:100vh;background:var(--gradient);background-size:400% 400%;
-      animation:bg 30s ease infinite;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif
-    }
-    @keyframes bg{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-    .header{position:sticky;top:0;height:var(--header-h);padding-top:var(--safe-top);
-      background:rgba(255,255,255,.08);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.12)}
-    .chat{background:#fff;border-radius:18px;box-shadow:0 8px 25px rgba(0,0,0,.15);
-      max-width:960px;margin:.75rem auto;height:calc(100vh - var(--header-h) - var(--safe-top) - var(--safe-bottom) - 1.5rem);
-      display:flex;flex-direction:column;overflow:hidden}
-    .msgs{flex:1;overflow:auto;padding:1rem}
-    .row{display:flex;gap:.75rem;margin-bottom:1rem;animation:fade .2s ease}
-    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-    .av{width:38px;height:38px;border-radius:9999px;display:grid;place-items:center;color:#fff;flex:0 0 38px}
-    .av-bot{background:linear-gradient(135deg,#00d4ff,#03dac6)}
-    .av-user{background:linear-gradient(135deg,#e94560,#ff006e)}
-    .bub{max-width:78%;padding:1rem;border-radius:14px}
-    .b-bot{background:#f8fbff}
-    .b-user{background:linear-gradient(135deg,#e94560,#ff006e);color:#fff;margin-left:auto}
-    .time{font-size:.75rem;opacity:.6;margin-top:.35rem}
-    .cta{display:inline-block;background:#111827;color:#fff!important;padding:.75rem 1rem;border-radius:.75rem;
-      font-weight:700;margin-top:.5rem;text-decoration:none}
-    .cta:hover{opacity:.9}
-    .dots{display:flex;gap:.4rem}
-    .dot{width:8px;height:8px;border-radius:9999px;background:#9ca3af;animation:b 1.4s infinite}
-    .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
-    @keyframes b{0%,80%,100%{transform:none}40%{transform:translateY(-6px)}}
-    @media (max-width:640px){.chat{margin:.5rem;height:calc(100vh - var(--header-h) - var(--safe-top) - var(--safe-bottom) - 1rem)}.bub{max-width:90%}}
-  </style>
-</head>
-<body>
-  <!-- Header -->
-  <header class="header">
-    <div class="max-w-5xl mx-auto px-4 h-full flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <button onclick="history.back()" class="rounded-xl px-2 py-2 border border-white/30 text-white hover:bg-white/10" type="button" aria-label="Indietro">⟵</button>
-        <h1 class="text-white font-semibold">Virgilio</h1>
-      </div>
-      <div class="flex items-center gap-2">
-        <button id="clear" class="px-3 py-1.5 rounded-lg bg-white/10 text-white text-sm border border-white/20 hover:bg-white/20" type="button">🗑️ Pulisci</button>
-        <button id="help" class="px-3 py-1.5 rounded-lg bg-white/10 text-white text-sm border border-white/20 hover:bg-white/20" type="button">❓ Aiuto</button>
-      </div>
-    </div>
-  </header>
+  const ranked = filtered
+    .map((r) => ({ ...r, __s: scoreWebResult(r, include_domains, exclude_domains) }))
+    .sort((a, b) => b.__s - a.__s);
 
-  <main class="py-3">
-    <div class="chat">
-      <div class="bg-gradient-to-r from-aurora to-cyan-400 text-white px-4 py-4 text-center">
-        <div class="flex items-center justify-center gap-3">
-          <div class="w-11 h-11 bg-white/25 rounded-full grid place-items-center text-2xl">🤖</div>
-          <div class="text-left">
-            <div class="font-bold text-xl">Virgilio</div>
-            <div class="text-sm opacity-90">Assistente sindacale AI</div>
-          </div>
-        </div>
-      </div>
+  const top = ranked.slice(0, 6).map((r) => ({
+    title: truncate(r.title, 160),
+    url: r.url,
+    content: truncate(r.content || r.raw_content || '', 3800),
+    published_date: r.published_date || null,
+  }));
 
-      <div id="msgs" class="msgs" role="log" aria-live="polite">
-        <div class="row">
-          <div class="av av-bot">🤖</div>
-          <div class="bub b-bot">
-            Ciao! Sono <strong>Virgilio</strong>. Fai una domanda su contratti, diritti, concorsi, disciplina, ferie e molto altro.
-            <div class="time">Ora</div>
-          </div>
-        </div>
-      </div>
+  return { used: true, results: top };
+}
 
-      <!-- typing -->
-      <div id="typing" class="px-4 py-2 hidden">
-        <div class="row">
-          <div class="av av-bot">🤖</div>
-          <div class="bub b-bot"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
-        </div>
-      </div>
+// ------------------------ HANDLER ------------------------
+export default async function handler(req, res) {
+  // CORS
+  res.setHeader('Vary', 'Origin');
+  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-      <!-- Input -->
-      <div class="p-3 border-t bg-gray-50">
-        <div class="max-w-3xl mx-auto flex gap-2">
-          <textarea id="inp" rows="1" maxlength="500" class="flex-1 rounded-xl border px-3 py-2 outline-none focus:ring-2 focus:ring-aurora" placeholder="✨ Scrivi la tua domanda…"></textarea>
-          <button id="send" class="rounded-xl bg-aurora text-white px-4 py-2 font-semibold disabled:opacity-50" disabled>Invia</button>
-        </div>
-      </div>
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    return res.status(500).json({ error: 'Server misconfigured (Supabase)' });
+  }
+  if (!OPENAI_API_KEY) {
+    return res.status(500).json({ error: 'Server misconfigured (OPENAI_API_KEY)' });
+  }
 
-      <div class="px-4 py-2 text-xs text-gray-500 border-t flex items-center justify-between">
-        <div id="conn">Connesso</div>
-        <div>Token: <span id="tok">0</span> • Caratteri: <span id="chars">0</span>/500</div>
-      </div>
-    </div>
-  </main>
-
-  <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-    // Supabase (login obbligatorio)
-    const supabase = createClient(
-      'https://pvzdilkozpspsnepedqc.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk',
-      { auth: { persistSession:true, autoRefreshToken:true } }
-    );
-
-    const API_CHAT = '/api/chat';
-    const DIRIGENTI_URL = `${window.location.origin}/dirigenti.html`;
-
-    const msgs = document.getElementById('msgs');
-    const typing = document.getElementById('typing');
-    const inp = document.getElementById('inp');
-    const sendBtn = document.getElementById('send');
-    const tok = document.getElementById('tok');
-    const chars = document.getElementById('chars');
-    const conn = document.getElementById('conn');
-    const help = document.getElementById('help');
-    const clear = document.getElementById('clear');
-
-    let isProcessing=false, totalTokens=0, history=[];
-
-    const timeNow = () => new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
-
-    function addBubble(html, who='bot', {raw=false}={}){
-      const row = document.createElement('div');
-      row.className='row';
-      const av=document.createElement('div');
-      av.className=`av ${who==='user'?'av-user':'av-bot'}`;
-      av.textContent = who==='user'?'👤':'🤖';
-      const bub=document.createElement('div');
-      bub.className=`bub ${who==='user'?'b-user':'b-bot'}`;
-      if(raw){ bub.innerHTML=html } else { bub.textContent=html }
-      const t=document.createElement('div'); t.className='time'; t.textContent=timeNow();
-      bub.appendChild(t);
-      row.appendChild(av); row.appendChild(bub);
-      msgs.appendChild(row); msgs.scrollTop = msgs.scrollHeight;
-    }
-    function setTyping(v){ typing.classList.toggle('hidden', !v); msgs.scrollTop=msgs.scrollHeight; }
-    function setConn(v){ conn.textContent = v ? 'Connesso' : 'Offline'; }
-    window.addEventListener('online',()=>setConn(true));
-    window.addEventListener('offline',()=>setConn(false));
-
-    // CTA Dirigenti come MESSAGGIO BOT (avatar 🤖, bubble chiara)
-    function addDirigentiCTA(){
-      const html = `
-        <p>Per l’elenco aggiornato dei dirigenti del Sindacato Carabinieri, apri la pagina ufficiale:</p>
-        <p><a class="cta" href="${DIRIGENTI_URL}" target="_blank" rel="noopener">Apri la pagina Dirigenti</a></p>
-      `;
-      addBubble(html,'bot',{raw:true});
+  try {
+    // 1) Verifica token Supabase
+    const auth = req.headers.authorization || '';
+    if (!auth.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Missing or invalid Authorization header' });
     }
 
-    function isDirigentiQuery(text){
-      const x=(text||'').toLowerCase();
-      return /\bdirigent/i.test(x) || /contatti.*dirigent/i.test(x);
-    }
-
-    help.addEventListener('click',()=>{
-      addBubble('Posso aiutarti su: disciplina, ferie/permessi, stipendi, concorsi, pensioni, codici e regolamenti. Scrivi: "Come funzionano i permessi per malattia?"','bot');
+    const vr = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      headers: { Authorization: auth, apikey: SUPABASE_ANON_KEY },
     });
-
-    clear.addEventListener('click',()=>{
-      if(!confirm('Cancellare la conversazione?')) return;
-      msgs.innerHTML='';
-      msgs.insertAdjacentHTML('beforeend', `
-        <div class="row">
-          <div class="av av-bot">🤖</div>
-          <div class="bub b-bot">
-            Ciao! Sono <strong>Virgilio</strong>. Fai una domanda su contratti, diritti, concorsi, disciplina, ferie e molto altro.
-            <div class="time">${timeNow()}</div>
-          </div>
-        </div>
-      `);
-      history=[]; totalTokens=0; tok.textContent='0';
-    });
-
-    inp.addEventListener('input',()=>{
-      chars.textContent=inp.value.length;
-      sendBtn.disabled = !inp.value.trim() || isProcessing;
-      inp.style.height='auto'; inp.style.height=Math.min(inp.scrollHeight,120)+'px';
-    });
-    inp.addEventListener('keydown',e=>{
-      if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); send(); }
-    });
-    sendBtn.addEventListener('click',send);
-
-    async function mustBeLoggedIn(){
-      const { data:{ session } } = await supabase.auth.getSession();
-      if(!session){ window.location.href = '../login.html'; return null; }
-      return session;
+    if (vr.status !== 200) {
+      const t = await vr.text().catch(() => '');
+      return res.status(401).json({ error: 'Invalid or expired token', details: t.slice(0, 200) });
     }
 
-    async function send(){
-      const text = inp.value.trim();
-      if(!text || isProcessing) return;
+    // 2) Body parsing
+    const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+    const {
+      messages = [],
+      model = 'gpt-4o-mini',
+      max_tokens = 650,
+      temperature = 0.3,
+      system_context = null,
 
-      isProcessing=true; sendBtn.disabled=true;
-      addBubble(text,'user');
-      history.push({role:'user',content:text});
-      inp.value=''; chars.textContent='0'; inp.style.height='auto';
+      // ricerca
+      enable_web_search = true,
+      web_search_query = null,
+      search_domains = DEFAULT_GOOD_DOMAINS,
+      search_exclude_domains = DEFAULT_EXCLUDE_DOMAINS,
+      search_years = 3,
+      search_filetypes = [], // es: ['pdf','doc','docx']
+    } = body;
 
-      if(isDirigentiQuery(text)){
-        addDirigentiCTA();
-        isProcessing=false; sendBtn.disabled=false; return;
-      }
+    // 3) Prompt & topic
+    const chat = [];
+    const lastUser = [...messages].reverse().find((m) => m?.role === 'user')?.content || '';
+    const topic = detectTopic(lastUser || web_search_query || '');
+    const preamble = buildSystemPreamble(topic);
+    chat.push({ role: 'system', content: preamble });
+    if (system_context) chat.push({ role: 'system', content: system_context });
 
-      const session = await mustBeLoggedIn(); if(!session) return;
+    // 4) Fonti pinned per topic
+    const pinned = pinnedForTopic(topic);
+    let sources = [];
+    if (pinned.length) {
+      const ctx = pinned.map((s, i) => `[${i + 1}] ${s.title}\nURL: ${s.url}`).join('\n');
+      chat.push({
+        role: 'system',
+        content:
+          'FONTI PINNATE (ufficiali, da usare come prioritarie):\n' +
+          ctx +
+          '\n\nCita con [1][2][3] quando pertinente.',
+      });
+      sources = pinned.map((s, i) => ({ idx: i + 1, title: s.title, url: s.url, content: '' }));
+    }
 
-      const body = {
-        messages: history.slice(-10),
-        model: 'gpt-4o-mini',
-        max_tokens: 600,
-        temperature: 0.3,
-        system_context: 'Sei Virgilio, assistente AI del Sindacato Carabinieri. Rispondi in modo chiaro e professionale.'
-      };
+    // 5) Web search istituzionale (con eccezione per Altroconsumo SOLO in tema pensioni)
+    let web_search_performed = false;
+    let web_sources_meta = [];
+    if (enable_web_search && TAVILY_API_KEY) {
+      const rawQ = (typeof web_search_query === 'string' && web_search_query.trim()) || lastUser;
 
-      setTyping(true);
-      try{
-        const r = await fetch(API_CHAT,{
-          method:'POST',
-          headers:{'Content-Type':'application/json', Authorization:'Bearer '+session.access_token},
-          body: JSON.stringify(body)
+      // se pensioni, estendiamo i domini includendo lo strumento "attendibile" Altroconsumo
+      const effective_domains =
+        topic === 'pensioni'
+          ? Array.from(new Set([...search_domains, 'altroconsumo.it']))
+          : search_domains;
+
+      const enriched = enrichQuery(rawQ, topic, search_filetypes);
+      const t = await tavilySearch(enriched, {
+        include_domains: effective_domains,
+        exclude_domains: search_exclude_domains,
+        max_results: 8,
+        years: Number(search_years) || 3,
+        filetypes: Array.isArray(search_filetypes) ? search_filetypes : [],
+      });
+
+      if (t.used) web_search_performed = true;
+      if (t.error) console.warn('Tavily error:', t.error);
+
+      if (t.results && t.results.length) {
+        const offset = sources.length;
+        t.results.forEach((w, i) => sources.push({ ...w, idx: offset + i + 1 }));
+        const webCtx = t.results
+          .map((s, i) => `[${offset + i + 1}] ${s.title}\nURL: ${s.url}\nEstratto:\n${s.content}`)
+          .join('\n---\n');
+        chat.push({
+          role: 'system',
+          content:
+            'FONTI WEB (istituzionali filtrate):\n' +
+            webCtx +
+            '\n\nCita i fatti con riferimenti coerenti [n].',
         });
-        const j = await r.json();
-        if(!r.ok){
-          addBubble(j?.error || `Errore ${r.status}. Riprova tra poco.`,'bot');
-        }else{
-          const msg = j?.choices?.[0]?.message?.content || 'Nessuna risposta.';
-          addBubble(msg,'bot',{raw:true});
-          history.push({role:'assistant',content:msg});
-          if(j?.usage?.total_tokens){ totalTokens+=j.usage.total_tokens; tok.textContent=totalTokens.toLocaleString(); }
-        }
-      }catch(e){
-        console.error(e);
-        addBubble('Problema di rete. Verifica la connessione e riprova.','bot');
-      }finally{
-        setTyping(false); isProcessing=false; sendBtn.disabled=false; inp.focus();
+
+        web_sources_meta = t.results.map((s, i) => ({
+          id: offset + i + 1,
+          title: s.title,
+          url: s.url,
+          published_date: s.published_date || null,
+        }));
       }
     }
 
-    // Init: richiede login ma non stampa messaggi “di servizio”
-    (async ()=>{ await mustBeLoggedIn(); })();
-  </script>
-</body>
-</html>
+    // 6) Cronologia utente/assistant
+    for (const m of Array.isArray(messages) ? messages : []) {
+      if (m?.role && m?.content) chat.push({ role: m.role, content: m.content });
+    }
+
+    // 7) OpenAI
+    const oa = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model, messages: chat, temperature, max_tokens }),
+    });
+
+    if (!oa.ok) {
+      const txt = await oa.text().catch(() => '');
+      return res.status(oa.status).json({ error: `OpenAI error: ${txt || oa.statusText}` });
+    }
+
+    const data = await oa.json();
+
+    // 8) Post-processing: chiusure & fonti + strumenti pensioni
+    const needsClosing = topic === 'licenze_istanze';
+    if (data?.choices?.[0]?.message?.content) {
+      if (needsClosing) {
+        data.choices[0].message.content += closingForLicenzeIstanze();
+      }
+
+      // Strumenti pensioni (come da prompt): CUSI (nota), MyINPS, Altroconsumo
+      if (topic === 'pensioni') {
+        data.choices[0].message.content +=
+          '\n\nStrumenti utili (pensioni):\n' +
+          '• CUSI — Applicativo interforze (accesso riservato al personale; simulazioni ausiliaria/riserva, moltiplicatore, TFS)\n' +
+          '• MyINPS — “La mia pensione futura” (area personale INPS)\n' +
+          '• Calcolatore Altroconsumo — stima indicativa: https://www.altroconsumo.it/soldi/lavoro-pensione/calcola-risparmia/calcolarepensioni';
+      }
+
+      if (sources.length) {
+        data.choices[0].message.content +=
+          '\n\nFonti:\n' + sources.map((s) => `[${s.idx}] ${s.title} — ${s.url}`).join('\n');
+      }
+    }
+
+    const pinned_sources_meta = pinned.map((s, i) => ({
+      id: i + 1,
+      title: s.title,
+      url: s.url,
+    }));
+
+    return res.status(200).json({
+      ...data,
+      web_search_performed,
+      web_sources: web_sources_meta,
+      pinned_sources: pinned_sources_meta,
+    });
+  } catch (e) {
+    console.error('API /api/chat error:', e);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+}
