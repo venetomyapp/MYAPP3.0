@@ -84,36 +84,46 @@ const DIRIGENTI = {
 
 const CONTACT_LINK = 'https://myapp31.vercel.app/richieste.html';
 
-// EXPERT SYSTEM PROMPT COMPLETO
-const EXPERT_SYSTEM_PROMPT = `Sei un assistente virtuale professionale per il personale dell'Arma dei Carabinieri e il Sindacato. Rispondi con competenza su tutti gli aspetti della professione, attingendo sempre alle fonti ufficiali indicate salvo che per l'elenco dirigenti (già caricato internamente).
+// EXPERT SYSTEM PROMPT PROFESSIONALE
+const EXPERT_SYSTEM_PROMPT = `Sono Virgilio, assistente virtuale specializzato per il personale dell'Arma dei Carabinieri e il supporto sindacale. La mia expertise copre tutti gli aspetti normativi e procedurali della professione militare, basandomi esclusivamente su fonti ufficiali e aggiornate.
 
-### AMBITI DI COMPETENZA E FONTI UFFICIALI
+## LE MIE COMPETENZE SPECIALISTICHE
 
-1. **Disciplina Militare** - Tipologie di sanzioni, strumenti, principi e procedure
-2. **Codice dell'Ordinamento Militare (COM)** - Doveri, diritti, gerarchia, avanzamenti  
-3. **Testo Unico dell'Ordinamento Militare (TUOM)** - Disposizioni generali e specifiche
-4. **Leggi Ordinarie e Speciali** - Applicabili alle Forze Armate e all'Arma
-5. **TULPS** - Testo Unico Leggi Pubblica Sicurezza
-6. **Codice della Strada (CdS)** - Norme sulla circolazione, competenze
-7. **Codice Civile** - Aspetti di rilevanza civile per militari
-8. **Regolamento Generale Arma** - Disposizioni interne e organizzative
-9. **Regolamento Organico Arma** - Struttura e funzioni  
-10. **Concorsi nell'Arma** - Bandi, procedure, requisiti per tutti i ruoli
-11. **Pensioni Militari** - Requisiti, calcolo, sistemi, coefficienti di trasformazione
+**Ambito Disciplinare e Ordinamentale:**
+- Disciplina Militare (sanzioni, procedure, principi)
+- Codice dell'Ordinamento Militare - COM (doveri, diritti, gerarchia, avanzamenti)
+- Testo Unico dell'Ordinamento Militare - TUOM (disposizioni generali e specifiche)
 
-### GESTIONE DIRIGENTI
-Quando richiesto informazioni sui dirigenti, chiedi sempre:
-a) Livello (regionale/provinciale)  
-b) Se provinciale, specificare la provincia
+**Normative e Codici:**
+- Leggi Ordinarie e Speciali per Forze Armate
+- TULPS (Testo Unico Leggi Pubblica Sicurezza)
+- Codice della Strada (competenze e circolazione)
+- Codice Civile (aspetti rilevanti per militari)
 
-### STILE E RESPONSABILITÀ
-- Linguaggio professionale, chiaro e puntuale
-- Cita sempre la fonte ufficiale con link diretto  
-- Usa elenchi e struttura ordinata per maggiore chiarezza
-- Non fornire consulenza legale individuale
-- Se l'informazione non è nelle fonti indicate, rimanda al dirigente competente
+**Regolamenti e Organizzazione:**
+- Regolamento Generale dell'Arma (disposizioni interne)
+- Regolamento Organico dell'Arma (struttura e funzioni)
 
-Rispondi sempre in italiano, con tono rispettoso e istituzionale.`;
+**Concorsi e Carriera:**
+- Bandi per tutti i ruoli (Allievi Ufficiali, Marescialli, Carabinieri, Atleti)
+- Procedure, requisiti, scadenze e modalità di partecipazione
+
+**Pensioni e Previdenza:**
+- Requisiti pensionistici comparto Difesa e Sicurezza
+- Sistemi di calcolo (retributivo/contributivo/misto)
+- Coefficienti di trasformazione e procedure INPS
+
+## APPROCCIO PROFESSIONALE
+
+Fornisco sempre:
+- Informazioni precise e aggiornate
+- Riferimenti alle fonti ufficiali con link diretti
+- Struttura chiara e organizzata delle risposte
+- Linguaggio istituzionale ma accessibile
+
+Per contatti dirigenti sindacali, specifico sempre livello (regionale/provinciale) e provincia quando necessario.
+
+Quando l'informazione non è nelle mie fonti ufficiali, rimando sempre al dirigente competente per approfondimenti specifici.`;
 
 // Rileva il topic dalla domanda (versione expert)
 function detectExpertTopic(query = '') {
@@ -145,20 +155,36 @@ function detectExpertTopic(query = '') {
   return 'generale';
 }
 
-// Gestione dirigenti con lista completa
+// Gestione dirigenti con risposta professionale
 function handleDirigentiQuery(query) {
   const q = query.toLowerCase();
   let response = '';
   
   if (q.includes('treviso')) {
-    response = `**DIRIGENTI PROVINCIA DI TREVISO:**\n\n${DIRIGENTI.treviso.provinciale.join('\n')}\n\n**Email:** ${DIRIGENTI.treviso.email}`;
+    response = `Ecco i contatti dei dirigenti sindacali per la **Provincia di Treviso**:
+
+${DIRIGENTI.treviso.provinciale.map(d => `• ${d}`).join('\n')}
+
+**Email ufficiale:** ${DIRIGENTI.treviso.email}`;
   } else if (q.includes('veneto') || q.includes('regionale')) {
-    response = `**DIRIGENTI REGIONE VENETO:**\n\n${DIRIGENTI.veneto.regionale.join('\n')}\n\n**Email:** ${DIRIGENTI.veneto.email}`;
+    response = `Ecco i contatti dei dirigenti sindacali per la **Regione Veneto**:
+
+${DIRIGENTI.veneto.regionale.map(d => `• ${d}`).join('\n')}
+
+**Email ufficiale:** ${DIRIGENTI.veneto.email}`;
   } else {
-    response = `Per fornirti i contatti corretti, specifica:\n\n**a) Livello:** regionale o provinciale\n**b) Se provinciale:** indica la provincia\n\n**Esempio:** "Dirigenti provinciali di Treviso" oppure "Dirigenti regionali Veneto"`;
+    response = `Per fornirti i contatti dei dirigenti sindacali più appropriati, ho bisogno di sapere:
+
+**📍 Livello richiesto:**
+- Regionale (per questioni che coinvolgono tutta la regione)
+- Provinciale (per questioni locali specifiche)
+
+**📍 Se provinciale, specifica la provincia**
+
+**Esempio di richiesta:** *"Dirigenti regionali del Veneto"* oppure *"Dirigenti provinciali di Treviso"*`;
   }
   
-  return response + `\n\nPer altre province o regioni, invia una richiesta specifica tramite: ${CONTACT_LINK}`;
+  return response + `\n\nPer altre province o regioni non ancora elencate, puoi inviare una richiesta specifica tramite: ${CONTACT_LINK}`;
 }
 
 // System prompt dinamico con fonti specifiche
@@ -176,9 +202,19 @@ function buildExpertSystemPrompt(topic) {
   return EXPERT_SYSTEM_PROMPT + contextSources + '\n\nCita sempre le fonti con [1][2][3] quando pertinente.';
 }
 
-// Chiusura speciale per licenze/istanze
+// Chiusura professionale per licenze/istanze
 function getLicenseClosing() {
-  return `\n\nPuoi verificare tutti i dettagli consultando direttamente la fonte ufficiale indicata. Per questa pratica ti consiglio di contattare il dirigente di zona: specifica se regionale o provinciale e di quale provincia. Puoi inviare subito la tua richiesta tramite questo link: ${CONTACT_LINK}\n\n**Per problemi in dettaglio contatta il tuo dirigente di zona.**`;
+  return `\n\n---
+
+**📋 Per completare la tua pratica:**
+
+Puoi verificare tutti i dettagli consultando direttamente la fonte ufficiale indicata sopra. Per supporto specifico su questa pratica, ti consiglio di contattare il dirigente sindacale di zona competente.
+
+**🔗 Richiesta assistenza:** [Invia richiesta](${CONTACT_LINK})
+
+*Specifica se necessiti del dirigente regionale o provinciale e, nel secondo caso, indica la provincia di competenza.*
+
+**Per questioni dettagliate e supporto personalizzato, contatta sempre il tuo dirigente di zona.**`;
 }
 
 export default async function handler(req, res) {
