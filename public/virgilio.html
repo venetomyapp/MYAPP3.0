@@ -2,13 +2,16 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0"/>
   <title>Virgilio - MyApp</title>
 
+  <!-- Manifest (opzionale: commenta se non hai il file pubblico) -->
+  <!-- <link rel="manifest" href="/manifest.json"> -->
+  <meta name="theme-color" content="#1a1a2e">
+  <meta name="background-color" content="#1a1a2e">
+
   <!-- Favicon robottino inline -->
-  <link rel="icon"
-        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23e94560'/%3E%3Ccircle cx='22' cy='26' r='3' fill='white'/%3E%3Ccircle cx='42' cy='26' r='3' fill='white'/%3E%3Crect x='28' y='35' width='8' height='4' rx='2' fill='white'/%3E%3Cpath d='M20 45 Q32 50 44 45' stroke='white' stroke-width='2' fill='none'/%3E%3Crect x='15' y='12' width='6' height='8' rx='3' fill='%2300d4ff'/%3E%3Crect x='43' y='12' width='6' height='8' rx='3' fill='%2300d4ff'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23e94560'/%3E%3Ccircle cx='22' cy='26' r='3' fill='white'/%3E%3Ccircle cx='42' cy='26' r='3' fill='white'/%3E%3Crect x='28' y='35' width='8' height='4' rx='2' fill='white'/%3E%3Cpath d='M20 45 Q32 50 44 45' stroke='white' stroke-width='2' fill='none'/%3E%3Crect x='15' y='12' width='6' height='8' rx='3' fill='%2300d4ff'/%3E%3Crect x='43' y='12' width='6' height='8' rx='3' fill='%2300d4ff'/%3E%3C/svg%3E">
 
   <!-- Tailwind (ok per test/dev) -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -28,13 +31,6 @@
               teal: '#03dac6',
               dark: '#0a0a23',
               light: '#f8fafc'
-            },
-            fontSize: {
-              'fluid-sm': 'clamp(0.9rem, 0.88rem + 0.2vw, 1rem)',
-              'fluid-base': 'clamp(1rem, 0.96rem + 0.4vw, 1.125rem)',
-              'fluid-lg': 'clamp(1.125rem, 1.05rem + 0.6vw, 1.375rem)',
-              'fluid-xl': 'clamp(1.25rem, 1.15rem + 1vw, 1.75rem)',
-              'fluid-2xl': 'clamp(1.5rem, 1.3rem + 1.5vw, 2rem)'
             }
           }
         }
@@ -43,263 +39,258 @@
   </script>
 
   <style>
-    :root{
+    :root {
       --gradient-bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
       --shadow-elevated: 0 8px 25px rgba(0,0,0,.15);
-      --header-h: 60px;
-      --safe-top: env(safe-area-inset-top);
-      --safe-bottom: env(safe-area-inset-bottom);
+      --header-height: 60px;
+      --safe-area-top: env(safe-area-inset-top);
+      --safe-area-bottom: env(safe-area-inset-bottom);
     }
-
-    * { box-sizing: border-box; -webkit-tap-highlight-color: rgba(233,69,96,.2); }
-    html, body { height: 100%; }
-    body{
-      margin:0;
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: rgba(233,69,96,0.3); }
+    body {
       background: var(--gradient-bg);
       background-size: 400% 400%;
       animation: gradientShift 30s ease infinite;
-      min-height: 100dvh;
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-      color: #111827;
+      min-height: 100vh;
+      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
     }
     @keyframes gradientShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
 
-    .app-shell{
-      min-height: calc(100dvh - var(--safe-top));
-      padding-top: max(8px, var(--safe-top));
-      padding-bottom: max(8px, var(--safe-bottom));
+    .header { background: rgba(255,255,255,.1); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+      border-bottom: 1px solid rgba(255,255,255,.1); position: sticky; top: 0; z-index: 40; height: var(--header-height);
+      padding-top: var(--safe-area-top); }
+    .back-button { display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:12px; background: rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); color:#fff; cursor:pointer; transition:all .2s; touch-action: manipulation; -webkit-touch-callout: none; user-select: none; }
+    .back-button:hover { background: rgba(255,255,255,.2); border-color: rgba(233,69,96,.5); color:#e94560; transform: translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,.1) }
+    .back-button:active { transform: scale(.95); background: rgba(233,69,96,.2); }
+
+    .chat-container { background:#fff; border-radius:20px; box-shadow: var(--shadow-elevated); width:100%; max-width:900px; margin:1rem auto; overflow:hidden;
+      height: calc(100vh - var(--header-height) - var(--safe-area-top) - var(--safe-area-bottom) - 2rem); display:flex; flex-direction:column; }
+    .chat-header { background: linear-gradient(135deg, #e94560, #00d4ff); color:#fff; padding:1.5rem; text-align:center; flex-shrink:0; }
+    .chat-messages { flex:1; overflow-y:auto; padding:1rem; scroll-behavior:smooth; -webkit-overflow-scrolling:touch; overscroll-behavior-y: contain; }
+    .chat-messages::-webkit-scrollbar{ width:4px } .chat-messages::-webkit-scrollbar-track{ background:#f1f1f1; border-radius:2px } .chat-messages::-webkit-scrollbar-thumb{ background:#e94560; border-radius:2px }
+
+    .message { margin-bottom:1.5rem; animation: fadeIn .3s ease-out; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto; }
+    @keyframes fadeIn { from{opacity:0; transform: translateY(10px)} to{opacity:1; transform:none} }
+    .message-bot, .message-system { display:flex; align-items:flex-start; gap:.75rem; }
+    .message-user { display:flex; align-items:flex-start; gap:.75rem; flex-direction: row-reverse; }
+
+    .avatar { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem; min-width:40px; min-height:40px; flex-shrink: 0; }
+    .avatar-bot{ background: linear-gradient(135deg, #00d4ff, #03dac6) }
+    .avatar-user{ background: linear-gradient(135deg, #e94560, #ff006e) }
+    .avatar-system{ background: linear-gradient(135deg, #ffd700, #ff8c00) }
+
+    .message-content { max-width:75%; padding:1rem 1.25rem; border-radius:16px; font-size:1rem; line-height:1.6; min-width: 0; flex: 1; }
+    .content-bot { background:#f8f9fa; color:#2d3748; border-bottom-left-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .content-user { background: linear-gradient(135deg, #e94560, #ff006e); color:#fff; border-bottom-right-radius:6px; box-shadow: 0 2px 8px rgba(233,69,96,0.3); }
+    .content-system { background: linear-gradient(135deg, #ffd700, #ff8c00); color:#fff; border-bottom-left-radius:6px; box-shadow: 0 2px 8px rgba(255,215,0,0.3); }
+    .message-time { font-size:.75rem; opacity:.7; margin-top:.5rem; font-weight: 500; }
+
+    .typing-indicator{ display:flex; align-items:center; gap:.75rem; padding:1rem 0; }
+    .typing-dots{ display:flex; gap:4px; padding:1rem 1.25rem; background:#f8f9fa; border-radius:16px; border-bottom-left-radius:6px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .typing-dot{ width:8px; height:8px; background:#6b7280; border-radius:50%; animation:typingBounce 1.5s infinite; }
+    .typing-dot:nth-child(2){ animation-delay:.3s } .typing-dot:nth-child(3){ animation-delay:.6s }
+    @keyframes typingBounce { 0%,60%,100{transform:none} 30%{transform: translateY(-10px)} }
+
+    .chat-input-area{ padding:1rem; border-top:1px solid #e5e7eb; background:#f8f9fa; flex-shrink:0; padding-bottom: calc(1rem + var(--safe-area-bottom)); }
+    .input-wrapper{ display:flex; gap:.75rem; align-items:flex-end; }
+    .chat-input{ flex:1; border:2px solid #e5e7eb; border-radius:12px; padding:.875rem 1rem; font-size:1rem; resize:none; outline:none; transition:border-color .2s; min-height:48px; max-height:120px; font-family:inherit; -webkit-appearance:none; appearance:none; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .chat-input:focus{ border-color:#e94560; box-shadow: 0 0 0 3px rgba(233,69,96,0.1); }
+    .send-button{ background: linear-gradient(135deg, #e94560, #00d4ff); color:#fff; border:none; border-radius:12px; padding:.75rem; width:48px; height:48px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; min-width:48px; min-height:48px; touch-action: manipulation; user-select: none; box-shadow: 0 2px 8px rgba(233,69,96,0.3); }
+    .send-button:hover:not(:disabled){ transform: translateY(-2px); box-shadow:0 4px 12px rgba(233,69,96,.4); }
+    .send-button:active:not(:disabled){ transform: scale(.95); }
+    .send-button:disabled{ opacity:.5; cursor:not-allowed; transform:none; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+    .loading-spinner{ width:20px; height:20px; border:2px solid rgba(255,255,255,.3); border-radius:50%; border-top-color:#fff; animation: spin 1s linear infinite; }
+    @keyframes spin { to{ transform: rotate(360deg) } }
+
+    .status-bar{ background:#f8f9fa; padding:.75rem 1rem; border-top:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center; font-size:.8rem; color:#6b7280; flex-shrink:0; font-weight: 500; }
+    .connection-status{ display:flex; align-items:center; gap:.5rem; }
+    .status-dot{ width:8px; height:8px; border-radius:50%; background:#10b981; }
+    .status-dot.disconnected{ background:#ef4444; }
+
+    .action-button{ background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:.5rem 1rem; font-size:.85rem; font-weight:500; color:#374151; cursor:pointer; transition:all .2s; min-height:36px; display:flex; align-items:center; justify-content:center; touch-action: manipulation; user-select: none; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .action-button:hover{ background:#f3f4f6; border-color:#e94560; color:#e94560; transform: translateY(-1px); }
+    .action-button:active{ transform: scale(.98); }
+    .action-button.primary{ background: linear-gradient(135deg, #e94560, #00d4ff); color:#fff; border:none; }
+    .action-button.primary:hover{ transform: translateY(-1px); box-shadow:0 4px 12px rgba(233,69,96,.3); }
+
+    .alert{ padding:1rem; border-radius:12px; margin:1rem; font-weight:500; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .alert-error{ background:#fef2f2; color:#dc2626; border:1px solid #fecaca; }
+    .alert-success{ background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0; }
+    .alert-info{ background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; }
+
+    .web-search-badge{ background: linear-gradient(135deg, #00d4ff, #03dac6); color:#fff; font-size:.75rem; font-weight:600; padding:.25rem .75rem; border-radius:12px; display:inline-block; margin-bottom:.5rem; box-shadow: 0 2px 4px rgba(0,212,255,0.3); }
+
+    /* Responsive */
+    @media (min-width:1200px){ .chat-container{ max-width:1000px } }
+    @media (max-width:1024px) and (min-width:769px){
+      .chat-container{ margin:1rem; height: calc(100vh - var(--header-height) - var(--safe-area-top) - var(--safe-area-bottom) - 2rem); }
+      .message-content{ max-width:80% }
     }
-
-    /* Header */
-    .header{
-      position: sticky; top: 0; z-index: 30; height: var(--header-h);
-      background: rgba(255,255,255,.12);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(255,255,255,.12);
+    @media (max-width:768px) and (min-width:481px){
+      :root { --header-height: 56px; }
+      .chat-container{ margin:.75rem; border-radius:16px; height: calc(100vh - var(--header-height) - var(--safe-area-top) - var(--safe-area-bottom) - 1.5rem); }
+      .chat-header{ padding:1.25rem .75rem; } .chat-header h1{ font-size:1.5rem; }
+      .message-content{ max-width:85%; padding: .875rem 1rem; font-size: .95rem; line-height: 1.5; }
+      .avatar{ width:36px; height:36px; min-width:36px; min-height:36px; font-size:1.1rem; }
+      .chat-input { font-size: 1rem; padding: .75rem .875rem; }
+      .send-button { width: 44px; height: 44px; min-width: 44px; min-height: 44px; }
     }
-    .back-button{ width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center;
-      color:#fff; background: rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.25); transition:.15s; }
-    .back-button:active{ transform: scale(.96) }
-    .back-button:hover{ background: rgba(255,255,255,.22); color:#e94560; }
-
-    /* Card chat */
-    .chat-card{
-      background: #fff; border-radius: 20px; box-shadow: var(--shadow-elevated);
-      width: 100%; max-width: 980px;
-      height: calc(100dvh - var(--header-h) - var(--safe-top) - var(--safe-bottom) - 2rem);
-      display:flex; flex-direction: column; overflow: hidden; margin: 0 auto;
+    @media (max-width:480px){
+      :root{ --header-height:52px }
+      .header{ height:var(--header-height); padding:.5rem 1rem; }
+      .chat-container{ margin:.5rem; border-radius:12px; height: calc(100vh - var(--header-height) - var(--safe-area-top) - var(--safe-area-bottom) - 1rem); }
+      .chat-header{ padding:1rem .75rem } .chat-header h1{ font-size:1.4rem } .chat-header p{ font-size:.85rem }
+      .chat-messages{ padding:.75rem } .message { margin-bottom: 1.25rem; }
+      .message-content{ max-width:88%; padding:.75rem .875rem; font-size:.9rem; line-height: 1.55; }
+      .avatar{ width:32px; height:32px; min-width:32px; min-height:32px; font-size:1rem; }
+      .chat-input-area{ padding:.75rem; padding-bottom: calc(.75rem + var(--safe-area-bottom)); }
+      .chat-input{ font-size:16px; padding:.75rem .875rem; min-height: 44px; }
+      .send-button{ width:44px; height:44px; min-width:44px; min-height:44px; }
+      .status-bar{ padding:.6rem .75rem; font-size:.75rem; }
+      .action-button { padding: .4rem .75rem; font-size: .8rem; min-height: 32px; }
+      .back-button { width: 36px; height: 36px; }
     }
-    .chat-header{
-      background: linear-gradient(135deg, #e94560, #00d4ff);
-      color: #fff; padding: 1.2rem; text-align: center; flex: 0 0 auto;
+    @media (max-width:360px) {
+      .chat-container { margin: .25rem; }
+      .message-content { max-width: 90%; padding: .625rem .75rem; font-size: .85rem; }
+      .chat-header { padding: .875rem .5rem; }
+      .avatar { width: 28px; height: 28px; min-width: 28px; min-height: 28px; font-size: .9rem; }
     }
-    .chat-scroll{
-      flex: 1 1 auto; overflow-y: auto; padding: .9rem clamp(.5rem, 2vw, 1rem);
-      scroll-behavior:smooth; -webkit-overflow-scrolling:touch;
+    @media (prefers-color-scheme:dark){
+      .content-bot{ background:#2d3748; color:#e2e8f0 }
+      .chat-input-area{ background:#1a202c } .status-bar{ background:#1a202c; color:#a0aec0 }
+      .chat-input { background: #2d3748; color: #e2e8f0; border-color: #4a5568; }
+      .chat-input:focus { border-color: #e94560; }
     }
-    .chat-scroll::-webkit-scrollbar{ width:6px }
-    .chat-scroll::-webkit-scrollbar-thumb{ background:#e94560; border-radius:4px }
-
-    .message{ display:flex; gap:.75rem; margin-bottom: clamp(.9rem, .6rem + .8vw, 1.35rem); }
-    .message-user{ flex-direction: row-reverse; }
-    .bubble{ max-width: 78%; padding: .9rem 1.1rem; border-radius: 16px; word-wrap: break-word; overflow-wrap: anywhere; font-size: var(--fs, 1rem); line-height: 1.6 }
-    .avatar{ width:40px; height:40px; min-width:40px; border-radius: 999px; display:flex; align-items:center; justify-content:center; font-size: 1.15rem; color:#fff }
-    .a-bot{ background: linear-gradient(135deg, #00d4ff, #03dac6) }
-    .a-user{ background: linear-gradient(135deg, #e94560, #ff006e) }
-    .a-sys { background: linear-gradient(135deg, #ffd700, #ff8c00) }
-
-    .b-bot{ background:#f8f9fa; color:#1f2937; border-bottom-left-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,.08) }
-    .b-user{ background: linear-gradient(135deg, #e94560, #ff006e); color:#fff; border-bottom-right-radius: 6px; box-shadow: 0 2px 8px rgba(233,69,96,.35) }
-    .b-sys { background: linear-gradient(135deg, #ffd700, #ff8c00); color:#fff; border-bottom-left-radius: 6px; box-shadow: 0 2px 8px rgba(255,215,0,.35) }
-
-    .time{ font-size:.75rem; opacity:.75; margin-top:.45rem }
-
-    .typing{ display:flex; gap:.75rem; padding:.6rem 0 }
-    .dots{ display:flex; gap:5px; background:#f8f9fa; padding:.7rem .9rem; border-radius:16px; border-bottom-left-radius:6px }
-    .dots > i{ width:8px; height:8px; background:#6b7280; border-radius:50%; animation: b 1.5s infinite }
-    .dots > i:nth-child(2){ animation-delay: .3s } .dots > i:nth-child(3){ animation-delay: .6s }
-    @keyframes b{ 0%,60%,100%{transform:none} 30%{transform: translateY(-8px)} }
-
-    .composer{ flex:0 0 auto; border-top:1px solid #e5e7eb; background:#f8f9fa; padding: .7rem clamp(.5rem, 2vw, 1rem); }
-    .composer-inner{ display:flex; gap:.6rem; align-items: flex-end; }
-    textarea{
-      flex:1; resize:none; min-height: 48px; max-height: 140px;
-      border:2px solid #e5e7eb; border-radius: 12px; padding: .85rem 1rem;
-      font-size: var(--fs, 1rem); outline: none; background: #fff;
-      transition: border-color .15s, box-shadow .15s;
+    *:focus-visible{ outline:2px solid #e94560; outline-offset:2px; }
+    @media (hover: none) and (pointer: coarse) {
+      .back-button:hover, .action-button:hover, .send-button:hover { transform: none; }
+      .back-button:active, .action-button:active, .send-button:active { transform: scale(.95); background: rgba(233,69,96,.2); }
     }
-    textarea:focus{ border-color: #e94560; box-shadow: 0 0 0 3px rgba(233,69,96,.12) }
-
-    .send{
-      width: 48px; height:48px; min-width:48px; border: none; border-radius: 12px; cursor: pointer;
-      display:flex; align-items:center; justify-content:center;
-      color:#fff; background: linear-gradient(135deg, #e94560, #00d4ff);
-      box-shadow: 0 2px 10px rgba(233,69,96,.35);
-      transition: transform .12s, box-shadow .12s, opacity .12s;
-      touch-action: manipulation;
-    }
-    .send:disabled{ opacity:.5; cursor:not-allowed; box-shadow: none }
-    .send:active{ transform: scale(.96) }
-
-    .status{
-      display:flex; justify-content:space-between; align-items:center; gap:.6rem;
-      padding: .55rem clamp(.5rem, 2vw, 1rem); background:#f8f9fa; border-top: 1px solid #e5e7eb;
-      font-size: .82rem; color:#6b7280;
-    }
-    .dot{ width:10px; height:10px; border-radius:50%; background:#10b981 }
-    .dot.off{ background:#ef4444 }
-
-    .web-badge{ display:inline-block; background: linear-gradient(135deg,#00d4ff,#03dac6); color:#fff;
-      font-size:.75rem; font-weight:600; padding:.2rem .6rem; border-radius: 999px; margin-bottom: .35rem }
-
-    /* Auth overlay (blocca tutto finché non loggato) */
-    .auth-guard{
-      position: fixed; inset: 0; z-index: 50;
-      display: grid; place-items: center;
-      background: rgba(10,10,35,.7);
-      backdrop-filter: blur(6px);
-    }
-    .auth-card{
-      background: #fff; border-radius: 16px; box-shadow: var(--shadow-elevated);
-      padding: 1.25rem 1.1rem; width: min(92vw, 480px);
-      text-align: center;
-    }
-
-    /* Mobile-first tweaks */
-    @media (max-width: 480px){
-      .chat-card{ border-radius: 14px }
-      .bubble{ max-width: 90% }
-    }
-    @media (prefers-color-scheme: dark){
-      body{ color:#e5e7eb }
-      .chat-card{ background:#0f172a }
-      .chat-header{ background: linear-gradient(135deg,#ef4444,#06b6d4) }
-      .b-bot{ background:#111827; color:#e5e7eb }
-      .composer{ background:#0b1222; border-color:#1f2937 }
-      textarea{ background:#0b1222; color:#e5e7eb; border-color:#1f2937 }
-      .status{ background:#0b1222; border-color:#1f2937; color:#9ca3af }
-      .dots{ background:#111827 }
-      .auth-card{ background:#0b1222; color:#e5e7eb }
+    @media (max-height: 500px) and (orientation: landscape) {
+      .chat-header { padding: .75rem; } .chat-header h1 { font-size: 1.2rem; }
+      .chat-header p, .chat-header div:last-child { font-size: .8rem; }
+      .message-content { padding: .625rem .875rem; }
+      .avatar { width: 28px; height: 28px; min-width: 28px; min-height: 28px; }
     }
   </style>
 </head>
 <body>
-  <div class="app-shell">
-    <!-- Header -->
-    <header class="header">
-      <div class="max-w-6xl mx-auto h-full px-4 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <button class="back-button" type="button" aria-label="Torna indietro" onclick="history.back()">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-          <h1 class="text-white font-semibold text-fluid-lg">Virgilio</h1>
+  <!-- Header -->
+  <header class="header">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <button onclick="history.back()" class="back-button" title="Torna indietro" type="button" aria-label="Torna alla pagina precedente">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <h1 class="text-white font-bold text-lg">Virgilio</h1>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="clearChatBtn" class="action-button text-sm" type="button">🗑️ Pulisci</button>
+        <button onclick="showHelp()" class="action-button text-sm" type="button">❓ Aiuto</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Loading -->
+  <div id="loading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden" role="status" aria-live="polite">
+    <div class="bg-white rounded-lg p-6 text-center mx-4 max-w-sm">
+      <div class="loading-spinner mx-auto mb-4"></div>
+      <p class="text-gray-700 font-medium">Caricamento Virgilio...</p>
+    </div>
+  </div>
+
+  <!-- Main Chat -->
+  <main class="py-6">
+    <div class="chat-container">
+      <!-- Chat Header -->
+      <div class="chat-header">
+        <div class="flex items-center justify-center gap-3 mb-2">
+          <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-content text-2xl">🤖</div>
+          <div>
+            <h1 class="text-2xl font-bold">Virgilio</h1>
+            <p class="text-sm opacity-90">Il tuo assistente sindacale AI</p>
+          </div>
         </div>
-        <div class="flex items-center gap-2">
-          <button id="clearChatBtn" class="hidden sm:inline-flex px-3 py-2 rounded-lg bg-white/90 hover:bg-white text-gray-800 text-sm font-medium transition">
-            🗑️ Pulisci
-          </button>
-          <button id="helpBtn" class="px-3 py-2 rounded-lg bg-white/90 hover:bg-white text-gray-800 text-sm font-medium transition">
-            ❓ Aiuto
-          </button>
-          <button id="logoutBtn" class="px-3 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm font-semibold transition">
-            Esci
+        <div class="text-sm opacity-80">Chiedi informazioni su contratti, diritti e procedure • Ricerca web integrata 🌐</div>
+      </div>
+
+      <!-- Alerts -->
+      <div id="alertContainer" aria-live="polite"></div>
+
+      <!-- Messages -->
+      <div id="chatMessages" class="chat-messages" role="log" aria-live="polite" aria-relevant="additions">
+        <div class="message message-bot">
+          <div class="avatar avatar-bot">🤖</div>
+          <div class="message-content content-bot">
+            <div>
+              Ciao! Sono <strong>Virgilio</strong> ✨, il tuo assistente sindacale AI di nuova generazione.
+              <br><br>
+              <strong>🎯 Le mie specializzazioni principali:</strong><br><br>
+              📋 <strong>Contratto di Lavoro</strong> — Normative, diritti e doveri dei Carabinieri<br>
+              🏥 <strong>Permessi per Malattia</strong> — Procedure, certificazioni e tempistiche<br>
+              🏖️ <strong>Ferie e Permessi</strong> — Regolamenti, richieste e diritti alle vacanze<br>
+              💰 <strong>Stipendio e Aumenti</strong> — Progressioni, indennità e trattamento economico<br>
+              👥 <strong>Dirigenti Sindacali</strong> — Contatti regionali e provinciali<br>
+              📝 <strong>Procedure Legali</strong> — Disciplinari, ricorsi e tutele legali<br><br>
+              🌐 <strong>Novità:</strong> Posso effettuare ricerche web in tempo reale per informazioni sempre aggiornate!
+              <br><br>
+              <strong>💬 Come posso aiutarti oggi?</strong><br>
+              • "Come funzionano i permessi per malattia?"<br>
+              • "Dimmi tutto sul contratto di lavoro"<br>
+              • "Chi sono i dirigenti sindacali?"<br>
+              • "Informazioni su stipendio e aumenti"
+            </div>
+            <div class="message-time">Ora</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Typing -->
+      <div id="typingIndicator" class="typing-indicator hidden" aria-hidden="true">
+        <div class="avatar avatar-bot">🤖</div>
+        <div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>
+      </div>
+
+      <!-- Input -->
+      <div class="chat-input-area">
+        <div class="input-wrapper">
+          <textarea id="messageInput" class="chat-input" placeholder="✨ Scrivi la tua domanda..." rows="1" maxlength="500" aria-label="Scrivi il messaggio"></textarea>
+          <button id="sendButton" class="send-button" disabled type="button" aria-label="Invia messaggio">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+            </svg>
           </button>
         </div>
       </div>
-    </header>
 
-    <!-- Main card -->
-    <main class="px-2 sm:px-4 py-4">
-      <section class="chat-card">
-        <!-- Chat title -->
-        <div class="chat-header">
-          <div class="flex items-center justify-center gap-3">
-            <div class="w-12 h-12 rounded-full bg-white/25 grid place-items-center text-2xl">🤖</div>
-            <div>
-              <h2 class="text-fluid-xl font-bold">Virgilio</h2>
-              <p class="text-white/90 text-fluid-sm">Il tuo assistente sindacale AI</p>
-            </div>
-          </div>
-          <p class="mt-1 text-white/90 text-fluid-sm">Contratti • Diritti • Procedure • Ricerca web istituzionale 🌐</p>
+      <!-- Status -->
+      <div class="status-bar">
+        <div class="connection-status">
+          <div id="statusDot" class="status-dot"></div>
+          <span id="statusText">Connesso</span>
         </div>
-
-        <!-- Alerts -->
-        <div id="alertContainer" class="px-3 pt-2"></div>
-
-        <!-- Messages -->
-        <div id="chatMessages" class="chat-scroll" role="log" aria-live="polite" aria-relevant="additions">
-          <div class="message">
-            <div class="avatar a-bot">🤖</div>
-            <div class="bubble b-bot">
-              <div>
-                Ciao! Sono <strong>Virgilio</strong> ✨. Posso aiutarti su normativa, disciplina, concorsi, licenze e contatti sindacali.
-                <br><br>
-                Esempi:
-                <ul class="list-disc ml-5 mt-1">
-                  <li>“Come funzionano i permessi per malattia?”</li>
-                  <li>“Ultime novità sul contratto 2025”</li>
-                  <li>“Dirigenti regionali Veneto” o “Dirigenti provinciali Treviso”</li>
-                </ul>
-              </div>
-              <div class="time">Ora</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Typing -->
-        <div id="typingIndicator" class="typing hidden" aria-hidden="true">
-          <div class="avatar a-bot">🤖</div>
-          <div class="dots"><i></i><i></i><i></i></div>
-        </div>
-
-        <!-- Composer -->
-        <div class="composer">
-          <div class="composer-inner">
-            <textarea id="messageInput" placeholder="✨ Scrivi la tua domanda…" rows="1" maxlength="500" aria-label="Scrivi il messaggio"></textarea>
-            <button id="sendButton" class="send" type="button" aria-label="Invia" disabled>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- Status -->
-        <div class="status">
-          <div class="flex items-center gap-2">
-            <span id="statusDot" class="dot"></span>
-            <span id="statusText">Connesso</span>
-          </div>
-          <div class="text-right">Token: <span id="tokenCount">0</span> • Caratteri: <span id="charCount">0</span>/500</div>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <!-- Auth guard (mostrato finché l'utente non è loggato) -->
-  <div id="authGuard" class="auth-guard hidden" aria-live="polite">
-    <div class="auth-card">
-      <h3 class="text-fluid-lg font-bold mb-1">Accesso richiesto</h3>
-      <p class="text-fluid-sm opacity-80">Per utilizzare Virgilio devi effettuare l’accesso.</p>
-      <a href="/login.html"
-         class="mt-3 inline-flex items-center justify-center px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
-        Vai al login
-      </a>
+        <div>Token: <span id="tokenCount">0</span> • Caratteri: <span id="charCount">0</span>/500</div>
+      </div>
     </div>
-  </div>
+  </main>
 
   <!-- App JS -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    // ===== Supabase (usa i tuoi valori) =====
+    // ⚙️ Supabase
     const supabaseUrl = 'https://pvzdilkozpspsnepedqc.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
     const supabase = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: true, autoRefreshToken: true } });
 
-    // ===== Config chatbot =====
+    // 🔌 Chatbot config: proxy same-origin su Vercel
     const CHATBOT_CONFIG = {
       apiEndpoint: '/api/chat',
       apiEndpointLocal: 'http://localhost:3001/api/chat',
@@ -311,7 +302,10 @@
       retryDelay: 1000
     };
 
-    // Stato UI
+    const DEMO_MODE = false;
+
+    // Stato
+    let currentUser = null;
     let conversationHistory = [];
     let isProcessing = false;
     let totalTokensUsed = 0;
@@ -327,198 +321,296 @@
     const tokenCount = document.getElementById('tokenCount');
     const charCount = document.getElementById('charCount');
     const alertContainer = document.getElementById('alertContainer');
-    const helpBtn = document.getElementById('helpBtn');
-    const clearChatBtn = document.getElementById('clearChatBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const authGuard = document.getElementById('authGuard');
 
-    // ===== Utils =====
-    const escapeHtml = (t) => {
-      const d = document.createElement('div'); d.textContent = t; return d.innerHTML;
-    };
-    const formatMessage = (t) => escapeHtml(t).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/\n/g,'<br>');
-    const formatTime = () => new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
-    const showTyping = () => { typingIndicator.classList.remove('hidden'); messagesContainer.scrollTop = messagesContainer.scrollHeight; };
-    const hideTyping = () => typingIndicator.classList.add('hidden');
-    const showAlert = (msg, type='info') => {
+    // Utils UI
+    function showAlert(message, type) {
+      if (!type) type = 'info';
       const el = document.createElement('div');
-      el.className = `rounded-xl px-3 py-2 mb-2 ${type==='error' ? 'bg-red-50 text-red-700 border border-red-200' : type==='success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-blue-50 text-blue-700 border border-blue-200'}`;
-      el.textContent = msg;
+      el.className = 'alert alert-' + type;
+      el.textContent = message;
       alertContainer.appendChild(el);
-      setTimeout(()=>el.remove(), 5000);
-    };
-    const updateConnectionStatus = (online) => {
-      statusDot.classList.toggle('off', !online);
-      statusText.textContent = online ? 'Connesso' : 'Offline';
-    };
-    const autoResize = () => { messageInput.style.height='auto'; messageInput.style.height = Math.min(messageInput.scrollHeight, 140) + 'px'; };
+      setTimeout(() => el.remove(), 5000);
+    }
+    function updateConnectionStatus(connected) {
+      if (connected) { statusDot.className = 'status-dot'; statusText.textContent = 'Connesso'; }
+      else { statusDot.className = 'status-dot disconnected'; statusText.textContent = 'Offline'; }
+    }
+    function syncOnlineStatus(){ updateConnectionStatus(navigator.onLine); }
+    window.addEventListener('online', syncOnlineStatus);
+    window.addEventListener('offline', syncOnlineStatus);
 
-    const addMessage = (content, type='bot', hasWeb=false) => {
+    function updateCharCount(){ const c = messageInput.value.length; charCount.textContent = c; charCount.style.color = c>400 ? '#ef4444':'#6b7280'; }
+    function updateSendButton(){ const has = messageInput.value.trim().length>0; sendButton.disabled = !has || isProcessing; }
+    function autoResizeTextarea(){ messageInput.style.height='auto'; messageInput.style.height = Math.min(messageInput.scrollHeight,120) + 'px'; }
+    function scrollToBottom(){ messagesContainer.scrollTop = messagesContainer.scrollHeight; }
+    function showTyping(){ typingIndicator.classList.remove('hidden'); scrollToBottom(); }
+    function hideTyping(){ typingIndicator.classList.add('hidden'); }
+    function formatTime(){ return new Date().toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'}); }
+    function escapeHtml(t){ const d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
+    function formatMessage(t){
+      return escapeHtml(t)
+        .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g,'<em>$1</em>')
+        .replace(/\n/g,'<br>');
+    }
+
+    // Add message
+    function addMessage(content, type, hasWebSearch){
+      if(!type) type='bot';
       const m = document.createElement('div');
-      m.className = `message ${type==='user' ? 'message-user' : ''}`;
-      let avatarClass = 'a-bot', bubbleClass = 'b-bot', avatarEmoji = '🤖';
-      if (type === 'user'){ avatarClass='a-user'; bubbleClass='b-user'; avatarEmoji='👤'; }
-      else if (type === 'system'){ avatarClass='a-sys'; bubbleClass='b-sys'; avatarEmoji='ℹ️'; }
-      const badge = (hasWeb && type==='bot') ? '<span class="web-badge">🌐 Ricerca Web</span><br/>' : '';
-      m.innerHTML = `
-        <div class="avatar ${avatarClass}">${avatarEmoji}</div>
-        <div class="bubble ${bubbleClass}">
-          ${badge}<div>${type === 'user' ? escapeHtml(content) : formatMessage(content)}</div>
-          <div class="time">${formatTime()}</div>
-        </div>`;
-      messagesContainer.appendChild(m);
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    };
+      m.className = 'message message-' + type;
 
-    // ===== Dirigenti helpers =====
+      let badge = '';
+      if (hasWebSearch && type === 'bot') { badge = '<div class="web-search-badge">🌐 Ricerca Web</div>'; }
+
+      if (type === 'user') {
+        m.innerHTML =
+          '<div class="avatar avatar-user">👤</div>' +
+          '<div class="message-content content-user">' +
+            '<div>' + escapeHtml(content) + '</div>' +
+            '<div class="message-time">' + formatTime() + '</div>' +
+          '</div>';
+      } else if (type === 'system') {
+        const safe = formatMessage(content);
+        m.innerHTML =
+          '<div class="avatar avatar-system">ℹ️</div>' +
+          '<div class="message-content content-system">' +
+            '<div>' + safe + '</div>' +
+            '<div class="message-time">' + formatTime() + '</div>' +
+          '</div>';
+      } else {
+        m.innerHTML =
+          '<div class="avatar avatar-bot">🤖</div>' +
+          '<div class="message-content content-bot">' +
+            badge +
+            '<div>' + formatMessage(content) + '</div>' +
+            '<div class="message-time">' + formatTime() + '</div>' +
+          '</div>';
+      }
+      messagesContainer.appendChild(m);
+      scrollToBottom();
+    }
+
+    // ===== Dirigenti helpers (nuovi) =====
     const REGIONI = ["abruzzo","basilicata","calabria","campania","emilia-romagna","friuli venezia giulia","lazio","liguria","lombardia","marche","molise","piemonte","puglia","sardegna","sicilia","toscana","trentino-alto adige","umbria","valle d'aosta","valle d’aosta","veneto"];
     const norm = (s)=> (s||"").toString().normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+
+    const EMAIL_DOMAIN_FIXES = [
+      [/@carabinieri\.nsc\b/i, '@carabinierinsc.it'],
+      [/@carabinieri\.nsc\.it\b/i, '@carabinierinsc.it'],
+      [/@carabinierinsc\.it\.it\b/i, '@carabinierinsc.it']
+    ];
+    const normalizeEmail = (email)=>{
+      let e = (email||'').trim();
+      for(const [re,rep] of EMAIL_DOMAIN_FIXES){ e = e.replace(re, rep); }
+      return e;
+    };
+
+    const sanitizeTelHref = (t)=> (t||'').toString().replace(/[^\d+]/g,'');
+    const cleanTelText   = (t)=> (t||'').toString().replace(/\s+/g,' ').trim();
+
     function parseDirigentiQuery(q){
-      const has = /(dirigent[ei]|segreteria|segretar[io]|\breferent[ei]\b|contatti.*dirigenti)/i.test(q);
+      const has = /(dirigent[ei]|sindacal[ei]|segreteria|segretar[io]|\breferent[ei]\b|contatti.*dirigenti)/i.test(q);
       if(!has) return null;
       const x = norm(q);
-      let livello = null; if(/\bregionale?\b/i.test(q)) livello='regionale'; if(/\bprovinciale?\b/i.test(q)||/\bprovincia\b/i.test(q)) livello='provinciale';
-      let regione = null; for(const r of REGIONI){ if(x.includes(norm(r))) { regione = r.replace(/valle d.?aosta/i, "Valle d'Aosta"); break; } }
+      let livello = null;
+      if(/\bregional[ei]?\b/i.test(q)) livello='regionale';
+      if(/\bprovincial[ei]?\b|\bprovincia\b/i.test(q)) livello='provinciale';
+
+      let regione = null;
+      for(const r of REGIONI){ if(x.includes(norm(r))){ regione = r.replace(/valle d.?aosta/i, "Valle d'Aosta"); break; } }
+
       let provincia = null;
       const m = q.match(/provincia\s+di\s+([A-Za-zÀ-ÖØ-öø-ÿ'\s\-]+)/i) || q.match(/\b(?:a|di)\s+([A-Z][a-zÀ-ÖØ-öø-ÿ'\-]{3,})/);
       if(m) provincia = m[1].trim();
       return { livello, regione, provincia };
     }
-    const inferLivello = (ruolo)=> {
-      const r = norm(ruolo||''); if(/provincial/.test(r)) return 'provinciale'; if(/regional/.test(r)) return 'regionale'; return null;
-    };
-    const matchesRegione = (d, regione)=> !regione || norm(d.regione||'').includes(norm(regione)) || norm(d.ruolo||'').includes(norm(regione));
-    const matchesProvincia = (d, provincia)=> !provincia || norm(d.provincia||'').includes(norm(provincia)) || norm(d.ruolo||'').includes(norm(provincia));
-    const matchesLivello = (d, livello)=> !livello || (inferLivello(d.ruolo)||norm(d.livello||'')).includes(norm(livello));
-    const formatDirigente = (d)=> {
-      const nome = escapeHtml(d.nome_cognome || d.nome || "");
-      const ruolo = escapeHtml(d.ruolo || "");
-      const email = escapeHtml(d.email || "");
-      const tel = escapeHtml(d.telefono || d.tel || "");
-      const reg = d.regione ? ` (${escapeHtml(d.regione)})` : "";
-      const prov = d.provincia ? ` — ${escapeHtml(d.provincia)}` : "";
-      const mailto = email ? ` — <a href="mailto:${email}">${email}</a>` : "";
-      const telto = tel ? ` — <a href="tel:${tel}">${tel}</a>` : "";
-      return `• <strong>${nome}</strong> — ${ruolo}${reg}${prov}${mailto}${telto}`;
-    };
-    const renderDirigenti = (list, header)=> {
-      const html = (list && list.length) ? list.map(formatDirigente).join('<br><br>') : "Nessun dirigente trovato con i criteri indicati.";
-      addMessage((header ? `<strong>${escapeHtml(header)}</strong><br><br>` : '') + html, 'system');
+
+    const inferLivello = (ruolo)=>{
+      const r = norm(ruolo||'');
+      if(/regional/.test(r))   return 'regionale';
+      if(/provincial/.test(r)) return 'provinciale';
+      return null;
     };
 
-    // ===== Data: dirigenti =====
+    const matchesRegione   = (d, regione)=> !regione || norm(d.regione||'').includes(norm(regione)) || norm(d.ruolo||'').includes(norm(regione));
+    const matchesProvincia = (d, provincia)=> !provincia || norm(d.provincia||'').includes(norm(provincia)) || norm(d.ruolo||'').includes(norm(provincia));
+    const matchesLivello   = (d, livello)=> !livello || (inferLivello(d.ruolo)||norm(d.livello||'')).includes(norm(livello));
+
+    function dedupeDirigenti(list){
+      const seen = new Set();
+      return list.filter(d=>{
+        const key = (normalizeEmail(d.email)||'') + '|' + sanitizeTelHref(d.telefono||d.tel||'') + '|' + (norm(d.nome_cognome||d.nome||''));
+        if(seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    }
+    function sortDirigenti(a,b){
+      const levelOrder = s => /regional/i.test(s||'') ? 0 : /provincial/i.test(s||'') ? 1 : 2;
+      const la = levelOrder(a.ruolo), lb = levelOrder(b.ruolo);
+      if(la!==lb) return la-lb;
+      const pa = (a.provincia||'zzz').toLowerCase(), pb = (b.provincia||'zzz').toLowerCase();
+      if(pa!==pb) return pa.localeCompare(pb,'it');
+      return (a.nome_cognome||'').localeCompare(b.nome_cognome||'','it');
+    }
+    function formatDirigente(d){
+      const nome = (d.nome_cognome || d.nome || '').trim();
+      const ruolo = (d.ruolo || '').trim();
+      const email = normalizeEmail(d.email || '');
+      const telText = cleanTelText(d.telefono || d.tel || '');
+      const telHref = sanitizeTelHref(d.telefono || d.tel || '');
+      const reg = d.regione ? ` (${d.regione})` : "";
+      const prov = d.provincia ? ` — ${d.provincia}` : "";
+      const mailto = email ? ` — <a href="mailto:${email}">${email}</a>` : "";
+      const telto  = telText ? ` — <a href="tel:${telHref}">${telText}</a>` : "";
+      return `• <strong>${nome}</strong> — ${ruolo}${reg}${prov}${mailto}${telto}`;
+    }
+    function renderDirigenti(list, header){
+      const html = (list && list.length) ? list.map(formatDirigente).join('<br><br>') : "Nessun dirigente trovato con i criteri indicati.";
+      addMessage((header ? `<strong>${header}</strong><br><br>` : '') + html, 'system');
+    }
+
+    // Dirigenti: carica da Supabase
     async function loadDirigenti(){
       try{
-        const { data, error } = await supabase.from('organico_dirigentisindacali').select('*').order('id',{ascending:true});
+        const { data, error } = await supabase
+          .from('organico_dirigentisindacali')
+          .select('*')
+          .order('id', { ascending: true });
         if(error) throw error;
         dirigenti = data || [];
         console.log('✅ Dirigenti caricati:', dirigenti.length);
       }catch(err){
-        console.error('❌ Errore dirigenti:', err);
-        // Fallback minimo
+        console.error('❌ Errore caricamento dirigenti:', err);
         dirigenti = [
-          { nome_cognome:'Antonio Grande', ruolo:'Segretario Generale Regionale - Veneto', email:'veneto@carabinierinsic.it', telefono:'3351470886', regione:'Veneto' }
+          { nome_cognome:'Antonio Grande', ruolo:'Segretario Generale Regionale - Veneto', email:'veneto@carabinierinsc.it', telefono:'3351470886', regione:'Veneto' }
         ];
       }
     }
 
-    // ===== Auth =====
-    async function ensureAuthOrRedirect(){
+    // Auth obbligatoria
+    async function verificaAutenticazione(){
       try{
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data:{ session } } = await supabase.auth.getSession();
         if(!session){
-          // blocca UI e chiedi login
-          authGuard.classList.remove('hidden');
-          // hard redirect per compatibilità
-          setTimeout(()=> { location.href = '/login.html'; }, 600);
+          console.log('❌ Nessuna sessione attiva');
+          window.location.href = '../login.html';
           return null;
         }
-        authGuard.classList.add('hidden');
         console.log('✅ Utente autenticato:', session.user.email);
         return session.user;
-      }catch(e){
-        console.error('❌ Errore auth:', e);
-        authGuard.classList.remove('hidden');
-        setTimeout(()=> { location.href = '/login.html'; }, 400);
+      }catch(err){
+        console.error('❌ Errore verifica auth:', err);
+        window.location.href = '../login.html';
         return null;
       }
     }
 
-    // ===== Help, Logout, Clear =====
-    function showHelp(){
+    // Help
+    window.showHelp = function(){
       const help =
         '🆘 <strong>Aiuto Virgilio</strong><br><br>' +
-        'Comandi utili:<br>' +
-        '• Domande in linguaggio naturale (normativa, disciplina, concorsi, licenze).<br>' +
-        '• “Dirigenti regionali Veneto” oppure “Dirigenti provinciali Treviso”.<br><br>' +
-        'Per inviare una richiesta: <a class="underline font-semibold" href="/richieste.html">/richieste.html</a>';
+        '<strong>Comandi disponibili:</strong><br>' +
+        '• Scrivi domande in linguaggio naturale<br>' +
+        '• Chiedi informazioni su contratti, diritti e dirigenti<br>' +
+        '• Esempi: "dirigenti regionali veneto", "dirigenti provinciali Treviso"<br><br>' +
+        '<em>Virgilio è sempre qui per aiutarti! ✨</em>';
       addMessage(help, 'system');
-    }
-    async function logout(){
-      try{ await supabase.auth.signOut(); }catch(_) {}
-      location.href = '/login.html';
-    }
-    function clearChat(){
-      if(!confirm('Vuoi davvero cancellare la conversazione?')) return;
-      conversationHistory = []; totalTokensUsed = 0; tokenCount.textContent = '0';
-      const msgs = messagesContainer.querySelectorAll('.message'); msgs.forEach((el,i)=>{ if(i>0) el.remove(); });
-      showAlert('Chat cancellata. ✨', 'success');
+    };
+
+    async function tentaRefreshSessione(){
+      try {
+        const { data, error } = await supabase.auth.refreshSession();
+        if (error) throw error;
+        return data?.session;
+      } catch (e) { return null; }
     }
 
-    // ===== Send =====
-    function updateCounters(){
-      const c = messageInput.value.length; charCount.textContent = c; charCount.style.color = c>400 ? '#ef4444' : '';
-      sendButton.disabled = !messageInput.value.trim() || isProcessing;
-    }
-    function needsWebSearchFor(q){
-      return /(?:\bultim[eaie]\b|\bnews\b|aggiornamenti|oggi|attuale|corrente|novit[àa]|contratto 2025|aumenti|stipendio 2025)/i.test(q);
-    }
-
+    // SEND
     async function sendMessage(){
-      const text = messageInput.value.trim();
-      if(!text || isProcessing) return;
+      const message = messageInput.value.trim();
+      if(!message || isProcessing) return;
 
-      isProcessing = true; updateCounters();
+      isProcessing = true; updateSendButton();
+
+      const text = message;
       addMessage(text, 'user');
       conversationHistory.push({ role:'user', content: text });
 
-      messageInput.value = ''; updateCounters(); autoResize();
+      messageInput.value=''; updateCharCount(); updateSendButton(); autoResizeTextarea();
 
-      // — Dirigenti (parsing locale con filtro)
+      // — Dirigenti (parsing locale con filtro migliorato)
       const qInfo = parseDirigentiQuery(text);
       if(qInfo){
         const { livello, regione, provincia } = qInfo;
+
         if(!dirigenti.length){
           addMessage('Al momento non riesco a leggere l’elenco dirigenti. Riprova più tardi.', 'system');
-          isProcessing=false; updateCounters(); return;
+          isProcessing=false; updateSendButton(); return;
         }
+
         if (!livello && !regione && !provincia){
           addMessage('Vuoi i contatti <strong>regionali</strong> o di una <strong>provincia</strong>? (es. "dirigenti provinciali Treviso")', 'system');
-          isProcessing=false; updateCounters(); return;
+          isProcessing=false; updateSendButton(); return;
         }
+
         if ((livello === 'provinciale' || /provincia/i.test(text)) && !provincia){
           addMessage('Per i dirigenti <strong>provinciali</strong>, indica la <strong>provincia</strong> (es. "Treviso").', 'system');
-          isProcessing=false; updateCounters(); return;
+          isProcessing=false; updateSendButton(); return;
         }
-        let results = dirigenti.filter(d => matchesLivello(d, livello) && matchesRegione(d, regione) && matchesProvincia(d, provincia));
-        if(!results.length && livello){ results = dirigenti.filter(d => matchesRegione(d, regione) && matchesProvincia(d, provincia)); }
+
+        let results = dirigenti.filter(d =>
+          matchesLivello(d, livello) &&
+          matchesRegione(d, regione) &&
+          matchesProvincia(d, provincia)
+        );
+
+        // solo regionali se chiede genericamente "in veneto"
+        if(!livello && regione && !provincia){
+          const regionali = results.filter(d => /regional/i.test(d.ruolo||''));
+          if(regionali.length) results = regionali;
+        }
+
+        results = dedupeDirigenti(results).sort(sortDirigenti);
+
         let header = 'Dirigenti';
         if (livello) header += ` ${livello}`;
         if (provincia) header += ` — Provincia di ${provincia}`;
         else if (regione) header += ` — ${regione[0].toUpperCase() + regione.slice(1)}`;
-        renderDirigenti(results.slice(0,20), header);
-        isProcessing=false; updateCounters(); return;
+
+        renderDirigenti(results.slice(0, 30), header);
+
+        if(!livello && regione && !provincia){
+          addMessage('Vuoi vedere anche i <strong>provinciali</strong>? Scrivi ad esempio: <em>“dirigenti provinciali Treviso”</em>.', 'system');
+        }
+
+        isProcessing=false; updateSendButton(); return;
       }
 
-      // — Chiamata backend
+      // DEMO mode?
+      if (DEMO_MODE) {
+        showTyping();
+        setTimeout(()=>{
+          addMessage('Demo: ho ricevuto → ' + text, 'bot', false);
+          hideTyping();
+          isProcessing=false; updateSendButton();
+        }, 400);
+        return;
+      }
+
       showTyping();
+
       try{
         let { data:{ session } } = await supabase.auth.getSession();
-        if(!session) throw new Error('Sessione scaduta');
+        if(!session){ throw new Error('Sessione scaduta'); }
 
-        const apiEndpoint = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+        const apiEndpoint =
+          (window.location.hostname==='localhost' || window.location.hostname==='127.0.0.1')
           ? CHATBOT_CONFIG.apiEndpointLocal
           : CHATBOT_CONFIG.apiEndpoint;
+
+        const needsWebSearch = /(?:\bultim[eaie]\b|\bnews\b|aggiornamenti|oggi|attuale|corrente|novit[àa]|contratto 2025|aumenti|stipendio 2025|bando|concorso)/i.test(text);
 
         const requestBody = {
           messages: conversationHistory.slice(-CHATBOT_CONFIG.maxHistory),
@@ -526,93 +618,131 @@
           max_tokens: CHATBOT_CONFIG.maxTokens,
           temperature: CHATBOT_CONFIG.temperature,
           system_context: 'Sei Virgilio, assistente AI del Sindacato Carabinieri. Rispondi in modo conciso e professionale.',
-          enable_web_search: needsWebSearchFor(text),
-          web_search_query: needsWebSearchFor(text) ? text : null
+          enable_web_search: needsWebSearch,
+          web_search_query: needsWebSearch ? text : null
         };
 
-        let lastErr = null;
+        let lastError = null;
         for(let attempt=0; attempt<CHATBOT_CONFIG.retryAttempts; attempt++){
           try{
             const resp = await fetch(apiEndpoint, {
               method:'POST',
-              headers:{ 'Content-Type':'application/json', 'Authorization': 'Bearer '+session.access_token },
+              headers:{
+                'Content-Type':'application/json',
+                'Authorization':'Bearer ' + session.access_token
+              },
               body: JSON.stringify(requestBody)
             });
+
             if(resp.status === 401 && attempt < CHATBOT_CONFIG.retryAttempts-1){
-              const { data } = await supabase.auth.refreshSession();
-              if (data?.session){ session = data.session; continue; }
+              const refreshed = await tentaRefreshSessione();
+              if (refreshed) { session = refreshed; continue; }
             }
+
             if(!resp.ok){
-              let msg = 'HTTP '+resp.status;
-              try{ const j = await resp.json(); if(j?.error) msg = j.error; }catch{}
+              let msg = 'HTTP ' + resp.status;
+              try{
+                const j = await resp.json();
+                if(j && j.error) msg = j.error;
+              }catch(_){}
               throw new Error(msg);
             }
-            const data = await resp.json();
-            const botResponse = data?.choices?.[0]?.message?.content;
-            if(!botResponse) throw new Error('Risposta API non valida');
 
-            addMessage(botResponse, 'bot', !!data.web_search_performed);
+            const data = await resp.json();
+            if(!data.choices || !data.choices[0] || !data.choices[0].message){
+              throw new Error('Risposta API non valida');
+            }
+
+            const botResponse = data.choices[0].message.content;
+            const hasWebSearch = !!data.web_search_performed;
+
+            addMessage(botResponse, 'bot', hasWebSearch);
             conversationHistory.push({ role:'assistant', content: botResponse });
-            if(data.usage){ totalTokensUsed += (data.usage.total_tokens || 0); tokenCount.textContent = totalTokensUsed.toLocaleString(); }
-            lastErr = null;
+
+            if(data.usage){
+              totalTokensUsed += (data.usage.total_tokens || 0);
+              tokenCount.textContent = totalTokensUsed.toLocaleString();
+            }
+            lastError = null;
             break;
-          }catch(e){
-            lastErr = e; await new Promise(r => setTimeout(r, CHATBOT_CONFIG.retryDelay*(attempt+1)));
+          }catch(err){
+            lastError = err;
+            console.warn('Tentativo fallito:', err.message);
+            if(attempt < CHATBOT_CONFIG.retryAttempts-1){
+              await new Promise(r=> setTimeout(r, CHATBOT_CONFIG.retryDelay*(attempt+1)));
+            }
           }
         }
-        if(lastErr) throw lastErr;
+        if(lastError) throw lastError;
+        syncOnlineStatus();
       }catch(err){
         console.error('Errore invio:', err);
         conversationHistory.pop();
         let msg = 'Errore di connessione';
-        if(/scadut/i.test(err.message)) msg = 'Sessione scaduta, effettua di nuovo il login';
+        if(/scadut/i.test(err.message)) msg = 'Sessione scaduta, riaccedi';
         else if(/invalid|expired|401/i.test(err.message)) msg = 'Token non valido o scaduto';
         else if(/network|fetch/i.test(err.message)) msg = 'Problema di rete, riprova';
         else if(/500/.test(err.message)) msg = 'Servizio temporaneamente non disponibile';
         else if(err.message) msg = err.message;
         showAlert(msg, 'error');
+        syncOnlineStatus();
       }finally{
         hideTyping();
-        isProcessing=false; updateCounters(); messageInput.focus();
+        isProcessing=false; updateSendButton(); messageInput.focus();
       }
     }
 
-    // ===== Init =====
-    function bindUI(){
-      messageInput.addEventListener('input', ()=>{ autoResize(); updateCounters(); });
-      messageInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); } });
-      sendButton.addEventListener('click', sendMessage);
-      helpBtn.addEventListener('click', showHelp);
-      clearChatBtn.addEventListener('click', clearChat);
-      logoutBtn.addEventListener('click', logout);
-      updateCounters();
-    }
-
-    async function boot(){
-      // Blocca UI se non loggato
-      const user = await ensureAuthOrRedirect();
-      if(!user) return; // lo splash farà redirect
-
-      // Online/offline
-      updateConnectionStatus(navigator.onLine);
-      window.addEventListener('online', ()=>updateConnectionStatus(true));
-      window.addEventListener('offline', ()=>updateConnectionStatus(false));
-
-      // Carica dirigenti
-      await loadDirigenti();
-
-      // Verifica proxy /api/chat (OPTIONAL, non blocking)
-      try{
+    // Check proxy /api/chat all'avvio
+    async function checkProxy(){
+      try {
         const r = await fetch('/api/chat', { method:'OPTIONS' });
-        if (r.status !== 200 && r.status !== 405) showAlert('Attenzione: /api/chat non è raggiungibile', 'error');
-      }catch{ showAlert('Impossibile contattare /api/chat', 'error'); }
-
-      bindUI();
-      console.log('🤖✨ Virgilio pronto.');
+        if (r.status !== 200 && r.status !== 405) {
+          showAlert('Attenzione: /api/chat non è raggiungibile ('+r.status+').', 'error');
+        }
+      } catch {
+        showAlert('Impossibile contattare /api/chat (controlla il deploy).', 'error');
+      }
     }
 
-    // Avvio
-    document.addEventListener('DOMContentLoaded', boot);
+    // Init
+    document.addEventListener('DOMContentLoaded', async ()=>{
+      document.getElementById('loading').classList.remove('hidden');
+      try{
+        syncOnlineStatus();
+
+        await checkProxy();
+        currentUser = await verificaAutenticazione(); // 🔐 login obbligatorio
+        if(!currentUser) return;
+
+        await loadDirigenti();
+
+        messageInput.addEventListener('input', ()=>{ updateCharCount(); updateSendButton(); autoResizeTextarea(); });
+        messageInput.addEventListener('keypress', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); }});
+        sendButton.addEventListener('click', sendMessage);
+
+        document.getElementById('clearChatBtn').addEventListener('click', ()=>{
+          if(confirm('Vuoi davvero cancellare tutta la conversazione?')){
+            conversationHistory=[]; totalTokensUsed=0; tokenCount.textContent='0';
+            const msgs = messagesContainer.querySelectorAll('.message');
+            msgs.forEach((msg, i)=>{ if(i>0) msg.remove(); });
+            showAlert('Chat cancellata con successo! ✨', 'success');
+          }
+        });
+
+        messageInput.focus();
+        updateSendButton();
+        console.log('🤖✨ Virgilio inizializzato!');
+      }catch(err){
+        console.error('Errore init:', err);
+        showAlert('Errore di inizializzazione. Ricarica la pagina.', 'error');
+      }finally{
+        document.getElementById('loading').classList.add('hidden');
+      }
+    });
+
+    // Error handlers
+    window.addEventListener('error', e=>{ console.error('Errore JS:', e.error); showAlert('Si è verificato un errore imprevisto', 'error'); });
+    window.addEventListener('unhandledrejection', e=>{ console.error('Promise rejected:', e.reason); showAlert('Errore di rete o server', 'error'); });
   </script>
 </body>
 </html>
