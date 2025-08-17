@@ -2,13 +2,13 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0"/>
   <title>Virgilio - MyApp</title>
 
   <!-- Favicon: robottino -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23e94560'/%3E%3Ccircle cx='22' cy='26' r='4' fill='white'/%3E%3Ccircle cx='42' cy='26' r='4' fill='white'/%3E%3Crect x='26' y='36' width='12' height='5' rx='2.5' fill='white'/%3E%3Crect x='15' y='12' width='6' height='9' rx='3' fill='%2300d4ff'/%3E%3Crect x='43' y='12' width='6' height='9' rx='3' fill='%2300d4ff'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23e94560'/%3E%3Ccircle cx='22' cy='26' r='3' fill='white'/%3E%3Ccircle cx='42' cy='26' r='3' fill='white'/%3E%3Crect x='28' y='35' width='8' height='4' rx='2' fill='white'/%3E%3Cpath d='M20 45 Q32 50 44 45' stroke='white' stroke-width='2' fill='none'/%3E%3Crect x='15' y='12' width='6' height='8' rx='3' fill='%2300d4ff'/%3E%3Crect x='43' y='12' width='6' height='8' rx='3' fill='%2300d4ff'/%3E%3C/svg%3E">
 
-  <!-- Tailwind (ok per test/dev) -->
+  <!-- Tailwind (dev/test). In prod consigliato build locale -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     if (typeof tailwind !== 'undefined') {
@@ -21,9 +21,6 @@
               accent: '#0f3460',
               aurora: '#e94560',
               cyan: '#00d4ff',
-              magenta: '#ff006e',
-              gold: '#ffd700',
-              teal: '#03dac6',
               dark: '#0a0a23',
               light: '#f8fafc'
             }
@@ -34,138 +31,63 @@
   </script>
 
   <style>
-    :root{
+    :root {
       --gradient-bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
-      --shadow-elevated: 0 10px 30px rgba(0,0,0,.18);
-      --header-h: 60px;
-      --safe-top: env(safe-area-inset-top);
-      --safe-bot: env(safe-area-inset-bottom);
+      --shadow-elevated: 0 8px 25px rgba(0,0,0,.15);
+      --header-height: 60px;
+      --safe-area-top: env(safe-area-inset-top);
+      --safe-area-bottom: env(safe-area-inset-bottom);
     }
-    *{margin:0; padding:0; box-sizing:border-box}
-    html,body{height:100%}
+    *{box-sizing:border-box}
     body{
-      background: var(--gradient-bg);
-      background-size: 400% 400%;
-      animation: bgShift 28s ease-in-out infinite;
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      color:#111827;
-      overflow-x:hidden;
+      background:var(--gradient-bg);
+      background-size:400% 400%;
+      animation:bgShift 30s ease infinite;
+      min-height:100vh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
     }
     @keyframes bgShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 
-    .header{
-      position: sticky; top:0; z-index:40; height:var(--header-h);
-      padding-top: var(--safe-top);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      background: rgba(255,255,255,.08);
-      border-bottom: 1px solid rgba(255,255,255,.15);
-    }
-    .back-button{
-      width:42px; height:42px; border-radius:12px;
-      background: rgba(255,255,255,.12);
-      border:1px solid rgba(255,255,255,.25);
-      color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer;
-      transition: transform .15s ease, background .15s ease;
-      user-select:none; -webkit-tap-highlight-color: transparent;
-    }
-    .back-button:hover{ transform: translateY(-1px); background: rgba(255,255,255,.18) }
+    .header{position:sticky;top:0;height:var(--header-height);padding-top:var(--safe-area-top);backdrop-filter:blur(12px);background:rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.12);z-index:40}
 
-    .chat-shell{ max-width: 980px; width: 100%; margin: 12px auto; padding: 0 10px; }
-    .chat{
-      background: #fff; border-radius: 18px; overflow: hidden; box-shadow: var(--shadow-elevated);
-      display:flex; flex-direction:column; min-height: calc(100vh - var(--header-h) - var(--safe-top) - var(--safe-bot) - 24px);
-    }
-    .chat-head{
-      background: linear-gradient(135deg, #e94560, #00d4ff);
-      color:#fff; padding: 18px 16px; text-align:center;
-    }
-    .chat-log{ flex:1; overflow-y:auto; padding: 14px; scroll-behavior:smooth; -webkit-overflow-scrolling:touch; }
-    .chat-log::-webkit-scrollbar{width:6px}
-    .chat-log::-webkit-scrollbar-thumb{background:#e94560; border-radius:3px}
+    .chat-container{background:#fff;border-radius:18px;box-shadow:var(--shadow-elevated);max-width:960px;margin:.75rem auto;height:calc(100vh - var(--header-height) - var(--safe-area-top) - var(--safe-area-bottom) - 1.5rem);display:flex;flex-direction:column;overflow:hidden}
+    .chat-header{background:linear-gradient(135deg,#e94560,#00d4ff);color:#fff;padding:1.25rem;text-align:center}
+    .chat-messages{flex:1;overflow:auto;padding:1rem}
+    .message{display:flex;gap:.75rem;margin-bottom:1rem;animation:fade .25s ease}
+    @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .avatar{width:38px;height:38px;border-radius:9999px;display:grid;place-items:center;color:#fff;flex:0 0 38px}
+    .avatar-bot{background:linear-gradient(135deg,#00d4ff,#03dac6)}
+    .avatar-user{background:linear-gradient(135deg,#e94560,#ff006e)}
+    .avatar-system{background:linear-gradient(135deg,#ffd700,#ff8c00)}
+    .bubble{max-width:78%;padding:1rem;border-radius:14px}
+    .bot{background:#f8fbff}
+    .user{background:linear-gradient(135deg,#e94560,#ff006e);color:#fff;margin-left:auto}
+    .system{background:linear-gradient(135deg,#ffd700,#ff8c00);color:#1a1a2e}
+    .time{font-size:.75rem;opacity:.6;margin-top:.35rem}
 
-    .msg{display:flex; gap:10px; margin: 12px 0; animation: fade .2s ease}
-    @keyframes fade{from{opacity:0; transform: translateY(6px)}to{opacity:1; transform:none}}
-    .msg .avatar{
-      width:40px; height:40px; min-width:40px; min-height:40px; border-radius:50%;
-      display:flex; align-items:center; justify-content:center; color:#fff; font-size:18px;
-    }
-    .avatar-bot{ background: linear-gradient(135deg,#00d4ff,#03dac6)}
-    .avatar-user{ background: linear-gradient(135deg,#e94560,#ff006e)}
-    .avatar-sys{ background: linear-gradient(135deg,#ffd700,#ff8c00)}
-
-    .bubble{
-      max-width: 78%;
-      background:#f8f9fb; border-radius: 14px; padding: 12px 14px; line-height:1.55; font-size: 0.98rem;
-    }
-    .bubble p{margin:0 0 .35rem 0}
-    .bubble .time{opacity:.65; font-size:.78rem; margin-top:6px}
-    .bubble.user{ background: linear-gradient(135deg,#e94560,#ff006e); color:#fff; border-bottom-right-radius:6px }
-    .bubble.bot{ background:#f8f9fb; color:#1f2937; border-bottom-left-radius:6px }
-    .bubble.sys{ background: linear-gradient(135deg,#ffd700,#ff8c00); color:#fff; border-bottom-left-radius:6px }
-    .row-user{ flex-direction: row-reverse }
-
-    .typing{ display:flex; gap:10px; align-items:center; margin: 6px 0 14px }
-    .dots{ display:flex; gap:5px; background:#f8f9fb; padding:10px 14px; border-radius: 14px; border-bottom-left-radius: 6px }
-    .dot{ width:8px; height:8px; border-radius:50%; background:#9aa3af; animation: bounce 1.3s infinite }
-    .dot:nth-child(2){ animation-delay:.25s } .dot:nth-child(3){ animation-delay:.5s }
-    @keyframes bounce{ 0%,60%,100%{transform:none} 30%{transform: translateY(-8px)} }
-
-    .chat-input{
-      border-top: 1px solid #e5e7eb; background:#f9fafb; padding: 10px; padding-bottom: calc(10px + var(--safe-bot));
-    }
-    .input-wrap{ display:flex; gap:10px; align-items:flex-end }
-    textarea{
-      flex:1; border:2px solid #e5e7eb; border-radius: 12px; padding: 12px;
-      font: inherit; min-height: 48px; max-height: 120px; resize: none; outline: none; background: #fff;
-      transition: border-color .15s ease, box-shadow .15s ease;
-    }
-    textarea:focus{ border-color:#e94560; box-shadow: 0 0 0 3px rgba(233,69,96,.12) }
-    .send{
-      width:48px; height:48px; min-width:48px; min-height:48px; border-radius: 12px; border: none; cursor: pointer;
-      background: linear-gradient(135deg, #e94560, #00d4ff); color:#fff; display:flex; align-items:center; justify-content:center;
-      box-shadow: 0 8px 22px rgba(233,69,96,.28); transition: transform .12s ease, box-shadow .12s ease;
-    }
-    .send:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none }
-    .send:not(:disabled):hover{ transform: translateY(-1px) }
-
-    .status{
-      display:flex; justify-content:space-between; align-items:center; font-size:.85rem; color:#6b7280;
-      border-top:1px solid #e5e7eb; background:#f9fafb; padding: 8px 12px;
-    }
-    .dot-status{ width:10px; height:10px; border-radius:50%; background:#10b981 }
-    .dot-status.off{ background:#ef4444 }
-
-    .alert{ margin: 10px; padding: 10px; border-radius: 12px; font-weight: 600 }
-    .alert.error{ background:#fef2f2; color:#b91c1c; border: 1px solid #fecaca }
-    .alert.info{ background:#eef2ff; color:#1d4ed8; border: 1px solid #bfdbfe }
-
+    /* CTA link stile “bottone” */
     .cta{
-      display:inline-block; margin-top:6px; padding: 10px 14px; border-radius: 10px; font-weight:700; text-decoration:none;
-      background: linear-gradient(135deg,#111827,#1f2937); color:#fff;
+      display:inline-block;
+      background:#111827;
+      color:#fff !important;
+      padding:.75rem 1rem;
+      border-radius:.75rem;
+      font-weight:700;
+      margin-top:.5rem;
+      text-decoration:none;
     }
-    .cta:hover{ filter:brightness(1.05) }
+    .cta:hover{opacity:.9}
+    .cta:active{transform:scale(.98)}
 
-    @media (max-width: 780px){
-      .bubble{ max-width: 88% }
-      .chat-shell{ padding: 0 6px }
+    .typing{display:flex;gap:.5rem;align-items:center}
+    .dot{width:8px;height:8px;border-radius:9999px;background:#9ca3af;animation:bounce 1.4s infinite}
+    .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+    @keyframes bounce{0%,80%,100%{transform:none}40%{transform:translateY(-6px)}}
+
+    @media (max-width:640px){
+      .chat-container{margin:.5rem;height:calc(100vh - var(--header-height) - var(--safe-area-top) - var(--safe-area-bottom) - 1rem)}
+      .bubble{max-width:90%}
     }
-    @media (max-width: 480px){
-      :root{ --header-h: 54px }
-      .chat{ border-radius: 14px }
-      .bubble{ font-size: .95rem; padding: 10px 12px }
-      .chat-head{ padding: 14px 10px }
-    }
-    @media (prefers-color-scheme: dark){
-      .chat{ background:#0f172a; color:#e2e8f0 }
-      .chat-head{ background: linear-gradient(135deg,#0ea5e9,#e11d48) }
-      .bubble.bot{ background:#1f2937; color:#e5e7eb }
-      .chat-input{ background:#0b1220; border-top-color:#132036 }
-      textarea{ background:#0f172a; color:#e5e7eb; border-color:#1e293b }
-      .status{ background:#0b1220; border-top-color:#132036; color:#9ca3af }
-      .cta{ background: linear-gradient(135deg,#e94560,#f43f5e) }
-    }
-    *:focus-visible{ outline: 2px solid #e94560; outline-offset: 2px }
   </style>
 </head>
 <body>
@@ -173,256 +95,234 @@
   <header class="header">
     <div class="max-w-5xl mx-auto px-4 h-full flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <button class="back-button" onclick="history.back()" title="Torna indietro" aria-label="Torna indietro">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-          </svg>
-        </button>
-        <h1 class="text-white font-semibold text-lg">Virgilio</h1>
+        <button onclick="history.back()" class="rounded-xl px-2 py-2 border border-white/30 text-white hover:bg-white/10" type="button" aria-label="Indietro">⟵</button>
+        <h1 class="text-white font-semibold">Virgilio</h1>
       </div>
       <div class="flex items-center gap-2">
-        <button id="clearBtn" class="px-3 py-2 text-sm rounded-md bg-white/10 text-white border border-white/20 hover:bg-white/20">🗑️ Pulisci</button>
-        <button id="helpBtn"  class="px-3 py-2 text-sm rounded-md bg-white/10 text-white border border-white/20 hover:bg-white/20">❓ Aiuto</button>
+        <button id="clearChatBtn" class="px-3 py-1.5 rounded-lg bg-white/10 text-white text-sm border border-white/20 hover:bg-white/20" type="button">🗑️ Pulisci</button>
+        <button id="helpBtn" class="px-3 py-1.5 rounded-lg bg-white/10 text-white text-sm border border-white/20 hover:bg-white/20" type="button">❓ Aiuto</button>
       </div>
     </div>
   </header>
 
-  <!-- Main -->
-  <main class="chat-shell">
-    <section class="chat" role="application" aria-label="Chat Virgilio">
-      <div class="chat-head">
+  <main class="py-3">
+    <div class="chat-container">
+      <div class="chat-header">
         <div class="flex items-center justify-center gap-3">
-          <span class="w-12 h-12 rounded-full bg-white/25 flex items-center justify-center text-2xl">🤖</span>
-          <div>
-            <div class="text-xl font-bold">Virgilio</div>
-            <div class="opacity-90 text-sm">Assistente sindacale AI • Ricerca web</div>
+          <div class="w-11 h-11 bg-white/25 rounded-full grid place-items-center text-2xl">🤖</div>
+          <div class="text-left">
+            <div class="font-bold text-xl">Virgilio</div>
+            <div class="text-sm opacity-90">Assistente sindacale AI</div>
           </div>
         </div>
       </div>
 
-      <div id="alertBox" class="px-3"></div>
-
-      <div id="log" class="chat-log" role="log" aria-live="polite">
-        <div class="msg">
+      <div id="msgs" class="chat-messages" role="log" aria-live="polite">
+        <!-- Messaggio iniziale -->
+        <div class="message">
           <div class="avatar avatar-bot">🤖</div>
           <div class="bubble bot">
-            <p>Ciao! Sono <strong>Virgilio</strong>. Fai una domanda su contratti, diritti, concorsi, disciplina, ferie e molto altro.</p>
+            Ciao! Sono <strong>Virgilio</strong>. Fai una domanda su contratti, diritti, concorsi, disciplina, ferie e molto altro.
             <div class="time">Ora</div>
           </div>
         </div>
       </div>
 
-      <div id="typing" class="typing hidden">
-        <div class="avatar avatar-bot">🤖</div>
-        <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-      </div>
-
-      <div class="chat-input">
-        <div class="input-wrap">
-          <textarea id="input" rows="1" maxlength="600" placeholder="✨ Scrivi la tua domanda…"></textarea>
-          <button id="send" class="send" disabled title="Invia" aria-label="Invia">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2L12 3 3 21l9-2zm0-0v-8"/>
-            </svg>
-          </button>
+      <!-- typing -->
+      <div id="typing" class="px-4 py-2 hidden">
+        <div class="message">
+          <div class="avatar avatar-bot">🤖</div>
+          <div class="bubble bot typing">
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          </div>
         </div>
       </div>
 
-      <div class="status">
-        <div class="flex items-center gap-2"><span id="net" class="dot-status"></span><span id="netText">Connesso</span></div>
-        <div class="opacity-80">Token: <span id="tk">0</span> • Caratteri: <span id="cc">0</span>/600</div>
+      <!-- Input -->
+      <div class="p-3 border-t bg-gray-50">
+        <div class="max-w-3xl mx-auto flex gap-2">
+          <textarea id="input" rows="1" maxlength="500" class="flex-1 rounded-xl border px-3 py-2 outline-none focus:ring-2 focus:ring-aurora" placeholder="✨ Scrivi la tua domanda…"></textarea>
+          <button id="send" class="rounded-xl bg-aurora text-white px-4 py-2 font-semibold disabled:opacity-50" disabled>Invia</button>
+        </div>
       </div>
-    </section>
+
+      <!-- status -->
+      <div class="px-4 py-2 text-xs text-gray-500 border-t flex items-center justify-between">
+        <div id="conn">Connesso</div>
+        <div>Token: <span id="tok">0</span> • Caratteri: <span id="chars">0</span>/500</div>
+      </div>
+    </div>
   </main>
 
-  <!-- App -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    // === CONFIG ===
-    const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
-    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON, { auth: { persistSession:true, autoRefreshToken:true } });
+    // === Supabase (auth obbligatoria per usare la chat) ===
+    const supabase = createClient(
+      'https://pvzdilkozpspsnepedqc.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk',
+      { auth: { persistSession: true, autoRefreshToken: true } }
+    );
 
+    // === Config ===
     const API_CHAT = '/api/chat';
-    const DIRIGENTI_PAGE = 'https://myapp31-j287nk69t-myapp30s-projects.vercel.app/dirigenti.html';
+    const DIRIGENTI_URL = `${window.location.origin}/dirigenti.html`; // pagina pubblica
 
-    // === STATE ===
-    let isBusy = false;
-    let history = [];
-    let totalTokens = 0;
+    // === Stato/DOM ===
+    const msgs = document.getElementById('msgs');
+    const typing = document.getElementById('typing');
+    const input = document.getElementById('input');
+    const sendBtn = document.getElementById('send');
+    const tok = document.getElementById('tok');
+    const chars = document.getElementById('chars');
+    const conn = document.getElementById('conn');
+    const helpBtn = document.getElementById('helpBtn');
+    const clearBtn = document.getElementById('clearChatBtn');
 
-    // === DOM ===
-    const $log = document.getElementById('log');
-    const $input = document.getElementById('input');
-    const $send = document.getElementById('send');
-    const $typing = document.getElementById('typing');
-    const $alert = document.getElementById('alertBox');
-    const $tk = document.getElementById('tk');
-    const $cc = document.getElementById('cc');
-    const $net = document.getElementById('net');
-    const $netText = document.getElementById('netText');
-    const $clear = document.getElementById('clearBtn');
-    const $help = document.getElementById('helpBtn');
+    let isProcessing = false;
+    let totalTokens=0;
+    let history=[];
 
-    // === UTIL ===
-    const esc = (t) => { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; };
-    const fmt = (t) => esc(t).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/\n/g,'<br>');
-    const now = () => new Date().toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'});
+    // === Utils UI ===
+    const timeNow = () => new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
 
-    function setOnline(ok){ $net.classList.toggle('off', !ok); $netText.textContent = ok ? 'Connesso' : 'Offline' }
-    addEventListener('online', ()=>setOnline(true));
-    addEventListener('offline', ()=>setOnline(false));
-    setOnline(navigator.onLine);
-
-    function showAlert(msg, type='info'){
-      const el = document.createElement('div');
-      el.className = `alert ${type}`;
-      el.innerHTML = esc(msg);
-      $alert.appendChild(el);
-      setTimeout(()=> el.remove(), 4500);
-    }
-
-    // Add message — if trusted=true non fa escape (per HTML controllato da noi)
-    function addMsg(text, role='bot', trusted=false){
-      const row = document.createElement('div');
-      row.className = 'msg ' + (role==='user'?'row-user':'');
+    function addBubble(html, who='bot', {raw=false}={}){
+      const wrapper = document.createElement('div');
+      wrapper.className = 'message';
       const avatar = document.createElement('div');
-      avatar.className = 'avatar ' + (role==='user'?'avatar-user': role==='system'?'avatar-sys':'avatar-bot');
-      avatar.textContent = role==='user'?'👤' : role==='system'?'ℹ️':'🤖';
-      const bubble = document.createElement('div');
-      bubble.className = 'bubble ' + (role==='user'?'user': role==='system'?'sys':'bot');
-      const content = trusted ? text : (role==='user'?esc(text):fmt(text));
-      bubble.innerHTML = `<div>${content}</div><div class="time">${now()}</div>`;
-      row.appendChild(avatar); row.appendChild(bubble);
-      $log.appendChild(row);
-      $log.scrollTop = $log.scrollHeight;
+      avatar.className = `avatar ${who==='user'?'avatar-user':(who==='system'?'avatar-system':'avatar-bot')}`;
+      avatar.textContent = who==='user'?'👤':(who==='system'?'ℹ️':'🤖');
+
+      const bub = document.createElement('div');
+      bub.className = `bubble ${who==='user'?'user':(who==='system'?'system':'bot')}`;
+      if(raw){ bub.innerHTML = html; } else { bub.textContent = html; }
+
+      const t = document.createElement('div');
+      t.className = 'time';
+      t.textContent = timeNow();
+      bub.appendChild(t);
+
+      wrapper.appendChild(avatar);
+      wrapper.appendChild(bub);
+      msgs.appendChild(wrapper);
+      msgs.scrollTop = msgs.scrollHeight;
     }
 
-    function typing(show){ $typing.classList.toggle('hidden', !show); if(show) $log.scrollTop = $log.scrollHeight; }
-    function updateCounts(){ const c = $input.value.length; $cc.textContent = c; $send.disabled = !c || isBusy }
+    function setTyping(v){ typing.classList.toggle('hidden', !v); msgs.scrollTop = msgs.scrollHeight; }
+    function setConn(v){ conn.textContent = v ? 'Connesso' : 'Offline'; }
+    window.addEventListener('online',()=>setConn(true));
+    window.addEventListener('offline',()=>setConn(false));
 
-    // === LOGIN GATE ===
-    async function ensureLoggedIn(){
+    // CTA Dirigenti (solo link, niente elenco)
+    function addDirigentiCTA(){
+      const html = `
+        <p>Per l’elenco aggiornato dei dirigenti del Sindacato Carabinieri, apri la pagina ufficiale:</p>
+        <p><a class="cta" href="${DIRIGENTI_URL}" target="_blank" rel="noopener">Apri la pagina Dirigenti</a></p>
+      `;
+      addBubble(html,'system',{raw:true});
+    }
+
+    // rileva intent "dirigenti"
+    function isDirigentiQuery(text){
+      const x = (text||'').toLowerCase();
+      return /\bdirigent/i.test(x) || /contatti.*dirigent/i.test(x);
+    }
+
+    // Aiuto sintetico
+    helpBtn.addEventListener('click', ()=>{
+      addBubble('Posso aiutarti su: disciplina, ferie/permessi, stipendi, concorsi, pensioni, codici e regolamenti. Scrivi ad esempio: "Come funzionano i permessi per malattia?"','system');
+    });
+
+    clearBtn.addEventListener('click', ()=>{
+      if(!confirm('Cancellare la conversazione?')) return;
+      msgs.innerHTML = '';
+      addBubble('Chat ripulita.','system');
+      history=[]; totalTokens=0; tok.textContent='0';
+    });
+
+    // Input sync
+    input.addEventListener('input', ()=>{
+      chars.textContent = input.value.length;
+      sendBtn.disabled = !input.value.trim() || isProcessing;
+      input.style.height='auto';
+      input.style.height=Math.min(input.scrollHeight,120)+'px';
+    });
+    input.addEventListener('keydown', e=>{
+      if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); send(); }
+    });
+    sendBtn.addEventListener('click', send);
+
+    async function mustBeLoggedIn(){
       const { data:{ session } } = await supabase.auth.getSession();
       if(!session){
-        showAlert('Devi effettuare l’accesso per usare Virgilio. Reindirizzamento…', 'error');
-        location.href = '../login.html';
-        throw new Error('Not authenticated');
+        // se non loggato, manda al login
+        window.location.href = '../login.html';
+        return null;
       }
       return session;
     }
 
-    // Riconoscimento richieste dirigenti
-    function isDirigentiQuery(text){
-      return /dirigent/i.test(text) || /(contatti|referenti).*(sindacal|dirigent)/i.test(text);
-    }
-    function answerWithDirigentiLink(){
-      const html = `
-        <p>Per l’elenco aggiornato dei dirigenti del Sindacato Carabinieri, apri la pagina ufficiale:</p>
-        <a class="cta" href="${DIRIGENTI_PAGE}" target="_blank" rel="noopener noreferrer">Apri la pagina Dirigenti</a>
-      `;
-      // uso bubble "bot" e trusted=true così è cliccabile e pulito
-      addMsg(html, 'bot', true);
-    }
-
-    // === SEND ===
     async function send(){
-      const text = $input.value.trim();
-      if(!text || isBusy) return;
+      const text = input.value.trim();
+      if(!text || isProcessing) return;
 
-      isBusy = true; updateCounts();
+      isProcessing=true; sendBtn.disabled=true;
+      addBubble(text,'user');
+      history.push({role:'user',content:text});
+      input.value=''; chars.textContent='0'; input.style.height='auto';
 
-      addMsg(text, 'user');
-      history.push({ role:'user', content:text });
-      $input.value=''; updateCounts();
-
-      // HARD RULE: se si parla di dirigenti → solo link
-      if (isDirigentiQuery(text)) {
-        answerWithDirigentiLink();
-        isBusy = false; updateCounts(); return;
+      // caso speciale: DIRIGENTI => mostra solo CTA pubblica
+      if(isDirigentiQuery(text)){
+        addDirigentiCTA();
+        isProcessing=false; sendBtn.disabled=false;
+        return;
       }
 
-      typing(true);
+      const session = await mustBeLoggedIn();
+      if(!session){ return; }
+
+      const body = {
+        messages: history.slice(-10),
+        model: 'gpt-4o-mini',
+        max_tokens: 600,
+        temperature: 0.3,
+        // web search abilitata di default lato server se presente la key
+        system_context: 'Sei Virgilio, assistente AI del Sindacato Carabinieri. Rispondi in modo chiaro e professionale.'
+      };
+
+      setTyping(true);
       try{
-        const { data:{ session } } = await supabase.auth.getSession();
-        if(!session) throw new Error('Sessione scaduta');
-
-        const payload = {
-          messages: history.slice(-12),
-          model: 'gpt-4o-mini',
-          max_tokens: 650,
-          temperature: 0.3,
-          system_context: 'Sei Virgilio, assistente sindacale. Rispondi in italiano in modo chiaro, cita fonti ufficiali quando presenti.'
-        };
-
         const r = await fetch(API_CHAT, {
           method:'POST',
-          headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + session.access_token },
-          body: JSON.stringify(payload)
+          headers:{ 'Content-Type':'application/json', Authorization:'Bearer '+session.access_token },
+          body: JSON.stringify(body)
         });
+        const j = await r.json();
 
         if(!r.ok){
-          let msg = 'Errore server ('+r.status+')';
-          try{ const j = await r.json(); if(j?.error) msg = j.error }catch{}
-          throw new Error(msg);
+          addBubble(j?.error || `Errore ${r.status}. Riprova tra poco.`,'system');
+        }else{
+          const msg = j?.choices?.[0]?.message?.content || 'Nessuna risposta.';
+          addBubble(msg,'bot',{raw:true});
+          history.push({role:'assistant',content:msg});
+          if(j?.usage?.total_tokens){ totalTokens+=j.usage.total_tokens; tok.textContent=totalTokens.toLocaleString(); }
         }
-        const j = await r.json();
-        const content = j?.choices?.[0]?.message?.content || 'Nessuna risposta.';
-        addMsg(content, 'bot');
-        history.push({ role:'assistant', content });
-
-        if (j?.usage?.total_tokens){ totalTokens += j.usage.total_tokens; document.getElementById('tk').textContent = totalTokens.toLocaleString('it-IT') }
-      }catch(e){
-        console.error(e);
-        showAlert(e.message || 'Errore di rete', 'error');
+      }catch(err){
+        console.error(err);
+        addBubble('Problema di rete. Verifica la connessione e riprova.','system');
       }finally{
-        typing(false);
-        isBusy = false; updateCounts(); $input.focus();
+        setTyping(false);
+        isProcessing=false; sendBtn.disabled=false; input.focus();
       }
     }
 
-    // === INIT ===
-    document.addEventListener('DOMContentLoaded', async () => {
-      try{ await ensureLoggedIn(); }catch{ return }
-
-      // wire
-      $input.addEventListener('input', ()=>{
-        $input.style.height = 'auto';
-        $input.style.height = Math.min($input.scrollHeight, 120) + 'px';
-        updateCounts();
-      });
-      $input.addEventListener('keydown', e=>{
-        if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); send(); }
-      });
-      $send.addEventListener('click', send);
-
-      document.getElementById('clearBtn').addEventListener('click', ()=>{
-        if(confirm('Vuoi cancellare la conversazione?')){
-          history = []; totalTokens = 0; document.getElementById('tk').textContent = '0';
-          [...$log.querySelectorAll('.msg')].slice(1).forEach(n=>n.remove());
-          showAlert('Chat cancellata ✅','info');
-        }
-      });
-
-      document.getElementById('helpBtn').addEventListener('click', ()=>{
-        addMsg('Suggerimenti: chiedi su ferie, malattia, disciplina, concorsi, pensioni, TULPS, CdS, COM/TUOM. Per i dirigenti scrivi “dirigenti veneto” o “dirigenti Treviso”: ti darò il link ufficiale.', 'bot');
-      });
-
-      // ping proxy
-      try {
-        const opt = await fetch(API_CHAT, { method:'OPTIONS' });
-        if (opt.status !== 200 && opt.status !== 405) showAlert('Attenzione: /api/chat non è raggiungibile ('+opt.status+').', 'error');
-      } catch {
-        showAlert('Impossibile contattare /api/chat (controlla il deploy).', 'error');
+    // Init: richiede login per usare la chat
+    (async ()=>{
+      const session = await mustBeLoggedIn();
+      if(session){
+        addBubble('Sessione verificata. Come posso aiutarti?','system');
       }
-
-      $input.focus(); updateCounts();
-      console.log('🤖✨ Virgilio pronto.');
-    });
-
-    addEventListener('error', (e)=>{ console.error(e.error || e.message); showAlert('Si è verificato un errore inatteso','error') });
-    addEventListener('unhandledrejection', (e)=>{ console.error(e.reason); showAlert('Errore di rete o server','error') });
+    })();
   </script>
 </body>
 </html>
