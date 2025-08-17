@@ -56,7 +56,10 @@
     "concurrently": "^8.2.2"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.39.0"
+    "@supabase/supabase-js": "^2.45.1",
+    "mammoth": "^1.6.0",
+    "megajs": "^1.1.3",
+    "pdf-parse": "^1.1.1"
   },
   "myapp": {
     "name": "MyApp",
@@ -86,14 +89,14 @@
   ],
   "vercel": {
     "builds": [
-      {
-        "src": "*.html",
-        "use": "@vercel/static"
-      }
+      { "src": "api/**/*.js", "use": "@vercel/node" },
+      { "src": "*.html", "use": "@vercel/static" },
+      { "src": "styles.css", "use": "@vercel/static" },
+      { "src": "assets/**", "use": "@vercel/static" }
     ],
     "routes": [
-      { "src": "/", "dest": "/index.html" },
       { "handle": "filesystem" },
+      { "src": "/", "dest": "/index.html" },
       { "src": "/(.*)", "dest": "/index.html" }
     ]
   }
