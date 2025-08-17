@@ -1,3 +1,4 @@
+
 // /api/chat.js — Chat “guidata” con fonti ufficiali + web search istituzionale
 // ENV richieste: SUPABASE_URL, SUPABASE_ANON_KEY, OPENAI_API_KEY, (opz.) TAVILY_API_KEY
 
