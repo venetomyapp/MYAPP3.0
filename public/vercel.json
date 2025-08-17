@@ -1,9 +1,8 @@
 {
   "version": 2,
-  "name": "myapp31",
   "builds": [
     {
-      "src": "**/*",
+      "src": "*.html",
       "use": "@vercel/static"
     }
   ],
@@ -13,42 +12,6 @@
       "dest": "/index.html"
     },
     {
-      "src": "/login",
-      "dest": "/login.html"
-    },
-    {
-      "src": "/home",
-      "dest": "/home.html"
-    },
-    {
-      "src": "/home_dirigenti",
-      "dest": "/home_dirigenti.html"
-    },
-    {
-      "src": "/profilo",
-      "dest": "/profilo.html"
-    },
-    {
-      "src": "/tessera",
-      "dest": "/tessera.html"
-    },
-    {
-      "src": "/documenti",
-      "dest": "/documenti.html"
-    },
-    {
-      "src": "/news",
-      "dest": "/news.html"
-    },
-    {
-      "src": "/virgilio",
-      "dest": "/virgilio.html"
-    },
-    {
-      "src": "/eventi",
-      "dest": "/eventi.html"
-    },
-    {
       "handle": "filesystem"
     },
     {
@@ -56,25 +19,21 @@
       "dest": "/index.html"
     }
   ],
-  "headers": [
+  "crons": [
     {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        }
-      ]
+      "path": "/api/sync/auto-sync",
+      "schedule": "0 6 * * *"
     }
   ],
-  "cleanUrls": true,
-  "trailingSlash": false
+  "functions": {
+    "api/sync/process-documents.js": {
+      "maxDuration": 300
+    },
+    "api/sync/discover-mega.js": {
+      "maxDuration": 60
+    },
+    "api/sync/auto-sync.js": {
+      "maxDuration": 600
+    }
+  }
 }
