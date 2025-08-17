@@ -15,7 +15,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/public/icons/icon-192x192.png" />
   <link rel="apple-touch-icon" href="/public/icons/apple-touch-icon.png" />
 
-  <!-- Fonts + Tailwind -->
+  <!-- Fonts + Tailwind (CDN: ok per test/dev) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet" />
@@ -62,17 +62,17 @@
     .btn-aurora { background: var(--gradient-magic); color:#fff; border:2px solid rgba(233,69,96,.3); border-radius:14px; padding:10px 14px; font-weight:800; }
     .btn-cyber { background: var(--gradient-cyber); color:#fff; border:2px solid rgba(0,212,255,.3); border-radius:14px; padding:10px 14px; font-weight:800; }
     .btn-ghost { background: rgba(255,255,255,.9); border:2px solid rgba(0,0,0,.06); border-radius:14px; padding:10px 14px; font-weight:800; }
-    .switch { position:relative; width:42px; height:26px; background:#e5e7eb; border-radius:999px; transition:.2s; }
+    .switch { position:relative; width:42px; height:26px; background:#e5e7eb; border-radius:999px; transition:.2s; cursor:pointer; }
     .switch::after { content:''; position:absolute; top:3px; left:3px; width:20px; height:20px; background:#fff; border-radius:50%; transition:.2s; box-shadow:0 1px 3px rgba(0,0,0,.2); }
     .switch.on { background:#10b981; }
     .switch.on::after { transform: translateX(16px); }
-    .switch[aria-disabled="true"] { filter: grayscale(1); opacity:.6; cursor: not-allowed; }
     .bottom-nav { position:fixed; left:0; right:0; bottom:0; height:80px; background:rgba(255,255,255,.95); backdrop-filter:blur(18px); border-top:1px solid rgba(255,255,255,.3); display:flex; justify-content:space-around; align-items:center; z-index:100; }
     .nav-item { display:flex; flex-direction:column; align-items:center; gap:2px; font-weight:800; color:#555; text-decoration:none; padding:8px 10px; border-radius:12px; }
     .nav-item.active { background: var(--gradient-magic); color:#fff; transform:translateY(-3px); box-shadow:0 10px 25px rgba(233,69,96,.3); }
     .main { padding:20px 16px; min-height:calc(100vh - 80px); }
     .section { display:none; animation:fade .25s ease-out; } .section.active { display:block; }
     @keyframes fade { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)} }
+    /* Back button bottom-left (non copre l’header) */
     .back-btn {
       position: fixed; left: 20px; bottom: calc(90px + env(safe-area-inset-bottom));
       width: 52px; height: 52px; border-radius: 50%;
@@ -84,13 +84,11 @@
     .label { font-size:12px; font-weight:800; color:#444; margin-bottom:6px; }
     .row { display:grid; grid-template-columns:1fr; gap:10px; }
     @media(min-width:640px){ .row-2 { grid-template-columns:1fr 1fr; } .row-3 { grid-template-columns:1fr 1fr 1fr; } }
-    /* Utility per nascondere elementi di scrittura quando non autorizzati */
-    .w-write { /* elementi “solo per Admin/Dirigente” */ }
   </style>
 </head>
 <body>
   <!-- Back (non invasivo) -->
-  <a href="#" onclick="navigateBack()" class="back-btn" aria-label="Torna indietro">
+  <a href="javascript:void(0)" onclick="navigateBack()" class="back-btn" aria-label="Torna indietro">
     <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
     </svg>
@@ -103,7 +101,7 @@
         <span class="text-3xl">🛠️</span>
       </div>
       <h1 class="text-3xl text-ultra-visible mb-2">Gestione Academy</h1>
-      <p class="text-ultra-visible opacity-90" id="role-banner">Videoconferenze, corsi, canali, risorse — Area Dirigenti</p>
+      <p class="text-ultra-visible opacity-90">Videoconferenze, corsi, canali, risorse — Area Dirigenti</p>
     </div>
 
     <!-- DASHBOARD -->
@@ -131,7 +129,7 @@
         <div class="card p-5">
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-lg font-black text-gray-800">📅 Prossime Live (7 giorni)</h3>
-            <button id="btn-new-live" class="btn-aurora w-write" onclick="openLiveModal()">+ Nuova Live</button>
+            <button class="btn-aurora" onclick="openLiveModal()">+ Nuova Live</button>
           </div>
           <div id="upcoming-live" class="space-y-3"></div>
         </div>
@@ -139,7 +137,7 @@
         <div class="card p-5">
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-lg font-black text-gray-800">🧰 Ultime Risorse</h3>
-            <button id="btn-new-res" class="btn-cyber w-write" onclick="openResModal()">+ Nuova Risorsa</button>
+            <button class="btn-cyber" onclick="openResModal()">+ Nuova Risorsa</button>
           </div>
           <div id="recent-resources" class="space-y-3"></div>
         </div>
@@ -161,7 +159,7 @@
             <option value="true">Pubblicate</option>
             <option value="false">Bozze</option>
           </select>
-          <button id="btn-new-live-2" class="btn-ghost w-write" onclick="openLiveModal()">+ Nuova</button>
+          <button class="btn-ghost" onclick="openLiveModal()">+ Nuova</button>
         </div>
       </div>
       <div id="live-list" class="space-y-3"></div>
@@ -188,7 +186,7 @@
             <option value="true">Pubblicate</option>
             <option value="false">Bozze</option>
           </select>
-          <button id="btn-new-res-2" class="btn-ghost w-write" onclick="openResModal()">+ Nuova</button>
+          <button class="btn-ghost" onclick="openResModal()">+ Nuova</button>
         </div>
       </div>
       <div id="res-list" class="space-y-3"></div>
@@ -257,7 +255,7 @@
           </div>
         </div>
         <div>
-          <div class="label">Tags (separati da virgola)</div>
+          <div class="label">Tags (separati da virgolla)</div>
           <input id="live-tags" class="input" placeholder="es: ai, compliance, dev" />
         </div>
         <div>
@@ -371,11 +369,9 @@
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk";
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
 
-    const PROFILE_TABLE = 'user_profiles';
-
     // ===== State =====
     let user = null;
-    let canWrite = false; // <-- SOLO Admin/Dirigente ATTIVO
+    let isAdmin = false; // Admin o Dirigente ATTIVO
     let live = [];
     let resources = [];
     let editingLive = null;
@@ -386,74 +382,57 @@
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) {
-          window.location.href = '../login-minimal.html';
+          // forza login se non autenticato
+          location.replace('../login-minimal.html');
           return;
         }
         user = session.user;
 
-        await determinePrivileges();
-        applyWriteGuards();
+        // Legge ruolo da public.user_profiles (role, stato)
+        isAdmin = await checkAdminPrivileges(user.id);
+
+        if (!isAdmin) {
+          alert('Non autorizzato. Verrai reindirizzato alla home.');
+          location.replace('../home.html');
+          return;
+        }
 
         await loadAll();
         renderDashboard();
         renderLiveList();
         renderResList();
         attachFilters();
-        console.log('✅ Gestione Academy pronta — write:', canWrite);
+        console.log('✅ Admin Academy pronto');
       } catch (e) {
         console.error(e);
         toast('Errore di inizializzazione', 'error');
       }
     });
 
-    async function determinePrivileges(){
-      // 1) Prova RPC is_admin (se esiste)
-      let rpcAdmin = false;
+    async function checkAdminPrivileges(userId) {
       try {
-        const { data: rpc } = await supabase.rpc('is_admin');
-        rpcAdmin = !!rpc;
-      } catch(_) { /* ignoriamo se non esiste */ }
-
-      // 2) Leggi profilo DB (role, stato)
-      let dbRole = null, dbStato = null;
-      try {
+        // 1) Prova DB
         const { data, error } = await supabase
-          .from(PROFILE_TABLE)
-          .select('role,stato')
-          .eq('user_id', user.id)
+          .from('user_profiles')
+          .select('role, stato')
+          .eq('user_id', userId)
           .maybeSingle();
-        if (!error && data) {
-          dbRole = (data.role || '').toUpperCase();
-          dbStato = (data.stato || 'ATTIVO').toUpperCase();
+
+        let role = String(data?.role || '').toUpperCase();
+        let stato = String(data?.stato || '').toUpperCase();
+
+        // 2) Fallback metadata (se tabella vuota)
+        if (!role) {
+          const meta = (user && user.user_metadata) || {};
+          role = String(meta.role || meta.ruolo || meta.profilo || 'USER').toUpperCase();
         }
-      } catch(_) {}
+        if (!stato) stato = 'ATTIVO';
 
-      // 3) Fallback: metadata utente
-      const meta = user.user_metadata || {};
-      const metaRole = String(meta.role || meta.ruolo || meta.profilo || '').toUpperCase();
-      const metaStato = String(meta.stato || '').toUpperCase();
-
-      const effRole  = (dbRole || metaRole || 'USER').toUpperCase();
-      const effStato = (dbStato || metaStato || 'ATTIVO').toUpperCase();
-
-      canWrite = rpcAdmin || (effStato === 'ATTIVO' && (effRole === 'ADMIN' || effRole === 'DIRIGENTE'));
-
-      // Banner informativo
-      const banner = document.getElementById('role-banner');
-      if (banner && !canWrite) {
-        banner.textContent = 'Modalità sola lettura — accesso riservato a Dirigenti/Admin per modifiche';
+        return (stato === 'ATTIVO') && (role === 'ADMIN' || role === 'DIRIGENTE');
+      } catch (e) {
+        console.warn('Errore lettura ruolo:', e);
+        return false;
       }
-    }
-
-    function applyWriteGuards(){
-      // Nasconde tutti gli elementi marcati w-write se non autorizzato
-      document.querySelectorAll('.w-write').forEach(el => {
-        el.style.display = canWrite ? '' : 'none';
-      });
-      // Disabilita gli switch nelle liste (rendering fa già la logica, ma preveniamo click generici)
-      document.querySelectorAll('.switch').forEach(sw => {
-        if (!canWrite) sw.setAttribute('aria-disabled', 'true'); else sw.removeAttribute('aria-disabled');
-      });
     }
 
     async function loadAll(){
@@ -496,9 +475,7 @@
 
     function renderUpcoming(){
       const seven = Date.now() + 7*24*3600*1000;
-      const upcoming = live
-        .filter(l => new Date(l.start_at).getTime() <= seven && new Date(l.end_at).getTime() >= Date.now())
-        .slice(0,5);
+      const upcoming = live.filter(l => new Date(l.start_at).getTime() <= seven && new Date(l.end_at).getTime() >= Date.now()).slice(0,5);
       document.getElementById('upcoming-live').innerHTML =
         upcoming.map(rowLiveCompact).join('') || emptyState('Nessuna live nei prossimi 7 giorni');
     }
@@ -532,7 +509,6 @@
         return mq && mp && mpub;
       });
       document.getElementById('live-list').innerHTML = list.map(rowLive).join('') || emptyState('Nessuna live trovata');
-      applyWriteGuards();
     }
 
     function renderResList(){
@@ -546,7 +522,6 @@
         return mq && mt && mpub;
       });
       document.getElementById('res-list').innerHTML = list.map(rowRes).join('') || emptyState('Nessuna risorsa trovata');
-      applyWriteGuards();
     }
 
     // ===== Rows =====
@@ -560,7 +535,7 @@
           </div>
           <div class="flex items-center gap-3">
             ${pubBadge(l.is_published)}
-            ${canWrite ? `<button class="btn-ghost w-write" onclick="openLiveModal('${l.id}')">Modifica</button>` : ``}
+            <button class="btn-ghost" onclick="openLiveModal('${l.id}')">Modifica</button>
           </div>
         </div>`;
     }
@@ -574,24 +549,11 @@
           </div>
           <div class="flex items-center gap-3">
             ${pubBadge(r.is_published)}
-            ${canWrite ? `<button class="btn-ghost w-write" onclick="openResModal('${r.id}')">Modifica</button>` : ``}
+            <button class="btn-ghost" onclick="openResModal('${r.id}')">Modifica</button>
           </div>
         </div>`;
     }
     function rowLive(l){
-      const writeCol = canWrite ? `
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-gray-600">Pubblicato</span>
-          <div class="switch ${l.is_published?'on':''}" role="switch" aria-checked="${l.is_published}" onclick="toggleLivePublish('${l.id}', ${!l.is_published})"></div>
-        </div>
-        <button class="btn-ghost" onclick="openLiveModal('${l.id}')">Modifica</button>
-        <button class="bg-red-500 text-white rounded-xl py-2 font-black" onclick="confirmDeleteLive('${l.id}')">Elimina</button>
-      ` : `
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-gray-600">Pubblicato</span>
-          <div class="switch ${l.is_published?'on':''}" role="switch" aria-checked="${l.is_published}" aria-disabled="true"></div>
-        </div>
-      `;
       return `
         <div class="card p-4">
           <div class="flex justify-between gap-3">
@@ -604,25 +566,17 @@
               ${l.join_url?`<div class="text-xs mt-2"><a class="text-blue-600 underline" href="${l.join_url}" target="_blank" rel="noopener">Apri link</a></div>`:''}
             </div>
             <div class="flex flex-col gap-2 min-w-[140px]">
-              ${writeCol}
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gray-600">Pubblicato</span>
+                <div class="switch ${l.is_published?'on':''}" role="switch" aria-checked="${l.is_published}" onclick="toggleLivePublish('${l.id}', ${!l.is_published})"></div>
+              </div>
+              <button class="btn-ghost" onclick="openLiveModal('${l.id}')">Modifica</button>
+              <button class="bg-red-500 text-white rounded-xl py-2 font-black" onclick="confirmDeleteLive('${l.id}')">Elimina</button>
             </div>
           </div>
         </div>`;
     }
     function rowRes(r){
-      const writeCol = canWrite ? `
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-gray-600">Pubblicato</span>
-          <div class="switch ${r.is_published?'on':''}" role="switch" aria-checked="${r.is_published}" onclick="toggleResPublish('${r.id}', ${!r.is_published})"></div>
-        </div>
-        <button class="btn-ghost" onclick="openResModal('${r.id}')">Modifica</button>
-        <button class="bg-red-500 text-white rounded-xl py-2 font-black" onclick="confirmDeleteRes('${r.id}')">Elimina</button>
-      ` : `
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-gray-600">Pubblicato</span>
-          <div class="switch ${r.is_published?'on':''}" role="switch" aria-checked="${r.is_published}" aria-disabled="true"></div>
-        </div>
-      `;
       return `
         <div class="card p-4">
           <div class="flex justify-between gap-3">
@@ -635,16 +589,21 @@
               ${r.url?`<div class="text-xs mt-2"><a class="text-blue-600 underline" href="${r.url}" target="_blank" rel="noopener">Apri</a></div>`:''}
             </div>
             <div class="flex flex-col gap-2 min-w-[140px]">
-              ${writeCol}
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gray-600">Pubblicato</span>
+                <div class="switch ${r.is_published?'on':''}" role="switch" aria-checked="${r.is_published}" onclick="toggleResPublish('${r.id}', ${!r.is_published})"></div>
+              </div>
+              <button class="btn-ghost" onclick="openResModal('${r.id}')">Modifica</button>
+              <button class="bg-red-500 text-white rounded-xl py-2 font-black" onclick="confirmDeleteRes('${r.id}')">Elimina</button>
             </div>
           </div>
         </div>`;
     }
     function pubBadge(isPub){ return `<span class="inline-flex items-center gap-1 text-xs font-bold ${isPub?'text-green-700':'text-gray-600'}">${isPub?'✅ Pubblicata':'📝 Bozza'}</span>`; }
 
-    // ===== LIVE: modal + CRUD =====
+    // ===== LIVE: modal + CRUD (con guardie role) =====
     function openLiveModal(id=null){
-      if (!canWrite) { toast('Non autorizzato', 'error'); return; }
+      if (!isAdmin) return toast('Non autorizzato', 'error');
       const modal = document.getElementById('live-modal');
       document.getElementById('live-form').reset();
       document.getElementById('live-delete-box').classList.add('hidden');
@@ -684,7 +643,8 @@
 
     document.getElementById('live-form').addEventListener('submit', async (e)=>{
       e.preventDefault();
-      if (!canWrite) { toast('Non autorizzato', 'error'); return; }
+      if (!isAdmin) return toast('Non autorizzato', 'error');
+
       const payload = {
         title: val('live-title'),
         description: val('live-desc'),
@@ -729,12 +689,12 @@
     });
 
     function confirmDeleteLive(id){
-      if (!canWrite) { toast('Non autorizzato', 'error'); return; }
+      if (!isAdmin) return toast('Non autorizzato', 'error');
       if (!confirm('Eliminare questa live?')) return;
       deleteLive(id);
     }
     async function deleteLive(id=null){
-      if (!canWrite) { toast('Non autorizzato', 'error'); return; }
+      if (!isAdmin) return toast('Non autorizzato', 'error');
       const targetId = id || (editingLive && editingLive.id);
       if (!targetId) return;
       try {
@@ -750,7 +710,7 @@
     }
 
     async function toggleLivePublish(id, value){
-      if (!canWrite) { toast('Non autorizzato', 'error'); return; }
+      if (!isAdmin) return toast('Non autorizzato', 'error');
       try {
         const { error } = await supabase.from('live_sessions').update({ is_published: !!value }).eq('id', id);
         if (error) throw error;
@@ -759,9 +719,9 @@
       } catch(e){ console.error(e); toast('Errore aggiornamento stato','error'); }
     }
 
-    // ===== RESOURCES: modal + CRUD =====
+    // ===== RESOURCES: modal + CRUD (con guardie role) =====
     function openResModal(id=null){
-      if (!canWrite) { toast('Non autorizzato', 'error'); return; }
+      if (!isAdmin) return toast('Non autorizzato', 'error');
       const modal = document.getElementById('res-modal');
       document.getElementById('res-form').reset();
       document.getElementById('res-delete-box').classList.add('hidden');
@@ -800,7 +760,8 @@
 
     document.getElementById('res-form').addEventListener('submit', async (e)=>{
       e.preventDefault();
-      if (!canWrite) { toast('Non autorizzato', 'error'); return; }
+      if (!isAdmin) return toast('Non autorizzato', 'error');
+
       const payload = {
         type: val('res-type-input') || 'link',
         provider: val('res-provider') || null,
@@ -841,12 +802,12 @@
     });
 
     function confirmDeleteRes(id){
-      if (!canWrite) { toast('Non autorizzato', 'error'); return; }
+      if (!isAdmin) return toast('Non autorizzato', 'error');
       if (!confirm('Eliminare questa risorsa?')) return;
       deleteRes(id);
     }
     async function deleteRes(id=null){
-      if (!canWrite) { toast('Non autorizzato', 'error'); return; }
+      if (!isAdmin) return toast('Non autorizzato', 'error');
       const targetId = id || (editingRes && editingRes.id);
       if (!targetId) return;
       try {
@@ -862,7 +823,7 @@
     }
 
     async function toggleResPublish(id, value){
-      if (!canWrite) { toast('Non autorizzato', 'error'); return; }
+      if (!isAdmin) return toast('Non autorizzato', 'error');
       try {
         const { error } = await supabase.from('learning_resources').update({ is_published: !!value }).eq('id', id);
         if (error) throw error;
@@ -878,12 +839,7 @@
       document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
       document.querySelector(`.nav-item[data-target="${id}"]`).classList.add('active');
     }
-
-    function navigateBack(){
-      // Torna alla home corretta in base ai privilegi
-      const target = canWrite ? '../home_dirigenti.html' : '../home.html';
-      window.location.href = target;
-    }
+    function navigateBack(){ location.replace('../home_dirigenti.html'); }
 
     function emptyState(t){ return `<div class="text-center text-white/90 font-bold py-6">${t}</div>`; }
     function toast(msg, kind='info'){
@@ -899,17 +855,14 @@
     function splitTags(s){ return (s||'').split(',').map(t=>t.trim()).filter(Boolean); }
     function numOrNull(s){ const n = parseInt(s,10); return isNaN(n)?null:n; }
     function toISO(local){ if(!local) return null; const d = new Date(local); return d.toISOString(); }
-    function toLocalInput(d){ if(!d) return ''; const x=new Date(d);
-      const pad=n=>String(n).padStart(2,'0');
-      return `${x.getFullYear()}-${pad(x.getMonth()+1)}-${pad(x.getDate())}T${pad(x.getHours())}:${pad(x.getMinutes())}`;
-    }
+    function toLocalInput(d){ if(!d) return ''; const x=new Date(d); const pad=n=>String(n).padStart(2,'0'); return `${x.getFullYear()}-${pad(x.getMonth()+1)}-${pad(x.getDate())}T${pad(x.getHours())}:${pad(x.getMinutes())}`; }
     function setSwitch(id, on){ const el=document.getElementById(id); el.classList.toggle('on', !!on); el.setAttribute('aria-checked', !!on); }
     function getSwitch(id){ return document.getElementById(id).classList.contains('on'); }
 
-    // Blocca il toggle dei falsi switch quando non autorizzato
+    // Switch toggle base
     document.addEventListener('click', (e)=>{
       if (e.target.classList.contains('switch')) {
-        if (!canWrite || e.target.getAttribute('aria-disabled') === 'true') return;
+        // toggle visuale locale (lo stato vero viene salvato dai metodi toggleLivePublish/Res)
         e.target.classList.toggle('on');
         e.target.setAttribute('aria-checked', e.target.classList.contains('on'));
       }
