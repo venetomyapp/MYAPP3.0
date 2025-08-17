@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAG Admin - Virgilio Document Sync</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .status-badge {
+      @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    }
+    .status-new { @apply bg-blue-100 text-blue-800; }
+    .status-processed { @apply bg-green-100 text-green-800; }
+    .status-processing { @apply bg-yellow-100 text-yellow-800; }
+    .status-error { @apply bg-red-100 text-red-800; }
+    
+    .animate-spin {
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <div class="min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <h1 class="text-xl font-semibold text-gray-900">🤖 Virgilio RAG Admin</h1>
+          </div>
+          <div class="flex items-center space-x-4">
+            <span id="user-info" class="text-sm text-gray-500">Non autenticato</span>
+            <button id="logout-btn" class="hidden text-sm text-red-600 hover:text-red-900">Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      
+      <!-- Login Section -->
+      <div id="login-section" class="max-w-md mx-auto">
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="px-4 py-5 sm:p-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">🔐 Accesso Admin</h3>
+            <p class="text-sm text-gray-600 mb-4">Effettua l'accesso per gestire i documenti RAG di Virgilio</p>
+            <button id="login-btn" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              Accedi con Supabase
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Dashboard -->
+      <div id="admin-dashboard" class="hidden space-y-6">
+        
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                    <span class="text-white text-sm font-bold">📁</span>
+                  </div>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt class="text-sm font-medium text-gray-500 truncate">Documenti MEGA</dt>
+                    <dd class="text-lg font-medium text-gray-900" id="mega-docs-count">-</dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                    <span class="text-white text-sm font-bold">✅</span>
+                  </div>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt class="text-sm font-medium text-gray-500 truncate">Processati</dt>
+                    <dd class="text-lg font-medium text-gray-900" id="processed-count">-</dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+                    <span class="text-white text-sm font-bold">🆕</span>
+                  </div>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt class="text-sm font-medium text-gray-500 truncate">Nuovi</dt>
+                    <dd class="text-lg font-medium text-gray-900" id="new-count">-</dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
+                    <span class="text-white text-sm font-bold">🧠</span>
+                  </div>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt class="text-sm font-medium text-gray-500 truncate">Chunks DB</dt>
+                    <dd class="text-lg font-medium text-gray-900" id="chunks-count">-</dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="bg-white shadow rounded-lg">
+          <div class="px-4 py-5 sm:p-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">🔄 Azioni Sincronizzazione</h3>
+            
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <button id="discover-btn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <span id="discover-icon">🔍</span>
+                <span class="ml-2">Scopri Documenti</span>
+              </button>
+              
+              <button id="process-new-btn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" disabled>
+                <span id="process-icon">⚡</span>
+                <span class="ml-2">Processa Nuovi</span>
+              </button>
+              
+              <button id="full-sync-btn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                <span id="sync-icon">🔄</span>
+                <span class="ml-2">Sync Completo</span>
+              </button>
+            </div>
+            
+            <div id="action-status" class="mt-4 hidden">
+              <div class="rounded-md bg-blue-50 p-4">
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <div class="animate-spin h-5 w-5 text-blue-400">⚡</div>
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm text-blue-800" id="action-message">Operazione in corso...</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Files Table -->
+        <div class="bg-white shadow rounded-lg">
+          <div class="px-4 py-5 sm:p-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">📚 Documenti MEGA</h3>
+            
+            <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+              <table class="min-w-full divide-y divide-gray-300">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Documento</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stato</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ultimo Sync</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Azioni</th>
+                  </tr>
+                </thead>
+                <tbody id="files-table-body" class="bg-white divide-y divide-gray-200">
+                  <tr>
+                    <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                      <div class="animate-spin h-5 w-5 mx-auto mb-2">⚡</div>
+                      Caricamento documenti...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Logs -->
+        <div class="bg-white shadow rounded-lg">
+          <div class="px-4 py-5 sm:p-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">📝 Log Operazioni</h3>
+            <div id="logs-container" class="bg-gray-900 text-green-400 p-4 rounded-md font-mono text-sm h-48 overflow-y-auto">
+              <div>🚀 RAG Admin Dashboard inizializzata</div>
+              <div>ℹ️ Effettua l'accesso per iniziare</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    // Supabase client
+    const supabase = createClient(
+      'https://pvzdilkozpspsnepedqc.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk'
+    );
+
+    // State
+    let currentUser = null;
+    let discoveredFiles = [];
+    
+    // Elements
+    const loginSection = document.getElementById('login-section');
+    const adminDashboard = document.getElementById('admin-dashboard');
+    const loginBtn = document.getElementById('login-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const userInfo = document.getElementById('user-info');
+    const logsContainer = document.getElementById('logs-container');
+    
+    // Buttons
+    const discoverBtn = document.getElementById('discover-btn');
+    const processNewBtn = document.getElementById('process-new-btn');
+    const fullSyncBtn = document.getElementById('full-sync-btn');
+    const actionStatus = document.getElementById('action-status');
+    const actionMessage = document.getElementById('action-message');
+
+    // Utility functions
+    function addLog(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      const icon = type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️';
+      const logEntry = document.createElement('div');
+      logEntry.textContent = `[${timestamp}] ${icon} ${message}`;
+      logsContainer.appendChild(logEntry);
+      logsContainer.scrollTop = logsContainer.scrollHeight;
+    }
+
+    function showActionStatus(message) {
+      actionMessage.textContent = message;
+      actionStatus.classList.remove('hidden');
+    }
+
+    function hideActionStatus() {
+      actionStatus.classList.add('hidden');
+    }
+
+    function setButtonLoading(button, loading) {
+      const icon = button.querySelector('span:first-child');
+      button.disabled = loading;
+      if (loading) {
+        icon.textContent = '⚡';
+        icon.classList.add('animate-spin');
+      } else {
+        icon.classList.remove('animate-spin');
+      }
+    }
+
+    // API calls
+    async function makeAuthenticatedRequest(url, options = {}) {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('Non autenticato');
+
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          ...options.headers,
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text().catch(() => '');
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+
+      return response.json();
+    }
+
+    // Discover documents
+    async function discoverDocuments() {
+      try {
+        setButtonLoading(discoverBtn, true);
+        showActionStatus('Scoprendo documenti MEGA...');
+        addLog('Avvio discovery documenti MEGA');
+
+        const result = await makeAuthenticatedRequest('/api/sync/discover-mega');
+        
+        discoveredFiles = result.files || [];
+        updateStats(result.statistics);
+        updateFilesTable();
+        
+        addLog(`Discovery completato: ${result.files.length} documenti trovati`, 'success');
+        
+        // Abilita il pulsante processa se ci sono file nuovi
+        const newFiles = discoveredFiles.filter(f => f.needs_processing);
+        processNewBtn.disabled = newFiles.length === 0;
+        
+        if (newFiles.length > 0) {
+          addLog(`Trovati ${newFiles.length} documenti da processare`);
+        }
+        
+      } catch (error) {
+        addLog(`Errore discovery: ${error.message}`, 'error');
+        console.error('Discovery error:', error);
+      } finally {
+        setButtonLoading(discoverBtn, false);
+        hideActionStatus();
+        discoverBtn.querySelector('span:first-child').textContent = '🔍';
+      }
+    }
+
+    // Process new documents
+    async function processNewDocuments() {
+      try {
+        const newFiles = discoveredFiles.filter(f => f.needs_processing);
+        if (newFiles.length === 0) {
+          addLog('Nessun documento da processare');
+          return;
+        }
+
+        setButtonLoading(processNewBtn, true);
+        showActionStatus(`Processando ${newFiles.length} documenti...`);
+        addLog(`Avvio processing ${newFiles.length} documenti`);
+
+        const result = await makeAuthenticatedRequest('/api/sync/process-documents', {
+          method: 'POST',
+          body: JSON.stringify({
+            files: newFiles.map(f => f.name),
+            source: 'manual'
+          })
+        });
+
+        addLog(`Processing completato: ${result.statistics.files_processed}/${result.statistics.files_requested} file`, 'success');
+        addLog(`Chunks totali salvati: ${result.statistics.total_chunks_saved}`);
+        
+        // Refresh discovery
+        await discoverDocuments();
+        
+      } catch (error) {
+        addLog(`Errore processing: ${error.message}`, 'error');
+        console.error('Processing error:', error);
+      } finally {
+        setButtonLoading(processNewBtn, false);
+        hideActionStatus();
+        processNewBtn.querySelector('span:first-child').textContent = '⚡';
+      }
+    }
+
+    // Full sync
+    async function fullSync() {
+      try {
+        setButtonLoading(fullSyncBtn, true);
+        showActionStatus('Sincronizzazione completa...');
+        addLog('Avvio sincronizzazione completa');
+
+        // Prima discover
+        const discoveryResult = await makeAuthenticatedRequest('/api/sync/discover-mega');
+        addLog(`Discovery: ${discoveryResult.files.length} documenti`);
+
+        // Poi process all
+        if (discoveryResult.files.length > 0) {
+          const processResult = await makeAuthenticatedRequest('/api/sync/process-documents', {
+            method: 'POST',
+            body: JSON.stringify({
+              files: discoveryResult.files.map(f => f.name),
+              source: 'full-sync'
+            })
+          });
+
+          addLog(`Sync completo: ${processResult.statistics.files_processed} file processati`, 'success');
+        }
+
+        // Refresh dashboard
+        await discoverDocuments();
+        
+      } catch (error) {
+        addLog(`Errore sync completo: ${error.message}`, 'error');
+        console.error('Full sync error:', error);
+      } finally {
+        setButtonLoading(fullSyncBtn, false);
+        hideActionStatus();
+        fullSyncBtn.querySelector('span:first-child').textContent = '🔄';
+      }
+    }
+
+    // Update stats
+    function updateStats(stats) {
+      if (!stats) return;
+      
+      document.getElementById('mega-docs-count').textContent = stats.total_discovered || 0;
+      document.getElementById('processed-count').textContent = stats.already_processed || 0;
+      document.getElementById('new-count').textContent = stats.new_files || 0;
+      
+      // Get chunks count from database would require separate API call
+      document.getElementById('chunks-count').textContent = '~' + ((stats.already_processed || 0) * 50);
+    }
+
+    // Update files table
+    function updateFilesTable() {
+      const tbody = document.getElementById('files-table-body');
+      
+      if (discoveredFiles.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+              Nessun documento trovato. Clicca "Scopri Documenti" per iniziare.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      tbody.innerHTML = discoveredFiles.map(file => `
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="text-sm font-medium text-gray-900">${file.name}</div>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="status-badge status-${file.processing_status}">
+              ${file.processing_status === 'processed' ? '✅ Processato' : 
+                file.processing_status === 'new' ? '🆕 Nuovo' : 
+                '❓ Sconosciuto'}
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${file.discovered_at ? new Date(file.discovered_at).toLocaleString() : '-'}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${file.needs_processing ? 
+              '<button class="text-blue-600 hover:text-blue-900">Processa</button>' : 
+              '<span class="text-gray-400">-</span>'}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Authentication
+    async function login() {
+      try {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: window.location.href
+          }
+        });
+        
+        if (error) throw error;
+        
+      } catch (error) {
+        addLog(`Errore login: ${error.message}`, 'error');
+        console.error('Login error:', error);
+      }
+    }
+
+    async function logout() {
+      try {
+        const { error } = await supabase.auth.signOut();
+        if (error) throw error;
+        
+        currentUser = null;
+        showLoginSection();
+        addLog('Logout effettuato');
+        
+      } catch (error) {
+        addLog(`Errore logout: ${error.message}`, 'error');
+      }
+    }
+
+    function showLoginSection() {
+      loginSection.classList.remove('hidden');
+      adminDashboard.classList.add('hidden');
+      logoutBtn.classList.add('hidden');
+      userInfo.textContent = 'Non autenticato';
+    }
+
+    function showAdminDashboard() {
+      loginSection.classList.add('hidden');
+      adminDashboard.classList.remove('hidden');
+      logoutBtn.classList.remove('hidden');
+      userInfo.textContent = currentUser?.email || 'Autenticato';
+      
+      // Auto-discover on login
+      setTimeout(discoverDocuments, 1000);
+    }
+
+    // Event listeners
+    loginBtn.addEventListener('click', login);
+    logoutBtn.addEventListener('click', logout);
+    discoverBtn.addEventListener('click', discoverDocuments);
+    processNewBtn.addEventListener('click', processNewDocuments);
+    fullSyncBtn.addEventListener('click', fullSync);
+
+    // Auth state listener
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        currentUser = session.user;
+        showAdminDashboard();
+        addLog(`Login effettuato: ${session.user.email}`, 'success');
+      } else {
+        currentUser = null;
+        showLoginSection();
+      }
+    });
+
+    // Initialize
+    async function init() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        currentUser = session.user;
+        showAdminDashboard();
+      } else {
+        showLoginSection();
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
