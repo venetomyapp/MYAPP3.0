@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
   <title>Academy & Live — MyApp</title>
 
   <!-- PWA -->
@@ -15,7 +15,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/public/icons/icon-192x192.png" />
   <link rel="apple-touch-icon" href="/public/icons/apple-touch-icon.png" />
 
-  <!-- Fonts + Tailwind -->
+  <!-- Fonts + Tailwind (CDN) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet" />
@@ -45,357 +45,150 @@
   </script>
 
   <style>
-    :root {
+    :root{
       --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
       --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
       --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
       --gradient-hero: linear-gradient(135deg, #1a1a2e 0%, #e94560 50%, #00d4ff 100%);
     }
-    
-    * { 
-      font-family: 'Inter', sans-serif; 
-      -webkit-tap-highlight-color: transparent; 
-      scroll-behavior: smooth;
-    }
-    
-    body {
-      background: var(--gradient-aurora);
-      background-size: 400% 400%;
-      animation: aurora 20s ease infinite;
-      margin: 0; 
-      padding: 0; 
-      overflow-x: hidden;
-    }
-    
-    @keyframes aurora { 
-      0%{background-position:0% 50%} 
-      50%{background-position:100% 50%} 
-      100%{background-position:0% 50%} 
-    }
-    
-    @keyframes float {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-10px) rotate(1deg); }
-    }
-    
-    @keyframes pulse-glow {
-      0%, 100% { box-shadow: 0 0 20px rgba(233, 69, 96, 0.3); }
-      50% { box-shadow: 0 0 40px rgba(233, 69, 96, 0.6), 0 0 60px rgba(0, 212, 255, 0.4); }
-    }
-    
-    @keyframes slide-in {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
+
+    *{ font-family:'Inter',sans-serif; -webkit-tap-highlight-color:transparent; scroll-behavior:smooth; }
+
+    body{
+      background:var(--gradient-aurora);
+      background-size:400% 400%;
+      animation:aurora 20s ease infinite;
+      margin:0; padding:0; overflow-x:hidden;
     }
 
-    .text-ultra-visible { 
-      color:#fff; 
-      text-shadow:0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1); 
-      font-weight: 900; 
+    @keyframes aurora{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    @keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-10px) rotate(1deg)}}
+    @keyframes pulse-glow{0%,100%{box-shadow:0 0 20px rgba(233,69,96,.3)}50%{box-shadow:0 0 40px rgba(233,69,96,.6),0 0 60px rgba(0,212,255,.4)}}
+    @keyframes slide-in{from{opacity:0; transform:translateY(30px)} to{opacity:1; transform:translateY(0)}}
+
+    .animate-float{ animation: float 6s ease-in-out infinite; }
+
+    .text-ultra-visible{
+      color:#fff; text-shadow:0 8px 25px rgba(0,0,0,.9),0 4px 12px rgba(0,0,0,.8),0 2px 6px rgba(0,0,0,1); font-weight:900;
     }
-    
-    .glass-card { 
-      background: rgba(255,255,255,.95); 
-      border:1px solid rgba(255,255,255,.3); 
-      border-radius:24px; 
-      box-shadow:0 20px 60px rgba(0,0,0,.1), 0 10px 30px rgba(0,0,0,.05); 
-      backdrop-filter: blur(20px);
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    .glass-card{
+      background:rgba(255,255,255,.95);
+      border:1px solid rgba(255,255,255,.3);
+      border-radius:24px;
+      box-shadow:0 20px 60px rgba(0,0,0,.1), 0 10px 30px rgba(0,0,0,.05);
+      backdrop-filter:blur(20px);
+      transition:all .4s cubic-bezier(.4,0,.2,1);
     }
-    
-    .glass-card:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow:0 30px 80px rgba(0,0,0,.15), 0 15px 40px rgba(0,0,0,.1);
-    }
-    
-    .feature-card {
-      background: rgba(255,255,255,.98);
+    .glass-card:hover{ transform:translateY(-8px) scale(1.02); box-shadow:0 30px 80px rgba(0,0,0,.15), 0 15px 40px rgba(0,0,0,.1); }
+
+    .feature-card{
+      background:rgba(255,255,255,.98);
       border:2px solid rgba(255,255,255,.4);
       border-radius:28px;
       box-shadow:0 25px 50px rgba(0,0,0,.08);
-      backdrop-filter: blur(25px);
-      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
+      backdrop-filter:blur(25px);
+      transition:all .5s cubic-bezier(.4,0,.2,1);
+      position:relative; overflow:hidden;
     }
-    
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: linear-gradient(135deg, rgba(233,69,96,0.05) 0%, rgba(0,212,255,0.05) 100%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
+    .feature-card::before{
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(135deg, rgba(233,69,96,.05) 0%, rgba(0,212,255,.05) 100%);
+      opacity:0; transition:opacity .3s ease;
     }
-    
-    .feature-card:hover::before {
-      opacity: 1;
+    .feature-card:hover::before{opacity:1}
+    .feature-card:hover{ transform:translateY(-12px) scale(1.03); box-shadow:0 40px 80px rgba(0,0,0,.12), 0 20px 40px rgba(233,69,96,.15); border-color:rgba(233,69,96,.3) }
+
+    .btn-aurora{
+      background:var(--gradient-magic); color:#fff; border:2px solid rgba(233,69,96,.3);
+      border-radius:18px; padding:14px 28px; font-weight:800; transition:all .3s cubic-bezier(.4,0,.2,1);
+      position:relative; overflow:hidden;
     }
-    
-    .feature-card:hover {
-      transform: translateY(-12px) scale(1.03);
-      box-shadow:0 40px 80px rgba(0,0,0,.12), 0 20px 40px rgba(233,69,96,.15);
-      border-color: rgba(233,69,96,.3);
-    }
-    
-    .btn-aurora { 
-      background: var(--gradient-magic); 
-      color:#fff; 
-      border:2px solid rgba(233,69,96,.3); 
-      border-radius:18px; 
-      padding:14px 28px; 
-      font-weight:800;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .btn-aurora::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%; right: 0; bottom: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transition: left 0.5s;
-    }
-    
-    .btn-aurora:hover::before {
-      left: 100%;
-    }
-    
-    .btn-aurora:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(233,69,96,.4);
-    }
-    
-    .btn-cyber { 
-      background: var(--gradient-cyber); 
-      color:#fff; 
-      border:2px solid rgba(0,212,255,.3); 
-      border-radius:18px; 
-      padding:14px 28px; 
-      font-weight:800;
-      transition: all 0.3s ease;
-    }
-    
-    .btn-cyber:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(0,212,255,.4);
-    }
-    
-    .btn-ghost { 
-      background: rgba(255,255,255,.95); 
-      border:2px solid rgba(0,0,0,.08); 
-      border-radius:18px; 
-      padding:14px 28px; 
-      font-weight:800;
-      transition: all 0.3s ease;
-    }
-    
-    .btn-ghost:hover {
-      background: rgba(255,255,255,1);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(0,0,0,.1);
-    }
-    
-    .chip { 
-      background: rgba(255,255,255,.9); 
-      border:1px solid rgba(0,0,0,.08); 
-      border-radius:999px; 
-      padding:8px 16px; 
-      font-weight:700; 
-      font-size:12px;
-      transition: all 0.3s ease;
-    }
-    
-    .chip:hover {
-      background: rgba(233,69,96,.1);
-      border-color: rgba(233,69,96,.3);
-      transform: scale(1.05);
+    .btn-aurora::before{content:''; position:absolute; inset:0; left:-100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent); transition:left .5s}
+    .btn-aurora:hover::before{left:100%}
+    .btn-aurora:hover{ transform:translateY(-2px); box-shadow:0 10px 25px rgba(233,69,96,.4) }
+
+    .btn-cyber{ background:var(--gradient-cyber); color:#fff; border:2px solid rgba(0,212,255,.3); border-radius:18px; padding:14px 28px; font-weight:800; transition:all .3s ease }
+    .btn-cyber:hover{ transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,212,255,.4) }
+
+    .btn-ghost{ background:rgba(255,255,255,.95); border:2px solid rgba(0,0,0,.08); border-radius:18px; padding:14px 28px; font-weight:800; transition:all .3s ease }
+    .btn-ghost:hover{ background:#fff; transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,.1) }
+
+    .chip{ background:rgba(255,255,255,.9); border:1px solid rgba(0,0,0,.08); border-radius:999px; padding:8px 16px; font-weight:700; font-size:12px; transition:all .3s ease }
+    .chip:hover{ background:rgba(233,69,96,.1); border-color:rgba(233,69,96,.3); transform:scale(1.05) }
+
+    .hero-section{ background:var(--gradient-hero); background-size:400% 400%; animation:aurora 25s ease infinite; position:relative; overflow:hidden }
+    .hero-section::before{
+      content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%;
+      background:radial-gradient(circle, rgba(255,255,255,.1) 1px, transparent 1px); background-size:50px 50px; animation:float 20s ease-in-out infinite;
     }
 
-    .hero-section {
-      background: var(--gradient-hero);
-      background-size: 400% 400%;
-      animation: aurora 25s ease infinite;
-      position: relative;
-      overflow: hidden;
+    .nav-pill{
+      background:rgba(255,255,255,.15); backdrop-filter:blur(20px);
+      border:1px solid rgba(255,255,255,.2);
+      border-radius:20px; padding:12px 24px; color:#fff; font-weight:700; cursor:pointer;
+      transition:all .3s cubic-bezier(.4,0,.2,1); position:relative; overflow:hidden; outline:0;
     }
-    
-    .hero-section::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-      background-size: 50px 50px;
-      animation: float 20s ease-in-out infinite;
+    .nav-pill::before{content:''; position:absolute; inset:0; background:var(--gradient-magic); opacity:0; transition:opacity .3s ease}
+    .nav-pill.active::before, .nav-pill:hover::before{opacity:1}
+    .nav-pill.active, .nav-pill:hover{ transform:translateY(-2px); box-shadow:0 10px 30px rgba(233,69,96,.3)}
+    .nav-pill span{ position:relative; z-index:1 }
+    .nav-pill:focus-visible{ outline:3px solid rgba(0,212,255,.7); outline-offset:2px }
+
+    .stats-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:20px }
+    .stat-card{ background:rgba(255,255,255,.95); border-radius:24px; padding:32px 24px; text-align:center; position:relative; overflow:hidden; transition:all .4s cubic-bezier(.4,0,.2,1) }
+    .stat-card::before{ content:''; position:absolute; inset:0; background:linear-gradient(135deg, rgba(233,69,96,.1), rgba(0,212,255,.1)); opacity:0; transition:opacity .3s ease }
+    .stat-card:hover::before{opacity:1}
+    .stat-card:hover{ transform:translateY(-8px) rotate(1deg); box-shadow:0 25px 50px rgba(0,0,0,.15) }
+
+    .section{ display:none; animation:slide-in .6s cubic-bezier(.4,0,.2,1) }
+    .section.active{ display:block }
+
+    .floating-action{
+      position:fixed; right:30px; bottom:30px; width:60px; height:60px; border-radius:50%;
+      background:var(--gradient-magic); color:#fff; border:none; font-size:24px; cursor:pointer;
+      transition:all .3s cubic-bezier(.4,0,.2,1); box-shadow:0 10px 25px rgba(233,69,96,.3); z-index:1000; animation:pulse-glow 2s ease-in-out infinite
     }
-    
-    .nav-pill {
-      background: rgba(255,255,255,.15);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,.2);
-      border-radius: 20px;
-      padding: 12px 24px;
-      color: white;
-      font-weight: 700;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .nav-pill::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: var(--gradient-magic);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    
-    .nav-pill.active::before,
-    .nav-pill:hover::before {
-      opacity: 1;
-    }
-    
-    .nav-pill.active,
-    .nav-pill:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(233,69,96,.3);
-    }
-    
-    .nav-pill span {
-      position: relative;
-      z-index: 1;
-    }
-    
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-    }
-    
-    .stat-card {
-      background: rgba(255,255,255,.95);
-      border-radius: 24px;
-      padding: 32px 24px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .stat-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: linear-gradient(135deg, rgba(233,69,96,0.1), rgba(0,212,255,0.1));
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    
-    .stat-card:hover::before {
-      opacity: 1;
-    }
-    
-    .stat-card:hover {
-      transform: translateY(-8px) rotate(1deg);
-      box-shadow: 0 25px 50px rgba(0,0,0,.15);
-    }
-    
-    .section { 
-      display: none; 
-      animation: slide-in 0.6s cubic-bezier(0.4, 0, 0.2, 1); 
-    } 
-    
-    .section.active { 
-      display: block; 
-    }
-    
-    .floating-action {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: var(--gradient-magic);
-      color: white;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 10px 25px rgba(233,69,96,.3);
-      z-index: 1000;
-      animation: pulse-glow 2s ease-in-out infinite;
-    }
-    
-    .floating-action:hover {
-      transform: scale(1.1) rotate(90deg);
-      box-shadow: 0 15px 35px rgba(233,69,96,.5);
-    }
-    
-    .content-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 24px;
-      margin-top: 40px;
-    }
-    
-    .section-content {
-      padding: 0 20px;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-    
-    @media (max-width: 768px) {
-      .content-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-      }
-      
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
-      }
-      
-      .feature-card {
-        padding: 20px;
-      }
+    .floating-action:hover{ transform:scale(1.1) rotate(90deg); box-shadow:0 15px 35px rgba(233,69,96,.5) }
+
+    .content-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(350px,1fr)); gap:24px; margin-top:40px }
+    .section-content{ padding:0 20px; max-width:1400px; margin:0 auto }
+
+    .live-indicator{ display:inline-block; width:12px; height:12px; background:#ff4444; border-radius:50%; animation:pulse-glow 1.5s ease-in-out infinite; margin-right:8px }
+
+    /* Sticky sub-navigation (compare dopo l'hero) */
+    .sticky-nav{
+      position:sticky; top:0; z-index:40;
+      background:linear-gradient(to bottom, rgba(10,10,35,.75), rgba(10,10,35,.35));
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(255,255,255,.1);
     }
 
-    .live-indicator {
-      display: inline-block;
-      width: 12px;
-      height: 12px;
-      background: #ff4444;
-      border-radius: 50%;
-      animation: pulse-glow 1.5s ease-in-out infinite;
-      margin-right: 8px;
+    /* Riduci animazioni se richiesto */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important }
     }
   </style>
 </head>
 <body>
 
-  <!-- Hero Section -->
+  <!-- HERO -->
   <section class="hero-section min-h-screen flex flex-col">
-    <!-- Header with floating back button -->
+    <!-- Header con back -->
     <div class="relative z-10 p-6">
-      <a href="#" onclick="navigateBack()" class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white hover:bg-white/30 transition-all duration-300">
-        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <button aria-label="Torna indietro" onclick="navigateBack()"
+              class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white hover:bg-white/30 transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-400">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
         </svg>
-      </a>
+      </button>
     </div>
 
     <!-- Hero Content -->
     <div class="flex-1 flex flex-col justify-center items-center text-center px-6 relative z-10">
       <div class="mb-8">
         <div class="w-32 h-32 bg-gradient-to-br from-white/20 to-white/10 rounded-full mx-auto mb-8 flex items-center justify-center backdrop-blur-lg border border-white/20 animate-float">
-          <span class="text-6xl">🎓</span>
+          <span class="text-6xl" aria-hidden="true">🎓</span>
         </div>
         <h1 class="text-5xl md:text-6xl text-ultra-visible mb-4 leading-tight">Academy & Live</h1>
         <p class="text-xl text-white/90 mb-8 max-w-2xl">La tua piattaforma di formazione completa: videoconferenze, corsi online, canali YouTube e risorse all'avanguardia</p>
@@ -403,70 +196,70 @@
 
       <!-- Quick Stats -->
       <div class="stats-grid w-full max-w-4xl mb-12">
-        <div class="stat-card">
+        <div class="stat-card" role="status" aria-live="polite">
           <div class="text-4xl font-black text-aurora mb-2" id="stat-live-today">0</div>
           <div class="text-sm font-bold text-gray-600">Live di oggi</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" role="status" aria-live="polite">
           <div class="text-4xl font-black text-cyan-500 mb-2" id="stat-corsi-attivi">0</div>
           <div class="text-sm font-bold text-gray-600">Corsi attivi</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" role="status" aria-live="polite">
           <div class="text-4xl font-black text-success mb-2" id="stat-preferiti">0</div>
           <div class="text-sm font-bold text-gray-600">Nei preferiti</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" role="status" aria-live="polite">
           <div class="text-4xl font-black text-gold mb-2" id="stat-ore">0h</div>
           <div class="text-sm font-bold text-gray-600">Ore formazione</div>
         </div>
       </div>
 
-      <!-- Navigation Pills -->
+      <!-- Navigation Pills (Hero) -->
       <div class="flex flex-wrap gap-4 justify-center max-w-4xl">
-        <div class="nav-pill active" onclick="show('dashboard')" data-target="dashboard">
-          <span>🏠 Dashboard</span>
-        </div>
-        <div class="nav-pill" onclick="show('live')" data-target="live">
-          <span>🔴 Live Sessions</span>
-        </div>
-        <div class="nav-pill" onclick="show('courses')" data-target="courses">
-          <span>📚 Corsi Online</span>
-        </div>
-        <div class="nav-pill" onclick="show('channels')" data-target="channels">
-          <span>▶️ Canali YouTube</span>
-        </div>
-        <div class="nav-pill" onclick="show('library')" data-target="library">
-          <span>🗂️ Libreria</span>
-        </div>
-        <div class="nav-pill" onclick="show('stats')" data-target="stats">
-          <span>📈 Analytics</span>
-        </div>
+        <div class="nav-pill active" role="button" tabindex="0" onclick="show('dashboard')" onkeydown="pillKey(event,'dashboard')" data-target="dashboard"><span>🏠 Dashboard</span></div>
+        <div class="nav-pill" role="button" tabindex="0" onclick="show('live')" onkeydown="pillKey(event,'live')" data-target="live"><span>🔴 Live Sessions</span></div>
+        <div class="nav-pill" role="button" tabindex="0" onclick="show('courses')" onkeydown="pillKey(event,'courses')" data-target="courses"><span>📚 Corsi Online</span></div>
+        <div class="nav-pill" role="button" tabindex="0" onclick="show('channels')" onkeydown="pillKey(event,'channels')" data-target="channels"><span>▶️ Canali YouTube</span></div>
+        <div class="nav-pill" role="button" tabindex="0" onclick="show('library')" onkeydown="pillKey(event,'library')" data-target="library"><span>🗂️ Libreria</span></div>
+        <div class="nav-pill" role="button" tabindex="0" onclick="show('stats')" onkeydown="pillKey(event,'stats')" data-target="stats"><span>📈 Analytics</span></div>
       </div>
     </div>
   </section>
 
-  <!-- Content Sections -->
+  <!-- Sticky Sub-Nav (compare quando esci dall’hero) -->
+  <nav id="stickyNav" class="sticky-nav hidden">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap gap-2 md:gap-3 items-center justify-center">
+      <div class="nav-pill active" role="button" tabindex="0" onclick="show('dashboard')" onkeydown="pillKey(event,'dashboard')" data-target="dashboard"><span>🏠 Dashboard</span></div>
+      <div class="nav-pill" role="button" tabindex="0" onclick="show('live')" onkeydown="pillKey(event,'live')" data-target="live"><span>🔴 Live</span></div>
+      <div class="nav-pill" role="button" tabindex="0" onclick="show('courses')" onkeydown="pillKey(event,'courses')" data-target="courses"><span>📚 Corsi</span></div>
+      <div class="nav-pill" role="button" tabindex="0" onclick="show('channels')" onkeydown="pillKey(event,'channels')" data-target="channels"><span>▶️ YouTube</span></div>
+      <div class="nav-pill" role="button" tabindex="0" onclick="show('library')" onkeydown="pillKey(event,'library')" data-target="library"><span>🗂️ Libreria</span></div>
+      <div class="nav-pill" role="button" tabindex="0" onclick="show('stats')" onkeydown="pillKey(event,'stats')" data-target="stats"><span>📈 Analytics</span></div>
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
   <div class="min-h-screen bg-gradient-to-b from-transparent to-black/20">
-    
+
     <!-- Dashboard -->
     <div id="dashboard" class="section active">
       <div class="section-content py-16">
         <h2 class="text-4xl font-black text-ultra-visible mb-8 text-center">🚀 Dashboard Panoramica</h2>
-        
+
         <div class="content-grid">
           <!-- Prossime Live -->
           <div class="feature-card p-8">
             <div class="flex items-center justify-between mb-6">
               <h3 class="text-2xl font-black text-gray-800 flex items-center">
-                <span class="live-indicator"></span>
+                <span class="live-indicator" aria-hidden="true"></span>
                 📅 Prossime Live
               </h3>
               <button class="btn-aurora" onclick="show('live')">Vedi tutto</button>
             </div>
-            <div id="upcoming-live" class="space-y-4"></div>
+            <div id="upcoming-live" class="space-y-4" aria-live="polite"></div>
           </div>
 
-          <!-- Consigliati -->
+          <!-- In evidenza -->
           <div class="feature-card p-8">
             <div class="flex items-center justify-between mb-6">
               <h3 class="text-2xl font-black text-gray-800">🌟 In Evidenza</h3>
@@ -475,10 +268,10 @@
                 <span class="chip">New</span>
               </div>
             </div>
-            <div id="featured" class="space-y-4"></div>
+            <div id="featured" class="space-y-4" aria-live="polite"></div>
           </div>
 
-          <!-- Quick Actions -->
+          <!-- Azioni rapide -->
           <div class="feature-card p-8">
             <h3 class="text-2xl font-black text-gray-800 mb-6">⚡ Quick Actions</h3>
             <div class="grid grid-cols-2 gap-4">
@@ -489,19 +282,19 @@
             </div>
           </div>
 
-          <!-- Activity Feed -->
+          <!-- Feed attività -->
           <div class="feature-card p-8">
             <h3 class="text-2xl font-black text-gray-800 mb-6">📊 Attività Recente</h3>
             <div class="space-y-3" id="activity-feed">
               <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                <span class="text-2xl">🎯</span>
+                <span class="text-2xl" aria-hidden="true">🎯</span>
                 <div>
                   <div class="font-bold text-sm">Corso completato</div>
                   <div class="text-xs text-gray-600">Project Management Base</div>
                 </div>
               </div>
               <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                <span class="text-2xl">📺</span>
+                <span class="text-2xl" aria-hidden="true">📺</span>
                 <div>
                   <div class="font-bold text-sm">Live session partecipata</div>
                   <div class="text-xs text-gray-600">Q&A con la Direzione</div>
@@ -509,85 +302,85 @@
               </div>
             </div>
           </div>
-        </div>
+        </div><!-- /grid -->
       </div>
     </div>
 
     <!-- Live Sessions -->
-    <div id="live" class="section">
+    <div id="live" class="section" aria-labelledby="live-title">
       <div class="section-content py-16">
         <div class="flex flex-col md:flex-row gap-6 items-center justify-between mb-8">
-          <h2 class="text-4xl font-black text-ultra-visible flex items-center">
-            <span class="live-indicator"></span>
+          <h2 id="live-title" class="text-4xl font-black text-ultra-visible flex items-center">
+            <span class="live-indicator" aria-hidden="true"></span>
             🔴 Live Sessions
           </h2>
           <div class="flex gap-4">
-            <input id="live-search" type="search" placeholder="Cerca webinar, relatore..." class="w-64 bg-white/90 border-2 border-white/50 rounded-2xl px-6 py-3 text-sm font-semibold backdrop-blur-lg">
+            <input id="live-search" type="search" placeholder="Cerca webinar, relatore..." class="w-64 bg-white/90 border-2 border-white/50 rounded-2xl px-6 py-3 text-sm font-semibold backdrop-blur-lg" />
             <select id="live-platform" class="bg-white/90 border-2 border-white/50 rounded-2xl px-4 py-3 text-sm font-semibold backdrop-blur-lg">
               <option value="">Tutte le piattaforme</option>
               <option>Zoom</option><option>Teams</option><option>Meet</option><option>YouTube Live</option>
             </select>
           </div>
         </div>
-        <div id="live-list" class="content-grid"></div>
+        <div id="live-list" class="content-grid" aria-live="polite"></div>
       </div>
     </div>
 
     <!-- Courses -->
-    <div id="courses" class="section">
+    <div id="courses" class="section" aria-labelledby="courses-title">
       <div class="section-content py-16">
         <div class="flex flex-col md:flex-row gap-6 items-center justify-between mb-8">
-          <h2 class="text-4xl font-black text-ultra-visible">📚 Corsi Online</h2>
+          <h2 id="courses-title" class="text-4xl font-black text-ultra-visible">📚 Corsi Online</h2>
           <div class="flex gap-4">
-            <input id="course-search" type="search" placeholder="Cerca corso, autore..." class="w-64 bg-white/90 border-2 border-white/50 rounded-2xl px-6 py-3 text-sm font-semibold backdrop-blur-lg">
+            <input id="course-search" type="search" placeholder="Cerca corso, autore..." class="w-64 bg-white/90 border-2 border-white/50 rounded-2xl px-6 py-3 text-sm font-semibold backdrop-blur-lg" />
             <select id="course-level" class="bg-white/90 border-2 border-white/50 rounded-2xl px-4 py-3 text-sm font-semibold backdrop-blur-lg">
               <option value="">Tutti i livelli</option>
               <option value="base">Base</option><option value="intermedio">Intermedio</option><option value="avanzato">Avanzato</option>
             </select>
           </div>
         </div>
-        <div id="course-list" class="content-grid"></div>
+        <div id="course-list" class="content-grid" aria-live="polite"></div>
       </div>
     </div>
 
     <!-- Channels -->
-    <div id="channels" class="section">
+    <div id="channels" class="section" aria-labelledby="channels-title">
       <div class="section-content py-16">
         <div class="flex items-center justify-between mb-8">
-          <h2 class="text-4xl font-black text-ultra-visible">▶️ Canali YouTube</h2>
-          <input id="channel-search" type="search" placeholder="Cerca canale..." class="w-64 bg-white/90 border-2 border-white/50 rounded-2xl px-6 py-3 text-sm font-semibold backdrop-blur-lg">
+          <h2 id="channels-title" class="text-4xl font-black text-ultra-visible">▶️ Canali YouTube</h2>
+          <input id="channel-search" type="search" placeholder="Cerca canale..." class="w-64 bg-white/90 border-2 border-white/50 rounded-2xl px-6 py-3 text-sm font-semibold backdrop-blur-lg" />
         </div>
-        <div id="channel-list" class="content-grid"></div>
+        <div id="channel-list" class="content-grid" aria-live="polite"></div>
       </div>
     </div>
 
     <!-- Library -->
-    <div id="library" class="section">
+    <div id="library" class="section" aria-labelledby="library-title">
       <div class="section-content py-16">
         <div class="flex items-center justify-between mb-8">
-          <h2 class="text-4xl font-black text-ultra-visible">🗂️ Libreria Risorse</h2>
-          <input id="library-search" type="search" placeholder="Cerca risorsa..." class="w-64 bg-white/90 border-2 border-white/50 rounded-2xl px-6 py-3 text-sm font-semibold backdrop-blur-lg">
+          <h2 id="library-title" class="text-4xl font-black text-ultra-visible">🗂️ Libreria Risorse</h2>
+          <input id="library-search" type="search" placeholder="Cerca risorsa..." class="w-64 bg-white/90 border-2 border-white/50 rounded-2xl px-6 py-3 text-sm font-semibold backdrop-blur-lg" />
         </div>
-        <div id="library-list" class="content-grid"></div>
+        <div id="library-list" class="content-grid" aria-live="polite"></div>
       </div>
     </div>
 
     <!-- Stats -->
-    <div id="stats" class="section">
+    <div id="stats" class="section" aria-labelledby="stats-title">
       <div class="section-content py-16">
-        <h2 class="text-4xl font-black text-ultra-visible mb-8 text-center">📈 Analytics & Insights</h2>
-        
+        <h2 id="stats-title" class="text-4xl font-black text-ultra-visible mb-8 text-center">📈 Analytics & Insights</h2>
+
         <div class="content-grid">
           <div class="feature-card p-8 md:col-span-2">
             <h3 class="text-2xl font-black text-gray-800 mb-6">Distribuzione Tempo per Categoria</h3>
-            <div style="position:relative; height:300px;"><canvas id="stats-chart"></canvas></div>
+            <div style="position:relative; height:300px;"><canvas id="stats-chart" aria-label="Distribuzione tempo" role="img"></canvas></div>
           </div>
-          
+
           <div class="feature-card p-8 text-center">
             <div class="text-5xl font-black text-aurora mb-4" id="stats-live-count">0</div>
             <div class="text-lg font-bold text-gray-600">Live Totali Seguite</div>
           </div>
-          
+
           <div class="feature-card p-8 text-center">
             <div class="text-5xl font-black text-success mb-4" id="stats-course-progress">0%</div>
             <div class="text-lg font-bold text-gray-600">Progresso Medio Corsi</div>
@@ -597,17 +390,17 @@
     </div>
   </div>
 
-  <!-- Floating Action Button -->
-  <button class="floating-action" onclick="joinNextLive()" title="Quick Join Next Live">
+  <!-- Floating Action -->
+  <button class="floating-action" onclick="joinNextLive()" title="Quick Join Next Live" aria-label="Apri la prossima live">
     🔴
   </button>
 
-  <!-- MODAL DETTAGLIO RISORSA -->
-  <div id="resource-modal" class="fixed inset-0 bg-black/70 hidden z-[200] p-5 overflow-y-auto backdrop-blur-sm">
+  <!-- Modal Risorsa -->
+  <div id="resource-modal" class="fixed inset-0 bg-black/70 hidden z-[200] p-5 overflow-y-auto backdrop-blur-sm" role="dialog" aria-modal="true">
     <div class="mx-auto max-w-lg glass-card p-8 my-8">
       <div class="flex justify-between items-center mb-6">
         <h3 id="res-title" class="text-2xl font-black text-gray-800">Titolo</h3>
-        <button class="text-3xl font-black text-gray-400 hover:text-gray-600 transition-colors" onclick="closeModal()">&times;</button>
+        <button class="text-3xl font-black text-gray-400 hover:text-gray-600 transition-colors" onclick="closeModal()" aria-label="Chiudi modale">&times;</button>
       </div>
       <div id="res-embed" class="rounded-2xl overflow-hidden mb-6 hidden"></div>
       <p id="res-desc" class="text-gray-700 mb-6 leading-relaxed"></p>
@@ -625,16 +418,13 @@
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk";
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
 
-    // Demo flag: dati fittizi SOLO se passi ?demo=1 nell'URL
-    const DEMO = new URLSearchParams(location.search).has('demo');
-
     // ===== State =====
     let user = null;
     let liveSessions = [];
     let courses = [];
     let channels = [];
     let library = [];
-    let favorites = new Set(); // ids
+    let favorites = new Set();
     let statsChart = null;
     let modalResource = null;
 
@@ -644,123 +434,99 @@
       await loadAll();
       renderAll();
       initFilters();
-      console.log('🌐 Academy & Live — Enhanced Version Ready!');
+      setupStickyNav();
+      initDeepLink(); // apre la sezione da hash (es. #live)
+      console.log('🌐 Academy & Live — Enhanced UI Ready');
     });
 
-    async function initUser() {
+    async function initUser(){
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        console.warn('No session: demo mode available via ?demo=1');
-      } else {
-        user = session.user;
-      }
-      try {
+      user = session?.user || null;
+      try{
         const raw = localStorage.getItem('academy_favs');
         if (raw) favorites = new Set(JSON.parse(raw));
-      } catch(e) {}
+      }catch(e){}
     }
 
-    async function loadAll() {
-      await Promise.all([
-        loadLive(),
-        loadCourses(),
-        loadChannels(),
-        loadLibrary()
-      ]);
+    async function loadAll(){
+      await Promise.all([ loadLive(), loadCourses(), loadChannels(), loadLibrary() ]);
     }
 
     // ===== Loaders =====
-    async function loadLive() {
-      try {
-        const { data, error } = await supabase.from('live_sessions')
-          .select('*')
-          .order('start_at', { ascending: true })
-          .limit(50);
+    async function loadLive(){
+      try{
+        const { data, error } = await supabase.from('live_sessions').select('*').order('start_at', { ascending:true }).limit(50);
         if (error) throw error;
         liveSessions = (data || []).map(normalizeLive);
-      } catch (e) {
-        console.error('loadLive error:', e);
-        liveSessions = [];
-      }
-      
-      // Aggiungi sempre dati demo se non ci sono contenuti sufficienti
-      if (liveSessions.length < 3) {
-        const demoLive = [
+      }catch(e){ console.error('loadLive error:', e); liveSessions=[]; }
+
+      // demo fallback
+      if (liveSessions.length < 3){
+        const addHours = (h)=>{ const d=new Date(); d.setHours(d.getHours()+h); return d; }
+        const addDays = (days,h=10)=>{ const d=new Date(); d.setDate(d.getDate()+days); d.setHours(h,0,0,0); return d; }
+        const demo = [
           { id:'demo-live-1', title:'🎯 Aggiornamento Normativo Q4', start_at:addHours(2), end_at:addHours(3), platform:'Zoom', join_url:'https://zoom.us/j/123456789', host:'Ufficio Formazione', track:'Compliance', tags:['norme','compliance'], passcode:'', status:'scheduled' },
           { id:'demo-live-2', title:'💼 Q&A con la Direzione', start_at:addDays(1,10), end_at:addDays(1,11), platform:'Teams', join_url:'https://teams.microsoft.com/l/meetup-join/xxx', host:'Direzione', track:'Company', tags:['strategie','q&a'], passcode:'', status:'scheduled' },
           { id:'demo-live-3', title:'🤖 Live Tech — AI Update', start_at:addDays(3,9), end_at:addDays(3,10), platform:'YouTube Live', join_url:'https://www.youtube.com/watch?v=dQw4w9WgXcQ', host:'Tech Guild', track:'Tech', tags:['ai','dev'], passcode:'', status:'scheduled' },
         ].map(normalizeLive);
-        liveSessions = [...liveSessions, ...demoLive];
+        liveSessions = [...liveSessions, ...demo];
       }
     }
 
-    async function loadCourses() {
-      try {
-        const { data, error } = await supabase.from('learning_resources')
-          .select('*').eq('type','course').order('created_at', { ascending:false }).limit(100);
+    async function loadCourses(){
+      try{
+        const { data, error } = await supabase.from('learning_resources').select('*').eq('type','course').order('created_at', { ascending:false }).limit(100);
         if (error) throw error;
         courses = (data || []).map(normalizeResource);
-      } catch (e) {
-        console.error('loadCourses error:', e);
-        courses = [];
-      }
-      
-      // Aggiungi sempre dati demo se non ci sono contenuti sufficienti
-      if (courses.length < 3) {
-        const demoCourses = [
+      }catch(e){ console.error('loadCourses error:', e); courses=[]; }
+
+      if (courses.length < 3){
+        const demo = [
           { id:'demo-c-1', title:'🚀 Project Management Avanzato', url:'#', provider:'Coursera', level:'base', duration_minutes:120, description:'Metodologie agili e strumenti moderni per gestire progetti complessi', tags:['management','agile','scrum'] },
           { id:'demo-c-2', title:'🔐 Cybersecurity Essentials', url:'#', provider:'edX', level:'intermedio', duration_minutes:180, description:'Protezione dati, threat analysis e incident response', tags:['security','it','privacy'] },
           { id:'demo-c-3', title:'📊 Advanced Excel & Data Analysis', url:'#', provider:'Udemy', level:'avanzato', duration_minutes:240, description:'Power Query, Pivot avanzate, Dashboard e automazioni', tags:['excel','data','analytics'] },
         ].map(normalizeResource);
-        courses = [...courses, ...demoCourses];
+        courses = [...courses, ...demo];
       }
     }
 
-    async function loadChannels() {
-      try {
-        const { data, error } = await supabase.from('learning_resources')
-          .select('*').eq('type','youtube_channel').order('created_at', { ascending:false }).limit(100);
+    async function loadChannels(){
+      try{
+        const { data, error } = await supabase.from('learning_resources').select('*').eq('type','youtube_channel').order('created_at', { ascending:false }).limit(100);
         if (error) throw error;
         channels = (data || []).map(normalizeResource);
-      } catch (e) {
-        console.error('loadChannels error:', e);
-        channels = [];
-      }
-      
-      // Aggiungi sempre dati demo se non ci sono contenuti sufficienti
-      if (channels.length < 3) {
-        const demoChannels = [
+      }catch(e){ console.error('loadChannels error:', e); channels=[]; }
+
+      if (channels.length < 3){
+        const demo = [
           { id:'demo-y-1', title:'💻 Computerphile', url:'https://www.youtube.com/@Computerphile', provider:'YouTube', description:'Computer Science spiegata in modo semplice e coinvolgente', tags:['cs','teoria','algoritmi'] },
           { id:'demo-y-2', title:'🔥 Fireship', url:'https://www.youtube.com/@Fireship', provider:'YouTube', description:'Web development, tutorial rapidi e news tech', tags:['web','frontend','javascript'] },
           { id:'demo-y-3', title:'🎓 MIT OpenCourseWare', url:'https://www.youtube.com/@mitocw', provider:'YouTube', description:'Corsi universitari completi del MIT', tags:['università','ingegneria','matematica'] },
         ].map(normalizeResource);
-        channels = [...channels, ...demoChannels];
+        channels = [...channels, ...demo];
       }
     }
 
-    async function loadLibrary() {
-      try {
-        const { data, error } = await supabase.from('learning_resources')
-          .select('*').neq('type','course').neq('type','youtube_channel').order('created_at', { ascending:false }).limit(200);
+    async function loadLibrary(){
+      try{
+        const { data, error } = await supabase.from('learning_resources').select('*').neq('type','course').neq('type','youtube_channel').order('created_at', { ascending:false }).limit(200);
         if (error) throw error;
         library = (data || []).map(normalizeResource);
-      } catch (e) {
-        console.error('loadLibrary error:', e);
-        library = [];
-      }
-      
-      // Aggiungi sempre dati demo se non ci sono contenuti sufficienti
-      if (library.length < 3) {
-        const demoLibrary = [
+      }catch(e){ console.error('loadLibrary error:', e); library=[]; }
+
+      if (library.length < 3){
+        const demo = [
           { id:'demo-l-1', title:'📋 Guida OKR 2025 (PDF)', url:'#', provider:'Company Docs', type:'document', description:'Template e esempi pratici per implementare OKR efficaci', tags:['okr','strategy','planning'] },
           { id:'demo-l-2', title:'🎧 Podcast — Data Culture Revolution', url:'#', provider:'Tech Podcast', type:'podcast', description:'Intervista esclusiva con CDO delle migliori aziende tech', tags:['data','culture','leadership'] },
           { id:'demo-l-3', title:'🔗 API Documentation Hub', url:'#', provider:'DevDocs', type:'documentation', description:'Documentazione completa delle API interne', tags:['api','development','docs'] },
         ].map(normalizeResource);
-        library = [...library, ...demoLibrary];
+        library = [...library, ...demo];
       }
     }
 
+    // ===== Normalizers =====
     function normalizeLive(r){
+      const addHoursTo = (d,h)=>{ const x=new Date(d); x.setHours(x.getHours()+h); return x; }
       return {
         id: r.id,
         title: r.title || r.nome || 'Live Session',
@@ -803,34 +569,35 @@
       renderChannelList();
       renderLibraryList();
       updateCounters();
+      syncActivePills(); // assicura stato coerente su hero + sticky
     }
 
     function updateCounters(){
       const today = new Date();
       const liveToday = liveSessions.filter(s => sameDay(s.start_at, today)).length;
-      document.getElementById('stat-live-today').textContent = liveToday;
-      document.getElementById('stat-corsi-attivi').textContent = courses.length;
-      document.getElementById('stat-preferiti').textContent = favorites.size;
-      const totalMin = (courses.reduce((a,c)=>a+(c.duration_minutes||0),0));
-      document.getElementById('stat-ore').textContent = Math.round(totalMin/60)+'h';
+      setText('stat-live-today', liveToday);
+      setText('stat-corsi-attivi', courses.length);
+      setText('stat-preferiti', favorites.size);
+      const totalMin = courses.reduce((a,c)=>a+(c.duration_minutes||0),0);
+      setText('stat-ore', Math.round(totalMin/60)+'h');
     }
 
     function renderUpcomingLive(){
-      const box = document.getElementById('upcoming-live');
+      const box = byId('upcoming-live');
       const items = liveSessions.slice(0,3).map(s => compactLiveCard(s)).join('');
       box.innerHTML = items || emptyState('Nessuna live in programma');
     }
 
     function renderFeatured(){
-      const box = document.getElementById('featured');
+      const box = byId('featured');
       const picks = [...courses.slice(0,2), ...channels.slice(0,1)];
       box.innerHTML = picks.map(r => compactResourceCard(r)).join('') || emptyState('Nessun contenuto consigliato');
     }
 
     function renderLiveList(){
-      const q = (document.getElementById('live-search').value||'').toLowerCase();
-      const p = document.getElementById('live-platform').value;
-      const list = document.getElementById('live-list');
+      const q = (byId('live-search').value||'').toLowerCase();
+      const p = byId('live-platform').value;
+      const list = byId('live-list');
       const filtered = liveSessions.filter(s => {
         const matchQ = !q || s.title.toLowerCase().includes(q) || (s.host||'').toLowerCase().includes(q) || (s.track||'').toLowerCase().includes(q);
         const matchP = !p || s.platform === p;
@@ -840,9 +607,9 @@
     }
 
     function renderCourseList(){
-      const q = (document.getElementById('course-search').value||'').toLowerCase();
-      const lvl = document.getElementById('course-level').value;
-      const list = document.getElementById('course-list');
+      const q = (byId('course-search').value||'').toLowerCase();
+      const lvl = byId('course-level').value;
+      const list = byId('course-list');
       const filtered = courses.filter(c => {
         const mQ = !q || c.title.toLowerCase().includes(q) || (c.provider||'').toLowerCase().includes(q);
         const mL = !lvl || (c.level||'')===lvl;
@@ -852,22 +619,25 @@
     }
 
     function renderChannelList(){
-      const q = (document.getElementById('channel-search').value||'').toLowerCase();
-      const list = document.getElementById('channel-list');
+      const q = (byId('channel-search').value||'').toLowerCase();
+      const list = byId('channel-list');
       const filtered = channels.filter(c => !q || c.title.toLowerCase().includes(q));
       list.innerHTML = filtered.map(c => channelCard(c)).join('') || emptyState('Nessun canale trovato');
     }
 
     function renderLibraryList(){
-      const q = (document.getElementById('library-search').value||'').toLowerCase();
-      const list = document.getElementById('library-list');
-      const filtered = library.filter(r => !q || r.title.toLowerCase().includes(q) || (r.provider||'').toLowerCase().includes(r));
+      const q = (byId('library-search').value||'').toLowerCase();
+      const list = byId('library-list');
+      const filtered = library.filter(r => {
+        const p = (r.provider||'').toLowerCase();
+        return !q || r.title.toLowerCase().includes(q) || p.includes(q); // ✅ fix: usa 'q' (prima c'era un ref sbagliato)
+      });
       list.innerHTML = filtered.map(r => resourceCard(r)).join('') || emptyState('Nessuna risorsa trovata');
     }
 
     function emptyState(t){ return `<div class="text-center text-white/90 font-bold py-12 text-xl">${t}</div>`; }
 
-    // ===== Enhanced UI Components =====
+    // ===== Cards =====
     function compactLiveCard(s){
       return `
         <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
@@ -898,7 +668,7 @@
           <div class="flex justify-between items-start gap-4">
             <div class="flex-1">
               <div class="flex items-center gap-2 mb-2">
-                <span class="live-indicator"></span>
+                <span class="live-indicator" aria-hidden="true"></span>
                 <span class="text-sm font-bold text-gray-500">${formatDateTime(s.start_at)} • ${s.platform}</span>
               </div>
               <h4 class="text-xl font-black text-gray-800 mb-2">${escapeHtml(s.title)}</h4>
@@ -964,7 +734,7 @@
 
     function resourceCard(r){
       const fav = favorites.has(r.id) ? '★' : '☆';
-      const typeIcons = { document: '📄', podcast: '🎧', video: '🎥', tool: '🛠️', documentation: '📚' };
+      const typeIcons = { document:'📄', podcast:'🎧', video:'🎥', tool:'🛠️', documentation:'📚' };
       return `
         <div class="feature-card p-6">
           <div class="flex justify-between items-start gap-4">
@@ -986,183 +756,210 @@
         </div>`;
     }
 
-    // ===== Navigation Enhancement =====
+    // ===== Navigazione / Stato =====
     function show(id){
-      // Hide all sections
+      // sezioni
       document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      
-      // Update nav pills
+      byId(id).classList.add('active');
+
+      // nav pills (hero + sticky)
       document.querySelectorAll('.nav-pill').forEach(n=>n.classList.remove('active'));
-      document.querySelector(`.nav-pill[data-target="${id}"]`).classList.add('active');
-      
-      // Scroll to content
-      const hero = document.querySelector('.hero-section');
-      hero.scrollIntoView({ behavior: 'smooth', block: 'end' });
-      
+      document.querySelectorAll(`.nav-pill[data-target="${id}"]`).forEach(n=>n.classList.add('active'));
+
+      // aggiorna hash per deep-link
+      if (location.hash !== '#'+id) history.replaceState(null, '', '#'+id);
+
+      // se apro stats, (ri)render chart
       if (id === 'stats') renderStats();
+
+      // porta in vista l’inizio del contenuto
+      const marker = document.getElementById('stickyNav') || document.querySelector('.hero-section');
+      marker?.scrollIntoView({ behavior:'smooth', block:'start' });
     }
 
-    async function navigateBack(){
-      window.location.href = '../home.html';
+    function pillKey(e, id){
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); show(id); }
     }
 
-    function joinNextLive(){
-      const nextLive = liveSessions.find(s => s.start_at > new Date());
-      if (nextLive) {
-        window.open(nextLive.join_url, '_blank');
-        toast('Entrando nella live: ' + nextLive.title + ' 🔴');
-      } else {
-        show('live');
-        toast('Controlla tutte le live disponibili 📅');
-      }
+    // Back “intelligente” (evita doppi salti)
+    function navigateBack(){
+      try{
+        const ref = document.referrer ? new URL(document.referrer) : null;
+        const sameOrigin = ref && ref.origin === location.origin;
+        if (sameOrigin && history.length > 1) { history.back(); return; }
+      }catch(_){}
+      // fallback (no history/referrer esterno)
+      window.location.href = '/home.html';
     }
 
-    // ===== Filters listeners =====
+    // Debounce helper
+    function debounce(fn, ms=180){
+      let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,args), ms); };
+    }
+
+    // ===== Filtri =====
     function initFilters(){
-      ['live-search','live-platform','course-search','course-level','channel-search','library-search']
-        .forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el.addEventListener('input', () => {
-            if (id.startsWith('live')) renderLiveList();
-            else if (id.startsWith('course')) renderCourseList();
-            else if (id.startsWith('channel')) renderChannelList();
-            else if (id.startsWith('library')) renderLibraryList();
-          });
-        });
+      const map = [
+        ['live-search', renderLiveList],
+        ['live-platform', renderLiveList],
+        ['course-search', renderCourseList],
+        ['course-level', renderCourseList],
+        ['channel-search', renderChannelList],
+        ['library-search', renderLibraryList],
+      ];
+      map.forEach(([id, fn])=>{
+        const el = byId(id);
+        if (!el) return;
+        const evt = (el.tagName === 'SELECT') ? 'change' : 'input';
+        el.addEventListener(evt, debounce(fn, 150));
+      });
     }
 
-    // ===== Resource modal =====
+    // ===== Sticky nav visibility =====
+    function setupStickyNav(){
+      const hero = document.querySelector('.hero-section');
+      const sticky = byId('stickyNav');
+      if (!hero || !sticky || !('IntersectionObserver' in window)) return;
+      const io = new IntersectionObserver(([entry])=>{
+        // quando l'hero esce quasi completamente, mostra la sticky bar
+        if (entry.intersectionRatio < 0.15) {
+          sticky.classList.remove('hidden');
+        } else {
+          sticky.classList.add('hidden');
+        }
+      }, { threshold:[0, .15, 1] });
+      io.observe(hero);
+    }
+
+    // ===== Deep-link support (#live, #courses, ...) =====
+    function initDeepLink(){
+      const hash = (location.hash||'').replace('#','');
+      const valid = ['dashboard','live','courses','channels','library','stats'];
+      if (valid.includes(hash)) show(hash);
+      window.addEventListener('hashchange', ()=>{
+        const h = (location.hash||'').slice(1);
+        if (valid.includes(h)) show(h);
+      });
+    }
+
+    // ===== Resource Modal =====
     function openResource(id, kind){
-      const res = (kind==='course' ? courses : (library.find(x=>x.id===id) || courses.find(x=>x.id===id) || channels.find(x=>x.id===id)));
+      const res = (kind==='course'
+        ? courses.find(x=>x.id===id)
+        : (library.find(x=>x.id===id) || courses.find(x=>x.id===id) || channels.find(x=>x.id===id)));
       if (!res) return;
       modalResource = res;
-      document.getElementById('res-title').textContent = res.title;
-      document.getElementById('res-desc').textContent = res.description || '';
-      document.getElementById('res-open').href = res.url;
-      const tags = (res.tags||[]).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('');
-      document.getElementById('res-tags').innerHTML = tags;
-      const embedBox = document.getElementById('res-embed');
+      setText('res-title', res.title);
+      setText('res-desc', res.description || '');
+      byId('res-open').href = res.url;
+
+      byId('res-tags').innerHTML = (res.tags||[]).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('');
+
+      const embedBox = byId('res-embed');
       const embed = getYouTubeEmbed(res.url);
-      if (embed) {
+      if (embed){
         embedBox.innerHTML = `<iframe width="100%" height="240" src="${embed}" title="YouTube" frameborder="0" allowfullscreen></iframe>`;
         embedBox.classList.remove('hidden');
       } else {
-        embedBox.classList.add('hidden');
-        embedBox.innerHTML = '';
+        embedBox.classList.add('hidden'); embedBox.innerHTML='';
       }
-      const favBtn = document.getElementById('res-fav');
+
+      const favBtn = byId('res-fav');
       favBtn.textContent = (favorites.has(res.id) ? '★' : '☆') + ' Preferito';
-      document.getElementById('resource-modal').classList.remove('hidden');
+
+      byId('resource-modal').classList.remove('hidden');
       document.body.style.overflow = 'hidden';
     }
-    
+
     function closeModal(){
-      document.getElementById('resource-modal').classList.add('hidden');
+      byId('resource-modal').classList.add('hidden');
       document.body.style.overflow = '';
       modalResource = null;
     }
-    
+
     function toggleFavActive(){
       if (!modalResource) return;
       toggleFavorite(modalResource.id);
-      const favBtn = document.getElementById('res-fav');
+      const favBtn = byId('res-fav');
       favBtn.textContent = (favorites.has(modalResource.id) ? '★' : '☆') + ' Preferito';
       updateCounters();
     }
 
-    // ===== Favorites (DB o local) =====
+    // ===== Preferiti =====
     async function toggleFavorite(id){
       if (favorites.has(id)) favorites.delete(id); else favorites.add(id);
       persistFavs();
       renderFeatured(); renderCourseList(); renderLibraryList();
       updateCounters();
-      if (user) {
-        try {
-          const { error } = await supabase.from('user_bookmarks')
-            .upsert({ user_id: user.id, resource_id: id }, { onConflict:'user_id,resource_id' });
+      if (user){
+        try{
+          const { error } = await supabase.from('user_bookmarks').upsert({ user_id:user.id, resource_id:id }, { onConflict:'user_id,resource_id' });
           if (error) throw error;
-        } catch(e) { /* fallback silenzioso */ }
+        }catch(e){/* fallback silenzioso */}
       }
     }
-    
+
     function persistFavs(){
-      try { localStorage.setItem('academy_favs', JSON.stringify([...favorites])); } catch(e) {}
+      try{ localStorage.setItem('academy_favs', JSON.stringify([...favorites])); }catch(e){}
     }
 
     // ===== Stats =====
     function renderStats(){
-      const ctx = document.getElementById('stats-chart');
+      const ctx = byId('stats-chart');
       if (!ctx) return;
       const data = {
-        labels: ['Live Sessions', 'Corsi Online', 'Canali YouTube', 'Risorse Libreria'],
-        datasets: [{ 
+        labels: ['Live Sessions','Corsi Online','Canali YouTube','Risorse Libreria'],
+        datasets: [{
           data: [liveSessions.length*60, courses.length*90, channels.length*30, library.length*20],
-          backgroundColor: ['#e94560','#00d4ff','#10b981','#ffd700'], 
-          borderColor:'#fff', 
-          borderWidth:3,
-          hoverBorderWidth: 5
+          backgroundColor: ['#e94560','#00d4ff','#10b981','#ffd700'],
+          borderColor:'#fff', borderWidth:3, hoverBorderWidth:5
         }]
       };
       if (statsChart) statsChart.destroy();
-      statsChart = new Chart(ctx.getContext('2d'), { 
-        type:'doughnut', 
+      statsChart = new Chart(ctx.getContext('2d'), {
+        type:'doughnut',
         data,
-        options:{ 
-          responsive:true, 
-          maintainAspectRatio:false, 
-          plugins:{ 
-            legend:{ 
-              position:'bottom',
-              labels: {
-                font: { weight: 'bold', size: 14 },
-                padding: 20
-              }
-            } 
-          },
-          cutout: '60%'
-        } 
+        options:{
+          responsive:true, maintainAspectRatio:false,
+          plugins:{ legend:{ position:'bottom', labels:{ font:{ weight:'bold', size:14 }, padding:20 } } },
+          cutout:'60%'
+        }
       });
-      document.getElementById('stats-live-count').textContent = liveSessions.length;
-      const avg = courses.length ? Math.min(100, Math.round((favorites.size / Math.max(1,courses.length)) * 100)) : 0;
-      document.getElementById('stats-course-progress').textContent = `${avg}%`;
+      setText('stats-live-count', liveSessions.length);
+      const avg = courses.length ? Math.min(100, Math.round((favorites.size / Math.max(1,courses.length))*100)) : 0;
+      setText('stats-course-progress', `${avg}%`);
     }
 
     // ===== Helpers =====
+    const byId = id => document.getElementById(id);
+    const setText = (id, v) => { const el = byId(id); if (el) el.textContent = v; }
+
     function formatDateTime(d){
       const dt = (d instanceof Date) ? d : new Date(d);
       return dt.toLocaleString('it-IT', { weekday:'short', day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' });
     }
-    
-    function sameDay(a,b){ 
-      return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); 
-    }
-    
-    function addHours(h){ const d=new Date(); d.setHours(d.getHours()+h); return d; }
-    function addHoursTo(d,h){ const x=new Date(d); x.setHours(x.getHours()+h); return x; }
-    function addDays(days, hour=10){ const d=new Date(); d.setDate(d.getDate()+days); d.setHours(hour,0,0,0); return d; }
-    function escapeHtml(s){ return (s||'').toString().replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-    
-    function copyText(t){ 
-      navigator.clipboard?.writeText(t).then(()=>toast('Link copiato negli appunti! 🎉')); 
-    }
-    
+    function sameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate() }
+    function escapeHtml(s){ return (s||'').toString().replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])) }
+
+    function copyText(t){ navigator.clipboard?.writeText(t).then(()=>toast('Link copiato negli appunti! 🎉')); }
+
+    // Toast
     function toast(msg){
       const n = document.createElement('div');
       n.className = 'fixed top-6 right-6 bg-gradient-to-r from-aurora to-cyan text-white px-6 py-4 rounded-2xl font-black shadow-2xl z-[300] transform translate-x-full';
-      n.textContent = msg; 
+      n.textContent = msg;
+      n.setAttribute('role','status'); n.setAttribute('aria-live','polite');
       document.body.appendChild(n);
-      setTimeout(() => n.style.transform = 'translateX(0)', 100);
-      setTimeout(()=>{ 
-        n.style.transform = 'translateX(full)';
-        setTimeout(() => n.remove(), 300);
+      requestAnimationFrame(()=>{ n.style.transition = 'transform .3s ease'; n.style.transform = 'translateX(0)'; });
+      setTimeout(()=>{
+        n.style.transform = 'translateX(120%)';
+        setTimeout(()=> n.remove(), 300);
       }, 3000);
     }
 
-    // ICS download
+    // ICS
     function downloadICS(id){
-      const s = liveSessions.find(x=>x.id===id); 
-      if(!s) return;
+      const s = liveSessions.find(x=>x.id===id); if(!s) return;
       const ics = [
         'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//MyApp//Academy//IT',
         'BEGIN:VEVENT',
@@ -1175,23 +972,12 @@
         'END:VEVENT','END:VCALENDAR'
       ].join('\r\n');
       const blob = new Blob([ics], { type:'text/calendar;charset=utf-8' });
-      const a = document.createElement('a'); 
-      a.href = URL.createObjectURL(blob); 
-      a.download = `${s.title.replace(/\s+/g,'_')}.ics`; 
-      a.click();
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${s.title.replace(/\s+/g,'_')}.ics`; a.click();
       URL.revokeObjectURL(a.href);
       toast('Evento aggiunto al calendario! 📅');
     }
-    
-    function icsDate(d){ 
-      const z = new Date(d); 
-      const pad=n=>String(n).padStart(2,'0'); 
-      return `${z.getUTCFullYear()}${pad(z.getUTCMonth()+1)}${pad(z.getUTCDate())}T${pad(z.getUTCHours())}${pad(z.getUTCMinutes())}${pad(z.getUTCSeconds())}Z`; 
-    }
-    
-    function escapeICS(s){ 
-      return (s||'').toString().replace(/([,;])/g,'\\$1').replace(/\n/g,'\\n'); 
-    }
+    function icsDate(d){ const z=new Date(d); const pad=n=>String(n).padStart(2,'0'); return `${z.getUTCFullYear()}${pad(z.getUTCMonth()+1)}${pad(z.getUTCDate())}T${pad(z.getUTCHours())}${pad(z.getUTCMinutes())}${pad(z.getUTCSeconds())}Z`; }
+    function escapeICS(s){ return (s||'').toString().replace(/([,;])/g,'\\$1').replace(/\n/g,'\\n'); }
 
     // YouTube helper
     function getYouTubeEmbed(url){
@@ -1205,34 +991,37 @@
           }
         }
         if (u.hostname.includes('youtu.be')){
-          const id = u.pathname.replace('/',''); 
+          const id = u.pathname.replace('/','');
           if (id) return `https://www.youtube.com/embed/${id}`;
         }
       }catch(e){}
       return null;
     }
 
-    // ===== Events =====
+    // Connessione
     window.addEventListener('online', ()=> toast('Connessione ripristinata! 🌐'));
     window.addEventListener('offline', ()=> toast('Modalità offline attiva 📱'));
 
-    // ===== Service worker (opzionale) =====
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js')
-        .then(()=>console.log('SW registered successfully'))
-        .catch(()=>console.log('SW registration failed'));
+    // Service worker opzionale
+    if ('serviceWorker' in navigator){
+      navigator.serviceWorker.register('/sw.js').catch(()=>{});
     }
 
-    // Smooth scroll behavior
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
+    // Accessibilità anchor smooth
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', e=>{
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth' });
-        }
+        const t = document.querySelector(a.getAttribute('href'));
+        if (t) t.scrollIntoView({ behavior:'smooth' });
       });
     });
+
+    // Sincronizza stato attivo tra le due righe di pill
+    function syncActivePills(){
+      const current = (location.hash||'#dashboard').slice(1);
+      document.querySelectorAll('.nav-pill').forEach(n=>n.classList.remove('active'));
+      document.querySelectorAll(`.nav-pill[data-target="${current}"]`).forEach(n=>n.classList.add('active'));
+    }
   </script>
 </body>
 </html>
