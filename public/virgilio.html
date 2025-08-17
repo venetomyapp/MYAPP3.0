@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0"/>
   <title>Virgilio - MyApp</title>
 
   <!-- Favicon: robottino -->
@@ -13,151 +13,175 @@
   <script>
     if (typeof tailwind !== 'undefined') {
       tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              primary: '#1a1a2e',
-              secondary: '#16213e',
-              accent: '#0f3460',
-              aurora: '#e94560',
-              cyan: '#00d4ff',
-              magenta: '#ff006e',
-              gold: '#ffd700',
-              teal: '#03dac6',
-              dark: '#0a0a23',
-              light: '#f8fafc'
-            }
+        theme: { extend: {
+          colors: {
+            primary:'#1a1a2e', secondary:'#16213e', accent:'#0f3460',
+            aurora:'#e94560', cyan:'#00d4ff', magenta:'#ff006e',
+            gold:'#ffd700', teal:'#03dac6', dark:'#0a0a23', light:'#f8fafc'
           }
-        }
+        }}
       };
     }
   </script>
 
   <style>
-    :root{
-      --gradient-bg: linear-gradient(135deg,#1a1a2e 0%,#16213e 25%,#0f3460 50%,#e94560 75%,#00d4ff 100%);
-      --header-h: 56px;
-      --safe-top: env(safe-area-inset-top);
-      --safe-bot: env(safe-area-inset-bottom);
+    :root {
+      --gradient-bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
+      --shadow-elevated: 0 8px 25px rgba(0,0,0,.15);
+      --header-height: 60px;
+      --safe-area-top: env(safe-area-inset-top);
+      --safe-area-bottom: env(safe-area-inset-bottom);
     }
-    *{box-sizing:border-box}
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:rgba(233,69,96,.3)}
     body{
-      margin:0;
-      min-height:100vh;
-      font-family: system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
-      background:var(--gradient-bg);
-      background-size:400% 400%;
-      animation:grad 30s linear infinite;
-      color:#111827;
-      -webkit-font-smoothing:antialiased;
+      background:var(--gradient-bg);background-size:400% 400%;
+      animation:gradientShift 30s ease infinite;min-height:100vh;
+      font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,'Roboto',sans-serif;
+      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden
     }
-    @keyframes grad{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-
-    .glass{background:rgba(255,255,255,.1);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.12)}
-    .card{background:#fff;border-radius:18px;box-shadow:0 12px 30px rgba(0,0,0,.12)}
-    .chat-shell{height:calc(100vh - var(--header-h) - var(--safe-top) - var(--safe-bot) - 1rem)}
-
-    @media (prefers-color-scheme:dark){
-      .bot{background:#2d3748;color:#e2e8f0}
-      .input{background:#2d3748;border-color:#475569;color:#e2e8f0}
-      .status{background:#1f2937;color:#94a3b8}
-    }
+    @keyframes gradientShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+    .header{background:rgba(255,255,255,.1);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);
+      border-bottom:1px solid rgba(255,255,255,.1);position:sticky;top:0;z-index:40;height:var(--header-height);
+      padding-top:var(--safe-area-top)}
+    .back-button{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;
+      background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;cursor:pointer;transition:.2s}
+    .back-button:hover{background:rgba(255,255,255,.2);border-color:rgba(233,69,96,.5);color:#e94560;transform:translateY(-1px);
+      box-shadow:0 4px 12px rgba(0,0,0,.1)}
+    .back-button:active{transform:scale(.95)}
+    .chat-container{background:#fff;border-radius:20px;box-shadow:var(--shadow-elevated);width:100%;max-width:900px;margin:1rem auto;
+      overflow:hidden;height:calc(100vh - var(--header-height) - var(--safe-area-top) - var(--safe-area-bottom) - 2rem);display:flex;flex-direction:column}
+    .chat-header{background:linear-gradient(135deg,#e94560,#00d4ff);color:#fff;padding:1.5rem;text-align:center;flex-shrink:0}
+    .chat-messages{flex:1;overflow-y:auto;padding:1rem;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
+    .chat-messages::-webkit-scrollbar{width:4px}.chat-messages::-webkit-scrollbar-thumb{background:#e94560;border-radius:2px}
+    .message{margin-bottom:1.1rem;animation:fadeIn .3s ease-out}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+    .message-bot,.message-system{display:flex;align-items:flex-start;gap:.75rem}
+    .message-user{display:flex;align-items:flex-start;gap:.75rem;flex-direction:row-reverse}
+    .avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;min-width:40px}
+    .avatar-bot{background:linear-gradient(135deg,#00d4ff,#03dac6)}.avatar-user{background:linear-gradient(135deg,#e94560,#ff006e)}
+    .avatar-system{background:linear-gradient(135deg,#ffd700,#ff8c00)}
+    .message-content{max-width:75%;padding:1rem 1.25rem;border-radius:16px;font-size:1rem;line-height:1.6}
+    .content-bot{background:#f8f9fa;color:#2d3748;border-bottom-left-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    .content-user{background:linear-gradient(135deg,#e94560,#ff006e);color:#fff;border-bottom-right-radius:6px;box-shadow:0 2px 8px rgba(233,69,96,.3)}
+    .content-system{background:linear-gradient(135deg,#ffd700,#ff8c00);color:#fff;border-bottom-left-radius:6px;box-shadow:0 2px 8px rgba(255,215,0,.3)}
+    .message-time{font-size:.75rem;opacity:.7;margin-top:.5rem;font-weight:500}
+    .typing-indicator{display:flex;align-items:center;gap:.75rem;padding:1rem 0}
+    .typing-dots{display:flex;gap:4px;padding:1rem 1.25rem;background:#f8f9fa;border-radius:16px;border-bottom-left-radius:6px}
+    .typing-dot{width:8px;height:8px;background:#6b7280;border-radius:50%;animation:typingBounce 1.5s infinite}
+    .typing-dot:nth-child(2){animation-delay:.3s}.typing-dot:nth-child(3){animation-delay:.6s}
+    @keyframes typingBounce{0%,60%,100%{transform:none}30%{transform:translateY(-10px)}}
+    .chat-input-area{padding:1rem;border-top:1px solid #e5e7eb;background:#f8f9fa;flex-shrink:0;padding-bottom:calc(1rem + var(--safe-area-bottom))}
+    .input-wrapper{display:flex;gap:.75rem;align-items:flex-end}
+    .chat-input{flex:1;border:2px solid #e5e7eb;border-radius:12px;padding:.875rem 1rem;font-size:1rem;resize:none;outline:none;transition:.2s;min-height:48px;max-height:120px}
+    .chat-input:focus{border-color:#e94560;box-shadow:0 0 0 3px rgba(233,69,96,.1)}
+    .send-button{background:linear-gradient(135deg,#e94560,#00d4ff);color:#fff;border:none;border-radius:12px;padding:.75rem;width:48px;height:48px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;min-width:48px}
+    .send-button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 4px 12px rgba(233,69,96,.4)}.send-button:disabled{opacity:.5;cursor:not-allowed}
+    .status-bar{background:#f8f9fa;padding:.75rem 1rem;border-top:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:#6b7280}
+    .status-dot{width:8px;height:8px;border-radius:50%;background:#10b981}.status-dot.disconnected{background:#ef4444}
+    .chip{display:inline-block;margin:.25rem .35rem 0 0;padding:.45rem .75rem;border-radius:9999px;border:1px solid #e5e7eb;background:#fff;font-size:.85rem;font-weight:600;cursor:pointer}
+    .chip:hover{border-color:#e94560;color:#e94560}
+    .cta{display:inline-flex;align-items:center;gap:.4rem;margin-top:.6rem;padding:.55rem .85rem;border-radius:10px;background:linear-gradient(135deg,#e94560,#00d4ff);color:#fff;font-weight:700;text-decoration:none}
+    @media (max-width:768px){.message-content{max-width:86%}.chat-container{height:calc(100vh - var(--header-height) - var(--safe-area-top) - var(--safe-area-bottom) - 1.5rem)}}
+    @media (max-width:480px){.message-content{max-width:90%}.chat-container{margin:.5rem}}
+    @media (prefers-color-scheme:dark){.content-bot{background:#2d3748;color:#e2e8f0}.chat-input-area{background:#1a202c}.status-bar{background:#1a202c;color:#a0aec0}.chat-input{background:#2d3748;color:#e2e8f0;border-color:#4a5568}}
   </style>
 </head>
 <body>
   <!-- Header -->
-  <header class="glass sticky top-0 z-40" style="height:var(--header-h);padding-top:var(--safe-top)">
-    <div class="max-w-4xl mx-auto px-3 h-full flex items-center justify-between">
-      <button onclick="history.back()" class="rounded-xl px-3 py-2 text-white hover:text-aurora transition">
-        ← Indietro
-      </button>
-      <h1 class="text-white font-bold">Virgilio</h1>
-      <div class="flex gap-2">
-        <button id="clearChatBtn" class="text-sm rounded-md bg-white/90 px-3 py-1 hover:bg-white">🗑️ Pulisci</button>
-        <button onclick="showHelp()" class="text-sm rounded-md bg-white/90 px-3 py-1 hover:bg-white">❓ Aiuto</button>
+  <header class="header">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <button onclick="history.back()" class="back-button" title="Torna indietro" type="button" aria-label="Torna alla pagina precedente">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <h1 class="text-white font-bold text-lg">Virgilio</h1>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="clearChatBtn" class="action-button text-sm" type="button">🗑️ Pulisci</button>
+        <button onclick="showHelp()" class="action-button text-sm" type="button">❓ Aiuto</button>
       </div>
     </div>
   </header>
 
-  <!-- Loading overlay -->
-  <div id="loading" class="fixed inset-0 hidden items-center justify-center bg-black/40 z-50">
-    <div class="bg-white rounded-lg p-6 text-center shadow-xl">
-      <div class="w-6 h-6 border-2 border-black/20 border-t-black rounded-full animate-spin mx-auto mb-3"></div>
-      <p>Caricamento Virgilio…</p>
+  <!-- Loading -->
+  <div id="loading" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden" role="status" aria-live="polite">
+    <div class="bg-white rounded-lg p-6 text-center mx-4 max-w-sm">
+      <div class="loading-spinner mx-auto mb-4"></div>
+      <p class="text-gray-700 font-medium">Caricamento Virgilio...</p>
     </div>
   </div>
 
-  <!-- Chat -->
-  <main class="py-2">
-    <div class="max-w-4xl mx-auto px-2">
-      <div class="card chat-shell overflow-hidden flex flex-col">
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-aurora to-cyan text-white px-4 py-4">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-white/20 grid place-items-center text-xl">🤖</div>
+  <!-- Main Chat -->
+  <main class="py-6">
+    <div class="chat-container">
+      <div class="chat-header">
+        <div class="flex items-center justify-center gap-3 mb-2">
+          <div class="w-12 h-12 bg-white/20 rounded-full grid place-items-center text-2xl">🤖</div>
+          <div>
+            <h1 class="text-2xl font-bold">Virgilio</h1>
+            <p class="text-sm opacity-90">Il tuo assistente sindacale AI</p>
+          </div>
+        </div>
+        <div class="text-sm opacity-80">Chiedi informazioni su contratti, diritti e procedure • Ricerca web integrata 🌐</div>
+      </div>
+
+      <!-- Alerts -->
+      <div id="alertContainer" aria-live="polite"></div>
+
+      <!-- Messages -->
+      <div id="chatMessages" class="chat-messages" role="log" aria-live="polite" aria-relevant="additions">
+        <div class="message message-bot">
+          <div class="avatar avatar-bot">🤖</div>
+          <div class="message-content content-bot">
             <div>
-              <div class="font-bold text-xl leading-tight">Virgilio</div>
-              <div class="text-xs opacity-90">Assistente sindacale AI • Ricerca web (fonti istituzionali)</div>
+              Ciao! Sono <strong>Virgilio</strong> ✨, il tuo assistente sindacale AI.
+              <br><br>
+              Posso aiutarti su <em>disciplina</em>, <em>contratti</em>, <em>permessi</em>, <em>concorsi</em>, <em>pensioni</em> e <em>dirigenti sindacali</em>.
+              <br><br>
+              Per i <strong>dirigenti</strong> puoi chiedere:&nbsp;
+              <span class="chip" data-q="dirigenti regionali veneto">Regionali Veneto</span>
+              <span class="chip" data-q="dirigenti provinciali Treviso">Provinciali Treviso</span>
+              <span class="chip" data-q="dirigenti provinciali Verona">Provinciali Verona</span>
             </div>
+            <div class="message-time">Ora</div>
           </div>
         </div>
+      </div>
 
-        <!-- Alerts -->
-        <div id="alertContainer" class="px-3 pt-2"></div>
+      <!-- Typing -->
+      <div id="typingIndicator" class="typing-indicator hidden" aria-hidden="true">
+        <div class="avatar avatar-bot">🤖</div>
+        <div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>
+      </div>
 
-        <!-- Messages -->
-        <div id="chatMessages" class="flex-1 overflow-y-auto px-3 py-3 space-y-3">
-          <div class="flex items-start gap-2">
-            <div class="w-9 h-9 rounded-full bg-cyan grid place-items-center">🤖</div>
-            <div class="bot rounded-xl px-3 py-2 bg-gray-50 shadow-sm">
-              <div>
-                Ciao! Sono <strong>Virgilio</strong>. Posso aiutarti su disciplina, COM/TUOM, ferie/permessi, concorsi, licenze e molto altro.
-                <br>Scrivi: <em>“dirigenti veneto”</em>, <em>“dirigenti provinciali Treviso”</em>, <em>“ultime novità contratto 2025”</em>…
-              </div>
-              <div class="text-xs opacity-70 mt-1">Ora</div>
-            </div>
-          </div>
+      <!-- Input -->
+      <div class="chat-input-area">
+        <div class="input-wrapper">
+          <textarea id="messageInput" class="chat-input" placeholder="✨ Scrivi la tua domanda..." rows="1" maxlength="500" aria-label="Scrivi il messaggio"></textarea>
+          <button id="sendButton" class="send-button" disabled type="button" aria-label="Invia messaggio">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2m0 0v-8"/></svg>
+          </button>
         </div>
+      </div>
 
-        <!-- Typing -->
-        <div id="typingIndicator" class="hidden px-3 pb-1">
-          <div class="flex items-center gap-2">
-            <div class="w-9 h-9 rounded-full bg-cyan grid place-items-center">🤖</div>
-            <div class="rounded-xl px-3 py-2 bg-gray-100">
-              <span class="inline-block w-2 h-2 bg-gray-500 rounded-full animate-bounce"></span>
-              <span class="inline-block w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:.15s] ml-1"></span>
-              <span class="inline-block w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:.3s] ml-1"></span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Input -->
-        <div class="border-t bg-gray-50 p-2">
-          <div class="flex gap-2">
-            <textarea id="messageInput" class="input w-full rounded-lg border-2 border-gray-200 px-3 py-2 resize-none min-h-[44px] max-h-[120px] outline-none focus:border-aurora" placeholder="✨ Scrivi la tua domanda…" rows="1" maxlength="500"></textarea>
-            <button id="sendButton" class="rounded-lg bg-gradient-to-r from-aurora to-cyan text-white w-12 h-12 grid place-items-center disabled:opacity-50">➤</button>
-          </div>
-        </div>
-
-        <!-- Status -->
-        <div class="status border-t text-xs px-3 py-2 flex justify-between items-center">
-          <div class="flex items-center gap-2"><span id="statusDot" class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span><span id="statusText">Connesso</span></div>
-          <div>Token: <span id="tokenCount">0</span> • Caratteri: <span id="charCount">0</span>/500</div>
-        </div>
+      <!-- Status -->
+      <div class="status-bar">
+        <div class="flex items-center gap-2"><span id="statusDot" class="status-dot"></span><span id="statusText">Connesso</span></div>
+        <div>Token: <span id="tokenCount">0</span> • Caratteri: <span id="charCount">0</span>/500</div>
       </div>
     </div>
   </main>
 
-  <!-- App -->
+  <!-- App JS -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    // 🔐 Supabase (pubblici/anon — ok nel client)
+    // ⚙️ Supabase
     const supabaseUrl = 'https://pvzdilkozpspsnepedqc.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
     const supabase = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: true, autoRefreshToken: true } });
 
-    // 🧠 Config API (same-origin su Vercel)
+    // 🔌 Chatbot API (same-origin su Vercel)
     const CHATBOT_CONFIG = {
       apiEndpoint: '/api/chat',
       apiEndpointLocal: 'http://localhost:3001/api/chat',
@@ -169,7 +193,11 @@
       retryDelay: 900
     };
 
+    const DIRIGENTI_PAGE = '/dirigenti.html';
+    const VENETO_PROVINCES = ['Belluno','Padova','Rovigo','Treviso','Venezia','Verona','Vicenza'];
+
     // Stato
+    let currentUser = null;
     let conversationHistory = [];
     let isProcessing = false;
     let totalTokensUsed = 0;
@@ -185,324 +213,323 @@
     const tokenCount = document.getElementById('tokenCount');
     const charCount = document.getElementById('charCount');
     const alertContainer = document.getElementById('alertContainer');
-    const loading = document.getElementById('loading');
 
-    // Utils UI
-    const showAlert=(msg,type='info')=>{
-      const el=document.createElement('div');
-      el.className='rounded-lg px-3 py-2 text-sm '+(type==='error'?'bg-red-50 text-red-700 border border-red-200':type==='success'?'bg-green-50 text-green-700 border border-green-200':'bg-blue-50 text-blue-700 border border-blue-200');
-      el.textContent=msg; alertContainer.appendChild(el); setTimeout(()=>el.remove(),4500);
-    };
-    const updateConnectionStatus=(ok)=>{ statusDot.className='inline-block w-2 h-2 rounded-full '+(ok?'bg-emerald-500':'bg-red-500'); statusText.textContent= ok?'Connesso':'Offline'; };
-    const syncOnlineStatus=()=>updateConnectionStatus(navigator.onLine);
-    window.addEventListener('online',syncOnlineStatus); window.addEventListener('offline',syncOnlineStatus);
-    const updateCharCount=()=>{ const c = messageInput.value.length; charCount.textContent=c; };
-    const updateSendButton=()=>{ sendButton.disabled = !messageInput.value.trim() || isProcessing; };
-    const autoResize=()=>{ messageInput.style.height='auto'; messageInput.style.height=Math.min(messageInput.scrollHeight,120)+'px'; };
-    const scrollBottom=()=>{ messagesContainer.scrollTop=messagesContainer.scrollHeight; };
-    const showTyping=()=>{ typingIndicator.classList.remove('hidden'); scrollBottom(); };
-    const hideTyping=()=> typingIndicator.classList.add('hidden');
-    const timeNow=()=> new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+    // Utils
+    const escapeHtml = (t)=>{ const d=document.createElement('div'); d.textContent=t; return d.innerHTML; };
+    const formatTime = ()=> new Date().toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'});
+    const scrollToBottom = ()=> { messagesContainer.scrollTop = messagesContainer.scrollHeight; };
+    const showTyping = ()=> { typingIndicator.classList.remove('hidden'); scrollToBottom(); };
+    const hideTyping = ()=> { typingIndicator.classList.add('hidden'); };
 
-    // Rendering messaggi
-    function addMessage(content, type='bot', hasWeb=false){
-      const wrap=document.createElement('div');
-      wrap.className='flex items-start gap-2';
-      const avatar=document.createElement('div');
-      avatar.className='w-9 h-9 rounded-full grid place-items-center text-base '+(type==='user'?'bg-gradient-to-br from-aurora to-magenta text-white':'bg-cyan');
-      avatar.textContent = type==='user'?'👤':'ℹ️';
-      if(type==='bot') avatar.textContent='🤖';
+    function showAlert(message, type='info'){
+      const el = document.createElement('div');
+      el.className = `alert alert-${type}`;
+      el.textContent = message;
+      alertContainer.appendChild(el);
+      setTimeout(()=> el.remove(), 5000);
+    }
+    function updateConnectionStatus(connected){ if(connected){statusDot.className='status-dot';statusText.textContent='Connesso'} else {statusDot.className='status-dot disconnected';statusText.textContent='Offline'} }
+    function syncOnlineStatus(){ updateConnectionStatus(navigator.onLine); }
+    window.addEventListener('online', syncOnlineStatus);
+    window.addEventListener('offline', syncOnlineStatus);
+    function updateCharCount(){ const c = messageInput.value.length; charCount.textContent=c; charCount.style.color = c>400 ? '#ef4444' : '#6b7280'; }
+    function updateSendButton(){ sendButton.disabled = !(messageInput.value.trim().length>0) || isProcessing; }
+    function autoResizeTextarea(){ messageInput.style.height='auto'; messageInput.style.height = Math.min(messageInput.scrollHeight,120) + 'px'; }
 
-      const bubble=document.createElement('div');
-      bubble.className='rounded-xl px-3 py-2 shadow-sm '+(type==='user'?'bg-gradient-to-r from-aurora to-magenta text-white':'bot bg-gray-50');
-      if(hasWeb && type==='bot'){
-        bubble.innerHTML=`<div class="inline-block text-[11px] font-semibold px-2 py-0.5 rounded-full bg-cyan/20 text-cyan-900 mb-1">🌐 Ricerca Web</div><br>`+content+`<div class="text-xs opacity-70 mt-2">${timeNow()}</div>`;
-      }else{
-        bubble.innerHTML=content+`<div class="text-xs opacity-70 mt-2">${timeNow()}</div>`;
-      }
-      wrap.appendChild(avatar); wrap.appendChild(bubble);
-      messagesContainer.appendChild(wrap);
-      scrollBottom();
+    // Add message
+    function addMessage(content, type='bot', hasWebSearch=false){
+      const m = document.createElement('div');
+      m.className = `message message-${type}`;
+      let badge = (hasWebSearch && type==='bot') ? '<div class="web-search-badge">🌐 Ricerca Web</div>' : '';
+      const inner =
+        type==='user'
+          ? `<div class="avatar avatar-user">👤</div><div class="message-content content-user"><div>${escapeHtml(content)}</div><div class="message-time">${formatTime()}</div></div>`
+          : type==='system'
+              ? `<div class="avatar avatar-system">ℹ️</div><div class="message-content content-system"><div>${content}</div><div class="message-time">${formatTime()}</div></div>`
+              : `<div class="avatar avatar-bot">🤖</div><div class="message-content content-bot">${badge}<div>${content}</div><div class="message-time">${formatTime()}</div></div>`;
+      m.innerHTML = inner;
+      messagesContainer.appendChild(m);
+      scrollToBottom();
     }
 
-    // HELP
-    window.showHelp = function(){
-      addMessage(
-        '🆘 <strong>Aiuto</strong><br><br>'+
-        'Esempi:<br>• <em>dirigenti veneto</em> (mostra solo <strong>regionali</strong>)<br>'+
-        '• <em>dirigenti provinciali Treviso</em><br>'+
-        '• <em>ultime novità contratto 2025</em>', 'system'
-      );
-    };
+    // Quick-replies handler
+    messagesContainer.addEventListener('click', (e)=>{
+      const el = e.target.closest('.chip');
+      if(!el) return;
+      messageInput.value = el.dataset.q || '';
+      updateCharCount(); updateSendButton();
+      if(messageInput.value.trim()) sendMessage();
+    });
 
-    // ————— Dirigenti: normalizzazione / dedup / parsing —————
-    const norm = s => (s||'').toString().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/\u00A0/g,' ').replace(/\s+/g,' ').toLowerCase().trim();
-
-    const EMAIL_FIXES = [
-      [/@carabinieri\.nsc\b/i, '@carabinierinsc.it'],
-      [/@carabinieri\.nsc\.it\b/i, '@carabinierinsc.it'],
-      [/@carabinierinsc\.it\.it\b/i, '@carabinierinsc.it']
-    ];
-    const normalizeEmail = e => {
-      let x=(e||'').trim(); EMAIL_FIXES.forEach(([r,rep])=> x=x.replace(r,rep)); return x.toLowerCase();
-    };
-    const sanitizeTelHref = t => (t||'').toString().replace(/[^\d+]/g,'');
-    const cleanTelText = t => (t||'').toString().replace(/\s+/g,' ').trim();
-
-    function dedupeDirigenti(list){
-      const seen=new Set();
-      return list.filter(d=>{
-        const key=[norm(d.nome_cognome||d.nome||''), normalizeEmail(d.email||''), sanitizeTelHref(d.telefono||d.tel||'')].join('|');
-        if(seen.has(key)) return false; seen.add(key); return true;
-      });
-    }
-
-    const VENETO_PROV = ['belluno','padova','rovigo','treviso','venezia','verona','vicenza'];
-    const guessProvincia = d => {
-      const p = d.provincia || '';
-      if(p) return p;
-      const inRole = norm(d.ruolo||'');
-      const hit = VENETO_PROV.find(pr => inRole.includes(pr));
-      return hit ? hit.charAt(0).toUpperCase()+hit.slice(1) : '';
-    };
-    const guessRegione = d => d.regione || ((/veneto/i.test(d.ruolo||'')) ? 'Veneto' : '');
-
-    function sortDirigenti(a,b){
-      const level = s => /regional/i.test(s||'') ? 0 : /provincial/i.test(s||'') ? 1 : 2;
-      const la=level(a.ruolo), lb=level(b.ruolo);
-      if(la!==lb) return la-lb;
-      const pa=norm(guessProvincia(a)||'zzz'), pb=norm(guessProvincia(b)||'zzz');
-      if(pa!==pb) return pa.localeCompare(pb,'it');
-      return (a.nome_cognome||'').localeCompare(b.nome_cognome||'','it');
-    }
-
-    function renderDirigenti(list, title='Dirigenti'){
-      if(!list.length){ addMessage('Nessun risultato per questa selezione.', 'system'); return; }
-      const rows=list.map(d=>{
-        const nome = (d.nome_cognome || d.nome || '').trim();
-        const ruolo = d.ruolo || '';
-        const email = normalizeEmail(d.email || '');
-        const telHref = sanitizeTelHref(d.telefono||d.tel||'');
-        const telTxt = cleanTelText(d.telefono||d.tel||'');
-        const prov = guessProvincia(d);
-        const reg = guessRegione(d);
-        return `• <strong>${nome}</strong> — ${ruolo}${reg?` (${reg})`:''}${prov?` — ${prov}`:''} — ${email?`<a href="mailto:${email}">${email}</a>`:''} ${telHref?`— <a href="tel:${telHref}">${telTxt||telHref}</a>`:''}`;
-      }).join('<br><br>');
-      addMessage(`<strong>${title}</strong><br><br>${rows}`, 'system');
-    }
-
-    function parseDirigentiQuery(t){
-      const q=norm(t);
-      if(!/\bdirigent/i.test(q)) return null;
-      const mReg = q.match(/\b(veneto|lombardia|lazio|sicilia|puglia|piemonte|toscana|calabria|campania|emilia|friuli|liguria|marche|molise|sardegna|umbria|abruzzo|basilicata|trentino|aosta)\b/);
-      const regione = mReg ? (mReg[1][0].toUpperCase()+mReg[1].slice(1)) : (/\bveneto\b/.test(q)?'Veneto':'');
-      const mProv = q.match(/\b(belluno|padova|rovigo|treviso|venezia|verona|vicenza)\b/);
-      const provincia = mProv ? (mProv[1][0].toUpperCase()+mProv[1].slice(1)) : '';
-      let livello = '';
-      if(/\bprovinciali?\b/.test(q)) livello='provinciale';
-      if(/\bregional[ei]?\b/.test(q)) livello='regionale';
-      return {livello, regione, provincia};
-    }
-
-    // Caricamento dirigenti
+    // Dirigenti — caricamento
     async function loadDirigenti(){
       try{
-        const { data, error } = await supabase.from('organico_dirigentisindacali').select('*').order('id',{ascending:true});
+        const { data, error } = await supabase.from('organico_dirigentisindacali').select('*').order('id', { ascending: true });
         if(error) throw error;
         dirigenti = data || [];
         console.log('✅ Dirigenti caricati:', dirigenti.length);
-      }catch(e){
-        console.error('❌ Errore dirg:', e);
-        dirigenti = []; // no fallback hardcoded per evitare dati obsoleti
+      }catch(err){
+        console.error('❌ Errore caricamento dirigenti:', err);
+        dirigenti = []; // meglio vuoto: evitiamo vecchi fallback
       }
     }
 
-    // Auth: SOLO loggati
-    async function requireAuth(){
+    // Dirigenti — helpers
+    const telSanitize = (t)=> (t||'').replace(/[^0-9+]/g,'');
+    function matchProvincia(rec, provincia){
+      const p = (provincia||'').toLowerCase();
+      return (rec?.provincia && String(rec.provincia).toLowerCase()===p)
+          || (rec?.ruolo && String(rec.ruolo).toLowerCase().includes(p));
+    }
+    function isRegionale(rec){
+      const r = (rec?.ruolo||'').toLowerCase();
+      return r.includes('regionale');
+    }
+    function renderDirigentiList(list, titolo){
+      if(!list || !list.length){
+        return `<strong>${escapeHtml(titolo)}</strong><br><br>Nessun nominativo trovato al momento. Prova un’altra provincia oppure apri la pagina completa dei dirigenti.<br><a href="${DIRIGENTI_PAGE}" class="cta" target="_blank" rel="noopener">Apri pagina dirigenti</a>`;
+      }
+      const rows = list.map(d=>{
+        const nome = escapeHtml(d.nome_cognome||'—');
+        const ruolo = escapeHtml(d.ruolo||'');
+        const email = escapeHtml(d.email||'');
+        const tel = telSanitize(d.telefono||'');
+        const telHref = tel ? `tel:${tel}` : '#';
+        const emailHref = email ? `mailto:${email}` : '#';
+        return `• <strong>${nome}</strong> — ${ruolo}` +
+               (email ? ` — <a href="${emailHref}">${email}</a>` : '') +
+               (tel ? ` — <a href="${telHref}">${tel}</a>` : '');
+      }).join('<br><br>');
+      return `<strong>${escapeHtml(titolo)}</strong><br><br>${rows}<br><br><a href="${DIRIGENTI_PAGE}" class="cta" target="_blank" rel="noopener">Vedi tutti i dirigenti</a>`;
+    }
+
+    // Intent parser per dirigenti
+    function parseDirigentiIntent(text){
+      const t = (text||'').toLowerCase();
+      if(!/dirigent|contatti.*dirigent/i.test(t)) return null;
+
+      const inVeneto = /veneto/.test(t);
+      const wantReg = /regional/i.test(t);
+      const wantProv = /provincial/i.test(t);
+
+      // cerca provincia Veneto
+      let provincia = null;
+      for(const p of VENETO_PROVINCES){
+        if (t.includes(p.toLowerCase())) { provincia = p; break; }
+      }
+
+      // default region = Veneto se menzionata
+      const regione = inVeneto ? 'Veneto' : null;
+
+      // logica:
+      //  - se specifica "regionali" -> regionali regione (se regione non indicata ma cita veneto -> Veneto)
+      //  - se specifica "provinciali + provincia" -> provinciali di quella provincia
+      //  - se dice solo "dirigenti veneto" ma non specifica -> chiedi chiarimento naturale
+      //  - se dice solo "dirigenti" -> chiedi chiarimento
+      if (wantReg && regione) return { type:'regionale', regione };
+      if (wantProv && provincia) return { type:'provinciale', provincia, regione: 'Veneto' };
+
+      // ambiguo: niente livello oppure livello provinciale ma senza provincia
+      return { type:'ask', regione: regione||'Veneto' };
+    }
+
+    function askDirigentiClarification(regione='Veneto'){
+      const chips = [
+        `<span class="chip" data-q="dirigenti regionali ${regione.toLowerCase()}">Regionali ${regione}</span>`
+      ].concat(VENETO_PROVINCES.map(p=>`<span class="chip" data-q="dirigenti provinciali ${p}">${p}</span>`)).join(' ');
+      const msg =
+        `Vuoi vedere i dirigenti <strong>regionali</strong> del ${regione} oppure quelli <strong>provinciali</strong>?` +
+        `<br><small>Scegli una delle opzioni qui sotto:</small><br>${chips}` +
+        `<br><a href="${DIRIGENTI_PAGE}" class="cta" target="_blank" rel="noopener">Apri pagina dirigenti</a>`;
+      addMessage(msg,'system');
+    }
+
+    function handleDirigentiQuery(q){
+      const intent = parseDirigentiIntent(q);
+      if(!intent) return false; // non è richiesta dirigenti → lascia al backend
+
+      if(intent.type==='regionale'){
+        const list = (dirigenti||[]).filter(isRegionale);
+        addMessage(renderDirigentiList(list, `Dirigenti — ${intent.regione} (regionali)`), 'system');
+        return true;
+      }
+
+      if(intent.type==='provinciale'){
+        const list = (dirigenti||[]).filter(r => matchProvincia(r, intent.provincia) && !isRegionale(r));
+        addMessage(renderDirigentiList(list, `Dirigenti — ${intent.provincia} (provinciali)`), 'system');
+        return true;
+      }
+
+      // ask
+      askDirigentiClarification(intent.regione);
+      return true;
+    }
+
+    // Auth
+    async function verificaAutenticazione(){
       try{
         const { data:{ session } } = await supabase.auth.getSession();
-        if(!session){ window.location.href='../login.html'; return null; }
+        if(!session){
+          console.log('❌ Nessuna sessione attiva');
+          window.location.href = '../login.html';
+          return null;
+        }
         console.log('✅ Utente autenticato:', session.user.email);
         return session.user;
-      }catch(e){
-        console.error('Auth err', e);
-        window.location.href='../login.html';
+      }catch(err){
+        console.error('❌ Errore verifica auth:', err);
+        window.location.href = '../login.html';
         return null;
       }
     }
 
+    // Help
+    window.showHelp = function(){
+      const help =
+        '🆘 <strong>Aiuto Virgilio</strong><br><br>'+
+        'Posso darti contatti dei dirigenti, spiegarti disciplina, ferie, malattia, concorsi e pensioni.<br><br>'+
+        'Per i dirigenti prova una scorciatoia:<br>'+
+        VENETO_PROVINCES.map(p=>`<span class="chip" data-q="dirigenti provinciali ${p}">${p}</span>`).join(' ')+
+        `<br><a href="${DIRIGENTI_PAGE}" class="cta" target="_blank" rel="noopener">Pagina dirigenti</a>`;
+      addMessage(help,'system');
+    };
+
+    async function tentaRefreshSessione(){
+      try{ const { data, error } = await supabase.auth.refreshSession(); if(error) throw error; return data?.session; }catch{ return null; }
+    }
+
     // Send
     async function sendMessage(){
-      const text = messageInput.value.trim();
-      if(!text || isProcessing) return;
+      const message = messageInput.value.trim();
+      if(!message || isProcessing) return;
+
       isProcessing = true; updateSendButton();
+      addMessage(message,'user');
+      conversationHistory.push({ role:'user', content: message });
+      messageInput.value=''; updateCharCount(); updateSendButton(); autoResizeTextarea();
 
-      addMessage(text, 'user');
-      conversationHistory.push({ role:'user', content:text });
-      messageInput.value=''; updateCharCount(); autoResize();
-
-      // —— BLOCCO “DIRIGENTI” con logica migliorata
-      const qInfo = parseDirigentiQuery(text);
-      if(qInfo){
-        const { livello, regione, provincia } = qInfo;
-
-        if(!dirigenti.length){
-          addMessage('Elenco dirigenti non disponibile in questo momento. Riprova più tardi.', 'system');
-          isProcessing=false; updateSendButton(); return;
-        }
-        if (!livello && !regione && !provincia){
-          addMessage('Vuoi i contatti <strong>regionali</strong> o di una <strong>provincia</strong>? (es. "dirigenti provinciali Treviso")', 'system');
-          isProcessing=false; updateSendButton(); return;
-        }
-        if ((livello==='provincale' || /provincia/i.test(text)) && !provincia){
-          addMessage('Per i dirigenti <strong>provinciali</strong>, indica la <strong>provincia</strong> (es. "Treviso").', 'system');
-          isProcessing=false; updateSendButton(); return;
-        }
-
-        let results;
-        if (provincia){
-          results = dirigenti.filter(d =>
-            /provincial/i.test(d.ruolo||'') &&
-            (!regione || norm(guessRegione(d)).includes(norm(regione))) &&
-            ( norm(guessProvincia(d)).includes(norm(provincia)) )
-          );
-        } else if (regione && !livello){ // “dirigenti veneto” => SOLO regionali
-          results = dirigenti.filter(d =>
-            /regional/i.test(d.ruolo||'') &&
-            norm(guessRegione(d)).includes(norm(regione))
-          );
-        } else { // filtri diretti se specifica livello
-          results = dirigenti.filter(d =>
-            (!livello || (/regional/i.test(d.ruolo||'') && livello==='regionale') || (/provincial/i.test(d.ruolo||'') && livello==='provinciale')) &&
-            (!regione || norm(guessRegione(d)).includes(norm(regione))) &&
-            (!provincia || norm(guessProvincia(d)).includes(norm(provincia)))
-          );
-        }
-
-        results = dedupeDirigenti(results).sort(sortDirigenti);
-
-        let header='Dirigenti';
-        if (provincia) header += ` provinciali — Provincia di ${provincia}`;
-        else if (regione && !livello) header += ` — ${regione} (Regionali)`;
-        else if (regione && livello) header += ` ${livello} — ${regione}`;
-
-        renderDirigenti(results.slice(0,30), header);
-        if(regione && !livello && !provincia){
-          addMessage('Vuoi vedere anche i <strong>provinciali</strong>? Scrivi: <em>“dirigenti provinciali Treviso”</em>.', 'system');
-        }
+      // 1) Shortcut locale dirigenti (logica naturale)
+      if (handleDirigentiQuery(message)) {
         isProcessing=false; updateSendButton(); return;
       }
-      // —— FINE BLOCCO “DIRIGENTI”
 
+      // 2) Backend
       showTyping();
       try{
         let { data:{ session } } = await supabase.auth.getSession();
         if(!session) throw new Error('Sessione scaduta');
 
         const apiEndpoint = (location.hostname==='localhost'||location.hostname==='127.0.0.1') ? CHATBOT_CONFIG.apiEndpointLocal : CHATBOT_CONFIG.apiEndpoint;
-        const needsWebSearch = /(?:\bultim[eaie]\b|\bnews\b|aggiornamenti|oggi|attuale|corrente|novit[àa]|contratto\s*2025|aumenti|stipendio\s*2025)/i.test(text);
 
-        const body = {
+        const needsWebSearch = /(?:\bultim[eaie]\b|\bnews\b|aggiornamenti|oggi|attuale|corrente|novit[àa]|contratto 2025|aumenti|stipendio 2025)/i.test(message);
+
+        const requestBody = {
           messages: conversationHistory.slice(-CHATBOT_CONFIG.maxHistory),
           model: CHATBOT_CONFIG.model,
           max_tokens: CHATBOT_CONFIG.maxTokens,
           temperature: CHATBOT_CONFIG.temperature,
-          system_context: 'Sei Virgilio, assistente AI del Sindacato Carabinieri. Rispondi con rigore e cita le fonti ufficiali.',
+          system_context: 'Sei Virgilio, assistente AI del Sindacato Carabinieri. Rispondi in modo chiaro e cita le fonti.',
           enable_web_search: needsWebSearch,
-          web_search_query: needsWebSearch ? text : null
+          web_search_query: needsWebSearch ? message : null
         };
 
-        let lastErr=null;
-        for(let i=0;i<CHATBOT_CONFIG.retryAttempts;i++){
+        let lastError = null;
+        for(let attempt=0; attempt<CHATBOT_CONFIG.retryAttempts; attempt++){
           try{
-            const r = await fetch(apiEndpoint,{
+            const resp = await fetch(apiEndpoint, {
               method:'POST',
-              headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
-              body: JSON.stringify(body)
+              headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+session.access_token },
+              body: JSON.stringify(requestBody)
             });
-            if(r.status===401 && i<CHATBOT_CONFIG.retryAttempts-1){
-              const { data, error } = await supabase.auth.refreshSession();
-              if(error || !data?.session) throw new Error('Token non valido o scaduto');
-              session = data.session; continue;
+
+            if(resp.status===401 && attempt<CHATBOT_CONFIG.retryAttempts-1){
+              const refreshed = await tentaRefreshSessione();
+              if(refreshed){ session = refreshed; continue; }
             }
-            if(!r.ok){
-              const j = await r.json().catch(()=>null);
-              throw new Error(j?.error || ('HTTP '+r.status));
+
+            if(!resp.ok){
+              let msg = 'HTTP '+resp.status;
+              try{ const j = await resp.json(); if(j && j.error) msg = j.error; }catch(_){}
+              throw new Error(msg);
             }
-            const data = await r.json();
-            const msg = data?.choices?.[0]?.message?.content || 'Nessuna risposta.';
-            const hasWeb = !!data.web_search_performed;
-            addMessage(msg, 'bot', hasWeb);
-            conversationHistory.push({ role:'assistant', content: msg });
+
+            const data = await resp.json();
+            const botResponse = data?.choices?.[0]?.message?.content || 'Nessuna risposta.';
+            const hasWebSearch = !!data.web_search_performed;
+
+            addMessage(botResponse,'bot',hasWebSearch);
+            conversationHistory.push({ role:'assistant', content: botResponse });
+
             if(data.usage){ totalTokensUsed += (data.usage.total_tokens || 0); tokenCount.textContent = totalTokensUsed.toLocaleString(); }
-            lastErr=null; break;
-          }catch(e){
-            lastErr=e;
-            await new Promise(r=>setTimeout(r, CHATBOT_CONFIG.retryDelay*(i+1)));
+            lastError = null; break;
+          }catch(err){
+            lastError = err;
+            if(attempt < CHATBOT_CONFIG.retryAttempts-1){
+              await new Promise(r=>setTimeout(r, CHATBOT_CONFIG.retryDelay*(attempt+1)));
+            }
           }
         }
-        if(lastErr) throw lastErr;
+        if(lastError) throw lastError;
         syncOnlineStatus();
-      }catch(e){
-        console.error('Errore invio:', e);
+      }catch(err){
+        console.error('Errore invio:', err);
         conversationHistory.pop();
-        showAlert(/scadut/i.test(e.message)?'Sessione scaduta, riaccedi':
-                  /invalid|expired|401/i.test(e.message)?'Token non valido o scaduto':
-                  /network|fetch/i.test(e.message)?'Problema di rete, riprova':
-                  e.message || 'Errore di connessione','error');
-        syncOnlineStatus();
+        let msg = 'Errore di connessione';
+        if(/scadut/i.test(err.message)) msg = 'Sessione scaduta, riaccedi';
+        else if(/invalid|expired|401/i.test(err.message)) msg = 'Token non valido o scaduto';
+        else if(/network|fetch/i.test(err.message)) msg = 'Problema di rete, riprova';
+        else if(/500/.test(err.message)) msg = 'Servizio temporaneamente non disponibile';
+        else if(err.message) msg = err.message;
+        showAlert(msg,'error'); syncOnlineStatus();
       }finally{
         hideTyping();
         isProcessing=false; updateSendButton(); messageInput.focus();
       }
     }
 
-    // Check proxy rapido
+    // Check proxy
     async function checkProxy(){
       try{
         const r = await fetch('/api/chat',{method:'OPTIONS'});
-        if(r.status!==200 && r.status!==405) showAlert('Attenzione: /api/chat non è raggiungibile ('+r.status+').','error');
+        if(r.status!==200 && r.status!==405){ showAlert('Attenzione: /api/chat non è raggiungibile ('+r.status+').','error'); }
       }catch{ showAlert('Impossibile contattare /api/chat (controlla il deploy).','error'); }
     }
 
     // Init
     document.addEventListener('DOMContentLoaded', async ()=>{
-      loading.classList.remove('hidden');
+      document.getElementById('loading').classList.remove('hidden');
       try{
         syncOnlineStatus();
-
-        // SOLO UTENTI LOGGATI
-        const user = await requireAuth();
-        if(!user) return;
-
         await checkProxy();
+        currentUser = await verificaAutenticazione();
+        if(!currentUser) return;
+
         await loadDirigenti();
 
-        messageInput.addEventListener('input', ()=>{ updateCharCount(); updateSendButton(); autoResize(); });
-        messageInput.addEventListener('keypress', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); } });
+        messageInput.addEventListener('input', ()=>{ updateCharCount(); updateSendButton(); autoResizeTextarea(); });
+        messageInput.addEventListener('keypress', (e)=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); }});
         sendButton.addEventListener('click', sendMessage);
-
         document.getElementById('clearChatBtn').addEventListener('click', ()=>{
-          if(confirm('Vuoi davvero cancellare la conversazione?')){
+          if(confirm('Vuoi davvero cancellare tutta la conversazione?')){
             conversationHistory=[]; totalTokensUsed=0; tokenCount.textContent='0';
-            [...messagesContainer.querySelectorAll('div')].forEach((el,i)=>{ if(i>0) el.remove(); });
-            showAlert('Chat cancellata!','success');
+            const msgs = messagesContainer.querySelectorAll('.message'); msgs.forEach((msg,i)=>{ if(i>0) msg.remove(); });
+            showAlert('Chat cancellata con successo! ✨','success');
           }
         });
 
         messageInput.focus(); updateSendButton();
         console.log('🤖✨ Virgilio inizializzato!');
-      }catch(e){
-        console.error('Init err:', e);
+      }catch(err){
+        console.error('Errore init:', err);
         showAlert('Errore di inizializzazione. Ricarica la pagina.','error');
       }finally{
-        loading.classList.add('hidden');
+        document.getElementById('loading').classList.add('hidden');
       }
     });
 
-    // Error handlers
-    window.addEventListener('error', e=>{ console.error('Errore JS:', e.error); showAlert('Si è verificato un errore imprevisto','error'); });
-    window.addEventListener('unhandledrejection', e=>{ console.error('Promise rejected:', e.reason); showAlert('Errore di rete o server','error'); });
+    // Global error handlers
+    window.addEventListener('error', (e)=>{ console.error('Errore JS:', e.error); showAlert('Si è verificato un errore imprevisto','error'); });
+    window.addEventListener('unhandledrejection', (e)=>{ console.error('Promise rejected:', e.reason); showAlert('Errore di rete o server','error'); });
   </script>
 </body>
 </html>
