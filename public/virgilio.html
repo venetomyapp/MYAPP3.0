@@ -2,534 +2,442 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Virgilio - MyApp</title>
 
   <!-- Favicon: robottino -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23e94560'/%3E%3Ccircle cx='22' cy='26' r='3' fill='white'/%3E%3Ccircle cx='42' cy='26' r='3' fill='white'/%3E%3Crect x='28' y='35' width='8' height='4' rx='2' fill='white'/%3E%3Cpath d='M20 45 Q32 50 44 45' stroke='white' stroke-width='2' fill='none'/%3E%3Crect x='15' y='12' width='6' height='8' rx='3' fill='%2300d4ff'/%3E%3Crect x='43' y='12' width='6' height='8' rx='3' fill='%2300d4ff'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23e94560'/%3E%3Ccircle cx='22' cy='26' r='4' fill='white'/%3E%3Ccircle cx='42' cy='26' r='4' fill='white'/%3E%3Crect x='26' y='36' width='12' height='5' rx='2.5' fill='white'/%3E%3Crect x='15' y='12' width='6' height='9' rx='3' fill='%2300d4ff'/%3E%3Crect x='43' y='12' width='6' height='9' rx='3' fill='%2300d4ff'/%3E%3C/svg%3E">
 
   <!-- Tailwind (ok per test/dev) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     if (typeof tailwind !== 'undefined') {
       tailwind.config = {
-        theme: { extend: {
-          colors: {
-            primary:'#1a1a2e', secondary:'#16213e', accent:'#0f3460',
-            aurora:'#e94560', cyan:'#00d4ff', magenta:'#ff006e',
-            gold:'#ffd700', teal:'#03dac6', dark:'#0a0a23', light:'#f8fafc'
+        theme: {
+          extend: {
+            colors: {
+              primary: '#1a1a2e',
+              secondary: '#16213e',
+              accent: '#0f3460',
+              aurora: '#e94560',
+              cyan: '#00d4ff',
+              magenta: '#ff006e',
+              gold: '#ffd700',
+              teal: '#03dac6',
+              dark: '#0a0a23',
+              light: '#f8fafc'
+            }
           }
-        }}
+        }
       };
     }
   </script>
 
   <style>
-    :root {
+    :root{
       --gradient-bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
-      --shadow-elevated: 0 8px 25px rgba(0,0,0,.15);
-      --header-height: 60px;
-      --safe-area-top: env(safe-area-inset-top);
-      --safe-area-bottom: env(safe-area-inset-bottom);
+      --shadow-elevated: 0 10px 30px rgba(0,0,0,.18);
+      --header-h: 60px;
+      --safe-top: env(safe-area-inset-top);
+      --safe-bot: env(safe-area-inset-bottom);
     }
-    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:rgba(233,69,96,.3)}
+    *{margin:0; padding:0; box-sizing:border-box}
+    html,body{height:100%}
     body{
-      background:var(--gradient-bg);background-size:400% 400%;
-      animation:gradientShift 30s ease infinite;min-height:100vh;
-      font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,'Roboto',sans-serif;
-      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden
+      background: var(--gradient-bg);
+      background-size: 400% 400%;
+      animation: bgShift 28s ease-in-out infinite;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color:#111827;
+      overflow-x:hidden;
     }
-    @keyframes gradientShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-    .header{background:rgba(255,255,255,.1);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);
-      border-bottom:1px solid rgba(255,255,255,.1);position:sticky;top:0;z-index:40;height:var(--header-height);
-      padding-top:var(--safe-area-top)}
-    .back-button{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;
-      background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;cursor:pointer;transition:.2s}
-    .back-button:hover{background:rgba(255,255,255,.2);border-color:rgba(233,69,96,.5);color:#e94560;transform:translateY(-1px);
-      box-shadow:0 4px 12px rgba(0,0,0,.1)}
-    .back-button:active{transform:scale(.95)}
-    .chat-container{background:#fff;border-radius:20px;box-shadow:var(--shadow-elevated);width:100%;max-width:900px;margin:1rem auto;
-      overflow:hidden;height:calc(100vh - var(--header-height) - var(--safe-area-top) - var(--safe-area-bottom) - 2rem);display:flex;flex-direction:column}
-    .chat-header{background:linear-gradient(135deg,#e94560,#00d4ff);color:#fff;padding:1.5rem;text-align:center;flex-shrink:0}
-    .chat-messages{flex:1;overflow-y:auto;padding:1rem;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
-    .chat-messages::-webkit-scrollbar{width:4px}.chat-messages::-webkit-scrollbar-thumb{background:#e94560;border-radius:2px}
-    .message{margin-bottom:1.1rem;animation:fadeIn .3s ease-out}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-    .message-bot,.message-system{display:flex;align-items:flex-start;gap:.75rem}
-    .message-user{display:flex;align-items:flex-start;gap:.75rem;flex-direction:row-reverse}
-    .avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;min-width:40px}
-    .avatar-bot{background:linear-gradient(135deg,#00d4ff,#03dac6)}.avatar-user{background:linear-gradient(135deg,#e94560,#ff006e)}
-    .avatar-system{background:linear-gradient(135deg,#ffd700,#ff8c00)}
-    .message-content{max-width:75%;padding:1rem 1.25rem;border-radius:16px;font-size:1rem;line-height:1.6}
-    .content-bot{background:#f8f9fa;color:#2d3748;border-bottom-left-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
-    .content-user{background:linear-gradient(135deg,#e94560,#ff006e);color:#fff;border-bottom-right-radius:6px;box-shadow:0 2px 8px rgba(233,69,96,.3)}
-    .content-system{background:linear-gradient(135deg,#ffd700,#ff8c00);color:#fff;border-bottom-left-radius:6px;box-shadow:0 2px 8px rgba(255,215,0,.3)}
-    .message-time{font-size:.75rem;opacity:.7;margin-top:.5rem;font-weight:500}
-    .typing-indicator{display:flex;align-items:center;gap:.75rem;padding:1rem 0}
-    .typing-dots{display:flex;gap:4px;padding:1rem 1.25rem;background:#f8f9fa;border-radius:16px;border-bottom-left-radius:6px}
-    .typing-dot{width:8px;height:8px;background:#6b7280;border-radius:50%;animation:typingBounce 1.5s infinite}
-    .typing-dot:nth-child(2){animation-delay:.3s}.typing-dot:nth-child(3){animation-delay:.6s}
-    @keyframes typingBounce{0%,60%,100%{transform:none}30%{transform:translateY(-10px)}}
-    .chat-input-area{padding:1rem;border-top:1px solid #e5e7eb;background:#f8f9fa;flex-shrink:0;padding-bottom:calc(1rem + var(--safe-area-bottom))}
-    .input-wrapper{display:flex;gap:.75rem;align-items:flex-end}
-    .chat-input{flex:1;border:2px solid #e5e7eb;border-radius:12px;padding:.875rem 1rem;font-size:1rem;resize:none;outline:none;transition:.2s;min-height:48px;max-height:120px}
-    .chat-input:focus{border-color:#e94560;box-shadow:0 0 0 3px rgba(233,69,96,.1)}
-    .send-button{background:linear-gradient(135deg,#e94560,#00d4ff);color:#fff;border:none;border-radius:12px;padding:.75rem;width:48px;height:48px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;min-width:48px}
-    .send-button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 4px 12px rgba(233,69,96,.4)}.send-button:disabled{opacity:.5;cursor:not-allowed}
-    .status-bar{background:#f8f9fa;padding:.75rem 1rem;border-top:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:#6b7280}
-    .status-dot{width:8px;height:8px;border-radius:50%;background:#10b981}.status-dot.disconnected{background:#ef4444}
-    .chip{display:inline-block;margin:.25rem .35rem 0 0;padding:.45rem .75rem;border-radius:9999px;border:1px solid #e5e7eb;background:#fff;font-size:.85rem;font-weight:600;cursor:pointer}
-    .chip:hover{border-color:#e94560;color:#e94560}
-    .cta{display:inline-flex;align-items:center;gap:.4rem;margin-top:.6rem;padding:.55rem .85rem;border-radius:10px;background:linear-gradient(135deg,#e94560,#00d4ff);color:#fff;font-weight:700;text-decoration:none}
-    @media (max-width:768px){.message-content{max-width:86%}.chat-container{height:calc(100vh - var(--header-height) - var(--safe-area-top) - var(--safe-area-bottom) - 1.5rem)}}
-    @media (max-width:480px){.message-content{max-width:90%}.chat-container{margin:.5rem}}
-    @media (prefers-color-scheme:dark){.content-bot{background:#2d3748;color:#e2e8f0}.chat-input-area{background:#1a202c}.status-bar{background:#1a202c;color:#a0aec0}.chat-input{background:#2d3748;color:#e2e8f0;border-color:#4a5568}}
+    @keyframes bgShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+    .header{
+      position: sticky; top:0; z-index:40; height:var(--header-h);
+      padding-top: var(--safe-top);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: rgba(255,255,255,.08);
+      border-bottom: 1px solid rgba(255,255,255,.15);
+    }
+    .back-button{
+      width:42px; height:42px; border-radius:12px;
+      background: rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.25);
+      color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer;
+      transition: transform .15s ease, background .15s ease;
+      user-select:none; -webkit-tap-highlight-color: transparent;
+    }
+    .back-button:hover{ transform: translateY(-1px); background: rgba(255,255,255,.18) }
+
+    .chat-shell{
+      max-width: 980px; width: 100%;
+      margin: 12px auto;
+      padding: 0 10px;
+    }
+    .chat{
+      background: #fff; border-radius: 18px; overflow: hidden; box-shadow: var(--shadow-elevated);
+      display:flex; flex-direction:column; min-height: calc(100vh - var(--header-h) - var(--safe-top) - var(--safe-bot) - 24px);
+    }
+    .chat-head{
+      background: linear-gradient(135deg, #e94560, #00d4ff);
+      color:#fff; padding: 18px 16px; text-align:center;
+    }
+    .chat-log{
+      flex:1; overflow-y:auto; padding: 14px; scroll-behavior:smooth; -webkit-overflow-scrolling:touch;
+    }
+    .chat-log::-webkit-scrollbar{width:6px}
+    .chat-log::-webkit-scrollbar-thumb{background:#e94560; border-radius:3px}
+    .msg{display:flex; gap:10px; margin: 12px 0; animation: fade .2s ease}
+    @keyframes fade{from{opacity:0; transform: translateY(6px)}to{opacity:1; transform:none}}
+    .msg .avatar{
+      width:40px; height:40px; min-width:40px; min-height:40px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center; color:#fff; font-size:18px;
+    }
+    .avatar-bot{ background: linear-gradient(135deg,#00d4ff,#03dac6)}
+    .avatar-user{ background: linear-gradient(135deg,#e94560,#ff006e)}
+    .avatar-sys{ background: linear-gradient(135deg,#ffd700,#ff8c00)}
+    .bubble{
+      max-width: 78%;
+      background:#f8f9fb; border-radius: 14px; padding: 12px 14px; line-height:1.55; font-size: 0.98rem;
+    }
+    .bubble .time{opacity:.65; font-size:.78rem; margin-top:6px}
+    .bubble.user{ background: linear-gradient(135deg,#e94560,#ff006e); color:#fff; border-bottom-right-radius:6px }
+    .bubble.bot{ background:#f8f9fb; color:#1f2937; border-bottom-left-radius:6px }
+    .bubble.sys{ background: linear-gradient(135deg,#ffd700,#ff8c00); color:#fff; border-bottom-left-radius:6px }
+    .row-user{ flex-direction: row-reverse }
+
+    .typing{ display:flex; gap:10px; align-items:center; margin: 6px 0 14px }
+    .dots{ display:flex; gap:5px; background:#f8f9fb; padding:10px 14px; border-radius: 14px; border-bottom-left-radius: 6px }
+    .dot{ width:8px; height:8px; border-radius:50%; background:#9aa3af; animation: bounce 1.3s infinite }
+    .dot:nth-child(2){ animation-delay:.25s } .dot:nth-child(3){ animation-delay:.5s }
+    @keyframes bounce{ 0%,60%,100%{transform:none} 30%{transform: translateY(-8px)} }
+
+    .chat-input{
+      border-top: 1px solid #e5e7eb; background:#f9fafb; padding: 10px; padding-bottom: calc(10px + var(--safe-bot));
+    }
+    .input-wrap{ display:flex; gap:10px; align-items:flex-end }
+    textarea{
+      flex:1; border:2px solid #e5e7eb; border-radius: 12px; padding: 12px;
+      font: inherit; min-height: 48px; max-height: 120px; resize: none; outline: none; background: #fff;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    textarea:focus{ border-color:#e94560; box-shadow: 0 0 0 3px rgba(233,69,96,.12) }
+    .send{
+      width:48px; height:48px; min-width:48px; min-height:48px; border-radius: 12px; border: none; cursor: pointer;
+      background: linear-gradient(135deg, #e94560, #00d4ff); color:#fff; display:flex; align-items:center; justify-content:center;
+      box-shadow: 0 8px 22px rgba(233,69,96,.28); transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .send:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none }
+    .send:not(:disabled):hover{ transform: translateY(-1px) }
+
+    .status{
+      display:flex; justify-content:space-between; align-items:center; font-size:.85rem; color:#6b7280;
+      border-top:1px solid #e5e7eb; background:#f9fafb; padding: 8px 12px;
+    }
+    .dot-status{ width:10px; height:10px; border-radius:50%; background:#10b981 }
+    .dot-status.off{ background:#ef4444 }
+
+    .alert{ margin: 10px; padding: 10px; border-radius: 12px; font-weight: 600 }
+    .alert.error{ background:#fef2f2; color:#b91c1c; border: 1px solid #fecaca }
+    .alert.info{ background:#eef2ff; color:#1d4ed8; border: 1px solid #bfdbfe }
+
+    .cta{ display:inline-block; margin-top:8px; padding: 8px 12px; border-radius: 10px; font-weight:700; text-decoration:none;
+      background: #111827; color:#fff }
+    .cta:hover{ filter:brightness(1.05) }
+
+    @media (max-width: 780px){
+      .bubble{ max-width: 88% }
+      .chat-shell{ padding: 0 6px }
+    }
+    @media (max-width: 480px){
+      :root{ --header-h: 54px }
+      .chat{ border-radius: 14px }
+      .bubble{ font-size: .95rem; padding: 10px 12px }
+      .chat-head{ padding: 14px 10px }
+    }
+    @media (prefers-color-scheme: dark){
+      .chat{ background:#0f172a; color:#e2e8f0 }
+      .chat-head{ background: linear-gradient(135deg,#0ea5e9,#e11d48) }
+      .bubble.bot{ background:#1f2937; color:#e5e7eb }
+      .chat-input{ background:#0b1220; border-top-color:#132036 }
+      textarea{ background:#0f172a; color:#e5e7eb; border-color:#1e293b }
+      .status{ background:#0b1220; border-top-color:#132036; color:#9ca3af }
+      .cta{ background:#e94560 }
+    }
+    *:focus-visible{ outline: 2px solid #e94560; outline-offset: 2px }
   </style>
 </head>
 <body>
   <!-- Header -->
   <header class="header">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+    <div class="max-w-5xl mx-auto px-4 h-full flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <button onclick="history.back()" class="back-button" title="Torna indietro" type="button" aria-label="Torna alla pagina precedente">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        <button class="back-button" onclick="history.back()" title="Torna indietro" aria-label="Torna indietro">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
         </button>
-        <h1 class="text-white font-bold text-lg">Virgilio</h1>
+        <h1 class="text-white font-semibold text-lg">Virgilio</h1>
       </div>
       <div class="flex items-center gap-2">
-        <button id="clearChatBtn" class="action-button text-sm" type="button">🗑️ Pulisci</button>
-        <button onclick="showHelp()" class="action-button text-sm" type="button">❓ Aiuto</button>
+        <button id="clearBtn" class="px-3 py-2 text-sm rounded-md bg-white/10 text-white border border-white/20 hover:bg-white/20">🗑️ Pulisci</button>
+        <button id="helpBtn"  class="px-3 py-2 text-sm rounded-md bg-white/10 text-white border border-white/20 hover:bg-white/20">❓ Aiuto</button>
       </div>
     </div>
   </header>
 
-  <!-- Loading -->
-  <div id="loading" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden" role="status" aria-live="polite">
-    <div class="bg-white rounded-lg p-6 text-center mx-4 max-w-sm">
-      <div class="loading-spinner mx-auto mb-4"></div>
-      <p class="text-gray-700 font-medium">Caricamento Virgilio...</p>
-    </div>
-  </div>
-
-  <!-- Main Chat -->
-  <main class="py-6">
-    <div class="chat-container">
-      <div class="chat-header">
-        <div class="flex items-center justify-center gap-3 mb-2">
-          <div class="w-12 h-12 bg-white/20 rounded-full grid place-items-center text-2xl">🤖</div>
+  <!-- Main -->
+  <main class="chat-shell">
+    <section class="chat" role="application" aria-label="Chat Virgilio">
+      <div class="chat-head">
+        <div class="flex items-center justify-center gap-3">
+          <span class="w-12 h-12 rounded-full bg-white/25 flex items-center justify-center text-2xl">🤖</span>
           <div>
-            <h1 class="text-2xl font-bold">Virgilio</h1>
-            <p class="text-sm opacity-90">Il tuo assistente sindacale AI</p>
+            <div class="text-xl font-bold">Virgilio</div>
+            <div class="opacity-90 text-sm">Assistente sindacale AI • Ricerca web</div>
           </div>
         </div>
-        <div class="text-sm opacity-80">Chiedi informazioni su contratti, diritti e procedure • Ricerca web integrata 🌐</div>
       </div>
 
-      <!-- Alerts -->
-      <div id="alertContainer" aria-live="polite"></div>
+      <div id="alertBox" class="px-3"></div>
 
-      <!-- Messages -->
-      <div id="chatMessages" class="chat-messages" role="log" aria-live="polite" aria-relevant="additions">
-        <div class="message message-bot">
+      <div id="log" class="chat-log" role="log" aria-live="polite">
+        <div class="msg">
           <div class="avatar avatar-bot">🤖</div>
-          <div class="message-content content-bot">
-            <div>
-              Ciao! Sono <strong>Virgilio</strong> ✨, il tuo assistente sindacale AI.
-              <br><br>
-              Posso aiutarti su <em>disciplina</em>, <em>contratti</em>, <em>permessi</em>, <em>concorsi</em>, <em>pensioni</em> e <em>dirigenti sindacali</em>.
-              <br><br>
-              Per i <strong>dirigenti</strong> puoi chiedere:&nbsp;
-              <span class="chip" data-q="dirigenti regionali veneto">Regionali Veneto</span>
-              <span class="chip" data-q="dirigenti provinciali Treviso">Provinciali Treviso</span>
-              <span class="chip" data-q="dirigenti provinciali Verona">Provinciali Verona</span>
-            </div>
-            <div class="message-time">Ora</div>
+          <div class="bubble bot">
+            Ciao! Sono <strong>Virgilio</strong>. Fai una domanda su contratti, diritti, concorsi, disciplina, ferie e molto altro.
+            <div class="time">Ora</div>
           </div>
         </div>
       </div>
 
-      <!-- Typing -->
-      <div id="typingIndicator" class="typing-indicator hidden" aria-hidden="true">
+      <div id="typing" class="typing hidden">
         <div class="avatar avatar-bot">🤖</div>
-        <div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>
+        <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
       </div>
 
-      <!-- Input -->
-      <div class="chat-input-area">
-        <div class="input-wrapper">
-          <textarea id="messageInput" class="chat-input" placeholder="✨ Scrivi la tua domanda..." rows="1" maxlength="500" aria-label="Scrivi il messaggio"></textarea>
-          <button id="sendButton" class="send-button" disabled type="button" aria-label="Invia messaggio">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2m0 0v-8"/></svg>
+      <div class="chat-input">
+        <div class="input-wrap">
+          <textarea id="input" rows="1" maxlength="600" placeholder="✨ Scrivi la tua domanda…"></textarea>
+          <button id="send" class="send" disabled title="Invia" aria-label="Invia">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2L12 3 3 21l9-2zm0-0v-8"/>
+            </svg>
           </button>
         </div>
       </div>
 
-      <!-- Status -->
-      <div class="status-bar">
-        <div class="flex items-center gap-2"><span id="statusDot" class="status-dot"></span><span id="statusText">Connesso</span></div>
-        <div>Token: <span id="tokenCount">0</span> • Caratteri: <span id="charCount">0</span>/500</div>
+      <div class="status">
+        <div class="flex items-center gap-2"><span id="net" class="dot-status"></span><span id="netText">Connesso</span></div>
+        <div class="opacity-80">Token: <span id="tk">0</span> • Caratteri: <span id="cc">0</span>/600</div>
       </div>
-    </div>
+    </section>
   </main>
 
-  <!-- App JS -->
+  <!-- App -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    // ⚙️ Supabase
-    const supabaseUrl = 'https://pvzdilkozpspsnepedqc.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
-    const supabase = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: true, autoRefreshToken: true } });
+    // === CONFIG ===
+    const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON, { auth: { persistSession:true, autoRefreshToken:true } });
 
-    // 🔌 Chatbot API (same-origin su Vercel)
-    const CHATBOT_CONFIG = {
-      apiEndpoint: '/api/chat',
-      apiEndpointLocal: 'http://localhost:3001/api/chat',
-      maxTokens: 650,
-      temperature: 0.3,
-      model: 'gpt-4o-mini',
-      maxHistory: 10,
-      retryAttempts: 3,
-      retryDelay: 900
+    const API_CHAT = '/api/chat';
+    const DIRIGENTI_PAGE = 'https://myapp31-j287nk69t-myapp30s-projects.vercel.app/dirigenti.html';
+
+    // === STATE ===
+    let isBusy = false;
+    let history = [];
+    let totalTokens = 0;
+
+    // === DOM ===
+    const $log = document.getElementById('log');
+    const $input = document.getElementById('input');
+    const $send = document.getElementById('send');
+    const $typing = document.getElementById('typing');
+    const $alert = document.getElementById('alertBox');
+    const $tk = document.getElementById('tk');
+    const $cc = document.getElementById('cc');
+    const $net = document.getElementById('net');
+    const $netText = document.getElementById('netText');
+    const $clear = document.getElementById('clearBtn');
+    const $help = document.getElementById('helpBtn');
+
+    // === UTIL ===
+    const esc = (t) => {
+      const d = document.createElement('div'); d.textContent = t; return d.innerHTML;
     };
+    const fmt = (t) => esc(t).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/\n/g,'<br>');
+    const now = () => new Date().toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'});
 
-    const DIRIGENTI_PAGE = '/dirigenti.html';
-    const VENETO_PROVINCES = ['Belluno','Padova','Rovigo','Treviso','Venezia','Verona','Vicenza'];
+    function setOnline(ok){ $net.classList.toggle('off', !ok); $netText.textContent = ok ? 'Connesso' : 'Offline' }
+    addEventListener('online', ()=>setOnline(true));
+    addEventListener('offline', ()=>setOnline(false));
+    setOnline(navigator.onLine);
 
-    // Stato
-    let currentUser = null;
-    let conversationHistory = [];
-    let isProcessing = false;
-    let totalTokensUsed = 0;
-    let dirigenti = [];
-
-    // DOM
-    const messagesContainer = document.getElementById('chatMessages');
-    const messageInput = document.getElementById('messageInput');
-    const sendButton = document.getElementById('sendButton');
-    const typingIndicator = document.getElementById('typingIndicator');
-    const statusDot = document.getElementById('statusDot');
-    const statusText = document.getElementById('statusText');
-    const tokenCount = document.getElementById('tokenCount');
-    const charCount = document.getElementById('charCount');
-    const alertContainer = document.getElementById('alertContainer');
-
-    // Utils
-    const escapeHtml = (t)=>{ const d=document.createElement('div'); d.textContent=t; return d.innerHTML; };
-    const formatTime = ()=> new Date().toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'});
-    const scrollToBottom = ()=> { messagesContainer.scrollTop = messagesContainer.scrollHeight; };
-    const showTyping = ()=> { typingIndicator.classList.remove('hidden'); scrollToBottom(); };
-    const hideTyping = ()=> { typingIndicator.classList.add('hidden'); };
-
-    function showAlert(message, type='info'){
+    function showAlert(msg, type='info'){
       const el = document.createElement('div');
-      el.className = `alert alert-${type}`;
-      el.textContent = message;
-      alertContainer.appendChild(el);
-      setTimeout(()=> el.remove(), 5000);
-    }
-    function updateConnectionStatus(connected){ if(connected){statusDot.className='status-dot';statusText.textContent='Connesso'} else {statusDot.className='status-dot disconnected';statusText.textContent='Offline'} }
-    function syncOnlineStatus(){ updateConnectionStatus(navigator.onLine); }
-    window.addEventListener('online', syncOnlineStatus);
-    window.addEventListener('offline', syncOnlineStatus);
-    function updateCharCount(){ const c = messageInput.value.length; charCount.textContent=c; charCount.style.color = c>400 ? '#ef4444' : '#6b7280'; }
-    function updateSendButton(){ sendButton.disabled = !(messageInput.value.trim().length>0) || isProcessing; }
-    function autoResizeTextarea(){ messageInput.style.height='auto'; messageInput.style.height = Math.min(messageInput.scrollHeight,120) + 'px'; }
-
-    // Add message
-    function addMessage(content, type='bot', hasWebSearch=false){
-      const m = document.createElement('div');
-      m.className = `message message-${type}`;
-      let badge = (hasWebSearch && type==='bot') ? '<div class="web-search-badge">🌐 Ricerca Web</div>' : '';
-      const inner =
-        type==='user'
-          ? `<div class="avatar avatar-user">👤</div><div class="message-content content-user"><div>${escapeHtml(content)}</div><div class="message-time">${formatTime()}</div></div>`
-          : type==='system'
-              ? `<div class="avatar avatar-system">ℹ️</div><div class="message-content content-system"><div>${content}</div><div class="message-time">${formatTime()}</div></div>`
-              : `<div class="avatar avatar-bot">🤖</div><div class="message-content content-bot">${badge}<div>${content}</div><div class="message-time">${formatTime()}</div></div>`;
-      m.innerHTML = inner;
-      messagesContainer.appendChild(m);
-      scrollToBottom();
+      el.className = `alert ${type}`;
+      el.innerHTML = esc(msg);
+      $alert.appendChild(el);
+      setTimeout(()=> el.remove(), 4500);
     }
 
-    // Quick-replies handler
-    messagesContainer.addEventListener('click', (e)=>{
-      const el = e.target.closest('.chip');
-      if(!el) return;
-      messageInput.value = el.dataset.q || '';
-      updateCharCount(); updateSendButton();
-      if(messageInput.value.trim()) sendMessage();
-    });
+    function addMsg(text, role='bot'){
+      const row = document.createElement('div');
+      row.className = 'msg ' + (role==='user'?'row-user':'');
+      const avatar = document.createElement('div');
+      avatar.className = 'avatar ' + (role==='user'?'avatar-user': role==='system'?'avatar-sys':'avatar-bot');
+      avatar.textContent = role==='user'?'👤' : role==='system'?'ℹ️':'🤖';
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble ' + (role==='user'?'user': role==='system'?'sys':'bot');
+      bubble.innerHTML = `<div>${role==='user'?esc(text):fmt(text)}</div><div class="time">${now()}</div>`;
+      row.appendChild(avatar); row.appendChild(bubble);
+      $log.appendChild(row);
+      $log.scrollTop = $log.scrollHeight;
+    }
 
-    // Dirigenti — caricamento
-    async function loadDirigenti(){
-      try{
-        const { data, error } = await supabase.from('organico_dirigentisindacali').select('*').order('id', { ascending: true });
-        if(error) throw error;
-        dirigenti = data || [];
-        console.log('✅ Dirigenti caricati:', dirigenti.length);
-      }catch(err){
-        console.error('❌ Errore caricamento dirigenti:', err);
-        dirigenti = []; // meglio vuoto: evitiamo vecchi fallback
+    function typing(show){ $typing.classList.toggle('hidden', !show); if(show) $log.scrollTop = $log.scrollHeight; }
+    function updateCounts(){ const c = $input.value.length; $cc.textContent = c; $send.disabled = !c || isBusy }
+
+    // === LOGIN GATE ===
+    async function ensureLoggedIn(){
+      const { data:{ session } } = await supabase.auth.getSession();
+      if(!session){
+        showAlert('Devi effettuare l’accesso per usare Virgilio. Reindirizzamento…', 'error');
+        location.href = '../login.html';
+        throw new Error('Not authenticated');
       }
+      return session;
     }
 
-    // Dirigenti — helpers
-    const telSanitize = (t)=> (t||'').replace(/[^0-9+]/g,'');
-    function matchProvincia(rec, provincia){
-      const p = (provincia||'').toLowerCase();
-      return (rec?.provincia && String(rec.provincia).toLowerCase()===p)
-          || (rec?.ruolo && String(rec.ruolo).toLowerCase().includes(p));
+    // === HARD RULE: richieste "dirigenti" -> link e basta ===
+    function isDirigentiQuery(text){
+      return /dirigent/i.test(text) || /(contatti|referenti).*(sindacal|dirigent)/i.test(text);
     }
-    function isRegionale(rec){
-      const r = (rec?.ruolo||'').toLowerCase();
-      return r.includes('regionale');
-    }
-    function renderDirigentiList(list, titolo){
-      if(!list || !list.length){
-        return `<strong>${escapeHtml(titolo)}</strong><br><br>Nessun nominativo trovato al momento. Prova un’altra provincia oppure apri la pagina completa dei dirigenti.<br><a href="${DIRIGENTI_PAGE}" class="cta" target="_blank" rel="noopener">Apri pagina dirigenti</a>`;
-      }
-      const rows = list.map(d=>{
-        const nome = escapeHtml(d.nome_cognome||'—');
-        const ruolo = escapeHtml(d.ruolo||'');
-        const email = escapeHtml(d.email||'');
-        const tel = telSanitize(d.telefono||'');
-        const telHref = tel ? `tel:${tel}` : '#';
-        const emailHref = email ? `mailto:${email}` : '#';
-        return `• <strong>${nome}</strong> — ${ruolo}` +
-               (email ? ` — <a href="${emailHref}">${email}</a>` : '') +
-               (tel ? ` — <a href="${telHref}">${tel}</a>` : '');
-      }).join('<br><br>');
-      return `<strong>${escapeHtml(titolo)}</strong><br><br>${rows}<br><br><a href="${DIRIGENTI_PAGE}" class="cta" target="_blank" rel="noopener">Vedi tutti i dirigenti</a>`;
+    function answerWithDirigentiLink(){
+      const msg = `Per l’elenco aggiornato dei dirigenti visita la pagina ufficiale:<br>
+      <a class="cta" href="${DIRIGENTI_PAGE}" target="_blank" rel="noopener">Apri la pagina Dirigenti</a>`;
+      addMsg(msg, 'system');
     }
 
-    // Intent parser per dirigenti
-    function parseDirigentiIntent(text){
-      const t = (text||'').toLowerCase();
-      if(!/dirigent|contatti.*dirigent/i.test(t)) return null;
+    // === SEND ===
+    async function send(){
+      const text = $input.value.trim();
+      if(!text || isBusy) return;
 
-      const inVeneto = /veneto/.test(t);
-      const wantReg = /regional/i.test(t);
-      const wantProv = /provincial/i.test(t);
+      isBusy = true; updateCounts();
 
-      // cerca provincia Veneto
-      let provincia = null;
-      for(const p of VENETO_PROVINCES){
-        if (t.includes(p.toLowerCase())) { provincia = p; break; }
+      addMsg(text, 'user');
+      history.push({ role:'user', content:text });
+      $input.value=''; updateCounts();
+
+      // Se è una richiesta sui dirigenti → rispondi solo con il link e STOP
+      if (isDirigentiQuery(text)) {
+        answerWithDirigentiLink();
+        isBusy = false; updateCounts(); return;
       }
 
-      // default region = Veneto se menzionata
-      const regione = inVeneto ? 'Veneto' : null;
-
-      // logica:
-      //  - se specifica "regionali" -> regionali regione (se regione non indicata ma cita veneto -> Veneto)
-      //  - se specifica "provinciali + provincia" -> provinciali di quella provincia
-      //  - se dice solo "dirigenti veneto" ma non specifica -> chiedi chiarimento naturale
-      //  - se dice solo "dirigenti" -> chiedi chiarimento
-      if (wantReg && regione) return { type:'regionale', regione };
-      if (wantProv && provincia) return { type:'provinciale', provincia, regione: 'Veneto' };
-
-      // ambiguo: niente livello oppure livello provinciale ma senza provincia
-      return { type:'ask', regione: regione||'Veneto' };
-    }
-
-    function askDirigentiClarification(regione='Veneto'){
-      const chips = [
-        `<span class="chip" data-q="dirigenti regionali ${regione.toLowerCase()}">Regionali ${regione}</span>`
-      ].concat(VENETO_PROVINCES.map(p=>`<span class="chip" data-q="dirigenti provinciali ${p}">${p}</span>`)).join(' ');
-      const msg =
-        `Vuoi vedere i dirigenti <strong>regionali</strong> del ${regione} oppure quelli <strong>provinciali</strong>?` +
-        `<br><small>Scegli una delle opzioni qui sotto:</small><br>${chips}` +
-        `<br><a href="${DIRIGENTI_PAGE}" class="cta" target="_blank" rel="noopener">Apri pagina dirigenti</a>`;
-      addMessage(msg,'system');
-    }
-
-    function handleDirigentiQuery(q){
-      const intent = parseDirigentiIntent(q);
-      if(!intent) return false; // non è richiesta dirigenti → lascia al backend
-
-      if(intent.type==='regionale'){
-        const list = (dirigenti||[]).filter(isRegionale);
-        addMessage(renderDirigentiList(list, `Dirigenti — ${intent.regione} (regionali)`), 'system');
-        return true;
-      }
-
-      if(intent.type==='provinciale'){
-        const list = (dirigenti||[]).filter(r => matchProvincia(r, intent.provincia) && !isRegionale(r));
-        addMessage(renderDirigentiList(list, `Dirigenti — ${intent.provincia} (provinciali)`), 'system');
-        return true;
-      }
-
-      // ask
-      askDirigentiClarification(intent.regione);
-      return true;
-    }
-
-    // Auth
-    async function verificaAutenticazione(){
+      typing(true);
       try{
         const { data:{ session } } = await supabase.auth.getSession();
-        if(!session){
-          console.log('❌ Nessuna sessione attiva');
-          window.location.href = '../login.html';
-          return null;
-        }
-        console.log('✅ Utente autenticato:', session.user.email);
-        return session.user;
-      }catch(err){
-        console.error('❌ Errore verifica auth:', err);
-        window.location.href = '../login.html';
-        return null;
-      }
-    }
-
-    // Help
-    window.showHelp = function(){
-      const help =
-        '🆘 <strong>Aiuto Virgilio</strong><br><br>'+
-        'Posso darti contatti dei dirigenti, spiegarti disciplina, ferie, malattia, concorsi e pensioni.<br><br>'+
-        'Per i dirigenti prova una scorciatoia:<br>'+
-        VENETO_PROVINCES.map(p=>`<span class="chip" data-q="dirigenti provinciali ${p}">${p}</span>`).join(' ')+
-        `<br><a href="${DIRIGENTI_PAGE}" class="cta" target="_blank" rel="noopener">Pagina dirigenti</a>`;
-      addMessage(help,'system');
-    };
-
-    async function tentaRefreshSessione(){
-      try{ const { data, error } = await supabase.auth.refreshSession(); if(error) throw error; return data?.session; }catch{ return null; }
-    }
-
-    // Send
-    async function sendMessage(){
-      const message = messageInput.value.trim();
-      if(!message || isProcessing) return;
-
-      isProcessing = true; updateSendButton();
-      addMessage(message,'user');
-      conversationHistory.push({ role:'user', content: message });
-      messageInput.value=''; updateCharCount(); updateSendButton(); autoResizeTextarea();
-
-      // 1) Shortcut locale dirigenti (logica naturale)
-      if (handleDirigentiQuery(message)) {
-        isProcessing=false; updateSendButton(); return;
-      }
-
-      // 2) Backend
-      showTyping();
-      try{
-        let { data:{ session } } = await supabase.auth.getSession();
         if(!session) throw new Error('Sessione scaduta');
 
-        const apiEndpoint = (location.hostname==='localhost'||location.hostname==='127.0.0.1') ? CHATBOT_CONFIG.apiEndpointLocal : CHATBOT_CONFIG.apiEndpoint;
-
-        const needsWebSearch = /(?:\bultim[eaie]\b|\bnews\b|aggiornamenti|oggi|attuale|corrente|novit[àa]|contratto 2025|aumenti|stipendio 2025)/i.test(message);
-
-        const requestBody = {
-          messages: conversationHistory.slice(-CHATBOT_CONFIG.maxHistory),
-          model: CHATBOT_CONFIG.model,
-          max_tokens: CHATBOT_CONFIG.maxTokens,
-          temperature: CHATBOT_CONFIG.temperature,
-          system_context: 'Sei Virgilio, assistente AI del Sindacato Carabinieri. Rispondi in modo chiaro e cita le fonti.',
-          enable_web_search: needsWebSearch,
-          web_search_query: needsWebSearch ? message : null
+        const payload = {
+          messages: history.slice(-12),
+          model: 'gpt-4o-mini',
+          max_tokens: 650,
+          temperature: 0.3,
+          system_context: 'Sei Virgilio, assistente sindacale. Rispondi in italiano in modo chiaro, cita fonti ufficiali quando presenti.'
         };
 
-        let lastError = null;
-        for(let attempt=0; attempt<CHATBOT_CONFIG.retryAttempts; attempt++){
-          try{
-            const resp = await fetch(apiEndpoint, {
-              method:'POST',
-              headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+session.access_token },
-              body: JSON.stringify(requestBody)
-            });
-
-            if(resp.status===401 && attempt<CHATBOT_CONFIG.retryAttempts-1){
-              const refreshed = await tentaRefreshSessione();
-              if(refreshed){ session = refreshed; continue; }
-            }
-
-            if(!resp.ok){
-              let msg = 'HTTP '+resp.status;
-              try{ const j = await resp.json(); if(j && j.error) msg = j.error; }catch(_){}
-              throw new Error(msg);
-            }
-
-            const data = await resp.json();
-            const botResponse = data?.choices?.[0]?.message?.content || 'Nessuna risposta.';
-            const hasWebSearch = !!data.web_search_performed;
-
-            addMessage(botResponse,'bot',hasWebSearch);
-            conversationHistory.push({ role:'assistant', content: botResponse });
-
-            if(data.usage){ totalTokensUsed += (data.usage.total_tokens || 0); tokenCount.textContent = totalTokensUsed.toLocaleString(); }
-            lastError = null; break;
-          }catch(err){
-            lastError = err;
-            if(attempt < CHATBOT_CONFIG.retryAttempts-1){
-              await new Promise(r=>setTimeout(r, CHATBOT_CONFIG.retryDelay*(attempt+1)));
-            }
-          }
-        }
-        if(lastError) throw lastError;
-        syncOnlineStatus();
-      }catch(err){
-        console.error('Errore invio:', err);
-        conversationHistory.pop();
-        let msg = 'Errore di connessione';
-        if(/scadut/i.test(err.message)) msg = 'Sessione scaduta, riaccedi';
-        else if(/invalid|expired|401/i.test(err.message)) msg = 'Token non valido o scaduto';
-        else if(/network|fetch/i.test(err.message)) msg = 'Problema di rete, riprova';
-        else if(/500/.test(err.message)) msg = 'Servizio temporaneamente non disponibile';
-        else if(err.message) msg = err.message;
-        showAlert(msg,'error'); syncOnlineStatus();
-      }finally{
-        hideTyping();
-        isProcessing=false; updateSendButton(); messageInput.focus();
-      }
-    }
-
-    // Check proxy
-    async function checkProxy(){
-      try{
-        const r = await fetch('/api/chat',{method:'OPTIONS'});
-        if(r.status!==200 && r.status!==405){ showAlert('Attenzione: /api/chat non è raggiungibile ('+r.status+').','error'); }
-      }catch{ showAlert('Impossibile contattare /api/chat (controlla il deploy).','error'); }
-    }
-
-    // Init
-    document.addEventListener('DOMContentLoaded', async ()=>{
-      document.getElementById('loading').classList.remove('hidden');
-      try{
-        syncOnlineStatus();
-        await checkProxy();
-        currentUser = await verificaAutenticazione();
-        if(!currentUser) return;
-
-        await loadDirigenti();
-
-        messageInput.addEventListener('input', ()=>{ updateCharCount(); updateSendButton(); autoResizeTextarea(); });
-        messageInput.addEventListener('keypress', (e)=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); }});
-        sendButton.addEventListener('click', sendMessage);
-        document.getElementById('clearChatBtn').addEventListener('click', ()=>{
-          if(confirm('Vuoi davvero cancellare tutta la conversazione?')){
-            conversationHistory=[]; totalTokensUsed=0; tokenCount.textContent='0';
-            const msgs = messagesContainer.querySelectorAll('.message'); msgs.forEach((msg,i)=>{ if(i>0) msg.remove(); });
-            showAlert('Chat cancellata con successo! ✨','success');
-          }
+        const r = await fetch(API_CHAT, {
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json',
+            'Authorization':'Bearer ' + session.access_token
+          },
+          body: JSON.stringify(payload)
         });
 
-        messageInput.focus(); updateSendButton();
-        console.log('🤖✨ Virgilio inizializzato!');
-      }catch(err){
-        console.error('Errore init:', err);
-        showAlert('Errore di inizializzazione. Ricarica la pagina.','error');
+        if(!r.ok){
+          let msg = 'Errore server ('+r.status+')';
+          try{ const j = await r.json(); if(j?.error) msg = j.error }catch{}
+          throw new Error(msg);
+        }
+        const j = await r.json();
+        const content = j?.choices?.[0]?.message?.content || 'Nessuna risposta.';
+        addMsg(content, 'bot');
+        history.push({ role:'assistant', content });
+
+        if (j?.usage?.total_tokens){ totalTokens += j.usage.total_tokens; $tk.textContent = totalTokens.toLocaleString('it-IT') }
+      }catch(e){
+        console.error(e);
+        showAlert(e.message || 'Errore di rete', 'error');
       }finally{
-        document.getElementById('loading').classList.add('hidden');
+        typing(false);
+        isBusy = false; updateCounts(); $input.focus();
       }
+    }
+
+    // === INIT ===
+    document.addEventListener('DOMContentLoaded', async () => {
+      try{
+        await ensureLoggedIn();
+      }catch{ return }
+
+      // wire
+      $input.addEventListener('input', ()=>{
+        // autoresize
+        $input.style.height = 'auto';
+        $input.style.height = Math.min($input.scrollHeight, 120) + 'px';
+        updateCounts();
+      });
+      $input.addEventListener('keydown', e=>{
+        if(e.key === 'Enter' && !e.shiftKey){
+          e.preventDefault();
+          send();
+        }
+      });
+      $send.addEventListener('click', send);
+
+      $clear.addEventListener('click', ()=>{
+        if(confirm('Vuoi cancellare la conversazione?')){
+          history = []; totalTokens = 0; $tk.textContent = '0';
+          [...$log.querySelectorAll('.msg')].slice(1).forEach(n=>n.remove()); // lascia il messaggio di benvenuto
+          showAlert('Chat cancellata ✅','info');
+        }
+      });
+
+      $help.addEventListener('click', ()=>{
+        addMsg(
+          'Suggerimenti: chiedi su ferie, malattia, disciplina, concorsi, pensioni, TULPS, CdS, COM/TUOM. ' +
+          'Per l’elenco dirigenti usa: “dirigenti veneto”, “dirigenti Treviso”, ecc. ' +
+          'Ti risponderò con il link ufficiale alla pagina Dirigenti.',
+          'system'
+        );
+      });
+
+      // ping rapido del proxy (facoltativo)
+      try {
+        const opt = await fetch(API_CHAT, { method:'OPTIONS' });
+        if (opt.status !== 200 && opt.status !== 405) {
+          showAlert('Attenzione: /api/chat non è raggiungibile ('+opt.status+').', 'error');
+        }
+      } catch {
+        showAlert('Impossibile contattare /api/chat (controlla il deploy).', 'error');
+      }
+
+      $input.focus(); updateCounts();
+      console.log('🤖✨ Virgilio pronto.');
     });
 
-    // Global error handlers
-    window.addEventListener('error', (e)=>{ console.error('Errore JS:', e.error); showAlert('Si è verificato un errore imprevisto','error'); });
-    window.addEventListener('unhandledrejection', (e)=>{ console.error('Promise rejected:', e.reason); showAlert('Errore di rete o server','error'); });
+    // error surfaces
+    addEventListener('error', (e)=>{ console.error(e.error || e.message); showAlert('Si è verificato un errore inatteso','error') });
+    addEventListener('unhandledrejection', (e)=>{ console.error(e.reason); showAlert('Errore di rete o server','error') });
   </script>
 </body>
 </html>
