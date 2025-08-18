@@ -1,521 +1,344 @@
-// api/sync/discover-kdrive.js - Enhanced version con debugging migliorato
+// api/sync/discover-kdrive.js - WebDAV REALE per accesso file veri
 
 const KDRIVE_SHARE_URL = 'https://kdrive.infomaniak.com/app/share/1781004/feb4c14d-870c-48be-b6d3-46e9b6f94be8';
 const KDRIVE_ID = '1781004';
 const SHARE_ID = 'feb4c14d-870c-48be-b6d3-46e9b6f94be8';
 
-// Test di accessibilità base del link
-async function testKDriveAccessibility() {
-  console.log('🔬 === TESTING kDrive ACCESSIBILITY ===');
-  
+// WebDAV URLs per accesso reale ai file
+const KDRIVE_WEBDAV_URL = `https://${KDRIVE_ID}.connect.kdrive.infomaniak.com/`;
+
+// Accesso WebDAV con credenziali reali
+async function getKDriveViaWebDAVReal() {
   try {
-    // Test 1: HEAD request per vedere se il link risponde
-    console.log('🔬 Test 1: HEAD request...');
-    const headResponse = await fetch(KDRIVE_SHARE_URL, { 
-      method: 'HEAD',
+    console.log('🔗 === ACCESSO WEBDAV REALE ===');
+    console.log('🔗 URL WebDAV:', KDRIVE_WEBDAV_URL);
+    
+    // Le credenziali devono essere fornite dall'utente
+    // Queste dovrebbero essere configurate come variabili d'ambiente
+    const email = process.env.KDRIVE_EMAIL;
+    const password = process.env.KDRIVE_PASSWORD;
+    
+    if (!email || !password) {
+      console.log('⚠️ Credenziali kDrive mancanti!');
+      console.log('💡 Aggiungi queste variabili ENV in Vercel:');
+      console.log('   KDRIVE_EMAIL=tuo-email@example.com');
+      console.log('   KDRIVE_PASSWORD=tua-password');
+      console.log('   (o KDRIVE_APP_PASSWORD se hai 2FA attivo)');
+      
+      throw new Error('Credenziali kDrive mancanti - configura KDRIVE_EMAIL e KDRIVE_PASSWORD');
+    }
+    
+    console.log(`🔐 Using WebDAV credentials: ${email.substring(0, 3)}***`);
+    
+    // Codifica credenziali per autenticazione Basic
+    const credentials = Buffer.from(`${email}:${password}`).toString('base64');
+    
+    // PROPFIND request per ottenere lista file
+    const response = await fetch(KDRIVE_WEBDAV_URL, {
+      method: 'PROPFIND',
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-      }
+        'Authorization': `Basic ${credentials}`,
+        'Depth': '1',
+        'Content-Type': 'application/xml; charset=utf-8',
+        'User-Agent': 'Virgilio-RAG/2.0'
+      },
+      body: `<?xml version="1.0" encoding="utf-8"?>
+        <d:propfind xmlns:d="DAV:">
+          <d:prop>
+            <d:displayname/>
+            <d:getcontentlength/>
+            <d:getcontenttype/>
+            <d:resourcetype/>
+            <d:getlastmodified/>
+          </d:prop>
+        </d:propfind>`
     });
     
-    console.log(`📡 HEAD Response: ${headResponse.status} ${headResponse.statusText}`);
-    console.log('📡 HEAD Headers:', Object.fromEntries(headResponse.headers.entries()));
+    console.log(`📡 WebDAV Response: ${response.status} ${response.statusText}`);
     
-    // Test 2: OPTIONS request per CORS
-    console.log('🔬 Test 2: OPTIONS request (CORS check)...');
-    try {
-      const optionsResponse = await fetch(KDRIVE_SHARE_URL, { 
-        method: 'OPTIONS',
-        headers: {
-          'Origin': 'https://myapp31.vercel.app',
-          'Access-Control-Request-Method': 'GET'
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error('Credenziali kDrive non valide - verifica email/password');
+      } else if (response.status === 403) {
+        throw new Error('Accesso kDrive negato - verifica permessi account');
+      } else {
+        throw new Error(`WebDAV error: ${response.status} ${response.statusText}`);
+      }
+    }
+    
+    const xmlText = await response.text();
+    console.log('✅ WebDAV XML ricevuto');
+    console.log(`📄 XML length: ${xmlText.length} characters`);
+    
+    // Parse XML per estrarre file PDF/DOC
+    const files = [];
+    
+    // Pattern XML per file e cartelle
+    const responsePattern = /<d:response>(.*?)<\/d:response>/gis;
+    let responseMatch;
+    
+    while ((responseMatch = responsePattern.exec(xmlText)) !== null) {
+      const responseContent = responseMatch[1];
+      
+      // Estrai nome file
+      const nameMatch = responseContent.match(/<d:displayname>([^<]+)<\/d:displayname>/i);
+      if (!nameMatch) continue;
+      
+      const fileName = nameMatch[1];
+      
+      // Controlla se è una cartella
+      const isFolder = responseContent.includes('<d:collection/>') || 
+                      responseContent.includes('<d:resourcetype><d:collection/></d:resourcetype>');
+      
+      if (isFolder) {
+        console.log(`📁 Folder found: ${fileName}`);
+        
+        // Se è una cartella, esplora ricorsivamente
+        if (fileName !== '.' && fileName !== '..' && fileName !== '') {
+          try {
+            const folderFiles = await exploreKDriveFolder(fileName, credentials);
+            files.push(...folderFiles);
+          } catch (folderError) {
+            console.warn(`⚠️ Cannot explore folder ${fileName}:`, folderError.message);
+          }
         }
-      });
-      console.log(`📡 OPTIONS Response: ${optionsResponse.status}`);
-      console.log('📡 CORS Headers:', {
-        'access-control-allow-origin': optionsResponse.headers.get('access-control-allow-origin'),
-        'access-control-allow-methods': optionsResponse.headers.get('access-control-allow-methods')
-      });
-    } catch (corsError) {
-      console.log('❌ OPTIONS failed:', corsError.message);
-    }
-    
-    // Test 3: Basic GET request
-    console.log('🔬 Test 3: Basic GET request...');
-    const getResponse = await fetch(KDRIVE_SHARE_URL, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      } else {
+        // È un file - controlla se è PDF/DOC
+        if (/\.(pdf|docx?)$/i.test(fileName)) {
+          console.log(`📄 File found: ${fileName}`);
+          
+          // Estrai dimensione file
+          const sizeMatch = responseContent.match(/<d:getcontentlength>(\d+)<\/d:getcontentlength>/i);
+          const fileSize = sizeMatch ? parseInt(sizeMatch[1]) : 0;
+          
+          // Estrai tipo contenuto
+          const typeMatch = responseContent.match(/<d:getcontenttype>([^<]+)<\/d:getcontenttype>/i);
+          const contentType = typeMatch ? typeMatch[1] : '';
+          
+          // Estrai data modifica
+          const dateMatch = responseContent.match(/<d:getlastmodified>([^<]+)<\/d:getlastmodified>/i);
+          const lastModified = dateMatch ? dateMatch[1] : '';
+          
+          files.push({
+            name: fileName,
+            extension: fileName.split('.').pop().toLowerCase(),
+            size: fileSize,
+            content_type: contentType,
+            last_modified: lastModified,
+            discovered_at: new Date().toISOString(),
+            status: 'discovered',
+            source: 'kdrive_webdav_real',
+            webdav_url: `${KDRIVE_WEBDAV_URL}${encodeURIComponent(fileName)}`
+          });
+        }
       }
-    });
-    
-    console.log(`📡 GET Response: ${getResponse.status} ${getResponse.statusText}`);
-    console.log('📡 Content-Type:', getResponse.headers.get('content-type'));
-    console.log('📡 Content-Length:', getResponse.headers.get('content-length'));
-    
-    if (getResponse.ok) {
-      const responseText = await getResponse.text();
-      console.log(`📄 Response length: ${responseText.length} characters`);
-      
-      // Analisi rapida del contenuto
-      const hasHtml = responseText.includes('<html') || responseText.includes('<!DOCTYPE');
-      const hasKDrive = responseText.toLowerCase().includes('kdrive');
-      const hasFiles = responseText.toLowerCase().includes('file');
-      const hasAuth = responseText.toLowerCase().includes('auth') || responseText.toLowerCase().includes('login');
-      const hasJS = (responseText.match(/<script/gi) || []).length;
-      
-      console.log('🔍 Content Analysis:');
-      console.log(`   HTML document: ${hasHtml}`);
-      console.log(`   Contains "kdrive": ${hasKDrive}`);
-      console.log(`   Contains "file": ${hasFiles}`);
-      console.log(`   Requires auth: ${hasAuth}`);
-      console.log(`   JavaScript tags: ${hasJS}`);
-      
-      return {
-        accessible: true,
-        content: responseText,
-        requiresAuth: hasAuth,
-        hasJavaScript: hasJS > 0,
-        contentLength: responseText.length
-      };
-    } else {
-      return {
-        accessible: false,
-        status: getResponse.status,
-        statusText: getResponse.statusText
-      };
     }
+    
+    console.log(`✅ WebDAV real access successful: ${files.length} files found`);
+    if (files.length > 0) {
+      console.log('📂 Real files from kDrive:');
+      files.forEach(file => console.log(`   - ${file.name} (${file.size} bytes)`));
+    }
+    
+    return files;
     
   } catch (error) {
-    console.error('❌ Accessibility test failed:', error);
-    return {
-      accessible: false,
-      error: error.message
-    };
+    console.error('❌ WebDAV real access failed:', error);
+    throw error;
   }
 }
 
-// Parsing HTML migliorato con pattern specifici per kDrive
-async function getKDriveSharedFiles() {
+// Esplora cartella specifica via WebDAV
+async function exploreKDriveFolder(folderName, credentials) {
   try {
-    console.log('🔍 === METODO 1: HTML PARSING (Enhanced) ===');
+    console.log(`🔍 Exploring folder: ${folderName}`);
     
-    // Prima, test di accessibilità
-    const accessTest = await testKDriveAccessibility();
+    const folderUrl = `${KDRIVE_WEBDAV_URL}${encodeURIComponent(folderName)}/`;
     
-    if (!accessTest.accessible) {
-      throw new Error(`kDrive not accessible: ${accessTest.error || accessTest.status}`);
+    const response = await fetch(folderUrl, {
+      method: 'PROPFIND',
+      headers: {
+        'Authorization': `Basic ${credentials}`,
+        'Depth': '1',
+        'Content-Type': 'application/xml; charset=utf-8'
+      },
+      body: `<?xml version="1.0" encoding="utf-8"?>
+        <d:propfind xmlns:d="DAV:">
+          <d:prop>
+            <d:displayname/>
+            <d:getcontentlength/>
+            <d:getcontenttype/>
+            <d:resourcetype/>
+          </d:prop>
+        </d:propfind>`
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Folder access failed: ${response.status}`);
     }
     
-    const html = accessTest.content;
-    console.log('✅ kDrive page accessible, analyzing content...');
-    
-    if (accessTest.requiresAuth) {
-      console.log('⚠️ Page seems to require authentication (found auth/login keywords)');
-    }
-    
-    if (accessTest.hasJavaScript) {
-      console.log('⚠️ Page uses heavy JavaScript (dynamic content loading likely)');
-    }
-    
+    const xmlText = await response.text();
     const files = [];
     
-    // Pattern specifici per kDrive Infomaniak
-    const kdrivePatterns = [
-      // Infomaniak-specific patterns
+    const responsePattern = /<d:response>(.*?)<\/d:response>/gis;
+    let responseMatch;
+    
+    while ((responseMatch = responsePattern.exec(xmlText)) !== null) {
+      const responseContent = responseMatch[1];
+      
+      const nameMatch = responseContent.match(/<d:displayname>([^<]+)<\/d:displayname>/i);
+      if (!nameMatch) continue;
+      
+      const fileName = nameMatch[1];
+      const isFolder = responseContent.includes('<d:collection/>');
+      
+      if (!isFolder && /\.(pdf|docx?)$/i.test(fileName)) {
+        const sizeMatch = responseContent.match(/<d:getcontentlength>(\d+)<\/d:getcontentlength>/i);
+        const fileSize = sizeMatch ? parseInt(sizeMatch[1]) : 0;
+        
+        console.log(`📄 File in ${folderName}: ${fileName} (${fileSize} bytes)`);
+        
+        files.push({
+          name: fileName,
+          extension: fileName.split('.').pop().toLowerCase(),
+          size: fileSize,
+          folder: folderName,
+          discovered_at: new Date().toISOString(),
+          status: 'discovered',
+          source: 'kdrive_webdav_folder',
+          webdav_url: `${KDRIVE_WEBDAV_URL}${encodeURIComponent(folderName)}/${encodeURIComponent(fileName)}`
+        });
+      }
+    }
+    
+    return files;
+    
+  } catch (error) {
+    console.error(`❌ Error exploring folder ${folderName}:`, error);
+    return [];
+  }
+}
+
+// Fallback: tentativi con link pubblico (per compatibilità)
+async function getKDrivePublicLinkFallback() {
+  try {
+    console.log('🔄 === FALLBACK: PUBLIC LINK PARSING ===');
+    console.log('⚠️ Trying public link as fallback...');
+    
+    const response = await fetch(KDRIVE_SHARE_URL, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Public link failed: ${response.status}`);
+    }
+    
+    const html = await response.text();
+    console.log(`📄 Public page fetched: ${html.length} characters`);
+    
+    // Cerca file patterns nel HTML
+    const files = [];
+    const patterns = [
+      /"name"\s*:\s*"([^"]*\.(?:pdf|docx?))"/gi,
       /"fileName"\s*:\s*"([^"]*\.(?:pdf|docx?))"/gi,
-      /"name"\s*:\s*"([^"]*\.(?:pdf|docx?))"[^}]*"isFile"\s*:\s*true/gi,
-      /"title"\s*:\s*"([^"]*\.(?:pdf|docx?))"/gi,
-      
-      // Vue.js patterns (kDrive usa Vue)
-      /:name\s*=\s*["']([^"']*\.(?:pdf|docx?))["']/gi,
-      /v-bind:title\s*=\s*["']([^"']*\.(?:pdf|docx?))["']/gi,
-      
-      // Generic JSON patterns
-      /"filename"\s*:\s*"([^"]*\.(?:pdf|docx?))"/gi,
-      /"file_name"\s*:\s*"([^"]*\.(?:pdf|docx?))"/gi,
-      
-      // HTML attributes
-      /data-filename\s*=\s*["']([^"']*\.(?:pdf|docx?))["']/gi,
-      /title\s*=\s*["']([^"']*\.(?:pdf|docx?))["']/gi,
-      
-      // Text content
-      />([^<]*\.(?:pdf|docx?))</gi
+      /title\s*=\s*["']([^"']*\.(?:pdf|docx?))["']/gi
     ];
     
-    console.log(`🔍 Testing ${kdrivePatterns.length} kDrive-specific patterns...`);
-    
-    // Cerca con pattern specifici
-    for (let i = 0; i < kdrivePatterns.length; i++) {
-      const pattern = kdrivePatterns[i];
-      let matchCount = 0;
+    for (const pattern of patterns) {
       let match;
-      
-      pattern.lastIndex = 0;
-      
       while ((match = pattern.exec(html)) !== null) {
-        let filename = match[1];
-        matchCount++;
-        
-        if (filename && filename.length > 3 && filename.length < 200 && 
-            !files.some(f => f.name === filename)) {
-          console.log(`📄 Found file (pattern ${i+1}): ${filename}`);
+        const filename = match[1];
+        if (!files.some(f => f.name === filename)) {
           files.push({
             name: filename,
             extension: filename.split('.').pop().toLowerCase(),
             discovered_at: new Date().toISOString(),
             status: 'discovered',
-            source: 'kdrive_html_parsing',
-            pattern_used: i + 1
+            source: 'kdrive_public_fallback'
           });
         }
       }
-      
-      console.log(`   Pattern ${i+1}: ${matchCount} matches`);
     }
     
-    // Se non trova nulla, cerca nei tag script
-    if (files.length === 0) {
-      console.log('🔍 No files found with patterns, searching in script tags...');
-      
-      const scriptRegex = /<script[^>]*>(.*?)<\/script>/gis;
-      let scriptMatch;
-      let scriptIndex = 0;
-      
-      while ((scriptMatch = scriptRegex.exec(html)) !== null) {
-        scriptIndex++;
-        const scriptContent = scriptMatch[1];
-        
-        console.log(`🔍 Analyzing script tag ${scriptIndex} (${scriptContent.length} chars)...`);
-        
-        // Cerca file JSON nei script
-        const filePatterns = [
-          /"name"\s*:\s*"([^"]*\.(?:pdf|docx?))"/gi,
-          /"fileName"\s*:\s*"([^"]*\.(?:pdf|docx?))"/gi,
-          /"filename"\s*:\s*"([^"]*\.(?:pdf|docx?))"/gi
-        ];
-        
-        for (const pattern of filePatterns) {
-          let match;
-          while ((match = pattern.exec(scriptContent)) !== null) {
-            const filename = match[1];
-            if (!files.some(f => f.name === filename)) {
-              console.log(`📄 Found in script ${scriptIndex}: ${filename}`);
-              files.push({
-                name: filename,
-                extension: filename.split('.').pop().toLowerCase(),
-                discovered_at: new Date().toISOString(),
-                status: 'discovered',
-                source: 'kdrive_script_parsing'
-              });
-            }
-          }
-        }
-      }
+    if (files.length > 0) {
+      console.log(`✅ Public fallback found ${files.length} files`);
+      return files;
     }
     
-    console.log(`✅ HTML parsing completed: ${files.length} files found`);
-    return files;
+    throw new Error('No files found in public link');
     
   } catch (error) {
-    console.error('❌ HTML parsing failed:', error);
-    
-    // Analisi dell'errore
-    if (error.message.includes('CORS')) {
-      console.log('💡 CORS Issue detected - kDrive blocks cross-origin requests');
-    } else if (error.message.includes('401') || error.message.includes('403')) {
-      console.log('💡 Authentication required - kDrive share may be private');
-    } else if (error.message.includes('404')) {
-      console.log('💡 Share not found - URL may be invalid or expired');
-    }
-    
-    throw error;
-  }
-}
-
-// API calls migliorati
-async function getKDriveViaAPI() {
-  try {
-    console.log('🌐 === METODO 2: API CALLS (Enhanced) ===');
-    
-    const kdriveInfo = parseKDriveUrl(KDRIVE_SHARE_URL);
-    if (!kdriveInfo) {
-      throw new Error('Cannot parse kDrive URL');
-    }
-    
-    // API endpoints più completi con autenticazione
-    const apiTests = [
-      // Public share API
-      {
-        url: `https://api.infomaniak.com/1/drive/${kdriveInfo.kdriveId}/files/share/${kdriveInfo.shareId}`,
-        method: 'GET',
-        headers: { 'Accept': 'application/json' }
-      },
-      // Share direct access
-      {
-        url: `https://kdrive.infomaniak.com/api/share/${kdriveInfo.shareId}/files`,
-        method: 'GET',
-        headers: { 'Accept': 'application/json' }
-      },
-      // Public folder endpoint
-      {
-        url: `https://kdrive.infomaniak.com/api/drive/${kdriveInfo.kdriveId}/share/${kdriveInfo.shareId}`,
-        method: 'GET',
-        headers: { 'Accept': 'application/json' }
-      }
-    ];
-    
-    console.log(`🔗 Testing ${apiTests.length} API endpoints...`);
-    
-    for (let i = 0; i < apiTests.length; i++) {
-      const test = apiTests[i];
-      try {
-        console.log(`🔗 [${i+1}/${apiTests.length}] ${test.method} ${test.url}`);
-        
-        const response = await fetch(test.url, {
-          method: test.method,
-          headers: {
-            ...test.headers,
-            'User-Agent': 'Virgilio-RAG/1.0'
-          }
-        });
-        
-        console.log(`   Status: ${response.status} ${response.statusText}`);
-        console.log(`   Content-Type: ${response.headers.get('content-type')}`);
-        
-        if (response.ok) {
-          const data = await response.json();
-          console.log('✅ API successful, parsing response...');
-          console.log('📄 Response keys:', Object.keys(data));
-          
-          // Parse different API response formats
-          let files = [];
-          
-          if (Array.isArray(data)) {
-            files = data;
-          } else if (data.data && Array.isArray(data.data)) {
-            files = data.data;
-          } else if (data.files && Array.isArray(data.files)) {
-            files = data.files;
-          } else if (data.children && Array.isArray(data.children)) {
-            files = data.children;
-          }
-          
-          const processedFiles = files
-            .filter(item => {
-              const isFile = item.type === 'file' || !item.type;
-              const validExt = item.name && /\.(pdf|docx?)$/i.test(item.name);
-              return isFile && validExt;
-            })
-            .map(file => ({
-              name: file.name,
-              extension: file.name.split('.').pop().toLowerCase(),
-              id: file.id,
-              size: file.size || 0,
-              discovered_at: new Date().toISOString(),
-              status: 'discovered',
-              source: 'kdrive_api'
-            }));
-          
-          if (processedFiles.length > 0) {
-            console.log(`✅ API found ${processedFiles.length} files`);
-            return processedFiles;
-          }
-        } else {
-          console.log(`   Failed: ${response.status}`);
-          
-          // Log errore specifico
-          try {
-            const errorData = await response.json();
-            console.log(`   Error details:`, errorData);
-          } catch (e) {
-            console.log(`   No error details available`);
-          }
-        }
-      } catch (apiError) {
-        console.log(`   Exception: ${apiError.message}`);
-      }
-    }
-    
-    throw new Error('All API endpoints failed');
-    
-  } catch (error) {
-    console.error('❌ API method failed:', error);
+    console.error('❌ Public link fallback failed:', error);
     return [];
   }
 }
 
-// WebDAV migliorato
-async function getKDriveViaWebDAV() {
-  try {
-    console.log('🔗 === METODO 3: WEBDAV (Enhanced) ===');
-    
-    // WebDAV URLs più completi
-    const webdavTests = [
-      `https://${KDRIVE_ID}.connect.kdrive.infomaniak.com/share/${SHARE_ID}/`,
-      `https://webdav.kdrive.infomaniak.com/${KDRIVE_ID}/share/${SHARE_ID}/`,
-      `https://dav.infomaniak.com/kdrive/${KDRIVE_ID}/${SHARE_ID}/`,
-      `https://connect.kdrive.infomaniak.com/${KDRIVE_ID}/share/${SHARE_ID}/`
-    ];
-    
-    console.log(`🔗 Testing ${webdavTests.length} WebDAV endpoints...`);
-    
-    for (let i = 0; i < webdavTests.length; i++) {
-      const webdavUrl = webdavTests[i];
-      try {
-        console.log(`🔗 [${i+1}/${webdavTests.length}] PROPFIND ${webdavUrl}`);
-        
-        const response = await fetch(webdavUrl, {
-          method: 'PROPFIND',
-          headers: {
-            'Depth': '1',
-            'Content-Type': 'application/xml; charset=utf-8',
-            'Accept': 'application/xml, text/xml',
-            'User-Agent': 'Virgilio-RAG/1.0'
-          },
-          body: `<?xml version="1.0" encoding="utf-8"?>
-            <d:propfind xmlns:d="DAV:">
-              <d:prop>
-                <d:displayname/>
-                <d:getcontentlength/>
-                <d:getcontenttype/>
-                <d:resourcetype/>
-              </d:prop>
-            </d:propfind>`
-        });
-        
-        console.log(`   Status: ${response.status} ${response.statusText}`);
-        
-        if (response.ok) {
-          const xmlText = await response.text();
-          console.log('✅ WebDAV response received');
-          console.log(`📄 XML length: ${xmlText.length} characters`);
-          
-          // Parse XML per file
-          const files = [];
-          const displayNameRegex = /<d:displayname>([^<]*\.(?:pdf|docx?))<\/d:displayname>/gi;
-          let match;
-          
-          while ((match = displayNameRegex.exec(xmlText)) !== null) {
-            const filename = match[1];
-            if (!files.some(f => f.name === filename)) {
-              console.log(`📄 WebDAV file: ${filename}`);
-              files.push({
-                name: filename,
-                extension: filename.split('.').pop().toLowerCase(),
-                discovered_at: new Date().toISOString(),
-                status: 'discovered',
-                source: 'kdrive_webdav'
-              });
-            }
-          }
-          
-          if (files.length > 0) {
-            console.log(`✅ WebDAV found ${files.length} files`);
-            return files;
-          }
-        } else {
-          console.log(`   Failed: ${response.status}`);
-        }
-      } catch (webdavError) {
-        console.log(`   Exception: ${webdavError.message}`);
-      }
-    }
-    
-    throw new Error('All WebDAV endpoints failed');
-    
-  } catch (error) {
-    console.error('❌ WebDAV method failed:', error);
-    return [];
-  }
-}
-
-// Discovery principale (UNCHANGED)
+// Discovery principale che prova WebDAV reale prima
 async function getKDriveFileList() {
   try {
     console.log('🚀 =====================================');
-    console.log('🚀 STARTING ENHANCED kDrive DISCOVERY');
+    console.log('🚀 STARTING REAL kDrive DISCOVERY');
     console.log('🚀 =====================================');
-    console.log('🔗 Target URL:', KDRIVE_SHARE_URL);
+    console.log('🔗 kDrive ID:', KDRIVE_ID);
     
-    const methods = [
-      { name: 'HTML Parsing', func: getKDriveSharedFiles },
-      { name: 'API Calls', func: getKDriveViaAPI },
-      { name: 'WebDAV', func: getKDriveViaWebDAV }
-    ];
+    let discoveredFiles = [];
     
-    let allDiscoveredFiles = [];
-    let successfulMethods = [];
-    
-    for (const method of methods) {
-      try {
-        console.log(`\n🔄 === TRYING METHOD: ${method.name.toUpperCase()} ===`);
-        const startTime = Date.now();
-        
-        const files = await method.func();
-        const duration = Date.now() - startTime;
-        
-        if (files && files.length > 0) {
-          console.log(`✅ ${method.name} successful: ${files.length} files in ${duration}ms`);
-          successfulMethods.push({ name: method.name, files: files.length, duration });
-          
-          files.forEach(file => {
-            if (!allDiscoveredFiles.some(f => f.name === file.name)) {
-              allDiscoveredFiles.push(file);
-            }
-          });
-        } else {
-          console.log(`⚠️ ${method.name} returned no files`);
-        }
-      } catch (error) {
-        console.log(`❌ ${method.name} failed: ${error.message}`);
+    // Metodo 1: WebDAV con credenziali (PRIORITARIO)
+    try {
+      console.log('\n🔄 === METODO 1: WEBDAV REAL ACCESS ===');
+      discoveredFiles = await getKDriveViaWebDAVReal();
+      
+      if (discoveredFiles.length > 0) {
+        console.log(`✅ WebDAV real access successful: ${discoveredFiles.length} files`);
+        return discoveredFiles;
+      }
+    } catch (webdavError) {
+      console.log(`❌ WebDAV real access failed: ${webdavError.message}`);
+      
+      if (webdavError.message.includes('Credenziali kDrive mancanti')) {
+        console.log('\n💡 === SETUP RICHIESTO ===');
+        console.log('Per accedere ai file REALI di kDrive, aggiungi queste variabili ENV:');
+        console.log('');
+        console.log('🔧 In Vercel Dashboard → Settings → Environment Variables:');
+        console.log('   KDRIVE_EMAIL=tuo-email@infomaniak.com');
+        console.log('   KDRIVE_PASSWORD=tua-password');
+        console.log('');
+        console.log('📝 Se hai 2FA attivo:');
+        console.log('   1. Vai su https://manager.infomaniak.com/v3/profile/application-password');
+        console.log('   2. Crea password app per "kDrive WebDAV"');
+        console.log('   3. Usa quella invece della password normale');
+        console.log('');
       }
     }
     
-    console.log('\n📊 === DISCOVERY SUMMARY ===');
-    console.log(`✅ Successful methods: ${successfulMethods.length}`);
-    successfulMethods.forEach(method => {
-      console.log(`   - ${method.name}: ${method.files} files`);
-    });
-    console.log(`📂 Total unique files: ${allDiscoveredFiles.length}`);
-    
-    if (allDiscoveredFiles.length > 0) {
-      return allDiscoveredFiles;
+    // Metodo 2: Fallback con link pubblico
+    try {
+      console.log('\n🔄 === METODO 2: PUBLIC LINK FALLBACK ===');
+      discoveredFiles = await getKDrivePublicLinkFallback();
+      
+      if (discoveredFiles.length > 0) {
+        console.log(`✅ Public fallback successful: ${discoveredFiles.length} files`);
+        return discoveredFiles;
+      }
+    } catch (fallbackError) {
+      console.log(`❌ Public fallback failed: ${fallbackError.message}`);
     }
     
-    // Fallback: file di test PROCESSABILI
-    console.log('\n🔄 === FALLBACK: PROCESSABLE TEST FILES ===');
-    console.log('⚠️ All discovery methods failed');
-    console.log('🔧 Providing test files to verify system functionality');
-    console.log('💡 Possible solutions:');
-    console.log('   1. Make sure kDrive share is public (no login required)');
-    console.log('   2. Check if share URL is still valid');
-    console.log('   3. Try accessing the URL manually in browser');
-    console.log('   4. Contact Infomaniak support about API access');
+    // Nessun metodo ha funzionato
+    console.log('\n⚠️ === ALL METHODS FAILED ===');
+    console.log('🔧 Per accedere ai file REALI, configura le credenziali WebDAV');
+    console.log('📄 Returning test files for system verification...');
     
     return [
       {
-        name: 'Test_Disciplina_Militare_CC.pdf',
+        name: 'Setup_Required_Configure_WebDAV.pdf',
         extension: 'pdf',
         discovered_at: new Date().toISOString(),
-        status: 'test_processable',  // Cambiato da 'test' a 'test_processable'
-        source: 'fallback_test',
-        note: 'Test file for system verification - processable'
-      },
-      {
-        name: 'Test_Concorsi_Arma_2024.pdf',
-        extension: 'pdf',
-        discovered_at: new Date().toISOString(),
-        status: 'test_processable',
-        source: 'fallback_test',
-        note: 'Test file for system verification - processable'
-      },
-      {
-        name: 'Test_Pensioni_Militari.docx',
-        extension: 'docx',
-        discovered_at: new Date().toISOString(),
-        status: 'test_processable',
-        source: 'fallback_test',
-        note: 'Test file for system verification - processable'
+        status: 'setup_required',
+        source: 'setup_instruction',
+        note: 'Configure KDRIVE_EMAIL and KDRIVE_PASSWORD to access real files'
       }
     ];
     
@@ -525,23 +348,7 @@ async function getKDriveFileList() {
   }
 }
 
-// Resto del codice identico...
-function parseKDriveUrl(url) {
-  try {
-    const match = url.match(/\/app\/share\/(\d+)\/([a-f0-9-]+)/);
-    if (!match) {
-      throw new Error('URL kDrive non valido');
-    }
-    return {
-      kdriveId: match[1],
-      shareId: match[2]
-    };
-  } catch (error) {
-    console.error('Errore parsing kDrive URL:', error);
-    return null;
-  }
-}
-
+// Resto del codice identico (checkDocumentStatus, handler, etc.)
 async function checkDocumentStatus(filename, authHeader) {
   try {
     const response = await fetch(`${process.env.SUPABASE_URL}/rest/v1/documents?file_name=eq.${encodeURIComponent(filename)}&select=id,title,created_at,metadata`, {
@@ -583,7 +390,7 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Token mancante' });
     }
 
-    console.log('🚀 === ENHANCED kDrive DISCOVERY REQUEST ===');
+    console.log('🚀 === REAL kDrive DISCOVERY REQUEST ===');
     const startTime = Date.now();
     
     const discoveredFiles = await getKDriveFileList();
@@ -603,26 +410,17 @@ export default async function handler(req, res) {
       });
     }
     
-    // Verifica stato di ogni file (SEZIONE MODIFICATA)
-    console.log('\n🔍 Checking processing status for each file...');
+    // Verifica stato di ogni file
     const filesWithStatus = [];
     
     for (const file of discoveredFiles) {
-      if (file.status === 'error') {
-        // Solo i file con errore non sono processabili
+      if (file.status === 'setup_required') {
+        // File di setup non processabili fino a configurazione
         filesWithStatus.push({
           ...file,
-          processing_status: file.status,
+          processing_status: 'setup_required',
           needs_processing: false
         });
-      } else if (file.status === 'test' || file.status === 'test_processable') {
-        // I file di test SONO processabili per testing del sistema
-        filesWithStatus.push({
-          ...file,
-          processing_status: 'new',  // Cambiato da 'test' a 'new'
-          needs_processing: true     // Cambiato da false a true
-        });
-        console.log(`   ${file.name}: test file (processable for system testing)`);
       } else {
         // File reali - controlla se già processati
         const status = await checkDocumentStatus(file.name, authHeader);
@@ -639,43 +437,19 @@ export default async function handler(req, res) {
       total_discovered: filesWithStatus.length,
       already_processed: filesWithStatus.filter(f => f.processing_status === 'processed').length,
       new_files: filesWithStatus.filter(f => f.processing_status === 'new').length,
-      test_files: filesWithStatus.filter(f => f.status && f.status.includes('test')).length,
+      setup_required: filesWithStatus.filter(f => f.processing_status === 'setup_required').length,
       discovery_method: filesWithStatus[0]?.source || 'unknown',
       discovery_time_ms: discoveryTime,
-      kdrive_version: 'v2.1_enhanced',
-      methods_used: [...new Set(filesWithStatus.map(f => f.source))],
-      share_accessible: filesWithStatus.filter(f => !f.status || !f.status.includes('test')).length > 0
+      kdrive_version: 'v3.0_webdav_real',
+      real_files_found: filesWithStatus.filter(f => f.source?.includes('webdav_real')).length > 0,
+      webdav_configured: !!(process.env.KDRIVE_EMAIL && process.env.KDRIVE_PASSWORD)
     };
     
     console.log('\n📊 === FINAL STATISTICS ===');
     console.log('📋 Total discovered:', stats.total_discovered);
     console.log('📋 New files (processable):', stats.new_files);
-    console.log('📋 Test files:', stats.test_files);
-    console.log('📋 Real files found:', stats.share_accessible);
-    
-    // Auto-trigger processing se richiesto
-    if (req.method === 'POST' && req.body?.auto_process === true) {
-      const newFiles = filesWithStatus.filter(f => f.needs_processing);
-      
-      if (newFiles.length > 0) {
-        console.log(`\n🚀 Auto-triggering processing for ${newFiles.length} files...`);
-        
-        fetch(`${req.headers.origin || 'https://myapp31.vercel.app'}/api/sync/process-kdrive`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': authHeader
-          },
-          body: JSON.stringify({
-            files: newFiles.map(f => f.name),
-            source: 'kdrive-auto-discovery'
-          })
-        }).catch(error => console.error('Auto-processing trigger failed:', error));
-        
-        stats.processing_triggered = true;
-        stats.files_queued = newFiles.length;
-      }
-    }
+    console.log('📋 WebDAV configured:', stats.webdav_configured);
+    console.log('📋 Real files found:', stats.real_files_found);
     
     return res.status(200).json({
       success: true,
@@ -683,31 +457,28 @@ export default async function handler(req, res) {
       files: filesWithStatus,
       statistics: stats,
       kdrive_folder: KDRIVE_SHARE_URL,
+      webdav_url: KDRIVE_WEBDAV_URL,
       timestamp: new Date().toISOString(),
-      platform: 'kdrive_infomaniak_enhanced',
-      debug_info: {
-        kdrive_id: KDRIVE_ID,
-        share_id: SHARE_ID,
-        discovery_duration_ms: discoveryTime,
-        real_files_found: stats.share_accessible,
-        test_files_processable: stats.test_files > 0
+      platform: 'kdrive_webdav_real',
+      setup_instructions: stats.webdav_configured ? null : {
+        message: 'Configure kDrive credentials to access real files',
+        variables_needed: ['KDRIVE_EMAIL', 'KDRIVE_PASSWORD'],
+        app_password_url: 'https://manager.infomaniak.com/v3/profile/application-password'
       }
     });
 
   } catch (error) {
-    console.error('❌ === kDrive DISCOVERY ERROR ===');
+    console.error('❌ === REAL kDrive DISCOVERY ERROR ===');
     console.error('Error details:', error);
     
     return res.status(500).json({
       success: false,
-      error: 'Errore interno durante kDrive discovery',
+      error: 'Errore durante kDrive discovery',
       message: error.message,
-      kdrive_url: KDRIVE_SHARE_URL,
       suggestions: [
-        'Verifica che la cartella kDrive sia pubblica',
-        'Controlla che la URL di condivisione sia ancora valida',
-        'Prova ad accedere manualmente alla URL nel browser',
-        'Contatta il supporto Infomaniak per accesso API'
+        'Configura credenziali kDrive: KDRIVE_EMAIL e KDRIVE_PASSWORD',
+        'Se hai 2FA, usa Application Password invece della password normale',
+        'Verifica che il tuo account abbia accesso al kDrive'
       ]
     });
   }
