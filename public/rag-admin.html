@@ -1,6 +1,630 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard RAG (kDrive)</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #333;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+    .header { text-align: center; color: white; margin-bottom: 30px; }
+
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header p { font-size: 1.1rem; opacity: 0.9; }
+
+    .dashboard {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .card h3 {
+      color: #5a67d8; margin-bottom: 15px; font-size: 1.3rem;
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .login-form { display: flex; flex-direction: column; gap: 15px; }
+
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+
+    .form-group label { font-weight: 600; color: #4a5568; }
+
+    .form-group input, .form-group select {
+      padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      outline: none; border-color: #5a67d8; box-shadow: 0 0 0 3px rgba(90,103,216,0.1);
+    }
+
+    .btn {
+      padding: 12px 24px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer;
+      transition: all 0.3s ease; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    }
+
+    .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102,126,234,0.4); }
+
+    .btn-success { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: white; }
+    .btn-success:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(72,187,120,0.4); }
+
+    .btn-warning { background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%); color: white; }
+    .btn-warning:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(237,137,54,0.4); }
+
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+
+    .status {
+      display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 8px; margin: 10px 0; font-weight: 500;
+    }
+    .status.success { background: #f0fff4; color: #22543d; border: 1px solid #68d391; }
+    .status.error   { background: #fff5f5; color: #742a2a; border: 1px solid #fc8181; }
+    .status.warning { background: #fffbeb; color: #744210; border: 1px solid #f6e05e; }
+    .status.info    { background: #ebf8ff; color: #2a4365; border: 1px solid #63b3ed; }
+
+    .spinner { width: 20px; height: 20px; border: 2px solid #e2e8f0; border-top: 2px solid #5a67d8; border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    .stats {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin: 20px 0;
+    }
+    .stat-item { text-align: center; padding: 15px; background: #f7fafc; border-radius: 8px; border: 1px solid #e2e8f0; }
+    .stat-number { font-size: 2rem; font-weight: bold; color: #5a67d8; }
+    .stat-label { font-size: 0.9rem; color: #718096; margin-top: 5px; }
+
+    .log-container { grid-column: 1 / -1; max-height: 400px; overflow-y: auto; background: #1a202c; color: #e2e8f0;
+      padding: 20px; border-radius: 10px; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.5; }
+    .log-entry { margin-bottom: 5px; padding: 2px 0; }
+    .log-entry.error { color: #fed7d7; }
+    .log-entry.success { color: #c6f6d5; }
+    .log-entry.warning { color: #faf089; }
+
+    .hidden { display: none !important; }
+
+    .auth-tab { padding: 8px 12px; border: 2px solid #e2e8f0; background: white; border-radius: 6px; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease; }
+    .auth-tab.active { background: #5a67d8; color: white; border-color: #5a67d8; }
+    .auth-tab:hover:not(.active) { border-color: #5a67d8; background: #f7fafc; }
+
+    .auth-section { display: flex; flex-direction: column; gap: 15px; }
+
+    @media (max-width: 768px) {
+      .dashboard { grid-template-columns: 1fr; }
+      .header h1 { font-size: 2rem; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎯 Admin Dashboard RAG</h1>
+      <p>Gestione Documenti kDrive Infomaniak • Sistema Virgilio AI</p>
+    </div>
+
+    <div class="dashboard">
+      <!-- Login Card -->
+      <div class="card">
+        <h3>🔐 Autenticazione</h3>
+        <div class="login-form">
+          <div class="form-group">
+            <label for="apiUrl">URL API Base</label>
+            <input type="url" id="apiUrl" placeholder="https://your-app.vercel.app" />
+          </div>
+
+          <!-- Tab selector -->
+          <div style="display:flex; gap:10px; margin-bottom:15px;">
+            <button type="button" class="auth-tab active" onclick="switchAuthTab('email')" id="emailTab">📧 Email/Password</button>
+            <button type="button" class="auth-tab" onclick="switchAuthTab('token')" id="tokenTab">🔑 Token JWT</button>
+            <button type="button" class="auth-tab" onclick="switchAuthTab('demo')" id="demoTab">🚀 Demo Mode</button>
+          </div>
+
+          <!-- Email/Password Login -->
+          <div id="emailAuth" class="auth-section">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="admin@example.com">
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" placeholder="Password">
+            </div>
+            <button class="btn btn-primary" onclick="loginWithEmail()">
+              <span id="emailSpinner" class="spinner hidden"></span>
+              Accedi con Email
+            </button>
+          </div>
+
+          <!-- Token Login -->
+          <div id="tokenAuth" class="auth-section hidden">
+            <div class="form-group">
+              <label for="token">Token Supabase JWT</label>
+              <input type="password" id="token" placeholder="eyJhbGciOiJIUzI1NiIs...">
+            </div>
+            <button class="btn btn-primary" onclick="loginWithToken()">
+              <span id="tokenSpinner" class="spinner hidden"></span>
+              Accedi con Token
+            </button>
+          </div>
+
+          <!-- Demo Mode (disattivata in prod) -->
+          <div id="demoAuth" class="auth-section hidden">
+            <div class="status info">
+              <span>ℹ️</span><span>Modalità demo - solo per sviluppo locale</span>
+            </div>
+            <button class="btn btn-success" onclick="loginDemo()">
+              <span id="demoSpinner" class="spinner hidden"></span>
+              🚀 Accesso Demo
+            </button>
+          </div>
+
+          <div id="loginStatus" class="hidden"></div>
+        </div>
+      </div>
+
+      <!-- Actions Card -->
+      <div class="card">
+        <h3>⚡ Azioni kDrive</h3>
+
+        <!-- Share URL -->
+        <div class="form-group">
+          <label for="shareUrl">kDrive Share URL</label>
+          <input type="url" id="shareUrl"
+                 placeholder="https://kdrive.infomaniak.com/app/share/..."
+                 value="https://kdrive.infomaniak.com/app/share/1781004/feb4c14d-870c-48be-b6d3-46e9b6f94be8"/>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:15px; margin-top:6px;">
+          <button class="btn btn-success" onclick="discoverKDriveDocuments()" disabled id="discoverBtn">
+            <span id="discoverSpinner" class="spinner hidden"></span>
+            🔍 Scopri Documenti kDrive
+          </button>
+
+          <button class="btn btn-warning" onclick="processKDriveDocuments()" disabled id="processBtn">
+            <span id="processSpinner" class="spinner hidden"></span>
+            🚀 Processa Nuovi Documenti
+          </button>
+        </div>
+        <div id="actionStatus" class="hidden"></div>
+      </div>
+
+      <!-- Statistics Card -->
+      <div class="card">
+        <h3>📊 Statistiche kDrive</h3>
+        <div class="stats">
+          <div class="stat-item">
+            <div class="stat-number" id="kdrive-docs-count">-</div>
+            <div class="stat-label">Documenti kDrive</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="total-chunks">-</div>
+            <div class="stat-label">Chunks Totali</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="last-update">-</div>
+            <div class="stat-label">Ultimo Aggiornamento</div>
+          </div>
+        </div>
+        <div id="statsStatus" class="hidden"></div>
+      </div>
+
+      <!-- Status Card -->
+      <div class="card">
+        <h3>🎛️ Stato Sistema</h3>
+        <div id="systemStatus">
+          <div class="status info"><span>ℹ️</span><span>Sistema in attesa di autenticazione...</span></div>
+        </div>
+      </div>
+
+      <!-- Activity Log -->
+      <div class="card log-container">
+        <div style="color:#63b3ed;font-weight:bold;margin-bottom:15px;">📝 Log Attività Sistema kDrive</div>
+        <div id="activityLog"><div class="log-entry">Sistema avviato in attesa di login...</div></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ====== CONFIG ====== */
+    // Demo solo in locale e se esplicitamente abilitata con localStorage.enable_demo = '1'
+    const ENABLE_DEMO =
+      (location.hostname === 'localhost' || location.hostname.startsWith('127.')) &&
+      (localStorage.getItem('enable_demo') === '1');
+
+    let apiUrl = '';
+    let authToken = '';
+    let isAuthenticated = false;
+
+    /* ====== UTIL ====== */
+    function updateApiUrl() {
+      apiUrl = (document.getElementById('apiUrl').value || '').trim();
+      if (!apiUrl) return;
+      if (!apiUrl.startsWith('http')) apiUrl = 'https://' + apiUrl;
+      if (apiUrl.endsWith('/')) apiUrl = apiUrl.slice(0, -1);
+      localStorage.setItem('apiUrl', apiUrl);
+    }
+
+    function showStatus(element, type, message) {
+      element.className = `status ${type}`;
+      element.innerHTML = `<span>${getStatusIcon(type)}</span><span>${message}</span>`;
+      element.classList.remove('hidden');
+    }
+    function getStatusIcon(type) {
+      switch(type){case 'success':return '✅';case 'error':return '❌';case 'warning':return '⚠️';case 'info':return 'ℹ️';default:return '📝';}
+    }
+    function updateSystemStatus(type, message) {
+      const systemStatus = document.getElementById('systemStatus');
+      systemStatus.innerHTML = `<div class="status ${type}"><span>${getStatusIcon(type)}</span><span>${message}</span></div>`;
+    }
+    function logActivity(message, type='info') {
+      const log = document.getElementById('activityLog');
+      const timestamp = new Date().toLocaleTimeString('it-IT');
+      const div = document.createElement('div');
+      div.className = `log-entry ${type}`;
+      div.textContent = `[${timestamp}] ${message}`;
+      log.appendChild(div);
+      log.scrollTop = log.scrollHeight;
+    }
+    function enableActions() {
+      document.getElementById('discoverBtn').disabled = false;
+      document.getElementById('processBtn').disabled = false;
+    }
+    function switchAuthTab(tabType) {
+      document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+      const tabBtn = document.getElementById(tabType + 'Tab');
+      if (tabBtn) tabBtn.classList.add('active');
+      document.querySelectorAll('.auth-section').forEach(s => s.classList.add('hidden'));
+      document.getElementById(tabType + 'Auth').classList.remove('hidden');
+      document.getElementById('loginStatus').classList.add('hidden');
+    }
+
+    /* ====== AUTH ====== */
+    async function loginWithEmail() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const emailSpinner = document.getElementById('emailSpinner');
+      const loginStatus = document.getElementById('loginStatus');
+      updateApiUrl();
+
+      if (!email || !password) {
+        showStatus(loginStatus, 'error', 'Email e password richiesti');
+        return;
+      }
+
+      emailSpinner.classList.remove('hidden');
+      try {
+        const r = await fetch(`${apiUrl}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        if (!r.ok) {
+          let txt = '';
+          try { txt = await r.text(); } catch {}
+          throw new Error(`Login failed: ${r.status} ${txt.slice(0,200)}`);
+        }
+        const data = await r.json();
+        if (!data.access_token) throw new Error('Token mancante nella risposta');
+
+        authToken = data.access_token;
+        localStorage.setItem('authToken', authToken);
+        isAuthenticated = true;
+
+        showStatus(loginStatus, 'success', 'Login riuscito!');
+        enableActions();
+        updateSystemStatus('success', 'Sistema autenticato via email');
+        logActivity('✅ Login effettuato con email/password', 'success');
+        await loadStatistics();
+      } catch (e) {
+        showStatus(loginStatus, 'error', `Errore login: ${e.message}`);
+        logActivity(`❌ Errore login email: ${e.message}`, 'error');
+      } finally {
+        emailSpinner.classList.add('hidden');
+      }
+    }
+
+    async function loginWithToken() {
+      const tokenInput = document.getElementById('token');
+      const tokenSpinner = document.getElementById('tokenSpinner');
+      const loginStatus = document.getElementById('loginStatus');
+
+      authToken = tokenInput.value.trim();
+      if (!authToken) {
+        showStatus(loginStatus, 'error', 'Token richiesto');
+        return;
+      }
+      updateApiUrl();
+
+      tokenSpinner.classList.remove('hidden');
+      try {
+        const r = await fetch(`${apiUrl}/api/auth/verify`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${authToken}`, 'Content-Type':'application/json' }
+        });
+        if (!r.ok) throw new Error(`Token verification failed: ${r.status}`);
+        const data = await r.json();
+
+        localStorage.setItem('authToken', authToken);
+        isAuthenticated = true;
+
+        showStatus(loginStatus, 'success', 'Autenticazione token riuscita!');
+        enableActions();
+        updateSystemStatus('success', `Sistema autenticato via ${data.token_type || 'token'}`);
+        logActivity('✅ Login effettuato con token JWT', 'success');
+        await loadStatistics();
+      } catch (e) {
+        showStatus(loginStatus, 'error', `Errore token: ${e.message}`);
+        logActivity(`❌ Errore login token: ${e.message}`, 'error');
+      } finally {
+        tokenSpinner.classList.add('hidden');
+      }
+    }
+
+    async function loginDemo() {
+      if (!ENABLE_DEMO) {
+        updateSystemStatus('warning', 'Demo disabilitata in produzione');
+        logActivity('⚠️ Demo Mode disabilitata', 'warning');
+        return;
+      }
+      const demoSpinner = document.getElementById('demoSpinner');
+      const loginStatus = document.getElementById('loginStatus');
+      updateApiUrl();
+      demoSpinner.classList.remove('hidden');
+
+      try {
+        const r = await fetch(`${apiUrl}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: 'demo@virgilio.ai', password: 'demo123' })
+        });
+        if (!r.ok) throw new Error('Demo login API non disponibile');
+
+        const data = await r.json();
+        authToken = data.access_token;
+        localStorage.setItem('authToken', authToken);
+        isAuthenticated = true;
+
+        showStatus(loginStatus, 'success', '🚀 Demo attivata (sviluppo locale)');
+        enableActions();
+        updateSystemStatus('success', 'Sistema in modalità demo');
+        logActivity('🚀 Modalità demo attivata con token reale', 'success');
+        await loadStatistics();
+      } catch (e) {
+        showStatus(loginStatus, 'error', `❌ Errore demo: ${e.message}`);
+        logActivity(`❌ Errore modalità demo: ${e.message}`, 'error');
+      } finally {
+        demoSpinner.classList.add('hidden');
+      }
+    }
+
+    /* ====== KDRIVE ====== */
+    async function discoverKDriveDocuments() {
+      if (!isAuthenticated) return alert('Effettua prima il login');
+
+      const discoverBtn = document.getElementById('discoverBtn');
+      const discoverSpinner = document.getElementById('discoverSpinner');
+      const actionStatus = document.getElementById('actionStatus');
+      const shareUrl = (document.getElementById('shareUrl').value || '').trim();
+
+      if (!shareUrl) {
+        showStatus(actionStatus, 'warning', 'Inserisci il kDrive Share URL');
+        return;
+      }
+
+      localStorage.setItem('shareUrl', shareUrl);
+      discoverBtn.disabled = true;
+      discoverSpinner.classList.remove('hidden');
+      actionStatus.classList.add('hidden');
+
+      logActivity('🔍 Avvio discovery documenti kDrive...', 'info');
+
+      try {
+        updateApiUrl();
+        const url = `${apiUrl}/api/sync/discover-kdrive?share_url=${encodeURIComponent(shareUrl)}`;
+
+        const r = await fetch(url, { headers: { 'Authorization': `Bearer ${authToken}` } });
+        if (!r.ok) {
+          let txt = '';
+          try { txt = await r.text(); } catch {}
+          throw new Error(`API Error ${r.status}: ${txt.slice(0,200)}`);
+        }
+
+        const data = await r.json();
+        if (!data.success) throw new Error(data.message || 'Discovery fallito');
+
+        const s = data.statistics || {};
+        showStatus(actionStatus, 'success',
+          `🎉 Discovery completato: ${s.total_discovered || 0} documenti trovati, ${s.new_files || 0} nuovi`);
+
+        logActivity(`✅ Discovery kDrive completato: ${s.total_discovered || 0} documenti`, 'success');
+        logActivity(`📄 Nuovi file da processare: ${s.new_files || 0}`, 'info');
+        logActivity(`🔧 Metodo discovery: ${s.discovery_method || 'unknown'}`, 'info');
+        logActivity(`⏱️ Tempo discovery: ${s.discovery_time_ms || 0}ms`, 'info');
+
+        document.getElementById('kdrive-docs-count').textContent = s.total_discovered || 0;
+        updateSystemStatus('success', `Discovery completato sulla share kDrive`);
+
+        if (s.new_files > 0) logActivity(`🚀 ${s.new_files} file pronti per il processing`, 'info');
+        if (data.files?.length) logActivity(`📂 File trovati: ${data.files.map(f=>f.name).join(', ')}`, 'info');
+
+      } catch (e) {
+        showStatus(actionStatus, 'error', `❌ Errore discovery: ${e.message}`);
+        logActivity(`❌ Errore discovery kDrive: ${e.message}`, 'error');
+        updateSystemStatus('error', 'Errore durante discovery kDrive');
+      } finally {
+        discoverBtn.disabled = false;
+        discoverSpinner.classList.add('hidden');
+        actionStatus.classList.remove('hidden');
+      }
+    }
+
+    async function processKDriveDocuments() {
+      if (!isAuthenticated) return alert('Effettua prima il login');
+
+      const processBtn = document.getElementById('processBtn');
+      const processSpinner = document.getElementById('processSpinner');
+      const actionStatus = document.getElementById('actionStatus');
+      const shareUrl = (document.getElementById('shareUrl').value || '').trim();
+
+      if (!shareUrl) {
+        showStatus(actionStatus, 'warning', 'Inserisci il kDrive Share URL');
+        return;
+      }
+
+      logActivity('🔍 Ricerca file kDrive da processare...', 'info');
+
+      try {
+        updateApiUrl();
+
+        // 1) discovery sulla stessa share
+        const d = await fetch(`${apiUrl}/api/sync/discover-kdrive?share_url=${encodeURIComponent(shareUrl)}`, {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        if (!d.ok) throw new Error(`Discovery API error: ${d.status}`);
+        const discoverData = await d.json();
+        if (!discoverData.success) throw new Error(discoverData.message || 'Impossibile ottenere lista file');
+
+        const newFiles = discoverData.files?.filter(f => f.needs_processing) || [];
+        if (newFiles.length === 0) {
+          showStatus(actionStatus, 'warning', '⚠️ Nessun nuovo file da processare');
+          logActivity('⚠️ Nessun nuovo file kDrive trovato da processare', 'warning');
+          return;
+        }
+
+        processBtn.disabled = true;
+        processSpinner.classList.remove('hidden');
+        actionStatus.classList.add('hidden');
+
+        logActivity(`🚀 Avvio processing ${newFiles.length} file kDrive...`, 'info');
+        logActivity(`📂 File da processare: ${newFiles.map(f => f.name).join(', ')}`, 'info');
+
+        // 2) processing
+        const pr = await fetch(`${apiUrl}/api/sync/process-kdrive`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${authToken}`, 'Content-Type':'application/json' },
+          body: JSON.stringify({ files: newFiles.map(f => f.name), source: 'dashboard-kdrive', share_url: shareUrl })
+        });
+        if (!pr.ok) {
+          let txt = '';
+          try { txt = await pr.text(); } catch {}
+          throw new Error(`Processing API error ${pr.status}: ${txt.slice(0,200)}`);
+        }
+
+        const processData = await pr.json();
+        if (!processData.success) throw new Error(processData.message || 'Processing fallito');
+
+        const s = processData.statistics || {};
+        showStatus(actionStatus, 'success',
+          `🎉 Processing completato: ${s.files_processed}/${s.files_requested} file, ${s.total_chunks_saved} chunks`);
+
+        logActivity(`✅ Processing kDrive completato: ${s.files_processed} file processati`, 'success');
+        logActivity(`📚 Chunks creati: ${s.total_chunks_saved}`, 'success');
+
+        if (processData.results?.length) {
+          processData.results.forEach(r => {
+            if (r.success) logActivity(`✅ ${r.filename}: ${r.chunks_saved} chunks`, 'success');
+            else logActivity(`❌ ${r.filename}: ${r.error}`, 'error');
+          });
+        }
+
+        const current = parseInt(document.getElementById('total-chunks').textContent) || 0;
+        document.getElementById('total-chunks').textContent = current + (s.total_chunks_saved || 0);
+        updateSystemStatus('success', `Processing completato: ${s.total_chunks_saved} nuovi chunks creati`);
+        await loadStatistics();
+
+      } catch (e) {
+        showStatus(actionStatus, 'error', `❌ Errore processing: ${e.message}`);
+        logActivity(`❌ Errore processing kDrive: ${e.message}`, 'error');
+        updateSystemStatus('error', 'Errore durante processing kDrive');
+      } finally {
+        processBtn.disabled = false;
+        processSpinner.classList.add('hidden');
+        actionStatus.classList.remove('hidden');
+      }
+    }
+
+    /* ====== STATS ====== */
+    async function loadStatistics() {
+      if (!isAuthenticated) return;
+      try {
+        updateApiUrl();
+        const r = await fetch(`${apiUrl}/api/documents/count`, {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        if (!r.ok) throw new Error(`API stats error: ${r.status}`);
+        const data = await r.json();
+        if (!data.success) throw new Error(data.message || 'Statistiche non disponibili');
+
+        document.getElementById('total-chunks').textContent = data.total || 0;
+        document.getElementById('last-update').textContent = new Date().toLocaleDateString('it-IT');
+        logActivity(`📊 Statistiche caricate: ${data.total || 0} chunks`, 'info');
+
+        if (data.platforms) {
+          const p = Object.entries(data.platforms).map(([k,v]) => `${k}: ${v}`).join(', ');
+          logActivity(`📊 Piattaforme: ${p}`, 'info');
+        }
+      } catch (e) {
+        logActivity(`❌ Errore caricamento statistiche: ${e.message}`, 'error');
+      }
+    }
+
+    /* ====== BOOT ====== */
+    document.addEventListener('DOMContentLoaded', () => {
+      // Prefill da localStorage (comodi ai refresh)
+      const savedApi = localStorage.getItem('apiUrl') || 'https://myapp31.vercel.app';
+      document.getElementById('apiUrl').value = savedApi;
+
+      const savedShare = localStorage.getItem('shareUrl');
+      if (savedShare) document.getElementById('shareUrl').value = savedShare;
+
+      const savedToken = localStorage.getItem('authToken');
+      if (savedToken) {
+        authToken = savedToken;
+        isAuthenticated = true;
+        enableActions();
+        updateSystemStatus('success', 'Token presente (ripristinato)');
+        logActivity('🔑 Token ripristinato da sessione precedente', 'info');
+        loadStatistics();
+      }
+
+      // Demo disabilitata di default (nascosta in prod)
+      if (!ENABLE_DEMO) {
+        document.getElementById('demoTab').classList.add('hidden');
+        document.getElementById('demoAuth').classList.add('hidden');
+      }
+
+      // Tab di default: EMAIL (nessun auto-demo)
+      switchAuthTab('email');
+
+      logActivity('🚀 Dashboard kDrive avviata (modalità reale)', 'info');
+      logActivity('🔗 Inserisci API URL, fai login e usa la tua Share kDrive', 'info');
+      updateSystemStatus('info', 'In attesa di autenticazione...');
+    });
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="it">
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Dashboard RAG (kDrive)</title>
