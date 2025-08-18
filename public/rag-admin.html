@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RAG Admin - Virgilio Document Sync</title>
+  <title>RAG Admin - Virgilio Document Sync (kDrive)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .status-badge {
@@ -31,7 +31,7 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
           <div class="flex items-center">
-            <h1 class="text-xl font-semibold text-gray-900">🤖 Virgilio RAG Admin</h1>
+            <h1 class="text-xl font-semibold text-gray-900">🤖 Virgilio RAG Admin (kDrive)</h1>
           </div>
           <div class="flex items-center space-x-4">
             <span id="user-info" class="text-sm text-gray-500">Non autenticato</span>
@@ -49,7 +49,7 @@
         <div class="bg-white overflow-hidden shadow rounded-lg">
           <div class="px-4 py-5 sm:p-6">
             <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">🔐 Accesso Admin</h3>
-            <p class="text-sm text-gray-600 mb-4">Effettua l'accesso per gestire i documenti RAG di Virgilio</p>
+            <p class="text-sm text-gray-600 mb-4">Effettua l'accesso per gestire i documenti RAG di Virgilio (kDrive)</p>
             <button id="login-btn" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
               Accedi con Supabase
             </button>
@@ -72,8 +72,8 @@
                 </div>
                 <div class="ml-5 w-0 flex-1">
                   <dl>
-                    <dt class="text-sm font-medium text-gray-500 truncate">Documenti MEGA</dt>
-                    <dd class="text-lg font-medium text-gray-900" id="mega-docs-count">-</dd>
+                    <dt class="text-sm font-medium text-gray-500 truncate">Documenti kDrive</dt>
+                    <dd class="text-lg font-medium text-gray-900" id="kdrive-docs-count">-</dd>
                   </dl>
                 </div>
               </div>
@@ -138,7 +138,7 @@
         <!-- Actions -->
         <div class="bg-white shadow rounded-lg">
           <div class="px-4 py-5 sm:p-6">
-            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">🔄 Azioni Sincronizzazione</h3>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">🔄 Azioni Sincronizzazione kDrive</h3>
             
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <button id="discover-btn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
@@ -175,7 +175,7 @@
         <!-- Files Table -->
         <div class="bg-white shadow rounded-lg">
           <div class="px-4 py-5 sm:p-6">
-            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">📚 Documenti MEGA</h3>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">📚 Documenti kDrive</h3>
             
             <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
               <table class="min-w-full divide-y divide-gray-300">
@@ -191,7 +191,7 @@
                   <tr>
                     <td colspan="4" class="px-6 py-4 text-center text-gray-500">
                       <div class="animate-spin h-5 w-5 mx-auto mb-2">⚡</div>
-                      Caricamento documenti...
+                      Caricamento documenti kDrive...
                     </td>
                   </tr>
                 </tbody>
@@ -205,7 +205,7 @@
           <div class="px-4 py-5 sm:p-6">
             <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">📝 Log Operazioni</h3>
             <div id="logs-container" class="bg-gray-900 text-green-400 p-4 rounded-md font-mono text-sm h-48 overflow-y-auto">
-              <div>🚀 RAG Admin Dashboard inizializzata</div>
+              <div>🚀 RAG Admin Dashboard inizializzata (kDrive)</div>
               <div>ℹ️ Effettua l'accesso per iniziare</div>
             </div>
           </div>
@@ -295,20 +295,20 @@
       return response.json();
     }
 
-    // Discover documents
+    // Discover documents (kDrive version)
     async function discoverDocuments() {
       try {
         setButtonLoading(discoverBtn, true);
-        showActionStatus('Scoprendo documenti MEGA...');
-        addLog('Avvio discovery documenti MEGA');
+        showActionStatus('Scoprendo documenti kDrive...');
+        addLog('Avvio discovery documenti kDrive');
 
-        const result = await makeAuthenticatedRequest('/api/sync/discover-mega');
+        const result = await makeAuthenticatedRequest('/api/sync/discover-kdrive');
         
         discoveredFiles = result.files || [];
         updateStats(result.statistics);
         updateFilesTable();
         
-        addLog(`Discovery completato: ${result.files.length} documenti trovati`, 'success');
+        addLog(`Discovery kDrive completato: ${result.files.length} documenti trovati`, 'success');
         
         // Abilita il pulsante processa se ci sono file nuovi
         const newFiles = discoveredFiles.filter(f => f.needs_processing);
@@ -319,7 +319,7 @@
         }
         
       } catch (error) {
-        addLog(`Errore discovery: ${error.message}`, 'error');
+        addLog(`Errore discovery kDrive: ${error.message}`, 'error');
         console.error('Discovery error:', error);
       } finally {
         setButtonLoading(discoverBtn, false);
@@ -328,7 +328,7 @@
       }
     }
 
-    // Process new documents
+    // Process new documents (kDrive version)
     async function processNewDocuments() {
       try {
         const newFiles = discoveredFiles.filter(f => f.needs_processing);
@@ -338,10 +338,10 @@
         }
 
         setButtonLoading(processNewBtn, true);
-        showActionStatus(`Processando ${newFiles.length} documenti...`);
-        addLog(`Avvio processing ${newFiles.length} documenti`);
+        showActionStatus(`Processando ${newFiles.length} documenti kDrive...`);
+        addLog(`Avvio processing kDrive ${newFiles.length} documenti`);
 
-        const result = await makeAuthenticatedRequest('/api/sync/process-documents', {
+        const result = await makeAuthenticatedRequest('/api/sync/process-kdrive', {
           method: 'POST',
           body: JSON.stringify({
             files: newFiles.map(f => f.name),
@@ -349,14 +349,14 @@
           })
         });
 
-        addLog(`Processing completato: ${result.statistics.files_processed}/${result.statistics.files_requested} file`, 'success');
+        addLog(`Processing kDrive completato: ${result.statistics.files_processed}/${result.statistics.files_requested} file`, 'success');
         addLog(`Chunks totali salvati: ${result.statistics.total_chunks_saved}`);
         
         // Refresh discovery
         await discoverDocuments();
         
       } catch (error) {
-        addLog(`Errore processing: ${error.message}`, 'error');
+        addLog(`Errore processing kDrive: ${error.message}`, 'error');
         console.error('Processing error:', error);
       } finally {
         setButtonLoading(processNewBtn, false);
@@ -365,20 +365,20 @@
       }
     }
 
-    // Full sync
+    // Full sync (kDrive version)
     async function fullSync() {
       try {
         setButtonLoading(fullSyncBtn, true);
-        showActionStatus('Sincronizzazione completa...');
-        addLog('Avvio sincronizzazione completa');
+        showActionStatus('Sincronizzazione kDrive completa...');
+        addLog('Avvio sincronizzazione kDrive completa');
 
         // Prima discover
-        const discoveryResult = await makeAuthenticatedRequest('/api/sync/discover-mega');
-        addLog(`Discovery: ${discoveryResult.files.length} documenti`);
+        const discoveryResult = await makeAuthenticatedRequest('/api/sync/discover-kdrive');
+        addLog(`Discovery kDrive: ${discoveryResult.files.length} documenti`);
 
         // Poi process all
         if (discoveryResult.files.length > 0) {
-          const processResult = await makeAuthenticatedRequest('/api/sync/process-documents', {
+          const processResult = await makeAuthenticatedRequest('/api/sync/process-kdrive', {
             method: 'POST',
             body: JSON.stringify({
               files: discoveryResult.files.map(f => f.name),
@@ -386,14 +386,14 @@
             })
           });
 
-          addLog(`Sync completo: ${processResult.statistics.files_processed} file processati`, 'success');
+          addLog(`Sync kDrive completo: ${processResult.statistics.files_processed} file processati`, 'success');
         }
 
         // Refresh dashboard
         await discoverDocuments();
         
       } catch (error) {
-        addLog(`Errore sync completo: ${error.message}`, 'error');
+        addLog(`Errore sync kDrive completo: ${error.message}`, 'error');
         console.error('Full sync error:', error);
       } finally {
         setButtonLoading(fullSyncBtn, false);
@@ -406,7 +406,7 @@
     function updateStats(stats) {
       if (!stats) return;
       
-      document.getElementById('mega-docs-count').textContent = stats.total_discovered || 0;
+      document.getElementById('kdrive-docs-count').textContent = stats.total_discovered || 0;
       document.getElementById('processed-count').textContent = stats.already_processed || 0;
       document.getElementById('new-count').textContent = stats.new_files || 0;
       
@@ -422,7 +422,7 @@
         tbody.innerHTML = `
           <tr>
             <td colspan="4" class="px-6 py-4 text-center text-gray-500">
-              Nessun documento trovato. Clicca "Scopri Documenti" per iniziare.
+              Nessun documento trovato. Clicca "Scopri Documenti" per cercare in kDrive.
             </td>
           </tr>
         `;
@@ -440,6 +440,7 @@
             <span class="status-badge status-${file.processing_status}">
               ${file.processing_status === 'processed' ? '✅ Processato' : 
                 file.processing_status === 'new' ? '🆕 Nuovo' : 
+                file.processing_status === 'test' ? '🧪 Test' :
                 '❓ Sconosciuto'}
             </span>
           </td>
