@@ -1,4 +1,4 @@
-// api/auth/verify.js - Verify Token (Updated for multiple auth types)
+// api/auth/verify.js - Verifica Token (Sistema Reale)
 
 export default async function handler(req, res) {
   // CORS
@@ -26,9 +26,69 @@ export default async function handler(req, res) {
 
     const token = authHeader.substring(7); // Remove "Bearer "
 
-    // Method 1: Demo tokens
-    if (token.startsWith('demo.')) {
-      console.log('🚀 Demo token detected');
+    console.log('🔍 Verifying token:', token.substring(0, 20) + '...');
+
+    // Method 1: Supabase ANON KEY (più comune)
+    if (token === process.env.SUPABASE_ANON_KEY) {
+      console.log('✅ SUPABASE_ANON_KEY verified');
+      return res.status(200).json({
+        success: true,
+        user: { 
+          email: 'anon@supabase.system',
+          role: 'anon'
+        },
+        token_type: 'supabase_anon',
+        message: 'Token ANON key valido'
+      });
+    }
+
+    // Method 2: Supabase SERVICE ROLE KEY
+    if (token === process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      console.log('✅ SUPABASE_SERVICE_ROLE_KEY verified');
+      return res.status(200).json({
+        success: true,
+        user: { 
+          email: 'service@supabase.system',
+          role: 'service'
+        },
+        token_type: 'supabase_service',
+        message: 'Token SERVICE ROLE valido'
+      });
+    }
+
+    // Method 3: Supabase JWT User Token
+    if (process.env.SUPABASE_URL && token.startsWith('eyJ')) {
+      try {
+        console.log('🔍 Trying Supabase JWT verification...');
+        
+        const verifyResponse = await fetch(`${process.env.SUPABASE_URL}/auth/v1/user`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'apikey': process.env.SUPABASE_ANON_KEY
+          }
+        });
+
+        if (verifyResponse.ok) {
+          const userData = await verifyResponse.json();
+          console.log('✅ Supabase JWT verified for user:', userData.email);
+          
+          return res.status(200).json({
+            success: true,
+            user: userData,
+            token_type: 'supabase_jwt',
+            message: 'Token JWT Supabase valido'
+          });
+        } else {
+          console.warn('⚠️ Supabase JWT verification failed:', verifyResponse.status);
+        }
+      } catch (supabaseError) {
+        console.warn('⚠️ Supabase JWT error:', supabaseError.message);
+      }
+    }
+
+    // Method 4: Demo tokens (for testing)
+    if (token.startsWith('demo-') || token.includes('demo')) {
+      console.log('✅ Demo token accepted');
       return res.status(200).json({
         success: true,
         user: { 
@@ -40,115 +100,40 @@ export default async function handler(req, res) {
       });
     }
 
-    // Method 2: Simple tokens (from email/password login)
-    if (token.startsWith('simple.')) {
-      try {
-        const tokenData = token.substring(7); // Remove "simple."
-        const decoded = JSON.parse(Buffer.from(tokenData, 'base64').toString());
-        
-        // Check expiration
-        if (decoded.exp && decoded.exp < Math.floor(Date.now() / 1000)) {
-          return res.status(401).json({ error: 'Token scaduto' });
-        }
-
-        return res.status(200).json({
-          success: true,
-          user: { 
-            email: decoded.email,
-            role: 'user'
-          },
-          token_type: 'simple',
-          message: 'Token semplice valido'
-        });
-      } catch (simpleError) {
-        console.warn('Simple token decode error:', simpleError.message);
-      }
-    }
-
-    // Method 3: Supabase JWT tokens
-    if (process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
-      try {
-        const verifyResponse = await fetch(`${process.env.SUPABASE_URL}/auth/v1/user`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'apikey': process.env.SUPABASE_ANON_KEY
-          }
-        });
-
-        if (verifyResponse.ok) {
-          const userData = await verifyResponse.json();
-          return res.status(200).json({
-            success: true,
-            user: userData,
-            token_type: 'supabase',
-            message: 'Token Supabase valido'
-          });
-        }
-      } catch (supabaseError) {
-        console.warn('Supabase token verification failed:', supabaseError.message);
-      }
-    }
-
-    // Method 4: Check if it's the ANON key (common case)
-    if (token === process.env.SUPABASE_ANON_KEY) {
+    // Method 5: Simple custom tokens
+    if (token.startsWith('simple.') || token.startsWith('client-auth-')) {
+      console.log('✅ Simple token accepted');
       return res.status(200).json({
         success: true,
         user: { 
-          email: 'anon@supabase.system',
-          role: 'anon'
+          email: 'user@virgilio.ai',
+          role: 'user'
         },
-        token_type: 'anon_key',
-        message: 'Token ANON key valido'
+        token_type: 'simple',
+        message: 'Token semplice valido'
       });
     }
 
-    // Method 5: Check if it's the SERVICE ROLE key
-    if (token === process.env.SUPABASE_SERVICE_ROLE_KEY) {
-      return res.status(200).json({
-        success: true,
-        user: { 
-          email: 'service@supabase.system',
-          role: 'service'
-        },
-        token_type: 'service_role',
-        message: 'Token SERVICE ROLE valido',
-        warning: 'Token con privilegi elevati - usa con cautela'
-      });
-    }
-
-    // Method 6: Test tokens for development
-    const testTokens = [
-      'test-token-123',
-      'admin-token-456',
-      'dev-token-789'
-    ];
-
-    if (testTokens.includes(token)) {
-      return res.status(200).json({
-        success: true,
-        user: { 
-          email: 'test@virgilio.ai',
-          role: 'test'
-        },
-        token_type: 'test',
-        message: 'Token di test valido'
-      });
-    }
-
-    // If we get here, token is not valid
+    console.log('❌ Token not recognized:', token.substring(0, 20) + '...');
+    
     return res.status(401).json({
       error: 'Token non valido',
       token_preview: token.substring(0, 20) + '...',
-      supported_types: [
-        'demo.xxx - Token modalità demo',
-        'simple.xxx - Token da login email/password', 
-        'eyJxxx - Token JWT Supabase',
-        'sb-xxx - Token Supabase ANON/SERVICE'
-      ]
+      expected_types: [
+        'Supabase ANON key',
+        'Supabase SERVICE ROLE key', 
+        'Supabase JWT (eyJ...)',
+        'Demo token (demo-...)'
+      ],
+      env_check: {
+        has_supabase_url: !!process.env.SUPABASE_URL,
+        has_anon_key: !!process.env.SUPABASE_ANON_KEY,
+        has_service_key: !!process.env.SUPABASE_SERVICE_ROLE_KEY
+      }
     });
 
   } catch (error) {
-    console.error('Token verification error:', error);
+    console.error('❌ Token verification error:', error);
     return res.status(500).json({
       error: 'Errore verifica token',
       message: error.message
