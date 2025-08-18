@@ -257,6 +257,33 @@
             display: none !important;
         }
 
+        .auth-tab {
+            padding: 8px 12px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .auth-tab.active {
+            background: #5a67d8;
+            color: white;
+            border-color: #5a67d8;
+        }
+
+        .auth-tab:hover:not(.active) {
+            border-color: #5a67d8;
+            background: #f7fafc;
+        }
+
+        .auth-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
         @media (max-width: 768px) {
             .dashboard {
                 grid-template-columns: 1fr;
@@ -288,14 +315,60 @@
                         <label for="apiUrl">URL API Base</label>
                         <input type="url" id="apiUrl" value="https://myapp31.vercel.app" placeholder="https://your-app.vercel.app">
                     </div>
-                    <div class="form-group">
-                        <label for="token">Token Supabase</label>
-                        <input type="password" id="token" placeholder="Inserisci il token JWT">
+                    
+                    <!-- Tab selector -->
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <button type="button" class="auth-tab active" onclick="switchAuthTab('email')" id="emailTab">
+                            📧 Email/Password
+                        </button>
+                        <button type="button" class="auth-tab" onclick="switchAuthTab('token')" id="tokenTab">
+                            🔑 Token JWT
+                        </button>
+                        <button type="button" class="auth-tab" onclick="switchAuthTab('demo')" id="demoTab">
+                            🚀 Demo Mode
+                        </button>
                     </div>
-                    <button class="btn btn-primary" onclick="login()">
-                        <span id="loginSpinner" class="spinner hidden"></span>
-                        Accedi al Sistema
-                    </button>
+
+                    <!-- Email/Password Login -->
+                    <div id="emailAuth" class="auth-section">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" placeholder="admin@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" placeholder="Password">
+                        </div>
+                        <button class="btn btn-primary" onclick="loginWithEmail()">
+                            <span id="emailSpinner" class="spinner hidden"></span>
+                            Accedi con Email
+                        </button>
+                    </div>
+
+                    <!-- Token Login -->
+                    <div id="tokenAuth" class="auth-section hidden">
+                        <div class="form-group">
+                            <label for="token">Token Supabase JWT</label>
+                            <input type="password" id="token" placeholder="eyJhbGciOiJIUzI1NiIs...">
+                        </div>
+                        <button class="btn btn-primary" onclick="loginWithToken()">
+                            <span id="tokenSpinner" class="spinner hidden"></span>
+                            Accedi con Token
+                        </button>
+                    </div>
+
+                    <!-- Demo Mode -->
+                    <div id="demoAuth" class="auth-section hidden">
+                        <div class="status info">
+                            <span>ℹ️</span>
+                            <span>Modalità demo - accesso diretto per testing</span>
+                        </div>
+                        <button class="btn btn-success" onclick="loginDemo()">
+                            <span id="demoSpinner" class="spinner hidden"></span>
+                            🚀 Accesso Demo
+                        </button>
+                    </div>
+
                     <div id="loginStatus" class="hidden"></div>
                 </div>
             </div>
@@ -374,11 +447,73 @@
             }
         }
 
-        // Login
-        async function login() {
+        // Switch authentication tabs
+        function switchAuthTab(tabType) {
+            // Update tab buttons
+            document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabType + 'Tab').classList.add('active');
+            
+            // Show/hide auth sections
+            document.querySelectorAll('.auth-section').forEach(section => section.classList.add('hidden'));
+            document.getElementById(tabType + 'Auth').classList.remove('hidden');
+            
+            // Clear previous status
+            document.getElementById('loginStatus').classList.add('hidden');
+        }
+
+        // Login with Email/Password
+        async function loginWithEmail() {
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const emailSpinner = document.getElementById('emailSpinner');
+            const loginStatus = document.getElementById('loginStatus');
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+            updateApiUrl();
+
+            if (!email || !password) {
+                showStatus(loginStatus, 'error', 'Email e password richiesti');
+                return;
+            }
+
+            emailSpinner.classList.remove('hidden');
+
+            try {
+                const response = await fetch(`${apiUrl}/api/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.access_token) {
+                    authToken = data.access_token;
+                    isAuthenticated = true;
+                    showStatus(loginStatus, 'success', 'Login con email riuscito!');
+                    enableActions();
+                    updateSystemStatus('success', 'Sistema autenticato via email');
+                    logActivity('✅ Login effettuato con email/password', 'success');
+                    await loadStatistics();
+                } else {
+                    throw new Error(data.message || 'Login fallito');
+                }
+            } catch (error) {
+                console.error('Email login error:', error);
+                showStatus(loginStatus, 'error', `Errore login: ${error.message}`);
+                logActivity(`❌ Errore login email: ${error.message}`, 'error');
+            } finally {
+                emailSpinner.classList.add('hidden');
+            }
+        }
+
+        // Login with JWT Token
+        async function loginWithToken() {
             const tokenInput = document.getElementById('token');
-            const loginBtn = document.querySelector('.btn-primary');
-            const loginSpinner = document.getElementById('loginSpinner');
+            const tokenSpinner = document.getElementById('tokenSpinner');
             const loginStatus = document.getElementById('loginStatus');
 
             authToken = tokenInput.value.trim();
@@ -389,8 +524,7 @@
                 return;
             }
 
-            loginBtn.disabled = true;
-            loginSpinner.classList.remove('hidden');
+            tokenSpinner.classList.remove('hidden');
 
             try {
                 const response = await fetch(`${apiUrl}/api/auth/verify`, {
@@ -403,23 +537,77 @@
 
                 if (response.ok) {
                     isAuthenticated = true;
-                    showStatus(loginStatus, 'success', 'Autenticazione riuscita!');
+                    showStatus(loginStatus, 'success', 'Autenticazione token riuscita!');
                     enableActions();
-                    updateSystemStatus('success', 'Sistema autenticato e pronto');
-                    logActivity('✅ Login effettuato con successo', 'success');
+                    updateSystemStatus('success', 'Sistema autenticato via token JWT');
+                    logActivity('✅ Login effettuato con token JWT', 'success');
                     await loadStatistics();
                 } else {
-                    throw new Error(`Login failed: ${response.status}`);
+                    throw new Error(`Token non valido: ${response.status}`);
                 }
             } catch (error) {
-                console.error('Login error:', error);
-                showStatus(loginStatus, 'error', `Errore login: ${error.message}`);
-                logActivity(`❌ Errore login: ${error.message}`, 'error');
+                console.error('Token login error:', error);
+                showStatus(loginStatus, 'error', `Errore token: ${error.message}`);
+                logActivity(`❌ Errore login token: ${error.message}`, 'error');
             } finally {
-                loginBtn.disabled = false;
-                loginSpinner.classList.add('hidden');
+                tokenSpinner.classList.add('hidden');
             }
         }
+
+        // Demo Mode Login
+        async function loginDemo() {
+            const demoSpinner = document.getElementById('demoSpinner');
+            const loginStatus = document.getElementById('loginStatus');
+
+            updateApiUrl();
+            demoSpinner.classList.remove('hidden');
+
+            try {
+                // In demo mode, we use a fake token or try to get one from the API
+                const response = await fetch(`${apiUrl}/api/auth/demo`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ mode: 'demo' })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    authToken = data.token || 'demo-token-' + Date.now();
+                } else {
+                    // Fallback: use demo token
+                    authToken = 'demo-token-' + Date.now();
+                }
+
+                isAuthenticated = true;
+                showStatus(loginStatus, 'success', '🚀 Modalità demo attivata!');
+                enableActions();
+                updateSystemStatus('success', 'Sistema in modalità demo - testing abilitato');
+                logActivity('🚀 Modalità demo attivata per testing', 'success');
+                logActivity('⚠️ Attenzione: modalità demo - dati potrebbero essere simulati', 'warning');
+                
+                // Load demo statistics
+                document.getElementById('kdrive-docs-count').textContent = '?';
+                document.getElementById('total-chunks').textContent = '?';
+                document.getElementById('last-update').textContent = 'Demo';
+
+            } catch (error) {
+                console.error('Demo login error:', error);
+                // Even if demo endpoint fails, enable demo mode
+                authToken = 'demo-token-' + Date.now();
+                isAuthenticated = true;
+                showStatus(loginStatus, 'success', '🚀 Modalità demo attivata (offline)!');
+                enableActions();
+                updateSystemStatus('success', 'Sistema in modalità demo offline');
+                logActivity('🚀 Modalità demo offline attivata', 'success');
+            } finally {
+                demoSpinner.classList.add('hidden');
+            }
+        }
+
+        // Legacy login function (removed)
+        // async function login() { ... }
 
         // Enable actions after login
         function enableActions() {
@@ -645,6 +833,13 @@
         document.addEventListener('DOMContentLoaded', function() {
             logActivity('🚀 Dashboard kDrive avviata e pronta', 'info');
             logActivity('🔗 Connessione: kDrive Infomaniak Share', 'info');
+            logActivity('🎯 Scegli metodo di autenticazione:', 'info');
+            logActivity('   📧 Email/Password - Login con credenziali', 'info');
+            logActivity('   🔑 Token JWT - Usa token Supabase diretto', 'info');
+            logActivity('   🚀 Demo Mode - Testing senza autenticazione', 'info');
+            
+            // Set default tab to email
+            switchAuthTab('email');
         });
     </script>
 </body>
