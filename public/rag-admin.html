@@ -488,19 +488,23 @@
                     body: JSON.stringify({ email, password })
                 });
 
-                const data = await response.json();
-
-                if (response.ok && data.access_token) {
-                    authToken = data.access_token;
-                    isAuthenticated = true;
-                    showStatus(loginStatus, 'success', 'Login con email riuscito!');
-                    enableActions();
-                    updateSystemStatus('success', 'Sistema autenticato via email');
-                    logActivity('✅ Login effettuato con email/password', 'success');
-                    await loadStatistics();
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.access_token) {
+                        authToken = data.access_token;
+                        isAuthenticated = true;
+                        showStatus(loginStatus, 'success', 'Login con email riuscito!');
+                        enableActions();
+                        updateSystemStatus('success', 'Sistema autenticato via email');
+                        logActivity('✅ Login effettuato con email/password', 'success');
+                        await loadStatistics();
+                        return;
+                    }
                 } else {
-                    throw new Error(data.message || 'Login fallito');
+                    const errorData = await response.json().catch(() => ({ error: 'Errore sconosciuto' }));
+                    throw new Error(errorData.error || `Login failed: ${response.status}`);
                 }
+                
             } catch (error) {
                 console.error('Email login error:', error);
                 showStatus(loginStatus, 'error', `Errore login: ${error.message}`);
@@ -510,7 +514,7 @@
             }
         }
 
-        // Login with JWT Token
+        // Login with JWT Token  
         async function loginWithToken() {
             const tokenInput = document.getElementById('token');
             const tokenSpinner = document.getElementById('tokenSpinner');
@@ -536,15 +540,18 @@
                 });
 
                 if (response.ok) {
+                    const data = await response.json();
                     isAuthenticated = true;
                     showStatus(loginStatus, 'success', 'Autenticazione token riuscita!');
                     enableActions();
-                    updateSystemStatus('success', 'Sistema autenticato via token JWT');
+                    updateSystemStatus('success', `Sistema autenticato via ${data.token_type || 'token'}`);
                     logActivity('✅ Login effettuato con token JWT', 'success');
                     await loadStatistics();
                 } else {
-                    throw new Error(`Token non valido: ${response.status}`);
+                    const errorData = await response.json().catch(() => ({ error: 'Token non valido' }));
+                    throw new Error(errorData.error || `Token verification failed: ${response.status}`);
                 }
+                
             } catch (error) {
                 console.error('Token login error:', error);
                 showStatus(loginStatus, 'error', `Errore token: ${error.message}`);
@@ -554,7 +561,7 @@
             }
         }
 
-        // Demo Mode Login
+        // Demo Mode Login (Client-side only)
         async function loginDemo() {
             const demoSpinner = document.getElementById('demoSpinner');
             const loginStatus = document.getElementById('loginStatus');
@@ -563,44 +570,39 @@
             demoSpinner.classList.remove('hidden');
 
             try {
-                // In demo mode, we use a fake token or try to get one from the API
-                const response = await fetch(`${apiUrl}/api/auth/demo`, {
+                // Demo mode gets a real demo token from the API
+                const response = await fetch(`${apiUrl}/api/auth/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ mode: 'demo' })
+                    body: JSON.stringify({ 
+                        email: 'demo@virgilio.ai', 
+                        password: 'demo123' 
+                    })
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    authToken = data.token || 'demo-token-' + Date.now();
+                    authToken = data.access_token;
+                    isAuthenticated = true;
+                    
+                    showStatus(loginStatus, 'success', '🚀 Modalità demo attivata!');
+                    enableActions();
+                    updateSystemStatus('success', 'Sistema in modalità demo - kDrive reale');
+                    logActivity('🚀 Modalità demo attivata con token reale', 'success');
+                    logActivity('✅ Ready per kDrive discovery/processing reale', 'success');
+                    
+                    await loadStatistics();
                 } else {
-                    // Fallback: use demo token
-                    authToken = 'demo-token-' + Date.now();
+                    throw new Error('Demo login API non disponibile');
                 }
-
-                isAuthenticated = true;
-                showStatus(loginStatus, 'success', '🚀 Modalità demo attivata!');
-                enableActions();
-                updateSystemStatus('success', 'Sistema in modalità demo - testing abilitato');
-                logActivity('🚀 Modalità demo attivata per testing', 'success');
-                logActivity('⚠️ Attenzione: modalità demo - dati potrebbero essere simulati', 'warning');
-                
-                // Load demo statistics
-                document.getElementById('kdrive-docs-count').textContent = '?';
-                document.getElementById('total-chunks').textContent = '?';
-                document.getElementById('last-update').textContent = 'Demo';
 
             } catch (error) {
                 console.error('Demo login error:', error);
-                // Even if demo endpoint fails, enable demo mode
-                authToken = 'demo-token-' + Date.now();
-                isAuthenticated = true;
-                showStatus(loginStatus, 'success', '🚀 Modalità demo attivata (offline)!');
-                enableActions();
-                updateSystemStatus('success', 'Sistema in modalità demo offline');
-                logActivity('🚀 Modalità demo offline attivata', 'success');
+                showStatus(loginStatus, 'error', `❌ Errore demo: ${error.message}`);
+                logActivity(`❌ Errore modalità demo: ${error.message}`, 'error');
+                updateSystemStatus('error', 'Demo mode non disponibile');
             } finally {
                 demoSpinner.classList.add('hidden');
             }
@@ -615,7 +617,7 @@
             document.getElementById('processBtn').disabled = false;
         }
 
-        // Discover kDrive documents
+        // Discover kDrive documents (API reale)
         async function discoverKDriveDocuments() {
             if (!isAuthenticated) {
                 alert('Effettua prima il login');
@@ -634,6 +636,7 @@
 
             try {
                 updateApiUrl();
+                
                 const response = await fetch(`${apiUrl}/api/sync/discover-kdrive`, {
                     method: 'GET',
                     headers: {
@@ -641,6 +644,11 @@
                         'Content-Type': 'application/json'
                     }
                 });
+
+                if (!response.ok) {
+                    const errorText = await response.text().catch(() => 'Unknown error');
+                    throw new Error(`API Error ${response.status}: ${errorText.substring(0, 200)}`);
+                }
 
                 const data = await response.json();
 
@@ -652,6 +660,7 @@
                     logActivity(`✅ Discovery kDrive completato: ${stats.total_discovered || 0} documenti`, 'success');
                     logActivity(`📄 Nuovi file da processare: ${stats.new_files || 0}`, 'info');
                     logActivity(`🔧 Metodo discovery: ${stats.discovery_method || 'unknown'}`, 'info');
+                    logActivity(`⏱️ Tempo discovery: ${stats.discovery_time_ms || 0}ms`, 'info');
                     
                     // Update statistics
                     document.getElementById('kdrive-docs-count').textContent = stats.total_discovered || 0;
@@ -665,14 +674,29 @@
                             'linear-gradient(135deg, #48bb78 0%, #38a169 100%)';
                         logActivity(`🚀 ${stats.new_files} file pronti per il processing`, 'info');
                     }
+                    
+                    // Log details about files found
+                    if (data.files && data.files.length > 0) {
+                        logActivity(`📂 File trovati: ${data.files.map(f => f.name).join(', ')}`, 'info');
+                    }
                 } else {
                     throw new Error(data.message || 'Discovery fallito');
                 }
+                
             } catch (error) {
                 console.error('Discovery error:', error);
                 showStatus(actionStatus, 'error', `❌ Errore discovery: ${error.message}`);
                 logActivity(`❌ Errore discovery kDrive: ${error.message}`, 'error');
                 updateSystemStatus('error', 'Errore durante discovery kDrive');
+                
+                // Log suggestions for fixing
+                if (error.message.includes('404')) {
+                    logActivity('💡 Suggerimento: Verifica che il file /api/sync/discover-kdrive.js esista', 'warning');
+                } else if (error.message.includes('401')) {
+                    logActivity('💡 Suggerimento: Verifica token di autenticazione', 'warning');
+                } else if (error.message.includes('500')) {
+                    logActivity('💡 Suggerimento: Controlla i log del server per errori interni', 'warning');
+                }
             } finally {
                 discoverBtn.disabled = false;
                 discoverSpinner.classList.add('hidden');
@@ -680,7 +704,7 @@
             }
         }
 
-        // Process kDrive documents
+        // Process kDrive documents (API reale)
         async function processKDriveDocuments() {
             if (!isAuthenticated) {
                 alert('Effettua prima il login');
@@ -691,11 +715,12 @@
             const processSpinner = document.getElementById('processSpinner');
             const actionStatus = document.getElementById('actionStatus');
 
-            // Get list of files to process first
             logActivity('🔍 Ricerca file kDrive da processare...', 'info');
             
             try {
                 updateApiUrl();
+                
+                // First, get list of files to process
                 const discoverResponse = await fetch(`${apiUrl}/api/sync/discover-kdrive`, {
                     method: 'GET',
                     headers: {
@@ -704,17 +729,22 @@
                     }
                 });
 
+                if (!discoverResponse.ok) {
+                    throw new Error(`Discovery API error: ${discoverResponse.status}`);
+                }
+
                 const discoverData = await discoverResponse.json();
                 
                 if (!discoverData.success) {
-                    throw new Error('Impossibile ottenere lista file');
+                    throw new Error(discoverData.message || 'Impossibile ottenere lista file');
                 }
 
-                const newFiles = discoverData.files.filter(f => f.needs_processing);
+                const newFiles = discoverData.files?.filter(f => f.needs_processing) || [];
                 
                 if (newFiles.length === 0) {
                     showStatus(actionStatus, 'warning', '⚠️ Nessun nuovo file da processare');
                     logActivity('⚠️ Nessun nuovo file kDrive trovato da processare', 'warning');
+                    logActivity('💡 Esegui prima il discovery per trovare nuovi file', 'info');
                     return;
                 }
 
@@ -723,8 +753,9 @@
                 actionStatus.classList.add('hidden');
 
                 logActivity(`🚀 Avvio processing ${newFiles.length} file kDrive...`, 'info');
+                logActivity(`📂 File da processare: ${newFiles.map(f => f.name).join(', ')}`, 'info');
 
-                // Process files
+                // Process files via API
                 const processResponse = await fetch(`${apiUrl}/api/sync/process-kdrive`, {
                     method: 'POST',
                     headers: {
@@ -737,6 +768,11 @@
                     })
                 });
 
+                if (!processResponse.ok) {
+                    const errorText = await processResponse.text().catch(() => 'Unknown error');
+                    throw new Error(`Processing API error ${processResponse.status}: ${errorText.substring(0, 200)}`);
+                }
+
                 const processData = await processResponse.json();
 
                 if (processData.success) {
@@ -747,9 +783,20 @@
                     logActivity(`✅ Processing kDrive completato: ${stats.files_processed} file processati`, 'success');
                     logActivity(`📚 Chunks creati: ${stats.total_chunks_saved}`, 'success');
                     
+                    // Log details about each processed file
+                    if (processData.results && processData.results.length > 0) {
+                        processData.results.forEach(result => {
+                            if (result.success) {
+                                logActivity(`✅ ${result.filename}: ${result.chunks_saved} chunks`, 'success');
+                            } else {
+                                logActivity(`❌ ${result.filename}: ${result.error}`, 'error');
+                            }
+                        });
+                    }
+                    
                     // Update statistics
-                    document.getElementById('total-chunks').textContent = 
-                        (parseInt(document.getElementById('total-chunks').textContent) || 0) + stats.total_chunks_saved;
+                    const currentChunks = parseInt(document.getElementById('total-chunks').textContent) || 0;
+                    document.getElementById('total-chunks').textContent = currentChunks + (stats.total_chunks_saved || 0);
                     
                     updateSystemStatus('success', 
                         `Processing completato: ${stats.total_chunks_saved} nuovi chunks creati`);
@@ -758,11 +805,21 @@
                 } else {
                     throw new Error(processData.message || 'Processing fallito');
                 }
+                
             } catch (error) {
                 console.error('Processing error:', error);
                 showStatus(actionStatus, 'error', `❌ Errore processing: ${error.message}`);
                 logActivity(`❌ Errore processing kDrive: ${error.message}`, 'error');
                 updateSystemStatus('error', 'Errore durante processing kDrive');
+                
+                // Log suggestions for fixing
+                if (error.message.includes('404')) {
+                    logActivity('💡 Suggerimento: Verifica che il file /api/sync/process-kdrive.js esista', 'warning');
+                } else if (error.message.includes('401')) {
+                    logActivity('💡 Suggerimento: Verifica token di autenticazione', 'warning');
+                } else if (error.message.includes('500')) {
+                    logActivity('💡 Suggerimento: Controlla i log del server e configurazione OPENAI_API_KEY', 'warning');
+                }
             } finally {
                 processBtn.disabled = false;
                 processSpinner.classList.add('hidden');
@@ -770,30 +827,60 @@
             }
         }
 
-        // Load statistics
+        // Load statistics (API reale)
         async function loadStatistics() {
             if (!isAuthenticated) return;
 
             try {
                 updateApiUrl();
                 
-                // Get documents count
                 const docsResponse = await fetch(`${apiUrl}/api/documents/count`, {
                     headers: {
                         'Authorization': `Bearer ${authToken}`
                     }
                 });
                 
-                if (docsResponse.ok) {
-                    const docsData = await docsResponse.json();
+                if (!docsResponse.ok) {
+                    throw new Error(`API stats error: ${docsResponse.status}`);
+                }
+
+                const docsData = await docsResponse.json();
+                
+                if (docsData.success) {
                     document.getElementById('total-chunks').textContent = docsData.total || 0;
                     
                     const lastUpdate = new Date().toLocaleDateString('it-IT');
                     document.getElementById('last-update').textContent = lastUpdate;
+                    
+                    logActivity(`📊 Statistiche caricate: ${docsData.total || 0} chunks`, 'info');
+                    
+                    // Log additional statistics if available
+                    if (docsData.platforms) {
+                        const platforms = Object.entries(docsData.platforms)
+                            .map(([platform, count]) => `${platform}: ${count}`)
+                            .join(', ');
+                        logActivity(`📊 Piattaforme: ${platforms}`, 'info');
+                    }
+                    
+                    if (docsData.recent_files && docsData.recent_files.length > 0) {
+                        logActivity(`📊 File recenti: ${docsData.recent_files.length} trovati`, 'info');
+                    }
+                } else {
+                    throw new Error(docsData.message || 'Statistiche non disponibili');
                 }
+                
             } catch (error) {
                 console.error('Stats error:', error);
-                logActivity(`⚠️ Errore caricamento statistiche: ${error.message}`, 'warning');
+                logActivity(`❌ Errore caricamento statistiche: ${error.message}`, 'error');
+                
+                // Don't use demo statistics - just show error
+                if (error.message.includes('404')) {
+                    logActivity('💡 Suggerimento: Crea il file /api/documents/count.js', 'warning');
+                } else if (error.message.includes('401')) {
+                    logActivity('💡 Suggerimento: Verifica token di autenticazione', 'warning');
+                } else if (error.message.includes('500')) {
+                    logActivity('💡 Suggerimento: Verifica configurazione Supabase nel file API', 'warning');
+                }
             }
         }
 
@@ -831,15 +918,40 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            logActivity('🚀 Dashboard kDrive avviata e pronta', 'info');
+            logActivity('🚀 Dashboard kDrive Sistema REALE avviata', 'info');
             logActivity('🔗 Connessione: kDrive Infomaniak Share', 'info');
-            logActivity('🎯 Scegli metodo di autenticazione:', 'info');
-            logActivity('   📧 Email/Password - Login con credenziali', 'info');
-            logActivity('   🔑 Token JWT - Usa token Supabase diretto', 'info');
-            logActivity('   🚀 Demo Mode - Testing senza autenticazione', 'info');
+            logActivity('⚡ Sistema configurato per API REALI - NO SIMULAZIONI', 'success');
+            logActivity('', 'info');
+            logActivity('🎯 MODALITÀ DI AUTENTICAZIONE:', 'info');
+            logActivity('', 'info');
+            logActivity('   🚀 DEMO MODE (RACCOMANDATO):', 'success');
+            logActivity('      ✅ Usa credenziali demo@virgilio.ai / demo123', 'success');
+            logActivity('      ✅ Ottiene token reale dal sistema', 'success');
+            logActivity('      ✅ Testa API kDrive reali', 'success');
+            logActivity('', 'info');
+            logActivity('   📧 EMAIL/PASSWORD:', 'info');
+            logActivity('      ✅ admin@virgilio.ai / virgilio2024', 'info');
+            logActivity('      ✅ admin@example.com / admin123', 'info');
+            logActivity('      ✅ test@test.com / test123', 'info');
+            logActivity('      ✅ qualsiasi-email / demo123', 'info');
+            logActivity('', 'info');
+            logActivity('   🔑 TOKEN JWT:', 'info');
+            logActivity('      🔥 Incolla il tuo SUPABASE_ANON_KEY', 'info');
+            logActivity('      🔥 Oppure SUPABASE_SERVICE_ROLE_KEY', 'info');
+            logActivity('', 'info');
+            logActivity('📋 REQUISITI PER IL FUNZIONAMENTO:', 'warning');
+            logActivity('   ✅ File /api/auth/verify.js', 'warning');
+            logActivity('   ✅ File /api/auth/login.js', 'warning');
+            logActivity('   ✅ File /api/documents/count.js', 'warning');
+            logActivity('   ✅ File /api/sync/discover-kdrive.js', 'warning');
+            logActivity('   ✅ File /api/sync/process-kdrive.js', 'warning');
+            logActivity('   ✅ Variabili ENV: SUPABASE_URL, SUPABASE_ANON_KEY', 'warning');
+            logActivity('   ✅ Variabili ENV: OPENAI_API_KEY', 'warning');
+            logActivity('', 'info');
+            logActivity('🎯 PER INIZIARE: Clicca "🚀 Demo Mode" → "Accesso Demo"', 'success');
             
-            // Set default tab to email
-            switchAuthTab('email');
+            // Set default tab to demo mode
+            switchAuthTab('demo');
         });
     </script>
 </body>
