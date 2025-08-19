@@ -1,12 +1,16 @@
 // api/sync/process-kdrive.js
 const { createClient: createSupabase } = require("@supabase/supabase-js");
 const { createClient: createWebdav } = require("webdav");
-const OpenAI = require("openai");
 const pdfParse = require("pdf-parse");
 const mammoth = require("mammoth");
-const { JSDOM } = require("jsdom");
 
 module.exports.config = { runtime: "nodejs" };
+
+// carica 'openai' (ESM) quando serve
+async function getOpenAI() {
+  const OpenAI = (await import("openai")).default;
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+}
 
 function supa() {
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
@@ -22,40 +26,49 @@ function webdav() {
   if (process.env.KDRIVE_PUBLIC_TOKEN) {
     return createWebdav(base, {
       username: process.env.KDRIVE_PUBLIC_TOKEN,
-      password: process.env.KDRIVE_PUBLIC_PASSWORD || "",
+      password: process.env.KDRIVE_PUBLIC_PASSWORD || ""
     });
   }
-
   if (!process.env.KDRIVE_EMAIL || !process.env.KDRIVE_PASSWORD) {
     throw new Error("KDRIVE_EMAIL o KDRIVE_PASSWORD mancanti");
   }
   return createWebdav(base, {
     username: process.env.KDRIVE_EMAIL,
-    password: process.env.KDRIVE_PASSWORD,
+    password: process.env.KDRIVE_PASSWORD
   });
 }
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
+// strip HTML veloce senza jsdom
 function stripHtml(html) {
-  const dom = new JSDOM(html || "");
-  return dom.window.document.body.textContent || "";
+  return (html || "")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 async function bufferToText(filename, mime, buffer) {
   const lower = (filename || "").toLowerCase();
 
+  // PDF
   if (mime?.includes("pdf") || lower.endsWith(".pdf")) {
     const data = await pdfParse(buffer);
     return data.text || "";
   }
+
+  // DOCX → testo “raw”, niente HTML
   if (lower.endsWith(".docx")) {
-    const { value } = await mammoth.convertToHtml({ buffer });
-    return stripHtml(value);
+    const { value } = await mammoth.extractRawText({ buffer });
+    return value || "";
   }
+
+  // HTML
   if (mime?.includes("html") || lower.endsWith(".html") || lower.endsWith(".htm")) {
     return stripHtml(buffer.toString("utf8"));
   }
+
+  // testo semplice (txt, md, csv, json…)
   try {
     return buffer.toString("utf8");
   } catch {
@@ -82,6 +95,7 @@ module.exports = async function handler(req, res) {
   try {
     const db = supa();
     const client = webdav();
+    const openai = await getOpenAI();
 
     const { data: docs, error: docsErr } = await db
       .from("documents")
@@ -99,6 +113,7 @@ module.exports = async function handler(req, res) {
       try {
         const buf = Buffer.from(await client.getFileContents(d.path));
         const text = await bufferToText(d.path, d.mime, buf);
+
         if (!text || text.trim().length < 10) {
           out.skipped++;
           continue;
@@ -110,7 +125,7 @@ module.exports = async function handler(req, res) {
 
         const emb = await openai.embeddings.create({
           model: "text-embedding-3-small",
-          input: pieces,
+          input: pieces
         });
 
         const rows = pieces.map((content, idx) => ({
@@ -118,7 +133,7 @@ module.exports = async function handler(req, res) {
           chunk_index: idx,
           content,
           embedding: emb.data[idx].embedding,
-          token_count: content.length,
+          token_count: content.length
         }));
 
         const { error: insErr } = await db.from("chunks").insert(rows);
