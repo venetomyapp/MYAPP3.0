@@ -1,40 +1,51 @@
 // pages/api/sync/discover-kdrive.js
-export const config = { runtime: 'nodejs' };
+export const config = { runtime: "nodejs" };
 
-import { createClient as createSupabase } from '@supabase/supabase-js';
-import { createClient as createWebdav } from 'webdav';
+import { createClient as createSupabase } from "@supabase/supabase-js";
+import { createClient as createWebdav } from "webdav";
 
 function supa() {
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    throw new Error('SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY mancanti');
+    throw new Error("SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY mancanti");
   }
   return createSupabase(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 }
 
 function webdav() {
-  if (!process.env.KDRIVE_WEBDAV_URL) throw new Error('KDRIVE_WEBDAV_URL mancante');
-  if (!process.env.KDRIVE_EMAIL) throw new Error('KDRIVE_EMAIL mancante');
-  if (!process.env.KDRIVE_PASSWORD) throw new Error('KDRIVE_PASSWORD mancante');
-  return createWebdav(process.env.KDRIVE_WEBDAV_URL, {
+  const base = process.env.KDRIVE_WEBDAV_URL;
+  if (!base) throw new Error("KDRIVE_WEBDAV_URL mancante");
+
+  // Modalità link pubblico: username = token, password = eventuale password della share
+  if (process.env.KDRIVE_PUBLIC_TOKEN) {
+    return createWebdav(base, {
+      username: process.env.KDRIVE_PUBLIC_TOKEN,
+      password: process.env.KDRIVE_PUBLIC_PASSWORD || "",
+    });
+  }
+
+  // Modalità account personale
+  if (!process.env.KDRIVE_EMAIL || !process.env.KDRIVE_PASSWORD) {
+    throw new Error("KDRIVE_EMAIL o KDRIVE_PASSWORD mancanti");
+  }
+  return createWebdav(base, {
     username: process.env.KDRIVE_EMAIL,
     password: process.env.KDRIVE_PASSWORD,
   });
 }
 
 export default async function handler(req, res) {
-  const debug = req.query.debug === '1';
-  const dry = req.query.dry === '1';
-  const basePath = (process.env.KDRIVE_DEFAULT_PATH || '/').trim();
+  const debug = req.query.debug === "1";
+  const dry = req.query.dry === "1";
+  const basePath = (process.env.KDRIVE_DEFAULT_PATH || "/").trim();
 
   const out = {
     ok: false,
+    mode: process.env.KDRIVE_PUBLIC_TOKEN ? "public" : "account",
     env: {
-      KDRIVE_EMAIL: !!process.env.KDRIVE_EMAIL,
-      KDRIVE_PASSWORD: !!process.env.KDRIVE_PASSWORD,
       KDRIVE_WEBDAV_URL: !!process.env.KDRIVE_WEBDAV_URL,
-      KDRIVE_DEFAULT_PATH: !!process.env.KDRIVE_DEFAULT_PATH,
+      KDRIVE_PUBLIC_TOKEN: !!process.env.KDRIVE_PUBLIC_TOKEN,
+      KDRIVE_EMAIL: !!process.env.KDRIVE_EMAIL,
       SUPABASE_URL: !!process.env.SUPABASE_URL,
-      SUPABASE_SERVICE_ROLE_KEY: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
     },
     basePath,
     dry,
@@ -44,8 +55,8 @@ export default async function handler(req, res) {
     const client = webdav();
     const db = supa();
 
-    // Verifica tabelle prima di scrivere
-    const checkDocs = await db.from('documents').select('id').limit(1);
+    // Controllo tabella "documents"
+    const checkDocs = await db.from("documents").select("id").limit(1);
     if (checkDocs.error) {
       return res.status(500).json({
         ...out,
@@ -53,7 +64,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // Lista la cartella
+    // Listing ricorsivo
     let list;
     try {
       list = await client.getDirectoryContents(basePath, { deep: true });
@@ -61,41 +72,46 @@ export default async function handler(req, res) {
       return res.status(500).json({ ...out, error: `WebDAV listing fallito: ${String(e)}` });
     }
 
-    const files = list.filter((i) => i.type === 'file');
+    const files = (list || []).filter((i) => i.type === "file");
     out.discovered = files.length;
-    out.sample = files.slice(0, 10).map((f) => ({ filename: f.filename, size: f.size, mime: f.mime }));
+    out.sample = files.slice(0, 10).map((f) => ({
+      filename: f.filename,
+      size: f.size,
+      mime: f.mime,
+      lastmod: f.lastmod,
+    }));
 
     if (dry || files.length === 0) {
       out.ok = true;
       return res.status(200).json(out);
     }
 
+    // Upsert metadati in documents (onConflict: path)
     let upserts = 0;
     const errors = [];
-
     for (const f of files) {
       const row = {
         path: f.filename,
         mime: f.mime || null,
-        size: f.size || null,
+        size: f.size ?? null,
         etag: f.etag || null,
         lastmod: f.lastmod ? new Date(f.lastmod).toISOString() : null,
         updated_at: new Date().toISOString(),
       };
       try {
-        const { error } = await db.from('documents').upsert(row, { onConflict: 'path' });
+        const { error } = await db.from("documents").upsert(row, { onConflict: "path" });
         if (error) throw error;
         upserts++;
       } catch (e) {
         errors.push({ file: f.filename, error: String(e) });
-        if (debug) console.error('Upsert error', f.filename, e);
+        if (debug) console.error("Upsert error", f.filename, e);
       }
     }
 
     out.ok = errors.length === 0;
     out.upserts = upserts;
     out.errors = errors;
-    res.status(out.ok ? 200 : 207).json(out); // 207 = multi-status (alcuni errori)
+    res.status(out.ok ? 200 : 207).json(out); // 207 = Multi-Status (parzialmente ok)
   } catch (e) {
     res.status(500).json({ ...out, error: String(e) });
   }
