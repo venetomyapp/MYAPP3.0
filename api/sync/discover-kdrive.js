@@ -1,26 +1,30 @@
 // api/sync/discover-kdrive.js
-const { createClient: createSupabase } = require("@supabase/supabase-js");
 const { createClient: createWebdav } = require("webdav");
 
 module.exports.config = { runtime: "nodejs" };
 
-function supa() {
+// Supabase è ESM → lo carico quando serve
+async function getSupa() {
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     throw new Error("SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY mancanti");
   }
-  return createSupabase(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+  const { createClient } = await import("@supabase/supabase-js");
+  return createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 }
 
-function webdav() {
+function getWebdav() {
   const base = process.env.KDRIVE_WEBDAV_URL;
   if (!base) throw new Error("KDRIVE_WEBDAV_URL mancante");
 
+  // Modalità link pubblico (username = token)
   if (process.env.KDRIVE_PUBLIC_TOKEN) {
     return createWebdav(base, {
       username: process.env.KDRIVE_PUBLIC_TOKEN,
       password: process.env.KDRIVE_PUBLIC_PASSWORD || ""
     });
   }
+
+  // Modalità account
   if (!process.env.KDRIVE_EMAIL || !process.env.KDRIVE_PASSWORD) {
     throw new Error("KDRIVE_EMAIL o KDRIVE_PASSWORD mancanti");
   }
@@ -38,19 +42,15 @@ module.exports = async function handler(req, res) {
   const out = {
     ok: false,
     mode: process.env.KDRIVE_PUBLIC_TOKEN ? "public" : "account",
-    env: {
-      KDRIVE_WEBDAV_URL: !!process.env.KDRIVE_WEBDAV_URL,
-      KDRIVE_PUBLIC_TOKEN: !!process.env.KDRIVE_PUBLIC_TOKEN,
-      SUPABASE_URL: !!process.env.SUPABASE_URL
-    },
     basePath,
     dry
   };
 
   try {
-    const client = webdav();
-    const db = supa();
+    const client = getWebdav();
+    const db = await getSupa(); // <— ESM import qui
 
+    // verifica tabella
     const checkDocs = await db.from("documents").select("id").limit(1);
     if (checkDocs.error) {
       return res.status(500).json({
@@ -59,6 +59,7 @@ module.exports = async function handler(req, res) {
       });
     }
 
+    // listing ricorsivo
     let list;
     try {
       list = await client.getDirectoryContents(basePath, { deep: true });
