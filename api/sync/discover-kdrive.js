@@ -1,8 +1,8 @@
-// pages/api/sync/discover-kdrive.js
-export const config = { runtime: "nodejs" };
+// api/sync/discover-kdrive.js
+const { createClient: createSupabase } = require("@supabase/supabase-js");
+const { createClient: createWebdav } = require("webdav");
 
-import { createClient as createSupabase } from "@supabase/supabase-js";
-import { createClient as createWebdav } from "webdav";
+module.exports.config = { runtime: "nodejs" };
 
 function supa() {
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
@@ -15,7 +15,7 @@ function webdav() {
   const base = process.env.KDRIVE_WEBDAV_URL;
   if (!base) throw new Error("KDRIVE_WEBDAV_URL mancante");
 
-  // Modalità link pubblico: username = token, password = eventuale password della share
+  // Modalità link pubblico (username = token)
   if (process.env.KDRIVE_PUBLIC_TOKEN) {
     return createWebdav(base, {
       username: process.env.KDRIVE_PUBLIC_TOKEN,
@@ -23,7 +23,7 @@ function webdav() {
     });
   }
 
-  // Modalità account personale
+  // Modalità account
   if (!process.env.KDRIVE_EMAIL || !process.env.KDRIVE_PASSWORD) {
     throw new Error("KDRIVE_EMAIL o KDRIVE_PASSWORD mancanti");
   }
@@ -33,7 +33,7 @@ function webdav() {
   });
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   const debug = req.query.debug === "1";
   const dry = req.query.dry === "1";
   const basePath = (process.env.KDRIVE_DEFAULT_PATH || "/").trim();
@@ -44,7 +44,6 @@ export default async function handler(req, res) {
     env: {
       KDRIVE_WEBDAV_URL: !!process.env.KDRIVE_WEBDAV_URL,
       KDRIVE_PUBLIC_TOKEN: !!process.env.KDRIVE_PUBLIC_TOKEN,
-      KDRIVE_EMAIL: !!process.env.KDRIVE_EMAIL,
       SUPABASE_URL: !!process.env.SUPABASE_URL,
     },
     basePath,
@@ -55,7 +54,7 @@ export default async function handler(req, res) {
     const client = webdav();
     const db = supa();
 
-    // Controllo tabella "documents"
+    // verifica tabella
     const checkDocs = await db.from("documents").select("id").limit(1);
     if (checkDocs.error) {
       return res.status(500).json({
@@ -64,7 +63,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // Listing ricorsivo
+    // listing ricorsivo
     let list;
     try {
       list = await client.getDirectoryContents(basePath, { deep: true });
@@ -86,7 +85,7 @@ export default async function handler(req, res) {
       return res.status(200).json(out);
     }
 
-    // Upsert metadati in documents (onConflict: path)
+    // upsert
     let upserts = 0;
     const errors = [];
     for (const f of files) {
@@ -111,8 +110,8 @@ export default async function handler(req, res) {
     out.ok = errors.length === 0;
     out.upserts = upserts;
     out.errors = errors;
-    res.status(out.ok ? 200 : 207).json(out); // 207 = Multi-Status (parzialmente ok)
+    res.status(out.ok ? 200 : 207).json(out); // 207 = parziale
   } catch (e) {
     res.status(500).json({ ...out, error: String(e) });
   }
-}
+};
