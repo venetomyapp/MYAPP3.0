@@ -1,4 +1,3 @@
-// pages/api/sync/diag-webdav.js
 export const config = { runtime: "nodejs" };
 
 import { createClient } from "webdav";
@@ -18,7 +17,7 @@ function buildClient(out) {
   out.mode = "account";
   if (!process.env.KDRIVE_EMAIL || !process.env.KDRIVE_PASSWORD) {
     throw new Error(
-      "Token pubblico assente e mancano KDRIVE_EMAIL/KDRIVE_PASSWORD: impostare la modalità public o account."
+      "Token pubblico assente e mancano KDRIVE_EMAIL/KDRIVE_PASSWORD."
     );
   }
   return createClient(base, {
@@ -61,7 +60,6 @@ export default async function handler(req, res) {
 
     return res.status(200).json(out);
   } catch (e) {
-    // Se il server risponde 401/403/404, lo vediamo qui in chiaro
     return res.status(200).json({ ...out, error: String(e) });
   }
 }
