@@ -1,12 +1,12 @@
-// pages/api/sync/process-kdrive.js
-export const config = { runtime: "nodejs" };
+// api/sync/process-kdrive.js
+const { createClient: createSupabase } = require("@supabase/supabase-js");
+const { createClient: createWebdav } = require("webdav");
+const OpenAI = require("openai");
+const pdfParse = require("pdf-parse");
+const mammoth = require("mammoth");
+const { JSDOM } = require("jsdom");
 
-import { createClient as createSupabase } from "@supabase/supabase-js";
-import { createClient as createWebdav } from "webdav";
-import OpenAI from "openai";
-import pdf from "pdf-parse";
-import mammoth from "mammoth";
-import { JSDOM } from "jsdom";
+module.exports.config = { runtime: "nodejs" };
 
 function supa() {
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
@@ -19,7 +19,6 @@ function webdav() {
   const base = process.env.KDRIVE_WEBDAV_URL;
   if (!base) throw new Error("KDRIVE_WEBDAV_URL mancante");
 
-  // Modalità link pubblico
   if (process.env.KDRIVE_PUBLIC_TOKEN) {
     return createWebdav(base, {
       username: process.env.KDRIVE_PUBLIC_TOKEN,
@@ -27,7 +26,6 @@ function webdav() {
     });
   }
 
-  // Modalità account
   if (!process.env.KDRIVE_EMAIL || !process.env.KDRIVE_PASSWORD) {
     throw new Error("KDRIVE_EMAIL o KDRIVE_PASSWORD mancanti");
   }
@@ -47,24 +45,17 @@ function stripHtml(html) {
 async function bufferToText(filename, mime, buffer) {
   const lower = (filename || "").toLowerCase();
 
-  // PDF
   if (mime?.includes("pdf") || lower.endsWith(".pdf")) {
-    const data = await pdf(buffer);
+    const data = await pdfParse(buffer);
     return data.text || "";
   }
-
-  // DOCX
   if (lower.endsWith(".docx")) {
     const { value } = await mammoth.convertToHtml({ buffer });
     return stripHtml(value);
   }
-
-  // HTML
   if (mime?.includes("html") || lower.endsWith(".html") || lower.endsWith(".htm")) {
     return stripHtml(buffer.toString("utf8"));
   }
-
-  // Testo semplice (txt, md, csv, json, etc.)
   try {
     return buffer.toString("utf8");
   } catch {
@@ -84,15 +75,14 @@ function chunkText(text, chunkSize = 1000, overlap = 150) {
   return chunks;
 }
 
-export default async function handler(req, res) {
-  const limit = Number(req.query.limit || 20); // processa max N documenti per invocazione
+module.exports = async function handler(req, res) {
+  const limit = Number(req.query.limit || 20);
   const out = { ok: false, processed: 0, skipped: 0, errors: [] };
 
   try {
     const db = supa();
     const client = webdav();
 
-    // Prendi un set di documenti da processare (i più recenti)
     const { data: docs, error: docsErr } = await db
       .from("documents")
       .select("*")
@@ -107,37 +97,30 @@ export default async function handler(req, res) {
 
     for (const d of docs) {
       try {
-        // Scarica contenuto dal WebDAV
         const buf = Buffer.from(await client.getFileContents(d.path));
         const text = await bufferToText(d.path, d.mime, buf);
-
         if (!text || text.trim().length < 10) {
           out.skipped++;
-          continue; // file senza testo utile (es. immagini/scan)
+          continue;
         }
 
-        // Cancella i vecchi chunk di questo documento
         await db.from("chunks").delete().eq("doc_id", d.id);
 
-        // Crea i chunk
         const pieces = chunkText(text);
 
-        // Crea embedding in batch
         const emb = await openai.embeddings.create({
           model: "text-embedding-3-small",
           input: pieces,
         });
 
-        // Inserimento batch dei chunk
         const rows = pieces.map((content, idx) => ({
-          doc_id: d.id,               // BIGINT (FK su documents.id)
+          doc_id: d.id,
           chunk_index: idx,
           content,
-          embedding: emb.data[idx].embedding, // array di float
-          token_count: content.length,        // stima semplice
+          embedding: emb.data[idx].embedding,
+          token_count: content.length,
         }));
 
-        // Supabase accetta insert di array di righe
         const { error: insErr } = await db.from("chunks").insert(rows);
         if (insErr) throw insErr;
 
@@ -152,4 +135,4 @@ export default async function handler(req, res) {
   } catch (e) {
     res.status(500).json({ ...out, error: String(e) });
   }
-}
+};
