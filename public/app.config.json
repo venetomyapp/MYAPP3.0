@@ -1,0 +1,68 @@
+{
+  "app": {
+    "name": "MyApp",
+    "version": "4.1.0",
+    "build": "20250820",
+    "environment": "production"
+  },
+  "database": {
+    "provider": "Supabase",
+    "type": "PostgreSQL",
+    "version": "15+"
+  },
+  "features": {
+    "authentication": {
+      "enabled": true,
+      "providers": ["email", "google", "github"],
+      "mfa": true
+    },
+    "userManagement": {
+      "enabled": true,
+      "roles": ["admin", "user", "moderator"],
+      "permissions": true
+    },
+    "digitalCard": {
+      "enabled": true,
+      "qrCode": true,
+      "nfc": false
+    },
+    "dashboard": {
+      "enabled": true,
+      "responsive": true,
+      "themes": ["light", "dark", "auto"]
+    },
+    "notifications": {
+      "enabled": true,
+      "push": true,
+      "email": true,
+      "inApp": true
+    },
+    "newsManagement": {
+      "enabled": true,
+      "categories": true,
+      "comments": false
+    },
+    "eventsCalendar": {
+      "enabled": true,
+      "recurring": true,
+      "reminders": true
+    }
+  },
+  "ui": {
+    "framework": "Tailwind CSS",
+    "components": "Custom",
+    "icons": "Lucide",
+    "fonts": ["Inter", "Roboto"]
+  },
+  "deployment": {
+    "platform": "Vercel",
+    "domain": "myapp31.vercel.app",
+    "cdn": true,
+    "ssl": true
+  },
+  "monitoring": {
+    "analytics": false,
+    "errorTracking": false,
+    "performance": false
+  }
+}
