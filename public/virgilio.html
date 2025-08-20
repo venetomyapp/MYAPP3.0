@@ -148,6 +148,8 @@
 
     let isProcessing=false, totalTokens=0, history=[];
 
+    const timeNow = () => new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+
     // ===== DEBUG PANEL =====
     function addDebugMessage(message, type = 'info') {
       const debugRow = document.createElement('div');
@@ -397,36 +399,8 @@
 
     help.addEventListener('click',()=>{
       addBubble('Posso aiutarti su: disciplina, ferie/permessi, stipendi, concorsi, pensioni, codici e regolamenti. Scrivi: "Come funzionano i permessi per malattia?"','bot');
-      
-      // Test rapido degli endpoint
-      setTimeout(async () => {
-        addBubble('🔍 Test veloce connessione documenti...', 'bot');
-        
-        try {
-          const listTest = await fetch('/api/list');
-          const listData = await listTest.json();
-          
-          if (listTest.ok && listData.files) {
-            addBubble(`✅ Connessione OK! Trovati ${listData.files.length} documenti disponibili: ${listData.files.map(f => f.key).join(', ')}`, 'bot');
-            
-            // Test ricerca
-            const searchTest = await fetch('/api/search?q=veterano');
-            const searchData = await searchTest.json();
-            
-            if (searchTest.ok) {
-              addBubble(`🔍 Test ricerca "veterano": ${searchData.results?.length || 0} risultati trovati`, 'bot');
-              if (searchData.results?.length > 0) {
-                addBubble(`📄 Documenti: ${searchData.results.map(r => r.key).join(', ')}`, 'bot');
-              }
-            } else {
-              addBubble(`❌ Errore test ricerca: ${searchData.error}`, 'bot');
-            }
-          } else {
-            addBubble(`❌ Errore connessione: ${listData.error}`, 'bot');
-          }
-        } catch (e) {
-          addBubble(`❌ Errore test: ${e.message}`, 'bot');
-        }
+    });
+
     // Test completo R2
     testR2.addEventListener('click', async () => {
       addDebugMessage('🚀 INIZIO TEST COMPLETO R2');
@@ -591,8 +565,11 @@
         const j = await r.json();
         if(!r.ok){
           addBubble(j?.error || `Errore ${r.status}. Riprova tra poco.`,'bot');
+          addDebugMessage(`❌ Errore API Chat: ${j?.error || r.status}`, 'error');
         }else{
           let msg = j?.choices?.[0]?.message?.content || 'Nessuna risposta.';
+          
+          addDebugMessage(`✅ Risposta AI ricevuta (${msg.length} caratteri)`, 'success');
           
           // Aggiungi la risposta principale
           addBubble(msg,'bot',{raw:true});
@@ -613,6 +590,7 @@
       }catch(e){
         console.error(e);
         addBubble('Problema di rete. Verifica la connessione e riprova.','bot');
+        addDebugMessage(`❌ Errore rete: ${e.message}`, 'error');
       }finally{
         setTyping(false); isProcessing=false; sendBtn.disabled=false; inp.focus();
       }
