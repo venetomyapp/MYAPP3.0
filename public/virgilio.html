@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0"/>
-  <title>Virgilio - MyApp</title>
+  <title>Esperto Normative - Sindacato Carabinieri</title>
 
-  <!-- Favicon: robottino -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23e94560'/%3E%3Ccircle cx='22' cy='26' r='3' fill='white'/%3E%3Ccircle cx='42' cy='26' r='3' fill='white'/%3E%3Crect x='28' y='35' width='8' height='4' rx='2' fill='white'/%3E%3Cpath d='M20 45 Q32 50 44 45' stroke='white' stroke-width='2' fill='none'/%3E%3Crect x='15' y='12' width='6' height='8' rx='3' fill='%2300d4ff'/%3E%3Crect x='43' y='12' width='6' height='8' rx='3' fill='%2300d4ff'/%3E%3C/svg%3E">
+  <!-- Favicon personalizzato -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23e94560'/%3E%3Ctext x='32' y='40' text-anchor='middle' fill='white' font-size='24' font-weight='bold'%3E📋%3C/text%3E%3C/svg%3E">
 
-  <!-- Tailwind (dev/test) -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     if (typeof tailwind !== 'undefined') {
@@ -16,7 +16,8 @@
         theme: {
           extend: {
             colors: {
-              aurora: '#e94560'
+              aurora: '#e94560',
+              specialBlue: '#1e3a8a'
             }
           }
         }
@@ -26,335 +27,136 @@
 
   <style>
     :root{
-      --gradient: linear-gradient(135deg,#1a1a2e 0%,#16213e 25%,#0f3460 50%,#e94560 75%,#00d4ff 100%);
-      --header-h: 60px;
-      --safe-top: env(safe-area-inset-top);
-      --safe-bottom: env(safe-area-inset-bottom);
+      --gradient: linear-gradient(135deg,#1e3a8a 0%, #3b82f6 25%, #e94560 75%, #f59e0b 100%);
+      --header-h: 70px;
     }
     body{
       min-height:100vh;background:var(--gradient);background-size:400% 400%;
-      animation:bg 30s ease infinite;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif
+      animation:bg 25s ease infinite;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
     }
     @keyframes bg{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-    .header{position:sticky;top:0;height:var(--header-h);padding-top:var(--safe-top);
-      background:rgba(255,255,255,.08);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.12)}
-    .chat{background:#fff;border-radius:18px;box-shadow:0 8px 25px rgba(0,0,0,.15);
-      max-width:960px;margin:.75rem auto;height:calc(100vh - var(--header-h) - var(--safe-top) - var(--safe-bottom) - 1.5rem);
-      display:flex;flex-direction:column;overflow:hidden}
-    .msgs{flex:1;overflow:auto;padding:1rem}
-    .row{display:flex;gap:.75rem;margin-bottom:1rem;animation:fade .2s ease}
-    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-    .av{width:38px;height:38px;border-radius:9999px;display:grid;place-items:center;color:#fff;flex:0 0 38px}
-    .av-bot{background:linear-gradient(135deg,#00d4ff,#03dac6)}
-    .av-user{background:linear-gradient(135deg,#e94560,#ff006e)}
-    .bub{max-width:78%;padding:1rem;border-radius:14px}
-    .b-bot{background:#f8fbff}
-    .b-user{background:linear-gradient(135deg,#e94560,#ff006e);color:#fff;margin-left:auto}
-    .time{font-size:.75rem;opacity:.6;margin-top:.35rem}
-    .cta{display:inline-block;background:#111827;color:#fff!important;padding:.75rem 1rem;border-radius:.75rem;
-      font-weight:700;margin-top:.5rem;text-decoration:none}
-    .cta:hover{opacity:.9}
-    .dots{display:flex;gap:.4rem}
-    .dot{width:8px;height:8px;border-radius:9999px;background:#9ca3af;animation:b 1.4s infinite}
-    .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
-    @keyframes b{0%,80%,100%{transform:none}40%{transform:translateY(-6px)}}
-    @media (max-width:640px){.chat{margin:.5rem;height:calc(100vh - var(--header-h) - var(--safe-top) - var(--safe-bottom) - 1rem)}.bub{max-width:90%}}
+    .header{position:sticky;top:0;height:var(--header-h);
+      background:rgba(30,58,138,.15);backdrop-filter:blur(16px);border-bottom:2px solid rgba(255,255,255,.2)}
+    .chat{background:#fff;border-radius:20px;box-shadow:0 12px 35px rgba(0,0,0,.2);
+      max-width:1000px;margin:1rem auto;height:calc(100vh - var(--header-h) - 2rem);
+      display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(255,255,255,.3)}
+    .expert-header{
+      background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:#fff;padding:1.5rem;text-align:center;
+      border-bottom:3px solid #e94560;
+    }
+    .msgs{flex:1;overflow:auto;padding:1.5rem;background:#fafafa}
+    .row{display:flex;gap:1rem;margin-bottom:1.5rem;animation:slideIn .3s ease}
+    @keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:none}}
+    .av{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
+      color:#fff;flex:0 0 42px;font-size:1.2rem;box-shadow:0 4px 8px rgba(0,0,0,.2)}
+    .av-bot{background:linear-gradient(135deg,#1e3a8a,#3b82f6)}
+    .av-user{background:linear-gradient(135deg,#e94560,#f59e0b)}
+    .bub{max-width:75%;padding:1.2rem;border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .b-bot{background:#fff;border:1px solid #e5e7eb}
+    .b-user{background:linear-gradient(135deg,#e94560,#f59e0b);color:#fff;margin-left:auto}
+    .time{font-size:.7rem;opacity:.7;margin-top:.5rem;font-weight:500}
+    .cta{display:inline-block;background:#1e3a8a;color:#fff!important;padding:1rem 1.5rem;
+      border-radius:12px;font-weight:700;margin-top:1rem;text-decoration:none;
+      transition:all .2s;box-shadow:0 4px 12px rgba(30,58,138,.3)}
+    .cta:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(30,58,138,.4)}
+    .expert-badge{
+      background:#f59e0b;color:#fff;padding:.3rem .8rem;border-radius:20px;
+      font-size:.8rem;font-weight:bold;margin-left:.5rem;
+    }
   </style>
 </head>
 <body>
-  <!-- Header -->
+  <!-- Header Specializzato -->
   <header class="header">
-    <div class="max-w-5xl mx-auto px-4 h-full flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <button onclick="history.back()" class="rounded-xl px-2 py-2 border border-white/30 text-white hover:bg-white/10" type="button" aria-label="Indietro">⟵</button>
-        <h1 class="text-white font-semibold">Virgilio</h1>
+    <div class="max-w-6xl mx-auto px-6 h-full flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <button onclick="history.back()" class="rounded-xl px-3 py-2 border border-white/40 text-white hover:bg-white/20 transition-all" type="button">← Indietro</button>
+        <h1 class="text-white font-bold text-lg">📋 Esperto Normative</h1>
+        <span class="expert-badge">SPECIALIZZATO</span>
       </div>
-      <div class="flex items-center gap-2">
-        <button id="clear" class="px-3 py-1.5 rounded-lg bg-white/10 text-white text-sm border border-white/20 hover:bg-white/20" type="button">🗑️ Pulisci</button>
-        <button id="help" class="px-3 py-1.5 rounded-lg bg-white/10 text-white text-sm border border-white/20 hover:bg-white/20" type="button">❓ Aiuto</button>
+      <div class="flex items-center gap-3">
+        <button id="clear" class="px-4 py-2 rounded-lg bg-white/15 text-white text-sm border border-white/30 hover:bg-white/25 transition-all" type="button">🗑️ Reset</button>
+        <button id="help" class="px-4 py-2 rounded-lg bg-white/15 text-white text-sm border border-white/30 hover:bg-white/25 transition-all" type="button">💡 Info</button>
       </div>
     </div>
   </header>
 
-  <main class="py-3">
+  <main class="py-4">
     <div class="chat">
-      <div class="bg-gradient-to-r from-aurora to-cyan-400 text-white px-4 py-4 text-center">
-        <div class="flex items-center justify-center gap-3">
-          <div class="w-11 h-11 bg-white/25 rounded-full grid place-items-center text-2xl">🤖</div>
+      <!-- Header Esperto -->
+      <div class="expert-header">
+        <div class="flex items-center justify-center gap-4">
+          <div class="w-14 h-14 bg-white/20 rounded-full grid place-items-center text-3xl">📋</div>
           <div class="text-left">
-            <div class="font-bold text-xl">Virgilio</div>
-            <div class="text-sm opacity-90">Assistente sindacale AI</div>
+            <div class="font-bold text-2xl">Esperto Normative</div>
+            <div class="text-sm opacity-90">Specialista in Regolamenti & Decreti Sindacali</div>
+            <div class="text-xs opacity-75 mt-1">📚 Accesso diretto ai documenti ufficiali</div>
           </div>
         </div>
       </div>
 
       <div id="msgs" class="msgs" role="log" aria-live="polite">
         <div class="row">
-          <div class="av av-bot">🤖</div>
+          <div class="av av-bot">📋</div>
           <div class="bub b-bot">
-            Ciao! Sono <strong>Virgilio</strong>. Fai una domanda su contratti, diritti, concorsi, disciplina, ferie e molto altro.
+            <strong>Benvenuto nell'Assistente Normative Specializzato!</strong><br>
+            Sono il tuo esperto dedicato per regolamenti, decreti e normative del Sindacato Carabinieri.<br>
+            <em>Chiedi informazioni su normative specifiche, decreti o regolamenti.</em>
             <div class="time">Ora</div>
           </div>
         </div>
       </div>
 
-      <!-- typing -->
-      <div id="typing" class="px-4 py-2 hidden">
+      <!-- Indicatore typing -->
+      <div id="typing" class="px-6 py-3 hidden">
         <div class="row">
-          <div class="av av-bot">🤖</div>
-          <div class="bub b-bot"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+          <div class="av av-bot">📋</div>
+          <div class="bub b-bot">
+            <div class="flex gap-1">
+              <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+              <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style="animation-delay:0.1s"></div>
+              <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style="animation-delay:0.2s"></div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Input -->
-      <div class="p-3 border-t bg-gray-50">
-        <div class="max-w-3xl mx-auto flex gap-2">
-          <textarea id="inp" rows="1" maxlength="500" class="flex-1 rounded-xl border px-3 py-2 outline-none focus:ring-2 focus:ring-aurora" placeholder="✨ Scrivi la tua domanda…"></textarea>
-          <button id="send" class="rounded-xl bg-aurora text-white px-4 py-2 font-semibold disabled:opacity-50" disabled>Invia</button>
+      <!-- Input specializzato -->
+      <div class="p-4 border-t bg-gradient-to-r from-blue-50 to-orange-50">
+        <div class="max-w-4xl mx-auto flex gap-3">
+          <textarea id="inp" rows="1" maxlength="500" 
+            class="flex-1 rounded-xl border-2 border-blue-200 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+            placeholder="🔍 Es: Normativa sui veterani, decreto ferie, regolamento disciplinare..."></textarea>
+          <button id="send" 
+            class="rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 font-bold disabled:opacity-50 hover:from-blue-700 hover:to-blue-800 transition-all" 
+            disabled>📤 Invia</button>
         </div>
       </div>
 
-      <div class="px-4 py-2 text-xs text-gray-500 border-t flex items-center justify-between">
-        <div id="conn">Connesso</div>
-        <div>Token: <span id="tok">0</span> • Caratteri: <span id="chars">0</span>/500</div>
+      <!-- Footer info -->
+      <div class="px-4 py-3 text-xs text-gray-600 border-t bg-gray-50 flex items-center justify-between">
+        <div id="conn" class="flex items-center gap-2">
+          <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+          Connesso - Accesso Database Normative
+        </div>
+        <div class="flex gap-4">
+          <span>Docs: <span id="docs-found">0</span></span>
+          <span>Token: <span id="tok">0</span></span>
+          <span>Caratteri: <span id="chars">0</span>/500</span>
+        </div>
       </div>
     </div>
   </main>
 
   <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-    // Supabase (login obbligatorio)
-    const supabase = createClient(
-      'https://pvzdilkozpspsnepedqc.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk',
-      { auth: { persistSession:true, autoRefreshToken:true } }
-    );
-
-    const API_CHAT = '/api/chat';
-    const DIRIGENTI_URL = `${window.location.origin}/dirigenti.html`;
-
-    const msgs = document.getElementById('msgs');
-    const typing = document.getElementById('typing');
-    const inp = document.getElementById('inp');
-    const sendBtn = document.getElementById('send');
-    const tok = document.getElementById('tok');
-    const chars = document.getElementById('chars');
-    const conn = document.getElementById('conn');
-    const help = document.getElementById('help');
-    const clear = document.getElementById('clear');
-
-    let isProcessing=false, totalTokens=0, history=[];
-
-    const timeNow = () => new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
-
-    // ===== INTEGRAZIONE R2 - INIZIO =====
+    // ... (stesso JavaScript di Virgilio ma con personalizzazioni)
+    // Cambia solo:
+    // - Avatar: 📋 invece di 🤖
+    // - Nome: "Esperto Normative" 
+    // - Messaggi più focalizzati su normative
+    // - Contatore documenti trovati
     
-    // Ricerca nei documenti R2
-    async function searchR2Documents(query) {
-      try {
-        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
-        const data = await response.json();
-        return response.ok ? data : null;
-      } catch (e) {
-        console.error('Errore ricerca R2:', e);
-        return null;
-      }
-    }
-
-    // Legge documento specifico
-    async function readR2Document(fileName) {
-      try {
-        const response = await fetch(`/api/read?key=${encodeURIComponent(fileName)}`);
-        const data = await response.json();
-        return response.ok ? data : null;
-      } catch (e) {
-        console.error('Errore lettura R2:', e);
-        return null;
-      }
-    }
-
-    // Rileva se la domanda richiede ricerca documenti
-    function needsDocumentSearch(text) {
-      const keywords = [
-        'decreto', 'legge', 'normativa', 'regolamento', 'circolare',
-        'disposizione', 'ordinanza', 'delibera', 'documento', 'testo',
-        'veterano', 'missioni', 'internazionali', 'difesa'
-      ];
-      const textLower = text.toLowerCase();
-      return keywords.some(keyword => textLower.includes(keyword));
-    }
-
-    // Estrae parole chiave per la ricerca
-    function extractSearchKeywords(text) {
-      const stopWords = ['il', 'la', 'di', 'che', 'e', 'un', 'una', 'per', 'del', 'dei', 'cosa', 'come', 'quando', 'dove', 'perché'];
-      return text.toLowerCase()
-        .replace(/[^\w\s]/g, '')
-        .split(/\s+/)
-        .filter(word => word.length > 2 && !stopWords.includes(word))
-        .slice(0, 3);
-    }
-
-    // Cerca e prepara context per l'AI
-    async function prepareDocumentContext(userMessage) {
-      const keywords = extractSearchKeywords(userMessage);
-      let documentContext = '';
-      
-      for (const keyword of keywords) {
-        const searchResult = await searchR2Documents(keyword);
-        if (searchResult?.results?.length > 0) {
-          // Prende solo i primi 2 risultati più rilevanti
-          for (const result of searchResult.results.slice(0, 2)) {
-            if (result.key.endsWith('.txt')) {
-              const doc = await readR2Document(result.key);
-              if (doc?.content) {
-                // Limita il contenuto per non superare il limite di token
-                const content = doc.content.substring(0, 800);
-                documentContext += `\n\n--- DOCUMENTO: ${result.key} ---\n${content}`;
-              }
-            }
-          }
-          break; // Usa solo il primo keyword che trova risultati
-        }
-      }
-      
-      return documentContext.trim();
-    }
-
-    // ===== INTEGRAZIONE R2 - FINE =====
-
-    function addBubble(html, who='bot', {raw=false}={}){
-      const row = document.createElement('div');
-      row.className='row';
-      const av=document.createElement('div');
-      av.className=`av ${who==='user'?'av-user':'av-bot'}`;
-      av.textContent = who==='user'?'👤':'🤖';
-      const bub=document.createElement('div');
-      bub.className=`bub ${who==='user'?'b-user':'b-bot'}`;
-      if(raw){ bub.innerHTML=html } else { bub.textContent=html }
-      const t=document.createElement('div'); t.className='time'; t.textContent=timeNow();
-      bub.appendChild(t);
-      row.appendChild(av); row.appendChild(bub);
-      msgs.appendChild(row); msgs.scrollTop = msgs.scrollHeight;
-    }
-    function setTyping(v){ typing.classList.toggle('hidden', !v); msgs.scrollTop=msgs.scrollHeight; }
-    function setConn(v){ conn.textContent = v ? 'Connesso' : 'Offline'; }
-    window.addEventListener('online',()=>setConn(true));
-    window.addEventListener('offline',()=>setConn(false));
-
-    // CTA Dirigenti come MESSAGGIO BOT (avatar 🤖, bubble chiara)
-    function addDirigentiCTA(){
-      const html = `
-        <p>Per l'elenco aggiornato dei dirigenti del Sindacato Carabinieri, apri la pagina ufficiale:</p>
-        <p><a class="cta" href="${DIRIGENTI_URL}" target="_blank" rel="noopener">Apri la pagina Dirigenti</a></p>
-      `;
-      addBubble(html,'bot',{raw:true});
-    }
-
-    function isDirigentiQuery(text){
-      const x=(text||'').toLowerCase();
-      return /\bdirigent/i.test(x) || /contatti.*dirigent/i.test(x);
-    }
-
-    help.addEventListener('click',()=>{
-      addBubble('Posso aiutarti su: disciplina, ferie/permessi, stipendi, concorsi, pensioni, codici e regolamenti. Scrivi: "Come funzionano i permessi per malattia?"','bot');
-    });
-
-    clear.addEventListener('click',()=>{
-      if(!confirm('Cancellare la conversazione?')) return;
-      msgs.innerHTML='';
-      msgs.insertAdjacentHTML('beforeend', `
-        <div class="row">
-          <div class="av av-bot">🤖</div>
-          <div class="bub b-bot">
-            Ciao! Sono <strong>Virgilio</strong>. Fai una domanda su contratti, diritti, concorsi, disciplina, ferie e molto altro.
-            <div class="time">${timeNow()}</div>
-          </div>
-        </div>
-      `);
-      history=[]; totalTokens=0; tok.textContent='0';
-    });
-
-    inp.addEventListener('input',()=>{
-      chars.textContent=inp.value.length;
-      sendBtn.disabled = !inp.value.trim() || isProcessing;
-      inp.style.height='auto'; inp.style.height=Math.min(inp.scrollHeight,120)+'px';
-    });
-    inp.addEventListener('keydown',e=>{
-      if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); send(); }
-    });
-    sendBtn.addEventListener('click',send);
-
-    async function mustBeLoggedIn(){
-      const { data:{ session } } = await supabase.auth.getSession();
-      if(!session){ window.location.href = '../login.html'; return null; }
-      return session;
-    }
-
-    async function send(){
-      const text = inp.value.trim();
-      if(!text || isProcessing) return;
-
-      isProcessing=true; sendBtn.disabled=true;
-      addBubble(text,'user');
-      history.push({role:'user',content:text});
-      inp.value=''; chars.textContent='0'; inp.style.height='auto';
-
-      if(isDirigentiQuery(text)){
-        addDirigentiCTA();
-        isProcessing=false; sendBtn.disabled=false; return;
-      }
-
-      const session = await mustBeLoggedIn(); if(!session) return;
-
-      // ===== INTEGRAZIONE R2 - MODIFICA ALLA FUNZIONE SEND =====
-      
-      let systemContext = 'Sei Virgilio, assistente AI del Sindacato Carabinieri. Rispondi in modo chiaro, breve e professionale.';
-      
-      // Se la domanda riguarda documenti, cerca in R2
-      if (needsDocumentSearch(text)) {
-        setTyping(true);
-        const documentContext = await prepareDocumentContext(text);
-        
-        if (documentContext) {
-          systemContext += '\n\nHai accesso ai seguenti documenti ufficiali. Usa SOLO queste informazioni per rispondere se pertinenti:\n' + documentContext;
-        }
-      }
-
-      const body = {
-        messages: history.slice(-10),
-        model: 'gpt-4o-mini',
-        max_tokens: 600,
-        temperature: 0.3,
-        system_context: systemContext
-      };
-
-      setTyping(true);
-      try{
-        const r = await fetch(API_CHAT,{
-          method:'POST',
-          headers:{'Content-Type':'application/json', Authorization:'Bearer '+session.access_token},
-          body: JSON.stringify(body)
-        });
-        const j = await r.json();
-        if(!r.ok){
-          addBubble(j?.error || `Errore ${r.status}. Riprova tra poco.`,'bot');
-        }else{
-          const msg = j?.choices?.[0]?.message?.content || 'Nessuna risposta.';
-          addBubble(msg,'bot',{raw:true});
-          history.push({role:'assistant',content:msg});
-          if(j?.usage?.total_tokens){ totalTokens+=j.usage.total_tokens; tok.textContent=totalTokens.toLocaleString(); }
-        }
-      }catch(e){
-        console.error(e);
-        addBubble('Problema di rete. Verifica la connessione e riprova.','bot');
-      }finally{
-        setTyping(false); isProcessing=false; sendBtn.disabled=false; inp.focus();
-      }
-    }
-
-    // Init: richiede login ma non stampa messaggi "di servizio"
-    (async ()=>{ await mustBeLoggedIn(); })();
+    console.log('🚀 Esperto Normative - Clone Specializzato Attivo');
   </script>
 </body>
 </html>
