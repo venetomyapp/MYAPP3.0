@@ -1,0 +1,33 @@
+# Ignora file JavaScript che non devono essere serverless functions
+discover-kdrive.js
+diag-webdav.js
+diag-env.js
+process-kdrive.js
+
+# Ignora file di sviluppo
+*.config.js
+*.test.js
+*.spec.js
+
+# Ignora documentazione
+README.md
+docs/
+*.md
+
+# Ignora file temporanei
+.cache/
+.temp/
+*.log
+*.tmp
+
+# Ignora file di configurazione locale
+.env.local
+.env.development
+.env.test
+
+# Ignora node_modules (già ignorato di default)
+node_modules/
+
+# Ignora file di build locali
+dist/
+build/
