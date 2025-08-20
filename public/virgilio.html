@@ -70,6 +70,7 @@
         <h1 class="text-white font-semibold">Virgilio</h1>
       </div>
       <div class="flex items-center gap-2">
+        <button id="test-r2" class="px-3 py-1.5 rounded-lg bg-yellow-500/20 text-white text-sm border border-yellow-500/30 hover:bg-yellow-500/30" type="button">🧪 Test R2</button>
         <button id="clear" class="px-3 py-1.5 rounded-lg bg-white/10 text-white text-sm border border-white/20 hover:bg-white/20" type="button">🗑️ Pulisci</button>
         <button id="help" class="px-3 py-1.5 rounded-lg bg-white/10 text-white text-sm border border-white/20 hover:bg-white/20" type="button">❓ Aiuto</button>
       </div>
@@ -143,21 +144,54 @@
     const conn = document.getElementById('conn');
     const help = document.getElementById('help');
     const clear = document.getElementById('clear');
+    const testR2 = document.getElementById('test-r2');
 
     let isProcessing=false, totalTokens=0, history=[];
 
-    const timeNow = () => new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+    // ===== DEBUG PANEL =====
+    function addDebugMessage(message, type = 'info') {
+      const debugRow = document.createElement('div');
+      debugRow.className = 'row';
+      const debugAv = document.createElement('div');
+      debugAv.className = 'av av-bot';
+      debugAv.textContent = type === 'error' ? '❌' : type === 'success' ? '✅' : '🔍';
+      debugAv.style.background = type === 'error' ? '#ef4444' : type === 'success' ? '#22c55e' : '#6b7280';
+      
+      const debugBub = document.createElement('div');
+      debugBub.className = 'bub b-bot';
+      debugBub.style.background = '#f3f4f6';
+      debugBub.style.fontSize = '0.8rem';
+      debugBub.style.fontFamily = 'monospace';
+      debugBub.innerHTML = `<strong>[DEBUG]</strong> ${message}<div class="time">${timeNow()}</div>`;
+      
+      debugRow.appendChild(debugAv);
+      debugRow.appendChild(debugBub);
+      msgs.appendChild(debugRow);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
 
     // ===== INTEGRAZIONE R2 - INIZIO =====
     
     // Ricerca nei documenti R2
     async function searchR2Documents(query) {
       try {
-        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+        const url = `/api/search?q=${encodeURIComponent(query)}`;
+        addDebugMessage(`🌐 Chiamata: ${url}`);
+        
+        const response = await fetch(url);
+        addDebugMessage(`📡 Status: ${response.status} ${response.statusText}`);
+        
         const data = await response.json();
-        return response.ok ? data : null;
+        addDebugMessage(`📦 Dati ricevuti: ${JSON.stringify(data).substring(0, 200)}...`);
+        
+        if (!response.ok) {
+          addDebugMessage(`❌ Errore API: ${data.error || 'Errore sconosciuto'}`, 'error');
+          return null;
+        }
+        
+        return data;
       } catch (e) {
-        console.error('Errore ricerca R2:', e);
+        addDebugMessage(`❌ Errore rete: ${e.message}`, 'error');
         return null;
       }
     }
@@ -165,11 +199,23 @@
     // Legge documento specifico
     async function readR2Document(fileName) {
       try {
-        const response = await fetch(`/api/read?key=${encodeURIComponent(fileName)}`);
+        const url = `/api/read?key=${encodeURIComponent(fileName)}`;
+        addDebugMessage(`📖 Leggo: ${url}`);
+        
+        const response = await fetch(url);
+        addDebugMessage(`📡 Read Status: ${response.status}`);
+        
         const data = await response.json();
-        return response.ok ? data : null;
+        
+        if (!response.ok) {
+          addDebugMessage(`❌ Errore lettura: ${data.error}`, 'error');
+          return null;
+        }
+        
+        addDebugMessage(`✅ File letto: ${data.content?.length || 0} caratteri`, 'success');
+        return data;
       } catch (e) {
-        console.error('Errore lettura R2:', e);
+        addDebugMessage(`❌ Errore rete lettura: ${e.message}`, 'error');
         return null;
       }
     }
@@ -197,10 +243,18 @@
         'decreto', 'legge', 'normativa', 'regolamento', 'circolare',
         'disposizione', 'ordinanza', 'delibera', 'documento', 'testo',
         'veterano', 'missioni', 'internazionali', 'difesa', 'articolo',
-        'comma', 'capitolo', 'sezione', 'allegato'
+        'comma', 'capitolo', 'sezione', 'allegato', 'status'
       ];
       const textLower = text.toLowerCase();
-      return keywords.some(keyword => textLower.includes(keyword));
+      const matches = keywords.filter(keyword => textLower.includes(keyword));
+      
+      const needsSearch = matches.length > 0;
+      addDebugMessage(`🔍 Rilevazione ricerca documenti: "${text}" → ${needsSearch ? 'SÌ' : 'NO'}`);
+      if (matches.length > 0) {
+        addDebugMessage(`🎯 Keywords trovate: ${matches.join(', ')}`);
+      }
+      
+      return needsSearch;
     }
 
     // Estrae parole chiave per la ricerca
@@ -220,38 +274,90 @@
       let sourceInfo = '';
       let foundInDocuments = false;
       
+      addDebugMessage(`Inizio ricerca documenti per: "${userMessage}"`);
+      addDebugMessage(`Keywords estratte: ${keywords.join(', ')}`);
+      
       // Prima cerca nei documenti R2
       for (const keyword of keywords) {
-        const searchResult = await searchR2Documents(keyword);
-        if (searchResult?.results?.length > 0) {
-          foundInDocuments = true;
-          for (const result of searchResult.results.slice(0, 2)) {
-            if (result.key.endsWith('.txt')) {
-              const doc = await readR2Document(result.key);
-              if (doc?.content) {
-                const content = doc.content.substring(0, 1200);
-                documentContext += `\n\n--- DOCUMENTO UFFICIALE: ${result.key} ---\n${content}`;
-                sourceInfo += `Fonte: ${result.key}\n`;
+        addDebugMessage(`🔍 Cerco "${keyword}" in R2...`);
+        
+        try {
+          const searchResult = await searchR2Documents(keyword);
+          addDebugMessage(`Risposta API search: ${searchResult ? 'OK' : 'NULL'}`);
+          
+          if (searchResult?.results?.length > 0) {
+            foundInDocuments = true;
+            addDebugMessage(`✅ Trovati ${searchResult.results.length} documenti`, 'success');
+            
+            for (const result of searchResult.results.slice(0, 3)) {
+              addDebugMessage(`📄 Documento: ${result.key} (${result.size} bytes)`);
+              
+              // Per file di testo, leggi il contenuto
+              if (result.key.endsWith('.txt') || result.key.endsWith('.md')) {
+                addDebugMessage(`📖 Tento lettura contenuto TXT...`);
+                try {
+                  const doc = await readR2Document(result.key);
+                  if (doc?.content) {
+                    const content = doc.content.substring(0, 1200);
+                    documentContext += `\n\n--- DOCUMENTO: ${result.key} ---\n${content}`;
+                    sourceInfo += `📄 ${result.key}\n`;
+                    addDebugMessage(`✅ Letto contenuto TXT (${doc.content.length} caratteri)`, 'success');
+                  } else {
+                    addDebugMessage(`❌ Contenuto TXT vuoto`, 'error');
+                  }
+                } catch (readError) {
+                  addDebugMessage(`❌ Errore lettura TXT: ${readError.message}`, 'error');
+                }
+              } 
+              // Per PDF, usa solo il nome e snippet dalla ricerca
+              else if (result.key.endsWith('.pdf')) {
+                documentContext += `\n\n--- DOCUMENTO PDF: ${result.key} ---\n`;
+                documentContext += `Contenuto rilevante: ${result.snippet || 'Documento ufficiale disponibile'}`;
+                sourceInfo += `📄 ${result.key} (PDF)\n`;
+                addDebugMessage(`📋 PDF trovato e aggiunto al context`, 'success');
+              }
+              // Altri tipi di file
+              else {
+                documentContext += `\n\n--- DOCUMENTO: ${result.key} ---\n`;
+                documentContext += `Documento ufficiale disponibile: ${result.snippet || 'Contenuto specifico disponibile'}`;
+                sourceInfo += `📄 ${result.key}\n`;
+                addDebugMessage(`📋 Altro documento aggiunto al context`, 'success');
               }
             }
+            break; // Usa solo il primo keyword che trova risultati
+          } else {
+            addDebugMessage(`❌ Nessun risultato per "${keyword}"`);
           }
-          break;
+        } catch (searchError) {
+          addDebugMessage(`❌ Errore ricerca "${keyword}": ${searchError.message}`, 'error');
         }
       }
       
       // Se non trova nei documenti, cerca in rete
       if (!foundInDocuments) {
-        const webResult = await searchWeb(userMessage);
-        if (webResult?.results?.length > 0) {
-          documentContext += '\n\n--- INFORMAZIONI WEB ---\n';
-          webResult.results.slice(0, 2).forEach(result => {
-            documentContext += `${result.title}: ${result.snippet}\n`;
-          });
-          sourceInfo = 'Fonte: Ricerca web';
+        addDebugMessage(`🌐 Nessun documento R2 trovato, provo ricerca web...`);
+        try {
+          const webResult = await searchWeb(userMessage);
+          if (webResult?.results?.length > 0) {
+            documentContext += '\n\n--- INFORMAZIONI WEB ---\n';
+            webResult.results.slice(0, 2).forEach(result => {
+              documentContext += `${result.title}: ${result.snippet}\n`;
+            });
+            sourceInfo = 'Fonte: Ricerca web';
+            addDebugMessage(`✅ Trovati ${webResult.results.length} risultati web`, 'success');
+          } else {
+            addDebugMessage(`❌ Nessun risultato web trovato`);
+          }
+        } catch (webError) {
+          addDebugMessage(`❌ Errore ricerca web: ${webError.message}`, 'error');
         }
       }
       
-      return { context: documentContext.trim(), sourceInfo, foundInDocuments };
+      const finalContext = documentContext.trim();
+      addDebugMessage(`📝 Context finale: ${finalContext ? `${finalContext.length} caratteri` : 'VUOTO'}`);
+      addDebugMessage(`📊 foundInDocuments: ${foundInDocuments}`);
+      
+      return { context: finalContext, sourceInfo, foundInDocuments };
     }
 
     // ===== INTEGRAZIONE R2 - FINE =====
@@ -291,6 +397,102 @@
 
     help.addEventListener('click',()=>{
       addBubble('Posso aiutarti su: disciplina, ferie/permessi, stipendi, concorsi, pensioni, codici e regolamenti. Scrivi: "Come funzionano i permessi per malattia?"','bot');
+      
+      // Test rapido degli endpoint
+      setTimeout(async () => {
+        addBubble('🔍 Test veloce connessione documenti...', 'bot');
+        
+        try {
+          const listTest = await fetch('/api/list');
+          const listData = await listTest.json();
+          
+          if (listTest.ok && listData.files) {
+            addBubble(`✅ Connessione OK! Trovati ${listData.files.length} documenti disponibili: ${listData.files.map(f => f.key).join(', ')}`, 'bot');
+            
+            // Test ricerca
+            const searchTest = await fetch('/api/search?q=veterano');
+            const searchData = await searchTest.json();
+            
+            if (searchTest.ok) {
+              addBubble(`🔍 Test ricerca "veterano": ${searchData.results?.length || 0} risultati trovati`, 'bot');
+              if (searchData.results?.length > 0) {
+                addBubble(`📄 Documenti: ${searchData.results.map(r => r.key).join(', ')}`, 'bot');
+              }
+            } else {
+              addBubble(`❌ Errore test ricerca: ${searchData.error}`, 'bot');
+            }
+          } else {
+            addBubble(`❌ Errore connessione: ${listData.error}`, 'bot');
+          }
+        } catch (e) {
+          addBubble(`❌ Errore test: ${e.message}`, 'bot');
+        }
+    // Test completo R2
+    testR2.addEventListener('click', async () => {
+      addDebugMessage('🚀 INIZIO TEST COMPLETO R2');
+      
+      // Test 1: Lista file
+      addDebugMessage('📋 Test 1: Lista file...');
+      try {
+        const listResponse = await fetch('/api/list');
+        const listData = await listResponse.json();
+        
+        if (listResponse.ok && listData.files) {
+          addDebugMessage(`✅ Lista OK: ${listData.files.length} file`, 'success');
+          listData.files.forEach(file => {
+            addDebugMessage(`  📄 ${file.key} (${file.size} bytes)`);
+          });
+        } else {
+          addDebugMessage(`❌ Lista FAIL: ${listData.error}`, 'error');
+          return;
+        }
+      } catch (e) {
+        addDebugMessage(`❌ Lista ERROR: ${e.message}`, 'error');
+        return;
+      }
+      
+      // Test 2: Ricerca "veterano"
+      addDebugMessage('🔍 Test 2: Ricerca "veterano"...');
+      try {
+        const searchResponse = await fetch('/api/search?q=veterano');
+        const searchData = await searchResponse.json();
+        
+        if (searchResponse.ok) {
+          addDebugMessage(`✅ Ricerca OK: ${searchData.results?.length || 0} risultati`, 'success');
+          if (searchData.results?.length > 0) {
+            searchData.results.forEach(result => {
+              addDebugMessage(`  📄 ${result.key} - ${result.snippet?.substring(0, 50)}...`);
+            });
+            
+            // Test 3: Lettura primo file TXT trovato
+            const txtFile = searchData.results.find(r => r.key.endsWith('.txt'));
+            if (txtFile) {
+              addDebugMessage(`📖 Test 3: Lettura file ${txtFile.key}...`);
+              try {
+                const readResponse = await fetch(`/api/read?key=${encodeURIComponent(txtFile.key)}`);
+                const readData = await readResponse.json();
+                
+                if (readResponse.ok && readData.content) {
+                  addDebugMessage(`✅ Lettura OK: ${readData.content.length} caratteri`, 'success');
+                  addDebugMessage(`  📝 Primi 100 caratteri: "${readData.content.substring(0, 100)}..."`);
+                } else {
+                  addDebugMessage(`❌ Lettura FAIL: ${readData.error}`, 'error');
+                }
+              } catch (e) {
+                addDebugMessage(`❌ Lettura ERROR: ${e.message}`, 'error');
+              }
+            } else {
+              addDebugMessage(`ℹ️ Nessun file TXT trovato per test lettura`);
+            }
+          }
+        } else {
+          addDebugMessage(`❌ Ricerca FAIL: ${searchData.error}`, 'error');
+        }
+      } catch (e) {
+        addDebugMessage(`❌ Ricerca ERROR: ${e.message}`, 'error');
+      }
+      
+      addDebugMessage('🏁 TEST COMPLETO TERMINATO');
     });
 
     clear.addEventListener('click',()=>{
@@ -344,19 +546,29 @@
       
       let systemContext = 'Sei Virgilio, assistente AI del Sindacato Carabinieri. ISTRUZIONI OBBLIGATORIE:\n\n1. Rispondi SEMPRE in modo BREVE e GENERICO (massimo 2-3 frasi)\n2. NON fornire troppi dettagli specifici nella prima risposta\n3. Dai una risposta generale che stimoli l\'interazione\n4. Se usi documenti, menziona solo che "abbiamo documentazione specifica" senza dettagli\n5. NON includere mai l\'invito ai dirigenti nella risposta principale';
       
+      addDebugMessage(`💬 Messaggio utente: "${text}"`);
+      
       // Se la domanda riguarda documenti, cerca in R2 e web
-      if (needsDocumentSearch(text)) {
+      const needsSearch = needsDocumentSearch(text);
+      if (needsSearch) {
+        addDebugMessage(`🔍 Attivazione ricerca documenti...`);
         const { context: documentContext, sourceInfo, foundInDocuments } = await prepareDocumentContext(text);
         
         if (documentContext) {
           if (foundInDocuments) {
             systemContext += '\n\nHai accesso a documenti ufficiali su questo argomento. Dai una risposta GENERALE e BREVE senza entrare nei dettagli specifici:\n' + documentContext;
             systemContext += '\n\nIMPORTANTE: Menziona solo che "esistono normative specifiche" senza citare articoli o dettagli.';
+            addDebugMessage(`✅ Context documenti ufficiali aggiunto (${documentContext.length} caratteri)`, 'success');
           } else {
             systemContext += '\n\nInformazioni generali disponibili. Rispondi in modo GENERICO:\n' + documentContext;
             systemContext += '\n\nIMPORTANTE: Non dare troppi dettagli, stimola l\'utente a chiedere di più.';
+            addDebugMessage(`ℹ️ Context web aggiunto (${documentContext.length} caratteri)`);
           }
+        } else {
+          addDebugMessage(`❌ Nessun context trovato`, 'error');
         }
+      } else {
+        addDebugMessage(`ℹ️ Nessuna ricerca documenti necessaria`);
       }
 
       const body = {
@@ -366,6 +578,8 @@
         temperature: 0.3,
         system_context: systemContext
       };
+
+      addDebugMessage(`🤖 Invio richiesta API con system context (${systemContext.length} caratteri)`);
 
       setTyping(true);
       try{
