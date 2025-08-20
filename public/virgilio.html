@@ -70,7 +70,6 @@
         <h1 class="text-white font-semibold">Virgilio</h1>
       </div>
       <div class="flex items-center gap-2">
-        <button id="test-r2" class="px-3 py-1.5 rounded-lg bg-yellow-500/20 text-white text-sm border border-yellow-500/30 hover:bg-yellow-500/30" type="button">🧪 Test R2</button>
         <button id="clear" class="px-3 py-1.5 rounded-lg bg-white/10 text-white text-sm border border-white/20 hover:bg-white/20" type="button">🗑️ Pulisci</button>
         <button id="help" class="px-3 py-1.5 rounded-lg bg-white/10 text-white text-sm border border-white/20 hover:bg-white/20" type="button">❓ Aiuto</button>
       </div>
@@ -93,7 +92,9 @@
         <div class="row">
           <div class="av av-bot">🤖</div>
           <div class="bub b-bot">
-            Ciao! Sono <strong>Virgilio</strong>. Fai una domanda su contratti, diritti, concorsi, disciplina, ferie e molto altro.
+            Ciao! Sono <strong>Virgilio Avanzato</strong>. Ora posso leggere i tuoi documenti TXT in modo minuzioso e selettivo! 📋<br>
+            Fai una domanda su contratti, diritti, concorsi, disciplina, ferie e molto altro.<br>
+            <em style="font-size: 0.9em; opacity: 0.8;">🎯 Prova "🎯 Demo Ricerca" per vedere le mie nuove capacità!</em>
             <div class="time">Ora</div>
           </div>
         </div>
@@ -144,33 +145,10 @@
     const conn = document.getElementById('conn');
     const help = document.getElementById('help');
     const clear = document.getElementById('clear');
-    const testR2 = document.getElementById('test-r2');
 
     let isProcessing=false, totalTokens=0, history=[];
 
     const timeNow = () => new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
-
-    // ===== DEBUG PANEL =====
-    function addDebugMessage(message, type = 'info') {
-      const debugRow = document.createElement('div');
-      debugRow.className = 'row';
-      const debugAv = document.createElement('div');
-      debugAv.className = 'av av-bot';
-      debugAv.textContent = type === 'error' ? '❌' : type === 'success' ? '✅' : '🔍';
-      debugAv.style.background = type === 'error' ? '#ef4444' : type === 'success' ? '#22c55e' : '#6b7280';
-      
-      const debugBub = document.createElement('div');
-      debugBub.className = 'bub b-bot';
-      debugBub.style.background = '#f3f4f6';
-      debugBub.style.fontSize = '0.8rem';
-      debugBub.style.fontFamily = 'monospace';
-      debugBub.innerHTML = `<strong>[DEBUG]</strong> ${message}<div class="time">${timeNow()}</div>`;
-      
-      debugRow.appendChild(debugAv);
-      debugRow.appendChild(debugBub);
-      msgs.appendChild(debugRow);
-      msgs.scrollTop = msgs.scrollHeight;
-    }
 
     // ===== INTEGRAZIONE R2 - INIZIO =====
     
@@ -222,7 +200,27 @@
       }
     }
 
-    // Ricerca web di fallback
+    // Estrae testo da PDF
+    async function extractPDFContent(fileName) {
+      try {
+        const url = `/api/pdf-extract?fileName=${encodeURIComponent(fileName)}`;
+        addDebugMessage(`📄 Estraggo testo da PDF: ${fileName}`);
+        
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if (!response.ok) {
+          addDebugMessage(`❌ Errore estrazione PDF: ${data.error}`, 'error');
+          return null;
+        }
+        
+        addDebugMessage(`✅ PDF estratto: ${data.totalLength} caratteri, ${data.chunksCount} sezioni`, 'success');
+        return data;
+      } catch (e) {
+        addDebugMessage(`❌ Errore rete estrazione PDF: ${e.message}`, 'error');
+        return null;
+      }
+    }
     async function searchWeb(query) {
       try {
         const response = await fetch('/api/web-search', {
@@ -248,96 +246,164 @@
         'comma', 'capitolo', 'sezione', 'allegato', 'status'
       ];
       const textLower = text.toLowerCase();
-      const matches = keywords.filter(keyword => textLower.includes(keyword));
-      
-      const needsSearch = matches.length > 0;
-      addDebugMessage(`🔍 Rilevazione ricerca documenti: "${text}" → ${needsSearch ? 'SÌ' : 'NO'}`);
-      if (matches.length > 0) {
-        addDebugMessage(`🎯 Keywords trovate: ${matches.join(', ')}`);
-      }
-      
-      return needsSearch;
+      return keywords.some(keyword => textLower.includes(keyword));
     }
 
-    // Estrae parole chiave per la ricerca
+    // Estrae parole chiave con algoritmo migliorato
     function extractSearchKeywords(text) {
-      const stopWords = ['il', 'la', 'di', 'che', 'e', 'un', 'una', 'per', 'del', 'dei', 'cosa', 'come', 'quando', 'dove', 'perché'];
-      return text.toLowerCase()
-        .replace(/[^\w\s]/g, '')
+      const stopWords = ['il', 'la', 'di', 'che', 'e', 'un', 'una', 'per', 'del', 'dei', 'delle', 'cosa', 'come', 'quando', 'dove', 'perché', 'sono', 'hai', 'hanno', 'questo', 'questa'];
+      
+      const words = text.toLowerCase()
+        .replace(/[^\w\sàèéìíîòóù]/g, '')
         .split(/\s+/)
-        .filter(word => word.length > 2 && !stopWords.includes(word))
-        .slice(0, 3);
+        .filter(word => word.length > 2 && !stopWords.includes(word));
+      
+      // Identifica termini tecnici/normativi (hanno precedenza)
+      const technicalTerms = words.filter(word => 
+        /^(decreto|legge|articolo|art|comma|normativa|regolamento|disposizione|circolare|veterano|status|missioni|internazionali|difesa|benefici|requisiti|procedura|domanda)/.test(word)
+      );
+      
+      const allKeywords = [...technicalTerms, ...words.filter(w => !technicalTerms.includes(w))];
+      return [...new Set(allKeywords)].slice(0, 4);
     }
 
-    // Cerca nei documenti R2 e in rete se necessario
+    // Estrae sezioni rilevanti da un documento TXT
+    function extractRelevantSections(content, keywords, userMessage) {
+      const sections = content.split(/\n\s*\n/).filter(section => section.trim().length > 50);
+      const relevantSections = [];
+      
+      sections.forEach((section, index) => {
+        let sectionScore = 0;
+        const sectionLower = section.toLowerCase();
+        const matchedKeywords = [];
+        
+        // Punteggio per keywords
+        keywords.forEach(keyword => {
+          const keywordLower = keyword.toLowerCase();
+          const keywordCount = (sectionLower.match(new RegExp(keywordLower, 'g')) || []).length;
+          if (keywordCount > 0) {
+            sectionScore += keywordCount * 10;
+            matchedKeywords.push(keyword);
+          }
+        });
+        
+        // Punteggio per parole dal messaggio utente
+        const userWords = userMessage.toLowerCase().split(/\s+/).filter(word => word.length > 3);
+        userWords.forEach(word => {
+          if (sectionLower.includes(word)) {
+            sectionScore += 5;
+          }
+        });
+        
+        // Punteggio per struttura normativa
+        const structureKeywords = ['articolo', 'art.', 'capitolo', 'cap.', 'comma', 'disposizione', 'decreto', 'legge'];
+        structureKeywords.forEach(struct => {
+          if (sectionLower.includes(struct)) {
+            sectionScore += 8;
+          }
+        });
+        
+        // Punteggio per numeri
+        const numberMatches = section.match(/\b\d+\b/g);
+        if (numberMatches && numberMatches.length > 0) {
+          sectionScore += Math.min(numberMatches.length * 2, 10);
+        }
+        
+        if (sectionScore > 10) {
+          relevantSections.push({
+            content: section.trim(),
+            score: sectionScore,
+            matchedKeywords,
+            index
+          });
+        }
+      });
+      
+      relevantSections.sort((a, b) => b.score - a.score);
+      return relevantSections.slice(0, 5);
+    }
+
+    // Cerca nei documenti R2 con algoritmo intelligente
     async function prepareDocumentContext(userMessage) {
       const keywords = extractSearchKeywords(userMessage);
       let documentContext = '';
       let sourceInfo = '';
       let foundInDocuments = false;
       
-      addDebugMessage(`Inizio ricerca documenti per: "${userMessage}"`);
-      addDebugMessage(`Keywords estratte: ${keywords.join(', ')}`);
+      const searchResults = [];
       
-      // Prima cerca nei documenti R2
+      // Ricerca multi-keyword con scoring
       for (const keyword of keywords) {
-        addDebugMessage(`🔍 Cerco "${keyword}" in R2...`);
-        
         try {
           const searchResult = await searchR2Documents(keyword);
-          addDebugMessage(`Risposta API search: ${searchResult ? 'OK' : 'NULL'}`);
           
           if (searchResult?.results?.length > 0) {
             foundInDocuments = true;
-            addDebugMessage(`✅ Trovati ${searchResult.results.length} documenti`, 'success');
             
-            for (const result of searchResult.results.slice(0, 3)) {
-              addDebugMessage(`📄 Documento: ${result.key} (${result.size} bytes)`);
-              
-              // Per file di testo, leggi il contenuto
-              if (result.key.endsWith('.txt') || result.key.endsWith('.md')) {
-                addDebugMessage(`📖 Tento lettura contenuto TXT...`);
-                try {
-                  const doc = await readR2Document(result.key);
-                  if (doc?.content) {
-                    const content = doc.content.substring(0, 1200);
-                    documentContext += `\n\n--- DOCUMENTO: ${result.key} ---\n${content}`;
-                    sourceInfo += `📄 ${result.key}\n`;
-                    addDebugMessage(`✅ Letto contenuto TXT (${doc.content.length} caratteri)`, 'success');
-                  } else {
-                    addDebugMessage(`❌ Contenuto TXT vuoto`, 'error');
-                  }
-                } catch (readError) {
-                  addDebugMessage(`❌ Errore lettura TXT: ${readError.message}`, 'error');
-                }
-              } 
-              // Per PDF, usa solo il nome e snippet dalla ricerca
-              else if (result.key.endsWith('.pdf')) {
-                documentContext += `\n\n--- DOCUMENTO PDF: ${result.key} ---\n`;
-                documentContext += `Contenuto rilevante: ${result.snippet || 'Documento ufficiale disponibile'}`;
-                sourceInfo += `📄 ${result.key} (PDF)\n`;
-                addDebugMessage(`📋 PDF trovato e aggiunto al context`, 'success');
-              }
-              // Altri tipi di file
-              else {
-                documentContext += `\n\n--- DOCUMENTO: ${result.key} ---\n`;
-                documentContext += `Documento ufficiale disponibile: ${result.snippet || 'Contenuto specifico disponibile'}`;
-                sourceInfo += `📄 ${result.key}\n`;
-                addDebugMessage(`📋 Altro documento aggiunto al context`, 'success');
+            for (const result of searchResult.results) {
+              const existingResult = searchResults.find(r => r.key === result.key);
+              if (existingResult) {
+                existingResult.score += 1;
+                existingResult.keywords.push(keyword);
+              } else {
+                searchResults.push({
+                  ...result,
+                  score: 1,
+                  keywords: [keyword],
+                  searchKeyword: keyword
+                });
               }
             }
-            break; // Usa solo il primo keyword che trova risultati
-          } else {
-            addDebugMessage(`❌ Nessun risultato per "${keyword}"`);
           }
         } catch (searchError) {
-          addDebugMessage(`❌ Errore ricerca "${keyword}": ${searchError.message}`, 'error');
+          console.error(`Errore ricerca ${keyword}:`, searchError);
         }
       }
       
-      // Se non trova nei documenti, cerca in rete
+      // Ordina per rilevanza
+      searchResults.sort((a, b) => {
+        if (a.score !== b.score) return b.score - a.score;
+        if (a.key.endsWith('.txt') && !b.key.endsWith('.txt')) return -1;
+        if (!a.key.endsWith('.txt') && b.key.endsWith('.txt')) return 1;
+        return (b.size || 0) - (a.size || 0);
+      });
+      
+      // Elabora i migliori risultati
+      for (const result of searchResults.slice(0, 3)) {
+        if (result.key.endsWith('.txt') || result.key.endsWith('.md')) {
+          try {
+            const doc = await readR2Document(result.key);
+            
+            if (doc?.content) {
+              const relevantSections = extractRelevantSections(doc.content, result.keywords, userMessage);
+              
+              if (relevantSections.length > 0) {
+                documentContext += `\n\n--- DOCUMENTO: ${result.key} (Rilevanza: ${result.score}) ---\n`;
+                
+                relevantSections.forEach((section, index) => {
+                  documentContext += `\n[SEZIONE ${index + 1}]\n${section.content}\n`;
+                });
+                
+                sourceInfo += `📄 ${result.key} (${relevantSections.length} sezioni rilevanti)\n`;
+              } else {
+                const preview = doc.content.substring(0, 1500);
+                documentContext += `\n\n--- DOCUMENTO: ${result.key} ---\n${preview}`;
+                sourceInfo += `📄 ${result.key} (anteprima)\n`;
+              }
+            }
+          } catch (readError) {
+            console.error(`Errore lettura ${result.key}:`, readError);
+          }
+        }
+        else if (result.key.endsWith('.pdf')) {
+          documentContext += `\n\n--- DOCUMENTO PDF: ${result.key} ---\n`;
+          documentContext += `Documento ufficiale disponibile. Keywords trovate: ${result.keywords.join(', ')}`;
+          sourceInfo += `📄 ${result.key} (PDF)\n`;
+        }
+      }
+      
+      // Fallback ricerca web
       if (!foundInDocuments) {
-        addDebugMessage(`🌐 Nessun documento R2 trovato, provo ricerca web...`);
         try {
           const webResult = await searchWeb(userMessage);
           if (webResult?.results?.length > 0) {
@@ -346,20 +412,13 @@
               documentContext += `${result.title}: ${result.snippet}\n`;
             });
             sourceInfo = 'Fonte: Ricerca web';
-            addDebugMessage(`✅ Trovati ${webResult.results.length} risultati web`, 'success');
-          } else {
-            addDebugMessage(`❌ Nessun risultato web trovato`);
           }
         } catch (webError) {
-          addDebugMessage(`❌ Errore ricerca web: ${webError.message}`, 'error');
+          console.error('Errore ricerca web:', webError);
         }
       }
       
-      const finalContext = documentContext.trim();
-      addDebugMessage(`📝 Context finale: ${finalContext ? `${finalContext.length} caratteri` : 'VUOTO'}`);
-      addDebugMessage(`📊 foundInDocuments: ${foundInDocuments}`);
-      
-      return { context: finalContext, sourceInfo, foundInDocuments };
+      return { context: documentContext.trim(), sourceInfo, foundInDocuments };
     }
 
     // ===== INTEGRAZIONE R2 - FINE =====
@@ -398,75 +457,7 @@
     }
 
     help.addEventListener('click',()=>{
-      addBubble('Posso aiutarti su: disciplina, ferie/permessi, stipendi, concorsi, pensioni, codici e regolamenti. Scrivi: "Come funzionano i permessi per malattia?"','bot');
-    });
-
-    // Test completo R2
-    testR2.addEventListener('click', async () => {
-      addDebugMessage('🚀 INIZIO TEST COMPLETO R2');
-      
-      // Test 1: Lista file
-      addDebugMessage('📋 Test 1: Lista file...');
-      try {
-        const listResponse = await fetch('/api/list');
-        const listData = await listResponse.json();
-        
-        if (listResponse.ok && listData.files) {
-          addDebugMessage(`✅ Lista OK: ${listData.files.length} file`, 'success');
-          listData.files.forEach(file => {
-            addDebugMessage(`  📄 ${file.key} (${file.size} bytes)`);
-          });
-        } else {
-          addDebugMessage(`❌ Lista FAIL: ${listData.error}`, 'error');
-          return;
-        }
-      } catch (e) {
-        addDebugMessage(`❌ Lista ERROR: ${e.message}`, 'error');
-        return;
-      }
-      
-      // Test 2: Ricerca "veterano"
-      addDebugMessage('🔍 Test 2: Ricerca "veterano"...');
-      try {
-        const searchResponse = await fetch('/api/search?q=veterano');
-        const searchData = await searchResponse.json();
-        
-        if (searchResponse.ok) {
-          addDebugMessage(`✅ Ricerca OK: ${searchData.results?.length || 0} risultati`, 'success');
-          if (searchData.results?.length > 0) {
-            searchData.results.forEach(result => {
-              addDebugMessage(`  📄 ${result.key} - ${result.snippet?.substring(0, 50)}...`);
-            });
-            
-            // Test 3: Lettura primo file TXT trovato
-            const txtFile = searchData.results.find(r => r.key.endsWith('.txt'));
-            if (txtFile) {
-              addDebugMessage(`📖 Test 3: Lettura file ${txtFile.key}...`);
-              try {
-                const readResponse = await fetch(`/api/read?key=${encodeURIComponent(txtFile.key)}`);
-                const readData = await readResponse.json();
-                
-                if (readResponse.ok && readData.content) {
-                  addDebugMessage(`✅ Lettura OK: ${readData.content.length} caratteri`, 'success');
-                  addDebugMessage(`  📝 Primi 100 caratteri: "${readData.content.substring(0, 100)}..."`);
-                } else {
-                  addDebugMessage(`❌ Lettura FAIL: ${readData.error}`, 'error');
-                }
-              } catch (e) {
-                addDebugMessage(`❌ Lettura ERROR: ${e.message}`, 'error');
-              }
-            } else {
-              addDebugMessage(`ℹ️ Nessun file TXT trovato per test lettura`);
-            }
-          }
-        } else {
-          addDebugMessage(`❌ Ricerca FAIL: ${searchData.error}`, 'error');
-        }
-      } catch (e) {
-        addDebugMessage(`❌ Ricerca ERROR: ${e.message}`, 'error');
-      }
-      
-      addDebugMessage('🏁 TEST COMPLETO TERMINATO');
+      addBubble('🎯 <strong>Virgilio Avanzato</strong> ora legge i tuoi documenti TXT in modo minuzioso! Posso aiutarti su: disciplina, ferie/permessi, stipendi, concorsi, pensioni, codici e regolamenti.<br><br>📋 <strong>Funzionalità:</strong><br>• Ricerca intelligente multi-keyword<br>• Estrazione sezioni rilevanti<br>• Analisi del contenuto<br><br>💬 Prova: "decreto veterani" o "status di veterano"','bot', {raw: true});
     });
 
     clear.addEventListener('click',()=>{
@@ -476,7 +467,8 @@
         <div class="row">
           <div class="av av-bot">🤖</div>
           <div class="bub b-bot">
-            Ciao! Sono <strong>Virgilio</strong>. Fai una domanda su contratti, diritti, concorsi, disciplina, ferie e molto altro.
+            Ciao! Sono <strong>Virgilio Avanzato</strong>. Ora posso leggere i tuoi documenti TXT in modo minuzioso e selettivo! 📋<br>
+            Fai una domanda su contratti, diritti, concorsi, disciplina, ferie e molto altro.
             <div class="time">${timeNow()}</div>
           </div>
         </div>
@@ -518,31 +510,22 @@
 
       // ===== INTEGRAZIONE R2 - MODIFICA ALLA FUNZIONE SEND =====
       
-      let systemContext = 'Sei Virgilio, assistente AI del Sindacato Carabinieri. ISTRUZIONI OBBLIGATORIE:\n\n1. Rispondi SEMPRE in modo BREVE e GENERICO (massimo 2-3 frasi)\n2. NON fornire troppi dettagli specifici nella prima risposta\n3. Dai una risposta generale che stimoli l\'interazione\n4. Se usi documenti, menziona solo che "abbiamo documentazione specifica" senza dettagli\n5. NON includere mai l\'invito ai dirigenti nella risposta principale';
-      
-      addDebugMessage(`💬 Messaggio utente: "${text}"`);
+      let systemContext = 'Sei Virgilio, assistente AI del Sindacato Carabinieri. ISTRUZIONI OBBLIGATORIE:\n\n1. Rispondi SEMPRE in modo BREVE e GENERICO (massimo 2-3 frasi)\n2. NON fornire troppi dettagli specifici nella prima risposta\n3. Dai una risposta generale che stimoli l\'interazione\n4. Se usi documenti, menziona solo che "abbiamo documentazione specifica" senza dettagli\n5. NON includere mai l\'invito ai dirigenti nella risposta principale\n6. Le sezioni dei documenti che ricevi sono GIÀ le parti più rilevanti - usale come base per rispondere';
       
       // Se la domanda riguarda documenti, cerca in R2 e web
       const needsSearch = needsDocumentSearch(text);
       if (needsSearch) {
-        addDebugMessage(`🔍 Attivazione ricerca documenti...`);
         const { context: documentContext, sourceInfo, foundInDocuments } = await prepareDocumentContext(text);
         
         if (documentContext) {
           if (foundInDocuments) {
-            systemContext += '\n\nHai accesso a documenti ufficiali su questo argomento. Dai una risposta GENERALE e BREVE senza entrare nei dettagli specifici:\n' + documentContext;
-            systemContext += '\n\nIMPORTANTE: Menziona solo che "esistono normative specifiche" senza citare articoli o dettagli.';
-            addDebugMessage(`✅ Context documenti ufficiali aggiunto (${documentContext.length} caratteri)`, 'success');
+            systemContext += '\n\nHai accesso a sezioni SELEZIONATE dai documenti ufficiali. Queste sono le parti più rilevanti per la domanda:\n' + documentContext;
+            systemContext += '\n\nIMPORTANTE: Le sezioni fornite sono già filtrate per rilevanza. Rispondi in modo GENERICO basandoti su queste informazioni senza citare specifici articoli o numeri.';
           } else {
             systemContext += '\n\nInformazioni generali disponibili. Rispondi in modo GENERICO:\n' + documentContext;
             systemContext += '\n\nIMPORTANTE: Non dare troppi dettagli, stimola l\'utente a chiedere di più.';
-            addDebugMessage(`ℹ️ Context web aggiunto (${documentContext.length} caratteri)`);
           }
-        } else {
-          addDebugMessage(`❌ Nessun context trovato`, 'error');
         }
-      } else {
-        addDebugMessage(`ℹ️ Nessuna ricerca documenti necessaria`);
       }
 
       const body = {
@@ -552,8 +535,6 @@
         temperature: 0.3,
         system_context: systemContext
       };
-
-      addDebugMessage(`🤖 Invio richiesta API con system context (${systemContext.length} caratteri)`);
 
       setTyping(true);
       try{
@@ -565,11 +546,8 @@
         const j = await r.json();
         if(!r.ok){
           addBubble(j?.error || `Errore ${r.status}. Riprova tra poco.`,'bot');
-          addDebugMessage(`❌ Errore API Chat: ${j?.error || r.status}`, 'error');
         }else{
           let msg = j?.choices?.[0]?.message?.content || 'Nessuna risposta.';
-          
-          addDebugMessage(`✅ Risposta AI ricevuta (${msg.length} caratteri)`, 'success');
           
           // Aggiungi la risposta principale
           addBubble(msg,'bot',{raw:true});
@@ -590,7 +568,6 @@
       }catch(e){
         console.error(e);
         addBubble('Problema di rete. Verifica la connessione e riprova.','bot');
-        addDebugMessage(`❌ Errore rete: ${e.message}`, 'error');
       }finally{
         setTyping(false); isProcessing=false; sendBtn.disabled=false; inp.focus();
       }
