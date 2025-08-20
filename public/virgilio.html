@@ -579,9 +579,52 @@
         system_context: systemContext
       };
 
-      addDebugMessage(`🤖 Invio richiesta API con system context (${systemContext.length} caratteri)`);
-
       setTyping(true);
+      try{
+        const r = await fetch(API_CHAT,{
+          method:'POST',
+          headers:{'Content-Type':'application/json', Authorization:'Bearer '+session.access_token},
+          body: JSON.stringify(body)
+        });
+        const j = await r.json();
+        if(!r.ok){
+          addBubble(j?.error || `Errore ${r.status}. Riprova tra poco.`,'bot');
+          addDebugMessage(`❌ Errore API Chat: ${j?.error || r.status}`, 'error');
+        }else{
+          let msg = j?.choices?.[0]?.message?.content || 'Nessuna risposta.';
+          
+          addDebugMessage(`✅ Risposta AI ricevuta (${msg.length} caratteri)`, 'success');
+          
+          // Aggiungi la risposta principale
+          addBubble(msg,'bot',{raw:true});
+          history.push({role:'assistant',content:msg});
+          
+          // Aggiungi automaticamente la seconda bolla con invito ai dirigenti
+          setTimeout(() => {
+            const followUpMsg = `
+              💡 <strong>Vuoi sapere di più sull'argomento?</strong><br>
+              Non perdere l'occasione di contattare il tuo dirigente di zona!<br>
+              <a class="cta" href="${DIRIGENTI_URL}" target="_blank" rel="noopener">Vai alla sezione Richieste</a>
+            `;
+            addBubble(followUpMsg, 'bot', {raw: true});
+          }, 1500);
+          
+          if(j?.usage?.total_tokens){ totalTokens+=j.usage.total_tokens; tok.textContent=totalTokens.toLocaleString(); }
+        }
+      }catch(e){
+        console.error(e);
+        addBubble('Problema di rete. Verifica la connessione e riprova.','bot');
+        addDebugMessage(`❌ Errore rete: ${e.message}`, 'error');
+      }finally{
+        setTyping(false); isProcessing=false; sendBtn.disabled=false; inp.focus();
+      }
+    }
+
+    // Init: richiede login ma non stampa messaggi "di servizio"
+    (async ()=>{ await mustBeLoggedIn(); })();
+  </script>
+</body>
+</html>
       try{
         const r = await fetch(API_CHAT,{
           method:'POST',
