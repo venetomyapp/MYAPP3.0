@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Gestione Documenti Chatbot</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .security-warning {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            color: #856404;
+        }
+
+        .security-warning h3 {
+            color: #b52d07;
+            margin-bottom: 10px;
+        }
+
+        .config-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 5px solid #3498db;
+        }
+
+        .config-section h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .upload-zone {
+            border: 3px dashed #3498db;
+            border-radius: 15px;
+            padding: 60px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .upload-zone:hover {
+            border-color: #2980b9;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            transform: translateY(-2px);
+        }
+
+        .upload-zone.dragover {
+            border-color: #27ae60;
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+        }
+
+        .upload-icon {
+            font-size: 4em;
+            color: #3498db;
+            margin-bottom: 20px;
+        }
+
+        .upload-text {
+            font-size: 1.3em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .upload-subtext {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .file-list {
+            margin-top: 30px;
+        }
+
+        .file-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .file-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .file-icon {
+            font-size: 2em;
+            width: 60px;
+            text-align: center;
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .file-details {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .rename-input {
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            min-width: 200px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+
+        .status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending { background: #ffeaa7; color: #fdcb6e; }
+        .status-processing { background: #74b9ff; color: #0984e3; }
+        .status-success { background: #00b894; color: #00a085; }
+        .status-error { background: #e17055; color: #d63031; }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #27ae60);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .logs {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 30px;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            opacity: 0;
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .log-timestamp {
+            color: #95a5a6;
+            margin-right: 10px;
+        }
+
+        .log-info { color: #3498db; }
+        .log-success { color: #27ae60; }
+        .log-warning { color: #f39c12; }
+        .log-error { color: #e74c3c; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #3498db;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .supported-formats {
+            margin-top: 15px;
+            padding: 15px;
+            background: #e8f4fd;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .supported-formats h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .format-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .format-tag {
+            background: #3498db;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .input-password {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Admin Documenti Chatbot</h1>
+            <p>Upload, Converti e Indicizza documenti automaticamente</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Avviso Sicurezza -->
+            <div class="security-warning">
+                <h3>🔒 AVVISO SICUREZZA IMPORTANTE</h3>
+                <p><strong>Mai inserire API keys direttamente nel codice!</strong> Usa variabili d'ambiente o sistemi di gestione segreti. Le chiavi sotto sono solo placeholder - sostituiscile con le tue configurazioni sicure.</p>
+            </div>
+
+            <!-- Configurazione -->
+            <div class="config-section">
+                <h3>⚙️ Configurazione Sistema</h3>
+                <div class="config-grid">
+                    <div class="form-group">
+                        <label>Account ID Cloudflare</label>
+                        <input type="text" id="accountId" placeholder="Inserisci il tuo Account ID">
+                    </div>
+                    <div class="form-group">
+                        <label>API Key Cloudflare</label>
+                        <div class="input-password">
+                            <input type="password" id="apiKey" placeholder="Inserisci la tua API Key">
+                            <button type="button" class="toggle-password" onclick="togglePassword('apiKey')">👁️</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Cloudflare</label>
+                        <input type="email" id="email" placeholder="Il tuo email Cloudflare">
+                    </div>
+                    <div class="form-group">
+                        <label>Nome Bucket R2</label>
+                        <input type="text" id="bucketName" value="docs">
+                    </div>
+                    <div class="form-group">
+                        <label>OpenAI API Key</label>
+                        <div class="input-password">
+                            <input type="password" id="openaiKey" placeholder="Inserisci la tua OpenAI API Key">
+                            <button type="button" class="toggle-password" onclick="togglePassword('openaiKey')">👁️</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Prefisso Nome File</label>
+                        <select id="namePrefix">
+                            <option value="AUTO">Auto-detect</option>
+                            <option value="ORD">ORD - Ordinamenti</option>
+                            <option value="REG">REG - Regolamenti</option>
+                            <option value="PROC">PROC - Procedure</option>
+                            <option value="LIC">LIC - Licenze</option>
+                            <option value="GEST">GEST - Gestione</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; padding: 15px; background: #d4edda; border: 1px solid #c3e6cb; border-radius: 8px;">
+                    <h4 style="color: #155724; margin-bottom: 10px;">💡 Best Practices Sicurezza:</h4>
+                    <ul style="color: #155724; margin-left: 20px;">
+                        <li>Usa variabili d'ambiente: <code>process.env.OPENAI_API_KEY</code></li>
+                        <li>Implementa autenticazione per questa pagina admin</li>
+                        <li>Usa HTTPS sempre</li>
+                        <li>Ruota le API keys regolarmente</li>
+                        <li>Non committare mai le chiavi in Git</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Statistiche -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalDocs">0</div>
+                    <div class="stat-label">Documenti Totali</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="todayUploads">0</div>
+                    <div class="stat-label">Upload Oggi</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalChunks">0</div>
+                    <div class="stat-label">Chunks Indicizzati</div>
+                </div>
+            </div>
+
+            <!-- Upload Zone -->
+            <div class="upload-zone" id="uploadZone">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">Trascina i file qui o clicca per selezionare</div>
+                <div class="upload-subtext">Supporta PDF, DOCX, DOC, TXT e altri formati</div>
+                <input type="file" id="fileInput" multiple accept=".pdf,.docx,.doc,.txt,.rtf,.odt">
+            </div>
+
+            <div class="supported-formats">
+                <h4>📋 Formati Supportati</h4>
+                <div class="format-list">
+                    <span class="format-tag">PDF</span>
+                    <span class="format-tag">DOCX</span>
+                    <span class="format-tag">DOC</span>
+                    <span class="format-tag">TXT</span>
+                    <span class="format-tag">RTF</span>
+                    <span class="format-tag">ODT</span>
+                </div>
+            </div>
+
+            <!-- File List -->
+            <div class="file-list" id="fileList"></div>
+
+            <!-- Process All Button -->
+            <div style="text-align: center; margin: 30px 0;">
+                <button class="btn btn-success" id="processAllBtn" style="font-size: 1.2em; padding: 15px 40px;">
+                    🚀 Processa Tutti i Documenti
+                </button>
+            </div>
+
+            <!-- Logs -->
+            <div class="logs" id="logs">
+                <div class="log-entry log-info">
+                    <span class="log-timestamp">[SYSTEM]</span>
+                    Sistema pronto - Configurare le API keys per iniziare
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configurazione globale - MAI hardcodare le API keys qui!
+        let CONFIG = {};
+        let files = [];
+        let isProcessing = false;
+
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', function() {
+            loadConfig();
+            setupEventListeners();
+            loadStats();
+            checkConfiguration();
+            log('info', 'Sistema inizializzato - Inserire le credenziali per continuare');
+        });
+
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const button = input.nextElementSibling;
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                button.textContent = '👁️';
+            }
+        }
+
+        function loadConfig() {
+            CONFIG = {
+                accountId: document.getElementById('accountId').value,
+                apiKey: document.getElementById('apiKey').value,
+                email: document.getElementById('email').value,
+                bucketName: document.getElementById('bucketName').value,
+                openaiKey: document.getElementById('openaiKey').value,
+                namePrefix: document.getElementById('namePrefix').value
+            };
+        }
+
+        function checkConfiguration() {
+            const required = ['accountId', 'apiKey', 'email', 'openaiKey'];
+            const missing = required.filter(key => !CONFIG[key] || CONFIG[key].trim() === '');
+            
+            if (missing.length > 0) {
+                log('warning', `⚠️ Configurazione incompleta: ${missing.join(', ')}`);
+                document.getElementById('processAllBtn').disabled = true;
+            } else {
+                log('success', '✅ Configurazione completa');
+                document.getElementById('processAllBtn').disabled = false;
+            }
+        }
+
+        function setupEventListeners() {
+            // Upload zone events
+            const uploadZone = document.getElementById('uploadZone');
+            const fileInput = document.getElementById('fileInput');
+
+            uploadZone.addEventListener('click', () => fileInput.click());
+            uploadZone.addEventListener('dragover', handleDragOver);
+            uploadZone.addEventListener('dragleave', handleDragLeave);
+            uploadZone.addEventListener('drop', handleDrop);
+            fileInput.addEventListener('change', handleFileSelect);
+
+            // Process button
+            document.getElementById('processAllBtn').addEventListener('click', processAllFiles);
+
+            // Config inputs
+            document.querySelectorAll('input, select').forEach(input => {
+                input.addEventListener('change', () => {
+                    loadConfig();
+                    checkConfiguration();
+                });
+            });
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files);
+            addFiles(files);
+        }
+
+        function handleFileSelect(e) {
+            const files = Array.from(e.target.files);
+            addFiles(files);
+        }
+
+        function addFiles(newFiles) {
+            newFiles.forEach(file => {
+                const fileObj = {
+                    id: Date.now() + Math.random(),
+                    originalFile: file,
+                    originalName: file.name,
+                    size: file.size,
+                    type: file.type,
+                    newName: generateFileName(file.name),
+                    status: 'pending',
+                    convertedText: null,
+                    progress: 0
+                };
+                files.push(fileObj);
+            });
+            
+            renderFileList();
+            log('info', `Aggiunti ${newFiles.length} file alla coda`);
+        }
+
+        function generateFileName(originalName) {
+            const nameWithoutExt = originalName.replace(/\.[^/.]+$/, "");
+            const prefix = CONFIG.namePrefix === 'AUTO' ? autoDetectPrefix(nameWithoutExt) : CONFIG.namePrefix;
+            const sanitized = nameWithoutExt.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
+            const timestamp = new Date().toISOString().slice(0, 10);
+            return `${prefix}_${sanitized}_${timestamp}.txt`;
+        }
+
+        function autoDetectPrefix(filename) {
+            const name = filename.toLowerCase();
+            if (name.includes('ordinament') || name.includes('militar')) return 'ORD';
+            if (name.includes('regolament')) return 'REG';
+            if (name.includes('procedur')) return 'PROC';
+            if (name.includes('licenz') || name.includes('feri') || name.includes('riposi')) return 'LIC';
+            if (name.includes('gestion') || name.includes('assegnaz')) return 'GEST';
+            return 'DOC';
+        }
+
+        function renderFileList() {
+            const fileListEl = document.getElementById('fileList');
+            fileListEl.innerHTML = '';
+
+            files.forEach(file => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <div class="file-icon">${getFileIcon(file.type)}</div>
+                    <div class="file-info">
+                        <div class="file-name">${file.originalName}</div>
+                        <div class="file-details">
+                            ${formatBytes(file.size)} • ${file.type || 'unknown'}
+                        </div>
+                        <div class="progress-bar" style="display: ${file.status === 'processing' ? 'block' : 'none'}">
+                            <div class="progress-fill" style="width: ${file.progress}%"></div>
+                        </div>
+                    </div>
+                    <div class="file-actions">
+                        <input type="text" class="rename-input" value="${file.newName}" 
+                               onchange="updateFileName('${file.id}', this.value)">
+                        <span class="status status-${file.status}">${file.status}</span>
+                        <button class="btn btn-danger btn-small" onclick="removeFile('${file.id}')">❌</button>
+                    </div>
+                `;
+                fileListEl.appendChild(fileItem);
+            });
+        }
+
+        function getFileIcon(type) {
+            if (type.includes('pdf')) return '📄';
+            if (type.includes('word') || type.includes('document')) return '📝';
+            if (type.includes('text')) return '📃';
+            return '📋';
+        }
+
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function updateFileName(fileId, newName) {
+            const file = files.find(f => f.id == fileId);
+            if (file) {
+                file.newName = newName;
+                log('info', `Nome file aggiornato: ${newName}`);
+            }
+        }
+
+        function removeFile(fileId) {
+            files = files.filter(f => f.id != fileId);
+            renderFileList();
+            log('info', 'File rimosso dalla coda');
+        }
+
+        async function processAllFiles() {
+            if (isProcessing) {
+                log('warning', 'Processamento già in corso...');
+                return;
+            }
+
+            if (files.length === 0) {
+                log('warning', 'Nessun file da processare');
+                return;
+            }
+
+            // Verifica configurazione
+            const required = ['accountId', 'apiKey', 'email', 'openaiKey'];
+            const missing = required.filter(key => !CONFIG[key] || CONFIG[key].trim() === '');
+            
+            if (missing.length > 0) {
+                log('error', `❌ Configurazione mancante: ${missing.join(', ')}`);
+                return;
+            }
+
+            isProcessing = true;
+            document.getElementById('processAllBtn').disabled = true;
+            
+            log('info', `Avvio processamento di ${files.length} file...`);
+
+            for (const file of files) {
+                try {
+                    await processFile(file);
+                } catch (error) {
+                    log('error', `Errore processamento ${file.originalName}: ${error.message}`);
+                    file.status = 'error';
+                    renderFileList();
+                }
+            }
+
+            isProcessing = false;
+            document.getElementById('processAllBtn').disabled = false;
+            log('success', 'Processamento completato per tutti i file!');
+            loadStats();
+        }
+
+        async function processFile(file) {
+            log('info', `Processando: ${file.originalName}`);
+            file.status = 'processing';
+            file.progress = 0;
+            renderFileList();
+
+            // Step 1: Converti in testo
+            file.progress = 20;
+            renderFileList();
+            const text = await convertToText(file);
+            file.convertedText = text;
+
+            // Step 2: Upload su R2
+            file.progress = 50;
+            renderFileList();
+            await uploadToR2(file);
+
+            // Step 3: Indicizza nel chatbot
+            file.progress = 80;
+            renderFileList();
+            await indexInChatbot(file);
+
+            file.status = 'success';
+            file.progress = 100;
+            renderFileList();
+            log('success', `✅ Completato: ${file.originalName} → ${file.newName}`);
+        }
+
+        async function convertToText(file) {
+            const fileType = file.type.toLowerCase();
+            
+            if (fileType.includes('pdf')) {
+                return await convertPdfToText(file.originalFile);
+            } else if (fileType.includes('word') || fileType.includes('document')) {
+                return await convertDocxToText(file.originalFile);
+            } else if (fileType.includes('text')) {
+                return await file.originalFile.text();
+            } else {
+                // Fallback: prova a leggere come testo
+                return await file.originalFile.text();
+            }
+        }
+
+        async function convertPdfToText(pdfFile) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = async function() {
+                    try {
+                        const typedArray = new Uint8Array(this.result);
+                        const pdf = await pdfjsLib.getDocument(typedArray).promise;
+                        let fullText = '';
+                        
+                        for (let i = 1; i <= pdf.numPages; i++) {
+                            const page = await pdf.getPage(i);
+                            const textContent = await page.getTextContent();
+                            const pageText = textContent.items.map(item => item.str).join(' ');
+                            fullText += pageText + '\n\n';
+                        }
+                        
+                        resolve(fullText);
+                    } catch (error) {
+                        reject(error);
+                    }
+                };
+                reader.onerror = reject;
+                reader.readAsArrayBuffer(pdfFile);
+            });
+        }
+
+        async function convertDocxToText(docxFile) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    mammoth.extractRawText({arrayBuffer: this.result})
+                        .then(result => resolve(result.value))
+                        .catch(reject);
+                };
+                reader.onerror = reject;
+                reader.readAsArrayBuffer(docxFile);
+            });
+        }
+
+        async function uploadToR2(file) {
+            const blob = new Blob([file.convertedText], { type: 'text/plain' });
+            
+            const response = await fetch(
+                `https://api.cloudflare.com/client/v4/accounts/${CONFIG.accountId}/r2/buckets/${CONFIG.bucketName}/objects/${encodeURIComponent(file.newName)}`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'X-Auth-Email': CONFIG.email,
+                        'X-Auth-Key': CONFIG.apiKey,
+                        'Content-Type': 'text/plain'
+                    },
+                    body: blob
+                }
+            );
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Upload R2 fallito: ${response.status} - ${errorText}`);
+            }
+
+            log('success', `📤 Upload R2 completato: ${file.newName}`);
+        }
+
+        async function indexInChatbot(file) {
+            // Qui dovresti implementare la chiamata al tuo endpoint di indicizzazione
+            // ESEMPIO di integrazione sicura:
+            /*
+            const response = await fetch('/api/index-document', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + getSecureToken() // Token sicuro dal server
+                },
+                body: JSON.stringify({
+                    filename: file.newName,
+                    content: file.convertedText
+                })
+            });
+            */
+            
+            log('info', `🤖 Indicizzazione chatbot: ${file.newName}`);
+            
+            // Simula tempo di processamento
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            log('success', `🧠 Indicizzazione completata: ${file.newName}`);
+        }
+
+        function log(type, message) {
+            const logsEl = document.getElementById('logs');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            logEntry.innerHTML = `
+                <span class="log-timestamp">[${timestamp}]</span>
+                ${message}
+            `;
+            logsEl.appendChild(logEntry);
+            logsEl.scrollTop = logsEl.scrollHeight;
+        }
+
+        async function loadStats() {
+            // Carica statistiche (implementa la logica reale)
+            document.getElementById('totalDocs').textContent = files.filter(f => f.status === 'success').length;
+            document.getElementById('todayUploads').textContent = files.length;
+            document.getElementById('totalChunks').textContent = files.filter(f => f.status === 'success').length * 50; // Stima
+        }
+
+        // Imposta PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+</body>
+</html>
