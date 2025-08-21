@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Upload via Worker (CORS-Free)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header p { font-size: 1.2em; opacity: 0.9; }
+        .main-content { padding: 40px; }
+        
+        .status-banner {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .upload-zone {
+            border: 3px dashed #3498db;
+            border-radius: 15px;
+            padding: 60px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+        .upload-zone:hover {
+            border-color: #2980b9;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            transform: translateY(-2px);
+        }
+        .upload-zone.dragover {
+            border-color: #27ae60;
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+        }
+        .upload-icon { font-size: 4em; color: #3498db; margin-bottom: 20px; }
+        .upload-text { font-size: 1.3em; color: #2c3e50; margin-bottom: 10px; }
+        .upload-subtext { color: #7f8c8d; font-size: 0.9em; }
+        
+        .file-list { margin-top: 30px; }
+        .file-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .file-icon { font-size: 2em; width: 60px; text-align: center; }
+        .file-info { flex: 1; }
+        .file-name { font-weight: 600; color: #2c3e50; margin-bottom: 5px; }
+        .file-details { color: #7f8c8d; font-size: 0.9em; }
+        .file-actions { display: flex; gap: 10px; align-items: center; }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #27ae60);
+            transition: width 0.3s ease;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+        }
+        .btn-success:hover { transform: translateY(-2px); }
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+        .btn-small { padding: 8px 16px; font-size: 12px; }
+        
+        .status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-pending { background: #ffeaa7; color: #b8860b; }
+        .status-processing { background: #74b9ff; color: #0984e3; }
+        .status-success { background: #00b894; color: #00a085; }
+        .status-error { background: #e17055; color: #d63031; }
+        
+        .logs {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 30px;
+        }
+        .log-entry { margin-bottom: 5px; }
+        .log-timestamp { color: #95a5a6; margin-right: 10px; }
+        .log-info { color: #3498db; }
+        .log-success { color: #27ae60; }
+        .log-warning { color: #f39c12; }
+        .log-error { color: #e74c3c; }
+        
+        #fileInput { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Admin Upload (CORS-Free)</h1>
+            <p>Upload tramite Cloudflare Worker - Nessun problema CORS!</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Status Banner -->
+            <div class="status-banner" id="statusBanner">
+                ✅ Sistema configurato per usare il Worker - CORS risolto!<br>
+                🌐 Endpoint: <span id="workerUrl">https://search-worker.virgilio-search.workers.dev</span>
+            </div>
+
+            <!-- Upload Zone -->
+            <div class="upload-zone" id="uploadZone">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">Trascina i file qui o clicca per selezionare</div>
+                <div class="upload-subtext">Supporta PDF, DOCX, DOC, TXT e altri formati</div>
+                <input type="file" id="fileInput" multiple accept=".pdf,.docx,.doc,.txt,.rtf,.odt">
+            </div>
+
+            <!-- File List -->
+            <div class="file-list" id="fileList"></div>
+
+            <!-- Process Button -->
+            <div style="text-align: center; margin: 30px 0;">
+                <button class="btn btn-success" id="processAllBtn" style="font-size: 1.2em; padding: 15px 40px;">
+                    🚀 Processa Tutti i Documenti
+                </button>
+            </div>
+
+            <!-- Logs -->
+            <div class="logs" id="logs">
+                <div class="log-entry log-info">
+                    <span class="log-timestamp">[SYSTEM]</span>
+                    Sistema pronto - Upload tramite Worker attivato
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ✅ CONFIGURAZIONE CORRETTA: USA IL WORKER
+        const WORKER_URL = 'https://search-worker.virgilio-search.workers.dev';
+        let files = [];
+        let isProcessing = false;
+
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            testWorkerConnection();
+            log('success', '✅ Sistema inizializzato - Modalità Worker attiva');
+        });
+
+        // Test connessione Worker
+        async function testWorkerConnection() {
+            try {
+                const response = await fetch(WORKER_URL);
+                if (response.ok) {
+                    const text = await response.text();
+                    log('success', `✅ Worker online: ${text}`);
+                    document.getElementById('statusBanner').style.background = '#d4edda';
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                log('error', `❌ Worker non raggiungibile: ${error.message}`);
+                document.getElementById('statusBanner').innerHTML = '❌ Worker offline - Verificare il deploy';
+                document.getElementById('statusBanner').style.background = '#f8d7da';
+            }
+        }
+
+        function setupEventListeners() {
+            const uploadZone = document.getElementById('uploadZone');
+            const fileInput = document.getElementById('fileInput');
+
+            uploadZone.addEventListener('click', () => fileInput.click());
+            uploadZone.addEventListener('dragover', handleDragOver);
+            uploadZone.addEventListener('dragleave', handleDragLeave);
+            uploadZone.addEventListener('drop', handleDrop);
+            fileInput.addEventListener('change', handleFileSelect);
+
+            document.getElementById('processAllBtn').addEventListener('click', processAllFiles);
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files);
+            addFiles(files);
+        }
+
+        function handleFileSelect(e) {
+            const files = Array.from(e.target.files);
+            addFiles(files);
+        }
+
+        function addFiles(newFiles) {
+            newFiles.forEach(file => {
+                const fileObj = {
+                    id: Date.now() + Math.random(),
+                    originalFile: file,
+                    originalName: file.name,
+                    size: file.size,
+                    type: file.type,
+                    newName: generateFileName(file.name),
+                    status: 'pending',
+                    convertedText: null,
+                    progress: 0
+                };
+                files.push(fileObj);
+            });
+            
+            renderFileList();
+            log('info', `📁 Aggiunti ${newFiles.length} file alla coda`);
+        }
+
+        function generateFileName(originalName) {
+            const nameWithoutExt = originalName.replace(/\.[^/.]+$/, "");
+            const sanitized = nameWithoutExt.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
+            const timestamp = new Date().toISOString().slice(0, 10);
+            return `${sanitized}_${timestamp}.txt`;
+        }
+
+        function renderFileList() {
+            const fileListEl = document.getElementById('fileList');
+            fileListEl.innerHTML = '';
+
+            files.forEach(file => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <div class="file-icon">${getFileIcon(file.type)}</div>
+                    <div class="file-info">
+                        <div class="file-name">${file.originalName}</div>
+                        <div class="file-details">
+                            ${formatBytes(file.size)} • ${file.type || 'unknown'} → ${file.newName}
+                        </div>
+                        <div class="progress-bar" style="display: ${file.status === 'processing' ? 'block' : 'none'}">
+                            <div class="progress-fill" style="width: ${file.progress}%"></div>
+                        </div>
+                    </div>
+                    <div class="file-actions">
+                        <span class="status status-${file.status}">${file.status}</span>
+                        <button class="btn btn-danger btn-small" onclick="removeFile('${file.id}')">❌</button>
+                    </div>
+                `;
+                fileListEl.appendChild(fileItem);
+            });
+        }
+
+        function getFileIcon(type) {
+            if (type.includes('pdf')) return '📄';
+            if (type.includes('word') || type.includes('document')) return '📝';
+            if (type.includes('text')) return '📃';
+            return '📋';
+        }
+
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function removeFile(fileId) {
+            files = files.filter(f => f.id != fileId);
+            renderFileList();
+            log('info', '🗑️ File rimosso dalla coda');
+        }
+
+        async function processAllFiles() {
+            if (isProcessing) {
+                log('warning', '⚠️ Processamento già in corso...');
+                return;
+            }
+
+            if (files.length === 0) {
+                log('warning', '⚠️ Nessun file da processare');
+                return;
+            }
+
+            isProcessing = true;
+            document.getElementById('processAllBtn').disabled = true;
+            document.getElementById('processAllBtn').textContent = '⏳ Processando...';
+            
+            log('info', `🚀 Avvio processamento di ${files.length} file via Worker...`);
+
+            for (const file of files) {
+                try {
+                    await processFile(file);
+                } catch (error) {
+                    log('error', `❌ Errore processamento ${file.originalName}: ${error.message}`);
+                    file.status = 'error';
+                    renderFileList();
+                }
+            }
+
+            isProcessing = false;
+            document.getElementById('processAllBtn').disabled = false;
+            document.getElementById('processAllBtn').textContent = '🚀 Processa Tutti i Documenti';
+            log('success', '🎉 Processamento completato per tutti i file!');
+        }
+
+        async function processFile(file) {
+            log('info', `📄 Processando: ${file.originalName}`);
+            file.status = 'processing';
+            file.progress = 0;
+            renderFileList();
+
+            // Step 1: Converti in testo
+            file.progress = 25;
+            renderFileList();
+            const text = await convertToText(file);
+            file.convertedText = text;
+            log('success', `📝 Conversione completata: ${file.originalName}`);
+
+            // Step 2: Processamento completo via Worker
+            file.progress = 60;
+            renderFileList();
+            await processCompleteDocumentViaWorker(file);
+
+            file.status = 'success';
+            file.progress = 100;
+            renderFileList();
+            log('success', `✅ Completato: ${file.originalName} → ${file.newName}`);
+        }
+
+        // ✅ FUNZIONE CORRETTA: USA IL WORKER INVECE DELLE API DIRETTE
+        async function processCompleteDocumentViaWorker(file) {
+            const response = await fetch(`${WORKER_URL}/api/process-document`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    filename: file.newName,
+                    content: file.convertedText
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`Worker error: ${errorData.error}`);
+            }
+
+            const result = await response.json();
+            log('success', `🤖 Worker: Upload + Indicizzazione completata (${result.chunks_processed} chunks)`);
+        }
+
+        // Funzioni di conversione file
+        async function convertToText(file) {
+            const fileType = file.originalFile.type.toLowerCase();
+            
+            if (fileType.includes('pdf')) {
+                return await convertPdfToText(file.originalFile);
+            } else if (fileType.includes('word') || fileType.includes('document')) {
+                return await convertDocxToText(file.originalFile);
+            } else if (fileType.includes('text')) {
+                return await file.originalFile.text();
+            } else {
+                return await file.originalFile.text();
+            }
+        }
+
+        async function convertPdfToText(pdfFile) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = async function() {
+                    try {
+                        const typedArray = new Uint8Array(this.result);
+                        const pdf = await pdfjsLib.getDocument(typedArray).promise;
+                        let fullText = '';
+                        
+                        for (let i = 1; i <= pdf.numPages; i++) {
+                            const page = await pdf.getPage(i);
+                            const textContent = await page.getTextContent();
+                            const pageText = textContent.items.map(item => item.str).join(' ');
+                            fullText += pageText + '\n\n';
+                        }
+                        
+                        resolve(fullText);
+                    } catch (error) {
+                        reject(error);
+                    }
+                };
+                reader.onerror = reject;
+                reader.readAsArrayBuffer(pdfFile);
+            });
+        }
+
+        async function convertDocxToText(docxFile) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    mammoth.extractRawText({arrayBuffer: this.result})
+                        .then(result => resolve(result.value))
+                        .catch(reject);
+                };
+                reader.onerror = reject;
+                reader.readAsArrayBuffer(docxFile);
+            });
+        }
+
+        function log(type, message) {
+            const logsEl = document.getElementById('logs');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            logEntry.innerHTML = `
+                <span class="log-timestamp">[${timestamp}]</span>
+                ${message}
+            `;
+            logsEl.appendChild(logEntry);
+            logsEl.scrollTop = logsEl.scrollHeight;
+        }
+
+        // PDF.js worker setup
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+</body>
+</html>
