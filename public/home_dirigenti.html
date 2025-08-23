@@ -5,44 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Area Dirigenti - MyApp</title>
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS da CDN locale per evitare warning produzione -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/3.4.0/tailwind.min.css" rel="stylesheet">
     
     <!-- CONFIGURAZIONE COLORI TAILWIND -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { inter: ['Inter','sans-serif'] },
-                    colors: {
-                        primary: '#1a1a2e',
-                        secondary: '#16213e', 
-                        accent: '#0f3460',
-                        aurora: '#e94560',
-                        cyan: '#00d4ff',
-                        magenta: '#ff006e',
-                        gold: '#ffd700',
-                        teal: '#03dac6',
-                        dark: '#0a0a23',
-                        light: '#f8fafc',
-                        success: '#10b981',
-                        textDark: '#1C1C1E',
-                        backgroundLight: '#F4F4F8',
-                    },
-                    screens: {
-                        'xs': '320px',
-                        'sm': '640px',
-                        'md': '768px',
-                        'lg': '1024px',
-                        'xl': '1280px',
-                        '2xl': '1536px',
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <!-- STILI MOBILE-FIRST -->
     <style>
         :root {
             --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
@@ -54,7 +20,7 @@
         }
 
         * {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-tap-highlight-color: transparent;
             -webkit-touch-callout: none;
         }
@@ -185,6 +151,7 @@
             transition: all .25s ease;
             touch-action: manipulation;
             min-height: 44px;
+            cursor: pointer;
         }
 
         @media (hover: hover) and (pointer: fine) {
@@ -378,6 +345,23 @@
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
+        }
+
+        /* Error and loading states */
+        .error-state {
+            text-align: center;
+            padding: 2rem;
+            color: #ef4444;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            margin: 1rem 0;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
         }
     </style>
 </head>
@@ -609,8 +593,10 @@
 
     <!-- JAVASCRIPT -->
     <script type="module">
+        // Importa Supabase Client
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
+        // Inizializza Supabase
         const supabase = createClient(
             'https://pvzdilkozpspsnepedqc.supabase.co',
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk'
@@ -628,11 +614,46 @@
             } 
         };
 
-        const escapeHTML = (s) => String(s ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;');
+        const escapeHTML = (str) => {
+            const div = document.createElement('div');
+            div.textContent = str || '';
+            return div.innerHTML;
+        };
 
-        const setText = (id, v) => { 
+        const setText = (id, value) => { 
             const el = document.getElementById(id); 
-            if (el) el.textContent = v; 
+            if (el) el.textContent = value || '—'; 
+        };
+
+        const setHTML = (id, html) => {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = html || '';
+        };
+
+        // Error handling
+        const showError = (containerId, message) => {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.innerHTML = `
+                    <div class="error-state">
+                        <div class="text-3xl mb-2">⚠️</div>
+                        <p class="font-semibold mb-2">Errore nel caricamento</p>
+                        <p class="text-sm opacity-75">${escapeHTML(message)}</p>
+                    </div>
+                `;
+            }
+        };
+
+        const showLoading = (containerId) => {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.innerHTML = `
+                    <div class="loading-state">
+                        <span class="spinner"></span>
+                        <p class="mt-2 text-sm">Caricamento in corso...</p>
+                    </div>
+                `;
+            }
         };
 
         // Mobile menu functions
@@ -643,7 +664,6 @@
             if (mobileMenuBtn && mobileMenu) {
                 mobileMenuBtn.addEventListener('click', toggleMobileMenu);
                 
-                // Close menu when clicking outside
                 document.addEventListener('click', (e) => {
                     if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
                         closeMobileMenu();
@@ -691,52 +711,109 @@
 
         // Authentication guard
         async function guard() {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) { 
-                window.location.href = 'auth.html'; 
-                return null; 
+            try {
+                const { data: { user }, error } = await supabase.auth.getUser();
+                if (error) {
+                    console.error('Auth error:', error);
+                    window.location.href = 'auth.html'; 
+                    return null;
+                }
+                if (!user) { 
+                    window.location.href = 'auth.html'; 
+                    return null; 
+                }
+                return user;
+            } catch (error) {
+                console.error('Guard error:', error);
+                window.location.href = 'auth.html';
+                return null;
             }
-            return user;
         }
 
         // Load user profile
         async function loadProfile(user) {
             try {
-                const { data: p } = await supabase.from('user_profiles').select('nome,cognome,email,role').eq('user_id', user.id).single();
-                setText('whoami', p?.email || user.email || '—');
-                setText('userName', p?.nome ? `${p.nome} ${p.cognome||''}`.trim() : 'Dirigente');
-                setText('userEmail', p?.email || user.email || '—');
-                document.getElementById('userIcon').textContent = (p?.role === 'ADMIN') ? '👑' : '🎯';
-                setText('rolesSummary', p?.role || '—');
-                setText('accessLevel', p?.role === 'ADMIN' ? 'Accesso Amministratore Completo' : 'Accesso Dirigente Autorizzato');
-            } catch {
+                const { data: profile, error } = await supabase
+                    .from('user_profiles')
+                    .select('nome, cognome, email, role, full_name, created_at')
+                    .eq('user_id', user.id)
+                    .single();
+                
+                if (error) {
+                    console.error('Profile error:', error);
+                    // Use fallback data
+                    setText('whoami', user.email || '—');
+                    setText('userName', 'Dirigente');
+                    setText('userEmail', user.email || '—');
+                    setText('rolesSummary', 'Dirigente');
+                    setText('accessLevel', 'Accesso Dirigente');
+                    return;
+                }
+                
+                const displayName = profile?.nome ? 
+                    `${profile.nome} ${profile.cognome || ''}`.trim() : 
+                    profile?.full_name || 'Dirigente';
+                
+                setText('whoami', profile?.email || user.email || '—');
+                setText('userName', displayName);
+                setText('userEmail', profile?.email || user.email || '—');
+                
+                const userIcon = document.getElementById('userIcon');
+                if (userIcon) {
+                    userIcon.textContent = (profile?.role === 'ADMIN') ? '👑' : '🎯';
+                }
+                
+                setText('rolesSummary', profile?.role || 'USER');
+                setText('accessLevel', 
+                    profile?.role === 'ADMIN' ? 'Accesso Amministratore Completo' : 
+                    profile?.role === 'DIRIGENTE' ? 'Accesso Dirigente Autorizzato' :
+                    'Accesso Utente Standard'
+                );
+                
+                // Set registration date from profile creation
+                if (profile?.created_at) {
+                    setText('iscrittoDal', fmtDate(profile.created_at));
+                }
+                
+            } catch (error) {
+                console.error('Load profile error:', error);
                 setText('whoami', user.email || '—');
                 setText('userName', 'Dirigente'); 
                 setText('userEmail', user.email || '—'); 
                 setText('rolesSummary', '—'); 
-                setText('accessLevel', 'Accesso Dirigente Autorizzato');
-            }
-        }
-
-        // Load subscription date
-        async function loadIscrittoDal(user) {
-            try {
-                const { data } = await supabase.from('tessere').select('data_emissione').eq('user_id', user.id).order('data_emissione', { ascending: true }).limit(1);
-                setText('iscrittoDal', data?.[0]?.data_emissione ? fmtDate(data[0].data_emissione) : 'Non disponibile');
-            } catch { 
-                setText('iscrittoDal', 'Non disponibile'); 
+                setText('accessLevel', 'Accesso Standard');
             }
         }
 
         // Load system overview
         async function loadSystemOverview() {
             try {
-                const nowIso = new Date().toISOString();
-                const { count: totalNews } = await supabase.from('news').select('id', {count: 'exact', head: true}).eq('pubblicata', true).or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
-                const { count: featuredCount } = await supabase.from('news').select('id', {count: 'exact', head: true}).eq('pubblicata', true).eq('in_evidenza', true).or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
+                const now = new Date();
+                const nowIso = now.toISOString();
+                
+                // Count published and active news
+                const { count: totalNews, error: newsError } = await supabase
+                    .from('news')
+                    .select('id', {count: 'exact', head: true})
+                    .eq('pubblicata', true)
+                    .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
+                
+                // Count featured news
+                const { count: featuredCount, error: featuredError } = await supabase
+                    .from('news')
+                    .select('id', {count: 'exact', head: true})
+                    .eq('pubblicata', true)
+                    .eq('in_evidenza', true)
+                    .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
+                
+                if (newsError) console.error('News count error:', newsError);
+                if (featuredError) console.error('Featured news count error:', featuredError);
+                
                 setText('newsCount', typeof totalNews === 'number' ? totalNews : '—'); 
                 setText('featuredNewsCount', typeof featuredCount === 'number' ? featuredCount : '—');
-            } catch { 
+                
+            } catch (error) {
+                console.error('System overview error:', error);
                 setText('newsCount', '—'); 
                 setText('featuredNewsCount', '—'); 
             }
@@ -747,63 +824,79 @@
             const wrap = document.getElementById('latestNews'); 
             const empty = document.getElementById('newsEmptyState');
             
-            wrap.innerHTML = `<div class="col-span-full flex items-center justify-center py-8"><span class="spinner"></span></div>`;
+            if (!wrap || !empty) return;
+            
+            showLoading('latestNews');
             
             try {
-                const nowIso = new Date().toISOString();
-                const { data: news } = await supabase
+                const now = new Date();
+                const nowIso = now.toISOString();
+                
+                const { data: news, error } = await supabase
                     .from('news')
-                    .select('id,titolo,sottotitolo,immagine_url,categoria,data_pubblicazione,in_evidenza,url_articolo')
+                    .select('id, titolo, sottotitolo, immagine_url, categoria, data_pubblicazione, in_evidenza, url_articolo')
                     .eq('pubblicata', true)
                     .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`)
                     .order('in_evidenza', {ascending: false})
                     .order('data_pubblicazione', {ascending: false})
                     .limit(6);
                 
-                if (!news || !news.length) { 
+                if (error) {
+                    console.error('News error:', error);
+                    showError('latestNews', 'Impossibile caricare le notizie');
+                    return;
+                }
+                
+                if (!news || news.length === 0) { 
                     wrap.innerHTML = ''; 
                     empty.classList.remove('hidden'); 
                     return; 
                 }
                 
                 empty.classList.add('hidden'); 
-                wrap.innerHTML = '';
                 
-                for (const n of news) {
-                    const card = document.createElement('article');
-                    const hasUrl = !!n.url_articolo && String(n.url_articolo).trim().length > 0;
-                    card.className = 'rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm';
-                    card.innerHTML = `
-                        <div class="h-32 md:h-40 bg-slate-100 overflow-hidden">
-                            ${n.immagine_url ? 
-                                `<img src="${escapeHTML(n.immagine_url)}" alt="" class="w-full h-full object-cover">` : 
-                                `<div class="w-full h-full flex items-center justify-center text-3xl md:text-4xl">📰</div>`
-                            }
-                        </div>
-                        <div class="p-3 md:p-4">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="badge">${escapeHTML(n.categoria || 'GENERALE')}</span>
-                                ${n.in_evidenza ? '<span class="badge">⭐ In evidenza</span>' : ''}
+                const newsHTML = news.map(n => {
+                    const hasUrl = n.url_articolo && String(n.url_articolo).trim().length > 0;
+                    return `
+                        <article class="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm">
+                            <div class="h-32 md:h-40 bg-slate-100 overflow-hidden">
+                                ${n.immagine_url ? 
+                                    `<img src="${escapeHTML(n.immagine_url)}" alt="" class="w-full h-full object-cover">` : 
+                                    `<div class="w-full h-full flex items-center justify-center text-3xl md:text-4xl">📰</div>`
+                                }
                             </div>
-                            <h3 class="font-extrabold text-slate-900 text-sm md:text-lg leading-snug mb-1">${escapeHTML(n.titolo)}</h3>
-                            ${n.sottotitolo ? `<p class="text-slate-600 text-xs md:text-sm mb-3">${escapeHTML(n.sottotitolo)}</p>` : ''}
-                            <div class="flex items-center justify-between text-xs text-slate-500">
-                                <span>${fmtDate(n.data_pubblicazione)}</span>
-                                <button class="btn-aurora text-xs px-3 py-2" ${hasUrl ? `data-url="${escapeHTML(n.url_articolo)}"` : 'disabled title="Nessun link"'}>Leggi l'articolo completo</button>
+                            <div class="p-3 md:p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="badge">${escapeHTML(n.categoria || 'GENERALE')}</span>
+                                    ${n.in_evidenza ? '<span class="badge">⭐ In evidenza</span>' : ''}
+                                </div>
+                                <h3 class="font-extrabold text-slate-900 text-sm md:text-lg leading-snug mb-1">${escapeHTML(n.titolo)}</h3>
+                                ${n.sottotitolo ? `<p class="text-slate-600 text-xs md:text-sm mb-3">${escapeHTML(n.sottotitolo)}</p>` : ''}
+                                <div class="flex items-center justify-between text-xs text-slate-500">
+                                    <span>${fmtDate(n.data_pubblicazione)}</span>
+                                    <button class="btn-aurora text-xs px-3 py-2 ${hasUrl ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed'}" 
+                                            ${hasUrl ? `data-url="${escapeHTML(n.url_articolo)}"` : 'disabled title="Nessun link disponibile"'}>
+                                        Leggi articolo
+                                    </button>
+                                </div>
                             </div>
-                        </div>`;
-                    wrap.appendChild(card);
-                }
+                        </article>
+                    `;
+                }).join('');
                 
+                wrap.innerHTML = newsHTML;
+                
+                // Add click handlers for news articles
                 wrap.addEventListener('click', (e) => { 
-                    const b = e.target.closest('button[data-url]'); 
-                    if (b) { 
-                        window.open(b.getAttribute('data-url'), '_blank', 'noopener'); 
+                    const btn = e.target.closest('button[data-url]'); 
+                    if (btn && btn.dataset.url) { 
+                        window.open(btn.dataset.url, '_blank', 'noopener,noreferrer'); 
                     } 
-                }, { once: true });
-            } catch (e) { 
-                console.error(e); 
-                wrap.innerHTML = '<div class="text-center py-8 text-slate-600">Errore nel caricamento</div>'; 
+                });
+                
+            } catch (error) { 
+                console.error('Load news error:', error); 
+                showError('latestNews', 'Errore nel caricamento delle notizie');
             }
         }
 
@@ -812,37 +905,54 @@
             const wrap = document.getElementById('featuredConvenzioni'); 
             const empty = document.getElementById('convEmptyState');
             
+            if (!wrap || !empty) return;
+            
             try {
-                const { data } = await supabase.from('convenzioni')
-                    .select('id,nome_azienda,descrizione,logo_url,link_esterno,in_evidenza,attiva')
+                const { data, error } = await supabase
+                    .from('convenzioni')
+                    .select('id, nome_azienda, descrizione, logo_url, link_esterno, in_evidenza, attiva')
                     .eq('attiva', true)
                     .eq('in_evidenza', true)
                     .order('created_at', {ascending: false})
                     .limit(6);
                 
-                if (!data || !data.length) { 
+                if (error) {
+                    console.error('Conventions error:', error);
+                    empty.classList.remove('hidden'); 
+                    return;
+                }
+                
+                if (!data || data.length === 0) { 
                     empty.classList.remove('hidden'); 
                     return; 
                 }
                 
                 empty.classList.add('hidden'); 
-                wrap.innerHTML = '';
                 
-                for (const c of data) {
-                    const el = document.createElement('a');
-                    el.className = 'function-card border-slate-200 bg-white';
-                    el.href = c.link_esterno || '#'; 
-                    el.target = c.link_esterno ? '_blank' : '_self'; 
-                    el.rel = c.link_esterno ? 'noopener' : '';
-                    el.innerHTML = `
-                        <div class="w-full h-16 md:h-24 bg-slate-50 rounded-lg flex items-center justify-center overflow-hidden mb-3">
-                            ${c.logo_url ? `<img src="${escapeHTML(c.logo_url)}" alt="" class="max-h-16 md:max-h-24 object-contain">` : '<div class="text-2xl md:text-3xl">🤝</div>'}
-                        </div>
-                        <h4 class="font-extrabold">${escapeHTML(c.nome_azienda)}</h4>
-                        <p class="text-slate-600 text-xs">${escapeHTML((c.descrizione||'').slice(0,110))}${c.descrizione&&c.descrizione.length>110?'…':''}</p>`;
-                    wrap.appendChild(el);
-                }
-            } catch { 
+                const conventionsHTML = data.map(c => {
+                    const truncatedDesc = c.descrizione && c.descrizione.length > 110 ? 
+                        c.descrizione.slice(0, 110) + '…' : (c.descrizione || '');
+                    
+                    return `
+                        <a href="${c.link_esterno || '#'}" 
+                           class="function-card border-slate-200 bg-white" 
+                           ${c.link_esterno ? 'target="_blank" rel="noopener noreferrer"' : ''}>
+                            <div class="w-full h-16 md:h-24 bg-slate-50 rounded-lg flex items-center justify-center overflow-hidden mb-3">
+                                ${c.logo_url ? 
+                                    `<img src="${escapeHTML(c.logo_url)}" alt="${escapeHTML(c.nome_azienda)}" class="max-h-16 md:max-h-24 object-contain">` : 
+                                    '<div class="text-2xl md:text-3xl">🤝</div>'
+                                }
+                            </div>
+                            <h4 class="font-extrabold">${escapeHTML(c.nome_azienda)}</h4>
+                            <p class="text-slate-600 text-xs">${escapeHTML(truncatedDesc)}</p>
+                        </a>
+                    `;
+                }).join('');
+                
+                wrap.innerHTML = conventionsHTML;
+                
+            } catch (error) { 
+                console.error('Load conventions error:', error);
                 empty.classList.remove('hidden'); 
             }
         }
@@ -861,7 +971,9 @@
         async function handleLogout() {
             try { 
                 await supabase.auth.signOut(); 
-            } catch {}
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
             window.location.href = 'index.html';
         }
 
@@ -886,7 +998,6 @@
 
             // Add resize listener to update layouts
             window.addEventListener('resize', () => {
-                // Close mobile menu on resize to larger screen
                 if (window.innerWidth >= 640) {
                     closeMobileMenu();
                 }
@@ -894,29 +1005,40 @@
         }
 
         // Initialize everything
-        (async () => {
-            console.log('🏛️ Area Dirigenti Mobile-First Dashboard Loading...');
-            
-            // Setup mobile interactions
-            setupMobileMenu();
-            setupLogout();
-            setupMobileOptimizations();
-            
-            // Check authentication
-            const user = await guard(); 
-            if (!user) return;
-            
-            // Load all data
-            await Promise.all([
-                loadProfile(user), 
-                loadIscrittoDal(user), 
-                loadSystemOverview(), 
-                loadLatestNews(), 
-                loadFeaturedConvenzioni()
-            ]);
-            
-            console.log('✅ Area Dirigenti Dashboard Ready - Mobile Optimized with Full Integration');
-        })();
+        async function initializeApp() {
+            try {
+                console.log('🏛️ Area Dirigenti Mobile-First Dashboard Loading...');
+                
+                // Setup mobile interactions
+                setupMobileMenu();
+                setupLogout();
+                setupMobileOptimizations();
+                
+                // Check authentication
+                const user = await guard(); 
+                if (!user) return;
+                
+                console.log('✅ User authenticated:', user.email);
+                
+                // Load all data with error handling
+                const loadPromises = [
+                    loadProfile(user).catch(err => console.error('Profile load failed:', err)), 
+                    loadSystemOverview().catch(err => console.error('System overview failed:', err)), 
+                    loadLatestNews().catch(err => console.error('News load failed:', err)), 
+                    loadFeaturedConvenzioni().catch(err => console.error('Conventions load failed:', err))
+                ];
+                
+                await Promise.allSettled(loadPromises);
+                
+                console.log('✅ Area Dirigenti Dashboard Ready - Mobile Optimized with Full Integration');
+                
+            } catch (error) {
+                console.error('❌ App initialization failed:', error);
+            }
+        }
+
+        // Start the application
+        initializeApp();
     </script>
 </body>
 </html>
