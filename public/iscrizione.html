@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>🎯 QUESTA CONVENZIONE TI INTERESSA? Iscriviti al Sindacato!</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- CONFIGURAZIONE COLORI TAILWIND -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1a1a2e',
+                        secondary: '#16213e',
+                        accent: '#0f3460',
+                        aurora: '#e94560',
+                        cyan: '#00d4ff',
+                        magenta: '#ff006e',
+                        gold: '#ffd700',
+                        teal: '#03dac6',
+                        dark: '#0a0a23',
+                        light: '#f8fafc',
+                        textDark: '#1C1C1E',
+                        backgroundLight: '#F4F4F8',
+                        sindacale: '#c41e3a',
+                        giustizia: '#2e8b57',
+                        solidarietà: '#4682b4',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- STILI ESPLOSIVI CONVENZIONI -->
+    <style>
+        :root {
+            --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
+            --gradient-convenzione: linear-gradient(135deg, #ffd700 0%, #ff6b35 25%, #e94560 50%, #4682b4 75%, #2e8b57 100%);
+            --gradient-benefici: linear-gradient(135deg, #2e8b57 0%, #4682b4 50%, #ffd700 100%);
+            --gradient-sconto: linear-gradient(135deg, #ff6b35 0%, #ffd700 25%, #2e8b57 50%, #4682b4 75%, #e94560 100%);
+            --gradient-explosive: linear-gradient(45deg, #ffd700, #ff6b35, #e94560, #4682b4, #2e8b57, #00d4ff);
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+
+        body {
+            background: var(--gradient-convenzione);
+            background-size: 400% 400%;
+            animation: aurora 18s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        @keyframes aurora {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+        }
+
+        @keyframes shimmer { 
+            0% { background-position: -200% 0; } 
+            100% { background-position: 200% 0; } 
+        }
+
+        @keyframes slideUp { 
+            from { opacity: 0; transform: translateY(30px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        @keyframes fadeIn { 
+            from { opacity: 0; } 
+            to { opacity: 1; } 
+        }
+
+        @keyframes pulse { 
+            0%, 100% { opacity: 1; transform: scale(1); } 
+            50% { opacity: 0.8; transform: scale(1.05); } 
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes sconto-shake {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-3px) rotate(-1deg); }
+            20%, 40%, 60%, 80% { transform: translateX(3px) rotate(1deg); }
+        }
+
+        @keyframes convenzione-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8), 0 0 60px rgba(233, 69, 96, 0.6); }
+        }
+
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        @keyframes risparmio-pulse {
+            0%, 100% { 
+                transform: scale(1); 
+                box-shadow: 0 0 20px rgba(255, 107, 53, 0.5); 
+            }
+            50% { 
+                transform: scale(1.1); 
+                box-shadow: 0 0 40px rgba(255, 107, 53, 0.8), 0 0 60px rgba(255, 215, 0, 0.6); 
+            }
+        }
+
+        /* Typography esplosiva convenzioni */
+        .text-ultra-visible { 
+            color: #fff; 
+            text-shadow: 0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1); 
+            font-weight: 900; 
+        }
+
+        .text-convenzione {
+            background: var(--gradient-explosive);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbow 3s ease-in-out infinite;
+            font-weight: 900;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+        }
+
+        .text-sconto {
+            background: var(--gradient-sconto);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbow 2s ease-in-out infinite;
+            font-weight: 800;
+        }
+
+        /* Glass effects */
+        .glass-morphism { 
+            background: rgba(255,255,255,.08); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255,255,255,.20); 
+            box-shadow: 0 8px 32px rgba(31,38,135,.25); 
+        }
+
+        .glass-card { 
+            background: rgba(255,255,255,.95); 
+            backdrop-filter: blur(16px); 
+            border: 1px solid rgba(0,0,0,.06); 
+        }
+
+        /* Buttons esplosivi convenzioni */
+        .btn-convenzione {
+            background: var(--gradient-sconto);
+            background-size: 300% 300%;
+            color: white;
+            border: 3px solid rgba(255, 107, 53, 0.8);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: convenzione-glow 2s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-convenzione::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-convenzione:hover::before {
+            left: 100%;
+        }
+
+        .btn-convenzione:hover {
+            transform: translateY(-3px) scale(1.05);
+            animation: sconto-shake 0.5s ease-in-out;
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.4), 0 0 50px rgba(255, 215, 0, 0.6);
+        }
+
+        .btn-secondary {
+            background: var(--gradient-benefici);
+            color: white;
+            border: 2px solid rgba(70, 130, 180, 0.5);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 700;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 16px 32px rgba(70, 130, 180, 0.35);
+        }
+
+        /* Hero section convenzione */
+        .hero-convenzione {
+            background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,107,53,0.15), rgba(233,69,96,0.15));
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-convenzione::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255,215,0,0.1), transparent, rgba(233,69,96,0.1), transparent);
+            animation: spin 12s linear infinite;
+            z-index: 1;
+        }
+
+        .hero-convenzione .content {
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Convenzione card */
+        .convenzione-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(15px);
+            border: 3px solid rgba(255,215,0,0.6);
+            border-radius: 25px;
+            animation: risparmio-pulse 3s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .convenzione-card::before {
+            content: '🏆';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 2rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        /* Statistics convenzioni */
+        .stat-convenzione {
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255,215,0,0.5);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            animation: bounce 4s ease-in-out infinite;
+        }
+
+        .stat-convenzione:nth-child(2) { animation-delay: 0.5s; }
+        .stat-convenzione:nth-child(3) { animation-delay: 1s; }
+        .stat-convenzione:nth-child(4) { animation-delay: 1.5s; }
+
+        .stat-convenzione:hover {
+            transform: translateY(-5px) scale(1.05);
+            border-color: rgba(255,215,0,0.8);
+            box-shadow: 0 15px 30px rgba(255,215,0,0.3);
+        }
+
+        /* Floating elements */
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating:nth-child(odd) {
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Urgency indicators */
+        .urgenza-flash {
+            animation: urgenza-blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes urgenza-blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.4; }
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 640px) {
+            .hero-title { 
+                font-size: clamp(1.5rem, 8vw, 3.5rem); 
+                line-height: 1.1;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,215,0,.6); border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,215,0,.8); }
+        ::-webkit-scrollbar-track { background: transparent; }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+        }
+    </style>
+</head>
+
+<body class="flex flex-col min-h-screen font-sans">
+
+    <!-- HEADER CONVENZIONI -->
+    <header class="glass-morphism sticky top-0 z-40" style="padding-top: max(16px, var(--safe-area-inset-top));">
+        <div class="px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-gold via-aurora to-teal rounded-xl flex items-center justify-center">
+                        <span class="text-white font-black text-lg">🎁</span>
+                    </div>
+                    <div class="hidden sm:block">
+                        <span class="text-ultra-visible text-xl font-black">SINDACATO</span>
+                        <div class="text-white text-xs flex items-center gap-2">
+                            <span class="w-2 h-2 bg-gold rounded-full urgenza-flash"></span>
+                            <span class="hidden md:inline">CONVENZIONI ESCLUSIVE</span>
+                            <span class="md:hidden">SCONTI</span>
+                        </div>
+                    </div>
+                    <div class="sm:hidden">
+                        <span class="text-ultra-visible text-lg font-black">SINDACATO</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-3">
+                    <div class="text-white text-right hidden sm:block">
+                        <div class="font-semibold text-sm text-sconto">🎯 RISPARMIA</div>
+                        <div class="text-xs opacity-80">Subito!</div>
+                    </div>
+                    <button class="btn-convenzione px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
+                        <span>🎁 ISCRIVITI</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONVENZIONI -->
+    <main class="flex-grow pb-8">
+
+        <!-- HERO SECTION CONVENZIONI -->
+        <section class="p-4 md:p-8 animate-fade-in">
+            <div class="hero-convenzione p-8 md:p-12 text-center relative">
+                <div class="content">
+                    <!-- Indicatore convenzione -->
+                    <div class="flex justify-center mb-6">
+                        <div class="inline-flex items-center gap-2 bg-gold text-dark px-6 py-2 rounded-full font-bold text-sm urgenza-flash">
+                            <span>🎁</span>
+                            <span class="hidden sm:inline">CONVENZIONE ESCLUSIVA RISERVATA</span>
+                            <span class="sm:hidden">SOLO ISCRITTI</span>
+                            <span>🎁</span>
+                        </div>
+                    </div>
+
+                    <!-- Titolo esplosivo convenzioni -->
+                    <h1 class="hero-title text-convenzione mb-6">
+                        TI INTERESSA<br>
+                        QUESTA<br>
+                        <span class="text-sconto">CONVENZIONE?</span>
+                    </h1>
+
+                    <!-- Sottotitolo potente -->
+                    <div class="text-ultra-visible text-xl md:text-3xl font-black mb-8 leading-tight">
+                        ALLORA COSA ASPETTI?<br>
+                        <span class="text-6xl md:text-8xl">💰</span><br>
+                        <span class="text-sconto">ISCRIVITI E RISPARMIA!</span>
+                    </div>
+
+                    <!-- Card convenzione specifica -->
+                    <div class="convenzione-card p-6 md:p-8 mb-8 mx-auto max-w-2xl">
+                        <div id="convenzioneDetails" class="text-textDark">
+                            <!-- Contenuto dinamico basato sulla convenzione selezionata -->
+                            <div class="flex flex-col md:flex-row items-center gap-6">
+                                <div class="w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-gold to-aurora rounded-2xl flex items-center justify-center text-4xl md:text-5xl" id="convenzioneIcon">
+                                    🎯
+                                </div>
+                                <div class="text-center md:text-left flex-grow">
+                                    <h3 class="text-2xl md:text-3xl font-black mb-2" id="convenzioneNome">Convenzione Esclusiva</h3>
+                                    <p class="text-lg md:text-xl mb-4" id="convenzioneDescrizione">Scopri vantaggi e sconti riservati solo agli iscritti</p>
+                                    <div class="inline-flex items-center gap-2 bg-aurora text-white px-4 py-2 rounded-full font-bold text-sm">
+                                        <span>💎</span>
+                                        <span>RISERVATA AGLI ISCRITTI</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Messaggio principale -->
+                    <div class="glass-morphism rounded-3xl p-6 md:p-8 mb-8">
+                        <p class="text-white text-lg md:text-2xl font-bold leading-relaxed mb-4">
+                            <span class="text-gold">NON PERDERE TEMPO!</span><br>
+                            Contatta subito il tuo dirigente sindacale e<br>
+                            accedi a <span class="text-cyan">QUESTA E TANTE ALTRE</span> convenzioni esclusive!
+                        </p>
+                        <p class="text-white/90 text-base md:text-xl">
+                            Essere iscritti significa <span class="text-magenta font-black">RISPARMIARE OGNI GIORNO!</span>
+                        </p>
+                    </div>
+
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                        <button class="btn-convenzione px-8 py-4 rounded-2xl text-lg font-black flex items-center justify-center gap-3 min-h-16">
+                            <span class="text-2xl">📞</span>
+                            <span>CONTATTA DIRIGENTE</span>
+                            <span class="text-2xl">💰</span>
+                        </button>
+                        <button class="btn-secondary px-8 py-4 rounded-2xl text-lg font-bold flex items-center justify-center gap-3 min-h-16">
+                            <span class="text-xl">✉️</span>
+                            <span>SCRIVI EMAIL</span>
+                        </button>
+                    </div>
+
+                    <!-- Contatto email -->
+                    <div class="glass-morphism rounded-2xl p-4 mb-8 inline-block">
+                        <div class="text-white text-sm font-bold mb-2">📧 Scrivici per maggiori informazioni:</div>
+                        <a href="mailto:info@myappgo.it" class="text-cyan text-lg font-bold hover:text-gold transition-colors">
+                            info@myappgo.it
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STATISTICHE CONVENZIONI -->
+        <section class="p-4 animate-slide-up">
+            <div class="text-center mb-6">
+                <h2 class="text-ultra-visible text-2xl md:text-3xl font-black mb-2">
+                    💰 QUANTO RISPARMIANO I NOSTRI ISCRITTI
+                </h2>
+                <p class="text-white/80 text-lg">I numeri parlano chiaro: essere iscritti conviene!</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="stat-convenzione p-6 floating">
+                    <div class="text-4xl mb-3">🎁</div>
+                    <div class="text-white text-3xl font-black">150+</div>
+                    <div class="text-white/80 text-sm font-bold">Convenzioni Attive</div>
+                </div>
+                <div class="stat-convenzione p-6 floating">
+                    <div class="text-4xl mb-3">💰</div>
+                    <div class="text-white text-3xl font-black">€2.500</div>
+                    <div class="text-white/80 text-sm font-bold">Risparmio Medio/Anno</div>
+                </div>
+                <div class="stat-convenzione p-6 floating">
+                    <div class="text-4xl mb-3">⭐</div>
+                    <div class="text-white text-3xl font-black">97%</div>
+                    <div class="text-white/80 text-sm font-bold">Soddisfazione</div>
+                </div>
+                <div class="stat-convenzione p-6 floating">
+                    <div class="text-4xl mb-3">🚀</div>
+                    <div class="text-white text-3xl font-black">24h</div>
+                    <div class="text-white/80 text-sm font-bold">Attivazione</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ALTRE CONVENZIONI IN EVIDENZA -->
+        <section class="p-4 animate-slide-up">
+            <div class="glass-morphism rounded-3xl p-6 md:p-8">
+                <div class="text-center mb-8">
+                    <h2 class="text-ultra-visible text-2xl md:text-3xl font-black mb-4">
+                        🎯 ALTRE CONVENZIONI CHE POTRESTI PERDERTI
+                    </h2>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="glass-card rounded-2xl p-6 hover:transform hover:scale-105 transition-all">
+                        <div class="text-center">
+                            <div class="text-4xl mb-3">🏨</div>
+                            <h3 class="font-black text-textDark text-lg mb-2">Vacanze & Hotel</h3>
+                            <p class="text-gray-600 mb-3">Fino al 40% di sconto su soggiorni e viaggi</p>
+                            <div class="bg-aurora text-white px-3 py-1 rounded-full text-sm font-bold">-40%</div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 hover:transform hover:scale-105 transition-all">
+                        <div class="text-center">
+                            <div class="text-4xl mb-3">🛍️</div>
+                            <h3 class="font-black text-textDark text-lg mb-2">Shopping & Retail</h3>
+                            <p class="text-gray-600 mb-3">Sconti esclusivi in negozi e brand</p>
+                            <div class="bg-teal text-white px-3 py-1 rounded-full text-sm font-bold">-35%</div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 hover:transform hover:scale-105 transition-all">
+                        <div class="text-center">
+                            <div class="text-4xl mb-3">🏥</div>
+                            <h3 class="font-black text-textDark text-lg mb-2">Salute & Benessere</h3>
+                            <p class="text-gray-600 mb-3">Visite mediche e trattamenti agevolati</p>
+                            <div class="bg-giustizia text-white px-3 py-1 rounded-full text-sm font-bold">-50%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CALL TO ACTION FINALE -->
+        <section class="p-4 animate-slide-up">
+            <div class="hero-convenzione p-8 md:p-12 text-center">
+                <div class="content">
+                    <div class="text-6xl md:text-8xl mb-6">💎</div>
+                    <h2 class="text-convenzione text-3xl md:text-5xl font-black mb-6">
+                        NON ASPETTARE<br>
+                        UN MINUTO IN PIÙ!
+                    </h2>
+                    <p class="text-ultra-visible text-xl md:text-2xl mb-8 leading-relaxed">
+                        Ogni giorno che passa è un'occasione di risparmio<br>
+                        che stai perdendo. <strong>ISCRIVITI OGGI!</strong>
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-6 justify-center mb-8">
+                        <button onclick="window.location.href='mailto:info@myappgo.it?subject=Richiesta%20Iscrizione%20Sindacato&body=Salve,%0D%0A%0D%0ASono%20interessato%20all%27iscrizione%20al%20sindacato%20per%20accedere%20alle%20convenzioni%20esclusive.%0D%0A%0D%0AAttendo%20vostre%20notizie.%0D%0A%0D%0ACordiali%20saluti'" 
+                                class="btn-convenzione px-12 py-6 rounded-3xl text-xl font-black flex items-center justify-center gap-4 cursor-pointer">
+                            <span class="text-3xl">✉️</span>
+                            <div class="text-left">
+                                <div>SCRIVI SUBITO A</div>
+                                <div>INFO@MYAPPGO.IT</div>
+                            </div>
+                        </button>
+                        <button class="btn-secondary px-12 py-6 rounded-3xl text-xl font-bold flex items-center justify-center gap-4">
+                            <span class="text-2xl">📞</span>
+                            <div>CHIAMA DIRIGENTE</div>
+                        </button>
+                    </div>
+
+                    <div class="glass-morphism rounded-2xl p-6">
+                        <h3 class="text-white text-lg font-bold mb-4">🔥 COSA SUCCEDE DOPO L'ISCRIZIONE?</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-white/90">
+                            <div class="flex items-center gap-2">
+                                <span class="text-green-400">✅</span>
+                                <span class="text-sm">Accesso immediato a tutte le convenzioni</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-green-400">✅</span>
+                                <span class="text-sm">Tessera digitale attiva in 24h</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-green-400">✅</span>
+                                <span class="text-sm">Supporto dedicato sempre disponibile</span>
+                            </div>
+                        </div>
+                        <p class="text-white/80 text-sm mt-4">
+                            💰 <strong>Il risparmio inizia dal primo giorno!</strong> Con una sola convenzione recuperi già la quota annuale.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="glass-morphism mt-8 pb-8" style="padding-bottom: max(2rem, var(--safe-area-inset-bottom));">
+        <div class="px-4 py-6">
+            <div class="text-center text-white">
+                <div class="mb-3">
+                    <span class="font-bold text-lg">SINDACATO</span>
+                    <span class="text-white/70 text-sm ml-2">Convenzioni Esclusive 2025</span>
+                </div>
+                <div class="flex justify-center items-center space-x-4 text-xs opacity-80 mb-4 flex-wrap">
+                    <span>© 2025 Sindacato</span>
+                    <span>•</span>
+                    <span>📧 info@myappgo.it</span>
+                    <span>•</span>
+                    <span>Risparmia con Noi</span>
+                </div>
+                <div class="flex justify-center space-x-2">
+                    <div class="w-2 h-2 bg-gold rounded-full urgenza-flash"></div>
+                    <div class="w-2 h-2 bg-aurora rounded-full urgenza-flash" style="animation-delay: 0.3s;"></div>
+                    <div class="w-2 h-2 bg-teal rounded-full urgenza-flash" style="animation-delay: 0.6s;"></div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT DINAMICO CONVENZIONI -->
+    <script>
+        // Dati convenzioni (da personalizzare per ogni convenzione)
+        const convenzioni = {
+            'canevaworld': {
+                nome: 'CanevaWorld Resort',
+                descrizione: 'Tariffe agevolate su Gardaland, Movieland e Resort',
+                icon: '🎢',
+                categoria: 'Divertimento & Vacanze',
+                sconto: 'fino al 35%'
+            },
+            'centrodiffusione': {
+                nome: 'Centro Diffusione Lingue',
+                descrizione: 'Corsi di lingua in presenza e online a tariffe agevolate',
+                icon: '🗣️',
+                categoria: 'Formazione & Cultura',
+                sconto: 'fino al 40%'
+            },
+            'butterflylab': {
+                nome: 'Butterfly Lab Srl',
+                descrizione: 'Screening medici e pacchetti salute agevolati',
+                icon: '🔬',
+                categoria: 'Salute & Benessere',
+                sconto: 'fino al 50%'
+            }
+        };
+
+        // Funzione per personalizzare la pagina in base alla convenzione
+        function personalizzaPagina() {
+            // Ottieni il parametro dalla URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const convenzioneId = urlParams.get('convenzione') || 'default';
+            
+            const convenzione = convenzioni[convenzioneId];
+            
+            if (convenzione) {
+                document.getElementById('convenzioneNome').textContent = convenzione.nome;
+                document.getElementById('convenzioneDescrizione').textContent = convenzione.descrizione;
+                document.getElementById('convenzioneIcon').textContent = convenzione.icon;
+                
+                // Aggiorna il titolo della pagina
+                document.title = `🎯 ${convenzione.nome} - Iscriviti al Sindacato per questa Convenzione!`;
+                
+                // Personalizza alcuni elementi
+                const badgeSconto = document.createElement('div');
+                badgeSconto.className = 'inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-full font-bold text-sm mt-3';
+                badgeSconto.innerHTML = `<span>💰</span><span>RISPARMIO ${convenzione.sconto.toUpperCase()}</span>`;
+                document.getElementById('convenzioneDetails').appendChild(badgeSconto);
+            }
+        }
+
+        // Social proof dinamico convenzioni
+        function showSocialProofConvenzioni() {
+            const messages = [
+                "Sara da Roma ha risparmiato €300 con CanevaWorld! 🎢",
+                "Luca da Milano sta imparando l'inglese al 40% di sconto! 🗣️",
+                "Anna da Torino ha fatto il check-up completo risparmiando €200! 🔬",
+                "Marco da Napoli si è iscritto per le vacanze scontate! 🏨",
+                "Giulia da Palermo accede a 150+ convenzioni esclusive! 💎"
+            ];
+            
+            let currentIndex = 0;
+            
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-4 left-4 bg-gold text-dark px-4 py-3 rounded-xl font-bold text-sm z-50 transform translate-y-full transition-transform duration-500';
+            notification.style.maxWidth = 'calc(100vw - 2rem)';
+            document.body.appendChild(notification);
+            
+            function showNext() {
+                notification.textContent = messages[currentIndex];
+                notification.classList.remove('translate-y-full');
+                
+                setTimeout(() => {
+                    notification.classList.add('translate-y-full');
+                }, 4000);
+                
+                currentIndex = (currentIndex + 1) % messages.length;
+            }
+            
+            setTimeout(showNext, 3000);
+            setInterval(showNext, 8000);
+        }
+
+        // Effetti interattivi
+        function addConvenzioneEffects() {
+            document.querySelectorAll('.btn-convenzione, .btn-secondary').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    btn.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        btn.style.transform = '';
+                    }, 150);
+                });
+            });
+
+            // Effetto particelle quando si clicca sui bottoni principali
+            document.querySelectorAll('.btn-convenzione').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    createParticleEffect(e.target, '💰');
+                });
+            });
+        }
+
+        // Crea effetto particelle
+        function createParticleEffect(element, emoji) {
+            for (let i = 0; i < 6; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.textContent = emoji;
+                    particle.style.cssText = `
+                        position: fixed;
+                        font-size: 20px;
+                        pointer-events: none;
+                        z-index: 9999;
+                        animation: particle-float 2s ease-out forwards;
+                    `;
+                    
+                    const rect = element.getBoundingClientRect();
+                    particle.style.left = (rect.left + rect.width/2 + (Math.random() - 0.5) * 100) + 'px';
+                    particle.style.top = (rect.top + rect.height/2) + 'px';
+                    
+                    document.body.appendChild(particle);
+                    
+                    setTimeout(() => particle.remove(), 2000);
+                }, i * 100);
+            }
+        }
+
+        // Aggiungi CSS per le particelle
+        const particleStyle = document.createElement('style');
+        particleStyle.textContent = `
+            @keyframes particle-float {
+                0% { opacity: 1; transform: translateY(0) scale(1); }
+                100% { opacity: 0; transform: translateY(-100px) scale(0.5); }
+            }
+        `;
+        document.head.appendChild(particleStyle);
+
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🎁 PAGINA CONVENZIONI ESPLOSIVA CARICATA!');
+            personalizzaPagina();
+            showSocialProofConvenzioni();
+            addConvenzioneEffects();
+        });
+
+        // Prevenzione dell'abbandono della pagina
+        window.addEventListener('beforeunload', (e) => {
+            const message = 'ASPETTA! Stai per perdere l\'accesso a convenzioni esclusive! Sei sicuro di voler uscire?';
+            e.preventDefault();
+            e.returnValue = message;
+            return message;
+        });
+
+        console.log('💰 SISTEMA CONVENZIONI ESPLOSIVO ATTIVATO - Ready to save!');
+    </script>
+</body>
+</html>
