@@ -1,444 +1,908 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dirigenti – MyApp – Il tuo dirigente sempre con te</title>
-
-  <!-- PWA Meta -->
-  <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#1a1a2e">
-
-  <!-- Icone (metti i file dentro /icons) -->
-  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
-  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-  <!-- Tailwind (ok per test/dev) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary:'#1a1a2e', secondary:'#16213e', accent:'#0f3460', aurora:'#e94560',
-            cyan:'#00d4ff', magenta:'#ff006e', gold:'#ffd700', teal:'#03dac6',
-            dark:'#0a0a23', light:'#ffffff', muted:'#64748b', success:'#00ea8d',
-            warning:'#ffb800', error:'#ff4757', textPrimary:'#111827', textSecondary:'#1f2937',
-            textMuted:'#374151', bgCard:'#ffffff', bgOverlay:'#ffffff', bgSection:'rgba(255,255,255,0.98)'
-          },
-          fontFamily:{ sans:['Inter','system-ui','sans-serif'] },
-          fontSize:{
-            'fluid-xs':'clamp(0.875rem,2.5vw,1rem)',
-            'fluid-sm':'clamp(1rem,2.8vw,1.125rem)',
-            'fluid-base':'clamp(1.125rem,3vw,1.25rem)',
-            'fluid-lg':'clamp(1.25rem,3.5vw,1.5rem)',
-            'fluid-xl':'clamp(1.5rem,4vw,1.75rem)',
-            'fluid-2xl':'clamp(1.75rem,4.5vw,2.25rem)',
-            'fluid-3xl':'clamp(2.25rem,5.5vw,2.75rem)',
-            'fluid-4xl':'clamp(2.75rem,6.5vw,3.5rem)',
-            'fluid-5xl':'clamp(3rem,7.5vw,4.5rem)',
-            'fluid-6xl':'clamp(3.5rem,8.5vw,5.5rem)',
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Area Dirigenti - MyApp</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- CONFIGURAZIONE COLORI TAILWIND -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { inter: ['Inter','sans-serif'] },
+                    colors: {
+                        primary: '#1a1a2e',
+                        secondary: '#16213e', 
+                        accent: '#0f3460',
+                        aurora: '#e94560',
+                        cyan: '#00d4ff',
+                        magenta: '#ff006e',
+                        gold: '#ffd700',
+                        teal: '#03dac6',
+                        dark: '#0a0a23',
+                        light: '#f8fafc',
+                        success: '#10b981',
+                        textDark: '#1C1C1E',
+                        backgroundLight: '#F4F4F8',
+                    },
+                    screens: {
+                        'xs': '320px',
+                        'sm': '640px',
+                        'md': '768px',
+                        'lg': '1024px',
+                        'xl': '1280px',
+                        '2xl': '1536px',
+                    }
+                }
+            }
         }
-      }
-    }
-  </script>
+    </script>
+    
+    <!-- STILI MOBILE-FIRST -->
+    <style>
+        :root {
+            --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
+            --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
+            --safe-area-inset-top: env(safe-area-inset-top, 0);
+            --safe-area-inset-bottom: env(safe-area-inset-bottom, 0);
+            --safe-area-inset-left: env(safe-area-inset-left, 0);
+            --safe-area-inset-right: env(safe-area-inset-right, 0);
+        }
 
-  <style>
-    :root {
-      --gradient-aurora: linear-gradient(135deg,#1a1a2e 0%,#16213e 25%,#0f3460 50%,#e94560 75%,#00d4ff 100%);
-      --gradient-cyber: linear-gradient(135deg,#0a0a23 0%,#1a1a2e 50%,#00d4ff 100%);
-      --gradient-magic: linear-gradient(135deg,#ff006e 0%,#e94560 50%,#03dac6 100%);
-      --bg-card-solid:#fff; --bg-card-slight:rgba(255,255,255,.98); --bg-section:rgba(255,255,255,.95);
-      --shadow-card-readable:0 8px 40px rgba(0,0,0,.12);
-      --shadow-card-hover-readable:0 16px 60px rgba(0,0,0,.18);
-      --border-card-readable:2px solid rgba(226,232,240,.8);
-      --line-height-comfortable:1.7; --line-height-headers:1.3;
-    }
-    *{scroll-behavior:smooth}
-    body{
-      background:var(--gradient-aurora); background-size:400% 400%;
-      animation:aurora-subtle 25s ease infinite; min-height:100vh;
-      font-family:'Inter',system-ui,sans-serif; overflow-x:hidden; position:relative;
-      line-height:var(--line-height-comfortable); font-weight:500;
-    }
-    @keyframes aurora-subtle{0%,100%{background-position:0% 50%}25%{background-position:100% 50%}50%{background-position:100% 100%}75%{background-position:0% 100%}}
-    .text-ultra-visible{color:#fff;text-shadow:0 4px 8px rgba(0,0,0,.9),0 2px 4px rgba(0,0,0,.8),0 1px 2px rgba(0,0,0,1);font-weight:900;line-height:var(--line-height-headers)}
-    .dirigente-card{background:var(--bg-card-solid);border:var(--border-card-readable);border-radius:20px;padding:clamp(2rem,5vw,3rem) clamp(2rem,5vw,3rem) clamp(2.5rem,6vw,3.5rem);transition:.3s cubic-bezier(.4,0,.2,1);position:relative;overflow:visible;box-shadow:var(--shadow-card-readable);color:#111827;line-height:var(--line-height-comfortable);min-height:clamp(400px,50vw,500px)}
-    .dirigente-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:var(--gradient-magic);transform:scaleX(0);transition:transform .4s ease}
-    .dirigente-card:hover::before{transform:scaleX(1)}
-    .dirigente-card:hover{transform:translateY(-8px) scale(1.01);box-shadow:var(--shadow-card-hover-readable);border-color:rgba(233,69,96,.4)}
-    .dirigente-avatar{width:clamp(100px,15vw,130px);height:clamp(100px,15vw,130px);border-radius:50%;background:var(--gradient-magic);display:flex;align-items:center;justify-content:center;font-size:clamp(2.5rem,6vw,3.5rem);margin:0 auto 2rem;box-shadow:0 12px 40px rgba(233,69,96,.4);transition:.3s;border:4px solid #fff;font-weight:900;color:#fff;overflow:hidden}
-    .dirigente-card:hover .dirigente-avatar{transform:scale(1.05);box-shadow:0 16px 50px rgba(233,69,96,.5)}
-    .readable-title{color:#111827;font-weight:800;letter-spacing:-.01em;line-height:var(--line-height-headers);margin-bottom:1rem}
-    .readable-subtitle{color:#1f2937;font-weight:700;line-height:var(--line-height-headers);margin-bottom:.75rem}
-    .readable-text{color:#374151;font-weight:600;line-height:var(--line-height-comfortable);margin-bottom:.5rem}
-    .btn-back{background:var(--gradient-cyber);color:#fff;border:3px solid rgba(0,212,255,.4);z-index:1000;padding:clamp(.6rem,2vw,.8rem) clamp(1rem,3vw,1.5rem);border-radius:15px;transition:.3s cubic-bezier(.4,0,.2,1);text-decoration:none;display:flex;align-items:center;gap:.75rem;font-weight:700;font-size:clamp(.9rem,2.5vw,1rem);box-shadow:0 8px 25px rgba(0,212,255,.3);line-height:1.2;cursor:pointer;border:none;min-width:clamp(90px,20vw,120px);position:fixed;top:18px;left:18px}
-    .btn-back:hover{transform:translateY(-2px) scale(1.05);box-shadow:0 12px 35px rgba(0,212,255,.4)}
-    .loading-card{background:#fff;border-radius:24px;padding:3rem;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:350px;animation:pulse 2s infinite;border:var(--border-card-readable)}
-    .loading-spinner{width:60px;height:60px;border:5px solid rgba(233,69,96,.1);border-left:5px solid #e94560;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:1.5rem}
-    .loading-text{color:#374151;font-size:clamp(1.1rem,3vw,1.3rem);font-weight:600}
-    .error-card{background:rgba(255,71,87,.05);border:3px solid rgba(255,71,87,.4);border-radius:24px;padding:3rem;text-align:center;color:#dc2626;font-weight:600}
-    .filter-tabs{display:flex;gap:1rem;margin-bottom:2rem;overflow-x:auto;padding:.5rem;-webkit-overflow-scrolling:touch}
-    .filter-tab{padding:clamp(1rem,3vw,1.3rem) clamp(1.5rem,4vw,2rem);border-radius:25px;font-size:clamp(.9rem,2.5vw,1.1rem);font-weight:700;white-space:nowrap;transition:.3s cubic-bezier(.4,0,.2,1);cursor:pointer;border:3px solid;line-height:1.2}
-    .filter-tab:not(.active){background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.4);text-shadow:0 2px 4px rgba(0,0,0,.8)}
-    .filter-tab:not(.active):hover{background:rgba(255,255,255,.25);transform:translateY(-2px)}
-    .filter-tab.active{background:#fff;color:#111827;border-color:#e94560;box-shadow:0 12px 30px rgba(233,69,96,.4);transform:translateY(-2px)}
-    .role-badge{display:inline-block;padding:clamp(.7rem,2vw,1rem) clamp(1.2rem,3vw,1.6rem);border-radius:25px;font-weight:800;font-size:clamp(.85rem,2.2vw,1rem);text-align:center;margin-bottom:1.5rem;text-transform:uppercase;letter-spacing:1.2px;border:3px solid;line-height:1.2}
-    .role-regionale{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border-color:rgba(245,158,11,.5);text-shadow:0 2px 4px rgba(0,0,0,.5)}
-    .role-provinciale{background:linear-gradient(135deg,#10b981,#047857);color:#fff;border-color:rgba(16,185,129,.5);text-shadow:0 2px 4px rgba(0,0,0,.5)}
-    .contact-button{background:var(--gradient-magic);color:#fff;padding:clamp(1rem,3vw,1.3rem) clamp(1.8rem,5vw,2.3rem);border-radius:25px;font-size:clamp(1rem,2.8vw,1.2rem);font-weight:700;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:.75rem;transition:.3s cubic-bezier(.4,0,.2,1);border:3px solid rgba(233,69,96,.4);text-shadow:0 2px 4px rgba(0,0,0,.3);line-height:1.2;min-width:clamp(120px,25vw,150px);white-space:nowrap;box-shadow:0 4px 12px rgba(233,69,96,.2)}
-    .contact-button:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 12px 30px rgba(233,69,96,.5);border-color:rgba(233,69,96,.8)}
-    .stat-card{background:rgba(255,255,255,.95);backdrop-filter:blur(15px);border:3px solid rgba(255,255,255,.3);border-radius:20px;transition:.3s ease;padding:clamp(1.5rem,4vw,2rem)}
-    .stat-card:hover{transform:translateY(-3px) scale(1.02);background:#fff;box-shadow:0 16px 40px rgba(0,0,0,.15);border-color:rgba(233,69,96,.3)}
-    .stat-number{font-size:clamp(2rem,6vw,3rem);font-weight:900;color:#111827;line-height:1.1;margin-bottom:.5rem}
-    .stat-label{font-size:clamp(.9rem,2.5vw,1.1rem);color:#374151;font-weight:700;line-height:1.3}
-    .empty-state{text-align:center;padding:clamp(3rem,8vw,5rem);color:#fff}
-    .empty-icon{font-size:clamp(4rem,12vw,6rem);margin-bottom:2rem}
-    .contact-section{background:#fff;border-radius:24px;padding:clamp(2.5rem,6vw,4rem);box-shadow:var(--shadow-card-readable);border:var(--border-card-readable)}
-    .contact-title{font-size:clamp(2rem,5vw,3rem);font-weight:900;color:#111827;margin-bottom:2.5rem;line-height:var(--line-height-headers)}
-    .contact-info-card{border-radius:20px;padding:clamp(2rem,5vw,2.5rem);transition:.3s ease;border:3px solid rgba(255,255,255,.2)}
-    .contact-icon{font-size:clamp(3rem,8vw,4rem);margin-bottom:1.5rem}
-    .contact-info-title{font-size:clamp(1.2rem,3.5vw,1.5rem);font-weight:800;margin-bottom:1rem;line-height:var(--line-height-headers)}
-    .contact-info-text{font-size:clamp(1rem,2.8vw,1.2rem);font-weight:600;line-height:var(--line-height-comfortable)}
-    .contact-cta{background:var(--gradient-magic);color:#fff;padding:clamp(1.2rem,4vw,1.5rem) clamp(2rem,5vw,2.5rem);border-radius:25px;font-size:clamp(1.1rem,3vw,1.3rem);font-weight:800;text-decoration:none;transition:.3s ease;border:3px solid rgba(233,69,96,.4);text-shadow:0 2px 4px rgba(0,0,0,.3);line-height:1.3}
-    .contact-cta:hover{transform:scale(1.03);box-shadow:0 16px 40px rgba(233,69,96,.5)}
-    @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
-    @keyframes fadeInUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
-    .fade-in-up{animation:fadeInUp .8s ease-out forwards}
-  </style>
+        * {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+
+        body {
+            background: var(--gradient-aurora);
+            background-size: 400% 400%;
+            animation: aurora 20s ease infinite;
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            padding-left: var(--safe-area-inset-left);
+            padding-right: var(--safe-area-inset-right);
+        }
+
+        @keyframes aurora {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+        }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+        }
+
+        /* Typography */
+        .text-ultra-visible {
+            color: #fff;
+            text-shadow: 0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1);
+            font-weight: 800;
+        }
+
+        .hero-title {
+            font-size: clamp(1.8rem, 6vw, 3.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+        }
+
+        .section-title {
+            font-size: clamp(1.1rem, 4vw, 1.5rem);
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        /* Cards */
+        .glass-card {
+            background: #ffffff;
+            border: 1px solid rgba(0,0,0,.06);
+            border-radius: 24px;
+            box-shadow: 0 14px 30px rgba(0,0,0,.12);
+        }
+
+        /* Function Cards - Mobile Optimized */
+        .function-card {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+            padding: 1rem;
+            transition: all .25s ease;
+            text-align: center;
+            color: #0f172a;
+            text-decoration: none;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        .function-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient-magic);
+            transition: left 0.3s ease;
+        }
+
+        .function-card:active::before {
+            left: 0;
+        }
+
+        .function-card:active {
+            transform: scale(0.98);
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .function-card:hover {
+                background: #ffffff;
+                transform: translateY(-3px);
+                box-shadow: 0 10px 20px rgba(0,0,0,.12);
+            }
+        }
+
+        .function-card h4 {
+            font-weight: 800;
+            font-size: clamp(0.9rem, 2.8vw, 1rem);
+            margin-bottom: 0.25rem;
+        }
+
+        .function-card p {
+            color: #475569;
+            font-size: 0.75rem;
+            line-height: 1.3;
+        }
+
+        /* Buttons */
+        .btn-aurora {
+            background: var(--gradient-magic);
+            color: #fff;
+            border: 0;
+            border-radius: 12px;
+            padding: 0.75rem 1.25rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all .25s ease;
+            touch-action: manipulation;
+            min-height: 44px;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .btn-aurora:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 16px rgba(233,69,96,.3);
+            }
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            background: #111827;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        /* Spinner */
+        .spinner {
+            border: 3px solid rgba(0,0,0,.1);
+            border-top: 3px solid #111827;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+
+        /* Mobile Grid Systems */
+        .mobile-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        @media (min-width: 480px) {
+            .mobile-grid-2 {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 16px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .mobile-grid-2 {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .mobile-grid-2 {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        @media (min-width: 640px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 16px;
+            }
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 12px;
+        }
+
+        @media (min-width: 640px) {
+            .admin-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .admin-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 16px;
+        }
+
+        @media (min-width: 640px) {
+            .news-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .news-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Header with safe area */
+        .header-safe {
+            padding-top: max(12px, var(--safe-area-inset-top));
+        }
+
+        /* Mobile-specific animations */
+        .animate-slide-up {
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Mobile sections */
+        .mobile-section {
+            padding: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .mobile-section {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .mobile-section {
+                padding: 2rem;
+            }
+        }
+
+        /* Focus states */
+        .function-card:focus-visible,
+        button:focus-visible,
+        [role="button"]:focus-visible {
+            outline: 3px solid rgba(0,212,255,.65);
+            outline-offset: 2px;
+        }
+
+        /* Touch targets */
+        .touch-target {
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        /* Mobile menu */
+        .mobile-menu {
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-menu.show {
+            transform: translateY(0);
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.25); border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.4); }
+        ::-webkit-scrollbar-track { background: transparent; }
+
+        /* Utility classes */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
 </head>
-<body class="relative overflow-x-hidden">
 
-  <!-- Back Button (smart) -->
-  <button id="backBtn" type="button" class="btn-back" aria-label="Torna alla home">
-    <span class="text-xl">←</span><span>Indietro</span>
-  </button>
+<body class="flex flex-col min-h-screen">
 
-  <!-- Hero -->
-  <section class="min-h-screen flex flex-col justify-center items-center text-center px-4 relative pt-20">
-    <h1 class="text-ultra-visible mb-8 fade-in-up" style="font-size:clamp(3rem,10vw,5rem);font-weight:900;line-height:1.1;">I Nostri Dirigenti</h1>
-    <div class="text-ultra-visible mb-16 fade-in-up" style="font-size:clamp(1.5rem,5vw,2.5rem);font-weight:800;animation-delay:.2s;">Al servizio del Sindacato Carabinieri</div>
+    <!-- HEADER MOBILE OPTIMIZED -->
+    <header class="sticky top-0 z-40 bg-black/10 backdrop-blur-md border-b border-white/10 header-safe">
+        <div class="px-4 py-3">
+            <div class="flex items-center justify-between">
+                <!-- Logo + Title -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shadow">
+                        <span class="text-xl text-white">🏛️</span>
+                    </div>
+                    <div>
+                        <div class="text-white font-extrabold leading-none text-sm md:text-base">Area Dirigenti</div>
+                        <div id="whoami" class="text-white/80 text-xs">Caricamento…</div>
+                    </div>
+                </div>
 
-    <div class="bg-white rounded-3xl p-8 md:p-12 mb-20 max-w-5xl fade-in-up shadow-xl border-2 border-gray-200" style="animation-delay:.4s;">
-      <p class="readable-text text-xl md:text-2xl leading-relaxed mb-8">
-        <span class="readable-title text-3xl md:text-4xl block mb-6">Esperienza e Competenza</span>
-        <span class="readable-subtitle text-xl md:text-2xl">Il nostro team di dirigenti unisce esperienza militare e competenza legale per offrire la migliore tutela ai nostri iscritti.</span>
-      </p>
-    </div>
+                <!-- Right Section -->
+                <div class="flex items-center gap-2">
+                    <!-- Desktop Logout -->
+                    <button id="logoutBtn" class="btn-aurora text-sm px-4 py-2 hidden sm:flex" title="Disconnetti">
+                        <span>🚪</span>
+                        <span class="hidden md:inline">Logout</span>
+                    </button>
 
-    <div class="grid grid-cols-3 gap-6 mb-12 max-w-2xl w-full fade-in-up" style="animation-delay:.6s;">
-      <div class="stat-card text-center"><div class="stat-number" id="totalCount">-</div><div class="stat-label text-cyan">Totali</div></div>
-      <div class="stat-card text-center"><div class="stat-number" id="regionaliCount">-</div><div class="stat-label text-cyan">Regionali</div></div>
-      <div class="stat-card text-center"><div class="stat-number" id="provincialiCount">-</div><div class="stat-label text-cyan">Provinciali</div></div>
-    </div>
-  </section>
-
-  <!-- Dirigenti -->
-  <section class="py-20 md:py-32 px-4 relative">
-    <div class="max-w-7xl mx-auto container-custom">
-
-      <div class="text-center mb-20">
-        <h2 class="text-ultra-visible mb-12" style="font-size:clamp(2.5rem,8vw,4rem);font-weight:900;">Il Nostro Team</h2>
-        <p class="text-cyan text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed font-bold mb-16">Dirigenti con esperienza pluriennale al servizio del personale dell'Arma dei Carabinieri</p>
-      </div>
-
-      <div class="max-w-3xl mx-auto mb-16">
-        <input type="text" id="searchInput" class="search-box w-full" placeholder="🔍 Cerca dirigente per nome o provincia...">
-        <div class="filter-tabs">
-          <button class="filter-tab active" data-filter="all">Tutti</button>
-          <button class="filter-tab" data-filter="Regionale">Regionali</button>
-          <button class="filter-tab" data-filter="Provinciale">Provinciali</button>
-        </div>
-      </div>
-
-      <div id="loadingContainer" class="dirigenti-grid grid gap-8 mb-20">
-        <div class="loading-card">
-          <div class="loading-spinner"></div>
-          <p class="loading-text">Caricamento dirigenti...</p>
-        </div>
-      </div>
-
-      <div id="errorContainer" class="hidden mb-20">
-        <div class="error-card max-w-2xl mx-auto">
-          <h3 class="text-2xl font-bold mb-4">⚠️ Errore di Caricamento</h3>
-          <p class="text-lg mb-6">Non è stato possibile caricare i dati dei dirigenti.</p>
-          <button onclick="window.dirigentiManager?.reload()" class="bg-red-500 text-white px-8 py-4 rounded-lg hover:bg-red-600 transition-colors font-bold text-lg">🔄 Riprova</button>
-        </div>
-      </div>
-
-      <div id="emptyState" class="empty-state hidden">
-        <div class="empty-icon">👥</div>
-        <h3 class="empty-title text-ultra-visible">Nessun dirigente trovato</h3>
-        <p class="empty-text text-cyan font-bold">Prova a modificare i filtri di ricerca</p>
-      </div>
-
-      <div id="dirigentiContainer" class="dirigenti-grid grid gap-8 mb-20 hidden"></div>
-
-      <!-- Contatti -->
-      <div class="contact-section">
-        <h3 class="contact-title text-center">Contatta la Dirigenza</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          <div class="contact-info-card bg-gradient-to-r from-primary to-secondary text-white group">
-            <div class="contact-icon group-hover:scale-110 transition-transform duration-300">📧</div>
-            <div class="contact-info-title">Email Generale</div>
-            <div class="contact-info-text">veneto@carabinierinsc.it</div>
-          </div>
-          <div class="contact-info-card bg-gradient-to-r from-aurora to-magenta text-white group">
-            <div class="contact-icon group-hover:scale-110 transition-transform duration-300">📱</div>
-            <div class="contact-info-title">Telefono</div>
-            <div class="contact-info-text">378 081 9900</div>
-          </div>
-          <div class="contact-info-card bg-gradient-to-r from-teal to-success text-white group">
-            <div class="contact-icon group-hover:scale-110 transition-transform duration-300">⏰</div>
-            <div class="contact-info-title">Orari</div>
-            <div class="contact-info-text">Lun-Ven 9:00-18:00</div>
-          </div>
-        </div>
-        <div class="text-center">
-          <a href="https://form.jotform.com/250396120847357" target="_blank" class="contact-cta inline-block">📝 Richiedi Appuntamento</a>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Supabase + Logica -->
-  <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-    // Progetto che mi hai dato
-    const supabaseUrl = 'https://pvzdilkozpspsnepedqc.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
-    // Back intelligente
-    const backBtn = document.getElementById('backBtn');
-    backBtn?.addEventListener('click', async (e) => {
-      e.preventDefault();
-      try {
-        backBtn.style.transform = 'scale(0.96)';
-        setTimeout(()=> backBtn.style.transform = '', 150);
-
-        const { data:{ session } } = await supabase.auth.getSession();
-        if (!session) { window.location.href = '/home.html'; return; }
-
-        const uid = session.user.id;
-        const { data: prof, error } = await supabase
-          .from('user_profiles')
-          .select('role')
-          .eq('user_id', uid)
-          .single();
-
-        if (error) { console.warn('role fallback:', error.message); window.location.href='/home.html'; return; }
-
-        const role = (prof?.role || '').toUpperCase();
-        window.location.href = (role === 'DIRIGENTE' || role === 'ADMIN') ? '/home_dirigenti.html' : '/home.html';
-      } catch (err) {
-        console.error('Smart back error:', err);
-        window.location.href = '/home.html';
-      }
-    });
-
-    class DirigentiManager {
-      constructor(){
-        this.allDirigenti = [];
-        this.filteredDirigenti = [];
-        this.currentFilter = 'all';
-        this.deviceType = this.detectDevice();
-        this.init();
-      }
-
-      detectDevice(){
-        const w = window.innerWidth, h = window.innerHeight;
-        const orientation = w > h ? 'landscape' : 'portrait';
-        if (w <= 320) return {type:'smartwatch', orientation};
-        if (w <= 480) return {type: orientation==='portrait'?'mobile-portrait':'mobile-landscape', orientation};
-        if (w <= 667) return {type:'mobile-large', orientation};
-        if (w <= 768) return {type:'phablet', orientation};
-        if (w <= 1024) return {type: orientation==='portrait'?'tablet-portrait':'tablet-landscape', orientation};
-        if (w <= 1366) return {type:'laptop-small', orientation};
-        if (w <= 1920) return {type:'desktop', orientation};
-        if (w <= 2560) return {type:'desktop-ultrawide', orientation};
-        return {type:'desktop-4k', orientation};
-      }
-
-      async init(){
-        try {
-          await this.loadDirigenti();
-          this.setupEventListeners();
-          this.adjustForDevice();
-        } catch (e){
-          console.error('Init error:', e);
-          this.showError();
-        }
-      }
-
-      async loadDirigenti(){
-        this.showLoading();
-        try{
-          const { data, error } = await supabase
-            .from('organico_dirigentisindacali')
-            .select('id,nome_cognome,ruolo,provincia,regione,email,telefono,foto_url,competenze,ordine,attivo')
-            .eq('attivo', true)
-            .order('ordine', { ascending:true })
-            .order('nome_cognome', { ascending:true });
-
-          if (error) throw error;
-          this.allDirigenti = data ?? [];
-          this.filteredDirigenti = [...this.allDirigenti];
-          this.renderDirigenti();
-          this.updateStats();
-        } catch (err){
-          console.error('Caricamento dirigenti fallito:', err);
-          this.showError();
-        }
-      }
-
-      showLoading(){
-        document.getElementById('loadingContainer').classList.remove('hidden');
-        document.getElementById('dirigentiContainer').classList.add('hidden');
-        document.getElementById('errorContainer').classList.add('hidden');
-        document.getElementById('emptyState').classList.add('hidden');
-      }
-      showError(){
-        document.getElementById('loadingContainer').classList.add('hidden');
-        document.getElementById('dirigentiContainer').classList.add('hidden');
-        document.getElementById('emptyState').classList.add('hidden');
-        document.getElementById('errorContainer').classList.remove('hidden');
-      }
-
-      renderDirigenti(){
-        const container = document.getElementById('dirigentiContainer');
-        const loading = document.getElementById('loadingContainer');
-        const errorBox = document.getElementById('errorContainer');
-        const empty = document.getElementById('emptyState');
-        loading.classList.add('hidden'); errorBox.classList.add('hidden');
-
-        if (this.filteredDirigenti.length === 0){
-          container.classList.add('hidden'); empty.classList.remove('hidden'); return;
-        }
-        empty.classList.add('hidden'); container.classList.remove('hidden');
-
-        container.innerHTML = this.filteredDirigenti.map((d, i) => this.card(d, i)).join('');
-        this.animateCards();
-      }
-
-      card(d, i){
-        const initials = d?.nome_cognome ? d.nome_cognome.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2) : '??';
-        const roleClass = this.roleClass(d?.ruolo);
-        const provincia = d?.provincia || 'Non specificata';
-        const avatar = d?.foto_url
-          ? `<img src="${d.foto_url}" alt="${d.nome_cognome}" class="w-full h-full object-cover rounded-full">`
-          : `<span>${initials}</span>`;
-        return `
-          <article class="dirigente-card fade-in-up" style="animation-delay:${i*0.08}s;opacity:0;" tabindex="0" aria-label="Informazioni su ${d?.nome_cognome ?? 'Dirigente'}">
-            <div class="dirigente-avatar" aria-hidden="true">${avatar}</div>
-            <h3 class="readable-title text-center">${d?.nome_cognome ?? 'Nome non disponibile'}</h3>
-            <div class="text-center">
-              <span class="role-badge ${roleClass}">${d?.ruolo ?? 'Ruolo non specificato'}</span>
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuBtn" class="sm:hidden touch-target text-white p-2 rounded-xl bg-white/10">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
             </div>
-            <p class="readable-text text-center mb-8"><span class="inline-flex items-center gap-2"><span class="text-2xl">📍</span><span class="font-bold text-lg">${provincia}</span></span></p>
-            <div class="flex flex-col gap-4 justify-center items-center mt-auto pt-4">
-              ${d?.email ? `<a href="mailto:${d.email}" class="contact-button w-full max-w-xs" aria-label="Invia email a ${d.nome_cognome}"><span class="text-xl">📧</span><span>Email</span></a>`:''}
-              ${d?.telefono ? `<a href="tel:${d.telefono}" class="contact-button w-full max-w-xs" aria-label="Chiama ${d.nome_cognome}"><span class="text-xl">📞</span><span>Chiama</span></a>`:''}
-            </div>
-          </article>
-        `;
-      }
 
-      roleClass(ruolo){
-        if (!ruolo) return 'role-provinciale';
-        if (ruolo.includes('Regionale')) return 'role-regionale';
-        if (ruolo.includes('Provinciale')) return 'role-provinciale';
-        if (ruolo.includes('Segretario Generale')) return 'role-provinciale';
-        return 'role-provinciale';
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="sm:hidden mt-4 pb-4 border-t border-white/20 hidden">
+                <div class="pt-4 space-y-2">
+                    <button id="logoutBtnMobile" class="btn-aurora w-full py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
+                        <span>🚪</span>
+                        <span>Logout</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow mobile-section max-w-6xl mx-auto w-full">
+
+        <!-- HERO SECTION -->
+        <section class="text-center mb-6 animate-fade-in">
+            <h1 class="hero-title text-ultra-visible mb-2">Benvenuto nell'Area Dirigenti</h1>
+            <p class="text-white/90 font-semibold text-sm md:text-base">Funzioni direzionali e amministrative</p>
+        </section>
+
+        <!-- AZIONI PERSONALI -->
+        <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
+            <h2 class="section-title mb-4 text-center">🧭 Azioni Personali</h2>
+            <div class="mobile-grid-2">
+                <a class="function-card" href="tessera.html" aria-label="Tessera Digitale">
+                    <div class="text-3xl mb-1">🎫</div>
+                    <h4>Tessera Digitale</h4>
+                    <p>Visualizza/Scarica la tua tessera</p>
+                </a>
+                <a class="function-card" href="profilo.html" aria-label="Profilo">
+                    <div class="text-3xl mb-1">👤</div>
+                    <h4>Il mio profilo</h4>
+                    <p>Modifica i tuoi dati</p>
+                </a>
+                <a class="function-card" href="virgilio.html" aria-label="Virgilio">
+                    <div class="text-3xl mb-1">🧭</div>
+                    <h4>Virgilio</h4>
+                    <p>Accesso rapido ai servizi</p>
+                </a>
+                <a class="function-card" href="strumenti.html" aria-label="Strumenti">
+                    <div class="text-3xl mb-1">🛠️</div>
+                    <h4>Strumenti</h4>
+                    <p>Utility di lavoro</p>
+                </a>
+                <a class="function-card" href="filebox.html" aria-label="FileBox">
+                    <div class="text-3xl mb-1">📁</div>
+                    <h4>FileBox</h4>
+                    <p>I tuoi file e documenti</p>
+                </a>
+                <a class="function-card" href="servizi.html" aria-label="Assistenza">
+                    <div class="text-3xl mb-1">🛟</div>
+                    <h4>Assistenza</h4>
+                    <p>Supporto e servizi</p>
+                </a>
+                <a class="function-card" href="https://form.jotform.com/243226223182044" target="_blank" rel="noopener">
+                    <div class="text-3xl mb-1">💰</div>
+                    <h4>Richiedi Rimborso</h4>
+                    <p>Modulo rimborso spese</p>
+                </a>
+                <a class="function-card" href="https://form.jotform.com/243262801203343" target="_blank" rel="noopener">
+                    <div class="text-3xl mb-1">📝</div>
+                    <h4>Richiedi Permesso</h4>
+                    <p>Permesso sindacale</p>
+                </a>
+                <a class="function-card" href="https://eu.jotform.com/tables/243226223182044" target="_blank" rel="noopener">
+                    <div class="text-3xl mb-1">📊</div>
+                    <h4>Tabella Rendiconto</h4>
+                    <p>Visualizza i dati</p>
+                </a>
+                <a class="function-card" href="https://eu.jotform.com/tables/243262801203343" target="_blank" rel="noopener">
+                    <div class="text-3xl mb-1">📅</div>
+                    <h4>Tabella Permessi</h4>
+                    <p>Gestisci permessi</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- DATI DIRIGENZIALI -->
+        <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
+            <h2 class="section-title mb-4 text-center">🪪 I Tuoi Dati dirigenziali</h2>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
+                <div class="w-14 h-14 rounded-full bg-slate-800 text-white flex items-center justify-center text-2xl flex-shrink-0">
+                    <span id="userIcon">👤</span>
+                </div>
+                <div>
+                    <div id="userName" class="text-lg md:text-xl font-extrabold text-slate-900 mb-1">Caricamento…</div>
+                    <div id="userEmail" class="text-slate-600 text-sm mb-2">—</div>
+                    <div class="flex flex-wrap justify-center sm:justify-start gap-2">
+                        <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-xs">
+                            📅 <span class="hidden sm:inline">Iscritto dal:</span> <strong id="iscrittoDal">—</strong>
+                        </span>
+                        <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-xs">
+                            🔐 <strong id="accessLevel">Verifica…</strong>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PANORAMICA SISTEMA -->
+        <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
+            <h2 class="section-title mb-4 text-center">📈 Panoramica di sistema</h2>
+            <div class="stats-grid">
+                <div class="p-4 rounded-xl border border-slate-200 bg-white text-center">
+                    <div class="text-2xl mb-1">📰</div>
+                    <div class="text-xs text-slate-600 mb-1">News pubblicate</div>
+                    <div id="newsCount" class="text-2xl font-extrabold text-slate-900">—</div>
+                </div>
+                <div class="p-4 rounded-xl border border-slate-200 bg-white text-center">
+                    <div class="text-2xl mb-1">⭐</div>
+                    <div class="text-xs text-slate-600 mb-1">News in evidenza</div>
+                    <div id="featuredNewsCount" class="text-2xl font-extrabold text-slate-900">—</div>
+                </div>
+                <div class="p-4 rounded-xl border border-slate-200 bg-white text-center">
+                    <div class="text-2xl mb-1">🛡️</div>
+                    <div class="text-xs text-slate-600 mb-1">Ruolo</div>
+                    <div id="rolesSummary" class="text-sm font-bold text-slate-900">—</div>
+                </div>
+                <div class="p-4 rounded-xl border border-slate-200 bg-white text-center">
+                    <div class="text-2xl mb-1">⚙️</div>
+                    <div class="text-xs text-slate-600 mb-1">Stato</div>
+                    <div class="text-sm font-bold text-green-600">Attivo</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AREA AMMINISTRATIVA -->
+        <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
+            <h2 class="section-title mb-4 text-center">🏗️ Area Amministrativa dirigenziale</h2>
+            <div class="admin-grid">
+               <a href="gestione_richieste_utenti.html" class="function-card">
+    <div class="text-4xl mb-2">📋</div>
+    <h4>Gestione Richieste Utenti</h4>
+    <p>Gestisci le richieste degli utenti</p>
+</a>
+                <a href="gestione-convenzioni.html" class="function-card">
+                    <div class="text-4xl mb-2">🏷️</div>
+                    <h4>Gestione Convenzioni</h4>
+                    <p>Crea e gestisci partnership</p>
+                </a>
+                <a href="gestione-notizie.html" class="function-card">
+                    <div class="text-4xl mb-2">📰</div>
+                    <h4>Gestione Notizie</h4>
+                    <p>Pubblica e modifica news</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- ULTIME NOTIZIE -->
+        <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
+            <h2 class="section-title mb-4 text-center">🗞️ Ultime Notizie</h2>
+            <div id="latestNews" class="news-grid">
+                <div class="col-span-full flex items-center justify-center py-8">
+                    <span class="spinner"></span>
+                </div>
+            </div>
+            <div id="newsEmptyState" class="hidden text-center py-8">
+                <div class="text-4xl mb-3">🪧</div>
+                <p class="text-slate-700 font-semibold">Nessuna notizia pubblicata al momento</p>
+            </div>
+        </section>
+
+        <!-- CONVENZIONI IN EVIDENZA -->
+        <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
+            <h2 class="section-title mb-4 text-center">🤝 Convenzioni in evidenza</h2>
+            <div id="featuredConvenzioni" class="news-grid"></div>
+            <div id="convEmptyState" class="text-center py-8">
+                <div class="text-4xl mb-3">🔎</div>
+                <p class="text-slate-700 font-semibold">Al momento non ci sono convenzioni in evidenza.</p>
+                <p class="text-slate-500 mt-1 text-sm">
+                    Gestiscile da <a class="text-blue-700 font-bold underline" href="gestione-convenzioni.html">Gestione Convenzioni</a>.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JAVASCRIPT -->
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+        const supabase = createClient(
+            'https://pvzdilkozpspsnepedqc.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk'
+        );
+
+        // Mobile menu state
+        let mobileMenuOpen = false;
+
+        // Utility functions
+        const fmtDate = (iso) => { 
+            try { 
+                return iso ? new Intl.DateTimeFormat('it-IT', {dateStyle: 'long'}).format(new Date(iso)) : '—'; 
+            } catch { 
+                return '—'; 
+            } 
+        };
+
+        const escapeHTML = (s) => String(s ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;");
+
+        const setText = (id, v) => { 
+            const el = document.getElementById(id); 
+            if (el) el.textContent = v; 
+        };
+
+        // Mobile menu functions
+        function setupMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                        closeMobileMenu();
+                    }
+                });
+            }
         }
 
-      animateCards(){
-        document.querySelectorAll('.dirigente-card').forEach((c, i)=>{
-          setTimeout(()=>{ c.style.opacity='1'; }, i*120);
-        });
-      }
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            
+            if (mobileMenu) {
+                mobileMenuOpen = !mobileMenuOpen;
+                
+                if (mobileMenuOpen) {
+                    mobileMenu.classList.remove('hidden');
+                    mobileMenu.classList.add('animate-slide-up');
+                    if (mobileMenuBtn) {
+                        mobileMenuBtn.innerHTML = `
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        `;
+                    }
+                } else {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('animate-slide-up');
+                    if (mobileMenuBtn) {
+                        mobileMenuBtn.innerHTML = `
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        `;
+                    }
+                }
+            }
+        }
 
-      updateStats(){
-        const total = this.allDirigenti.length;
-        const regionali = this.allDirigenti.filter(d => d.ruolo?.includes('Regionale')).length;
-        const provinciali = this.allDirigenti.filter(d => d.ruolo?.includes('Provinciale')).length;
-        document.getElementById('totalCount').textContent = total;
-        document.getElementById('regionaliCount').textContent = regionali;
-        document.getElementById('provincialiCount').textContent = provinciali;
-      }
+        function closeMobileMenu() {
+            if (mobileMenuOpen) {
+                toggleMobileMenu();
+            }
+        }
 
-      filterDirigenti(){
-        const term = document.getElementById('searchInput').value.toLowerCase().trim();
-        this.filteredDirigenti = this.allDirigenti.filter(d=>{
-          const matchText = !term ||
-            d.nome_cognome?.toLowerCase().includes(term) ||
-            d.provincia?.toLowerCase().includes(term) ||
-            d.ruolo?.toLowerCase().includes(term);
-          const matchFilter = this.currentFilter === 'all' || d.ruolo?.includes(this.currentFilter);
-          return matchText && matchFilter;
-        });
-        this.renderDirigenti();
-      }
+        // Authentication guard
+        async function guard() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) { 
+                window.location.href = 'auth.html'; 
+                return null; 
+            }
+            return user;
+        }
 
-      setupEventListeners(){
-        // Search debounce
-        let t;
-        document.getElementById('searchInput').addEventListener('input', ()=>{
-          clearTimeout(t); t = setTimeout(()=> this.filterDirigenti(), 250);
-        });
-        // Filter tabs
-        document.querySelectorAll('.filter-tab').forEach(tab=>{
-          tab.addEventListener('click', ()=>{
-            document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
-            tab.classList.add('active');
-            this.currentFilter = tab.dataset.filter;
-            this.filterDirigenti();
-          });
-        });
-        // Resize
-        let r;
-        window.addEventListener('resize', ()=>{
-          clearTimeout(r);
-          r = setTimeout(()=>{
-            this.deviceType = this.detectDevice();
-            this.adjustForDevice();
-          }, 200);
-        });
-      }
+        // Load user profile
+        async function loadProfile(user) {
+            try {
+                const { data: p } = await supabase.from('user_profiles').select('nome,cognome,email,role').eq('user_id', user.id).single();
+                setText('whoami', p?.email || user.email || '—');
+                setText('userName', p?.nome ? `${p.nome} ${p.cognome||''}`.trim() : 'Dirigente');
+                setText('userEmail', p?.email || user.email || '—');
+                document.getElementById('userIcon').textContent = (p?.role === 'ADMIN') ? '👑' : '🎯';
+                setText('rolesSummary', p?.role || '—');
+                setText('accessLevel', p?.role === 'ADMIN' ? 'Accesso Amministratore Completo' : 'Accesso Dirigente Autorizzato');
+            } catch {
+                setText('whoami', user.email || '—');
+                setText('userName', 'Dirigente'); 
+                setText('userEmail', user.email || '—'); 
+                setText('rolesSummary', '—'); 
+                setText('accessLevel', 'Accesso Dirigente Autorizzato');
+            }
+        }
 
-      adjustForDevice(){
-        const grid = document.getElementById('dirigentiContainer');
-        if (!grid) return;
-        grid.classList.remove('grid-cols-1','grid-cols-2','grid-cols-3','grid-cols-4','xl:grid-cols-4','lg:grid-cols-3');
+        // Load subscription date
+        async function loadIscrittoDal(user) {
+            try {
+                const { data } = await supabase.from('tessere').select('data_emissione').eq('user_id', user.id).order('data_emissione', { ascending: true }).limit(1);
+                setText('iscrittoDal', data?.[0]?.data_emissione ? fmtDate(data[0].data_emissione) : 'Non disponibile');
+            } catch { 
+                setText('iscrittoDal', 'Non disponibile'); 
+            }
+        }
 
-        const t = this.deviceType.type;
-        if (t.includes('smartwatch') || t.includes('mobile-portrait')) grid.classList.add('grid-cols-1');
-        else if (t.includes('mobile-large') || t.includes('phablet')) grid.classList.add('grid-cols-1','sm:grid-cols-2');
-        else if (t.includes('tablet')) grid.classList.add('grid-cols-2');
-        else if (t.includes('laptop') || t.includes('desktop')) grid.classList.add('grid-cols-2','lg:grid-cols-3','xl:grid-cols-4');
-        else grid.classList.add('grid-cols-3','xl:grid-cols-4');
-      }
+        // Load system overview
+        async function loadSystemOverview() {
+            try {
+                const nowIso = new Date().toISOString();
+                const { count: totalNews } = await supabase.from('news').select('id', {count: 'exact', head: true}).eq('pubblicata', true).or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
+                const { count: featuredCount } = await supabase.from('news').select('id', {count: 'exact', head: true}).eq('pubblicata', true).eq('in_evidenza', true).or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
+                setText('newsCount', typeof totalNews === 'number' ? totalNews : '—'); 
+                setText('featuredNewsCount', typeof featuredCount === 'number' ? featuredCount : '—');
+            } catch { 
+                setText('newsCount', '—'); 
+                setText('featuredNewsCount', '—'); 
+            }
+        }
 
-      async reload(){ await this.loadDirigenti(); }
-    }
+        // Load latest news
+        async function loadLatestNews() {
+            const wrap = document.getElementById('latestNews'); 
+            const empty = document.getElementById('newsEmptyState');
+            
+            wrap.innerHTML = `<div class="col-span-full flex items-center justify-center py-8"><span class="spinner"></span></div>`;
+            
+            try {
+                const nowIso = new Date().toISOString();
+                const { data: news } = await supabase
+                    .from('news')
+                    .select('id,titolo,sottotitolo,immagine_url,categoria,data_pubblicazione,in_evidenza,url_articolo')
+                    .eq('pubblicata', true)
+                    .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`)
+                    .order('in_evidenza', {ascending: false})
+                    .order('data_pubblicazione', {ascending: false})
+                    .limit(6);
+                
+                if (!news || !news.length) { 
+                    wrap.innerHTML = ''; 
+                    empty.classList.remove('hidden'); 
+                    return; 
+                }
+                
+                empty.classList.add('hidden'); 
+                wrap.innerHTML = '';
+                
+                for (const n of news) {
+                    const card = document.createElement('article');
+                    const hasUrl = !!n.url_articolo && String(n.url_articolo).trim().length > 0;
+                    card.className = 'rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm';
+                    card.innerHTML = `
+                        <div class="h-32 md:h-40 bg-slate-100 overflow-hidden">
+                            ${n.immagine_url ? 
+                                `<img src="${escapeHTML(n.immagine_url)}" alt="" class="w-full h-full object-cover">` : 
+                                `<div class="w-full h-full flex items-center justify-center text-3xl md:text-4xl">📰</div>`
+                            }
+                        </div>
+                        <div class="p-3 md:p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="badge">${escapeHTML(n.categoria || 'GENERALE')}</span>
+                                ${n.in_evidenza ? '<span class="badge">⭐ In evidenza</span>' : ''}
+                            </div>
+                            <h3 class="font-extrabold text-slate-900 text-sm md:text-lg leading-snug mb-1">${escapeHTML(n.titolo)}</h3>
+                            ${n.sottotitolo ? `<p class="text-slate-600 text-xs md:text-sm mb-3">${escapeHTML(n.sottotitolo)}</p>` : ''}
+                            <div class="flex items-center justify-between text-xs text-slate-500">
+                                <span>${fmtDate(n.data_pubblicazione)}</span>
+                                <button class="btn-aurora text-xs px-3 py-2" ${hasUrl ? `data-url="${escapeHTML(n.url_articolo)}"` : 'disabled title="Nessun link"'}>Leggi l'articolo completo</button>
+                            </div>
+                        </div>`;
+                    wrap.appendChild(card);
+                }
+                
+                wrap.addEventListener('click', (e) => { 
+                    const b = e.target.closest('button[data-url]'); 
+                    if (b) { 
+                        window.open(b.getAttribute('data-url'), '_blank', 'noopener'); 
+                    } 
+                }, { once: true });
+            } catch (e) { 
+                console.error(e); 
+                wrap.innerHTML = '<div class="text-center py-8 text-slate-600">Errore nel caricamento</div>'; 
+            }
+        }
 
-    document.addEventListener('DOMContentLoaded', ()=> {
-      window.dirigentiManager = new DirigentiManager();
-    });
+        // Load featured conventions
+        async function loadFeaturedConvenzioni() {
+            const wrap = document.getElementById('featuredConvenzioni'); 
+            const empty = document.getElementById('convEmptyState');
+            
+            try {
+                const { data } = await supabase.from('convenzioni')
+                    .select('id,nome_azienda,descrizione,logo_url,link_esterno,in_evidenza,attiva')
+                    .eq('attiva', true)
+                    .eq('in_evidenza', true)
+                    .order('created_at', {ascending: false})
+                    .limit(6);
+                
+                if (!data || !data.length) { 
+                    empty.classList.remove('hidden'); 
+                    return; 
+                }
+                
+                empty.classList.add('hidden'); 
+                wrap.innerHTML = '';
+                
+                for (const c of data) {
+                    const el = document.createElement('a');
+                    el.className = 'function-card border-slate-200 bg-white';
+                    el.href = c.link_esterno || '#'; 
+                    el.target = c.link_esterno ? '_blank' : '_self'; 
+                    el.rel = c.link_esterno ? 'noopener' : '';
+                    el.innerHTML = `
+                        <div class="w-full h-16 md:h-24 bg-slate-50 rounded-lg flex items-center justify-center overflow-hidden mb-3">
+                            ${c.logo_url ? `<img src="${escapeHTML(c.logo_url)}" alt="" class="max-h-16 md:max-h-24 object-contain">` : '<div class="text-2xl md:text-3xl">🤝</div>'}
+                        </div>
+                        <h4 class="font-extrabold">${escapeHTML(c.nome_azienda)}</h4>
+                        <p class="text-slate-600 text-xs">${escapeHTML((c.descrizione||'').slice(0,110))}${c.descrizione&&c.descrizione.length>110?'…':''}</p>`;
+                    wrap.appendChild(el);
+                }
+            } catch { 
+                empty.classList.remove('hidden'); 
+            }
+        }
 
-    // Stato pagina/animazioni minori
-    window.addEventListener('error', (e)=> console.error('Errore globale:', e.error));
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.body.classList.add('reduced-motion');
-    document.addEventListener('visibilitychange', ()=> document.body.style.animationPlayState = document.hidden ? 'paused':'running');
-  </script>
+        // Logout functions
+        function setupLogout() {
+            const logoutBtns = ['logoutBtn', 'logoutBtnMobile'];
+            logoutBtns.forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.addEventListener('click', handleLogout);
+                }
+            });
+        }
+
+        async function handleLogout() {
+            try { 
+                await supabase.auth.signOut(); 
+            } catch {}
+            window.location.href = 'index.html';
+        }
+
+        // Mobile optimizations
+        function setupMobileOptimizations() {
+            // Handle orientation changes
+            window.addEventListener('orientationchange', () => {
+                setTimeout(() => {
+                    closeMobileMenu();
+                }, 100);
+            });
+
+            // Handle scroll to hide mobile menu
+            let lastScrollY = window.scrollY;
+            window.addEventListener('scroll', () => {
+                const currentScrollY = window.scrollY;
+                if (currentScrollY > lastScrollY + 50) {
+                    closeMobileMenu();
+                }
+                lastScrollY = currentScrollY;
+            });
+
+            // Add resize listener to update layouts
+            window.addEventListener('resize', () => {
+                // Close mobile menu on resize to larger screen
+                if (window.innerWidth >= 640) {
+                    closeMobileMenu();
+                }
+            });
+        }
+
+        // Initialize everything
+        (async () => {
+            console.log('🏛️ Area Dirigenti Mobile-First Dashboard Loading...');
+            
+            // Setup mobile interactions
+            setupMobileMenu();
+            setupLogout();
+            setupMobileOptimizations();
+            
+            // Check authentication
+            const user = await guard(); 
+            if (!user) return;
+            
+            // Load all data
+            await Promise.all([
+                loadProfile(user), 
+                loadIscrittoDal(user), 
+                loadSystemOverview(), 
+                loadLatestNews(), 
+                loadFeaturedConvenzioni()
+            ]);
+            
+            console.log('✅ Area Dirigenti Dashboard Ready - Mobile Optimized with Full Integration');
+        })();
+    </script>
 </body>
 </html>
