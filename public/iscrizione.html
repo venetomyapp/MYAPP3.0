@@ -640,24 +640,69 @@
         let currentUser = null;
         let userProfile = null;
 
-        // === NAVIGAZIONE INTELLIGENTE ===
+        // === NAVIGAZIONE INTELLIGENTE - CORRETTA ===
         
         // Torna alla home corretta in base al profilo utente
         async function goBackToHome() {
             try {
-                // Prima prova a controllare il profilo dell'utente
-                await checkUserProfile();
+                console.log('🔍 Controllo profilo utente per navigazione...');
                 
-                // Se è dirigente o admin, vai a home_dirigenti.html
-                if (userProfile && (userProfile.role === 'DIRIGENTE' || userProfile.role === 'ADMIN')) {
+                // Inizializza Supabase se non è già fatto
+                if (!supabaseClient) {
+                    if (typeof supabase === 'undefined') {
+                        console.error('❌ Supabase non disponibile, redirect a home normale');
+                        window.location.href = 'home.html';
+                        return;
+                    }
+                    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                }
+                
+                // Verifica la sessione utente
+                const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
+                if (sessionError || !session) {
+                    console.warn('⚠️ Nessuna sessione attiva, redirect a home normale');
+                    window.location.href = 'home.html';
+                    return;
+                }
+                
+                currentUser = session.user;
+                console.log('👤 Utente trovato:', currentUser.id);
+                
+                // Leggi il profilo dalla tabella user_profiles
+                const { data: profile, error: profileError } = await supabaseClient
+                    .from('user_profiles')
+                    .select('role, stato, nome, cognome, full_name')
+                    .eq('user_id', currentUser.id)
+                    .single();
+                
+                if (profileError) {
+                    console.error('❌ Errore lettura profilo:', profileError);
+                    console.log('📍 Redirect a home normale per sicurezza');
+                    window.location.href = 'home.html';
+                    return;
+                }
+                
+                if (!profile) {
+                    console.warn('⚠️ Profilo non trovato, redirect a home normale');
+                    window.location.href = 'home.html';
+                    return;
+                }
+                
+                console.log('✅ Profilo caricato:', { role: profile.role, stato: profile.stato });
+                userProfile = profile;
+                
+                // Decisione di navigazione basata sul ruolo
+                if (profile.role === 'DIRIGENTE' || profile.role === 'ADMIN') {
+                    console.log('🏛️ Utente dirigente/admin -> home_dirigenti.html');
                     window.location.href = 'home_dirigenti.html';
                 } else {
-                    // Altrimenti vai alla home normale
+                    console.log('👤 Utente normale -> home.html');
                     window.location.href = 'home.html';
                 }
+                
             } catch (error) {
-                console.warn('⚠️ Errore controllo profilo, redirect a home normale:', error);
-                // In caso di errore, vai alla home normale
+                console.error('❌ Errore generale controllo profilo:', error);
+                console.log('📍 Fallback: redirect a home normale');
                 window.location.href = 'home.html';
             }
         }
@@ -667,56 +712,70 @@
             window.location.href = 'dirigenti.html';
         }
         
-        // === CONTROLLO PROFILO UTENTE ===
+        // === CONTROLLO PROFILO UTENTE - AGGIORNATO ===
         async function checkUserProfile() {
             try {
                 if (typeof supabase === 'undefined') {
                     console.warn('⚠️ Supabase non disponibile');
-                    return;
+                    return false;
                 }
                 
-                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                if (!supabaseClient) {
+                    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                }
                 
                 const { data: { session } } = await supabaseClient.auth.getSession();
                 if (!session) {
                     console.warn('⚠️ Nessuna sessione attiva');
-                    return;
+                    return false;
                 }
                 
                 currentUser = session.user;
                 userProfile = await getUserProfile(currentUser.id);
                 
-                if (!userProfile) {
-                    // Crea un profilo di fallback
-                    userProfile = {
-                        user_id: currentUser.id,
-                        email: currentUser.email,
-                        nome: currentUser.user_metadata?.nome || 'Utente',
-                        cognome: currentUser.user_metadata?.cognome || '',
-                        role: 'USER',
-                        stato: 'ATTIVO'
-                    };
+                if (userProfile) {
+                    console.log('✅ Profilo utente caricato per background:', userProfile.role);
+                    return true;
+                } else {
+                    console.warn('⚠️ Profilo utente non trovato');
+                    return false;
                 }
-                
-                console.log('✅ Profilo utente caricato:', userProfile.role);
                 
             } catch (error) {
                 console.error('❌ Errore controllo profilo:', error);
+                return false;
             }
         }
         
         async function getUserProfile(userId) {
             try {
+                console.log('🔍 Recupero profilo per user_id:', userId);
+                
                 const { data, error } = await supabaseClient
                     .from('user_profiles')
                     .select('*')
                     .eq('user_id', userId)
                     .single();
                     
-                if (error && error.code !== 'PGRST116') throw error;
+                if (error) {
+                    if (error.code === 'PGRST116') {
+                        console.warn('⚠️ Profilo non trovato per user_id:', userId);
+                    } else {
+                        console.error('❌ Errore query profilo:', error);
+                    }
+                    return null;
+                }
+                
+                console.log('✅ Profilo recuperato:', { 
+                    role: data.role, 
+                    nome: data.nome, 
+                    email: data.email 
+                });
+                
                 return data;
+                
             } catch (error) {
-                console.warn('⚠️ Errore recupero profilo:', error);
+                console.error('❌ Errore recupero profilo:', error);
                 return null;
             }
         }
