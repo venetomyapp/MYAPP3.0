@@ -1,680 +1,666 @@
 <!DOCTYPE html>
-<html lang="esso">
-<testa>
+<html lang="it">
+<head>
     <meta charset="UTF-8">
-    <meta nome="viewport" contenuto="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <titolo>Area Dirigenti - MyApp</titolo>
-
-    <!-- Vento di coda CSS -->
-    <scrittura src="https://cdn.tailwindcss.com"></scrittura>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Area Dirigenti - MyApp</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
     <!-- CONFIGURAZIONE COLORI TAILWIND -->
-    <scrittura>
-        vento contrario.confidenziale = {
-            tema: {
-                estendere: {
-                    famiglia font: { intercalare: ['Inter','sans-serif'] },
-                    colori: {
-                        primario: '#1a1a2e',
-                        secondario: '#16213e', 
-                        accento: '#0f3460',
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { inter: ['Inter','sans-serif'] },
+                    colors: {
+                        primary: '#1a1a2e',
+                        secondary: '#16213e', 
+                        accent: '#0f3460',
                         aurora: '#e94560',
-                        ciano: '#00d4ff',
+                        cyan: '#00d4ff',
                         magenta: '#ff006e',
-                        oro: '#ffd700',
-                        alzavola: '#03dac6',
-                        scuro: '#0a0a23',
-                        luce: '#f8fafc',
-                        successo: '#10b981',
-                        testoDark: '#1C1C1E',
-                        sfondoLuce: '#F4F4F8',
+                        gold: '#ffd700',
+                        teal: '#03dac6',
+                        dark: '#0a0a23',
+                        light: '#f8fafc',
+                        success: '#10b981',
+                        textDark: '#1C1C1E',
+                        backgroundLight: '#F4F4F8',
                     },
-                    schermi: {
-                        'xs': "320 px",
-                        'sm': "640 px",
-                        'md': "768px",
-                        'Lg': "1024px",
-                        'xl': "1280px",
-                        '2xl': "1536px",
+                    screens: {
+                        'xs': '320px',
+                        'sm': '640px',
+                        'md': '768px',
+                        'lg': '1024px',
+                        'xl': '1280px',
+                        '2xl': '1536px',
                     }
                 }
             }
         }
-    </scrittura>
-
+    </script>
+    
     <!-- STILI MOBILE-FIRST -->
-    <stile>
-        :radice {
-            --gradiente-aurora: gradiente lineare(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
-            --gradiente-magia: gradiente lineare(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
-            --area sicura-inserito-in alto: env(area sicura-inserita-in cima, 0);
-            --area sicura-inserto-fondo: env(area sicura-inserito-in basso, 0);
-            --area sicura-inserito-sinistra: env(area sicura-inserita-sinistra, 0);
-            --area sicura-inserito-diritto: env(area sicura-inserita-destra, 0);
+    <style>
+        :root {
+            --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
+            --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
+            --safe-area-inset-top: env(safe-area-inset-top, 0);
+            --safe-area-inset-bottom: env(safe-area-inset-bottom, 0);
+            --safe-area-inset-left: env(safe-area-inset-left, 0);
+            --safe-area-inset-right: env(safe-area-inset-right, 0);
         }
 
         * {
-            famiglia font: 'Inter', sans-serif;
-            -webkit-tap-evidenzia-colore: trasparente;
-            -webkit-touch-callout: nessuno;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
         }
 
-        corpo del corpo {
-            sfondo: var(--gradiente-aurora);
-            dimensione sfondo: 400% 400%;
-            animazione: aurora 20s facilità infinita;
-            altezza minima: 100vh;
-            altezza minima: 100dvh;
-            overflow-x: nascosto;
-            imbottitura-sinistra: var(--area sicura-inserito-sinistra);
-            diritto d'imbottitura: var(--area sicura-inserito-diritto);
+        body {
+            background: var(--gradient-aurora);
+            background-size: 400% 400%;
+            animation: aurora 20s ease infinite;
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            padding-left: var(--safe-area-inset-left);
+            padding-right: var(--safe-area-inset-right);
         }
 
         @keyframes aurora {
-            0%, 100% { posizione di sfondo: 0% 50%; }
-            25% { posizione di sfondo: 100% 50%; }
-            50% { posizione di sfondo: 100% 100%; }
-            75% { posizione di sfondo: 0% 100%; }
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
         }
 
-        @keyframes slideUp { da { opacità: 0; trasformare: traduci(20px); } a { opacità: 1; trasformare: traduci(0); } }
-        @keyframes fadeIn { da { opacità: 0; } a { opacità: 1; } }
-        @keyframes spin { 0% { trasformare: ruota(0deg); } 100% { trasformare: ruota(360deg); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        @media (movimenti preferiti-ridotti: ridurre) {
-            * { animazione-durata: 0,01ms !importante; animazione-iterazione-conteggio: 1 !importante; transizione-durata: 0,01ms !importante; comportamento scroll: auto !importante; }
+        @media (prefers-reduced-motion: reduce) {
+            * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
         }
 
-        /* Tipografia */
-        .testo-ultra-visibile {
-            colore: #fff;
-            testo-ombra: 0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1);
-            font-peso: 800;
+        /* Typography */
+        .text-ultra-visible {
+            color: #fff;
+            text-shadow: 0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1);
+            font-weight: 800;
         }
 
-        .titolo dell'eroe {
-            dimensione carattere: morsetto(1.8rem, 6vw, 3.5rem);
-            font-peso: 900;
-            altezza della linea: 1.1;
+        .hero-title {
+            font-size: clamp(1.8rem, 6vw, 3.5rem);
+            font-weight: 900;
+            line-height: 1.1;
         }
 
-        .sezione-titolo {
-            dimensione carattere: morsetto(1.1rem, 4vw, 1.5rem);
-            font-peso: 900;
-            colore: #0f172a;
+        .section-title {
+            font-size: clamp(1.1rem, 4vw, 1.5rem);
+            font-weight: 900;
+            color: #0f172a;
         }
 
-        /* Carte */
-        .carta di vetro {
-            sfondo: #ffffff;
-            confine: 1px solido rgba(0,0,0,.06);
-            raggio di confine: 24px;
-            box-ombra: 0 14px 30px rgba(0,0,0,.12);
+        /* Cards */
+        .glass-card {
+            background: #ffffff;
+            border: 1px solid rgba(0,0,0,.06);
+            border-radius: 24px;
+            box-shadow: 0 14px 30px rgba(0,0,0,.12);
         }
 
-        /* Carte funzione - Mobile ottimizzato */
-        .scheda funzione {
-            sfondo: #f8fafc;
-            confine: 1px solido #e5e7eb;
-            raggio di confine: 20px;
-            imbottitura: 1rem;
-            transizione: tutto .25s facilità;
-            allineare testo: centro;
-            colore: #0f172a;
-            testo-decorazione: nessuno;
-            altezza minima: 120px;
-            visualizzazione: flettere;
-            direzione flex: colonna;
-            allinea-elementi: centro;
-            giustifica-contenuto: centro;
-            posizione: relativo;
-            troppo pieno: nascosto;
-            touch-azione: manipolazione;
+        /* Function Cards - Mobile Optimized */
+        .function-card {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+            padding: 1rem;
+            transition: all .25s ease;
+            text-align: center;
+            color: #0f172a;
+            text-decoration: none;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            touch-action: manipulation;
         }
 
-        .scheda funzione::prima di {
-            contenuto: ';
-            posizione: assoluto;
-            parte superiore: 0;
-            sinistra: -100%;
-            larghezza: 100%;
-            altezza: 2px;
-            sfondo: var(--gradiente-magia);
-            transizione: sinistra 0,3s facilità;
+        .function-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient-magic);
+            transition: left 0.3s ease;
         }
 
-        .scheda funzione:attivo::prima di {
-            sinistra: 0;
+        .function-card:active::before {
+            left: 0;
         }
 
-        .scheda funzione:attivo {
-            trasformare: scala(0,98);
+        .function-card:active {
+            transform: scale(0.98);
         }
 
-        @media (hover: hover) e (puntatore: bene) {
-            .scheda funzione:hover {
-                sfondo: #ffffff;
-                trasformare: traduci(-3px);
-                box-ombra: 0 10px 20px rgba(0,0,0,.12);
+        @media (hover: hover) and (pointer: fine) {
+            .function-card:hover {
+                background: #ffffff;
+                transform: translateY(-3px);
+                box-shadow: 0 10px 20px rgba(0,0,0,.12);
             }
         }
 
-        .scheda funzione h4 {
-            font-peso: 800;
-            dimensione carattere: morsetto(0,9rem, 2.8vw, 1rem);
-            margine-fondo: 0,25rem;
+        .function-card h4 {
+            font-weight: 800;
+            font-size: clamp(0.9rem, 2.8vw, 1rem);
+            margin-bottom: 0.25rem;
         }
 
-        .scheda funzione biforcare {
-            colore: #475569;
-            dimensione carattere: 0,75rem;
-            altezza della linea: 1.3;
+        .function-card p {
+            color: #475569;
+            font-size: 0.75rem;
+            line-height: 1.3;
         }
 
-        /* Pulsanti */
+        /* Buttons */
         .btn-aurora {
-            sfondo: var(--gradiente-magia);
-            colore: #fff;
-            confine: 0;
-            raggio di confine: 12px;
-            imbottitura: 0,75rem 1.25rem;
-            font-peso: 800;
-            visualizzazione: flessione in linea;
-            allinea-elementi: centro;
-            lacuna: 0,5rem;
-            transizione: tutto .25s facilità;
-            touch-azione: manipolazione;
-            altezza minima: 44px;
+            background: var(--gradient-magic);
+            color: #fff;
+            border: 0;
+            border-radius: 12px;
+            padding: 0.75rem 1.25rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all .25s ease;
+            touch-action: manipulation;
+            min-height: 44px;
         }
 
-        @media (hover: hover) e (puntatore: bene) {
+        @media (hover: hover) and (pointer: fine) {
             .btn-aurora:hover {
-                trasformare: traduci(-2px);
-                box-ombra: 0 8px 16px rgba(233,69,96,.3);
+                transform: translateY(-2px);
+                box-shadow: 0 8px 16px rgba(233,69,96,.3);
             }
         }
 
-        /* Distintivi */
-        .distintivo {
-            visualizzazione: blocco in linea;
-            imbottitura: 0,25rem 0,6rem;
-            raggio di confine: 9999px;
-            sfondo: #111827;
-            colore: #fff;
-            dimensione carattere: 0,7rem;
-            font-peso: 700;
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            background: #111827;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
         }
 
         /* Spinner */
-        .filatore {
-            confine: 3px solido rgba(0,0,0,.1);
-            bordo-cima: 3px solido #111827;
-            raggio di confine: 50%;
-            larghezza: 22px;
-            altezza: 22px;
-            animazione: spin 1s infinito lineare;
-            visualizzazione: blocco in linea;
+        .spinner {
+            border: 3px solid rgba(0,0,0,.1);
+            border-top: 3px solid #111827;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
         }
 
-        /* Sistemi di rete mobile */
-        .rete mobile-2 {
-            visualizzazione: griglia;
-            griglia-modello-colonne: ripetere(2, 1fr);
-            lacuna: 12px;
+        /* Mobile Grid Systems */
+        .mobile-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
         }
 
-        @media (larghezza minima: 480px){
-            .rete mobile-2 {
-                griglia-modello-colonne: ripetere(3, 1fr);
-                lacuna: 16px;
+        @media (min-width: 480px) {
+            .mobile-grid-2 {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 16px;
             }
         }
 
-        @media (larghezza minima: 768px){
-            .rete mobile-2 {
-                griglia-modello-colonne: ripetere(4, 1fr);
-                lacuna: 20px;
+        @media (min-width: 768px) {
+            .mobile-grid-2 {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
             }
         }
 
-        @media (larghezza minima: 1024px){
-            .rete mobile-2 {
-                griglia-modello-colonne: ripetere(5, 1fr);
+        @media (min-width: 1024px) {
+            .mobile-grid-2 {
+                grid-template-columns: repeat(5, 1fr);
             }
         }
 
         .stats-grid {
-            visualizzazione: griglia;
-            griglia-modello-colonne: ripetere(2, 1fr);
-            lacuna: 12px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
         }
 
-        @media (larghezza minima: 640px){
+        @media (min-width: 640px) {
             .stats-grid {
-                griglia-modello-colonne: ripetere(4, 1fr);
-                lacuna: 16px;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 16px;
             }
         }
 
         .admin-grid {
-            visualizzazione: griglia;
-            griglia-modello-colonne: ripetere(1, 1fr);
-            lacuna: 12px;
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 12px;
         }
 
-        @media (larghezza minima: 640px){
+        @media (min-width: 640px) {
             .admin-grid {
-                griglia-modello-colonne: ripetere(2, 1fr);
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
-        @media (larghezza minima: 1024px){
+        @media (min-width: 1024px) {
             .admin-grid {
-                griglia-modello-colonne: ripetere(3, 1fr);
+                grid-template-columns: repeat(3, 1fr);
             }
         }
 
         .news-grid {
-            visualizzazione: griglia;
-            griglia-modello-colonne: ripetere(1, 1fr);
-            lacuna: 16px;
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 16px;
         }
 
-        @media (larghezza minima: 640px){
+        @media (min-width: 640px) {
             .news-grid {
-                griglia-modello-colonne: ripetere(2, 1fr);
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
-        @media (larghezza minima: 1024px){
+        @media (min-width: 1024px) {
             .news-grid {
-                griglia-modello-colonne: ripetere(3, 1fr);
+                grid-template-columns: repeat(3, 1fr);
             }
         }
 
-        /* Intestazione con area sicura */
+        /* Header with safe area */
         .header-safe {
-            imbottitura-top: max(12px, var(--area sicura-inserito-in alto));
+            padding-top: max(12px, var(--safe-area-inset-top));
         }
 
-        /* Animazioni specifiche per dispositivi mobili */
-        .scorrimento animato {
-            animazione: scivola 0,3s disinvoltura;
+        /* Mobile-specific animations */
+        .animate-slide-up {
+            animation: slideUp 0.3s ease-out;
         }
 
         .animate-fade-in {
-            animazione: fadeIn 0,3s disinvoltura;
+            animation: fadeIn 0.3s ease-out;
         }
 
-        /* Sezioni mobili */
-        .sezione mobile {
-            imbottitura: 1rem;
+        /* Mobile sections */
+        .mobile-section {
+            padding: 1rem;
         }
 
-        @media (larghezza minima: 640px){
-            .sezione mobile {
-                imbottitura: 1.5rem;
+        @media (min-width: 640px) {
+            .mobile-section {
+                padding: 1.5rem;
             }
         }
 
-        @media (larghezza minima: 1024px){
-            .sezione mobile {
-                imbottitura: 2rem;
+        @media (min-width: 1024px) {
+            .mobile-section {
+                padding: 2rem;
             }
         }
 
-        /* Stati focus */
-        .scheda funzione:focus-visibile,
-        pulsante:focus-visibile,
-        [ruolo="bottone"]:focus-visibile {
-            delineare: 3px solido rgba(0,212,255,.65);
-            delineare-offset: 2px;
+        /* Focus states */
+        .function-card:focus-visible,
+        button:focus-visible,
+        [role="button"]:focus-visible {
+            outline: 3px solid rgba(0,212,255,.65);
+            outline-offset: 2px;
         }
 
-        /* Toccare bersagli */
+        /* Touch targets */
         .touch-target {
-            altezza minima: 44px;
-            larghezza minima: 44px;
+            min-height: 44px;
+            min-width: 44px;
         }
 
-        /* Menu mobile */
-        .menu mobile {
-            trasformare: traduci(-100%);
-            transizione: trasformare 0,3s facilità;
+        /* Mobile menu */
+        .mobile-menu {
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
         }
 
-        .menu mobile.mostra {
-            trasformare: traduci(0);
+        .mobile-menu.show {
+            transform: translateY(0);
         }
 
-        /* Stile della barra di scorrimento */
-        ::-webkit-scrollbar { larghezza: 6px; altezza: 6px; }
-        ::-webkit-scrollbar-pollice { sfondo: rgba(255,255,255,.25); raggio di confine: 9999px; }
-        ::-webkit-scrollbar-pollice:hover { sfondo: rgba(255,255,255,.4); }
-        ::-traccia della barra di scorrimento Webkit { sfondo: trasparente; }
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.25); border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.4); }
+        ::-webkit-scrollbar-track { background: transparent; }
 
-        /* Classi di utilità */
-        .solo sr {
-            posizione: assoluto;
-            larghezza: 1px;
-            altezza: 1px;
-            imbottitura: 0;
-            margine: -1px;
-            troppo pieno: nascosto;
-            clip: rettorato(0,0,0,0);
-            spazio bianco: nowrap;
-            confine: 0;
+        /* Utility classes */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap;
+            border: 0;
         }
 
-        .linea-morsetto-2 {
-            visualizzazione: -webkit-box;
+        .line-clamp-2 {
+            display: -webkit-box;
             -webkit-line-clamp: 2;
-            -webkit-box-orient: verticale;
-            troppo pieno: nascosto;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        .morsetto-linea-3 {
-            visualizzazione: -webkit-box;
+        .line-clamp-3 {
+            display: -webkit-box;
             -webkit-line-clamp: 3;
-            -webkit-box-orient: verticale;
-            troppo pieno: nascosto;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
-    </stile>
-</testa>
+    </style>
+</head>
 
-<corpo del corpo classe="schermo flex flex-col min-h">
+<body class="flex flex-col min-h-screen">
 
-    <!-- INTESTAZIONE MOBILE OTTIMIZZATA -->
-    <intestazione classe="sticky top-0 z-40 bg-nero/10 sfondo-sfocatura-md bordo-b bordo-bianco/10 header-sicuro">
-        <div classe="px-4 py-3">
-            <div classe="flex items-center justifica-tra">
-                <!-- Logo + Titolo -->
-                <div classe="flex items-center gap-3">
-                    <div classe="w-10 h-10 arrotondato-xl bg-bianco/20 elementi flessibili-centro giustificano-centro ombra">
-                        <campata classe="testo-xl testo-bianco">️</campata>
+    <!-- HEADER MOBILE OPTIMIZED -->
+    <header class="sticky top-0 z-40 bg-black/10 backdrop-blur-md border-b border-white/10 header-safe">
+        <div class="px-4 py-3">
+            <div class="flex items-center justify-between">
+                <!-- Logo + Title -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shadow">
+                        <span class="text-xl text-white">🏛️</span>
                     </div>
                     <div>
-                        <div classe="testo-bianco font-estrabold leading-nessuno text-sm md: text-base">Area Dirigenti</div>
-                        <div idrato="whoami" classe="testo-bianco/80 testo-xs">Caricamento...</div>
+                        <div class="text-white font-extrabold leading-none text-sm md:text-base">Area Dirigenti</div>
+                        <div id="whoami" class="text-white/80 text-xs">Caricamento…</div>
                     </div>
                 </div>
 
-                <!-- Sezione destra -->
-                <div classe="flex items-center gap-2">
-                    <!-- Disconnessione desktop -->
-                    <pulsante idrato="logoutBtn" classe="btn-aurora text-sm px-4 py-2 nascosto sm: flex" titolo="Disconnetti">
-                        <campata>🚪</campata>
-                        <campata classe="md nascosto: inline">Logout</campata>
-                    </pulsante>
+                <!-- Right Section -->
+                <div class="flex items-center gap-2">
+                    <!-- Desktop Logout -->
+                    <button id="logoutBtn" class="btn-aurora text-sm px-4 py-2 hidden sm:flex" title="Disconnetti">
+                        <span>🚪</span>
+                        <span class="hidden md:inline">Logout</span>
+                    </button>
 
-                    <!-- Pulsante del menu mobile -->
-                    <pulsante idrato="mobileMenuBtn" classe="sm: testo touch-target nascosto-bianco p-2 arrotondato-xl bg-bianco/10">
-                        <svg classe="w-5 h-5" riempire="nessuno" colpo="coloreCorrente" viewBox="002424">
-                            <percorso coprilineo corsa="rotondo" stroke-linejoin="rotondo" corsa-larghezza="2" d.c="M4 6h16M4 12h16M4 18h16"></percorso>
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuBtn" class="sm:hidden touch-target text-white p-2 rounded-xl bg-white/10">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
-                    </pulsante>
+                    </button>
                 </div>
             </div>
 
-            <!-- Menu mobile -->
-            <div idrato="menu mobile" classe="sm: nascosto mt-4 pb-4 bordo-t bordo-bianco/20 nascosto">
-                <div classe="pt-4 spazio-y-2">
-                    <pulsante idrato="logoutBtnMobile" classe="btn-aurora w-full py-3 arrotondato-xl text-sm font-bold flex items-center justify-center gap-2">
-                        <campata>🚪</campata>
-                        <campata>Logout</campata>
-                    </pulsante>
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="sm:hidden mt-4 pb-4 border-t border-white/20 hidden">
+                <div class="pt-4 space-y-2">
+                    <button id="logoutBtnMobile" class="btn-aurora w-full py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
+                        <span>🚪</span>
+                        <span>Logout</span>
+                    </button>
                 </div>
             </div>
         </div>
-    </intestazione>
+    </header>
 
-    <principale classe="sezione mobile Flex-Grow max-w-6xl mx-auto w-full">
+    <main class="flex-grow mobile-section max-w-6xl mx-auto w-full">
 
-        <!-- SEZIONE EROE -->
-        <sezione classe="text-center mb-6 animate-fade-in">
-            <h1 classe="hero-title testo-ultra-visibile mb-2">Benvenuto nell'Area Dirigenti</h1>
-            <biforcare classe="testo-bianco/90 font-semibold text-sm md:text-base">Funzioni direzionali e amministrative</biforcare>
-        </sezione>
+        <!-- HERO SECTION -->
+        <section class="text-center mb-6 animate-fade-in">
+            <h1 class="hero-title text-ultra-visible mb-2">Benvenuto nell'Area Dirigenti</h1>
+            <p class="text-white/90 font-semibold text-sm md:text-base">Funzioni direzionali e amministrative</p>
+        </section>
 
         <!-- AZIONI PERSONALI -->
-        <sezione classe="scheda di vetro p-4 md: p-6 mb-6 animate-slide-up">
-            <h2 classe="sezione-titolo mb-4 text-center">🧭 Azioni Personali</h2>
-            <div classe="rete mobile-2">
-                <un classe="scheda funzione" href="tessera.html" etichetta aria="Tessera Digitale">
-                    <div classe="testo-3xl mb-1">🎫</div>
+        <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
+            <h2 class="section-title mb-4 text-center">🧭 Azioni Personali</h2>
+            <div class="mobile-grid-2">
+                <a class="function-card" href="tessera.html" aria-label="Tessera Digitale">
+                    <div class="text-3xl mb-1">🎫</div>
                     <h4>Tessera Digitale</h4>
-                    <biforcare>Visualizza/Scarica la tua tessera</biforcare>
-                </un>
-                <un classe="scheda funzione" href="profilo.html" etichetta aria="Profilo">
-                    <div classe="testo-3xl mb-1">👤</div>
+                    <p>Visualizza/Scarica la tua tessera</p>
+                </a>
+                <a class="function-card" href="profilo.html" aria-label="Profilo">
+                    <div class="text-3xl mb-1">👤</div>
                     <h4>Il mio profilo</h4>
-                    <biforcare>Modifica i tuoi dati</biforcare>
-                </un>
-                <un classe="scheda funzione" href="virgilio.html" etichetta aria="Virgilio">
-                    <div classe="testo-3xl mb-1">🧭</div>
+                    <p>Modifica i tuoi dati</p>
+                </a>
+                <a class="function-card" href="virgilio.html" aria-label="Virgilio">
+                    <div class="text-3xl mb-1">🧭</div>
                     <h4>Virgilio</h4>
-                    <biforcare>il tuo chatbot professionalep>
-                </un>
-                <un classe="scheda funzione" href="strumenti.html" etichetta aria="Strumenti">
-                    <div classe="testo-3xl mb-1">️</div>
+                    <p>Accesso rapido ai servizi</p>
+                </a>
+                <a class="function-card" href="strumenti.html" aria-label="Strumenti">
+                    <div class="text-3xl mb-1">🛠️</div>
                     <h4>Strumenti</h4>
-                    <biforcare>Utility di lavoro</biforcare>
-                </un>
-                <un classe="scheda funzione" href="filebox.html" etichetta aria="FileBox">
-                    <div classe="testo-3xl mb-1">📁</div>
+                    <p>Utility di lavoro</p>
+                </a>
+                <a class="function-card" href="filebox.html" aria-label="FileBox">
+                    <div class="text-3xl mb-1">📁</div>
                     <h4>FileBox</h4>
-                    <biforcare>Area file e documenti — download</biforcare>
-                </un>
-                <un classe="scheda funzione" href="servizi.html" etichetta aria="Assistenza">
-                    <div classe="testo-3xl mb-1">🛟</div>
+                    <p>I tuoi file e documenti</p>
+                </a>
+                <a class="function-card" href="servizi.html" aria-label="Assistenza">
+                    <div class="text-3xl mb-1">🛟</div>
                     <h4>Assistenza</h4>
-                    <biforcare>Supporto e servizi</biforcare>
-                </un>
-                <un classe="scheda funzione" href="https://form.jotform.com/243226223182044" bersaglio="_vuoto" rel="noopener">
-                    <div classe="testo-3xl mb-1">💰</div>
+                    <p>Supporto e servizi</p>
+                </a>
+                <a class="function-card" href="https://form.jotform.com/243226223182044" target="_blank" rel="noopener">
+                    <div class="text-3xl mb-1">💰</div>
                     <h4>Richiedi Rimborso</h4>
-                    <biforcare>Modulo rimborso spese</biforcare>
-                </un>
-                <un classe="scheda funzione" href="https://form.jotform.com/243262801203343" bersaglio="_vuoto" rel="noopener">
-                    <div classe="testo-3xl mb-1">📝</div>
+                    <p>Modulo rimborso spese</p>
+                </a>
+                <a class="function-card" href="https://form.jotform.com/243262801203343" target="_blank" rel="noopener">
+                    <div class="text-3xl mb-1">📝</div>
                     <h4>Richiedi Permesso</h4>
-                    <biforcare>Permesso sindacale</biforcare>
-                </un>
-                <un classe="scheda funzione" href="https://eu.jotform.com/tables/243226223182044" bersaglio="_vuoto" rel="noopener">
-                    <div classe="testo-3xl mb-1">📊</div>
+                    <p>Permesso sindacale</p>
+                </a>
+                <a class="function-card" href="https://eu.jotform.com/tables/243226223182044" target="_blank" rel="noopener">
+                    <div class="text-3xl mb-1">📊</div>
                     <h4>Tabella Rendiconto</h4>
-                    <biforcare>Visualizza i dati</biforcare>
-                </un>
-                <un classe="scheda funzione" href="https://eu.jotform.com/tables/243262801203343" bersaglio="_vuoto" rel="noopener">
-                    <div classe="testo-3xl mb-1">📅</div>
+                    <p>Visualizza i dati</p>
+                </a>
+                <a class="function-card" href="https://eu.jotform.com/tables/243262801203343" target="_blank" rel="noopener">
+                    <div class="text-3xl mb-1">📅</div>
                     <h4>Tabella Permessi</h4>
-                    <biforcare>Gestisci permessi</biforcare>
-                </un>
-
-                <un classe="scheda funzione" href="Academy.html" etichetta aria="Community Hub (Novità)">
-                    <campata classe="badge assoluto top-2 destra-2">⭐ NOVITÀ</campata>
-                    <div classe="testo-3xl mb-1">🎓</div>
-                    <h4>Hub comunitario</h4>
-                    <biforcare>Vai all'Academy interattiva</biforcare>
-                </un>
-</div>
-        </sezione>
+                    <p>Gestisci permessi</p>
+                </a>
+            </div>
+        </section>
 
         <!-- DATI DIRIGENZIALI -->
-        <sezione classe="scheda di vetro p-4 md: p-6 mb-6 animate-slide-up">
-            <h2 classe="sezione-titolo mb-4 text-center">🪪 I Tuoi Dati dirigenziali</h2>
-            <div classe="flex flex-col sm: flex-row items-center justify-center gap-4 text-center sm: text-left">
-                <div classe="w-14 h-14 arrotondato-completo bg-slate-800 testo-bianco elementi flessibili-centro di giustificazione-centro di testo-2xl flex-shrink-0">
-                    <campata idrato="icona utente">👤</campata>
+        <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
+            <h2 class="section-title mb-4 text-center">🪪 I Tuoi Dati dirigenziali</h2>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
+                <div class="w-14 h-14 rounded-full bg-slate-800 text-white flex items-center justify-center text-2xl flex-shrink-0">
+                    <span id="userIcon">👤</span>
                 </div>
                 <div>
-                    <div idrato="userName" classe="text-lg md: text-xl font-extrabold text-slate-900 mb-1">Caricamento...</div>
-                    <div idrato="e-mail dell'utente" classe="text-slate-600 text-sm mb-2">—</div>
-                    <div classe="flex flex-wrap justify-center sm: justify-start gap-2">
-                        <campata classe="px-3 py-1 arrotondato-completo bg-slate-100 testo-slate-800 testo-xs">
-                            📅 <campata classe="nascosto sm: inline">Iscritto dal:</campata> <forte idrato="iscrittoDal">—</forte>
-                        </campata>
-                        <campata classe="px-3 py-1 arrotondato-completo bg-slate-100 testo-slate-800 testo-xs">
-                            🔐 <forte idrato="accessoLivello">Verifica...</forte>
-                        </campata>
+                    <div id="userName" class="text-lg md:text-xl font-extrabold text-slate-900 mb-1">Caricamento…</div>
+                    <div id="userEmail" class="text-slate-600 text-sm mb-2">—</div>
+                    <div class="flex flex-wrap justify-center sm:justify-start gap-2">
+                        <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-xs">
+                            📅 <span class="hidden sm:inline">Iscritto dal:</span> <strong id="iscrittoDal">—</strong>
+                        </span>
+                        <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-xs">
+                            🔐 <strong id="accessLevel">Verifica…</strong>
+                        </span>
                     </div>
                 </div>
             </div>
-        </sezione>
+        </section>
 
         <!-- PANORAMICA SISTEMA -->
-        <sezione classe="scheda di vetro p-4 md: p-6 mb-6 animate-slide-up">
-            <h2 classe="sezione-titolo mb-4 text-center">📈 Panoramica di sistema</h2>
-            <div classe="stats-grid">
-                <div classe="p-4 arrotondato-xl bordo bordo bordo-ardesia-200 bg-bianco testo-centro">
-                    <div classe="testo-2xl mb-1">📰</div>
-                    <div classe="testo-xs text-slate-600 mb-1">News pubblica</div>
-                    <div idrato="newsCount" classe="testo-2xl font-extrabold text-slate-900">—</div>
+        <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
+            <h2 class="section-title mb-4 text-center">📈 Panoramica di sistema</h2>
+            <div class="stats-grid">
+                <div class="p-4 rounded-xl border border-slate-200 bg-white text-center">
+                    <div class="text-2xl mb-1">📰</div>
+                    <div class="text-xs text-slate-600 mb-1">News pubblicate</div>
+                    <div id="newsCount" class="text-2xl font-extrabold text-slate-900">—</div>
                 </div>
-                <div classe="p-4 arrotondato-xl bordo bordo bordo-ardesia-200 bg-bianco testo-centro">
-                    <div classe="testo-2xl mb-1">⭐</div>
-                    <div classe="testo-xs text-slate-600 mb-1">News in evidenza</div>
-                    <div idrato="featuredNewsCount" classe="testo-2xl font-extrabold text-slate-900">—</div>
+                <div class="p-4 rounded-xl border border-slate-200 bg-white text-center">
+                    <div class="text-2xl mb-1">⭐</div>
+                    <div class="text-xs text-slate-600 mb-1">News in evidenza</div>
+                    <div id="featuredNewsCount" class="text-2xl font-extrabold text-slate-900">—</div>
                 </div>
-                <div classe="p-4 arrotondato-xl bordo bordo bordo-ardesia-200 bg-bianco testo-centro">
-                    <div classe="testo-2xl mb-1">️</div>
-                    <div classe="testo-xs text-slate-600 mb-1">Ruolo</div>
-                    <div idrato="riepilogo ruoli" classe="font text-sm-testo grassetto-slate-900">—</div>
+                <div class="p-4 rounded-xl border border-slate-200 bg-white text-center">
+                    <div class="text-2xl mb-1">🛡️</div>
+                    <div class="text-xs text-slate-600 mb-1">Ruolo</div>
+                    <div id="rolesSummary" class="text-sm font-bold text-slate-900">—</div>
                 </div>
-                <div classe="p-4 arrotondato-xl bordo bordo bordo-ardesia-200 bg-bianco testo-centro">
-                    <div classe="testo-2xl mb-1">️</div>
-                    <div classe="testo-xs text-slate-600 mb-1">Stato</div>
-                    <div classe="testo-sm carattere-grassetto testo-verde-600">Attivo</div>
+                <div class="p-4 rounded-xl border border-slate-200 bg-white text-center">
+                    <div class="text-2xl mb-1">⚙️</div>
+                    <div class="text-xs text-slate-600 mb-1">Stato</div>
+                    <div class="text-sm font-bold text-green-600">Attivo</div>
                 </div>
             </div>
-        </sezione>
+        </section>
 
         <!-- AREA AMMINISTRATIVA -->
-        <sezione classe="scheda di vetro p-4 md: p-6 mb-6 animate-slide-up">
-            <h2 classe="sezione-titolo mb-4 text-center">️ Area Amministrativa dirigenziale</h2>
-            <div classe="admin-grid">
-               <un href="gestione_richieste_utenti.html" classe="scheda funzione">
-    <div classe="testo-4xl mb-2">📋</div>
-    <h4>Gestione Richieste Utenti</h4>
-    <biforcare>Gestisci le ricchezze degli utensili</biforcare>
-</un>
-                <un href="gestione-convenzioni.html" classe="scheda funzione">
-                    <div classe="testo-4xl mb-2">️</div>
+        <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
+            <h2 class="section-title mb-4 text-center">🏗️ Area Amministrativa dirigenziale</h2>
+            <div class="admin-grid">
+                <a href="areadirigenti.html" class="function-card">
+                    <div class="text-4xl mb-2">🧭</div>
+                    <h4>Area Dirigenti</h4>
+                    <p>Vai all'area operativa</p>
+                </a>
+                <a href="gestione-convenzioni.html" class="function-card">
+                    <div class="text-4xl mb-2">🏷️</div>
                     <h4>Gestione Convenzioni</h4>
-                    <biforcare>Partenariato Crea e gestisci</biforcare>
-                </un>
-                <un href="gestione-notizie.html" classe="scheda funzione">
-                    <div classe="testo-4xl mb-2">📰</div>
+                    <p>Crea e gestisci partnership</p>
+                </a>
+                <a href="gestione-notizie.html" class="function-card">
+                    <div class="text-4xl mb-2">📰</div>
                     <h4>Gestione Notizie</h4>
-                    <biforcare>Pubblica e modifica news</biforcare>
-                </un>
-
-                <un href="admin-academy.html" classe="scheda funzione">
-                    <campata classe="badge assoluto top-2 destra-2">⭐ NOTIZIE</campata>
-                    <div classe="testo-4xl mb-2">🎓</div>
-                    <h4>Polo Comunitario Gestione</h4>
-                    <biforcare>Accademia Gestisci & amp; Comunità</biforcare>
-                </un>
-</div>
-        </sezione>
+                    <p>Pubblica e modifica news</p>
+                </a>
+            </div>
+        </section>
 
         <!-- ULTIME NOTIZIE -->
-        <sezione classe="scheda di vetro p-4 md: p-6 mb-6 animate-slide-up">
-            <h2 classe="sezione-titolo mb-4 text-center">️ Ultime Notizie</h2>
-            <div idrato="ultimeNotizie" classe="news-grid">
-                <div classe="col-span-full flex items-center justification-center py-8">
-                    <campata classe="filatore"></campata>
+        <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
+            <h2 class="section-title mb-4 text-center">🗞️ Ultime Notizie</h2>
+            <div id="latestNews" class="news-grid">
+                <div class="col-span-full flex items-center justify-center py-8">
+                    <span class="spinner"></span>
                 </div>
             </div>
-            <div idrato="newsEmptyState" classe="centro-testo nascosto py-8">
-                <div classe="testo-4xl mb-3">🪧</div>
-                <biforcare classe="carattere text-slate-700-semibold">Nessuna notizia pubblica al momento</biforcare>
+            <div id="newsEmptyState" class="hidden text-center py-8">
+                <div class="text-4xl mb-3">🪧</div>
+                <p class="text-slate-700 font-semibold">Nessuna notizia pubblicata al momento</p>
             </div>
-        </sezione>
+        </section>
 
         <!-- CONVENZIONI IN EVIDENZA -->
-        <sezione classe="scheda di vetro p-4 md: p-6 mb-6 animate-slide-up">
-            <h2 classe="sezione-titolo mb-4 text-center">🤝 Convenzioni in evidenza</h2>
-            <div idrato="featuredConvenzioni" classe="news-grid"></div>
-            <div idrato="convEmptyState" classe="centro testo py-8">
-                <div classe="testo-4xl mb-3">🔎</div>
-                <biforcare classe="carattere text-slate-700-semibold">Al momento non ci sono convenzioni in evidenza.</biforcare>
-                <biforcare classe="text-slate-500 mt-1 text-sm">
-                    Gestiscile da <un classe="sottolineatura carattere-grassetto testo-blu-700" href="gestione-convenzioni.html">Gestione Convenzioni</un>.
-                </biforcare>
+        <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
+            <h2 class="section-title mb-4 text-center">🤝 Convenzioni in evidenza</h2>
+            <div id="featuredConvenzioni" class="news-grid"></div>
+            <div id="convEmptyState" class="text-center py-8">
+                <div class="text-4xl mb-3">🔎</div>
+                <p class="text-slate-700 font-semibold">Al momento non ci sono convenzioni in evidenza.</p>
+                <p class="text-slate-500 mt-1 text-sm">
+                    Gestiscile da <a class="text-blue-700 font-bold underline" href="gestione-convenzioni.html">Gestione Convenzioni</a>.
+                </p>
             </div>
-        </sezione>
+        </section>
 
-    </principale>
+    </main>
 
     <!-- JAVASCRIPT -->
-    <scrittura tipo="modulo">
-        importare { creaCliente } da 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-        cospetto supabase = creaCliente(
+        const supabase = createClient(
             'https://pvzdilkozpspsnepedqc.supabase.co',
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk'
         );
 
-        // Stato del menu mobile
-        lasciar perdere mobileMenuApri = falso;
+        // Mobile menu state
+        let mobileMenuOpen = false;
 
-        // Funzioni di utilità
-        cospetto fmtDate = (iso) => { 
-            prova { 
-                ritorno iso ? nuovo Intl.DataTimeFormato('esso-ESSO', {dataStyle: 'lungo'}).formato(nuovo Data(iso)) : '—'; 
-            } cattura { 
-                ritorno '—'; 
+        // Utility functions
+        const fmtDate = (iso) => { 
+            try { 
+                return iso ? new Intl.DateTimeFormat('it-IT', {dateStyle: 'long'}).format(new Date(iso)) : '—'; 
+            } catch { 
+                return '—'; 
             } 
         };
 
-        cospetto escapeHTML = (s) => Corda(s ?? ').sostituisci tutto('&','&amp;').sostituisci tutto('<','&lt;').sostituisci tutto('>','&gt;').sostituisci tutto('"','& quot;').sostituisci tutto("',"&#39;");
+        const escapeHTML = (s) => String(s ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;");
 
-        cospetto setText = (idrato, v) => { 
-            cospetto el = documento.getElementById(idrato); 
-            se (el) el.contenuto del testo = v; 
+        const setText = (id, v) => { 
+            const el = document.getElementById(id); 
+            if (el) el.textContent = v; 
         };
 
-        // Funzioni del menu mobile
-        funzione setupMobileMenu() {
-            cospetto mobileMenuBtn = documento.getElementById('mobileMenuBtn');
-            cospetto menu mobile = documento.getElementById("menu mobile");
-
-            se (mobileMenuBtn && menu mobile) {
-                mobileMenuBtn.addEventListener('clicca', toggleMobileMenu);
-
-                // Chiudere il menu quando si fa clic all'esterno
-                documento.addEventListener('clicca', (e) => {
-                    se (!mobileMenuBtn.contiene(e.bersaglio) && !menu mobile.contiene(e.bersaglio)) {
-                        chiudiMenumobile();
+        // Mobile menu functions
+        function setupMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                        closeMobileMenu();
                     }
                 });
             }
         }
 
-        funzione toggleMobileMenu() {
-            cospetto menu mobile = documento.getElementById("menu mobile");
-            cospetto mobileMenuBtn = documento.getElementById('mobileMenuBtn');
-
-            se (menu mobile) {
-                mobileMenuApri = !mobileMenuApri;
-
-                se (mobileMenuApri) {
-                    menu mobile.elenco classi.rimuovere('nascosto');
-                    menu mobile.elenco classi.aggiungere("scivolamento degli animati");
-                    se (mobileMenuBtn) {
-                        mobileMenuBtn.html interno = `
-                            <classe SVG="w-5 h-5" riempimento="nessuno" tratto="currentColor" visualizzazioneBox="0 0 24 24">
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            
+            if (mobileMenu) {
+                mobileMenuOpen = !mobileMenuOpen;
+                
+                if (mobileMenuOpen) {
+                    mobileMenu.classList.remove('hidden');
+                    mobileMenu.classList.add('animate-slide-up');
+                    if (mobileMenuBtn) {
+                        mobileMenuBtn.innerHTML = `
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         `;
                     }
-                } altro {
-                    menu mobile.elenco classi.aggiungere('nascosto');
-                    menu mobile.elenco classi.rimuovere("scivolamento degli animati");
-                    se (mobileMenuBtn) {
-                        mobileMenuBtn.html interno = `
-                            <classe SVG="w-5 h-5" riempimento="nessuno" tratto="currentColor" visualizzazioneBox="0 0 24 24">
+                } else {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('animate-slide-up');
+                    if (mobileMenuBtn) {
+                        mobileMenuBtn.innerHTML = `
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                             </svg>
                         `;
@@ -683,241 +669,274 @@
             }
         }
 
-        funzione chiudiMenumobile() {
-            se (mobileMenuApri) {
+        function closeMobileMenu() {
+            if (mobileMenuOpen) {
                 toggleMobileMenu();
             }
         }
 
-        //Guardia di autenticazione
-        asincronizzare funzione guardia() {
-            cospetto { dati: { utente } } = attendere supabase.aut.ottieni utente();
-            se (!utente) { 
-                finestra.località.href = "auth.html"; 
-                ritorno nullo; 
+        // Authentication guard
+        async function guard() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) { 
+                window.location.href = 'auth.html'; 
+                return null; 
             }
-            ritorno utente;
+            return user;
         }
 
-        // Carica il profilo utente
-        asincronizzare funzione loadProfile(utente) {
-            prova {
-                cospetto { dati: biforcare } = attendere supabase.da("profili_utente").selezionare("nome, nome, e-mail, ruolo").eq('utente_id', utente.idrato).singolo();
-                setText('whoami', biforcare?.email || utente.email || '—');
-                setText('nomeutente', biforcare?.nome ? `${biforcare.nome} ${biforcare.cognome||'}`.rifinitura() : 'Dirigente');
-                setText('userEmail', biforcare?.email || utente.email || '—');
-                documento.getElementById('icona utente').contenuto del testo = (biforcare?.ruolo === 'AMMINISTRARE') ? '👑' : '🎯';
-                setText("rolesSummary", biforcare?.ruolo || '—');
-                setText('accessLevel', biforcare?.ruolo === 'AMMINISTRARE' ? ‘Accesso Amministratore Completo’ : ‘Accesso Dirigente Autorizzato’);
-            } cattura {
-                setText('whoami', utente.email || '—');
-                setText('nomeutente', 'Dirigente'); 
-                setText('userEmail', utente.email || '—'); 
-                setText("rolesSummary", '—'); 
-                setText('accessLevel', ‘Accesso Dirigente Autorizzato’);
-            }
-        }
-
-        // Data di sottoscrizione del carico
-        asincronizzare funzione loadIscrittoDal(utente) {
-            prova {
-                cospetto { dati } = attendere supabase.da('tessere').selezionare("dati_emissioni").eq('utente_id', utente.idrato).ordine("dati_emissioni", { ascendente: vero }).limite(1);
-                setText('iscrittoDal', dati?.[0]?.data_emissione ? fmtDate(dati[0].data_emissione) : "Non disponibile");
-            } cattura { 
-                setText('iscrittoDal', "Non disponibile"); 
+        // Load user profile
+        async function loadProfile(user) {
+            try {
+                const { data: p } = await supabase.from('user_profiles').select('nome,cognome,email,role').eq('user_id', user.id).single();
+                setText('whoami', p?.email || user.email || '—');
+                setText('userName', p?.nome ? `${p.nome} ${p.cognome||''}`.trim() : 'Dirigente');
+                setText('userEmail', p?.email || user.email || '—');
+                document.getElementById('userIcon').textContent = (p?.role === 'ADMIN') ? '👑' : '🎯';
+                setText('rolesSummary', p?.role || '—');
+                setText('accessLevel', p?.role === 'ADMIN' ? 'Accesso Amministratore Completo' : 'Accesso Dirigente Autorizzato');
+            } catch {
+                setText('whoami', user.email || '—');
+                setText('userName', 'Dirigente'); 
+                setText('userEmail', user.email || '—'); 
+                setText('rolesSummary', '—'); 
+                setText('accessLevel', 'Dirigente Autorizzato');
             }
         }
 
-        // Panoramica del sistema di carico
-        asincronizzare funzione loadSystemOverview() {
-            prova {
-                cospetto nowIso = nuovo Data().toISOString();
-                cospetto { contare: totalNews } = attendere supabase.da("notizie").selezionare('io', {contare: 'esatto', testa: vero}).eq('pubblicata', vero).o(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
-                cospetto { contare: featuredCount } = attendere supabase.da("notizie").selezionare('io', {contare: 'esatto', testa: vero}).eq('pubblicata', vero).eq('in_evidenza', vero).o(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
-                setText('notizieCount', typeof totalNews === 'numero' ? totalNews : '—'); 
-                setText('featuredNewsCount', typeof featuredCount === 'numero' ? featuredCount : '—');
-            } cattura { 
-                setText('notizieCount', '—'); 
+        // Load subscription date
+        async function loadIscrittoDal(user) {
+            try {
+                const { data } = await supabase.from('tessere').select('data_emissione').eq('user_id', user.id).order('data_emissione', { ascending: true }).limit(1);
+                setText('iscrittoDal', data?.[0]?.data_emissione ? fmtDate(data[0].data_emissione) : 'N/A');
+            } catch { 
+                setText('iscrittoDal', 'N/A'); 
+            }
+        }
+
+        // Load system overview
+        async function loadSystemOverview() {
+            try {
+                const nowIso = new Date().toISOString();
+                const { count: totalNews } = await supabase.from('news').select('id', {count: 'exact', head: true}).eq('pubblicata', true).or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
+                const { count: featuredCount } = await supabase.from('news').select('id', {count: 'exact', head: true}).eq('pubblicata', true).eq('in_evidenza', true).or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`);
+                setText('newsCount', typeof totalNews === 'number' ? totalNews : '—'); 
+                setText('featuredNewsCount', typeof featuredCount === 'number' ? featuredCount : '—');
+            } catch { 
+                setText('newsCount', '—'); 
                 setText('featuredNewsCount', '—'); 
             }
         }
 
-        //Carica le ultime notizie
-        asincronizzare funzione caricaUltimeNotizie() {
-            cospetto avvolgere = documento.getElementById("ultime notizie"); 
-            cospetto vuoto = documento.getElementById('notizieEmptyState');
-
-            avvolgere.html interno = `<div class="col-span-full flex items-center justify-center py-8"><span class="spinner"></span></div>`;
-
-            prova {
-                cospetto nowIso = nuovo Data().toISOString();
-                cospetto { dati: notizie } = attendere supabase
-                    .da("notizie")
-                    .selezionare('id,titolo,sottotitolo,immagine_url,categoria,data_pubblicazione,in_evidenza,url_articolo')
-                    .eq('pubblicata', vero)
-                    .o(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`)
-                    .ordine('in_evidenza', {ascendente: falso})
-                    .ordine('data_pubblicazione', {ascendente: falso})
-                    .limite(6);
-
-                se (!notizie || !notizie.lunghezza) { 
-                    avvolgere.html interno = '; 
-                    vuoto.elenco classi.rimuovere('nascosto'); 
-                    ritorno; 
+        // Load latest news - Mobile optimized (PRESERVING ORIGINAL LAYOUT)
+        async function loadLatestNews() {
+            const wrap = document.getElementById('latestNews'); 
+            const empty = document.getElementById('newsEmptyState');
+            
+            // Show spinner initially
+            wrap.innerHTML = `<div class="col-span-full flex items-center justify-center py-8"><span class="spinner"></span></div>`;
+            
+            try {
+                const nowIso = new Date().toISOString();
+                const { data: news } = await supabase
+                    .from('news')
+                    .select('id,titolo,sottotitolo,immagine_url,categoria,data_pubblicazione,in_evidenza,url_articolo')
+                    .eq('pubblicata', true)
+                    .or(`data_scadenza.is.null,data_scadenza.gt.${nowIso}`)
+                    .order('in_evidenza', {ascending: false})
+                    .order('data_pubblicazione', {ascending: false})
+                    .limit(6);
+                
+                if (!news || !news.length) { 
+                    wrap.innerHTML = ''; 
+                    empty.classList.remove('hidden'); 
+                    return; 
                 }
-
-                vuoto.elenco classi.aggiungere('nascosto'); 
-                avvolgere.html interno = ';
-
-                per (cospetto n di notizie) {
-                    cospetto carta = documento.creaelemento('articolo');
-                    cospetto hasUrl = !!n.url_articolo && Corda(n.url_articolo).rifinitura().lunghezza > 0;
-                    carta.nomeclasse = "bordo con bordo arrotondato xl-ardesia-200 bg-ombra nascosta con overflow bianco-sm";
-                    carta.html interno = `
-                        <classe Div="h-32 md:h-40 bg-slate-100 overflow-nascosto">
+                
+                empty.classList.add('hidden'); 
+                wrap.innerHTML = '';
+                
+                for (const n of news) {
+                    const card = document.createElement('article');
+                    const hasUrl = !!n.url_articolo && String(n.url_articolo).trim().length > 0;
+                    card.className = 'rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow';
+                    card.innerHTML = `
+                        <div class="h-32 md:h-40 bg-slate-100 overflow-hidden">
                             ${n.immagine_url ? 
-                                `<img src="${escapeHTML(n.immagine_url)}"alt="" class="w-full h-full object-cover">` : 
+                                `<img src="${escapeHTML(n.immagine_url)}" alt="" class="w-full h-full object-cover" loading="lazy">` : 
                                 `<div class="w-full h-full flex items-center justify-center text-3xl md:text-4xl">📰</div>`
                             }
                         </div>
-                        <classe Div="p-3 md:p-4">
-                            <classe Div="flex items-center justification-between mb-2">
-                                <classe di campata="badge">${escapeHTML(n.categoria || "GENERALE")}</span>
-                                ${n.in_evidenza ? '<classe campata="badge">⭐ In evidenza</span>' : '}
+                        <div class="p-3 md:p-4">
+                            <div class="flex items-center justify-between mb-2 flex-wrap gap-1">
+                                <span class="badge text-xs">${escapeHTML(n.categoria || 'GENERALE')}</span>
+                                ${n.in_evidenza ? '<span class="badge text-xs">⭐ In evidenza</span>' : ''}
                             </div>
-                            <classe h3="font-extrabold text-slate-900 text-sm md:text-lg leading-snug mb-1">${escapeHTML(n.titolo)}</h3>
-                            ${n.sottotitolo ? `<p class="text-slate-600 text-xs md:text-sm mb-3">${escapeHTML(n.sottotitolo)}</p>` : '}
-                            <div class="flex items-center justify-between text-xs text-slate-500">
-                                <span>${fmtDate(n.data_pubblicazione)}</span>
-                                <classe di pulsanti="btn-aurora text-xs px-3 py-2" ${hasUrl ? `data-url="${escapeHTML(n.url_articolo)}"` : ‘titolo disabilitato="Nessun link"’}>Leggi l'articolo completo</button>
+                            <h3 class="font-extrabold text-slate-900 text-sm md:text-lg leading-snug mb-1 line-clamp-2">
+                                ${escapeHTML(n.titolo)}
+                            </h3>
+                            ${n.sottotitolo ? 
+                                `<p class="text-slate-600 text-xs md:text-sm mb-3 line-clamp-2">${escapeHTML(n.sottotitolo)}</p>` : 
+                                ''
+                            }
+                            <div class="flex items-center justify-between text-xs text-slate-500 gap-2">
+                                <span class="truncate">${fmtDate(n.data_pubblicazione)}</span>
+                                <button class="btn-aurora text-xs px-3 py-2" 
+                                    ${hasUrl ? `data-url="${escapeHTML(n.url_articolo)}"` : 'disabled title="Nessun link"'}>
+                                    Leggi l'articolo completo
+                                </button>
                             </div>
                         </div>`;
-                    avvolgere.appendChild(carta);
+                    wrap.appendChild(card);
                 }
-
-                avvolgere.addEventListener('clicca', (e) => { 
-                    cospetto b = e.bersaglio.più vicino('pulsante[data-url]'); 
-                    se (b) { 
-                        finestra.aperto(b.getAttribute("dati-url"), '_vuoto', 'noopener'); 
+                
+                // Event delegation for buttons (ORIGINAL BEHAVIOR - ONE TIME LISTENER)
+                wrap.addEventListener('click', (e) => { 
+                    const b = e.target.closest('button[data-url]'); 
+                    if (b) { 
+                        window.open(b.getAttribute('data-url'), '_blank', 'noopener'); 
                     } 
-                }, { una volta: vero });
-            } cattura (e) { 
-                console.errore(e); 
-                avvolgere.html interno = '<div class="text-center py-8 text-slate-600">Errore nel caricamento</div>'; 
+                }, { once: true });
+            } catch (e) { 
+                console.error(e); 
+                wrap.innerHTML = '<div class="text-center py-8 text-slate-600">Errore nel caricamento</div>'; 
             }
         }
 
-        //Carica le convenzioni in primo piano
-        asincronizzare funzione loadFeaturedConvenzioni() {
-            cospetto avvolgere = documento.getElementById(‘featuredConvenzioni’); 
-            cospetto vuoto = documento.getElementById("convEmptyState");
-
-            prova {
-                cospetto { dati } = attendere supabase.da(‘convenzioni’)
-                    .selezionare('id,nome_attesa,descrizione,logo_url,link_esterno,in_evidenza,attesa')
-                    .eq('attiva', vero)
-                    .eq('in_evidenza', vero)
-                    .ordine('creato_at', {ascendente: falso})
-                    .limite(6);
-
-                se (!dati || !dati.lunghezza) { 
-                    vuoto.elenco classi.rimuovere('nascosto'); 
-                    ritorno; 
+        <!-- Load featured conventions - Mobile optimized (ORIGINAL BEHAVIOR) -->
+        async function loadFeaturedConvenzioni() {
+            const wrap = document.getElementById('featuredConvenzioni'); 
+            const empty = document.getElementById('convEmptyState');
+            
+            try {
+                const { data } = await supabase.from('convenzioni')
+                    .select('id,nome_azienda,descrizione,logo_url,link_esterno,in_evidenza,attiva')
+                    .eq('attiva', true)
+                    .eq('in_evidenza', true)
+                    .order('created_at', {ascending: false})
+                    .limit(6);
+                
+                if (!data || !data.length) { 
+                    empty.classList.remove('hidden'); 
+                    return; 
                 }
-
-                vuoto.elenco classi.aggiungere('nascosto'); 
-                avvolgere.html interno = ';
-
-                per (cospetto c di dati) {
-                    cospetto el = documento.creaelemento('a');
-                    el.nomeclasse = ‘funzione-carta bordo-slate-200 bg-bianco’;
+                
+                empty.classList.add('hidden'); 
+                wrap.innerHTML = '';
+                
+                for (const c of data) {
+                    const el = document.createElement('a');
+                    el.className = 'function-card border-slate-200 bg-white hover:bg-slate-50 transition-colors min-h-[140px]';
                     el.href = c.link_esterno || '#'; 
-                    el.bersaglio = c.link_esterno ? '_vuoto' : '_sé'; 
-                    el.rel = c.link_esterno ? 'noopener' : ';
-                    el.html interno = `
-                        <classe Div="w-full h-16 md: h-24 bg-slate-50 arrotondato-lg flex items-center justify-center overflow-hidden mb-3">
-                            ${c.logo_url ? `<img src="${escapeHTML(c.logo_url)}"alt="" class="max-h-16 md:max-h-24 oggetto-contenere">` : '<div class="text-2xl md:text-3xl">🤝</div>'}
+                    el.target = c.link_esterno ? '_blank' : '_self'; 
+                    el.rel = c.link_esterno ? 'noopener' : '';
+                    
+                    // Truncate description for mobile like original
+                    const maxDesc = window.innerWidth < 640 ? 60 : 110;
+                    const truncDesc = (c.descrizione || '').slice(0, maxDesc);
+                    const showEllipsis = c.descrizione && c.descrizione.length > maxDesc;
+                    
+                    el.innerHTML = `
+                        <div class="w-full h-16 md:h-20 bg-slate-50 rounded-lg flex items-center justify-center overflow-hidden mb-2">
+                            ${c.logo_url ? 
+                                `<img src="${escapeHTML(c.logo_url)}" alt="" class="max-h-16 md:max-h-20 object-contain" loading="lazy">` : 
+                                '<div class="text-2xl md:text-3xl">🤝</div>'
+                            }
                         </div>
-                        <classe h4="font-extrabold">${escapeHTML(c.nome_aziende)}</h4>
-                        <classe p="text-slate-600 text-xs">${escapeHTML((c.descrizione||').fetta(0,110))}${c.descrizione&&c.descrizione.lunghezza>110?'...':'}</p>`;
-                    avvolgere.appendChild(el);
+                        <h4 class="font-extrabold text-sm md:text-base line-clamp-2">${escapeHTML(c.nome_azienda)}</h4>
+                        <p class="text-slate-600 text-xs line-clamp-2 mt-1">
+                            ${escapeHTML(truncDesc)}${showEllipsis ? '…' : ''}
+                        </p>`;
+                    wrap.appendChild(el);
                 }
-            } cattura { 
-                vuoto.elenco classi.rimuovere('nascosto'); 
+            } catch { 
+                empty.classList.remove('hidden'); 
             }
         }
 
-        // Funzioni di disconnessione
-        funzione configurazioneLogout() {
-            cospetto logoutBtns = ['logoutBtn', 'logoutBtnMobile'];
-            logoutBtns.forEach(idrato => {
-                cospetto btn = documento.getElementById(idrato);
-                se (btn) {
-                    btn.addEventListener('clicca', handleLogout);
+        // Logout functions
+        function setupLogout() {
+            const logoutBtns = ['logoutBtn', 'logoutBtnMobile'];
+            logoutBtns.forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.addEventListener('click', handleLogout);
                 }
             });
         }
 
-        asincronizzare funzione handleLogout() {
-            prova { 
-                attendere supabase.aut.firma(); 
-            } cattura {}
-            finestra.località.href = 'index.html';
+        async function handleLogout() {
+            try { 
+                await supabase.auth.signOut(); 
+            } catch {}
+            window.location.href = 'index.html';
         }
 
-        // Ottimizzazioni mobili
-        funzione setupMobileOttimizzazioni() {
-            // Modifiche all'orientamento della maniglia
-            finestra.addEventListener("cambiamento di orientamento", () => {
+        // Mobile optimizations
+        function setupMobileOptimizations() {
+            // Handle orientation changes
+            window.addEventListener('orientationchange', () => {
                 setTimeout(() => {
-                    chiudiMenumobile();
+                    closeMobileMenu();
                 }, 100);
             });
 
-            //Gestire lo scorrimento per nascondere il menu mobile
-            lasciar perdere lastScrollY = finestra.scrolly;
-            finestra.addEventListener('scorrere', () => {
-                cospetto scorrimento corrente = finestra.scrolly;
-                se (scorrimento corrente > lastScrollY + 50) {
-                    chiudiMenumobile();
+            // Handle scroll to hide mobile menu
+            let lastScrollY = window.scrollY;
+            window.addEventListener('scroll', () => {
+                const currentScrollY = window.scrollY;
+                if (currentScrollY > lastScrollY + 50) {
+                    closeMobileMenu();
                 }
-                lastScrollY = scorrimento corrente;
+                lastScrollY = currentScrollY;
             });
 
-            // Aggiungi ridimensiona ascoltatore per aggiornare i layout
-            finestra.addEventListener('ridimensionare', () => {
-                //Chiudi il menu mobile ridimensionando lo schermo più grande
-                se (finestra.larghezza interna >= 640) {
-                    chiudiMenumobile();
+            // Add resize listener to update layouts
+            window.addEventListener('resize', () => {
+                // Close mobile menu on resize to larger screen
+                if (window.innerWidth >= 640) {
+                    closeMobileMenu();
                 }
             });
         }
 
-        // Inizializza tutto
-        (asincronizzare () => {
-            console.log(' ️ Area Dirigenti Mobile-First Dashboard Loading...');
+        // Navigation functions (integrated from previous dashboard)
+        function goToFileBox() { 
+            window.location.href = 'filebox.html'; 
+        }
+        
+        function goToAssistenza() { 
+            window.location.href = 'servizi.html'; 
+        }
 
-            //Imposta interazioni mobili
+        // Make functions available globally
+        window.goToFileBox = goToFileBox;
+        window.goToAssistenza = goToAssistenza;
+
+        // Initialize everything
+        (async () => {
+            console.log('🏛️ Area Dirigenti Mobile-First Dashboard Loading...');
+            
+            // Setup mobile interactions
             setupMobileMenu();
-            configurazioneLogout();
-            setupMobileOttimizzazioni();
-
-            // Controlla l'autenticazione
-            cospetto utente = attendere guardia(); 
-            se (!utente) ritorno;
-
-            //Carica tutti i dati
-            attendere Promettere.tutto([
-                loadProfile(utente), 
-                loadIscrittoDal(utente), 
+            setupLogout();
+            setupMobileOptimizations();
+            
+            // Check authentication
+            const user = await guard(); 
+            if (!user) return;
+            
+            // Load all data
+            await Promise.all([
+                loadProfile(user), 
+                loadIscrittoDal(user), 
                 loadSystemOverview(), 
-                caricaUltimeNotizie(), 
+                loadLatestNews(), 
                 loadFeaturedConvenzioni()
             ]);
-
-            console.log(‘✅ Area Dirigenti Dashboard Ready - Mobile Ottimizzato con Piena Integrazione’);
+            
+            console.log('✅ Area Dirigenti Dashboard Ready - Mobile Optimized with FileBox & Assistenza');
         })();
-    </scrittura>
-
-    <!-- Sezione riepilogativa del Community Hub --></corpo del corpo>
+    </script>
+</body>
 </html>
