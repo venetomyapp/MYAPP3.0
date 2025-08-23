@@ -35,14 +35,14 @@
         }
     </script>
     
-    <!-- STILI ESPLOSIVI CONVENZIONI -->
+    <!-- STILI ESPLOSIVI CONVENZIONI - COLORI ORIGINALI HOME -->
     <style>
         :root {
             --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
-            --gradient-convenzione: linear-gradient(135deg, #ffd700 0%, #ff6b35 25%, #e94560 50%, #4682b4 75%, #2e8b57 100%);
-            --gradient-benefici: linear-gradient(135deg, #2e8b57 0%, #4682b4 50%, #ffd700 100%);
-            --gradient-sconto: linear-gradient(135deg, #ff6b35 0%, #ffd700 25%, #2e8b57 50%, #4682b4 75%, #e94560 100%);
-            --gradient-explosive: linear-gradient(45deg, #ffd700, #ff6b35, #e94560, #4682b4, #2e8b57, #00d4ff);
+            --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
+            --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
+            --gradient-convenzione: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
+            --gradient-explosive: linear-gradient(45deg, #ff006e, #e94560, #00d4ff, #03dac6, #ffd700, #0f3460);
         }
 
         * {
@@ -51,11 +51,14 @@
         }
 
         body {
-            background: var(--gradient-convenzione);
+            background: var(--gradient-aurora);
             background-size: 400% 400%;
-            animation: aurora 18s ease infinite;
+            animation: aurora 20s ease infinite;
             min-height: 100vh;
+            min-height: 100dvh;
             overflow-x: hidden;
+            padding-left: var(--safe-area-inset-left);
+            padding-right: var(--safe-area-inset-right);
         }
 
         @keyframes aurora {
@@ -97,8 +100,8 @@
         }
 
         @keyframes convenzione-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
-            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8), 0 0 60px rgba(233, 69, 96, 0.6); }
+            0%, 100% { box-shadow: 0 0 20px rgba(233, 69, 96, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(233, 69, 96, 0.8), 0 0 60px rgba(0, 212, 255, 0.6); }
         }
 
         @keyframes rainbow {
@@ -159,12 +162,12 @@
             border: 1px solid rgba(0,0,0,.06); 
         }
 
-        /* Buttons esplosivi convenzioni */
+        /* Buttons esplosivi convenzioni - COLORI ORIGINALI */
         .btn-convenzione {
-            background: var(--gradient-sconto);
+            background: var(--gradient-magic);
             background-size: 300% 300%;
             color: white;
-            border: 3px solid rgba(255, 107, 53, 0.8);
+            border: 3px solid rgba(233, 69, 96, 0.8);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 900;
             text-transform: uppercase;
@@ -192,20 +195,21 @@
         .btn-convenzione:hover {
             transform: translateY(-3px) scale(1.05);
             animation: sconto-shake 0.5s ease-in-out;
-            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.4), 0 0 50px rgba(255, 215, 0, 0.6);
+            box-shadow: 0 20px 40px rgba(233, 69, 96, 0.4), 0 0 50px rgba(0, 212, 255, 0.6);
         }
 
         .btn-secondary {
-            background: var(--gradient-benefici);
+            background: var(--gradient-cyber);
             color: white;
-            border: 2px solid rgba(70, 130, 180, 0.5);
+            border: 2px solid rgba(0, 212, 255, 0.5);
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 700;
         }
 
         .btn-secondary:hover {
             transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 16px 32px rgba(70, 130, 180, 0.35);
+            box-shadow: 0 16px 32px rgba(0, 212, 255, 0.35);
+            border-color: rgba(0, 212, 255, 0.8);
         }
 
         /* Hero section convenzione */
@@ -260,11 +264,11 @@
             animation: bounce 2s ease-in-out infinite;
         }
 
-        /* Statistics convenzioni */
+        /* Statistics convenzioni - COLORI ORIGINALI */
         .stat-convenzione {
             background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
             backdrop-filter: blur(20px);
-            border: 2px solid rgba(255,215,0,0.5);
+            border: 2px solid rgba(233, 69, 96, 0.5);
             border-radius: 25px;
             transition: all 0.3s ease;
             animation: bounce 4s ease-in-out infinite;
@@ -276,8 +280,8 @@
 
         .stat-convenzione:hover {
             transform: translateY(-5px) scale(1.05);
-            border-color: rgba(255,215,0,0.8);
-            box-shadow: 0 15px 30px rgba(255,215,0,0.3);
+            border-color: rgba(233, 69, 96, 0.8);
+            box-shadow: 0 15px 30px rgba(233, 69, 96, 0.3);
         }
 
         /* Floating elements */
@@ -312,32 +316,50 @@
             }
         }
 
-        /* Scrollbar styling */
+        /* Scrollbar styling - COLORI ORIGINALI */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,215,0,.6); border-radius: 9999px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,215,0,.8); }
+        ::-webkit-scrollbar-thumb { background: rgba(233, 69, 96,.6); border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(233, 69, 96,.8); }
         ::-webkit-scrollbar-track { background: transparent; }
 
         @media (prefers-reduced-motion: reduce) {
             * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+        }
+
+        /* Touch targets - COERENZA CON HOME */
+        .touch-target {
+            min-height: 44px;
+            min-width: 44px;
         }
     </style>
 </head>
 
 <body class="flex flex-col min-h-screen font-sans">
 
-    <!-- HEADER CONVENZIONI -->
+    <!-- HEADER CONVENZIONI CON TASTO INDIETRO -->
     <header class="glass-morphism sticky top-0 z-40" style="padding-top: max(16px, var(--safe-area-inset-top));">
         <div class="px-4 py-3">
             <div class="flex items-center justify-between">
+                <!-- Sezione sinistra con tasto indietro -->
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-gold via-aurora to-teal rounded-xl flex items-center justify-center">
+                    <!-- Tasto Indietro - MIGLIORATO E PIÙ VISIBILE -->
+                    <button onclick="window.history.back()" 
+                            class="flex items-center gap-2 touch-target text-white bg-aurora/20 hover:bg-aurora/40 border-2 border-aurora/50 hover:border-aurora transition-all duration-300 px-3 py-2 rounded-xl backdrop-blur-sm font-semibold text-sm" 
+                            aria-label="Torna indietro" 
+                            title="Torna alla pagina precedente">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        <span class="hidden sm:inline">Indietro</span>
+                    </button>
+                    
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary via-secondary to-accent rounded-xl flex items-center justify-center">
                         <span class="text-white font-black text-lg">🎁</span>
                     </div>
                     <div class="hidden sm:block">
                         <span class="text-ultra-visible text-xl font-black">SINDACATO</span>
                         <div class="text-white text-xs flex items-center gap-2">
-                            <span class="w-2 h-2 bg-gold rounded-full urgenza-flash"></span>
+                            <span class="w-2 h-2 bg-aurora rounded-full urgenza-flash"></span>
                             <span class="hidden md:inline">CONVENZIONI ESCLUSIVE</span>
                             <span class="md:hidden">SCONTI</span>
                         </div>
@@ -349,7 +371,7 @@
 
                 <div class="flex items-center space-x-3">
                     <div class="text-white text-right hidden sm:block">
-                        <div class="font-semibold text-sm text-sconto">🎯 RISPARMIA</div>
+                        <div class="font-semibold text-sm text-cyan">🎯 RISPARMIA</div>
                         <div class="text-xs opacity-80">Subito!</div>
                     </div>
                     <button class="btn-convenzione px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
@@ -367,9 +389,9 @@
         <section class="p-4 md:p-8 animate-fade-in">
             <div class="hero-convenzione p-8 md:p-12 text-center relative">
                 <div class="content">
-                    <!-- Indicatore convenzione -->
+                    <!-- Indicatore convenzione - COLORI ORIGINALI -->
                     <div class="flex justify-center mb-6">
-                        <div class="inline-flex items-center gap-2 bg-gold text-dark px-6 py-2 rounded-full font-bold text-sm urgenza-flash">
+                        <div class="inline-flex items-center gap-2 bg-aurora text-white px-6 py-2 rounded-full font-bold text-sm urgenza-flash">
                             <span>🎁</span>
                             <span class="hidden sm:inline">CONVENZIONE ESCLUSIVA RISERVATA</span>
                             <span class="sm:hidden">SOLO ISCRITTI</span>
@@ -377,18 +399,19 @@
                         </div>
                     </div>
 
-                    <!-- Titolo esplosivo convenzioni -->
+                    <!-- Titolo esplosivo convenzioni - FRASE AD EFFETTO -->
                     <h1 class="hero-title text-convenzione mb-6">
-                        TI INTERESSA<br>
-                        QUESTA<br>
-                        <span class="text-sconto">CONVENZIONE?</span>
+                        SEI INTERESSATO<br>
+                        A QUESTA<br>
+                        <span class="text-aurora">CONVENZIONE?</span>
                     </h1>
 
-                    <!-- Sottotitolo potente -->
+                    <!-- Sottotitolo potente - INVITO PERSONALIZZATO -->
                     <div class="text-ultra-visible text-xl md:text-3xl font-black mb-8 leading-tight">
-                        ALLORA COSA ASPETTI?<br>
-                        <span class="text-6xl md:text-8xl">💰</span><br>
-                        <span class="text-sconto">ISCRIVITI E RISPARMIA!</span>
+                        VIENI A SCOPRIRE<br>
+                        <span class="text-6xl md:text-8xl">🌟</span><br>
+                        IL <span class="text-cyan">MONDO DI VANTAGGI</span><br>
+                        <span class="text-teal">ESCLUSIVI A TE RISERVATI!</span>
                     </div>
 
                     <!-- Card convenzione specifica -->
@@ -396,7 +419,7 @@
                         <div id="convenzioneDetails" class="text-textDark">
                             <!-- Contenuto dinamico basato sulla convenzione selezionata -->
                             <div class="flex flex-col md:flex-row items-center gap-6">
-                                <div class="w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-gold to-aurora rounded-2xl flex items-center justify-center text-4xl md:text-5xl" id="convenzioneIcon">
+                                <div class="w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-aurora to-cyan rounded-2xl flex items-center justify-center text-4xl md:text-5xl" id="convenzioneIcon">
                                     🎯
                                 </div>
                                 <div class="text-center md:text-left flex-grow">
@@ -411,15 +434,17 @@
                         </div>
                     </div>
 
-                    <!-- Messaggio principale -->
+                    <!-- Messaggio principale - AGGIORNATO CON NUOVA FRASE -->
                     <div class="glass-morphism rounded-3xl p-6 md:p-8 mb-8">
                         <p class="text-white text-lg md:text-2xl font-bold leading-relaxed mb-4">
-                            <span class="text-gold">NON PERDERE TEMPO!</span><br>
+                            <span class="text-gold">QUESTA È SOLO L'INIZIO!</span><br>
                             Contatta subito il tuo dirigente sindacale e<br>
-                            accedi a <span class="text-cyan">QUESTA E TANTE ALTRE</span> convenzioni esclusive!
+                            <span class="text-cyan">SCOPRI UN UNIVERSO INTERO</span> di convenzioni,<br>
+                            sconti e vantaggi <span class="text-teal">TUTTI PER TE!</span>
                         </p>
                         <p class="text-white/90 text-base md:text-xl">
-                            Essere iscritti significa <span class="text-magenta font-black">RISPARMIARE OGNI GIORNO!</span>
+                            Essere iscritti significa entrare in un <span class="text-magenta font-black">MONDO ESCLUSIVO</span><br>
+                            di opportunità senza fine!
                         </p>
                     </div>
 
@@ -485,8 +510,9 @@
             <div class="glass-morphism rounded-3xl p-6 md:p-8">
                 <div class="text-center mb-8">
                     <h2 class="text-ultra-visible text-2xl md:text-3xl font-black mb-4">
-                        🎯 ALTRE CONVENZIONI CHE POTRESTI PERDERTI
+                        🌍 SCOPRI IL MONDO DI VANTAGGI CHE TI ASPETTA
                     </h2>
+                    <p class="text-white/90 text-lg mb-6">Questa convenzione è solo un assaggio di quello che puoi ottenere!</p>
                 </div>
 
                 <div class="grid md:grid-cols-3 gap-6">
@@ -526,12 +552,12 @@
                 <div class="content">
                     <div class="text-6xl md:text-8xl mb-6">💎</div>
                     <h2 class="text-convenzione text-3xl md:text-5xl font-black mb-6">
-                        NON ASPETTARE<br>
-                        UN MINUTO IN PIÙ!
+                        ENTRA NEL NOSTRO<br>
+                        MONDO ESCLUSIVO!
                     </h2>
                     <p class="text-ultra-visible text-xl md:text-2xl mb-8 leading-relaxed">
-                        Ogni giorno che passa è un'occasione di risparmio<br>
-                        che stai perdendo. <strong>ISCRIVITI OGGI!</strong>
+                        Non aspettare oltre: un universo di vantaggi<br>
+                        riservati ti sta aspettando. <strong>SCOPRILO OGGI!</strong>
                     </p>
                     
                     <div class="flex flex-col sm:flex-row gap-6 justify-center mb-8">
@@ -566,7 +592,7 @@
                             </div>
                         </div>
                         <p class="text-white/80 text-sm mt-4">
-                            💰 <strong>Il risparmio inizia dal primo giorno!</strong> Con una sola convenzione recuperi già la quota annuale.
+                            🌟 <strong>Il mondo dei vantaggi ti aspetta!</strong> Ogni iscrizione apre le porte a un universo di opportunità esclusive.
                         </p>
                     </div>
                 </div>
@@ -591,8 +617,8 @@
                     <span>Risparmia con Noi</span>
                 </div>
                 <div class="flex justify-center space-x-2">
-                    <div class="w-2 h-2 bg-gold rounded-full urgenza-flash"></div>
-                    <div class="w-2 h-2 bg-aurora rounded-full urgenza-flash" style="animation-delay: 0.3s;"></div>
+                    <div class="w-2 h-2 bg-aurora rounded-full urgenza-flash"></div>
+                    <div class="w-2 h-2 bg-cyan rounded-full urgenza-flash" style="animation-delay: 0.3s;"></div>
                     <div class="w-2 h-2 bg-teal rounded-full urgenza-flash" style="animation-delay: 0.6s;"></div>
                 </div>
             </div>
@@ -663,7 +689,7 @@
             let currentIndex = 0;
             
             const notification = document.createElement('div');
-            notification.className = 'fixed bottom-4 left-4 bg-gold text-dark px-4 py-3 rounded-xl font-bold text-sm z-50 transform translate-y-full transition-transform duration-500';
+            notification.className = 'fixed bottom-4 left-4 bg-aurora text-white px-4 py-3 rounded-xl font-bold text-sm z-50 transform translate-y-full transition-transform duration-500';
             notification.style.maxWidth = 'calc(100vw - 2rem)';
             document.body.appendChild(notification);
             
