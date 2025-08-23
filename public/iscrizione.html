@@ -8,6 +8,9 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <!-- CONFIGURAZIONE COLORI TAILWIND -->
     <script>
         tailwind.config = {
@@ -342,15 +345,15 @@
             <div class="flex items-center justify-between">
                 <!-- Sezione sinistra con tasto indietro -->
                 <div class="flex items-center space-x-3">
-                    <!-- Tasto Indietro - MIGLIORATO E PIÙ VISIBILE -->
-                    <button onclick="window.history.back()" 
+                    <!-- Tasto Indietro - INTELLIGENTE PER PROFILO UTENTE -->
+                    <button onclick="goBackToHome()" 
                             class="flex items-center gap-2 touch-target text-white bg-aurora/20 hover:bg-aurora/40 border-2 border-aurora/50 hover:border-aurora transition-all duration-300 px-3 py-2 rounded-xl backdrop-blur-sm font-semibold text-sm" 
-                            aria-label="Torna indietro" 
-                            title="Torna alla pagina precedente">
+                            aria-label="Torna alla home" 
+                            title="Torna alla pagina principale">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path>
                         </svg>
-                        <span class="hidden sm:inline">Indietro</span>
+                        <span class="hidden sm:inline">Home</span>
                     </button>
                     
                     <div class="w-10 h-10 bg-gradient-to-br from-primary via-secondary to-accent rounded-xl flex items-center justify-center">
@@ -448,14 +451,15 @@
                         </p>
                     </div>
 
-                    <!-- CTA Buttons -->
+                    <!-- CTA Buttons - AGGIORNATI CON DIRIGENTI.HTML -->
                     <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-                        <button class="btn-convenzione px-8 py-4 rounded-2xl text-lg font-black flex items-center justify-center gap-3 min-h-16">
+                        <button onclick="goToDirigenti()" class="btn-convenzione px-8 py-4 rounded-2xl text-lg font-black flex items-center justify-center gap-3 min-h-16">
                             <span class="text-2xl">📞</span>
                             <span>CONTATTA DIRIGENTE</span>
                             <span class="text-2xl">💰</span>
                         </button>
-                        <button class="btn-secondary px-8 py-4 rounded-2xl text-lg font-bold flex items-center justify-center gap-3 min-h-16">
+                        <button onclick="window.location.href='mailto:info@myappgo.it?subject=Richiesta%20Iscrizione%20Sindacato&body=Salve,%0D%0A%0D%0ASono%20interessato%20all%27iscrizione%20al%20sindacato%20per%20accedere%20alle%20convenzioni%20esclusive.%0D%0A%0D%0AAttendo%20vostre%20notizie.%0D%0A%0D%0ACordiali%20saluti'" 
+                                class="btn-secondary px-8 py-4 rounded-2xl text-lg font-bold flex items-center justify-center gap-3 min-h-16">
                             <span class="text-xl">✉️</span>
                             <span>SCRIVI EMAIL</span>
                         </button>
@@ -561,17 +565,18 @@
                     </p>
                     
                     <div class="flex flex-col sm:flex-row gap-6 justify-center mb-8">
-                        <button onclick="window.location.href='mailto:info@myappgo.it?subject=Richiesta%20Iscrizione%20Sindacato&body=Salve,%0D%0A%0D%0ASono%20interessato%20all%27iscrizione%20al%20sindacato%20per%20accedere%20alle%20convenzioni%20esclusive.%0D%0A%0D%0AAttendo%20vostre%20notizie.%0D%0A%0D%0ACordiali%20saluti'" 
+                        <button onclick="goToDirigenti()" 
                                 class="btn-convenzione px-12 py-6 rounded-3xl text-xl font-black flex items-center justify-center gap-4 cursor-pointer">
-                            <span class="text-3xl">✉️</span>
+                            <span class="text-3xl">📞</span>
                             <div class="text-left">
-                                <div>SCRIVI SUBITO A</div>
-                                <div>INFO@MYAPPGO.IT</div>
+                                <div>CONTATTA IL TUO</div>
+                                <div>DIRIGENTE ORA!</div>
                             </div>
                         </button>
-                        <button class="btn-secondary px-12 py-6 rounded-3xl text-xl font-bold flex items-center justify-center gap-4">
-                            <span class="text-2xl">📞</span>
-                            <div>CHIAMA DIRIGENTE</div>
+                        <button onclick="window.location.href='mailto:info@myappgo.it?subject=Richiesta%20Iscrizione%20Sindacato&body=Salve,%0D%0A%0D%0ASono%20interessato%20all%27iscrizione%20al%20sindacato%20per%20accedere%20alle%20convenzioni%20esclusive.%0D%0A%0D%0AAttendo%20vostre%20notizie.%0D%0A%0D%0ACordiali%20saluti'" 
+                                class="btn-secondary px-12 py-6 rounded-3xl text-xl font-bold flex items-center justify-center gap-4 cursor-pointer">
+                            <span class="text-2xl">✉️</span>
+                            <div>SCRIVI EMAIL</div>
                         </button>
                     </div>
 
@@ -625,8 +630,97 @@
         </div>
     </footer>
 
-    <!-- JAVASCRIPT DINAMICO CONVENZIONI -->
+    <!-- JAVASCRIPT DINAMICO CONVENZIONI - CON NAVIGAZIONE INTELLIGENTE -->
     <script>
+        // === CONFIGURAZIONE SUPABASE ===
+        const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
+        
+        let supabaseClient;
+        let currentUser = null;
+        let userProfile = null;
+
+        // === NAVIGAZIONE INTELLIGENTE ===
+        
+        // Torna alla home corretta in base al profilo utente
+        async function goBackToHome() {
+            try {
+                // Prima prova a controllare il profilo dell'utente
+                await checkUserProfile();
+                
+                // Se è dirigente o admin, vai a home_dirigenti.html
+                if (userProfile && (userProfile.role === 'DIRIGENTE' || userProfile.role === 'ADMIN')) {
+                    window.location.href = 'home_dirigenti.html';
+                } else {
+                    // Altrimenti vai alla home normale
+                    window.location.href = 'home.html';
+                }
+            } catch (error) {
+                console.warn('⚠️ Errore controllo profilo, redirect a home normale:', error);
+                // In caso di errore, vai alla home normale
+                window.location.href = 'home.html';
+            }
+        }
+        
+        // Vai alla pagina dirigenti
+        function goToDirigenti() {
+            window.location.href = 'dirigenti.html';
+        }
+        
+        // === CONTROLLO PROFILO UTENTE ===
+        async function checkUserProfile() {
+            try {
+                if (typeof supabase === 'undefined') {
+                    console.warn('⚠️ Supabase non disponibile');
+                    return;
+                }
+                
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (!session) {
+                    console.warn('⚠️ Nessuna sessione attiva');
+                    return;
+                }
+                
+                currentUser = session.user;
+                userProfile = await getUserProfile(currentUser.id);
+                
+                if (!userProfile) {
+                    // Crea un profilo di fallback
+                    userProfile = {
+                        user_id: currentUser.id,
+                        email: currentUser.email,
+                        nome: currentUser.user_metadata?.nome || 'Utente',
+                        cognome: currentUser.user_metadata?.cognome || '',
+                        role: 'USER',
+                        stato: 'ATTIVO'
+                    };
+                }
+                
+                console.log('✅ Profilo utente caricato:', userProfile.role);
+                
+            } catch (error) {
+                console.error('❌ Errore controllo profilo:', error);
+            }
+        }
+        
+        async function getUserProfile(userId) {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('user_profiles')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .single();
+                    
+                if (error && error.code !== 'PGRST116') throw error;
+                return data;
+            } catch (error) {
+                console.warn('⚠️ Errore recupero profilo:', error);
+                return null;
+            }
+        }
+
         // Dati convenzioni (da personalizzare per ogni convenzione)
         const convenzioni = {
             'canevaworld': {
@@ -768,6 +862,11 @@
             personalizzaPagina();
             showSocialProofConvenzioni();
             addConvenzioneEffects();
+            
+            // Carica il profilo utente in background per la navigazione
+            checkUserProfile().catch(error => {
+                console.warn('⚠️ Profilo utente non disponibile:', error);
+            });
         });
 
         // Prevenzione dell'abbandono della pagina
