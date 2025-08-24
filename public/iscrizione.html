@@ -1165,13 +1165,25 @@
                     body: formData
                 });
 
+                console.log('📊 Response Status:', response.status);
+                console.log('📊 Response Headers:', response.headers);
+                console.log('📊 Content-Type:', response.headers.get('content-type'));
+
                 if (!response.ok) {
                     const errorText = await response.text();
+                    console.error('❌ Error Response:', errorText);
                     throw new Error(`Errore server: ${response.status} - ${errorText}`);
                 }
 
                 // Download PDF
                 const blob = await response.blob();
+                console.log('📄 Blob Size:', blob.size, 'bytes');
+                console.log('📄 Blob Type:', blob.type);
+                
+                if (blob.size === 0) {
+                    throw new Error('PDF vuoto ricevuto dal server');
+                }
+
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 
@@ -1181,6 +1193,10 @@
                 a.href = url;
                 a.download = `CIP_${nome}_${cognome}.pdf`;
                 document.body.appendChild(a);
+                
+                console.log('🔗 Download URL creato:', url);
+                console.log('📥 Filename:', a.download);
+                
                 a.click();
                 document.body.removeChild(a);
                 window.URL.revokeObjectURL(url);
