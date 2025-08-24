@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import SignaturePad from "react-signature-canvas";
 
-export default function Home() {
+export default function Iscrizione() {
   const sigRef = useRef(null);
   const [loading, setLoading] = useState(false);
 
@@ -10,7 +10,9 @@ export default function Home() {
     setLoading(true);
 
     const formData = new FormData(e.target);
-    const signature = sigRef.current.getTrimmedCanvas().toDataURL("image/png");
+    const signature = sigRef.current
+      .getTrimmedCanvas()
+      .toDataURL("image/png");
     formData.append("signature", signature);
 
     const res = await fetch("/api/genera-pdf", {
@@ -49,9 +51,19 @@ export default function Home() {
         <br /><br />
 
         <label>Documento fronte</label>
-        <input type="file" name="doc_front" accept="image/*,application/pdf" required />
+        <input
+          type="file"
+          name="doc_front"
+          accept="image/*,application/pdf"
+          required
+        />
         <label>Documento retro</label>
-        <input type="file" name="doc_back" accept="image/*,application/pdf" required />
+        <input
+          type="file"
+          name="doc_back"
+          accept="image/*,application/pdf"
+          required
+        />
         <br /><br />
 
         <button type="submit" disabled={loading}>
