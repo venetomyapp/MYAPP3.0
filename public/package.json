@@ -1,23 +1,20 @@
 {
   "name": "myapp",
   "version": "4.1.0",
-  "description": "MyApp v4.1 - Piattaforma digitale moderna per gestione utenti con Supabase",
-  "type": "module",
-  "main": "index.html",
+  "description": "MyApp v4.1 - Piattaforma digitale moderna per gestione utenti con Supabase + Iscrizione Sindacato",
+  "main": "index.js",
   "homepage": "https://myapp31.vercel.app",
   "scripts": {
-    "dev": "concurrently \"npm:dev:css\" \"npm:serve\"",
-    "dev:css": "tailwindcss -i ./src/input.css -o ./styles.css --watch",
-    "serve": "http-server . -p 3000 -c-1 --cors",
-    "start": "npm run dev",
-    "build": "npm run build:css && npm run validate && echo 'MyApp v4.1 - Build completato'",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "export": "next build && next export",
     "build:css": "tailwindcss -i ./src/input.css -o ./styles.css --minify",
-    "preview": "npm run build && npm run serve",
     "deploy": "npm run build && git add . && git commit -m 'Deploy MyApp v4.1 update' && git push origin main",
     "test": "echo 'Testing MyApp v4.1 components...' && npm run validate",
     "validate": "echo 'Validating HTML files...' && find . -name '*.html' -exec echo 'Validating {}' \\;",
-    "clean": "rm -rf dist/ .cache/ styles.css",
-    "lint": "echo 'Linting files...'",
+    "clean": "rm -rf dist/ .next/ .cache/ styles.css",
+    "lint": "next lint",
     "format": "echo 'Formatting files...'"
   },
   "keywords": [
@@ -26,11 +23,15 @@
     "supabase",
     "tailwindcss",
     "authentication",
-    "dashboard",
+    "dashboard", 
     "responsive",
     "user-management",
     "notifications",
-    "digital-card"
+    "digital-card",
+    "sindacato",
+    "pdf-generation",
+    "digital-signature",
+    "iscrizione"
   ],
   "author": {
     "name": "MyApp Team",
@@ -40,10 +41,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/venetomyapp/MYAPP4.0.git"
+    "url": "https://github.com/venetomyapp/MYAPP3.0.git"
   },
   "bugs": {
-    "url": "https://github.com/venetomyapp/MYAPP4.0/issues"
+    "url": "https://github.com/venetomyapp/MYAPP3.0/issues"
   },
   "engines": {
     "node": ">=18.0.0",
@@ -56,13 +57,21 @@
     "not ie <= 11"
   ],
   "dependencies": {
-    "@supabase/supabase-js": "^2.45.4"
+    "@supabase/supabase-js": "^2.45.4",
+    "next": "14.0.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "multiparty": "^4.2.3",
+    "pdf-lib": "^1.17.1",
+    "react-signature-canvas": "^1.0.6"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
     "concurrently": "^8.2.2",
     "http-server": "^14.1.1",
     "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.14"
+    "tailwindcss": "^3.4.14",
+    "eslint": "^8.54.0",
+    "eslint-config-next": "14.0.0"
   }
 }
