@@ -626,7 +626,7 @@ export default async function handler(req, res) {
           color: rgb(0, 0, 0),
         });
         yPos -= 10;
-        page.drawText("dovrà essere trasmessa via mail all'indirizzo tesseramenti@simcarabinieri.cc", {
+        page.drawText("dovrà essere trasmessa via mail all'indirizzo antoniogrande81@gmail.com", {
           x: 50,
           y: yPos,
           size: 8,
