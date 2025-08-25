@@ -1,1380 +1,485 @@
+// VERSIONE DEBUG - Verifica cosa riceve l'API
+module.exports = async function handler(req, res) {
+  console.log("🚀 START genera-pdf DEBUG");
+  
+  // CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Metodo non consentito" });
+  }
+
+  try {
+    console.log("📝 Headers ricevuti:", req.headers);
+    console.log("📝 Content-Type:", req.headers['content-type']);
+    
+    // PROVA PARSING DIVERSI METODI
+    let formData = {};
+    
+    if (req.headers['content-type']?.includes('multipart/form-data')) {
+      console.log("📦 Parsing multipart data...");
+      formData = await parseMultipartData(req);
+    } else if (req.headers['content-type']?.includes('application/x-www-form-urlencoded')) {
+      console.log("📦 Parsing URL encoded data...");
+      formData = await parseUrlEncodedData(req);
+    } else {
+      console.log("📦 Parsing raw body...");
+      formData = await parseRawBody(req);
+    }
+    
+    console.log("📊 DATI RICEVUTI:", formData);
+    console.log("📊 Numero campi:", Object.keys(formData).length);
+
+    // Usa dati ricevuti o fallback per test
+    const nome = formData.nome || "ANTONIO";
+    const cognome = formData.cognome || "GRANDE";
+    const grado = formData.grado || "Car.";
+    const cip = formData.cip || "12345";
+    const cf = formData.codicefiscale || "GRNNTN80A01H501X";
+    const email = formData.email || "antoniogrande81@gmail.com";
+    const cellulare = formData.cellulare || "+39 123 456 7890";
+    const luogonascita = formData.luogonascita || "Roma";
+    const provincia = formData.provincia || "RM";
+    const datanascita = formData.datanascita || "1980-01-01";
+    const reparto = formData.reparto || "Stazione CC di Roma";
+    const regione = formData.regione || "Lazio";
+    const citta = formData.citta || "Roma (RM)";
+    const ausiliaria = formData.ausiliaria || "NO";
+    
+    console.log("📋 Dati compilazione:", {
+      nome, cognome, grado, cip, cf, email, cellulare,
+      luogonascita, provincia, datanascita, reparto, regione, citta, ausiliaria
+    });
+
+    console.log("📄 Generazione PDF HTML...");
+
+    // Genera PDF usando HTML
+    const htmlContent = generatePdfHtml({
+      nome, cognome, grado, cip, cf, email, cellulare,
+      luogonascita, provincia, datanascita, reparto, 
+      regione, citta, ausiliaria
+    });
+
+    console.log("📏 HTML generato, lunghezza:", htmlContent.length);
+    console.log("📄 Prime 200 caratteri:", htmlContent.substring(0, 200));
+
+    const filename = `CIP_${nome}_${cognome}.pdf`;
+    
+    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    res.setHeader("Content-Disposition", `inline; filename="${filename}"`);
+    
+    console.log("📤 Invio HTML al client...");
+    
+    res.send(htmlContent);
+    
+    console.log("✅ HTML inviato!");
+
+  } catch (error) {
+    console.error("❌ ERRORE:", error);
+    return res.status(500).json({ 
+      error: "Errore generazione",
+      message: error.message,
+      stack: error.stack
+    });
+  }
+};
+
+// Parsing multipart/form-data
+async function parseMultipartData(req) {
+  return new Promise((resolve, reject) => {
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk.toString();
+    });
+    
+    req.on('end', () => {
+      try {
+        console.log("📦 Raw body length:", body.length);
+        console.log("📦 Raw body sample:", body.substring(0, 500));
+        
+        const fields = {};
+        
+        // Parse multipart boundaries
+        const boundary = req.headers['content-type']?.match(/boundary=([^;]+)/)?.[1];
+        if (boundary) {
+          console.log("🔍 Boundary found:", boundary);
+          
+          const parts = body.split(`--${boundary}`);
+          console.log("🔍 Parts found:", parts.length);
+          
+          parts.forEach((part, index) => {
+            if (part.includes('Content-Disposition: form-data')) {
+              const nameMatch = part.match(/name="([^"]+)"/);
+              if (nameMatch) {
+                const fieldName = nameMatch[1];
+                const contentStart = part.indexOf('\r\n\r\n') + 4;
+                const contentEnd = part.lastIndexOf('\r\n');
+                const fieldValue = part.substring(contentStart, contentEnd);
+                
+                if (fieldValue && !fieldValue.startsWith('data:')) {
+                  fields[fieldName] = fieldValue.trim();
+                  console.log(`✅ Campo estratto: ${fieldName} = ${fieldValue.substring(0, 50)}...`);
+                }
+              }
+            }
+          });
+        }
+        
+        resolve(fields);
+      } catch (err) {
+        console.error("❌ Errore parsing multipart:", err);
+        resolve({});
+      }
+    });
+    
+    req.on('error', reject);
+  });
+}
+
+// Parsing URL encoded
+async function parseUrlEncodedData(req) {
+  return new Promise((resolve, reject) => {
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk.toString();
+    });
+    
+    req.on('end', () => {
+      try {
+        const params = new URLSearchParams(body);
+        const fields = {};
+        
+        for (const [key, value] of params) {
+          fields[key] = value;
+        }
+        
+        resolve(fields);
+      } catch (err) {
+        resolve({});
+      }
+    });
+    
+    req.on('error', reject);
+  });
+}
+
+// Parsing raw body
+async function parseRawBody(req) {
+  return new Promise((resolve, reject) => {
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk.toString();
+    });
+    
+    req.on('end', () => {
+      console.log("📦 Raw body:", body.substring(0, 1000));
+      resolve({});
+    });
+    
+    req.on('error', reject);
+  });
+}
+
+// Genera HTML che simula un PDF ufficiale SIM
+function generatePdfHtml(data) {
+  const today = new Date().toLocaleDateString('it-IT');
+  
+  return `
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Iscrizione SIM Carabinieri - MyApp</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Signature Pad -->
-    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
-    
-    <!-- CONFIGURAZIONE COLORI TAILWIND -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1a1a2e',
-                        secondary: '#16213e',
-                        accent: '#0f3460',
-                        aurora: '#e94560',
-                        cyan: '#00d4ff',
-                        magenta: '#ff006e',
-                        gold: '#ffd700',
-                        teal: '#03dac6',
-                        dark: '#0a0a23',
-                        light: '#f8fafc',
-                        textDark: '#1C1C1E',
-                        backgroundLight: '#F4F4F8',
-                        'sim-green': '#009246',
-                        'sim-red': '#ce2b37',
-                    },
-                    screens: {
-                        'xs': '320px',
-                        'sm': '640px',
-                        'md': '768px',
-                        'lg': '1024px',
-                        'xl': '1280px',
-                        '2xl': '1536px',
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <!-- STILI -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delega SIM Carabinieri - ${data.nome} ${data.cognome}</title>
     <style>
-        :root {
-            --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
-            --gradient-sim: linear-gradient(135deg, #009246 0%, #ffffff 50%, #ce2b37 100%);
-            --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
-            --safe-area-inset-top: env(safe-area-inset-top, 0);
-            --safe-area-inset-bottom: env(safe-area-inset-bottom, 0);
-            --safe-area-inset-left: env(safe-area-inset-left, 0);
-            --safe-area-inset-right: env(safe-area-inset-right, 0);
+        @page {
+            size: A4;
+            margin: 20mm;
         }
-
-        * {
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-        }
-
+        
         body {
-            background: var(--gradient-aurora);
-            background-size: 400% 400%;
-            animation: aurora 20s ease infinite;
-            min-height: 100vh;
-            min-height: 100dvh;
-            overflow-x: hidden;
-            padding-left: var(--safe-area-inset-left);
-            padding-right: var(--safe-area-inset-right);
-        }
-
-        @keyframes aurora {
-            0%, 100% { background-position: 0% 50%; }
-            25% { background-position: 100% 50%; }
-            50% { background-position: 100% 100%; }
-            75% { background-position: 0% 100%; }
-        }
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
-
-        @media (prefers-reduced-motion: reduce) {
-            * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
-        }
-
-        /* Typography */
-        .text-ultra-visible { 
-            color: #fff; 
-            text-shadow: 0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1); 
-            font-weight: 800; 
-        }
-        .text-white { 
-            text-shadow: 0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1); 
-        }
-
-        /* Glass effects */
-        .glass-morphism { 
-            background: rgba(255,255,255,.08); 
-            backdrop-filter: blur(12px); 
-            border: 1px solid rgba(255,255,255,.20); 
-            box-shadow: 0 8px 32px rgba(31,38,135,.25); 
-        }
-        .glass-card { 
-            background: rgba(255,255,255,.95); 
-            backdrop-filter: blur(16px); 
-            border: 1px solid rgba(0,0,0,.06); 
-        }
-
-        /* Buttons */
-        .btn-aurora { 
-            background: var(--gradient-magic); 
-            color: white; 
-            border: 2px solid rgba(233,69,96,.3); 
-            transition: all .25s cubic-bezier(.4,0,.2,1); 
-            font-weight: 700; 
-            touch-action: manipulation;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-family: 'Times New Roman', serif;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #000;
+            background: white;
+            margin: 0;
+            padding: 20px;
         }
         
-        .btn-sim {
-            background: var(--gradient-sim);
-            color: white;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-            border: 2px solid rgba(0,146,70,.3);
-            transition: all .25s cubic-bezier(.4,0,.2,1);
-            font-weight: 700;
-            min-height: 48px;
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 20px;
         }
         
-        @media (hover: hover) and (pointer: fine) {
-            .btn-aurora:hover { 
-                transform: translateY(-2px) scale(1.02); 
-                box-shadow: 0 16px 32px rgba(233,69,96,.35); 
-                border-color: rgba(233,69,96,.7); 
-            }
-            .btn-sim:hover {
-                transform: translateY(-2px) scale(1.02);
-                box-shadow: 0 16px 32px rgba(0,146,70,.35);
-                border-color: rgba(0,146,70,.7);
-            }
-        }
-
-        /* Form elements */
-        .form-input {
-            background: rgba(255,255,255,.95);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(0,0,0,.1);
-            border-radius: 16px;
-            transition: all .2s ease;
-            min-height: 48px;
-            padding: 12px 16px;
-            font-size: 16px; /* Prevent zoom on iOS */
+        .logo {
+            font-size: 24px;
+            margin-bottom: 10px;
         }
         
-        .form-input:focus {
-            outline: none;
-            border-color: rgba(0,146,70,.5);
-            box-shadow: 0 0 0 3px rgba(0,146,70,.1);
-            transform: translateY(-1px);
-        }
-
-        .form-select {
-            background: rgba(255,255,255,.95);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(0,0,0,.1);
-            border-radius: 16px;
-            transition: all .2s ease;
-            min-height: 48px;
-            padding: 12px 16px;
-            font-size: 16px;
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-            background-position: right 12px center;
-            background-repeat: no-repeat;
-            background-size: 16px 12px;
-            padding-right: 40px;
-        }
-
-        .form-file {
-            background: rgba(255,255,255,.95);
-            backdrop-filter: blur(16px);
-            border: 2px dashed rgba(0,146,70,.3);
-            border-radius: 16px;
-            transition: all .2s ease;
-            min-height: 80px;
-            padding: 16px;
-        }
-        
-        .form-file:hover {
-            border-color: rgba(0,146,70,.6);
-            background: rgba(255,255,255,.98);
-        }
-
-        /* Section cards */
-        .section-card {
-            background: rgba(255,255,255,.12);
-            backdrop-filter: blur(15px);
-            border: 1.5px solid rgba(255,255,255,.25);
-            border-radius: 24px;
-            transition: all .2s ease;
-            animation: slideUp 0.6s ease-out;
-        }
-
-        .section-card:hover {
-            background: rgba(255,255,255,.18);
-            border-color: rgba(0,146,70,.4);
-            transform: translateY(-2px);
-        }
-
-        /* Signature canvas */
-        .signature-canvas {
-            border: 2px dashed rgba(0,146,70,.3);
-            border-radius: 16px;
-            background: rgba(255,255,255,.98);
-            cursor: crosshair;
-            touch-action: none;
-        }
-
-        .signature-canvas:hover {
-            border-color: rgba(0,146,70,.6);
-        }
-
-        /* Loading states */
-        .loading-spinner {
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top: 3px solid #fff;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Success/Error states */
-        .alert-success {
-            background: linear-gradient(135deg, rgba(16,185,129,.15), rgba(16,185,129,.05));
-            border: 1px solid rgba(16,185,129,.3);
-            border-radius: 16px;
-            animation: slideUp 0.4s ease-out;
-        }
-
-        .alert-error {
-            background: linear-gradient(135deg, rgba(239,68,68,.15), rgba(239,68,68,.05));
-            border: 1px solid rgba(239,68,68,.3);
-            border-radius: 16px;
-            animation: slideUp 0.4s ease-out;
-        }
-
-        /* Header safe */
-        .header-safe { padding-top: max(16px, var(--safe-area-inset-top)); }
-
-        /* Mobile spacing */
-        .touch-target { min-height: 44px; min-width: 44px; }
-        .mobile-section { padding: 1rem; }
-        @media (min-width: 640px) { .mobile-section { padding: 1.5rem; } }
-        @media (min-width: 1024px) { .mobile-section { padding: 2rem; } }
-
-        /* Italian flag effect */
-        .flag-border {
-            border-left: 4px solid #009246;
-            border-right: 4px solid #ce2b37;
-            border-top: 1px solid rgba(255,255,255,.2);
-            border-bottom: 1px solid rgba(255,255,255,.2);
-        }
-
-        /* Form grid */
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-        
-        @media (min-width: 640px) {
-            .form-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
-        }
-
-        /* Checkbox and radio custom */
-        .form-checkbox {
-            width: 20px;
-            height: 20px;
-            accent-color: #009246;
-        }
-
-        .form-radio {
-            width: 18px;
-            height: 18px;
-            accent-color: #009246;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.25); border-radius: 9999px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.4); }
-        ::-webkit-scrollbar-track { background: transparent; }
-
-        /* Progress steps */
-        .progress-step {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255,255,255,.2);
-            border: 2px solid rgba(255,255,255,.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
+        .title {
             font-weight: bold;
-            transition: all .3s ease;
+            font-size: 16px;
+            margin-bottom: 5px;
         }
-
-        .progress-step.active {
-            background: var(--gradient-sim);
-            border-color: rgba(0,146,70,.8);
-            transform: scale(1.1);
-            box-shadow: 0 8px 25px rgba(0,146,70,.3);
+        
+        .subtitle {
+            font-size: 14px;
+            margin-bottom: 10px;
         }
-
-        .progress-step.completed {
-            background: #10b981;
-            border-color: #10b981;
+        
+        .address {
+            font-size: 11px;
+            color: #666;
         }
-
-        .progress-line {
-            height: 2px;
-            background: rgba(255,255,255,.2);
-            flex: 1;
-            margin: 0 8px;
-            border-radius: 1px;
+        
+        .main-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 30px 0 20px 0;
+            text-transform: uppercase;
         }
-
-        .progress-line.active {
-            background: linear-gradient(90deg, #10b981 0%, rgba(255,255,255,.2) 100%);
+        
+        .field-row {
+            margin: 10px 0;
+            display: flex;
+            align-items: baseline;
+        }
+        
+        .field-label {
+            font-weight: bold;
+            margin-right: 10px;
+            min-width: 120px;
+        }
+        
+        .field-value {
+            text-transform: uppercase;
+            text-decoration: underline;
+        }
+        
+        .signature-section {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .signature-box {
+            border: 1px solid #000;
+            width: 200px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f9f9f9;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ccc;
+            font-size: 10px;
+            text-align: center;
+            color: #666;
+        }
+        
+        .delegation-text {
+            margin: 20px 0;
+            text-align: justify;
+            line-height: 1.6;
+        }
+        
+        .checkbox-area {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .checkbox {
+            border: 1px solid #000;
+            width: 12px;
+            height: 12px;
+            display: inline-block;
+            text-align: center;
+            line-height: 10px;
+        }
+        
+        @media print {
+            body { margin: 0; padding: 15mm; }
+            .no-print { display: none; }
+        }
+        
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #007cba;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 1000;
+        }
+        
+        .print-btn:hover {
+            background: #005a87;
         }
     </style>
 </head>
-
-<body class="flex flex-col min-h-screen font-sans">
-
-    <!-- HEADER -->
-    <header class="glass-morphism sticky top-0 z-40 header-safe">
-        <div class="px-4 py-3">
-            <div class="flex items-center justify-between">
-                <!-- Logo + Back Button -->
-                <div class="flex items-center space-x-3">
-                    <button onclick="goBack()" class="touch-target text-white hover:text-aurora transition-all duration-300 p-2 rounded-xl" title="Torna indietro">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                        </svg>
-                    </button>
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-gradient-to-br from-sim-green via-white to-sim-red rounded-xl flex items-center justify-center">
-                            <span class="text-sim-green font-black text-lg">🇮🇹</span>
-                        </div>
-                        <div>
-                            <span class="text-ultra-visible text-lg md:text-xl font-black">SIM Carabinieri</span>
-                            <div class="text-white text-xs flex items-center gap-2">
-                                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                                <span>Iscrizione Online</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Progress Indicator (Desktop) -->
-                <div class="hidden md:flex items-center">
-                    <div class="flex items-center">
-                        <div id="step1" class="progress-step active">1</div>
-                        <div class="progress-line" id="line1"></div>
-                        <div id="step2" class="progress-step">2</div>
-                        <div class="progress-line" id="line2"></div>
-                        <div id="step3" class="progress-step">3</div>
-                    </div>
-                </div>
-
-                <!-- Menu mobile -->
-                <button id="mobileMenuBtn" class="md:hidden touch-target text-white p-2 rounded-xl">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Progress mobile -->
-            <div class="md:hidden mt-3 pt-3 border-t border-white/20">
-                <div class="flex items-center justify-center">
-                    <div class="flex items-center">
-                        <div id="stepMobile1" class="progress-step active text-sm">1</div>
-                        <div class="progress-line w-12" id="lineMobile1"></div>
-                        <div id="stepMobile2" class="progress-step text-sm">2</div>
-                        <div class="progress-line w-12" id="lineMobile2"></div>
-                        <div id="stepMobile3" class="progress-step text-sm">3</div>
-                    </div>
-                </div>
-                <div class="text-center mt-2">
-                    <span id="stepText" class="text-white text-xs font-semibold">Dati Anagrafici</span>
-                </div>
+<body>
+    <button class="print-btn no-print" onclick="window.print()">🖨️ Stampa PDF</button>
+    
+    <div class="header">
+        <div class="logo">🇮🇹</div>
+        <div class="title">SINDACATO ITALIANO MILITARI CARABINIERI</div>
+        <div class="subtitle">S.I.M. CARABINIERI</div>
+        <div class="address">Via Magnagrecia n.13, 00184 Roma<br>Codice Fiscale: 96408280582</div>
+    </div>
+    
+    <div class="main-title">
+        DELEGA DI ADESIONE AL<br>
+        SINDACATO ITALIANO DEI MILITARI CARABINIERI SIM<br>
+        CARABINIERI- Via Magnagrecia n.13, 00184 Roma
+    </div>
+    
+    <div class="field-row">
+        <span class="field-label">Grado:</span>
+        <span class="field-value">${data.grado}</span>
+    </div>
+    
+    <div class="field-row">
+        <span class="field-label">IL/LA SOTTOSCRITTO/A NOME:</span>
+        <span class="field-value">${data.nome}</span>
+        <span class="field-label" style="margin-left: 40px;">COGNOME:</span>
+        <span class="field-value">${data.cognome}</span>
+    </div>
+    
+    <div class="field-row">
+        <span class="field-label">NATO/A A:</span>
+        <span class="field-value">${data.luogonascita}</span>
+        <span class="field-label" style="margin-left: 40px;">PROV.:</span>
+        <span class="field-value">${data.provincia}</span>
+        <span class="field-label" style="margin-left: 40px;">IL:</span>
+        <span class="field-value">${new Date(data.datanascita).toLocaleDateString('it-IT')}</span>
+    </div>
+    
+    <div class="field-row">
+        <span class="field-label">C.I.P.:</span>
+        <span class="field-value">${data.cip}</span>
+        <span class="field-label" style="margin-left: 40px;">CODICE FISCALE:</span>
+        <span class="field-value">${data.cf}</span>
+    </div>
+    
+    <div class="field-row">
+        <span class="field-label">REPARTO DI APPARTENENZA:</span>
+        <span class="field-value">${data.reparto}</span>
+        <span class="field-label" style="margin-left: 40px;">CAP:</span>
+        <span class="field-value">${data.cap}</span>
+    </div>
+    
+    <div class="field-row">
+        <span class="field-label">REGIONE:</span>
+        <span class="field-value">${data.regione}</span>
+        <span class="field-label" style="margin-left: 40px;">CITTÀ e PROV.:</span>
+        <span class="field-value">${data.citta}</span>
+    </div>
+    
+    <div class="field-row">
+        <span class="field-label">CELL.:</span>
+        <span class="field-value">${data.cellulare}</span>
+        <span class="field-label" style="margin-left: 40px;">E-MAIL:</span>
+        <span class="field-value">${data.email}</span>
+    </div>
+    
+    <div class="checkbox-area">
+        <span>Spuntare se in ausiliaria- SI</span>
+        <span class="checkbox">${data.ausiliaria === 'SI' ? '✓' : ''}</span>
+        <span>NO</span>
+        <span class="checkbox">${data.ausiliaria === 'NO' ? '✓' : ''}</span>
+    </div>
+    
+    <div class="delegation-text">
+        <p><strong>Con il presente atto aderisce al Sindacato Italiano Militari Carabinieri – S.I.M. Carabinieri –</strong><br>
+        Via Magnagrecia n. 13, 00183 Roma - <strong>Codice Fiscale: 96408280582</strong>.</p>
+        
+        <p><strong>A tal fine rilascia delega ed autorizza l'Amministrazione dell'Arma dei Carabinieri a:</strong></p>
+        
+        <ul style="margin-left: 20px;">
+            <li>trattenere mensilmente dal proprio statino paga e per le 12 mensilità, lo 0,50% della voce stipendio o del trattamento pensionistico da considerare al netto di tutte le ritenute fiscali e contributive riferita agli emolumenti fissi e continuativi così come stabilito dai competenti organi statutari in analogia alle leggi di settore vigenti, ai sensi dell'art. 13 co. 3 della Legge n. 46 del 28 aprile 2022;</li>
+            <li>versare la suddetta quota sul conto corrente bancario intestato a S.I.M. Carabinieri <strong>IBAN IT66 B0878739 0900 0000 0015819</strong> ai sensi dell'art. 7 co. 4. della Legge n. 46 del 28 aprile 2022 e D.M. conseguente.</li>
+        </ul>
+        
+        <p><strong>Validità temporale della delega:</strong> La presente delega ha validità dal primo giorno del mese successivo a quello del rilascio fino al 31 dicembre di ogni anno e si intende tacitamente rinnovata se non è revocata dall'interessato entro il 31 ottobre, ai sensi dell'art. 7 co. 3. della Legge n. 46 del 28 aprile 2022.</p>
+        
+        <p>L'eventuale revoca della delega dovrà essere trasmessa, in forma scritta, all'amministrazione e al S.I.M Carabinieri presso la sede legale nazionale Via Magnagrecia n. 13, 00183 Roma con raccomandata A/R o con PEC. ai sensi dell'art. art. 7 co. 3 della legge n. 46 del 28 aprile 2022.</p>
+    </div>
+    
+    <div class="signature-section">
+        <div>
+            <span>_________________________ lì, ${today}</span>
+        </div>
+        <div>
+            <span>Firma _________________________________</span>
+            <div class="signature-box">
+                <span style="color: #999; font-style: italic;">Firma digitale</span>
             </div>
         </div>
-    </header>
-
-    <!-- MAIN CONTENT -->
-    <main class="flex-grow pb-8">
-
-        <!-- HERO SECTION -->
-        <section class="mobile-section animate-fade-in">
-            <div class="glass-morphism rounded-3xl p-6 md:p-8 relative overflow-hidden flag-border">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-sim-green/20 to-sim-red/20 rounded-full blur-xl"></div>
-                <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-aurora/20 to-teal/20 rounded-full blur-lg"></div>
-
-                <div class="relative z-10 text-center">
-                    <div class="inline-flex items-center gap-2 mb-4">
-                        <div class="w-16 h-16 bg-gradient-to-br from-sim-green via-white to-sim-red rounded-full flex items-center justify-center shadow-lg">
-                            <span class="text-2xl">🛡️</span>
-                        </div>
-                    </div>
-                    
-                    <h1 class="text-2xl md:text-4xl font-black text-ultra-visible mb-4 leading-tight">
-                        Sindacato Italiano<br>
-                        <span class="text-sim-green">Militari Carabinieri</span>
-                    </h1>
-                    
-                    <p class="text-white/90 text-sm md:text-base mb-6 max-w-2xl mx-auto">
-                        <strong>Via Magnagrecia n.13, 00184 Roma</strong><br>
-                        Codice Fiscale: 96408280582
-                    </p>
-
-                    <div class="flex items-center justify-center gap-2 text-white/80 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm w-fit mx-auto">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                        <span class="text-sm font-medium">Connessione Sicura SSL</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ALERT MESSAGES -->
-        <div id="alertContainer" class="mobile-section hidden">
-            <!-- Messages will be inserted here -->
+    </div>
+    
+    <div style="margin-top: 30px;">
+        <p style="font-size: 10px;">
+            <strong>Dichiara di aver preso visione dello Statuto</strong> presente sul sito internet www.simcarabinieri.com, 
+            dell'allegato "A" relativo alle competenze stipendiali per il calcolo della base della quota associativa, 
+            ricevuto ed accettato copia dell'allegata informativa sul trattamento dei dati personali.
+        </p>
+    </div>
+    
+    <div class="signature-section" style="margin-top: 30px;">
+        <div>
+            <span>_________________________ lì, ${today}</span>
         </div>
-
-        <!-- ISCRIZIONE FORM -->
-        <section class="mobile-section">
-            <form id="iscrizioneForm" class="space-y-6">
-                
-                <!-- DATI SERVIZIO -->
-                <div class="section-card p-6 md:p-8">
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center">
-                            <span class="text-white text-lg">🎖️</span>
-                        </div>
-                        <div>
-                            <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Dati di Servizio</h2>
-                            <p class="text-white/70 text-sm">Informazioni sul grado e servizio</p>
-                        </div>
-                    </div>
-
-                    <div class="form-grid">
-                        <div>
-                            <label class="block text-white font-semibold mb-2" for="grado">
-                                Grado *
-                            </label>
-                            <select id="grado" name="grado" class="form-select w-full" required>
-                                <option value="">Seleziona il tuo grado</option>
-                                <option value="Car.">Car. (Carabiniere)</option>
-                                <option value="Car. Sc.">Car. Sc. (Carabiniere Scelto)</option>
-                                <option value="App. Sc.">App. Sc. (Appuntato Scelto)</option>
-                                <option value="App.">App. (Appuntato)</option>
-                                <option value="Brig.">Brig. (Brigadiere)</option>
-                                <option value="Brig. Capo">Brig. Capo (Brigadiere Capo)</option>
-                                <option value="M.llo">M.llo (Maresciallo)</option>
-                                <option value="M.llo Ord.">M.llo Ord. (Maresciallo Ordinario)</option>
-                                <option value="M.llo Capo">M.llo Capo (Maresciallo Capo)</option>
-                                <option value="M.llo Magg.">M.llo Magg. (Maresciallo Maggiore)</option>
-                                <option value="Lgt.">Lgt. (Luogotenente)</option>
-                                <option value="S.Lgt.">S.Lgt. (Sottotenente)</option>
-                                <option value="Ten.">Ten. (Tenente)</option>
-                                <option value="Cap.">Cap. (Capitano)</option>
-                                <option value="Magg.">Magg. (Maggiore)</option>
-                                <option value="Ten. Col.">Ten. Col. (Tenente Colonnello)</option>
-                                <option value="Col.">Col. (Colonnello)</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-white font-semibold mb-2">
-                                In Ausiliaria
-                            </label>
-                            <div class="flex gap-6 pt-3">
-                                <label class="flex items-center gap-2 text-white cursor-pointer">
-                                    <input type="radio" name="ausiliaria" value="SI" class="form-radio">
-                                    <span>SI</span>
-                                </label>
-                                <label class="flex items-center gap-2 text-white cursor-pointer">
-                                    <input type="radio" name="ausiliaria" value="NO" class="form-radio" checked>
-                                    <span>NO</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- DATI ANAGRAFICI -->
-                <div class="section-card p-6 md:p-8">
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-br from-green-600 to-green-800 rounded-xl flex items-center justify-center">
-                            <span class="text-white text-lg">👤</span>
-                        </div>
-                        <div>
-                            <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Dati Anagrafici</h2>
-                            <p class="text-white/70 text-sm">Informazioni personali</p>
-                        </div>
-                    </div>
-
-                    <div class="form-grid">
-                        <div>
-                            <label class="block text-white font-semibold mb-2" for="nome">
-                                Nome *
-                            </label>
-                            <input type="text" id="nome" name="nome" class="form-input w-full" 
-                                   placeholder="Inserisci il nome" required>
-                        </div>
-
-                        <div>
-                            <label class="block text-white font-semibold mb-2" for="cognome">
-                                Cognome *
-                            </label>
-                            <input type="text" id="cognome" name="cognome" class="form-input w-full" 
-                                   placeholder="Inserisci il cognome" required>
-                        </div>
-
-                        <div>
-                            <label class="block text-white font-semibold mb-2" for="luogonascita">
-                                Luogo di Nascita *
-                            </label>
-                            <input type="text" id="luogonascita" name="luogonascita" class="form-input w-full" 
-                                   placeholder="Città di nascita" required>
-                        </div>
-
-                        <div>
-                            <label class="block text-white font-semibold mb-2" for="provincia">
-                                Provincia Nascita *
-                            </label>
-                            <input type="text" id="provincia" name="provincia" class="form-input w-full" 
-                                   placeholder="RM" maxlength="2" style="text-transform: uppercase;" required>
-                        </div>
-
-                        <div>
-                            <label class="block text-white font-semibold mb-2" for="datanascita">
-                                Data di Nascita *
-                            </label>
-                            <input type="date" id="datanascita" name="datanascita" class="form-input w-full" required>
-                        </div>
-
-                        <div>
-                            <label class="block text-white font-semibold mb-2" for="codicefiscale">
-                                Codice Fiscale *
-                            </label>
-                            <input type="text" id="codicefiscale" name="codicefiscale" class="form-input w-full" 
-                                   placeholder="RSSMRA80A01H501X" maxlength="16" style="text-transform: uppercase;" required>
-                        </div>
-
-                        <div>
-                            <label class="block text-white font-semibold mb-2" for="cip">
-                                Codice CIP *
-                            </label>
-                            <input type="text" id="cip" name="cip" class="form-input w-full" 
-                                   placeholder="Inserisci il CIP" required>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- DATI SERVIZIO -->
-                <div class="section-card p-6 md:p-8">
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-br from-purple-600 to-purple-800 rounded-xl flex items-center justify-center">
-                            <span class="text-white text-lg">🏛️</span>
-                        </div>
-                        <div>
-                            <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Sede di Servizio</h2>
-                            <p class="text-white/70 text-sm">Reparto e ubicazione</p>
-                        </div>
-                    </div>
-
-                    <div class="form-grid">
-                        <div class="md:col-span-2">
-                            <label class="block text-white font-semibold mb-2" for="reparto">
-                                Reparto di Appartenenza *
-                            </label>
-                            <input type="text" id="reparto" name="reparto" class="form-input w-full" 
-                                   placeholder="Es: Stazione CC di Roma Centro" required>
-                        </div>
-
-                        <div>
-                            <label class="block text-white font-semibold mb-2" for="cap">
-                                CAP Reparto *
-                            </label>
-                            <input type="text" id="cap" name="cap" class="form-input w-full" 
-                                   placeholder="00100" pattern="[0-9]{5}" maxlength="5" required>
-                        </div>
-
-                        <div>
-                            <label class="block text-white font-semibold mb-2" for="regione">
-                                Regione *
-                            </label>
-                            <select id="regione" name="regione" class="form-select w-full" required>
-                                <option value="">Seleziona regione</option>
-                                <option value="Abruzzo">Abruzzo</option>
-                                <option value="Basilicata">Basilicata</option>
-                                <option value="Calabria">Calabria</option>
-                                <option value="Campania">Campania</option>
-                                <option value="Emilia-Romagna">Emilia-Romagna</option>
-                                <option value="Friuli-Venezia Giulia">Friuli-Venezia Giulia</option>
-                                <option value="Lazio">Lazio</option>
-                                <option value="Liguria">Liguria</option>
-                                <option value="Lombardia">Lombardia</option>
-                                <option value="Marche">Marche</option>
-                                <option value="Molise">Molise</option>
-                                <option value="Piemonte">Piemonte</option>
-                                <option value="Puglia">Puglia</option>
-                                <option value="Sardegna">Sardegna</option>
-                                <option value="Sicilia">Sicilia</option>
-                                <option value="Toscana">Toscana</option>
-                                <option value="Trentino-Alto Adige">Trentino-Alto Adige</option>
-                                <option value="Umbria">Umbria</option>
-                                <option value="Valle d'Aosta">Valle d'Aosta</option>
-                                <option value="Veneto">Veneto</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-white font-semibold mb-2" for="citta">
-                                Città e Provincia *
-                            </label>
-                            <input type="text" id="citta" name="citta" class="form-input w-full" 
-                                   placeholder="Roma (RM)" required>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- CONTATTI -->
-                <div class="section-card p-6 md:p-8">
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-br from-orange-600 to-orange-800 rounded-xl flex items-center justify-center">
-                            <span class="text-white text-lg">📞</span>
-                        </div>
-                        <div>
-                            <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Dati di Contatto</h2>
-                            <p class="text-white/70 text-sm">Cellulare e email</p>
-                        </div>
-                    </div>
-
-                    <div class="form-grid">
-                        <div>
-                            <label class="block text-white font-semibold mb-2" for="cellulare">
-                                Cellulare *
-                            </label>
-                            <input type="tel" id="cellulare" name="cellulare" class="form-input w-full" 
-                                   placeholder="+39 123 456 7890" required>
-                        </div>
-
-                        <div>
-                            <label class="block text-white font-semibold mb-2" for="email">
-                                Email *
-                            </label>
-                            <input type="email" id="email" name="email" class="form-input w-full" 
-                                   placeholder="nome@email.com" required>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- FIRMA DIGITALE -->
-                <div class="section-card p-6 md:p-8">
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-xl flex items-center justify-center">
-                            <span class="text-white text-lg">✍️</span>
-                        </div>
-                        <div>
-                            <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Firma Digitale</h2>
-                            <p class="text-white/70 text-sm">Firma nel riquadro sottostante</p>
-                        </div>
-                    </div>
-
-                    <div class="glass-card rounded-2xl p-6">
-                        <div class="mb-4">
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="text-textDark font-semibold">Firma qui *</span>
-                                <button type="button" id="clearSignature" 
-                                        class="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 font-semibold rounded-lg transition-colors text-sm">
-                                    🗑️ Cancella
-                                </button>
-                            </div>
-                            <canvas id="signatureCanvas" class="signature-canvas w-full" width="700" height="200"></canvas>
-                            <div class="mt-3 text-center">
-                                <span class="text-gray-600 text-sm">
-                                    💡 Usa mouse, trackpad o dito su dispositivi touch per firmare
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- DOCUMENTI -->
-                <div class="section-card p-6 md:p-8">
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center">
-                            <span class="text-white text-lg">📎</span>
-                        </div>
-                        <div>
-                            <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Documenti d'Identità</h2>
-                            <p class="text-white/70 text-sm">Carica fronte e retro del documento</p>
-                        </div>
-                    </div>
-
-                    <div class="form-grid">
-                        <div>
-                            <label class="block text-white font-semibold mb-3">
-                                📄 Documento Fronte *
-                            </label>
-                            <div class="form-file text-center cursor-pointer" id="frontUploadArea">
-                                <input type="file" id="doc_front" name="doc_front" 
-                                       accept="image/*,application/pdf" class="hidden" required>
-                                <div class="flex flex-col items-center justify-center h-20">
-                                    <svg class="w-8 h-8 text-sim-green mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                                    </svg>
-                                    <span class="text-sm font-medium text-gray-700">Clicca per caricare</span>
-                                    <span class="text-xs text-gray-500">JPG, PNG, PDF (Max 10MB)</span>
-                                </div>
-                            </div>
-                            <div id="frontPreview" class="mt-3 hidden"></div>
-                        </div>
-
-                        <div>
-                            <label class="block text-white font-semibold mb-3">
-                                📄 Documento Retro *
-                            </label>
-                            <div class="form-file text-center cursor-pointer" id="backUploadArea">
-                                <input type="file" id="doc_back" name="doc_back" 
-                                       accept="image/*,application/pdf" class="hidden" required>
-                                <div class="flex flex-col items-center justify-center h-20">
-                                    <svg class="w-8 h-8 text-sim-green mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                                    </svg>
-                                    <span class="text-sm font-medium text-gray-700">Clicca per caricare</span>
-                                    <span class="text-xs text-gray-500">JPG, PNG, PDF (Max 10MB)</span>
-                                </div>
-                            </div>
-                            <div id="backPreview" class="mt-3 hidden"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- CONSENSI -->
-                <div class="section-card p-6 md:p-8">
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-br from-yellow-600 to-yellow-800 rounded-xl flex items-center justify-center">
-                            <span class="text-white text-lg">📋</span>
-                        </div>
-                        <div>
-                            <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Consensi e Dichiarazioni</h2>
-                            <p class="text-white/70 text-sm">Informative obbligatorie</p>
-                        </div>
-                    </div>
-
-                    <div class="glass-card rounded-2xl p-6">
-                        <div class="space-y-4">
-                            <label class="flex items-start gap-3 cursor-pointer">
-                                <input type="checkbox" id="consensoStatuto" name="consensoStatuto" 
-                                       class="form-checkbox mt-1" required>
-                                <span class="text-textDark text-sm">
-                                    Dichiaro di aver preso visione dello <strong>Statuto</strong> presente sul sito 
-                                    <strong>www.simcarabinieri.com</strong> e dell'allegato "A" relativo alle competenze stipendiali 
-                                    per il calcolo della base della quota associativa. *
-                                </span>
-                            </label>
-
-                            <label class="flex items-start gap-3 cursor-pointer">
-                                <input type="checkbox" id="consensoPrivacy" name="consensoPrivacy" 
-                                       class="form-checkbox mt-1" required>
-                                <span class="text-textDark text-sm">
-                                    Ho ricevuto ed accettato copia dell'<strong>informativa sul trattamento dei dati personali</strong> 
-                                    secondo il Reg. UE 2016/679 (GDPR). *
-                                </span>
-                            </label>
-
-                            <label class="flex items-start gap-3 cursor-pointer">
-                                <input type="checkbox" id="consensoDelega" name="consensoDelega" 
-                                       class="form-checkbox mt-1" required>
-                                <span class="text-textDark text-sm">
-                                    Prendo atto che, ai sensi dell'art. 1, comma 4 della Legge, è ammessa 
-                                    <strong>un'unica delega</strong> su una singola retribuzione o trattamento pensionistico. *
-                                </span>
-                            </label>
-
-                            <label class="flex items-start gap-3 cursor-pointer">
-                                <input type="checkbox" id="consensoComunicazioni" name="consensoComunicazioni" 
-                                       class="form-checkbox mt-1">
-                                <span class="text-textDark text-sm">
-                                    Acconsento all'invio di comunicazioni informative via email relative alle attività sindacali 
-                                    (facoltativo).
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SUBMIT -->
-                <div class="section-card p-6 md:p-8">
-                    <div class="text-center space-y-4">
-                        <div class="glass-card rounded-2xl p-6 text-left">
-                            <h3 class="text-textDark font-bold text-lg mb-3">📄 Cosa succede dopo?</h3>
-                            <ul class="text-textDark text-sm space-y-2">
-                                <li class="flex items-center gap-2">
-                                    <span class="text-sim-green font-bold">1.</span>
-                                    <span>Verrà generato il PDF ufficiale di iscrizione</span>
-                                </li>
-                                <li class="flex items-center gap-2">
-                                    <span class="text-sim-green font-bold">2.</span>
-                                    <span>Dovrai inviarlo a: <strong>antoniogrande81@gmail.com</strong></span>
-                                </li>
-                                <li class="flex items-center gap-2">
-                                    <span class="text-sim-green font-bold">3.</span>
-                                    <span>Riceverai conferma di avvenuta iscrizione</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <button type="submit" id="submitBtn" class="btn-sim w-full py-4 px-8 rounded-2xl text-lg font-black text-white transition-all duration-300">
-                            <div class="flex items-center justify-center gap-3">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                                <span id="submitText">🇮🇹 Genera Delega Ufficiale SIM</span>
-                                <div id="submitSpinner" class="loading-spinner hidden"></div>
-                            </div>
-                        </button>
-
-                        <div class="text-center text-sm text-white/80">
-                            <p>📄 Il PDF generato avrà nome: <strong><span id="previewFilename">CIP_Nome_Cognome.pdf</span></strong></p>
-                            <p class="mt-2">🔒 I tuoi dati sono protetti secondo il Reg. UE 2016/679 (GDPR)</p>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </section>
-
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="glass-morphism mt-8 pb-8" style="padding-bottom: max(2rem, var(--safe-area-inset-bottom));">
-        <div class="px-4 py-6">
-            <div class="text-center text-white">
-                <div class="mb-3">
-                    <span class="font-bold text-lg">S.I.M. Carabinieri</span>
-                    <span class="text-white/70 text-sm ml-2">Iscrizione Online v1.0</span>
-                </div>
-                <div class="flex justify-center items-center space-x-4 text-xs opacity-80 mb-4 flex-wrap">
-                    <span>📧 antoniogrande81@gmail.com</span>
-                    <span class="hidden sm:inline">•</span>
-                    <span>🏛️ Via Magnagrecia n.13, Roma</span>
-                </div>
-                <div class="flex justify-center space-x-2">
-                    <div class="w-2 h-2 bg-sim-green rounded-full animate-pulse"></div>
-                    <div class="w-2 h-2 bg-white rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
-                    <div class="w-2 h-2 bg-sim-red rounded-full animate-pulse" style="animation-delay: 1s;"></div>
-                </div>
+        <div>
+            <span>Firma _________________________________</span>
+            <div class="signature-box">
+                <span style="color: #999; font-style: italic;">Firma digitale</span>
             </div>
         </div>
-    </footer>
-
-    <!-- JAVASCRIPT -->
-    <script>
-        // State
-        let signaturePad;
-        let currentStep = 1;
-        const maxSteps = 3;
-
-        // Initialization
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('🇮🇹 SIM Carabinieri - Iscrizione Online');
-            initializeSignaturePad();
-            setupEventListeners();
-            setupFileUploads();
-            updateProgress();
-            setupFormValidation();
-            console.log('✅ Pagina iscrizione caricata');
-        });
-
-        // === SIGNATURE PAD ===
-        function initializeSignaturePad() {
-            const canvas = document.getElementById('signatureCanvas');
-            if (!canvas) return;
-
-            // Responsive canvas sizing
-            function resizeCanvas() {
-                const container = canvas.parentElement;
-                const rect = container.getBoundingClientRect();
-                const ratio = Math.max(window.devicePixelRatio || 1, 1);
-                
-                canvas.width = rect.width * ratio;
-                canvas.height = 200 * ratio;
-                canvas.style.width = rect.width + 'px';
-                canvas.style.height = '200px';
-                
-                const ctx = canvas.getContext('2d');
-                ctx.scale(ratio, ratio);
-                
-                if (signaturePad) {
-                    signaturePad.clear();
-                }
-            }
-
-            signaturePad = new SignaturePad(canvas, {
-                backgroundColor: 'rgba(255,255,255,0.95)',
-                penColor: 'rgb(0,0,0)',
-                minWidth: 1,
-                maxWidth: 3,
-                throttle: 16,
-                minDistance: 5
-            });
-
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
-
-            // Clear signature
-            document.getElementById('clearSignature')?.addEventListener('click', () => {
-                signaturePad.clear();
-            });
-        }
-
-        // === FILE UPLOADS ===
-        function setupFileUploads() {
-            setupFileUpload('frontUploadArea', 'doc_front', 'frontPreview', '📄 Documento Fronte');
-            setupFileUpload('backUploadArea', 'doc_back', 'backPreview', '📄 Documento Retro');
-        }
-
-        function setupFileUpload(areaId, inputId, previewId, label) {
-            const area = document.getElementById(areaId);
-            const input = document.getElementById(inputId);
-            const preview = document.getElementById(previewId);
-
-            if (!area || !input || !preview) return;
-
-            // Click to upload
-            area.addEventListener('click', () => input.click());
-
-            // Drag and drop
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                area.addEventListener(eventName, preventDefaults, false);
-            });
-
-            ['dragenter', 'dragover'].forEach(eventName => {
-                area.addEventListener(eventName, highlight, false);
-            });
-
-            ['dragleave', 'drop'].forEach(eventName => {
-                area.addEventListener(eventName, unhighlight, false);
-            });
-
-            area.addEventListener('drop', handleDrop, false);
-            input.addEventListener('change', handleFiles, false);
-
-            function preventDefaults(e) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-
-            function highlight() {
-                area.style.borderColor = 'rgba(0,146,70,0.8)';
-                area.style.backgroundColor = 'rgba(0,146,70,0.1)';
-            }
-
-            function unhighlight() {
-                area.style.borderColor = 'rgba(0,146,70,0.3)';
-                area.style.backgroundColor = 'rgba(255,255,255,0.95)';
-            }
-
-            function handleDrop(e) {
-                const dt = e.dataTransfer;
-                const files = dt.files;
-                input.files = files;
-                handleFiles();
-            }
-
-            function handleFiles() {
-                const file = input.files[0];
-                if (!file) return;
-
-                // Validate file
-                const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
-                const maxSize = 10 * 1024 * 1024; // 10MB
-
-                if (!validTypes.includes(file.type)) {
-                    showAlert('error', 'Tipo file non supportato. Usa JPG, PNG o PDF.');
-                    input.value = '';
-                    return;
-                }
-
-                if (file.size > maxSize) {
-                    showAlert('error', 'File troppo grande. Massimo 10MB.');
-                    input.value = '';
-                    return;
-                }
-
-                // Show preview
-                displayFilePreview(file, preview, label);
-                
-                // Update area
-                area.innerHTML = `
-                    <div class="flex items-center justify-center h-20 text-sim-green">
-                        <svg class="w-8 h-8 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        <span class="font-semibold">File caricato: ${file.name}</span>
-                    </div>
-                `;
-            }
-        }
-
-        function displayFilePreview(file, container, label) {
-            container.innerHTML = '';
-            container.classList.remove('hidden');
-
-            const div = document.createElement('div');
-            div.className = 'glass-card rounded-lg p-3';
-
-            if (file.type.startsWith('image/')) {
-                const img = document.createElement('img');
-                img.className = 'w-full h-32 object-cover rounded-lg';
-                img.file = file;
-
-                const reader = new FileReader();
-                reader.onload = (e) => { img.src = e.target.result; };
-                reader.readAsDataURL(file);
-
-                div.appendChild(img);
-            }
-
-            const info = document.createElement('div');
-            info.className = 'mt-2 text-sm text-gray-600';
-            info.innerHTML = `
-                <div class="font-semibold">${label}</div>
-                <div>📁 ${file.name}</div>
-                <div>📏 ${(file.size / 1024 / 1024).toFixed(2)} MB</div>
-            `;
-            div.appendChild(info);
-
-            container.appendChild(div);
-        }
-
-        // === FORM VALIDATION ===
-        function setupFormValidation() {
-            // Real-time filename preview
-            ['nome', 'cognome'].forEach(id => {
-                document.getElementById(id)?.addEventListener('input', updateFilenamePreview);
-            });
-
-            // Codice fiscale validation
-            const cfInput = document.getElementById('codicefiscale');
-            if (cfInput) {
-                cfInput.addEventListener('input', (e) => {
-                    e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-                    validateCodiceFiscale(e.target.value);
-                });
-            }
-
-            // Provincia validation
-            const provInput = document.getElementById('provincia');
-            if (provInput) {
-                provInput.addEventListener('input', (e) => {
-                    e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
-                });
-            }
-        }
-
-        function updateFilenamePreview() {
-            const nome = document.getElementById('nome')?.value || 'Nome';
-            const cognome = document.getElementById('cognome')?.value || 'Cognome';
-            const preview = document.getElementById('previewFilename');
-            if (preview) {
-                preview.textContent = `CIP_${nome}_${cognome}.pdf`;
-            }
-        }
-
-        function validateCodiceFiscale(cf) {
-            const pattern = /^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$/;
-            const input = document.getElementById('codicefiscale');
-            
-            if (cf.length === 16) {
-                if (pattern.test(cf)) {
-                    input.style.borderColor = 'rgba(16,185,129,0.5)';
-                    input.style.backgroundColor = 'rgba(16,185,129,0.05)';
-                } else {
-                    input.style.borderColor = 'rgba(239,68,68,0.5)';
-                    input.style.backgroundColor = 'rgba(239,68,68,0.05)';
-                }
-            } else {
-                input.style.borderColor = '';
-                input.style.backgroundColor = '';
-            }
-        }
-
-        // === EVENT LISTENERS ===
-        function setupEventListeners() {
-            // Form submission
-            document.getElementById('iscrizioneForm')?.addEventListener('submit', handleSubmit);
-
-            // Mobile menu
-            document.getElementById('mobileMenuBtn')?.addEventListener('click', () => {
-                showAlert('info', 'Menu non disponibile in questa pagina');
-            });
-
-            // Form changes update progress
-            document.querySelectorAll('input, select, textarea').forEach(el => {
-                el.addEventListener('change', updateFormProgress);
-                el.addEventListener('input', updateFormProgress);
-            });
-        }
-
-        // === FORM SUBMISSION ===
-        async function handleSubmit(e) {
-            e.preventDefault();
-            
-            // Validate signature
-            if (!signaturePad || signaturePad.isEmpty()) {
-                showAlert('error', 'La firma è obbligatoria!');
-                document.getElementById('signatureCanvas').scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'center' 
-                });
-                return;
-            }
-
-            // Show loading state
-            setSubmitLoading(true);
-            updateProgress(3);
-
-            try {
-                // Prepare form data
-                const formData = new FormData(e.target);
-                
-                // Add signature
-                const signatureDataURL = signaturePad.toDataURL('image/png');
-                formData.append('signature', signatureDataURL);
-
-                console.log('📤 Invio dati al server...');
-
-                // Submit to API
-                const response = await fetch('/api/genera-pdf', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                console.log('📊 Response Status:', response.status);
-                console.log('📊 Response Headers:', response.headers);
-                console.log('📊 Content-Type:', response.headers.get('content-type'));
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('❌ Error Response:', errorText);
-                    throw new Error(`Errore server: ${response.status} - ${errorText}`);
-                }
-
-                // Download PDF
-                const blob = await response.blob();
-                console.log('📄 Blob Size:', blob.size, 'bytes');
-                console.log('📄 Blob Type:', blob.type);
-                
-                if (blob.size === 0) {
-                    throw new Error('PDF vuoto ricevuto dal server');
-                }
-
-                // Se è HTML, aprilo per stampa PDF
-                if (blob.type.includes('text/html')) {
-                    console.log('🖨️ Apertura HTML per stampa PDF...');
-                    const htmlText = await blob.text();
-                    const newWindow = window.open('', '_blank');
-                    newWindow.document.write(htmlText);
-                    newWindow.document.close();
-                    
-                    showAlert('success', '✅ Documento aperto in nuova finestra! Usa Ctrl+P → "Salva come PDF"');
-                    return;
-                }
-
-                // Se è PDF vero, scarica normalmente
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                
-                const nome = formData.get('nome') || 'Nome';
-                const cognome = formData.get('cognome') || 'Cognome';
-                
-                a.href = url;
-                a.download = `CIP_${nome}_${cognome}.pdf`;
-                document.body.appendChild(a);
-                
-                console.log('🔗 Download URL creato:', url);
-                console.log('📥 Filename:', a.download);
-                
-                a.click();
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-
-                // Show success
-                showAlert('success', '✅ PDF generato con successo! Il download è iniziato automaticamente.');
-                
-                // Reset form after delay
-                setTimeout(() => {
-                    if (confirm('Vuoi compilare una nuova iscrizione?')) {
-                        location.reload();
-                    } else {
-                        goBack();
-                    }
-                }, 3000);
-
-            } catch (error) {
-                console.error('❌ Errore:', error);
-                showAlert('error', `Errore: ${error.message}`);
-            } finally {
-                setSubmitLoading(false);
-            }
-        }
-
-        function setSubmitLoading(loading) {
-            const btn = document.getElementById('submitBtn');
-            const text = document.getElementById('submitText');
-            const spinner = document.getElementById('submitSpinner');
-
-            if (!btn || !text || !spinner) return;
-
-            if (loading) {
-                btn.disabled = true;
-                text.textContent = 'Generazione PDF in corso...';
-                spinner.classList.remove('hidden');
-                btn.style.opacity = '0.7';
-            } else {
-                btn.disabled = false;
-                text.textContent = '🇮🇹 Genera Delega Ufficiale SIM';
-                spinner.classList.add('hidden');
-                btn.style.opacity = '1';
-            }
-        }
-
-        // === PROGRESS TRACKING ===
-        function updateFormProgress() {
-            const form = document.getElementById('iscrizioneForm');
-            if (!form) return;
-
-            const requiredInputs = form.querySelectorAll('input[required], select[required]');
-            const filledInputs = Array.from(requiredInputs).filter(input => {
-                if (input.type === 'checkbox' || input.type === 'radio') {
-                    return input.checked;
-                }
-                return input.value.trim() !== '';
-            });
-
-            const progress = (filledInputs.length / requiredInputs.length) * 100;
-            
-            if (progress < 30) {
-                updateProgress(1);
-            } else if (progress < 80) {
-                updateProgress(2);
-            } else {
-                updateProgress(2);
-            }
-        }
-
-        function updateProgress(step) {
-            currentStep = step;
-            
-            // Desktop progress
-            updateProgressSteps(['step1', 'step2', 'step3'], ['line1', 'line2']);
-            
-            // Mobile progress  
-            updateProgressSteps(['stepMobile1', 'stepMobile2', 'stepMobile3'], ['lineMobile1', 'lineMobile2']);
-            
-            // Update step text
-            const stepText = document.getElementById('stepText');
-            if (stepText) {
-                const texts = ['Dati Anagrafici', 'Firma e Documenti', 'Invio Completato'];
-                stepText.textContent = texts[currentStep - 1] || texts[0];
-            }
-        }
-
-        function updateProgressSteps(stepIds, lineIds) {
-            stepIds.forEach((id, index) => {
-                const el = document.getElementById(id);
-                if (!el) return;
-                
-                el.classList.remove('active', 'completed');
-                
-                if (index + 1 < currentStep) {
-                    el.classList.add('completed');
-                    el.innerHTML = '✓';
-                } else if (index + 1 === currentStep) {
-                    el.classList.add('active');
-                    el.textContent = index + 1;
-                } else {
-                    el.textContent = index + 1;
-                }
-            });
-
-            lineIds.forEach((id, index) => {
-                const el = document.getElementById(id);
-                if (!el) return;
-                
-                el.classList.remove('active');
-                if (index + 1 < currentStep) {
-                    el.classList.add('active');
-                }
-            });
-        }
-
-        // === ALERTS ===
-        function showAlert(type, message) {
-            const container = document.getElementById('alertContainer');
-            if (!container) return;
-
-            const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
-            const icon = type === 'success' ? '✅' : '❌';
-            
-            container.innerHTML = `
-                <div class="${alertClass} p-4">
-                    <div class="flex items-center gap-3">
-                        <span class="text-2xl">${icon}</span>
-                        <div>
-                            <div class="font-bold text-gray-800">${type === 'success' ? 'Successo!' : 'Errore'}</div>
-                            <div class="text-gray-700 text-sm">${message}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            container.classList.remove('hidden');
-            container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-            // Auto hide after 5 seconds
+    </div>
+    
+    <div class="footer">
+        <p><strong>La presente delega, compilata, sottoscritta e corredata dal documento di identità,<br>
+        dovrà essere trasmessa via mail all'indirizzo antoniogrande81@gmail.com</strong></p>
+        <hr style="margin: 20px 0;">
+        <p>Documento generato digitalmente - MyApp SIM v1.0 - ${today}</p>
+    </div>
+    
+    <script class="no-print">
+        // Auto-print quando caricata
+        window.onload = function() {
             setTimeout(() => {
-                if (type !== 'success') { // Keep success messages visible
-                    container.classList.add('hidden');
-                }
-            }, 5000);
-        }
-
-        // === NAVIGATION ===
-        function goBack() {
-            if (document.referrer && document.referrer.includes(window.location.origin)) {
-                window.history.back();
-            } else {
-                window.location.href = 'home.html';
-            }
-        }
-
-        // === UTILITIES ===
-        function formatBytes(bytes, decimals = 2) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const dm = decimals < 0 ? 0 : decimals;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-        }
-
-        console.log('🇮🇹 SIM Carabinieri - Pagina Iscrizione Pronta');
+                window.print();
+            }, 1000);
+        };
+        
+        // Chiudi finestra dopo stampa
+        window.onafterprint = function() {
+            setTimeout(() => {
+                window.close();
+            }, 1000);
+        };
     </script>
 </body>
-</html>
+</html>`;
+}
