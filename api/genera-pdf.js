@@ -16,17 +16,29 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    console.log("📝 Content-Type ricevuto:", req.headers['content-type']);
+    console.log("🔍 HEADERS RICEVUTI:");
+    Object.keys(req.headers).forEach(key => {
+      console.log(`  ${key}: ${req.headers[key]}`);
+    });
+    
+    console.log("🔍 REQUEST METHOD:", req.method);
+    console.log("🔍 REQUEST URL:", req.url);
+    
+    // Controlla se req.body esiste già (Vercel potrebbe fare pre-parsing)
+    console.log("🔍 REQ.BODY TYPE:", typeof req.body);
+    console.log("🔍 REQ.BODY:", req.body);
     
     // Parse dei dati del form
     let formData = {};
     
-    if (req.headers['content-type']?.includes('multipart/form-data')) {
-      console.log("📦 Parsing multipart/form-data...");
+    if (req.body && typeof req.body === 'object' && !Buffer.isBuffer(req.body)) {
+      console.log("📦 Using pre-parsed body from Vercel...");
+      formData = req.body;
+    } else if (req.headers['content-type']?.includes('multipart/form-data')) {
+      console.log("📦 Parsing multipart/form-data manually...");
       formData = await parseMultipartFormData(req);
     } else {
-      console.log("📦 Parsing fallback...");
-      // Fallback per altri tipi di content
+      console.log("📦 No parsing method available, using fallback...");
       formData = {};
     }
     
@@ -498,21 +510,18 @@ function generaDocumentoSIM(dati) {
     </div>
     
     <script>
-        // Auto-stampa dopo 1 secondo
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                window.print();
-            }, 1000);
+        // DEBUG: No auto-print per ora, così possiamo vedere i dati
+        console.log('📄 HTML documento caricato');
+        console.log('📊 Dati utilizzati nel documento:', {
+            nome: '${dati.nome}',
+            cognome: '${dati.cognome}',
+            cip: '${dati.cip}'
         });
         
-        // Chiudi dopo stampa (opzionale)
-        window.addEventListener('afterprint', function() {
-            setTimeout(function() {
-                if (confirm('Chiudere la finestra?')) {
-                    window.close();
-                }
-            }, 1000);
-        });
+        // Stampa manuale con il bottone
+        function stampaPDF() {
+            window.print();
+        }
     </script>
 </body>
 </html>`;
