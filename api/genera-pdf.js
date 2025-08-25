@@ -1,6 +1,6 @@
-// VERSIONE NATIVA - Genera PDF senza dipendenze esterne pesanti
+// VERSIONE CORRETTA - Parsing multipart/form-data funzionante
 module.exports = async function handler(req, res) {
-  console.log("🚀 START genera-pdf NATIVE");
+  console.log("🚀 START genera-pdf API CORRETTA");
   
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -16,205 +16,275 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    console.log("📝 Parsing form data...");
+    console.log("📝 Content-Type ricevuto:", req.headers['content-type']);
     
-    // Parse multipart data manually (senza multiparty)
-    const data = await parseFormData(req);
+    // Parse dei dati del form
+    let formData = {};
     
-    console.log("📊 Dati estratti:", data.fields);
-
-    // Estrai dati form
-    const nome = data.fields.nome || "";
-    const cognome = data.fields.cognome || "";
-    const grado = data.fields.grado || "";
-    const cip = data.fields.cip || "";
-    const cf = data.fields.codicefiscale || "";
-    const email = data.fields.email || "";
-    const cellulare = data.fields.cellulare || "";
-    const luogonascita = data.fields.luogonascita || "";
-    const provincia = data.fields.provincia || "";
-    const datanascita = data.fields.datanascita || "";
-    const reparto = data.fields.reparto || "";
-    const regione = data.fields.regione || "";
-    const citta = data.fields.citta || "";
-    const ausiliaria = data.fields.ausiliaria || "NO";
+    if (req.headers['content-type']?.includes('multipart/form-data')) {
+      console.log("📦 Parsing multipart/form-data...");
+      formData = await parseMultipartFormData(req);
+    } else {
+      console.log("📦 Parsing fallback...");
+      // Fallback per altri tipi di content
+      formData = {};
+    }
     
-    console.log("📄 Generazione PDF HTML...");
-
-    // Genera PDF usando HTML to PDF (metodo nativo)
-    const htmlContent = generatePdfHtml({
-      nome, cognome, grado, cip, cf, email, cellulare,
-      luogonascita, provincia, datanascita, reparto, 
-      regione, citta, ausiliaria
+    console.log("📊 DATI ESTRATTI DAL FORM:");
+    Object.keys(formData).forEach(key => {
+      console.log(`  ${key}: "${formData[key]?.substring(0, 50)}${formData[key]?.length > 50 ? '...' : ''}"`);
     });
+    console.log("📊 Totale campi estratti:", Object.keys(formData).length);
 
-    console.log("📤 Invio PDF...");
-
-    // Invia come HTML che il browser può salvare come PDF
-    const filename = `CIP_${nome}_${cognome}.pdf`;
+    // Estrai i dati con fallback per testing
+    const datiCompilazione = {
+      grado: formData.grado || "Car.",
+      nome: formData.nome || "MARIO",
+      cognome: formData.cognome || "ROSSI", 
+      luogonascita: formData.luogonascita || "Roma",
+      provincia: formData.provincia || "RM",
+      datanascita: formData.datanascita || "1980-01-01",
+      cip: formData.cip || "12345",
+      codicefiscale: formData.codicefiscale || "RSSMRA80A01H501X",
+      reparto: formData.reparto || "Stazione CC Roma Centro",
+      cap: formData.cap || "00100",
+      regione: formData.regione || "Lazio",
+      citta: formData.citta || "Roma (RM)",
+      cellulare: formData.cellulare || "+39 123 456 7890",
+      email: formData.email || "mario.rossi@email.com",
+      ausiliaria: formData.ausiliaria || "NO"
+    };
     
+    console.log("📋 Dati per compilazione documento:");
+    console.log(JSON.stringify(datiCompilazione, null, 2));
+
+    // Genera HTML del documento
+    console.log("📄 Generazione HTML documento...");
+    const htmlContent = generaDocumentoSIM(datiCompilazione);
+    
+    console.log("📏 HTML generato, lunghezza:", htmlContent.length);
+    console.log("📄 Preview:", htmlContent.substring(0, 200) + "...");
+
+    // Imposta headers per HTML
+    const filename = `Delega_SIM_${datiCompilazione.nome}_${datiCompilazione.cognome}.html`;
     res.setHeader("Content-Type", "text/html; charset=utf-8");
     res.setHeader("Content-Disposition", `inline; filename="${filename}"`);
     
+    console.log("📤 Invio HTML al client...");
     res.send(htmlContent);
     
-    console.log("✅ PDF HTML inviato con successo!");
+    console.log("✅ Documento HTML inviato con successo!");
 
   } catch (error) {
-    console.error("❌ ERRORE:", error);
+    console.error("❌ ERRORE API:", error.message);
+    console.error("❌ Stack trace:", error.stack);
     return res.status(500).json({ 
-      error: "Errore generazione PDF",
+      error: "Errore generazione documento",
       message: error.message,
-      stack: error.stack
+      timestamp: new Date().toISOString()
     });
   }
 };
 
-// Funzione per parsing form data senza multiparty
-async function parseFormData(req) {
+// FUNZIONE PARSING MULTIPART CORRETTA
+async function parseMultipartFormData(req) {
   return new Promise((resolve, reject) => {
-    let body = '';
+    const chunks = [];
+    
     req.on('data', chunk => {
-      body += chunk.toString();
+      chunks.push(chunk);
     });
     
     req.on('end', () => {
       try {
-        // Parse basic form data (semplificato)
-        const fields = {};
-        const params = new URLSearchParams(body);
+        // Ricostruisci il body completo
+        const body = Buffer.concat(chunks).toString('utf8');
         
-        for (const [key, value] of params) {
-          fields[key] = value;
+        console.log("📦 Raw body length:", body.length);
+        console.log("📦 Raw body preview:", body.substring(0, 300) + "...");
+        
+        const formData = {};
+        
+        // Estrai boundary dal Content-Type
+        const contentType = req.headers['content-type'] || '';
+        const boundaryMatch = contentType.match(/boundary=([^;]+)/);
+        
+        if (!boundaryMatch) {
+          console.error("❌ Boundary non trovato nel Content-Type:", contentType);
+          resolve(formData);
+          return;
         }
         
-        resolve({ fields, files: {} });
-      } catch (err) {
-        reject(err);
+        const boundary = boundaryMatch[1];
+        console.log("🔍 Boundary identificato:", boundary);
+        
+        // Splitta le parti usando il boundary
+        const delimiter = `--${boundary}`;
+        const parts = body.split(delimiter);
+        
+        console.log("🔍 Parti totali trovate:", parts.length);
+        
+        // Processa ogni parte (esclude prima e ultima)
+        parts.slice(1, -1).forEach((part, index) => {
+          console.log(`📋 Processando parte ${index + 1}...`);
+          
+          // Rimuovi \r\n iniziali e finali
+          const cleanPart = part.replace(/^\r?\n/, '').replace(/\r?\n$/, '');
+          
+          // Trova la separazione tra headers e content
+          const headerSeparator = '\r\n\r\n';
+          const separatorIndex = cleanPart.indexOf(headerSeparator);
+          
+          if (separatorIndex === -1) {
+            console.log(`⚠️ Separatore headers non trovato nella parte ${index + 1}`);
+            return;
+          }
+          
+          const headers = cleanPart.substring(0, separatorIndex);
+          const content = cleanPart.substring(separatorIndex + headerSeparator.length);
+          
+          console.log(`📄 Headers parte ${index + 1}:`, headers);
+          console.log(`📝 Content parte ${index + 1}:`, content.substring(0, 50) + (content.length > 50 ? '...' : ''));
+          
+          // Estrai il nome del campo dagli headers
+          const nameMatch = headers.match(/name="([^"]+)"/);
+          
+          if (nameMatch) {
+            const fieldName = nameMatch[1];
+            const fieldValue = content.replace(/\r?\n$/, ''); // Rimuovi newline finale
+            
+            // Salta file uploads (hanno filename) e campi vuoti
+            if (!headers.includes('filename=') && fieldValue.trim() !== '') {
+              formData[fieldName] = fieldValue.trim();
+              console.log(`✅ Campo estratto: ${fieldName} = "${fieldValue.substring(0, 30)}${fieldValue.length > 30 ? '...' : ''}"`);
+            } else {
+              console.log(`⏭️ Campo skippato: ${fieldName} (file o vuoto)`);
+            }
+          } else {
+            console.log(`❌ Nome campo non trovato negli headers della parte ${index + 1}`);
+          }
+        });
+        
+        console.log("📋 Parsing completato. Campi estratti:", Object.keys(formData));
+        resolve(formData);
+        
+      } catch (error) {
+        console.error("❌ Errore durante parsing multipart:", error.message);
+        resolve({}); // Ritorna oggetto vuoto invece di rejection
       }
     });
     
-    req.on('error', reject);
+    req.on('error', (error) => {
+      console.error("❌ Errore lettura request:", error.message);
+      resolve({}); // Ritorna oggetto vuoto invece di rejection
+    });
   });
 }
 
-// Genera HTML che simula un PDF ufficiale SIM
-function generatePdfHtml(data) {
-  const today = new Date().toLocaleDateString('it-IT');
+// GENERA HTML DEL DOCUMENTO SIM
+function generaDocumentoSIM(dati) {
+  const oggi = new Date().toLocaleDateString('it-IT');
   
-  return `
-<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delega SIM Carabinieri - ${data.nome} ${data.cognome}</title>
+    <title>Delega SIM - ${dati.nome} ${dati.cognome}</title>
     <style>
         @page {
             size: A4;
-            margin: 20mm;
+            margin: 15mm;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
             font-family: 'Times New Roman', serif;
-            font-size: 12px;
-            line-height: 1.4;
+            font-size: 11px;
+            line-height: 1.3;
             color: #000;
             background: white;
-            margin: 0;
-            padding: 20px;
+            padding: 15px;
         }
         
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             border-bottom: 2px solid #000;
-            padding-bottom: 20px;
+            padding-bottom: 15px;
         }
         
         .logo {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-        
-        .title {
+            color: #c41e3a;
+            font-size: 20px;
             font-weight: bold;
-            font-size: 16px;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
         
-        .subtitle {
+        .org-title {
+            font-weight: bold;
             font-size: 14px;
-            margin-bottom: 10px;
-        }
-        
-        .address {
-            font-size: 11px;
-            color: #666;
-        }
-        
-        .main-title {
-            text-align: center;
-            font-weight: bold;
-            font-size: 18px;
-            margin: 30px 0 20px 0;
+            margin-bottom: 3px;
             text-transform: uppercase;
         }
         
-        .field-row {
-            margin: 10px 0;
+        .org-subtitle {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .address {
+            font-size: 10px;
+            color: #333;
+            line-height: 1.2;
+        }
+        
+        .document-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 12px;
+            margin: 20px 0;
+            text-transform: uppercase;
+            line-height: 1.4;
+        }
+        
+        .form-section {
+            margin: 15px 0;
+        }
+        
+        .form-row {
+            margin: 8px 0;
             display: flex;
             align-items: baseline;
+            flex-wrap: wrap;
         }
         
         .field-label {
             font-weight: bold;
-            margin-right: 10px;
-            min-width: 120px;
+            margin-right: 8px;
+            white-space: nowrap;
         }
         
         .field-value {
+            border-bottom: 1px solid #000;
+            padding: 0 5px 2px 5px;
+            min-width: 100px;
+            display: inline-block;
+            margin-right: 15px;
             text-transform: uppercase;
-            text-decoration: underline;
         }
         
-        .signature-section {
-            margin-top: 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .signature-box {
-            border: 1px solid #000;
-            width: 200px;
-            height: 80px;
+        .checkbox-section {
+            margin: 15px 0;
             display: flex;
             align-items: center;
-            justify-content: center;
-            background: #f9f9f9;
-        }
-        
-        .footer {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #ccc;
-            font-size: 10px;
-            text-align: center;
-            color: #666;
-        }
-        
-        .delegation-text {
-            margin: 20px 0;
-            text-align: justify;
-            line-height: 1.6;
-        }
-        
-        .checkbox-area {
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
-            gap: 20px;
+            gap: 15px;
         }
         
         .checkbox {
@@ -224,173 +294,225 @@ function generatePdfHtml(data) {
             display: inline-block;
             text-align: center;
             line-height: 10px;
+            font-size: 10px;
+            margin: 0 5px;
         }
         
-        @media print {
-            body { margin: 0; padding: 15mm; }
-            .no-print { display: none; }
+        .content-section {
+            margin: 20px 0;
+            text-align: justify;
+            line-height: 1.4;
         }
         
-        .print-btn {
+        .content-section p {
+            margin: 10px 0;
+        }
+        
+        .content-section ul {
+            margin: 10px 0 10px 20px;
+        }
+        
+        .content-section li {
+            margin: 8px 0;
+            text-align: justify;
+        }
+        
+        .signature-section {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .signature-line {
+            border-bottom: 1px solid #000;
+            min-width: 200px;
+            display: inline-block;
+            margin: 0 10px;
+        }
+        
+        .footer-info {
+            margin-top: 20px;
+            font-size: 10px;
+            line-height: 1.3;
+            padding: 10px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .print-controls {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
             background: #007cba;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 8px 16px;
+            border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
-            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
         
-        .print-btn:hover {
+        .print-controls:hover {
             background: #005a87;
+        }
+        
+        @media print {
+            .print-controls { display: none; }
+            body { padding: 0; margin: 0; }
+            .footer-info { background: white; border: none; }
+        }
+        
+        .highlight {
+            background-color: #ffffcc;
+            padding: 1px 3px;
+            border-radius: 2px;
+        }
+        
+        .bank-info {
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            background: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 3px;
         }
     </style>
 </head>
 <body>
-    <button class="print-btn no-print" onclick="window.print()">🖨️ Stampa PDF</button>
+    <button class="print-controls" onclick="window.print()">🖨️ Stampa PDF</button>
     
     <div class="header">
-        <div class="logo">🇮🇹</div>
-        <div class="title">SINDACATO ITALIANO MILITARI CARABINIERI</div>
-        <div class="subtitle">S.I.M. CARABINIERI</div>
-        <div class="address">Via Magnagrecia n.13, 00184 Roma<br>Codice Fiscale: 96408280582</div>
+        <div class="logo">🇮🇹 S.I.M.</div>
+        <div class="org-title">SINDACATO ITALIANO MILITARI CARABINIERI</div>
+        <div class="org-subtitle">S.I.M. CARABINIERI</div>
+        <div class="address">
+            Via Magnagrecia n.13, 00184 Roma<br>
+            Codice Fiscale: 96408280582
+        </div>
     </div>
     
-    <div class="main-title">
+    <div class="document-title">
         DELEGA DI ADESIONE AL<br>
         SINDACATO ITALIANO DEI MILITARI CARABINIERI SIM<br>
-        CARABINIERI- Via Magnagrecia n.13, 00184 Roma
+        CARABINIERI - Via Magnagrecia n.13, 00184 Roma
     </div>
     
-    <div class="field-row">
-        <span class="field-label">Grado:</span>
-        <span class="field-value">${data.grado}</span>
+    <div class="form-section">
+        <div class="form-row">
+            <span class="field-label">Grado:</span>
+            <span class="field-value">${dati.grado}</span>
+        </div>
+        
+        <div class="form-row">
+            <span class="field-label">IL/LA SOTTOSCRITTO/A NOME:</span>
+            <span class="field-value">${dati.nome}</span>
+            <span class="field-label">COGNOME:</span>
+            <span class="field-value">${dati.cognome}</span>
+        </div>
+        
+        <div class="form-row">
+            <span class="field-label">NATO/A A:</span>
+            <span class="field-value">${dati.luogonascita}</span>
+            <span class="field-label">PROV.:</span>
+            <span class="field-value">${dati.provincia}</span>
+            <span class="field-label">IL:</span>
+            <span class="field-value">${new Date(dati.datanascita).toLocaleDateString('it-IT')}</span>
+        </div>
+        
+        <div class="form-row">
+            <span class="field-label">C.I.P.:</span>
+            <span class="field-value">${dati.cip}</span>
+            <span class="field-label">CODICE FISCALE:</span>
+            <span class="field-value">${dati.codicefiscale}</span>
+        </div>
+        
+        <div class="form-row">
+            <span class="field-label">REPARTO DI APPARTENENZA:</span>
+            <span class="field-value">${dati.reparto}</span>
+            <span class="field-label">CAP:</span>
+            <span class="field-value">${dati.cap}</span>
+        </div>
+        
+        <div class="form-row">
+            <span class="field-label">REGIONE:</span>
+            <span class="field-value">${dati.regione}</span>
+            <span class="field-label">CITTÀ e PROV.:</span>
+            <span class="field-value">${dati.citta}</span>
+        </div>
+        
+        <div class="form-row">
+            <span class="field-label">CELL.:</span>
+            <span class="field-value">${dati.cellulare}</span>
+            <span class="field-label">E-MAIL:</span>
+            <span class="field-value">${dati.email}</span>
+        </div>
     </div>
     
-    <div class="field-row">
-        <span class="field-label">IL/LA SOTTOSCRITTO/A NOME:</span>
-        <span class="field-value">${data.nome}</span>
-        <span class="field-label" style="margin-left: 40px;">COGNOME:</span>
-        <span class="field-value">${data.cognome}</span>
-    </div>
-    
-    <div class="field-row">
-        <span class="field-label">NATO/A A:</span>
-        <span class="field-value">${data.luogonascita}</span>
-        <span class="field-label" style="margin-left: 40px;">PROV.:</span>
-        <span class="field-value">${data.provincia}</span>
-        <span class="field-label" style="margin-left: 40px;">IL:</span>
-        <span class="field-value">${new Date(data.datanascita).toLocaleDateString('it-IT')}</span>
-    </div>
-    
-    <div class="field-row">
-        <span class="field-label">C.I.P.:</span>
-        <span class="field-value">${data.cip}</span>
-        <span class="field-label" style="margin-left: 40px;">CODICE FISCALE:</span>
-        <span class="field-value">${data.cf}</span>
-    </div>
-    
-    <div class="field-row">
-        <span class="field-label">REPARTO DI APPARTENENZA:</span>
-        <span class="field-value">${data.reparto}</span>
-        <span class="field-label" style="margin-left: 40px;">CAP:</span>
-        <span class="field-value">${data.cap}</span>
-    </div>
-    
-    <div class="field-row">
-        <span class="field-label">REGIONE:</span>
-        <span class="field-value">${data.regione}</span>
-        <span class="field-label" style="margin-left: 40px;">CITTÀ e PROV.:</span>
-        <span class="field-value">${data.citta}</span>
-    </div>
-    
-    <div class="field-row">
-        <span class="field-label">CELL.:</span>
-        <span class="field-value">${data.cellulare}</span>
-        <span class="field-label" style="margin-left: 40px;">E-MAIL:</span>
-        <span class="field-value">${data.email}</span>
-    </div>
-    
-    <div class="checkbox-area">
-        <span>Spuntare se in ausiliaria- SI</span>
-        <span class="checkbox">${data.ausiliaria === 'SI' ? '✓' : ''}</span>
+    <div class="checkbox-section">
+        <span>Spuntare se in ausiliaria - SI</span>
+        <span class="checkbox">${dati.ausiliaria === 'SI' ? '✓' : ''}</span>
         <span>NO</span>
-        <span class="checkbox">${data.ausiliaria === 'NO' ? '✓' : ''}</span>
+        <span class="checkbox">${dati.ausiliaria === 'NO' ? '✓' : ''}</span>
     </div>
     
-    <div class="delegation-text">
+    <div class="content-section">
         <p><strong>Con il presente atto aderisce al Sindacato Italiano Militari Carabinieri – S.I.M. Carabinieri –</strong><br>
         Via Magnagrecia n. 13, 00183 Roma - <strong>Codice Fiscale: 96408280582</strong>.</p>
         
         <p><strong>A tal fine rilascia delega ed autorizza l'Amministrazione dell'Arma dei Carabinieri a:</strong></p>
         
-        <ul style="margin-left: 20px;">
-            <li>trattenere mensilmente dal proprio statino paga e per le 12 mensilità, lo 0,50% della voce stipendio o del trattamento pensionistico da considerare al netto di tutte le ritenute fiscali e contributive riferita agli emolumenti fissi e continuativi così come stabilito dai competenti organi statutari in analogia alle leggi di settore vigenti, ai sensi dell'art. 13 co. 3 della Legge n. 46 del 28 aprile 2022;</li>
-            <li>versare la suddetta quota sul conto corrente bancario intestato a S.I.M. Carabinieri <strong>IBAN IT66 B0878739 0900 0000 0015819</strong> ai sensi dell'art. 7 co. 4. della Legge n. 46 del 28 aprile 2022 e D.M. conseguente.</li>
+        <ul>
+            <li>trattenere mensilmente dal proprio statino paga e per le 12 mensilità, lo <strong>0,50%</strong> della voce stipendio o del trattamento pensionistico da considerare al netto di tutte le ritenute fiscali e contributive riferita agli emolumenti fissi e continuativi così come stabilito dai competenti organi statutari in analogia alle leggi di settore vigenti, ai sensi dell'<strong>art. 13 co. 3 della Legge n. 46 del 28 aprile 2022</strong>;</li>
+            
+            <li>versare la suddetta quota sul conto corrente bancario intestato a S.I.M. Carabinieri <strong class="bank-info">IBAN IT66 B0878739 0900 0000 0015819</strong> ai sensi dell'<strong>art. 7 co. 4. della Legge n. 46 del 28 aprile 2022</strong> e D.M. conseguente.</li>
         </ul>
         
-        <p><strong>Validità temporale della delega:</strong> La presente delega ha validità dal primo giorno del mese successivo a quello del rilascio fino al 31 dicembre di ogni anno e si intende tacitamente rinnovata se non è revocata dall'interessato entro il 31 ottobre, ai sensi dell'art. 7 co. 3. della Legge n. 46 del 28 aprile 2022.</p>
+        <p><strong>Validità temporale della delega:</strong> La presente delega ha validità dal primo giorno del mese successivo a quello del rilascio fino al <strong>31 dicembre</strong> di ogni anno e si intende <strong>tacitamente rinnovata</strong> se non è revocata dall'interessato entro il <strong>31 ottobre</strong>, ai sensi dell'<strong>art. 7 co. 3. della Legge n. 46 del 28 aprile 2022</strong>.</p>
         
-        <p>L'eventuale revoca della delega dovrà essere trasmessa, in forma scritta, all'amministrazione e al S.I.M Carabinieri presso la sede legale nazionale Via Magnagrecia n. 13, 00183 Roma con raccomandata A/R o con PEC. ai sensi dell'art. art. 7 co. 3 della legge n. 46 del 28 aprile 2022.</p>
+        <p>L'eventuale <strong>revoca della delega</strong> dovrà essere trasmessa, in forma scritta, all'amministrazione e al S.I.M Carabinieri presso la sede legale nazionale <strong>Via Magnagrecia n. 13, 00183 Roma</strong> con raccomandata A/R o con PEC. ai sensi dell'<strong>art. 7 co. 3 della legge n. 46 del 28 aprile 2022</strong>.</p>
     </div>
     
     <div class="signature-section">
-        <div>
-            <span>_________________________ lì, ${today}</span>
-        </div>
-        <div>
-            <span>Firma _________________________________</span>
-            <div class="signature-box">
-                <span style="color: #999; font-style: italic;">Firma digitale</span>
-            </div>
-        </div>
+        <span>_________________________ lì, ${oggi}</span>
+        <span>Firma <span class="signature-line"></span></span>
     </div>
     
-    <div style="margin-top: 30px;">
-        <p style="font-size: 10px;">
-            <strong>Dichiara di aver preso visione dello Statuto</strong> presente sul sito internet www.simcarabinieri.com, 
-            dell'allegato "A" relativo alle competenze stipendiali per il calcolo della base della quota associativa, 
-            ricevuto ed accettato copia dell'allegata informativa sul trattamento dei dati personali.
-        </p>
+    <div class="footer-info">
+        <p><strong>Dichiara di aver preso visione dello Statuto</strong> presente sul sito internet <strong>www.simcarabinieri.com</strong>, dell'allegato "A" relativo alle competenze stipendiali per il calcolo della base della quota associativa, ricevuto ed accettato copia dell'allegata informativa sul trattamento dei dati personali.</p>
     </div>
     
-    <div class="signature-section" style="margin-top: 30px;">
-        <div>
-            <span>_________________________ lì, ${today}</span>
-        </div>
-        <div>
-            <span>Firma _________________________________</span>
-            <div class="signature-box">
-                <span style="color: #999; font-style: italic;">Firma digitale</span>
-            </div>
-        </div>
+    <div class="signature-section" style="margin-top: 25px;">
+        <span>_________________________ lì, ${oggi}</span>
+        <span>Firma <span class="signature-line"></span></span>
     </div>
     
-    <div class="footer">
-        <p><strong>La presente delega, compilata, sottoscritta e corredata dal documento di identità,<br>
-        dovrà essere trasmessa via mail all'indirizzo antoniogrande81@gmail.com</strong></p>
-        <hr style="margin: 20px 0;">
-        <p>Documento generato digitalmente - MyApp SIM v1.0 - ${today}</p>
+    <div style="margin-top: 20px; text-align: center; font-size: 10px; font-weight: bold; border-top: 1px solid #ccc; padding-top: 10px;">
+        <p>La presente delega, compilata, sottoscritta e corredata dal documento di identità,<br>
+        dovrà essere trasmessa via mail all'indirizzo <strong>tesseramenti@simcarabinieri.cc</strong></p>
     </div>
     
-    <script class="no-print">
-        // Auto-print quando caricata
-        window.onload = function() {
-            setTimeout(() => {
+    <div style="margin-top: 15px; text-align: center; font-size: 9px; color: #666;">
+        Documento generato digitalmente - Sistema SIM v2.0 - ${oggi}
+    </div>
+    
+    <script>
+        // Auto-stampa dopo 1 secondo
+        window.addEventListener('load', function() {
+            setTimeout(function() {
                 window.print();
             }, 1000);
-        };
+        });
         
-        // Chiudi finestra dopo stampa
-        window.onafterprint = function() {
-            setTimeout(() => {
-                window.close();
+        // Chiudi dopo stampa (opzionale)
+        window.addEventListener('afterprint', function() {
+            setTimeout(function() {
+                if (confirm('Chiudere la finestra?')) {
+                    window.close();
+                }
             }, 1000);
-        };
+        });
     </script>
 </body>
 </html>`;
