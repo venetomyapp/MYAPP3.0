@@ -1184,6 +1184,19 @@
                     throw new Error('PDF vuoto ricevuto dal server');
                 }
 
+                // Se è HTML, aprilo per stampa PDF
+                if (blob.type.includes('text/html')) {
+                    console.log('🖨️ Apertura HTML per stampa PDF...');
+                    const htmlText = await blob.text();
+                    const newWindow = window.open('', '_blank');
+                    newWindow.document.write(htmlText);
+                    newWindow.document.close();
+                    
+                    showAlert('success', '✅ Documento aperto in nuova finestra! Usa Ctrl+P → "Salva come PDF"');
+                    return;
+                }
+
+                // Se è PDF vero, scarica normalmente
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 
