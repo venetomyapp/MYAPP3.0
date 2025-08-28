@@ -83,6 +83,7 @@
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); } 50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); } }
 
         @media (prefers-reduced-motion: reduce) {
             * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
@@ -124,16 +125,47 @@
             align-items: center;
             justify-content: center;
         }
+
+        /* CTA Button Special */
+        .btn-cta {
+            background: linear-gradient(135deg, #ffd700 0%, #ff006e 50%, #00d4ff 100%);
+            color: #1a1a2e;
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            font-weight: 800;
+            animation: glow 2s infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn-cta:hover::before {
+            left: 100%;
+        }
         
+        /* Mobile-first hover states */
         @media (hover: hover) and (pointer: fine) {
             .btn-aurora:hover { 
                 transform: translateY(-2px) scale(1.02); 
                 box-shadow: 0 16px 32px rgba(233,69,96,.35); 
                 border-color: rgba(233,69,96,.7); 
             }
+            .btn-cta:hover {
+                transform: translateY(-3px) scale(1.05);
+                animation: glow 1s infinite;
+            }
         }
 
-        /* Cards */
+        /* Cards with better mobile interaction */
         .tool-card,
         .action-card {
             background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.08));
@@ -173,7 +205,7 @@
             }
         }
 
-        /* Stats */
+        /* Mobile optimized stats */
         .stat-card { 
             background: linear-gradient(135deg, rgba(255,255,255,.15), rgba(255,255,255,.05)); 
             backdrop-filter: blur(15px); 
@@ -183,7 +215,10 @@
             min-height: 100px;
         }
 
-        .stat-card:active { transform: scale(0.98); }
+        .stat-card:active {
+            transform: scale(0.98);
+        }
+
         @media (hover: hover) and (pointer: fine) { 
             .stat-card:hover { 
                 transform: translateY(-2px); 
@@ -224,11 +259,28 @@
             overflow-y: auto; 
             z-index: 1000; 
         }
-        .notification-dropdown.show { display: block; animation: slideDown .2s ease; }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .notification-dropdown.show { 
+            display: block; 
+            animation: slideDown .2s ease; 
+        }
+        @keyframes slideDown { 
+            from { opacity: 0; transform: translateY(-10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
         .notification-badge { 
-            background: #dc2626; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; 
-            align-items: center; justify-content: center; font-size: 11px; font-weight: 600; position: absolute; top: -6px; right: -6px;
+            background: #dc2626; 
+            color: white; 
+            border-radius: 50%; 
+            width: 20px; 
+            height: 20px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 11px; 
+            font-weight: 600; 
+            position: absolute;
+            top: -6px;
+            right: -6px;
         }
 
         /* Priority indicators */
@@ -240,84 +292,112 @@
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
-        /* Hero */
-        .hero-title { font-size: clamp(1.8rem, 6vw, 3.5rem); font-weight: 900; line-height: 1.1; }
+        /* Hero title responsive */
+        .hero-title { 
+            font-size: clamp(1.8rem, 6vw, 3.5rem); 
+            font-weight: 900; 
+            line-height: 1.1;
+        }
 
-        /* Mobile grid */
-        .mobile-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        @media (min-width: 480px) { .mobile-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
-        @media (min-width: 768px) { .mobile-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
-        @media (min-width: 1024px) { .mobile-grid { grid-template-columns: repeat(5, 1fr); } }
+        /* Mobile grid system */
+        .mobile-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        @media (min-width: 480px) {
+            .mobile-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 16px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .mobile-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .mobile-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
 
         /* Stats grid */
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        @media (min-width: 640px) { .stats-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; } }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
 
-        /* Scrollbar */
+        @media (min-width: 640px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 16px;
+            }
+        }
+
+        /* Scrollbar styling */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.25); border-radius: 9999px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.4); }
         ::-webkit-scrollbar-track { background: transparent; }
 
-        /* Aspect ratio */
+        /* Aspect ratio helpers */
         .ratio-square { aspect-ratio: 1 / 1; }
         .ratio-16x9 { aspect-ratio: 16 / 9; }
         .ratio-4x3 { aspect-ratio: 4 / 3; }
 
-        /* SR-only */
-        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-
-        /* Header safe */
-        .header-safe { padding-top: max(16px, var(--safe-area-inset-top)); }
-
-        /* Animations helpers */
-        .animate-slide-up { animation: slideUp 0.3s ease-out; }
-        .animate-fade-in { animation: fadeIn 0.3s ease-out; }
-
-        /* Mobile spacing */
-        .touch-target { min-height: 44px; min-width: 44px; }
-        .mobile-section { padding: 1rem; }
-        @media (min-width: 640px) { .mobile-section { padding: 1.5rem; } }
-        @media (min-width: 1024px) { .mobile-section { padding: 2rem; } }
-
-        /* ======== NUOVO: Badge stellina & card Community ======== */
-        @keyframes twinkle { 
-          0%, 100% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 0px rgba(255,215,0,.0)); }
-          50% { transform: rotate(10deg) scale(1.1); filter: drop-shadow(0 0 8px rgba(255,215,0,.6)); }
+        /* Visually hidden for live regions */
+        .sr-only { 
+            position: absolute; 
+            width: 1px; 
+            height: 1px; 
+            padding: 0; 
+            margin: -1px; 
+            overflow: hidden; 
+            clip: rect(0,0,0,0); 
+            white-space: nowrap; 
+            border: 0; 
         }
-        .corner-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: linear-gradient(135deg, #ffd700, #ff8c00);
-            color: #1a1a2e;
-            font-weight: 900;
-            border-radius: 9999px;
-            padding: 6px 8px;
-            border: 2px solid rgba(255,255,255,.6);
-            line-height: 1;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            letter-spacing: .3px;
+
+        /* Header with safe area */
+        .header-safe {
+            padding-top: max(16px, var(--safe-area-inset-top));
         }
-        .corner-badge .star { font-size: 14px; animation: twinkle 1.8s ease-in-out infinite; }
-        .corner-badge-pulse { box-shadow: 0 0 0 0 rgba(255,215,0,.6); animation: badgePulse 2.2s infinite; }
-        @keyframes badgePulse {
-          0% { box-shadow: 0 0 0 0 rgba(255,215,0,.55); }
-          70% { box-shadow: 0 0 0 10px rgba(255,215,0,0); }
-          100% { box-shadow: 0 0 0 0 rgba(255,215,0,0); }
+
+        /* Mobile-specific animations */
+        .animate-slide-up {
+            animation: slideUp 0.3s ease-out;
         }
-        .community-card {
-            background: radial-gradient(120% 120% at 10% 0%, rgba(255,255,255,.22) 0%, rgba(255,255,255,.10) 60%) !important;
-            border: 2px solid rgba(255,215,0,.55) !important;
-            box-shadow: 0 12px 30px rgba(255,215,0,.18), inset 0 0 0 1px rgba(255,255,255,.08);
+
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
         }
-        @media (hover: hover) and (pointer: fine) {
-            .community-card:hover {
-                border-color: rgba(255,215,0,.85) !important;
-                box-shadow: 0 18px 40px rgba(255,215,0,.28), inset 0 0 0 1px rgba(255,255,255,.12);
+
+        /* Better touch targets */
+        .touch-target {
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        /* Improved mobile spacing */
+        .mobile-section {
+            padding: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .mobile-section {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .mobile-section {
+                padding: 2rem;
             }
         }
     </style>
@@ -418,13 +498,14 @@
     <!-- MAIN CONTENT -->
     <main class="flex-grow pb-8">
 
-        <!-- WELCOME SECTION -->
+        <!-- WELCOME SECTION - Mobile First -->
         <section class="mobile-section animate-fade-in">
             <div class="glass-morphism rounded-3xl p-6 md:p-8 relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-aurora/20 to-cyan/20 rounded-full blur-xl"></div>
                 <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-magenta/20 to-teal/20 rounded-full blur-lg"></div>
 
                 <div class="relative z-10">
+                    <!-- Mobile-optimized welcome -->
                     <div class="text-center md:text-left">
                         <div class="mb-4">
                             <div class="inline-flex items-center gap-2 mb-3">
@@ -442,6 +523,7 @@
                             Accedi ai tuoi servizi personalizzati
                         </p>
 
+                        <!-- Status indicators - Mobile optimized -->
                         <div class="flex flex-wrap gap-2 justify-center md:justify-start">
                             <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
                                 <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
@@ -460,7 +542,68 @@
             </div>
         </section>
 
-        <!-- STATS SECTION -->
+        <!-- CTA ISCRIZIONE SECTION - NEW -->
+        <section class="mobile-section animate-slide-up">
+            <div class="glass-morphism rounded-3xl p-6 md:p-8 text-center relative overflow-hidden">
+                <!-- Background effects -->
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-gradient-to-r from-gold/20 via-magenta/20 to-cyan/20 rounded-full blur-2xl"></div>
+                
+                <div class="relative z-10">
+                    <div class="flex items-center justify-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-gold to-magenta rounded-xl flex items-center justify-center">
+                            <span class="text-white text-2xl">⭐</span>
+                        </div>
+                        <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Vuoi di più?</h2>
+                    </div>
+                    
+                    <p class="text-white/90 text-base md:text-lg mb-6 max-w-lg mx-auto">
+                        Scopri tutti i vantaggi del <strong class="text-gold">Sindacato Italiano Militari - Carabinieri</strong>. 
+                        Convenzioni esclusive, tutela legale e servizi dedicati.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                        <a href="https://form.jotform.com/252383243723051" 
+                           target="_blank"
+                           class="btn-cta px-8 py-4 rounded-2xl text-lg font-black flex items-center gap-3 shadow-2xl transform transition-all duration-300"
+                           onclick="trackCtaClick()">
+                            <span>🚀 ISCRIVITI SUBITO</span>
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                        </a>
+                        
+                        <div class="text-center">
+                            <div class="text-white/80 text-sm">
+                                ✅ Iscrizione sicura e veloce<br>
+                                ✅ Attivazione immediata
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Benefits Preview -->
+                    <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                        <div class="text-white/80">
+                            <div class="text-2xl mb-1">🤝</div>
+                            <div class="text-xs font-semibold">Convenzioni</div>
+                        </div>
+                        <div class="text-white/80">
+                            <div class="text-2xl mb-1">⚖️</div>
+                            <div class="text-xs font-semibold">Tutela Legale</div>
+                        </div>
+                        <div class="text-white/80">
+                            <div class="text-2xl mb-1">🎓</div>
+                            <div class="text-xs font-semibold">Formazione</div>
+                        </div>
+                        <div class="text-white/80">
+                            <div class="text-2xl mb-1">🏥</div>
+                            <div class="text-xs font-semibold">Assistenza</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STATS SECTION - Mobile Grid -->
         <section class="mobile-section animate-slide-up">
             <div class="flex items-center gap-3 mb-4">
                 <div class="w-10 h-10 bg-gradient-to-br from-cyan to-teal rounded-xl flex items-center justify-center">
@@ -504,7 +647,7 @@
             </div>
         </section>
 
-        <!-- TOOLS SECTION -->
+        <!-- TOOLS SECTION - Mobile Grid -->
         <section class="mobile-section animate-slide-up">
             <div class="flex items-center gap-3 mb-4">
                 <div class="w-10 h-10 bg-gradient-to-br from-gold to-aurora rounded-xl flex items-center justify-center">
@@ -514,21 +657,6 @@
             </div>
 
             <div class="mobile-grid">
-                <!-- NUOVO: COMMUNITY HUB -->
-                <div class="tool-card community-card p-4 text-center cursor-pointer relative"
-                     role="button" tabindex="0" aria-label="Community Hub (novità)"
-                     onclick="goToCommunityHub()" onkeydown="keyActivate(event,'goToCommunityHub')">
-                     
-                    <div class="corner-badge corner-badge-pulse" aria-hidden="true" title="Novità">
-                        <span class="star">⭐</span>
-                        <span class="hidden sm:inline font-extrabold uppercase tracking-wide">News</span>
-                    </div>
-
-                    <div class="text-3xl mb-2" aria-hidden="true">🎓</div>
-                    <h3 class="text-white text-sm font-black mb-1 tracking-wide">Community Hub</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">Academy, dirette, corsi e canali</p>
-                </div>
-
                 <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Nuova Richiesta" onclick="goToRichieste()" onkeydown="keyActivate(event,'goToRichieste')">
                     <div class="text-3xl mb-2">📝</div>
                     <h3 class="text-white text-sm font-bold mb-1">Nuova Richiesta</h3>
@@ -574,7 +702,7 @@
                 <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="FileBox" onclick="goToFileBox()" onkeydown="keyActivate(event,'goToFileBox')">
                     <div class="text-3xl mb-2">📁</div>
                     <h3 class="text-white text-sm font-bold mb-1">FileBox</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">Area file e documenti — download</p>
+                    <p class="text-white/80 text-xs line-clamp-2">File e documenti</p>
                 </div>
 
                 <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Assistenza" onclick="goToAssistenza()" onkeydown="keyActivate(event,'goToAssistenza')">
@@ -585,7 +713,7 @@
             </div>
         </section>
 
-        <!-- REQUESTS SECTION -->
+        <!-- REQUESTS SECTION - Mobile First -->
         <section class="mobile-section animate-slide-up">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-3">
@@ -612,7 +740,7 @@
             </div>
         </section>
 
-        <!-- NEWS SECTION -->
+        <!-- NEWS SECTION - Mobile Cards -->
         <section class="mobile-section animate-slide-up" id="newsSection">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-3">
@@ -639,7 +767,7 @@
             </div>
         </section>
 
-        <!-- CONVENZIONI SECTION -->
+        <!-- CONVENTIONS SECTION - Mobile Grid -->
         <section class="mobile-section animate-slide-up" id="convenzioniSection">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-3">
@@ -666,7 +794,7 @@
 
     </main>
 
-    <!-- FOOTER -->
+    <!-- FOOTER - Mobile Optimized -->
     <footer class="glass-morphism mt-8 pb-8" style="padding-bottom: max(2rem, var(--safe-area-inset-bottom));">
         <div class="px-4 py-6">
             <div class="text-center text-white">
@@ -709,6 +837,21 @@
 
         // Mobile menu state
         let mobileMenuOpen = false;
+
+        // CTA Analytics tracking
+        function trackCtaClick() {
+            try {
+                window.dataLayer = window.dataLayer || [];
+                window.dataLayer.push({
+                    event: 'cta_sindacato_click',
+                    page: 'home',
+                    cta_location: 'vuoi_di_piu_section',
+                    ts: Date.now()
+                });
+            } catch (err) { 
+                console.log('Analytics tracking non disponibile');
+            }
+        }
 
         // Attivazione via tastiera per "role=button"
         function keyActivate(e, fnName, ...args) {
@@ -1042,7 +1185,7 @@
             if (statusEl) statusEl.textContent = getStatusLabel(userProfile.stato);
         }
 
-        // === DISPLAY FUNZIONI ===
+        // === DISPLAY FUNCTIONS - Mobile Optimized ===
         function displayRichieste(richieste) {
             const container = document.getElementById('richiesteContainer');
             if (!container) return;
@@ -1368,7 +1511,7 @@
             window.location.href = `richieste.html?id=${id}`;
         }
 
-        // === NAVIGAZIONE ESISTENTE ===
+        // === NAVIGAZIONE ===
         function goToRichieste(){ window.location.href = 'richieste.html'; }
         function goToTessera(){ window.location.href = 'tessera.html'; }
         function goToProfilo(){ window.location.href = 'profilo.html'; }
@@ -1380,10 +1523,7 @@
         function goToAssistenza(){ window.location.href = 'servizi.html'; }
         function viewAllNews(){ window.location.href = 'news.html'; }
 
-        // === NUOVO: NAVIGAZIONE COMMUNITY HUB ===
-        function goToCommunityHub(){ window.location.href = 'Academy.html'; }
-
-        // Apri notizia
+        // Apri notizia: priorità all'URL esterno, fallback interno
         function readNews(newsId, encodedUrl) {
             const decoded = encodedUrl ? decodeURIComponent(encodedUrl) : null;
             const url = sanitizeUrl(decoded);
@@ -1394,7 +1534,7 @@
             }
         }
 
-        // Apri convenzione
+        // Apri convenzione: se esiste link_esterno usa quello, altrimenti fallback interno
         function openConvenzione(convenzioneId, encodedUrl) {
             const decoded = encodedUrl ? decodeURIComponent(encodedUrl) : null;
             const url = sanitizeUrl(decoded);
@@ -1459,7 +1599,9 @@
             return d.toLocaleDateString('it-IT') + ' ' + d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}); 
         }
 
+        // Relative time "3 h fa", "ieri", etc.
         const rtf = new Intl.RelativeTimeFormat('it', { numeric:'auto' });
+        
         function formatRelativeTime(dateString){
             if (!dateString) return '';
             const now = new Date();
@@ -1475,9 +1617,11 @@
             if (abs < 60*60*1000) return rtf.format(minutes, 'minute');
             if (abs < 24*60*60*1000) return rtf.format(hours, 'hour');
             if (abs < 7*24*60*60*1000) return rtf.format(days, 'day');
+            // oltre: data breve
             return then.toLocaleDateString('it-IT', { day:'2-digit', month:'short', year:'numeric' });
         }
 
+        // URL sanitizer: consenti solo http/https
         function sanitizeUrl(input){
             if (!input) return null;
             try {
