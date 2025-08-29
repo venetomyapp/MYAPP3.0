@@ -14,22 +14,21 @@
             theme: {
                 extend: {
                     colors: {
-                        // Blue-Red 2025 Palette
-                        primary: '#1A237E',          // Blu Navy profondo
-                        secondary: '#3F51B5',        // Blu Indaco
-                        accent: '#2196F3',           // Blu Material
-                        magenta: '#E91E63',          // Rosa-fucsia
-                        deepRed: '#D32F2F',          // Rosso profondo
-                        blue: '#2196F3',             // Blu standard
-                        indigo: '#3F51B5',           // Indaco
-                        pink: '#E91E63',             // Rosa vibrante
-                        red: '#F44336',              // Rosso Material
+                        // Professional Blue-Purple Palette
+                        primary: '#1e3a8a',          // Blu profondo
+                        secondary: '#3730a3',        // Blu-viola
+                        accent: '#5b21b6',           // Viola medio
+                        purple: '#7c3aed',           // Viola vibrante
+                        lightPurple: '#a855f7',      // Viola chiaro
+                        blue: '#1e40af',             // Blu standard
+                        indigo: '#3730a3',           // Indaco
+                        violet: '#5b21b6',           // Violetto
                         gold: '#FFD700',             // Oro per contrasto
                         white: '#FFFFFF',            // Bianco puro
-                        dark: '#0D47A1',             // Blu molto scuro
-                        light: '#E3F2FD',            // Blu palissimo
+                        dark: '#1e1b4b',             // Blu molto scuro
+                        light: '#f1f5f9',            // Grigio chiarissimo
                         textDark: '#1C1C1E',
-                        backgroundLight: '#F0F8FF',
+                        backgroundLight: '#f8fafc',
                     },
                     fontFamily: {
                         'brand': ['Georgia', 'Times New Roman', 'serif'],
@@ -53,36 +52,19 @@
     <style>
         /* === VARIABILI CSS === */
         :root {
-            --gradient-main: linear-gradient(180deg, #1A237E 0%, #3F51B5 25%, #2196F3 50%, #E91E63 75%, #D32F2F 100%);
-            --gradient-button: linear-gradient(135deg, #3F51B5 0%, #2196F3 50%, #E91E63 100%);
-            --gradient-accent: linear-gradient(135deg, #1976D2 0%, #E91E63 50%, #D32F2F 100%);
-            --gradient-cyber: linear-gradient(135deg, #1A237E 0%, #3F51B5 50%, #2196F3 100%);
+            --gradient-main: linear-gradient(180deg, #1e3a8a 0%, #3730a3 25%, #5b21b6 50%, #7c3aed 75%, #a855f7 100%);
+            --gradient-button: linear-gradient(135deg, #3730a3 0%, #5b21b6 50%, #7c3aed 100%);
+            --gradient-accent: linear-gradient(135deg, #1e40af 0%, #5b21b6 50%, #7c3aed 100%);
+            --gradient-cyber: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #5b21b6 100%);
         }
 
         /* === SFONDO PRINCIPALE === */
         body {
             background: var(--gradient-main);
-            background-size: 400% 400%;
-            animation: purpleFlow 25s ease infinite;
             min-height: 100vh;
         }
 
         /* === ANIMAZIONI === */
-        @keyframes purpleFlow {
-            0%, 100% { 
-                background: linear-gradient(180deg, #1A237E 0%, #3F51B5 25%, #2196F3 50%, #E91E63 75%, #D32F2F 100%);
-            }
-            25% { 
-                background: linear-gradient(180deg, #0D47A1 0%, #1A237E 25%, #3F51B5 50%, #2196F3 75%, #E91E63 100%);
-            }
-            50% { 
-                background: linear-gradient(180deg, #3F51B5 0%, #2196F3 25%, #03A9F4 50%, #E91E63 75%, #D32F2F 100%);
-            }
-            75% { 
-                background: linear-gradient(180deg, #2196F3 0%, #03A9F4 25%, #E91E63 50%, #D32F2F 75%, #B71C1C 100%);
-            }
-        }
-
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-12px); }
@@ -94,8 +76,8 @@
         }
 
         @keyframes glow {
-            0%, 100% { box-shadow: 0 0 25px rgba(233, 30, 99, 0.6); }
-            50% { box-shadow: 0 0 45px rgba(171, 71, 188, 0.8); }
+            0%, 100% { box-shadow: 0 0 25px rgba(123, 58, 237, 0.6); }
+            50% { box-shadow: 0 0 45px rgba(91, 33, 182, 0.8); }
         }
 
         @keyframes pulse {
@@ -283,7 +265,7 @@
 
         /* === LOGO GRADIENT === */
         .logo-gradient {
-            background: linear-gradient(135deg, #2196F3 0%, #E91E63 50%, #D32F2F 100%);
+            background: linear-gradient(135deg, #3730a3 0%, #5b21b6 50%, #7c3aed 100%);
         }
     </style>
 </head>
@@ -294,8 +276,8 @@
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 logo-gradient rounded-xl flex items-center justify-center shadow-lg">
-                        <span class="text-white font-black text-xl">S</span>
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAASxSURBVFiFtZhLbBxVFIa/27e6u9rtdtvd9iN2EjtO4gQnJCEhkRAJEQFCYoMEQkJsWLFhwQYhsWDJhgUbJFasWCGxYMOGBQsWbJBasWDBhgUbFmxYsGHBhgUbNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0=" alt="MyApp" class="w-full h-full object-contain" />
                     </div>
                     <div class="flex flex-col">
                         <span class="text-ultra-visible text-2xl font-black">MyApp</span>
@@ -589,7 +571,7 @@
                     Piattaforma digitale moderna per la gestione professionale
                 </p>
                 <div class="flex justify-center space-x-6 text-sm text-white">
-                    <span>© 2025 SIM Carabinieri</span>
+                    <span>© 2025 MyApp by SIM Carabinieri</span>
                     <span>•</span>
                     <span>Versione 4.1</span>
                     <span>•</span>
