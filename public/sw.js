@@ -1,156 +1,254 @@
-// ===== REGISTRAZIONE SERVICE WORKER MIGLIORATA =====
-// Sostituisci il codice esistente in Academy.html e admin-academy.html
+// ===== SERVICE WORKER MYAPP BY SIM =====
+// File: /sw.js (root del sito)
 
-// Service Worker con gestione aggiornamenti
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', async () => {
-        try {
-            const registration = await navigator.serviceWorker.register('/sw.js', {
-                scope: '/',
-                updateViaCache: 'none' // Forza controllo aggiornamenti
-            });
-            
-            console.log('✅ SW registrato con scope:', registration.scope);
-            
-            // Gestisci aggiornamenti SW
-            registration.addEventListener('updatefound', () => {
-                const newWorker = registration.installing;
-                console.log('🔄 Nuovo SW trovato, installando...');
-                
-                newWorker.addEventListener('statechange', () => {
-                    if (newWorker.state === 'installed') {
-                        if (navigator.serviceWorker.controller) {
-                            // Nuovo SW disponibile
-                            console.log('✨ Nuovo SW pronto');
-                            showUpdateNotification(newWorker);
-                        } else {
-                            // Primo SW installato
-                            console.log('✅ SW installato per la prima volta');
-                            showInstallNotification();
-                        }
+const CACHE_NAME = 'myapp-sim-v1.0';
+const APP_VERSION = '1.0';
+
+// File da cacheare per funzionamento offline
+const urlsToCache = [
+    '/',
+    '/password-recovery.html',
+    '/reset-password.html', 
+    '/login.html',
+    '/home.html',
+    '/home_dirigenti.html',
+    '/manifest.json',
+    // Aggiungi altre pagine principali qui
+    
+    // Assets esterni critici
+    'https://cdn.tailwindcss.com',
+    'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
+    'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'
+];
+
+// File che devono sempre essere aggiornati (no cache)
+const noCacheUrls = [
+    '/api/',
+    'supabase.co',
+    'google',
+    'facebook'
+];
+
+// ===== INSTALLAZIONE =====
+self.addEventListener('install', event => {
+    console.log('MyApp by SIM SW - Installazione v' + APP_VERSION);
+    
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(cache => {
+                console.log('MyApp by SIM SW - Cache aperto');
+                return cache.addAll(urlsToCache);
+            })
+            .then(() => {
+                console.log('MyApp by SIM SW - File cachati con successo');
+                // Forza l'attivazione immediata
+                return self.skipWaiting();
+            })
+            .catch(error => {
+                console.error('MyApp by SIM SW - Errore installazione:', error);
+            })
+    );
+});
+
+// ===== ATTIVAZIONE =====
+self.addEventListener('activate', event => {
+    console.log('MyApp by SIM SW - Attivazione');
+    
+    event.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.map(cacheName => {
+                    // Pulisci cache vecchie
+                    if (cacheName !== CACHE_NAME) {
+                        console.log('MyApp by SIM SW - Rimozione cache vecchia:', cacheName);
+                        return caches.delete(cacheName);
                     }
+                })
+            );
+        }).then(() => {
+            console.log('MyApp by SIM SW - Cache pulite, prendendo controllo');
+            
+            // Notifica l'app dell'attivazione
+            self.clients.matchAll().then(clients => {
+                clients.forEach(client => {
+                    client.postMessage({
+                        type: 'SW_ACTIVATED',
+                        message: 'MyApp by SIM SW attivo v' + APP_VERSION
+                    });
                 });
             });
             
-            // Controlla aggiornamenti ogni 60 secondi
-            setInterval(() => {
-                registration.update();
-            }, 60000);
-            
-            // Ascolta messaggi dal SW
-            navigator.serviceWorker.addEventListener('message', event => {
-                const { data } = event;
-                if (data && data.type === 'SW_ACTIVATED') {
-                    console.log('📱 SW:', data.message);
-                }
-            });
-            
-        } catch (error) {
-            console.error('❌ SW registrazione fallita:', error);
-            // Non mostrare più "SW non disponibile" generico
-            console.log('ℹ️ SW non disponibile - funzionalità offline limitate');
-        }
-    });
-    
-    // Gestisci cambio di stato online/offline
-    window.addEventListener('online', () => {
-        showToast('🌐 Connessione ripristinata', 'success');
-    });
-    
-    window.addEventListener('offline', () => {
-        showToast('📱 Modalità offline attiva', 'info');
-    });
-} else {
-    console.log('⚠️ Browser non supporta Service Workers');
-}
-
-// ===== NOTIFICHE UI =====
-function showUpdateNotification(newWorker) {
-    // Crea notifica in-app per aggiornamento
-    const notification = createNotification(
-        '🚀 Nuova versione disponibile!',
-        'Clicca per aggiornare MyApp',
-        () => {
-            newWorker.postMessage({ type: 'SKIP_WAITING' });
-            window.location.reload();
-        }
+            return self.clients.claim();
+        })
     );
-    
-    document.body.appendChild(notification);
-}
+});
 
-function showInstallNotification() {
-    showToast('✅ MyApp ora funziona offline!', 'success');
-}
-
-function createNotification(title, message, onAction) {
-    const div = document.createElement('div');
-    div.className = 'fixed top-4 right-4 z-[9999] max-w-sm bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden';
-    div.innerHTML = `
-        <div class="p-4">
-            <div class="flex items-start">
-                <div class="flex-grow">
-                    <h4 class="text-sm font-bold text-gray-900 mb-1">${title}</h4>
-                    <p class="text-sm text-gray-600">${message}</p>
-                </div>
-                <button class="ml-3 text-gray-400 hover:text-gray-600" onclick="this.closest('.fixed').remove()">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                    </svg>
-                </button>
-            </div>
-            <div class="mt-3 flex gap-2">
-                <button class="btn-aurora text-sm px-3 py-1" onclick="this.closest('.fixed').remove(); (${onAction})()">
-                    Aggiorna ora
-                </button>
-                <button class="text-sm text-gray-500 hover:text-gray-700 px-3 py-1" onclick="this.closest('.fixed').remove()">
-                    Più tardi
-                </button>
-            </div>
-        </div>
-    `;
+// ===== FETCH - GESTIONE RICHIESTE =====
+self.addEventListener('fetch', event => {
+    const request = event.request;
+    const url = new URL(request.url);
     
-    // Auto-remove dopo 10 secondi
-    setTimeout(() => {
-        if (div.parentNode) {
-            div.remove();
-        }
-    }, 10000);
-    
-    return div;
-}
-
-// Toast esistente o nuova implementazione
-function showToast(message, type = 'info') {
-    // Se hai già una funzione toast(), usa quella
-    // Altrimenti implementa una versione semplice:
-    
-    if (typeof toast === 'function') {
-        toast(message);
+    // Skip richieste non GET
+    if (request.method !== 'GET') {
         return;
     }
     
-    // Implementazione toast semplice
-    const colors = {
-        success: 'bg-green-500',
-        error: 'bg-red-500', 
-        info: 'bg-blue-500'
-    };
+    // Skip richieste che non devono essere cachate
+    if (noCacheUrls.some(noCache => url.href.includes(noCache))) {
+        return;
+    }
     
-    const div = document.createElement('div');
-    div.className = `fixed top-6 right-6 ${colors[type]} text-white px-4 py-3 rounded-xl font-bold shadow-xl z-[9999] max-w-sm`;
-    div.textContent = message;
+    // Strategia Cache First per assets statici
+    if (url.pathname.match(/\.(css|js|png|jpg|jpeg|gif|svg|woff|woff2)$/)) {
+        event.respondWith(
+            caches.match(request).then(response => {
+                return response || fetch(request).then(fetchResponse => {
+                    // Cache la risorsa per il futuro
+                    const responseClone = fetchResponse.clone();
+                    caches.open(CACHE_NAME).then(cache => {
+                        cache.put(request, responseClone);
+                    });
+                    return fetchResponse;
+                });
+            }).catch(() => {
+                // Fallback per immagini rotte
+                if (url.pathname.match(/\.(png|jpg|jpeg|gif|svg)$/)) {
+                    return new Response(
+                        '<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><rect width="200" height="200" fill="#f3f4f6"/><text x="100" y="100" text-anchor="middle" dy="0.3em" font-family="sans-serif" font-size="14" fill="#6b7280">Immagine non disponibile</text></svg>',
+                        { headers: { 'Content-Type': 'image/svg+xml' } }
+                    );
+                }
+            })
+        );
+        return;
+    }
     
-    document.body.appendChild(div);
+    // Strategia Network First per pagine HTML
+    if (request.headers.get('accept').includes('text/html')) {
+        event.respondWith(
+            fetch(request)
+                .then(response => {
+                    // Cache la pagina se la richiesta ha successo
+                    if (response.status === 200) {
+                        const responseClone = response.clone();
+                        caches.open(CACHE_NAME).then(cache => {
+                            cache.put(request, responseClone);
+                        });
+                    }
+                    return response;
+                })
+                .catch(() => {
+                    // Fallback alla cache se offline
+                    return caches.match(request).then(response => {
+                        if (response) {
+                            return response;
+                        }
+                        
+                        // Pagina offline personalizzata
+                        return new Response(`
+                            <!DOCTYPE html>
+                            <html lang="it">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title>Offline - MyApp by SIM</title>
+                                <style>
+                                    body {
+                                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                                        background: linear-gradient(180deg, #4a148c 0%, #ad1457 50%, #d32f2f 100%);
+                                        color: white;
+                                        margin: 0;
+                                        padding: 20px;
+                                        min-height: 100vh;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        text-align: center;
+                                    }
+                                    .container {
+                                        max-width: 400px;
+                                        background: rgba(255, 255, 255, 0.1);
+                                        backdrop-filter: blur(10px);
+                                        border-radius: 20px;
+                                        padding: 40px 30px;
+                                        border: 1px solid rgba(255, 255, 255, 0.2);
+                                    }
+                                    h1 { margin: 0 0 10px 0; font-size: 24px; }
+                                    .subtitle { font-size: 14px; opacity: 0.8; margin-bottom: 20px; }
+                                    .icon { font-size: 48px; margin-bottom: 20px; }
+                                    .message { font-size: 16px; line-height: 1.5; margin-bottom: 30px; }
+                                    .btn {
+                                        background: rgba(255, 255, 255, 0.2);
+                                        border: 1px solid rgba(255, 255, 255, 0.3);
+                                        color: white;
+                                        padding: 12px 24px;
+                                        border-radius: 12px;
+                                        text-decoration: none;
+                                        font-weight: 600;
+                                        display: inline-block;
+                                        transition: all 0.3s ease;
+                                    }
+                                    .btn:hover {
+                                        background: rgba(255, 255, 255, 0.3);
+                                        transform: translateY(-2px);
+                                    }
+                                </style>
+                            </head>
+                            <body>
+                                <div class="container">
+                                    <div class="icon">📱</div>
+                                    <h1>MyApp</h1>
+                                    <div class="subtitle">by SIM</div>
+                                    <div class="message">
+                                        Sei offline. Questa pagina non è disponibile senza connessione internet.
+                                    </div>
+                                    <a href="/" class="btn" onclick="window.location.reload()">
+                                        Riprova
+                                    </a>
+                                </div>
+                            </body>
+                            </html>
+                        `, {
+                            headers: { 'Content-Type': 'text/html' }
+                        });
+                    });
+                })
+        );
+        return;
+    }
     
-    // Animazione di entrata
-    div.style.transform = 'translateX(100%)';
-    div.style.transition = 'transform 0.3s ease';
-    setTimeout(() => div.style.transform = 'translateX(0)', 10);
+    // Strategia predefinita: Network First
+    event.respondWith(
+        fetch(request).catch(() => {
+            return caches.match(request);
+        })
+    );
+});
+
+// ===== GESTIONE MESSAGGI =====
+self.addEventListener('message', event => {
+    const { data } = event;
     
-    // Auto-remove
-    setTimeout(() => {
-        div.style.transform = 'translateX(100%)';
-        setTimeout(() => div.remove(), 300);
-    }, 3000);
-}
+    if (data && data.type === 'SKIP_WAITING') {
+        console.log('MyApp by SIM SW - Skip waiting richiesto');
+        self.skipWaiting();
+    }
+    
+    if (data && data.type === 'GET_VERSION') {
+        event.ports[0].postMessage({
+            version: APP_VERSION,
+            cacheName: CACHE_NAME
+        });
+    }
+});
+
+// ===== GESTIONE ERRORI =====
+self.addEventListener('error', event => {
+    console.error('MyApp by SIM SW - Errore:', event.error);
+});
+
+self.addEventListener('unhandledrejection', event => {
+    console.error('MyApp by SIM SW - Promise rifiutata:', event.reason);
+});
+
+console.log('MyApp by SIM Service Worker v' + APP_VERSION + ' caricato');
