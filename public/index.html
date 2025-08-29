@@ -29,6 +29,8 @@
                         light: '#f1f5f9',            // Grigio chiarissimo
                         textDark: '#1C1C1E',
                         backgroundLight: '#f8fafc',
+                        magenta: '#E91E63',          // Magenta per le card
+                        teal: '#20B2AA',             // Teal per le card
                     },
                     fontFamily: {
                         'brand': ['Georgia', 'Times New Roman', 'serif'],
@@ -112,6 +114,28 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: none;
+        }
+
+        /* === M CORSIVA GLASSMORPHISM === */
+        .m-logo-italic-v5 {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-style: italic;
+            font-weight: 900;
+            font-size: 28px;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 2px 8px;
+            transform: rotate(-7deg);
+            transition: all 0.3s ease;
+        }
+
+        .m-logo-italic-v5:hover {
+            transform: rotate(-7deg) scale(1.05);
+            background: rgba(255, 255, 255, 0.15);
         }
 
         /* === GLASSMORPHISM === */
@@ -252,6 +276,7 @@
         @media (max-width: 640px) {
             .hero-title { font-size: 2.25rem; line-height: 2.5rem; }
             .hero-subtitle { font-size: 1.25rem; line-height: 1.75rem; }
+            .m-logo-italic-v5 { font-size: 24px; }
         }
 
         /* === FLOATING HELP === */
@@ -276,8 +301,8 @@
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
-                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAASxSURBVFiFtZhLbBxVFIa/27e6u9rtdtvd9iN2EjtO4gQnJCEhkRAJEQFCYoMEQkJsWLFhwQYhsWDJhgUbJFasWCGxYMOGBQsWbJBasWDBhgUbFmxYsGHBhgUbNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0bNmzYsGHDhg0=" alt="MyApp" class="w-full h-full object-contain" />
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg">
+                        <span class="m-logo-italic-v5">M</span>
                     </div>
                     <div class="flex flex-col">
                         <span class="text-ultra-visible text-2xl font-black">MyApp</span>
@@ -559,8 +584,8 @@
         <div class="container mx-auto px-4 py-8">
             <div class="text-center">
                 <div class="flex items-center justify-center space-x-3 mb-4">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center shadow-md overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20">
-                        <img src="https://www.myappgo.it/icon-128x128.png" alt="MyApp" crossorigin="anonymous" class="w-6 h-6" loading="eager" />
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center shadow-md">
+                        <span class="text-white text-lg font-bold italic" style="transform: rotate(-7deg); font-family: 'Georgia', serif;">M</span>
                     </div>
                     <div class="flex flex-col items-center">
                         <span class="text-white text-lg font-bold">MyApp</span>
@@ -681,7 +706,7 @@
 
         // === INITIALIZATION ===
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 MyApp by SIM Carabinieri Index Page Loaded v4.1');
+            console.log('🚀 MyApp by SIM Carabinieri Index Page Loaded v4.1 - M Corsiva Edition');
             
             // Update status
             updateSystemStatus();
@@ -722,7 +747,7 @@
                 }
             });
             
-            console.log('✅ MyApp by SIM Index page fully initialized');
+            console.log('✅ MyApp by SIM Index page with M Corsiva fully initialized');
         });
 
         // === PERFORMANCE MONITORING ===
