@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyApp - Sindacato Carabinieri</title>
+    <title>MyApp by SIM Carabinieri</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,17 +14,18 @@
             theme: {
                 extend: {
                     colors: {
-                        // Aurora Boreale 2025 Palette
-                        primary: '#1a1a2e',      // Blu notte profondo
-                        secondary: '#16213e',     // Blu oceano
-                        accent: '#0f3460',        // Blu acciaio
-                        aurora: '#e94560',        // Rosa aurora
-                        cyan: '#00d4ff',          // Cyan elettrico
-                        magenta: '#ff006e',       // Magenta vibrante
-                        gold: '#ffd700',          // Oro elegante
-                        teal: '#03dac6',          // Teal premium
-                        dark: '#0a0a23',          // Nero cyber
-                        light: '#f8fafc',         // Bianco ghiaccio
+                        // Deep Blue to Red Magenta Palette
+                        primary: '#0a0a2e',          // Blu navy molto scuro
+                        secondary: '#1a1a5a',        // Blu scuro
+                        accent: '#6a1b9a',           // Viola intenso
+                        aurora: '#c2185b',           // Magenta rosa
+                        cyan: '#00d4ff',             // Cyan elettrico
+                        magenta: '#c2185b',          // Magenta vero
+                        red: '#e53935',              // Rosso intenso finale
+                        gold: '#ffd700',             // Oro elegante
+                        teal: '#03dac6',             // Teal premium
+                        dark: '#040815',             // Quasi nero con toni blu
+                        light: '#f8fafc',            // Bianco ghiaccio
                         textDark: '#1C1C1E',
                         backgroundLight: '#F4F4F8',
                     },
@@ -47,14 +48,37 @@
     <style>
         /* === VARIABILI CSS === */
         :root {
-            --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
-            --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
-            --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
+            --gradient-main: linear-gradient(180deg, #0a0a2e 0%, #1a1a5a 20%, #2d1b69 40%, #6a1b9a 60%, #c2185b 80%, #e53935 100%);
+            --gradient-cyber: linear-gradient(135deg, #0a0a2e 0%, #2d1b69 50%, #6a1b9a 100%);
+            --gradient-magic: linear-gradient(135deg, #6a1b9a 0%, #c2185b 50%, #e53935 100%);
+        }
+
+        /* === M CORSIVA GLASSMORPHISM === */
+        .m-logo-italic-v5 {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-style: italic;
+            font-weight: 900;
+            font-size: 48px;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transform: rotate(-7deg);
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .m-logo-italic-v5:hover {
+            transform: rotate(-7deg) scale(1.05);
+            background: rgba(255, 255, 255, 0.15);
         }
 
         /* === SFONDO PRINCIPALE === */
         body {
-            background: var(--gradient-aurora);
+            background: var(--gradient-main);
             background-size: 400% 400%;
             animation: aurora 20s ease infinite;
             min-height: 100vh;
@@ -79,8 +103,8 @@
         }
 
         @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(233, 69, 96, 0.5); }
-            50% { box-shadow: 0 0 40px rgba(0, 212, 255, 0.8); }
+            0%, 100% { box-shadow: 0 0 20px rgba(194, 24, 91, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(229, 57, 53, 0.8); }
         }
 
         /* === TIPOGRAFIA ULTRA-VISIBILE === */
@@ -124,42 +148,42 @@
         .btn-aurora {
             background: var(--gradient-magic);
             color: white;
-            border: 2px solid rgba(233, 69, 96, 0.3);
+            border: 2px solid rgba(194, 24, 91, 0.3);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 700;
         }
 
         .btn-aurora:hover {
             transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(233, 69, 96, 0.4);
-            border-color: rgba(233, 69, 96, 0.8);
+            box-shadow: 0 20px 40px rgba(194, 24, 91, 0.4);
+            border-color: rgba(194, 24, 91, 0.8);
         }
 
         .btn-cyber {
             background: var(--gradient-cyber);
-            border: 2px solid rgba(0, 212, 255, 0.3);
+            border: 2px solid rgba(106, 27, 154, 0.3);
             color: white;
             font-weight: 700;
         }
 
         .btn-cyber:hover {
             transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.4);
-            border-color: rgba(0, 212, 255, 0.8);
+            box-shadow: 0 20px 40px rgba(106, 27, 154, 0.4);
+            border-color: rgba(106, 27, 154, 0.8);
         }
 
         .btn-primary {
-            background: var(--gradient-aurora);
+            background: var(--gradient-main);
             color: white;
-            border: 2px solid rgba(26, 26, 46, 0.3);
+            border: 2px solid rgba(10, 10, 46, 0.3);
             font-weight: 700;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .btn-primary:hover {
             transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(26, 26, 46, 0.4);
-            border-color: rgba(26, 26, 46, 0.8);
+            box-shadow: 0 20px 40px rgba(10, 10, 46, 0.4);
+            border-color: rgba(10, 10, 46, 0.8);
         }
 
         /* === FORM ELEMENTS === */
@@ -176,8 +200,8 @@
 
         .input-field:focus {
             outline: none;
-            border-color: #e94560;
-            box-shadow: 0 0 0 4px rgba(233, 69, 96, 0.2);
+            border-color: #c2185b;
+            box-shadow: 0 0 0 4px rgba(194, 24, 91, 0.2);
             transform: scale(1.02);
         }
 
@@ -200,7 +224,7 @@
             width: 50px;
             height: 50px;
             border: 5px solid rgba(255, 255, 255, 0.3);
-            border-top: 5px solid #e94560;
+            border-top: 5px solid #c2185b;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -242,6 +266,7 @@
         @media (max-width: 640px) {
             .hero-title { font-size: 2.25rem; line-height: 2.5rem; }
             .notification { min-width: 250px; margin: 10px; }
+            .m-logo-italic-v5 { font-size: 36px; padding: 6px 12px; }
         }
     </style>
     
@@ -262,12 +287,14 @@
             <!-- Logo e Titolo -->
             <div class="text-center mb-8">
                 <div class="mb-6">
-                    <div class="text-6xl mb-4">🛡️</div>
+                    <div class="mb-4">
+                        <span class="m-logo-italic-v5">M</span>
+                    </div>
                     <h1 class="text-ultra-visible text-4xl font-black mb-2">
                         MyApp
                     </h1>
                     <p class="text-white text-xl font-semibold">
-                        Sindacato Carabinieri
+                        by SIM Carabinieri
                     </p>
                 </div>
             </div>
