@@ -3,54 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyApp - Benvenuto</title>
-    
-    <!-- PWA Meta Tags -->
-    <meta name="description" content="La piattaforma di gestione digitale moderna e sicura">
-    <meta name="theme-color" content="#1a1a2e">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="MyApp">
-    
-    <!-- Web App Manifest -->
-    <link rel="manifest" href="/manifest.json">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../icons/favicon-16x16.png">
-    <link rel="shortcut icon" type="image/x-icon" href="../icons/favicon-16x16.png">
-    
-    <!-- Apple Touch Icons -->
-    <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="../icons/icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="../icons/icon-180x180.png">
-    <link rel="apple-touch-icon" sizes="192x192" href="../icons/icon-192x192.png">
-    
-    <!-- Android Icons -->
-    <link rel="icon" type="image/png" sizes="16x16" href="../icons/icon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="../icons/icon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="../icons/icon-96x96.png">
-    <link rel="icon" type="image/png" sizes="128x128" href="../icons/icon-128x128.png">
-    <link rel="icon" type="image/png" sizes="144x144" href="../icons/icon-144x144.png">
-    <link rel="icon" type="image/png" sizes="152x152" href="../icons/icon-152x152.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="../icons/icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="256x256" href="../icons/icon-256x256.png">
-    <link rel="icon" type="image/png" sizes="384x384" href="../icons/icon-384x384.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="../icons/icon-512x512.png">
-
-    <!-- Android Support -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="MyApp">
-    <meta name="msapplication-TileColor" content="#1a1a2e">
-    <meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+    <title>MyApp by SIM Carabinieri - Benvenuto</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- CONFIGURAZIONE COLORI TAILWIND -->
     <script>
@@ -58,944 +14,703 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#1a1a2e',
-                        secondary: '#16213e',
-                        accent: '#0f3460',
-                        aurora: '#e94560',
-                        cyan: '#00d4ff',
-                        magenta: '#ff006e',
-                        gold: '#ffd700',
-                        teal: '#03dac6',
-                        dark: '#0a0a23',
-                        light: '#f8fafc',
-                        purple: '#8b5cf6',
-                        indigo: '#6366f1'
+                        // Blue-Red 2025 Palette
+                        primary: '#1A237E',          // Blu Navy profondo
+                        secondary: '#3F51B5',        // Blu Indaco
+                        accent: '#2196F3',           // Blu Material
+                        magenta: '#E91E63',          // Rosa-fucsia
+                        deepRed: '#D32F2F',          // Rosso profondo
+                        blue: '#2196F3',             // Blu standard
+                        indigo: '#3F51B5',           // Indaco
+                        pink: '#E91E63',             // Rosa vibrante
+                        red: '#F44336',              // Rosso Material
+                        gold: '#FFD700',             // Oro per contrasto
+                        white: '#FFFFFF',            // Bianco puro
+                        dark: '#0D47A1',             // Blu molto scuro
+                        light: '#E3F2FD',            // Blu palissimo
+                        textDark: '#1C1C1E',
+                        backgroundLight: '#F0F8FF',
                     },
-                    animation: {
-                        'gradient': 'gradient 15s ease infinite',
-                        'float': 'float 6s ease-in-out infinite',
-                        'glow': 'glow 2s ease-in-out infinite alternate',
-                        'slideInUp': 'slideInUp 0.8s ease-out',
-                        'fadeIn': 'fadeIn 1s ease-out',
-                        'pulse-slow': 'pulse 3s ease-in-out infinite',
-                        'bounce-slow': 'bounce 3s infinite',
-                        'rotate-slow': 'spin 10s linear infinite',
-                        'wiggle': 'wiggle 1s ease-in-out infinite'
+                    fontFamily: {
+                        'brand': ['Georgia', 'Times New Roman', 'serif'],
+                    },
+                    screens: {
+                        'xs': '320px',
+                        'sm': '640px',
+                        'md': '768px',
+                        'lg': '1024px',
+                        'xl': '1280px',
+                        '2xl': '1536px',
+                        '3xl': '1920px',
+                        '4xl': '2560px',
                     }
                 }
             }
         }
     </script>
     
+    <!-- STILI CSS COMPLETI -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-        
-        * {
-            font-family: 'Inter', sans-serif;
-        }
-
+        /* === VARIABILI CSS === */
         :root {
-            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --gradient-tertiary: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --gradient-quaternary: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            --gradient-dark: linear-gradient(135deg, #232526 0%, #414345 100%);
-            --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
+            --gradient-main: linear-gradient(180deg, #1A237E 0%, #3F51B5 25%, #2196F3 50%, #E91E63 75%, #D32F2F 100%);
+            --gradient-button: linear-gradient(135deg, #3F51B5 0%, #2196F3 50%, #E91E63 100%);
+            --gradient-accent: linear-gradient(135deg, #1976D2 0%, #E91E63 50%, #D32F2F 100%);
+            --gradient-cyber: linear-gradient(135deg, #1A237E 0%, #3F51B5 50%, #2196F3 100%);
         }
 
+        /* === SFONDO PRINCIPALE === */
         body {
-            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #1a1a2e 100%);
+            background: var(--gradient-main);
             background-size: 400% 400%;
-            animation: gradient 20s ease infinite;
+            animation: purpleFlow 25s ease infinite;
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
-        @keyframes gradient {
-            0%, 100% { background-position: 0% 50%; }
-            25% { background-position: 100% 50%; }
-            50% { background-position: 100% 100%; }
-            75% { background-position: 0% 100%; }
+        /* === ANIMAZIONI === */
+        @keyframes purpleFlow {
+            0%, 100% { 
+                background: linear-gradient(180deg, #1A237E 0%, #3F51B5 25%, #2196F3 50%, #E91E63 75%, #D32F2F 100%);
+            }
+            25% { 
+                background: linear-gradient(180deg, #0D47A1 0%, #1A237E 25%, #3F51B5 50%, #2196F3 75%, #E91E63 100%);
+            }
+            50% { 
+                background: linear-gradient(180deg, #3F51B5 0%, #2196F3 25%, #03A9F4 50%, #E91E63 75%, #D32F2F 100%);
+            }
+            75% { 
+                background: linear-gradient(180deg, #2196F3 0%, #03A9F4 25%, #E91E63 50%, #D32F2F 75%, #B71C1C 100%);
+            }
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            33% { transform: translateY(-20px) rotate(1deg); }
-            66% { transform: translateY(-10px) rotate(-1deg); }
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
 
         @keyframes glow {
-            from { box-shadow: 0 0 20px rgba(233, 69, 96, 0.5), 0 0 40px rgba(0, 212, 255, 0.3), 0 0 60px rgba(255, 0, 110, 0.2); }
-            to { box-shadow: 0 0 30px rgba(233, 69, 96, 0.8), 0 0 60px rgba(0, 212, 255, 0.5), 0 0 90px rgba(255, 0, 110, 0.3); }
+            0%, 100% { box-shadow: 0 0 25px rgba(233, 30, 99, 0.6); }
+            50% { box-shadow: 0 0 45px rgba(171, 71, 188, 0.8); }
         }
 
-        @keyframes slideInUp {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .8; }
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        /* === TIPOGRAFIA ULTRA-VISIBILE === */
+        .text-ultra-visible {
+            color: #ffffff;
+            text-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.9), 
+                0 6px 15px rgba(26, 35, 126, 0.8), 
+                0 3px 8px rgba(0, 0, 0, 1),
+                0 1px 3px rgba(26, 35, 126, 0.9);
+            font-weight: 800;
         }
 
-        @keyframes wiggle {
-            0%, 7% { transform: rotateZ(0); }
-            15% { transform: rotateZ(-15deg); }
-            20% { transform: rotateZ(10deg); }
-            25% { transform: rotateZ(-10deg); }
-            30% { transform: rotateZ(6deg); }
-            35% { transform: rotateZ(-4deg); }
-            40%, 100% { transform: rotateZ(0); }
+        .text-white {
+            text-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.9), 
+                0 4px 12px rgba(26, 35, 126, 0.8), 
+                0 2px 6px rgba(0, 0, 0, 1);
         }
 
-        /* Particelle di sfondo */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .particle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: float 8s infinite linear;
-        }
-
-        .hero-container {
-            position: relative;
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 2px solid;
-            border-image: linear-gradient(45deg, rgba(233, 69, 96, 0.5), rgba(0, 212, 255, 0.5), rgba(255, 0, 110, 0.5)) 1;
-            border-radius: 32px;
-            padding: 4rem 3rem;
-            margin: 2rem auto;
-            max-width: 800px;
-            text-align: center;
-            animation: glow 3s ease-in-out infinite alternate;
-        }
-
-        .logo-main {
-            font-size: 6rem;
-            margin-bottom: 2rem;
-            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6));
-            animation: float 4s ease-in-out infinite;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .logo-main:hover {
-            transform: scale(1.1) rotate(10deg);
-            filter: drop-shadow(0 12px 24px rgba(233, 69, 96, 0.6));
-        }
-
-        .title-main {
-            font-size: 4.5rem;
-            font-weight: 900;
-            background: linear-gradient(45deg, #ffffff, #00d4ff, #e94560, #03dac6);
-            background-size: 300% 300%;
+        .brand-text {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-style: italic;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff 0%, #F3E5F5 50%, #E1BEE7 100%);
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1.5rem;
-            animation: gradient 5s ease infinite;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.8));
-            cursor: pointer;
+            text-shadow: none;
         }
 
-        .subtitle-main {
-            font-size: 1.5rem;
-            color: rgba(255, 255, 255, 0.95);
-            margin-bottom: 3rem;
-            font-weight: 500;
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
-            line-height: 1.6;
-            animation: slideInUp 1s ease-out 0.3s both;
+        /* === GLASSMORPHISM === */
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(45, 27, 105, 0.4);
         }
 
-        .btn-hero {
-            position: relative;
-            background: linear-gradient(45deg, #e94560, #00d4ff, #ff006e, #03dac6);
-            background-size: 400% 400%;
-            color: white;
-            border: none;
-            padding: 20px 50px;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            text-decoration: none;
-            display: inline-block;
-            margin: 0.75rem;
-            border: 3px solid rgba(255, 255, 255, 0.2);
-            animation: gradient 3s ease infinite;
-            overflow: hidden;
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 12px 40px 0 rgba(45, 27, 105, 0.5);
         }
 
-        .btn-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.6s;
-        }
-
-        .btn-hero:hover::before {
-            left: 100%;
-        }
-
-        .btn-hero:hover {
-            transform: translateY(-5px) scale(1.08);
-            box-shadow: 0 20px 40px rgba(233, 69, 96, 0.6), 0 0 40px rgba(0, 212, 255, 0.4);
-            border-color: rgba(255, 255, 255, 0.8);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            padding: 18px 36px;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            text-decoration: none;
-            display: inline-block;
-            margin: 0.5rem;
-            backdrop-filter: blur(10px);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.8);
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.2);
-        }
-
-        .features-section {
-            position: relative;
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.98);
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border-radius: 32px;
-            padding: 4rem 3rem;
-            margin: 4rem auto;
-            max-width: 1200px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
-            animation: slideInUp 1s ease-out 0.5s both;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 15px 35px rgba(45, 27, 105, 0.3);
+        }
+
+        /* === BOTTONI === */
+        .btn-aurora {
+            background: var(--gradient-button);
+            color: white;
+            border: 2px solid rgba(233, 30, 99, 0.4);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 700;
+            box-shadow: 0 8px 25px rgba(233, 30, 99, 0.3);
+        }
+
+        .btn-aurora:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 25px 50px rgba(233, 30, 99, 0.5);
+            border-color: rgba(233, 30, 99, 0.8);
+            background: linear-gradient(135deg, #AB47BC 0%, #E91E63 50%, #C2185B 100%);
+        }
+
+        .btn-cyber {
+            background: var(--gradient-cyber);
+            border: 2px solid rgba(156, 39, 176, 0.4);
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 8px 25px rgba(156, 39, 176, 0.3);
+        }
+
+        .btn-cyber:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 25px 50px rgba(156, 39, 176, 0.5);
+            border-color: rgba(156, 39, 176, 0.8);
+            background: linear-gradient(135deg, #673AB7 0%, #9C27B0 50%, #AB47BC 100%);
+        }
+
+        /* === CARDS === */
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 30px 60px rgba(45, 27, 105, 0.4);
         }
 
         .feature-card {
-            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-            border: 2px solid transparent;
-            border-radius: 20px;
-            padding: 2.5rem 2rem;
-            margin: 1.5rem 0;
-            text-align: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c);
-            opacity: 0;
-            transition: opacity 0.3s;
-            border-radius: 18px;
-            z-index: -1;
-        }
-
-        .feature-card:hover::before {
-            opacity: 0.1;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.08));
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 24px;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(45, 27, 105, 0.3);
         }
 
         .feature-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 0 0 2px rgba(102, 126, 234, 0.3);
-            border-color: rgba(102, 126, 234, 0.3);
+            transform: translateY(-8px) scale(1.03);
+            background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.15));
+            box-shadow: 0 20px 40px rgba(45, 27, 105, 0.4);
+            border-color: rgba(233, 30, 99, 0.3);
         }
 
-        .feature-icon {
-            font-size: 3.5rem;
-            margin-bottom: 1.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover .feature-icon {
-            animation: bounce 1s ease-in-out;
-            transform: scale(1.1);
-        }
-
-        .feature-title {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #1a1a2e;
-            margin-bottom: 1rem;
-            transition: color 0.3s;
-        }
-
-        .feature-card:hover .feature-title {
-            color: #667eea;
-        }
-
-        .feature-description {
-            color: #64748b;
-            font-size: 1rem;
-            line-height: 1.7;
-            font-weight: 500;
-        }
-
-        .session-info {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 2rem;
-            margin: 2rem auto;
-            max-width: 600px;
-            text-align: center;
-            animation: slideInUp 1s ease-out 0.7s both;
-        }
-
-        .session-user {
-            color: white;
-            font-weight: 700;
-            font-size: 1.3rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-            margin-bottom: 0.5rem;
-        }
-
-        .session-role {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1rem;
-            margin-top: 0.5rem;
-            font-weight: 500;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 3rem;
+        /* === HERO SECTION === */
+        .hero-title {
+            font-size: clamp(3rem, 12vw, 6rem);
             font-weight: 900;
-            background: linear-gradient(45deg, #1a1a2e, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 3rem;
-            animation: slideInUp 1s ease-out 0.3s both;
+            line-height: 1.1;
         }
 
-        .hidden {
-            display: none !important;
+        .hero-subtitle {
+            font-size: clamp(1.5rem, 6vw, 2.5rem);
+            font-weight: 800;
         }
 
-        /* Effetti mouse */
-        .cursor-trail {
-            position: fixed;
+        /* === STATUS INDICATORS === */
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            animation: pulse 2s infinite;
+            display: inline-block;
+            margin-right: 8px;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+
+        .status-offline {
+            background: linear-gradient(135deg, #F44336, #E53935);
+            box-shadow: 0 0 10px rgba(244, 67, 54, 0.5);
+        }
+
+        /* === LOADING STATES === */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
             width: 20px;
             height: 20px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(233, 69, 96, 0.6), rgba(0, 212, 255, 0.4));
-            pointer-events: none;
-            mix-blend-mode: difference;
-            z-index: 9999;
-            transition: transform 0.1s ease;
-        }
-
-        /* Scroll indicator */
-        .scroll-indicator {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 2rem;
-            animation: bounce 2s infinite;
-            cursor: pointer;
-            z-index: 100;
-        }
-
-        /* Loading animation */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #0c0c0c, #1a1a2e);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            opacity: 1;
-            transition: opacity 0.5s ease;
-        }
-
-        .loading-overlay.fade-out {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-left: 4px solid #e94560;
+            margin: -10px 0 0 -10px;
+            border: 2px solid transparent;
+            border-top-color: #ffffff;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero-container {
-                margin: 1rem;
-                padding: 3rem 2rem;
-            }
-            
-            .title-main {
-                font-size: 3rem;
-            }
-            
-            .subtitle-main {
-                font-size: 1.2rem;
-            }
-            
-            .btn-hero, .btn-secondary {
-                display: block;
-                margin: 1rem auto;
-                width: 85%;
-                max-width: 320px;
-            }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
-            .features-section {
-                margin: 2rem 1rem;
-                padding: 3rem 1.5rem;
-            }
+        /* === RESPONSIVE === */
+        @media (max-width: 640px) {
+            .hero-title { font-size: 2.25rem; line-height: 2.5rem; }
+            .hero-subtitle { font-size: 1.25rem; line-height: 1.75rem; }
+        }
 
-            .feature-card {
-                padding: 2rem 1.5rem;
-            }
+        /* === FLOATING HELP === */
+        .floating-help {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            z-index: 1000;
+            animation: float 3s ease-in-out infinite;
+        }
 
-            .scroll-indicator {
-                display: none;
-            }
-
-            .cursor-trail {
-                display: none;
-            }
+        /* === LOGO GRADIENT === */
+        .logo-gradient {
+            background: linear-gradient(135deg, #2196F3 0%, #E91E63 50%, #D32F2F 100%);
         }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="flex flex-col min-h-screen font-sans">
 
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="loading-spinner"></div>
-    </div>
-
-    <!-- Particelle di sfondo -->
-    <div class="particles" id="particles"></div>
-
-    <!-- Cursor Trail -->
-    <div class="cursor-trail" id="cursorTrail"></div>
-
-    <!-- Scroll Indicator -->
-    <div class="scroll-indicator" onclick="scrollToFeatures()">
-        <i class="fas fa-chevron-down"></i>
-    </div>
-
-    <!-- HERO SECTION -->
-    <div class="min-h-screen flex flex-col items-center justify-center p-4">
-        <div class="hero-container">
-            <div class="logo-main" onclick="logoClick()">🛡️</div>
-            <h1 class="title-main" onclick="titleClick()">MyApp</h1>
-            <p class="subtitle-main">
-                La piattaforma di gestione digitale moderna e sicura<br>
-                <span class="text-cyan-300">Innovazione • Sicurezza • Semplicità</span>
-            </p>
-            
-            <!-- SESSIONE NON ATTIVA -->
-            <div id="guestSection">
-                <div class="mb-8">
-                    <a href="login.html" class="btn-hero">
-                        <i class="fas fa-rocket mr-2"></i>
-                        Accedi o Registrati
-                    </a>
+    <!-- HEADER -->
+    <header class="glass-morphism">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 logo-gradient rounded-xl flex items-center justify-center shadow-lg">
+                        <span class="text-white font-black text-xl">S</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-ultra-visible text-2xl font-black">MyApp</span>
+                        <span class="text-white text-xs opacity-75 -mt-1">By SIM Carabinieri</span>
+                    </div>
                 </div>
-                
-                <div>
-                    <a href="#features" class="btn-secondary" onclick="scrollToFeatures()">
-                        <i class="fas fa-info-circle mr-2"></i>
-                        Scopri di più
-                    </a>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center text-white text-sm">
+                        <span class="status-indicator" id="statusIndicator"></span>
+                        <span id="statusText">Sistema Online</span>
+                    </div>
                 </div>
             </div>
-            
-            <!-- SESSIONE ATTIVA -->
-            <div id="userSection" class="hidden">
-                <div class="session-info">
-                    <div class="session-user" id="userName">
-                        <i class="fas fa-user-circle mr-2"></i>
-                        Utente connesso
-                    </div>
-                    <div class="session-role" id="userRole">
-                        <i class="fas fa-shield-alt mr-2"></i>
-                        Ruolo: User
-                    </div>
-                </div>
-                
-                <div class="mb-4">
-                    <button onclick="goToUserDashboard()" class="btn-hero">
-                        <i class="fas fa-home mr-2"></i>
-                        Vai alla Dashboard
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 flex items-center justify-center px-4 py-12">
+        <div class="text-center max-w-4xl">
+            <!-- HERO SECTION -->
+            <div class="mb-12">
+                <h1 class="hero-title text-ultra-visible mb-6">
+                    Benvenuto in <span class="text-ultra-visible font-black">MyApp</span>
+                </h1>
+                <p class="hero-subtitle text-white mb-8">
+                    La tua piattaforma digitale per avere sempre un dirigente a tua disposizione
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button onclick="goToLogin()" class="btn-aurora px-8 py-4 rounded-2xl text-xl font-bold">
+                        🚀 Accedi alla Piattaforma
+                    </button>
+                    <button onclick="scrollToFeatures()" class="btn-cyber px-8 py-4 rounded-2xl text-xl font-bold">
+                        📖 Scopri di più
                     </button>
                 </div>
-                
-                <div class="mb-4">
-                    <a href="login.html" class="btn-secondary">
-                        <i class="fas fa-user-edit mr-2"></i>
-                        Cambia Account
-                    </a>
-                </div>
-                
-                <div>
-                    <button onclick="handleLogout()" class="btn-secondary">
-                        <i class="fas fa-sign-out-alt mr-2"></i>
-                        Logout
+                <div class="mt-6">
+                    <button onclick="goToSIMSite()" class="text-white hover:text-blue-200 text-sm underline transition-colors duration-300">
+                        Sei già iscritto a SIM Carabinieri? →
                     </button>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- FEATURES SECTION -->
-    <div id="features" class="features-section">
-        <h2 class="section-title">
-            Funzionalità Principali
-        </h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="feature-card group">
-                <div class="feature-icon">
-                    <i class="fas fa-id-card text-purple-500"></i>
+            <!-- FEATURED SERVICES - Prima delle statistiche -->
+            <div class="mb-16">
+                <div class="text-center mb-8">
+                    <h2 class="text-ultra-visible text-3xl font-black mb-4">I Nostri Servizi Esclusivi</h2>
+                    <p class="text-white text-lg opacity-90">Tutto quello che serve al Carabiniere moderno</p>
                 </div>
-                <h3 class="feature-title">Tessera Digitale</h3>
-                <p class="feature-description">
-                    Tessera digitale sempre con te, con QR code e dati aggiornati in tempo reale
-                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Strumenti Professionali -->
+                    <div class="feature-card card-hover p-8 relative overflow-hidden">
+                        <div class="absolute top-4 right-4 bg-gold text-dark px-3 py-1 rounded-full text-xs font-black">
+                            ESCLUSIVO
+                        </div>
+                        <div class="text-5xl mb-4">🛠️</div>
+                        <h3 class="text-ultra-visible text-2xl font-bold mb-4">Strumenti Unici per il Tuo Lavoro</h3>
+                        <p class="text-white mb-4">Utility specializzate create dai Carabinieri per i Carabinieri. Calcoli automatici, moduli pre-compilati, procedure guidate.</p>
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center text-white text-sm">
+                                <div class="w-2 h-2 bg-gold rounded-full mr-3"></div>
+                                Calcolatori per indennità e benefit
+                            </div>
+                            <div class="flex items-center text-white text-sm">
+                                <div class="w-2 h-2 bg-gold rounded-full mr-3"></div>
+                                Modulistica automatica aggiornata
+                            </div>
+                            <div class="flex items-center text-white text-sm">
+                                <div class="w-2 h-2 bg-gold rounded-full mr-3"></div>
+                                Procedure operative semplificate
+                            </div>
+                        </div>
+                        <div class="text-gold text-sm font-bold">15+ strumenti sempre aggiornati</div>
+                    </div>
+
+                    <!-- Convenzioni Esclusive -->
+                    <div class="feature-card card-hover p-8 relative overflow-hidden">
+                        <div class="absolute top-4 right-4 bg-magenta text-white px-3 py-1 rounded-full text-xs font-black">
+                            RISPARMIA
+                        </div>
+                        <div class="text-5xl mb-4">🤝</div>
+                        <h3 class="text-ultra-visible text-2xl font-bold mb-4">Convenzioni Esclusive</h3>
+                        <p class="text-white mb-4">Sconti riservati ai soci SIM su centinaia di servizi. Risparmia su famiglia, casa, viaggi e tanto altro.</p>
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center text-white text-sm">
+                                <div class="w-2 h-2 bg-magenta rounded-full mr-3"></div>
+                                Fino al 40% di sconto sui servizi
+                            </div>
+                            <div class="flex items-center text-white text-sm">
+                                <div class="w-2 h-2 bg-magenta rounded-full mr-3"></div>
+                                350+ partner convenzionati
+                            </div>
+                            <div class="flex items-center text-white text-sm">
+                                <div class="w-2 h-2 bg-magenta rounded-full mr-3"></div>
+                                Nuove offerte ogni settimana
+                            </div>
+                        </div>
+                        <div class="text-magenta text-sm font-bold">Risparmio medio: 500€/anno</div>
+                    </div>
+
+                    <!-- Virgilio AI Chatbot -->
+                    <div class="feature-card card-hover p-8 relative overflow-hidden">
+                        <div class="absolute top-4 right-4 bg-accent text-white px-3 py-1 rounded-full text-xs font-black">
+                            AI POWERED
+                        </div>
+                        <div class="text-5xl mb-4">🤖</div>
+                        <h3 class="text-ultra-visible text-2xl font-bold mb-4">Virgilio AI - Il Tuo Assistente Personale</h3>
+                        <p class="text-white mb-4">Chatbot intelligente specializzato per Carabinieri. Normative, procedure, dubbi operativi risolti in tempo reale.</p>
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center text-white text-sm">
+                                <div class="w-2 h-2 bg-accent rounded-full mr-3"></div>
+                                Disponibile 24/7 senza interruzioni
+                            </div>
+                            <div class="flex items-center text-white text-sm">
+                                <div class="w-2 h-2 bg-accent rounded-full mr-3"></div>
+                                Database aggiornato in tempo reale
+                            </div>
+                            <div class="flex items-center text-white text-sm">
+                                <div class="w-2 h-2 bg-accent rounded-full mr-3"></div>
+                                Risposte precise e verificate
+                            </div>
+                        </div>
+                        <div class="text-accent text-sm font-bold">Oltre 10.000 domande risolte/mese</div>
+                    </div>
+
+                    <!-- Corsi Online -->
+                    <div class="feature-card card-hover p-8 relative overflow-hidden">
+                        <div class="absolute top-4 right-4 bg-teal text-dark px-3 py-1 rounded-full text-xs font-black">
+                            FORMAZIONE
+                        </div>
+                        <div class="text-5xl mb-4">📚</div>
+                        <h3 class="text-ultra-visible text-2xl font-bold mb-4">Corsi Online Specializzati</h3>
+                        <p class="text-white mb-4">Formazione continua con corsi dedicati ai Carabinieri. Aggiornamenti normativi, nuove procedure, crescita professionale.</p>
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center text-white text-sm">
+                                <div class="w-2 h-2 bg-teal rounded-full mr-3"></div>
+                                Certificati riconosciuti ufficialmente
+                            </div>
+                            <div class="flex items-center text-white text-sm">
+                                <div class="w-2 h-2 bg-teal rounded-full mr-3"></div>
+                                Flessibilità oraria totale
+                            </div>
+                            <div class="flex items-center text-white text-sm">
+                                <div class="w-2 h-2 bg-teal rounded-full mr-3"></div>
+                                Docenti esperti del settore
+                            </div>
+                        </div>
+                        <div class="text-teal text-sm font-bold">25+ corsi disponibili</div>
+                    </div>
+                </div>
             </div>
-            
-            <div class="feature-card group">
-                <div class="feature-icon">
-                    <i class="fas fa-newspaper text-indigo-500"></i>
+
+            <!-- STATISTICS SECTION -->
+            <div class="mb-16">
+                <div class="text-center mb-12">
+                    <h2 class="text-ultra-visible text-3xl font-black mb-4">Perché scegliere MyApp?</h2>
+                    <p class="text-white text-lg opacity-90">Migliaia di colleghi si affidano già a noi</p>
                 </div>
-                <h3 class="feature-title">News & Comunicazioni</h3>
-                <p class="feature-description">
-                    Rimani aggiornato con le ultime notizie e comunicazioni ufficiali
-                </p>
+                
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                    <div class="feature-card p-6 text-center">
+                        <div class="text-3xl font-black text-white mb-2">12.500+</div>
+                        <div class="text-white opacity-80 text-sm">Utenti Attivi</div>
+                    </div>
+                    <div class="feature-card p-6 text-center">
+                        <div class="text-3xl font-black text-white mb-2">98.5%</div>
+                        <div class="text-white opacity-80 text-sm">Soddisfazione</div>
+                    </div>
+                    <div class="feature-card p-6 text-center">
+                        <div class="text-3xl font-black text-white mb-2">24/7</div>
+                        <div class="text-white opacity-80 text-sm">Sempre Online</div>
+                    </div>
+                    <div class="feature-card p-6 text-center">
+                        <div class="text-3xl font-black text-white mb-2">2.8k</div>
+                        <div class="text-white opacity-80 text-sm">Richieste/Mese</div>
+                    </div>
+                </div>
             </div>
-            
-            <div class="feature-card group">
-                <div class="feature-icon">
-                    <i class="fas fa-tags text-pink-500"></i>
+
+            <!-- SERVICES PREVIEW -->
+            <div id="features" class="mb-16">
+                <div class="text-center mb-12">
+                    <h2 class="text-ultra-visible text-3xl font-black mb-4">I Tuoi Servizi Digitali</h2>
+                    <p class="text-white text-lg opacity-90">Tutto quello che ti serve, sempre a portata di mano</p>
                 </div>
-                <h3 class="feature-title">Convenzioni</h3>
-                <p class="feature-description">
-                    Accedi a sconti esclusivi e convenzioni con partner selezionati
-                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="feature-card card-hover p-8">
+                        <div class="text-4xl mb-4">🎫</div>
+                        <h3 class="text-ultra-visible text-xl font-bold mb-3">Tessera Digitale</h3>
+                        <p class="text-white mb-4">La tua tessera SIM sempre con te. QR code, dati personali e validità istantanea.</p>
+                        <div class="text-sm text-white opacity-70">✓ Sempre aggiornata ✓ Verificabile ✓ Sicura</div>
+                    </div>
+
+                    <div class="feature-card card-hover p-8">
+                        <div class="text-4xl mb-4">📝</div>
+                        <h3 class="text-ultra-visible text-xl font-bold mb-3">Richieste Dirette</h3>
+                        <p class="text-white mb-4">Comunica direttamente con i dirigenti. Richieste veloci, risposte tempestive.</p>
+                        <div class="text-sm text-white opacity-70">📊 Tracciabilità completa 📈 Tempi medi: 24h</div>
+                    </div>
+
+                    <div class="feature-card card-hover p-8">
+                        <div class="text-4xl mb-4">🤖</div>
+                        <h3 class="text-ultra-visible text-xl font-bold mb-3">Virgilio AI</h3>
+                        <p class="text-white mb-4">Assistente AI specializzato per Carabinieri. Normative, procedure, supporto H24.</p>
+                        <div class="text-sm text-white opacity-70">🧠 Sempre aggiornato 🎯 Risposte precise</div>
+                    </div>
+
+                    <div class="feature-card card-hover p-8">
+                        <div class="text-4xl mb-4">🤝</div>
+                        <h3 class="text-ultra-visible text-xl font-bold mb-3">Convenzioni</h3>
+                        <p class="text-white mb-4">Sconti esclusivi riservati ai soci SIM. Risparmia su centinaia di servizi.</p>
+                        <div class="text-sm text-white opacity-70">💰 Fino al 40% di sconto 🏪 350+ partner</div>
+                    </div>
+
+                    <div class="feature-card card-hover p-8">
+                        <div class="text-4xl mb-4">🛠️</div>
+                        <h3 class="text-ultra-visible text-xl font-bold mb-3">Strumenti Professionali</h3>
+                        <p class="text-white mb-4">Utility specializzate per il tuo lavoro. Calcoli, modulistica, procedure.</p>
+                        <div class="text-sm text-white opacity-70">⚡ Sempre aggiornati 📋 15+ strumenti</div>
+                    </div>
+
+                    <div class="feature-card card-hover p-8">
+                        <div class="text-4xl mb-4">📁</div>
+                        <h3 class="text-ultra-visible text-xl font-bold mb-3">FileBox Sicuro</h3>
+                        <p class="text-white mb-4">Archivia i tuoi documenti in modo sicuro. Accesso da qualsiasi dispositivo.</p>
+                        <div class="text-sm text-white opacity-70">🔒 Crittografato 💾 Storage illimitato</div>
+                    </div>
+                </div>
             </div>
-            
-            <div class="feature-card group">
-                <div class="feature-icon">
-                    <i class="fas fa-mobile-alt text-cyan-500"></i>
+
+            <!-- TESTIMONIALS -->
+            <div class="mb-16">
+                <div class="text-center mb-12">
+                    <h2 class="text-ultra-visible text-3xl font-black mb-4">Cosa dicono i colleghi</h2>
+                    <p class="text-white text-lg opacity-90">Testimonianze reali di chi usa MyApp ogni giorno</p>
                 </div>
-                <h3 class="feature-title">App Mobile</h3>
-                <p class="feature-description">
-                    Accesso completo da qualsiasi dispositivo, ovunque tu sia
-                </p>
-            </div>
-            
-            <div class="feature-card group">
-                <div class="feature-icon">
-                    <i class="fas fa-shield-alt text-green-500"></i>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="feature-card p-6">
+                        <div class="mb-4">
+                            <div class="text-2xl mb-2">⭐⭐⭐⭐⭐</div>
+                            <p class="text-white italic">"Finalmente posso contattare i dirigenti senza perdite di tempo. Le risposte arrivano in giornata!"</p>
+                        </div>
+                        <div class="text-white opacity-70 text-sm">
+                            <strong>Mar. Ord. Roberto M.</strong><br>
+                            Comando Stazione - Veneto
+                        </div>
+                    </div>
+
+                    <div class="feature-card p-6">
+                        <div class="mb-4">
+                            <div class="text-2xl mb-2">⭐⭐⭐⭐⭐</div>
+                            <p class="text-white italic">"Virgilio AI mi ha risolto dubbi normativi in pochi secondi. È come avere un consulente sempre disponibile."</p>
+                        </div>
+                        <div class="text-white opacity-70 text-sm">
+                            <strong>App. Sc. Laura S.</strong><br>
+                            Nucleo Operativo - Lombardia
+                        </div>
+                    </div>
+
+                    <div class="feature-card p-6">
+                        <div class="mb-4">
+                            <div class="text-2xl mb-2">⭐⭐⭐⭐⭐</div>
+                            <p class="text-white italic">"Le convenzioni mi fanno risparmiare centinaia di euro l'anno. Fantastico!"</p>
+                        </div>
+                        <div class="text-white opacity-70 text-sm">
+                            <strong>Brig. Capo Michele T.</strong><br>
+                            Compagnia - Lazio
+                        </div>
+                    </div>
                 </div>
-                <h3 class="feature-title">Sicurezza</h3>
-                <p class="feature-description">
-                    Dati protetti con crittografia avanzata e autenticazione sicura
-                </p>
-            </div>
-            
-            <div class="feature-card group">
-                <div class="feature-icon">
-                    <i class="fas fa-chart-line text-orange-500"></i>
-                </div>
-                <h3 class="feature-title">Dashboard</h3>
-                <p class="feature-description">
-                    Interfaccia intuitiva per gestire tutti i tuoi dati e servizi
-                </p>
             </div>
         </div>
-        
-        <div style="text-align: center; margin-top: 3rem;">
-            <a href="login.html" class="btn-hero">
-                <i class="fas fa-play mr-2"></i>
-                Inizia Subito
-            </a>
-        </div>
-    </div>
+    </main>
 
     <!-- FOOTER -->
-    <footer class="text-center text-white/80 mt-12 pb-8 px-4">
-        <div class="max-w-4xl mx-auto">
-            <div class="mb-6 p-6 rounded-2xl bg-white/5 backdrop-blur-lg border border-white/10">
-                <div class="text-2xl font-bold text-white mb-2">
-                    <i class="fas fa-shield-alt mr-2 text-aurora"></i>
-                    MyApp
+    <footer class="glass-morphism mt-16">
+        <div class="container mx-auto px-4 py-8">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-3 mb-4">
+                    <div class="w-8 h-8 logo-gradient rounded-lg flex items-center justify-center shadow-md">
+                        <span class="text-white font-black text-sm">S</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span class="text-white text-lg font-bold">MyApp</span>
+                        <span class="text-white text-xs opacity-60 -mt-1">By SIM Carabinieri</span>
+                    </div>
                 </div>
-                <div class="text-lg mb-4">v5.0 - Sistema di gestione digitale</div>
-                <div class="text-sm opacity-80">
-                    © 2025 MyApp. Tutti i diritti riservati. | Powered by Supabase
+                <p class="text-white text-sm mb-4">
+                    Piattaforma digitale moderna per la gestione professionale
+                </p>
+                <div class="flex justify-center space-x-6 text-sm text-white">
+                    <span>© 2025 SIM Carabinieri</span>
+                    <span>•</span>
+                    <span>Versione 4.1</span>
+                    <span>•</span>
+                    <span>Powered by Supabase</span>
                 </div>
             </div>
         </div>
     </footer>
 
+    <!-- FLOATING HELP BUTTON -->
+    <div class="floating-help">
+        <button onclick="showHelp()" class="btn-aurora w-14 h-14 rounded-full flex items-center justify-center text-2xl">
+            ❓
+        </button>
+    </div>
+
+    <!-- HELP MODAL -->
+    <div id="helpModal" class="fixed inset-0 hidden items-center justify-center bg-black/60 z-50">
+        <div class="glass-card w-full max-w-md rounded-2xl p-6 m-4">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-textDark">Aiuto - <span class="text-primary font-bold">MyApp</span></h2>
+                <button onclick="closeHelp()" class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+            </div>
+            <div class="space-y-4 text-textDark">
+                <div>
+                    <h3 class="font-semibold mb-2">🚀 Come iniziare</h3>
+                    <p class="text-sm">Clicca su "Accedi alla Piattaforma" per effettuare il login o registrarti.</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-2">🔐 Primo accesso</h3>
+                    <p class="text-sm">Se è la prima volta, registrati con i tuoi dati. Riceverai una email di conferma.</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-2">📱 Compatibilità</h3>
+                    <p class="text-sm">MyApp funziona su tutti i dispositivi: desktop, tablet e smartphone.</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-2">❓ Supporto</h3>
+                    <p class="text-sm">Per assistenza, contatta il supporto tecnico dalla tua dashboard.</p>
+                </div>
+            </div>
+            <div class="mt-6">
+                <button onclick="closeHelp()" class="btn-aurora w-full py-3 rounded-xl font-bold">
+                    Ho capito
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
     <script>
-        // === CONFIGURAZIONE SUPABASE ===
-        const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk';
+        // === CONFIGURATION ===
+        let systemStatus = 'online';
         
-        let supabaseClient;
-        let currentUser = null;
-        let userProfile = null;
-        let observer;
-
-        // === INIZIALIZZAZIONE ===
-        document.addEventListener('DOMContentLoaded', async () => {
-            console.log('🏠 INDEX PAGE LOADED - MyApp v5.0');
-            
-            // Inizializza effetti visuali
-            initializeVisualEffects();
-            
-            // Mostra loading
-            setTimeout(() => {
-                document.getElementById('loadingOverlay').classList.add('fade-out');
-                setTimeout(() => {
-                    document.getElementById('loadingOverlay').style.display = 'none';
-                }, 500);
-            }, 1500);
-            
-            try {
-                // Inizializza Supabase
-                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                console.log('✅ Supabase client inizializzato');
-                
-                // Controlla sessione SENZA redirect automatico
-                await checkSessionQuietly();
-                
-                console.log('✅ Homepage caricata correttamente');
-                
-            } catch (error) {
-                console.error('❌ Errore inizializzazione homepage:', error);
-                showGuestSection();
-            }
-            
-            // Osserva le feature cards quando si caricano
-            setTimeout(() => {
-                document.querySelectorAll('.feature-card').forEach(card => {
-                    observer.observe(card);
-                });
-            }, 2000);
-        });
-
-        // === CONTROLLO SESSIONE SILENZIOSO ===
-        async function checkSessionQuietly() {
-            try {
-                console.log('🔍 Controllo sessione silenzioso...');
-                
-                const { data: { session }, error } = await supabaseClient.auth.getSession();
-                
-                if (error) {
-                    console.warn('⚠️ Errore controllo sessione:', error);
-                    showGuestSection();
-                    return;
-                }
-
-                if (!session || !session.user) {
-                    console.log('👤 Nessuna sessione attiva');
-                    showGuestSection();
-                    return;
-                }
-
-                currentUser = session.user;
-                console.log('✅ Sessione attiva per:', currentUser.email);
-                
-                // Carica profilo utente
-                await loadUserProfile();
-                
-                // Mostra sezione utente loggato
-                showUserSection();
-                
-            } catch (error) {
-                console.error('❌ Errore controllo sessione:', error);
-                showGuestSection();
-            }
+        // === NAVIGATION FUNCTIONS ===
+        function goToLogin() {
+            // Semplice redirect senza controlli di sessione
+            // Aggiungiamo un parametro per evitare redirect automatici
+            window.location.href = 'login.html?from=index';
         }
 
-        // === CARICAMENTO PROFILO UTENTE ===
-        async function loadUserProfile() {
-            try {
-                const { data: profile, error } = await supabaseClient
-                    .from('user_profiles')
-                    .select('full_name, nome, cognome, role')
-                    .eq('user_id', currentUser.id)
-                    .single();
-
-                if (error) {
-                    console.warn('⚠️ Profilo non trovato:', error);
-                    userProfile = null;
-                    return;
-                }
-
-                userProfile = profile;
-                console.log('👤 Profilo caricato:', profile);
-                
-            } catch (error) {
-                console.error('❌ Errore caricamento profilo:', error);
-                userProfile = null;
-            }
-        }
-
-        // === MOSTRA SEZIONE GUEST ===
-        function showGuestSection() {
-            document.getElementById('guestSection').classList.remove('hidden');
-            document.getElementById('userSection').classList.add('hidden');
-        }
-
-        // === MOSTRA SEZIONE UTENTE LOGGATO ===
-        function showUserSection() {
-            document.getElementById('guestSection').classList.add('hidden');
-            document.getElementById('userSection').classList.remove('hidden');
-            
-            // Aggiorna info utente
-            updateUserInfo();
-        }
-
-        // === AGGIORNA INFO UTENTE ===
-        function updateUserInfo() {
-            const userNameEl = document.getElementById('userName');
-            const userRoleEl = document.getElementById('userRole');
-            
-            if (userProfile) {
-                const fullName = userProfile.full_name || 
-                                [userProfile.nome, userProfile.cognome].filter(Boolean).join(' ') || 
-                                'Utente';
-                const role = userProfile.role || 'USER';
-                
-                userNameEl.innerHTML = `<i class="fas fa-user-circle mr-2"></i>Benvenuto, ${fullName}`;
-                
-                let roleText = 'Utente';
-                let roleIcon = 'fas fa-user';
-                
-                if (role === 'ADMIN') {
-                    roleText = 'Amministratore';
-                    roleIcon = 'fas fa-crown';
-                } else if (role === 'DIRIGENTE') {
-                    roleText = 'Dirigente';
-                    roleIcon = 'fas fa-user-tie';
-                }
-                
-                userRoleEl.innerHTML = `<i class="${roleIcon} mr-2"></i>Ruolo: ${roleText}`;
-            } else {
-                userNameEl.innerHTML = `<i class="fas fa-user-circle mr-2"></i>Benvenuto, ${currentUser.email}`;
-                userRoleEl.innerHTML = '<i class="fas fa-user mr-2"></i>Ruolo: Utente';
-            }
-        }
-
-        // === VAI ALLA DASHBOARD UTENTE ===
-        async function goToUserDashboard() {
-            try {
-                console.log('🎯 Reindirizzamento alla dashboard...');
-                
-                // Aggiungi effetto di caricamento
-                const btn = event.target;
-                const originalHTML = btn.innerHTML;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Caricamento...';
-                btn.disabled = true;
-                
-                if (!userProfile) {
-                    console.log('⚠️ Profilo non caricato, reindirizzo alla home standard');
-                    window.location.href = 'home.html';
-                    return;
-                }
-                
-                const userRole = userProfile.role || 'USER';
-                
-                if (userRole === 'ADMIN' || userRole === 'DIRIGENTE') {
-                    console.log('👔 Reindirizzo alla dashboard dirigenti');
-                    window.location.href = 'home_dirigenti.html';
-                } else {
-                    console.log('👤 Reindirizzo alla dashboard utente');
-                    window.location.href = 'home.html';
-                }
-                
-            } catch (error) {
-                console.error('❌ Errore reindirizzamento:', error);
-                window.location.href = 'home.html';
-            }
-        }
-
-        // === LOGOUT ===
-        async function handleLogout() {
-            if (!confirm('Sei sicuro di voler uscire?')) {
-                return;
-            }
-            
-            try {
-                console.log('🚪 Logout in corso...');
-                
-                // Aggiungi effetto di caricamento
-                const btn = event.target;
-                const originalHTML = btn.innerHTML;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Uscita...';
-                btn.disabled = true;
-                
-                const { error } = await supabaseClient.auth.signOut();
-                if (error) {
-                    console.error('❌ Errore logout:', error);
-                }
-                
-                // Reset variabili
-                currentUser = null;
-                userProfile = null;
-                
-                // Mostra sezione guest con animazione
-                showGuestSection();
-                
-                // Ripristina pulsante
-                btn.innerHTML = originalHTML;
-                btn.disabled = false;
-                
-                console.log('✅ Logout completato');
-                
-            } catch (error) {
-                console.error('❌ Errore durante logout:', error);
-                alert('Errore durante il logout');
-                
-                // Ripristina pulsante anche in caso di errore
-                if (event && event.target) {
-                    event.target.innerHTML = '<i class="fas fa-sign-out-alt mr-2"></i>Logout';
-                    event.target.disabled = false;
-                }
-            }
-        }
-
-        // === FUNZIONI INTERATTIVE ===
-        function logoClick() {
-            const logo = document.querySelector('.logo-main');
-            logo.style.animation = 'wiggle 1s ease-in-out';
-            setTimeout(() => {
-                logo.style.animation = 'float 4s ease-in-out infinite';
-            }, 1000);
-        }
-
-        function titleClick() {
-            // Easter egg per il titolo
-            const title = document.querySelector('.title-main');
-            title.style.animation = 'gradient 2s ease infinite';
-            
-            // Aggiungi effetto temporaneo al background
-            document.body.style.animationDuration = '2s';
-            
-            setTimeout(() => {
-                title.style.animation = 'gradient 5s ease infinite';
-                document.body.style.animationDuration = '20s';
-            }, 3000);
+        function goToSIMSite() {
+            // Apre il sito SIM Carabinieri in una nuova tab
+            window.open('https://www.simcarabinieri.it', '_blank');
         }
 
         function scrollToFeatures() {
             const featuresSection = document.getElementById('features');
-            featuresSection.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-
-        // === EFFETTI VISUALI ===
-        function initializeVisualEffects() {
-            // Particelle di sfondo
-            createParticles();
-            
-            // Cursor trail
-            initializeCursorTrail();
-            
-            // Smooth scroll
-            initializeSmoothScroll();
-            
-            // Intersection observer per animazioni
-            initializeIntersectionObserver();
-        }
-
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = window.innerWidth > 768 ? 50 : 25;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.width = Math.random() * 4 + 2 + 'px';
-                particle.style.height = particle.style.width;
-                particle.style.animationDelay = Math.random() * 8 + 's';
-                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
-                particlesContainer.appendChild(particle);
+            if (featuresSection) {
+                featuresSection.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
             }
         }
 
-        function initializeCursorTrail() {
-            if (window.innerWidth <= 768) return; // Non su mobile
-            
-            const cursorTrail = document.getElementById('cursorTrail');
-            let mouseX = 0, mouseY = 0;
-            let trailX = 0, trailY = 0;
-
-            document.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-            });
-
-            function animateTrail() {
-                trailX += (mouseX - trailX) * 0.1;
-                trailY += (mouseY - trailY) * 0.1;
-                
-                cursorTrail.style.transform = `translate(${trailX - 10}px, ${trailY - 10}px)`;
-                requestAnimationFrame(animateTrail);
+        // === HELP MODAL ===
+        function showHelp() {
+            const modal = document.getElementById('helpModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
             }
-            
-            animateTrail();
         }
 
-        function initializeSmoothScroll() {
+        function closeHelp() {
+            const modal = document.getElementById('helpModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        // === STATUS MANAGEMENT ===
+        function updateSystemStatus() {
+            const indicator = document.getElementById('statusIndicator');
+            const text = document.getElementById('statusText');
+            
+            if (systemStatus === 'online') {
+                indicator.classList.remove('status-offline');
+                text.textContent = 'Sistema Online';
+            } else {
+                indicator.classList.add('status-offline');
+                text.textContent = 'Sistema Offline';
+            }
+        }
+
+        // === INITIALIZATION ===
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 MyApp by SIM Carabinieri Index Page Loaded v4.1');
+            
+            // Update status
+            updateSystemStatus();
+            
+            // Check system status every 30 seconds
+            setInterval(() => {
+                // Qui potresti aggiungere una vera verifica dello stato del sistema
+                updateSystemStatus();
+            }, 30000);
+            
+            // Add smooth scrolling for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -1008,185 +723,31 @@
                     }
                 });
             });
-        }
-
-        function initializeIntersectionObserver() {
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.animation = 'slideInUp 0.8s ease-out forwards';
-                    }
-                });
-            }, observerOptions);
-
-            // Osserva gli elementi iniziali
-            document.querySelectorAll('.feature-card, .section-title').forEach(el => {
-                observer.observe(el);
-            });
-        }
-
-        // === GESTIONE EVENTI MOBILE ===
-        if ('ontouchstart' in window) {
-            document.addEventListener('touchstart', (e) => {
-                // Nasconde scroll indicator su mobile
-                const scrollIndicator = document.querySelector('.scroll-indicator');
-                if (scrollIndicator) {
-                    scrollIndicator.style.display = 'none';
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Press 'L' to go to login
+                if (e.key.toLowerCase() === 'l' && !e.ctrlKey && !e.altKey) {
+                    goToLogin();
                 }
-                
-                // Aggiungi effetti touch per mobile
-                const touch = e.touches[0];
-                const ripple = document.createElement('div');
-                ripple.style.position = 'fixed';
-                ripple.style.left = touch.clientX - 25 + 'px';
-                ripple.style.top = touch.clientY - 25 + 'px';
-                ripple.style.width = '50px';
-                ripple.style.height = '50px';
-                ripple.style.borderRadius = '50%';
-                ripple.style.background = 'rgba(233, 69, 96, 0.3)';
-                ripple.style.transform = 'scale(0)';
-                ripple.style.transition = 'transform 0.6s ease, opacity 0.6s ease';
-                ripple.style.pointerEvents = 'none';
-                ripple.style.zIndex = '9999';
-                
-                document.body.appendChild(ripple);
-                
-                setTimeout(() => {
-                    ripple.style.transform = 'scale(4)';
-                    ripple.style.opacity = '0';
-                }, 10);
-                
-                setTimeout(() => {
-                    if (document.body.contains(ripple)) {
-                        document.body.removeChild(ripple);
-                    }
-                }, 600);
-            });
-        }
-
-        // === GESTIONE RESIZE FINESTRA ===
-        window.addEventListener('resize', () => {
-            // Ricrea particelle per adattarsi alla nuova dimensione
-            const particlesContainer = document.getElementById('particles');
-            particlesContainer.innerHTML = '';
-            createParticles();
-        });
-
-        // === PRELOAD RISORSE ===
-        function preloadResources() {
-            // Preload delle pagine principali
-            const pagesToPreload = ['login.html', 'home.html', 'home_dirigenti.html'];
-            pagesToPreload.forEach(page => {
-                const link = document.createElement('link');
-                link.rel = 'prefetch';
-                link.href = page;
-                document.head.appendChild(link);
-            });
-        }
-
-        // === GESTIONE SCROLL ===
-        let lastScrollY = window.scrollY;
-        window.addEventListener('scroll', () => {
-            const currentScrollY = window.scrollY;
-            const scrollIndicator = document.querySelector('.scroll-indicator');
-            
-            if (scrollIndicator) {
-                if (currentScrollY > 100) {
-                    scrollIndicator.style.opacity = '0';
-                } else {
-                    scrollIndicator.style.opacity = '0.7';
+                // Press 'H' to show help
+                if (e.key.toLowerCase() === 'h' && !e.ctrlKey && !e.altKey) {
+                    showHelp();
                 }
-            }
-            
-            lastScrollY = currentScrollY;
-        });
-
-        // === GESTIONE VISIBILITÀ PAGINA ===
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                // Pausa animazioni quando la pagina non è visibile
-                document.body.style.animationPlayState = 'paused';
-            } else {
-                // Riprendi animazioni quando la pagina è di nuovo visibile
-                document.body.style.animationPlayState = 'running';
-            }
-        });
-
-        // === INIZIALIZZAZIONE RITARDATA ===
-        setTimeout(() => {
-            // Avvia preload dopo il caricamento iniziale
-            preloadResources();
-            
-            // Aggiungi listener per performance
-            if ('requestIdleCallback' in window) {
-                requestIdleCallback(() => {
-                    console.log('🎯 Ottimizzazioni performance applicate');
-                });
-            }
-        }, 3000);
-
-        // === EXPORT GLOBALI ===
-        window.goToUserDashboard = goToUserDashboard;
-        window.handleLogout = handleLogout;
-        window.logoClick = logoClick;
-        window.titleClick = titleClick;
-        window.scrollToFeatures = scrollToFeatures;
-
-        // === PWA SERVICE WORKER ===
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then((registration) => {
-                        console.log('✅ Service Worker registrato:', registration);
-                    })
-                    .catch((error) => {
-                        console.log('❌ Service Worker registration failed:', error);
-                    });
+                // Press Escape to close help
+                if (e.key === 'Escape') {
+                    closeHelp();
+                }
             });
-        }
-
-        // === PWA INSTALL PROMPT ===
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            console.log('🎯 PWA Install prompt disponibile');
-            e.preventDefault();
-            deferredPrompt = e;
-            showInstallButton();
+            
+            console.log('✅ MyApp by SIM Index page fully initialized');
         });
 
-        function showInstallButton() {
-            // Aggiungi pulsante di installazione se non già presente
-            if (!document.getElementById('installBtn')) {
-                const installBtn = document.createElement('button');
-                installBtn.id = 'installBtn';
-                installBtn.className = 'btn-secondary';
-                installBtn.innerHTML = '<i class="fas fa-download mr-2"></i>Installa App';
-                installBtn.style.position = 'fixed';
-                installBtn.style.bottom = '20px';
-                installBtn.style.right = '20px';
-                installBtn.style.zIndex = '1000';
-                installBtn.onclick = installPWA;
-                document.body.appendChild(installBtn);
-            }
-        }
-
-        async function installPWA() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                console.log(`👤 User choice: ${outcome}`);
-                deferredPrompt = null;
-                document.getElementById('installBtn')?.remove();
-            }
-        }
-
-        console.log('🚀 MyApp Homepage - Modern Interface Ready');
+        // === PERFORMANCE MONITORING ===
+        window.addEventListener('load', function() {
+            const loadTime = performance.now();
+            console.log(`⚡ Page loaded in ${Math.round(loadTime)}ms`);
+        });
     </script>
-
 </body>
 </html>
