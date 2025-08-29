@@ -14,22 +14,23 @@
             theme: {
                 extend: {
                     colors: {
-                        // Professional Blue-Purple Palette
-                        primary: '#1e3a8a',          // Blu profondo
-                        secondary: '#3730a3',        // Blu-viola
-                        accent: '#5b21b6',           // Viola medio
-                        purple: '#7c3aed',           // Viola vibrante
-                        lightPurple: '#a855f7',      // Viola chiaro
-                        blue: '#1e40af',             // Blu standard
-                        indigo: '#3730a3',           // Indaco
-                        violet: '#5b21b6',           // Violetto
+                        // Deep Blue to Red Magenta Palette
+                        primary: '#0a0a2e',          // Blu navy molto scuro
+                        secondary: '#1a1a5a',        // Blu scuro
+                        accent: '#6a1b9a',           // Viola intenso
+                        purple: '#6a1b9a',           // Viola vibrante
+                        lightPurple: '#ab47bc',      // Viola chiaro
+                        blue: '#0a0a2e',             // Blu navy
+                        indigo: '#2d1b69',           // Blu viola scuro
+                        violet: '#6a1b9a',           // Violetto intenso
                         gold: '#FFD700',             // Oro per contrasto
                         white: '#FFFFFF',            // Bianco puro
-                        dark: '#1e1b4b',             // Blu molto scuro
+                        dark: '#040815',             // Quasi nero con toni blu
                         light: '#f1f5f9',            // Grigio chiarissimo
                         textDark: '#1C1C1E',
                         backgroundLight: '#f8fafc',
-                        magenta: '#E91E63',          // Magenta per le card
+                        magenta: '#c2185b',          // Magenta vero
+                        red: '#e53935',              // Rosso intenso finale
                         teal: '#20B2AA',             // Teal per le card
                     },
                     fontFamily: {
@@ -54,10 +55,10 @@
     <style>
         /* === VARIABILI CSS === */
         :root {
-            --gradient-main: linear-gradient(180deg, #1e3a8a 0%, #3730a3 25%, #5b21b6 50%, #7c3aed 75%, #a855f7 100%);
-            --gradient-button: linear-gradient(135deg, #3730a3 0%, #5b21b6 50%, #7c3aed 100%);
-            --gradient-accent: linear-gradient(135deg, #1e40af 0%, #5b21b6 50%, #7c3aed 100%);
-            --gradient-cyber: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #5b21b6 100%);
+            --gradient-main: linear-gradient(180deg, #0a0a2e 0%, #1a1a5a 20%, #2d1b69 40%, #6a1b9a 60%, #c2185b 80%, #e53935 100%);
+            --gradient-button: linear-gradient(135deg, #2d1b69 0%, #6a1b9a 50%, #e53935 100%);
+            --gradient-accent: linear-gradient(135deg, #0a0a2e 0%, #6a1b9a 50%, #e53935 100%);
+            --gradient-cyber: linear-gradient(135deg, #0a0a2e 0%, #2d1b69 50%, #6a1b9a 100%);
         }
 
         /* === SFONDO PRINCIPALE === */
@@ -172,24 +173,24 @@
 
         .btn-aurora:hover {
             transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 25px 50px rgba(233, 30, 99, 0.5);
-            border-color: rgba(233, 30, 99, 0.8);
-            background: linear-gradient(135deg, #AB47BC 0%, #E91E63 50%, #C2185B 100%);
+            box-shadow: 0 25px 50px rgba(229, 57, 53, 0.5);
+            border-color: rgba(229, 57, 53, 0.8);
+            background: linear-gradient(135deg, #6a1b9a 0%, #c2185b 50%, #e53935 100%);
         }
 
         .btn-cyber {
             background: var(--gradient-cyber);
-            border: 2px solid rgba(156, 39, 176, 0.4);
+            border: 2px solid rgba(106, 27, 154, 0.4);
             color: white;
             font-weight: 700;
-            box-shadow: 0 8px 25px rgba(156, 39, 176, 0.3);
+            box-shadow: 0 8px 25px rgba(106, 27, 154, 0.3);
         }
 
         .btn-cyber:hover {
             transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 25px 50px rgba(156, 39, 176, 0.5);
-            border-color: rgba(156, 39, 176, 0.8);
-            background: linear-gradient(135deg, #673AB7 0%, #9C27B0 50%, #AB47BC 100%);
+            box-shadow: 0 25px 50px rgba(106, 27, 154, 0.5);
+            border-color: rgba(106, 27, 154, 0.8);
+            background: linear-gradient(135deg, #0a0a2e 0%, #2d1b69 50%, #6a1b9a 100%);
         }
 
         /* === CARDS === */
