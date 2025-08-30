@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>MyApp by SIM Carabinieri - Dashboard</title>
+    <title>MyApp by SIM Carabinieri</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -580,7 +580,7 @@
                         <div class="mb-4">
                             <div class="inline-flex items-center gap-2 mb-3">
                                 <div class="w-1 h-6 bg-gradient-to-b from-magenta to-cyan rounded-full"></div>
-                                <span class="text-white/80 text-xs font-semibold uppercase tracking-wider">Dashboard</span>
+                                <span class="text-white/80 text-xs font-semibold uppercase tracking-wider">MyApp</span>
                             </div>
                         </div>
 
@@ -775,6 +775,12 @@
                     <div class="text-3xl mb-2">📁</div>
                     <h3 class="text-white text-sm font-bold mb-1">FileBox</h3>
                     <p class="text-white/80 text-xs line-clamp-2">File e documenti</p>
+                </div>
+
+                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Community Hub" onclick="goToCommunity()" onkeydown="keyActivate(event,'goToCommunity')">
+                    <div class="text-3xl mb-2">👥</div>
+                    <h3 class="text-white text-sm font-bold mb-1">Community Hub</h3>
+                    <p class="text-white/80 text-xs line-clamp-2">Forum e discussioni</p>
                 </div>
 
                 <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Assistenza" onclick="goToAssistenza()" onkeydown="keyActivate(event,'goToAssistenza')">
@@ -1601,6 +1607,7 @@
         function goToDirigenti(){ window.location.href = 'dirigenti.html'; }
         function goToConvenzioni(){ window.location.href = 'https://www.carabinierinsc.it/regioni-convenzioni/veneto'; }
         function goToFileBox(){ window.location.href = 'filebox.html'; }
+        function goToCommunity(){ window.location.href = 'academy.html'; }
         function goToAssistenza(){ window.location.href = 'servizi.html'; }
         function viewAllNews(){ window.location.href = 'news.html'; }
 
@@ -1729,7 +1736,7 @@
             }[s])); 
         }
 
-        console.log('✅ MyApp by SIM Carabinieri - Brand Identity 2025 - Mobile-First Dashboard Ready');
+        console.log('✅ MyApp by SIM Carabinieri (GA)- Brand Identity 2025 - Mobile-First Dashboard Ready');
     </script>
 </body>
 </html>
