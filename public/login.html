@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
   <title>Accesso - MyApp by SIM Carabinieri</title>
 
-  <!-- Tailwind CSS (CDN) -->
+  <!-- Tailwind CSS (CDN) - SOLO PER SVILUPPO -->
+  <!-- In produzione sostituire con: npm install tailwindcss -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Supabase -->
@@ -767,29 +768,70 @@
     let supabaseClient;
     let isProcessing = false;
 
+    // === FUNZIONI GLOBALI (accessibili da onclick) ===
+    window.switchToLogin = function() {
+      console.log('🔄 Switching to LOGIN');
+      document.getElementById('loginTab').classList.add('active');
+      document.getElementById('registerTab').classList.remove('active');
+      document.getElementById('loginForm').classList.add('active');
+      document.getElementById('registerForm').classList.remove('active');
+      document.getElementById('loginTab').setAttribute('aria-selected', 'true');
+      document.getElementById('registerTab').setAttribute('aria-selected', 'false');
+      document.getElementById('authTitle').textContent='MyApp';
+      document.getElementById('authSubtitle').textContent='by SIM Carabinieri';
+      clearMessages();
+      updateButtonsEnabled();
+      setTimeout(() => {
+        document.getElementById('loginEmail')?.focus();
+      }, 100);
+    };
+    
+    window.switchToRegister = function() {
+      console.log('🔄 Switching to REGISTER');
+      document.getElementById('loginTab').classList.remove('active');
+      document.getElementById('registerTab').classList.add('active');
+      document.getElementById('loginForm').classList.remove('active');
+      document.getElementById('registerForm').classList.add('active');
+      document.getElementById('loginTab').setAttribute('aria-selected', 'false');
+      document.getElementById('registerTab').setAttribute('aria-selected', 'true');
+      document.getElementById('authTitle').textContent='MyApp';
+      document.getElementById('authSubtitle').textContent='by SIM Carabinieri';
+      clearMessages();
+      updateButtonsEnabled();
+      setTimeout(() => {
+        document.getElementById('registerNome')?.focus();
+      }, 100);
+    };
+
     // === INIZIALIZZAZIONE ===
     document.addEventListener('DOMContentLoaded', async () => {
-      console.log('🔐 AUTH PAGE LOADED - MyApp by SIM Carabinieri v5.0+privacy');
+      try {
+        console.log('🔐 AUTH PAGE LOADED - MyApp by SIM Carabinieri v5.0+privacy');
 
-      supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      console.log('✅ Supabase client inizializzato');
+        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        console.log('✅ Supabase client inizializzato');
 
-      initPasswordToggles();
-      initPrivacyGates();
-      initDynamicButtonStates();
-      setupFormListeners();
+        initPasswordToggles();
+        initPrivacyGates();
+        initDynamicButtonStates();
+        setupFormListeners();
 
-      // Banner post-verifica (se torna dal link)
-      const qs = new URLSearchParams(window.location.search);
-      if (qs.get('verified') === '1') {
-        switchToLogin();
-        showMessage('Email verificata! Ora puoi accedere con le tue credenziali.', 'success');
-        // pulisco la query senza ricaricare
-        history.replaceState({}, '', window.location.pathname);
+        // Banner post-verifica (se torna dal link)
+        const qs = new URLSearchParams(window.location.search);
+        if (qs.get('verified') === '1') {
+          window.switchToLogin();
+          showMessage('Email verificata! Ora puoi accedere con le tue credenziali.', 'success');
+          // pulisco la query senza ricaricare
+          history.replaceState({}, '', window.location.pathname);
+        }
+
+        await checkExistingSession();
+        console.log('✅ Sistema di autenticazione pronto');
+        
+      } catch (error) {
+        console.error('❌ Errore inizializzazione:', error);
+        showMessage('Errore durante l\'inizializzazione. Ricarica la pagina.', 'error');
       }
-
-      await checkExistingSession();
-      console.log('✅ Sistema di autenticazione pronto');
     });
 
     // === SESSIONE ESISTENTE ===
@@ -843,7 +885,7 @@
       });
       document.getElementById('goLoginBtn')?.addEventListener('click', () => {
         hideVerifyOverlay();
-        switchToLogin();
+        window.switchToLogin();
         document.getElementById('loginPassword')?.focus();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
@@ -866,7 +908,7 @@
       const bindToggle = (inputId, btnId) => {
         const input = document.getElementById(inputId);
         const btn = document.getElementById(btnId);
-        if(!input || !btn) return;
+        if (!input || !btn) return;
         btn.addEventListener('click', () => {
           const isPwd = input.type === 'password';
           input.type = isPwd ? 'text' : 'password';
@@ -874,9 +916,9 @@
           input.focus();
         });
       };
-      bindToggle('loginPassword','toggleLoginPwd');
-      bindToggle('registerPassword','toggleRegPwd');
-      bindToggle('confirmPassword','toggleRegConfirmPwd');
+        bindToggle('loginPassword', 'toggleLoginPwd');
+        bindToggle('registerPassword', 'toggleRegPwd');
+        bindToggle('confirmPassword', 'toggleRegConfirmPwd');
     }
 
     // === PRIVACY CHECK (gating) ===
@@ -904,7 +946,7 @@
 
     // === DINAMIC ENABLE/DISABLE BOTTONI ===
     function initDynamicButtonStates() {
-      const ids = ['loginEmail','loginPassword','registerNome','registerCognome','registerEmail','registerDataNascita','registerLuogoNascita','registerPassword','confirmPassword'];
+      const ids = ['loginEmail', 'loginPassword', 'registerNome', 'registerCognome', 'registerEmail', 'registerDataNascita', 'registerLuogoNascita', 'registerPassword', 'confirmPassword'];
       ids.forEach(id => {
         document.getElementById(id)?.addEventListener('input', updateButtonsEnabled);
       });
@@ -1008,10 +1050,29 @@
       const confirmPassword = document.getElementById('confirmPassword').value;
       const privacyOk = document.getElementById('registerPrivacy').checked;
 
-      if (!privacyOk) { showMessage('Devi accettare l'Informativa Privacy per procedere.', 'error'); isProcessing = false; return; }
-      if (!nome || !cognome || !email || !dataNascita || !luogoNascita || !password) { showMessage('Compila tutti i campi obbligatori', 'error'); isProcessing = false; return; }
-      if (password !== confirmPassword) { showMessage('Le password non coincidono', 'error'); isProcessing = false; return; }
-      if (password.length < 6) { showMessage('La password deve essere di almeno 6 caratteri', 'error'); isProcessing = false; return; }
+      if (!privacyOk) { 
+        showMessage('Devi accettare l\'Informativa Privacy per procedere.', 'error'); 
+        isProcessing = false; 
+        return; 
+      }
+      
+      if (!nome || !cognome || !email || !dataNascita || !luogoNascita || !password) { 
+        showMessage('Compila tutti i campi obbligatori', 'error'); 
+        isProcessing = false; 
+        return; 
+      }
+      
+      if (password !== confirmPassword) { 
+        showMessage('Le password non coincidono', 'error'); 
+        isProcessing = false; 
+        return; 
+      }
+      
+      if (password.length < 6) { 
+        showMessage('La password deve essere di almeno 6 caratteri', 'error'); 
+        isProcessing = false; 
+        return; 
+      }
 
       // maggiorenne
       const birth = new Date(dataNascita);
@@ -1019,7 +1080,11 @@
       let age = now.getFullYear() - birth.getFullYear();
       const m = now.getMonth() - birth.getMonth();
       if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) age--;
-      if (age < 18) { showMessage('Devi essere maggiorenne per registrarti', 'error'); isProcessing = false; return; }
+      if (age < 18) { 
+        showMessage('Devi essere maggiorenne per registrarti', 'error'); 
+        isProcessing = false; 
+        return; 
+      }
 
       try {
         showLoadingButton('registerBtn', true);
@@ -1044,7 +1109,7 @@
 
         // Mostra overlay istruzioni + ritorno al login
         showVerifyOverlay(email);
-        switchToLogin();
+        window.switchToLogin();
         document.getElementById('loginEmail').value = email;
         document.getElementById('loginPassword').value = '';
         document.getElementById('loginPassword').focus();
@@ -1057,7 +1122,7 @@
         else if (err.message?.includes('Password should be at least')) msg = 'La password deve essere di almeno 6 caratteri';
         else if (err.message?.includes('Invalid email')) msg = 'Formato email non valido';
         else if (err.message) msg = err.message;
-        showMessage(msg,'error');
+        showMessage(msg, 'error');
       } finally {
         showLoadingButton('registerBtn', false);
         isProcessing = false;
@@ -1065,70 +1130,54 @@
     }
 
     // === UI HELPERS ===
-    function switchToLogin(){
-      console.log('🔄 Switching to LOGIN');
-      document.getElementById('loginTab').classList.add('active');
-      document.getElementById('registerTab').classList.remove('active');
-      document.getElementById('loginForm').classList.add('active');
-      document.getElementById('registerForm').classList.remove('active');
-      document.getElementById('loginTab').setAttribute('aria-selected', 'true');
-      document.getElementById('registerTab').setAttribute('aria-selected', 'false');
-      document.getElementById('authTitle').textContent='MyApp';
-      document.getElementById('authSubtitle').textContent='by SIM Carabinieri';
-      clearMessages();
-      updateButtonsEnabled();
-      setTimeout(() => {
-        document.getElementById('loginEmail')?.focus();
-      }, 100);
-    }
-    
-    function switchToRegister(){
-      console.log('🔄 Switching to REGISTER');
-      document.getElementById('loginTab').classList.remove('active');
-      document.getElementById('registerTab').classList.add('active');
-      document.getElementById('loginForm').classList.remove('active');
-      document.getElementById('registerForm').classList.add('active');
-      document.getElementById('loginTab').setAttribute('aria-selected', 'false');
-      document.getElementById('registerTab').setAttribute('aria-selected', 'true');
-      document.getElementById('authTitle').textContent='MyApp';
-      document.getElementById('authSubtitle').textContent='by SIM Carabinieri';
-      clearMessages();
-      updateButtonsEnabled();
-      setTimeout(() => {
-        document.getElementById('registerNome')?.focus();
-      }, 100);
-    }
-    function showMessage(message,type='info'){
-      const container=document.getElementById('messageContainer');
-      const el=document.createElement('div');
-      el.className=`message message-${type}`;
-      el.textContent=message;
-      container.innerHTML='';
+    function showMessage(message, type = 'info') {
+      const container = document.getElementById('messageContainer');
+      const el = document.createElement('div');
+      el.className = `message message-${type}`;
+      el.textContent = message;
+      container.innerHTML = '';
       container.appendChild(el);
-      if(type==='info'||type==='success'){
-        setTimeout(()=>{ if(el.parentNode){ el.remove(); } },5000);
+      if (type === 'info' || type === 'success') {
+        setTimeout(() => { 
+          if (el.parentNode) { 
+            el.remove(); 
+          } 
+        }, 5000);
       }
     }
-    function clearMessages(){ document.getElementById('messageContainer').innerHTML=''; }
-    function showLoadingButton(buttonId,loading){
-      const btn=document.getElementById(buttonId);
-      if(!btn) return;
-      if(loading){ btn.disabled=true; btn.innerHTML='<span class="loading-spinner"></span>Caricamento...'; }
-      else{ btn.disabled=false; btn.textContent = (buttonId==='loginBtn')?'Accedi':'Registrati'; }
+    
+    function clearMessages() { 
+      document.getElementById('messageContainer').innerHTML = ''; 
     }
-    function showLoadingOverlay(){ document.getElementById('loadingOverlay').style.display='flex'; }
+    
+    function showLoadingButton(buttonId, loading) {
+      const btn = document.getElementById(buttonId);
+      if (!btn) return;
+      if (loading) { 
+        btn.disabled = true; 
+        btn.innerHTML = '<span class="loading-spinner"></span>Caricamento...'; 
+      } else { 
+        btn.disabled = false; 
+        btn.textContent = (buttonId === 'loginBtn') ? 'Accedi' : 'Registrati'; 
+      }
+    }
+    
+    function showLoadingOverlay() { 
+      document.getElementById('loadingOverlay').style.display = 'flex'; 
+    }
 
     // Overlay helpers
-    function showVerifyOverlay(email){
+    function showVerifyOverlay(email) {
       document.getElementById('verifyEmail').textContent = email || '';
       const ov = document.getElementById('verifyOverlay');
       ov.style.display = 'flex';
-      ov.setAttribute('aria-hidden','false');
+      ov.setAttribute('aria-hidden', 'false');
     }
-    function hideVerifyOverlay(){
+    
+    function hideVerifyOverlay() {
       const ov = document.getElementById('verifyOverlay');
       ov.style.display = 'none';
-      ov.setAttribute('aria-hidden','true');
+      ov.setAttribute('aria-hidden', 'true');
     }
   </script>
 </body>
