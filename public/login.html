@@ -319,6 +319,53 @@
       margin-bottom: 2.5rem; 
     }
     
+    .auth-logo { 
+      font-size: 4rem; 
+      margin-bottom: 1.5rem; 
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,.3)); 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Container logo più grande e responsive */
+    .logo-container {
+      width: 80px;
+      height: 80px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 32px rgba(194, 24, 91, 0.2);
+    }
+
+    @media (max-width: 768px) {
+      .logo-container {
+        width: 72px;
+        height: 72px;
+        border-radius: 14px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .logo-container {
+        width: 64px;
+        height: 64px;
+        border-radius: 12px;
+      }
+      .auth-logo {
+        margin-bottom: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo-container {
+        width: 56px;
+        height: 56px;
+        border-radius: 10px;
+      }
+    }
+    
     .auth-title { 
       font-size: 2.5rem; 
       font-weight: 900; 
@@ -768,8 +815,8 @@
     let supabaseClient;
     let isProcessing = false;
 
-    // === FUNZIONI GLOBALI (accessibili da onclick) ===
-    window.switchToLogin = function() {
+    // === FUNZIONI GLOBALI PER ONCLICK ===
+    function switchToLogin() {
       console.log('🔄 Switching to LOGIN');
       document.getElementById('loginTab').classList.add('active');
       document.getElementById('registerTab').classList.remove('active');
@@ -777,16 +824,17 @@
       document.getElementById('registerForm').classList.remove('active');
       document.getElementById('loginTab').setAttribute('aria-selected', 'true');
       document.getElementById('registerTab').setAttribute('aria-selected', 'false');
-      document.getElementById('authTitle').textContent='MyApp';
-      document.getElementById('authSubtitle').textContent='by SIM Carabinieri';
+      document.getElementById('authTitle').textContent = 'MyApp';
+      document.getElementById('authSubtitle').textContent = 'by SIM Carabinieri';
       clearMessages();
       updateButtonsEnabled();
       setTimeout(() => {
-        document.getElementById('loginEmail')?.focus();
+        const emailField = document.getElementById('loginEmail');
+        if (emailField) emailField.focus();
       }, 100);
-    };
+    }
     
-    window.switchToRegister = function() {
+    function switchToRegister() {
       console.log('🔄 Switching to REGISTER');
       document.getElementById('loginTab').classList.remove('active');
       document.getElementById('registerTab').classList.add('active');
@@ -794,34 +842,137 @@
       document.getElementById('registerForm').classList.add('active');
       document.getElementById('loginTab').setAttribute('aria-selected', 'false');
       document.getElementById('registerTab').setAttribute('aria-selected', 'true');
-      document.getElementById('authTitle').textContent='MyApp';
-      document.getElementById('authSubtitle').textContent='by SIM Carabinieri';
+      document.getElementById('authTitle').textContent = 'MyApp';
+      document.getElementById('authSubtitle').textContent = 'by SIM Carabinieri';
       clearMessages();
       updateButtonsEnabled();
       setTimeout(() => {
-        document.getElementById('registerNome')?.focus();
+        const nomeField = document.getElementById('registerNome');
+        if (nomeField) nomeField.focus();
       }, 100);
-    };
+    }
+
+    // === FUNZIONI HELPER ===
+    function showMessage(message, type = 'info') {
+      const container = document.getElementById('messageContainer');
+      if (!container) return;
+      
+      const el = document.createElement('div');
+      el.className = `message message-${type}`;
+      el.textContent = message;
+      container.innerHTML = '';
+      container.appendChild(el);
+      
+      if (type === 'info' || type === 'success') {
+        setTimeout(() => { 
+          if (el && el.parentNode) { 
+            el.remove(); 
+          } 
+        }, 5000);
+      }
+    }
+    
+    function clearMessages() { 
+      const container = document.getElementById('messageContainer');
+      if (container) container.innerHTML = ''; 
+    }
+    
+    function showLoadingButton(buttonId, loading) {
+      const btn = document.getElementById(buttonId);
+      if (!btn) return;
+      
+      if (loading) { 
+        btn.disabled = true; 
+        btn.innerHTML = '<span class="loading-spinner"></span>Caricamento...'; 
+      } else { 
+        btn.disabled = false; 
+        btn.textContent = (buttonId === 'loginBtn') ? 'Accedi' : 'Registrati'; 
+      }
+    }
+    
+    function showLoadingOverlay() { 
+      const overlay = document.getElementById('loadingOverlay');
+      if (overlay) overlay.style.display = 'flex'; 
+    }
+
+    function showVerifyOverlay(email) {
+      const emailEl = document.getElementById('verifyEmail');
+      const overlay = document.getElementById('verifyOverlay');
+      
+      if (emailEl) emailEl.textContent = email || '';
+      if (overlay) {
+        overlay.style.display = 'flex';
+        overlay.setAttribute('aria-hidden', 'false');
+      }
+    }
+    
+    function hideVerifyOverlay() {
+      const overlay = document.getElementById('verifyOverlay');
+      if (overlay) {
+        overlay.style.display = 'none';
+        overlay.setAttribute('aria-hidden', 'true');
+      }
+    }
+
+    function updateButtonsEnabled() {
+      // Login button
+      const loginEmail = document.getElementById('loginEmail');
+      const loginPassword = document.getElementById('loginPassword');
+      const loginPrivacy = document.getElementById('loginPrivacy');
+      const loginBtn = document.getElementById('loginBtn');
+      
+      if (loginBtn) {
+        const isValid = loginEmail?.value.trim() && 
+                       loginPassword?.value && 
+                       loginPrivacy?.checked;
+        loginBtn.disabled = !isValid;
+      }
+
+      // Register button
+      const nome = document.getElementById('registerNome');
+      const cognome = document.getElementById('registerCognome');
+      const email = document.getElementById('registerEmail');
+      const dataNascita = document.getElementById('registerDataNascita');
+      const luogoNascita = document.getElementById('registerLuogoNascita');
+      const password = document.getElementById('registerPassword');
+      const confirmPassword = document.getElementById('confirmPassword');
+      const registerPrivacy = document.getElementById('registerPrivacy');
+      const registerBtn = document.getElementById('registerBtn');
+      
+      if (registerBtn) {
+        const isValid = nome?.value.trim() && 
+                       cognome?.value.trim() && 
+                       email?.value.trim() && 
+                       dataNascita?.value && 
+                       luogoNascita?.value.trim() && 
+                       password?.value && 
+                       confirmPassword?.value && 
+                       (password?.value === confirmPassword?.value) && 
+                       registerPrivacy?.checked;
+        registerBtn.disabled = !isValid;
+      }
+    }
 
     // === INIZIALIZZAZIONE ===
     document.addEventListener('DOMContentLoaded', async () => {
       try {
         console.log('🔐 AUTH PAGE LOADED - MyApp by SIM Carabinieri v5.0+privacy');
 
+        // Initialize Supabase
         supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         console.log('✅ Supabase client inizializzato');
 
+        // Initialize components
         initPasswordToggles();
         initPrivacyGates();
         initDynamicButtonStates();
         setupFormListeners();
 
-        // Banner post-verifica (se torna dal link)
+        // Check for verification redirect
         const qs = new URLSearchParams(window.location.search);
         if (qs.get('verified') === '1') {
-          window.switchToLogin();
+          switchToLogin();
           showMessage('Email verificata! Ora puoi accedere con le tue credenziali.', 'success');
-          // pulisco la query senza ricaricare
           history.replaceState({}, '', window.location.pathname);
         }
 
@@ -863,65 +1014,30 @@
       }
     }
 
-    // === LISTENERS FORM ===
-    function setupFormListeners() {
-      document.getElementById('loginForm')?.addEventListener('submit', handleLogin);
-      document.getElementById('registerForm')?.addEventListener('submit', handleRegister);
+    // === PASSWORD TOGGLES ===
+    function initPasswordToggles() {
+      const toggles = [
+        ['loginPassword', 'toggleLoginPwd'],
+        ['registerPassword', 'toggleRegPwd'],
+        ['confirmPassword', 'toggleRegConfirmPwd']
+      ];
 
-      const confirmPassword = document.getElementById('confirmPassword');
-      const registerPassword = document.getElementById('registerPassword');
-      if (confirmPassword && registerPassword) {
-        confirmPassword.addEventListener('input', function () {
-          const same = registerPassword.value === confirmPassword.value;
-          this.style.borderColor = same ? '#e5e7eb' : '#dc2626';
-          this.style.boxShadow = same ? 'none' : '0 0 0 3px rgba(220,38,38,.1)';
-        });
-      }
-
-      // Overlay actions
-      document.getElementById('openMailBtn')?.addEventListener('click', () => {
-        // Tentativo generico di aprire app email (fallback non intrusivo)
-        window.location.href = 'mailto:';
-      });
-      document.getElementById('goLoginBtn')?.addEventListener('click', () => {
-        hideVerifyOverlay();
-        window.switchToLogin();
-        document.getElementById('loginPassword')?.focus();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-      document.getElementById('resendBtn')?.addEventListener('click', async () => {
-        const email = document.getElementById('verifyEmail')?.textContent || '';
-        if (!email) return;
-        try {
-          const { error } = await supabaseClient.auth.resend({ type: 'signup', email });
-          if (error) throw error;
-          showMessage('Email di conferma reinviata ✅', 'success');
-        } catch (err) {
-          console.error('Reinvio email fallito:', err);
-          showMessage('Impossibile reinviare l'email. Riprova più tardi.', 'error');
+      toggles.forEach(([inputId, btnId]) => {
+        const input = document.getElementById(inputId);
+        const btn = document.getElementById(btnId);
+        
+        if (input && btn) {
+          btn.addEventListener('click', () => {
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            btn.textContent = isPassword ? '🙈' : '👁︎';
+            input.focus();
+          });
         }
       });
     }
 
-    // === TOGGLE PASSWORD ===
-    function initPasswordToggles() {
-      const bindToggle = (inputId, btnId) => {
-        const input = document.getElementById(inputId);
-        const btn = document.getElementById(btnId);
-        if (!input || !btn) return;
-        btn.addEventListener('click', () => {
-          const isPwd = input.type === 'password';
-          input.type = isPwd ? 'text' : 'password';
-          btn.textContent = isPwd ? '🙈' : '👁︎';
-          input.focus();
-        });
-      };
-        bindToggle('loginPassword', 'toggleLoginPwd');
-        bindToggle('registerPassword', 'toggleRegPwd');
-        bindToggle('confirmPassword', 'toggleRegConfirmPwd');
-    }
-
-    // === PRIVACY CHECK (gating) ===
+    // === PRIVACY GATES ===
     function initPrivacyGates() {
       const loginPrivacy = document.getElementById('loginPrivacy');
       const registerPrivacy = document.getElementById('registerPrivacy');
@@ -931,7 +1047,7 @@
         if (registerPrivacy) registerPrivacy.checked = true;
       }
 
-      const onChange = () => {
+      const handleChange = () => {
         if (REMEMBER_PRIVACY) {
           const accepted = (loginPrivacy?.checked || registerPrivacy?.checked) ? 'true' : 'false';
           localStorage.setItem('privacyAccepted', accepted);
@@ -939,46 +1055,107 @@
         updateButtonsEnabled();
       };
 
-      if (loginPrivacy) loginPrivacy.addEventListener('change', onChange);
-      if (registerPrivacy) registerPrivacy.addEventListener('change', onChange);
+      if (loginPrivacy) loginPrivacy.addEventListener('change', handleChange);
+      if (registerPrivacy) registerPrivacy.addEventListener('change', handleChange);
+      
       updateButtonsEnabled();
     }
 
-    // === DINAMIC ENABLE/DISABLE BOTTONI ===
+    // === DYNAMIC BUTTON STATES ===
     function initDynamicButtonStates() {
-      const ids = ['loginEmail', 'loginPassword', 'registerNome', 'registerCognome', 'registerEmail', 'registerDataNascita', 'registerLuogoNascita', 'registerPassword', 'confirmPassword'];
-      ids.forEach(id => {
-        document.getElementById(id)?.addEventListener('input', updateButtonsEnabled);
+      const fieldIds = [
+        'loginEmail', 'loginPassword', 'registerNome', 'registerCognome', 
+        'registerEmail', 'registerDataNascita', 'registerLuogoNascita', 
+        'registerPassword', 'confirmPassword'
+      ];
+      
+      fieldIds.forEach(id => {
+        const field = document.getElementById(id);
+        if (field) {
+          field.addEventListener('input', updateButtonsEnabled);
+        }
       });
+      
       updateButtonsEnabled();
     }
 
-    function updateButtonsEnabled() {
-      // login
-      const loginEmail = document.getElementById('loginEmail')?.value.trim();
-      const loginPassword = document.getElementById('loginPassword')?.value;
-      const loginPrivacy = document.getElementById('loginPrivacy')?.checked;
-      const loginBtn = document.getElementById('loginBtn');
-      if (loginBtn) loginBtn.disabled = !(loginEmail && loginPassword && loginPrivacy);
+    // === FORM LISTENERS ===
+    function setupFormListeners() {
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      
+      if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+      }
+      
+      if (registerForm) {
+        registerForm.addEventListener('submit', handleRegister);
+      }
 
-      // register
-      const nome = document.getElementById('registerNome')?.value.trim();
-      const cognome = document.getElementById('registerCognome')?.value.trim();
-      const email = document.getElementById('registerEmail')?.value.trim();
-      const dn = document.getElementById('registerDataNascita')?.value;
-      const ln = document.getElementById('registerLuogoNascita')?.value.trim();
-      const pw = document.getElementById('registerPassword')?.value;
-      const cpw = document.getElementById('confirmPassword')?.value;
-      const regPrivacy = document.getElementById('registerPrivacy')?.checked;
-      const okBase = nome && cognome && email && dn && ln && pw && cpw && (pw === cpw);
-      const regBtn = document.getElementById('registerBtn');
-      if (regBtn) regBtn.disabled = !(okBase && regPrivacy);
+      // Password confirmation validation
+      const confirmPassword = document.getElementById('confirmPassword');
+      const registerPassword = document.getElementById('registerPassword');
+      
+      if (confirmPassword && registerPassword) {
+        confirmPassword.addEventListener('input', function () {
+          const match = registerPassword.value === confirmPassword.value;
+          this.style.borderColor = match ? '#e5e7eb' : '#dc2626';
+          this.style.boxShadow = match ? 'none' : '0 0 0 3px rgba(220,38,38,.1)';
+        });
+      }
+
+      // Overlay actions
+      const openMailBtn = document.getElementById('openMailBtn');
+      const goLoginBtn = document.getElementById('goLoginBtn');
+      const resendBtn = document.getElementById('resendBtn');
+      
+      if (openMailBtn) {
+        openMailBtn.addEventListener('click', () => {
+          window.location.href = 'mailto:';
+        });
+      }
+      
+      if (goLoginBtn) {
+        goLoginBtn.addEventListener('click', () => {
+          hideVerifyOverlay();
+          switchToLogin();
+          setTimeout(() => {
+            const passwordField = document.getElementById('loginPassword');
+            if (passwordField) passwordField.focus();
+          }, 100);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+      
+      if (resendBtn) {
+        resendBtn.addEventListener('click', async () => {
+          const emailEl = document.getElementById('verifyEmail');
+          const email = emailEl?.textContent || '';
+          
+          if (!email) return;
+          
+          try {
+            const { error } = await supabaseClient.auth.resend({ 
+              type: 'signup', 
+              email 
+            });
+            
+            if (error) throw error;
+            showMessage('Email di conferma reinviata ✅', 'success');
+            
+          } catch (err) {
+            console.error('Reinvio email fallito:', err);
+            showMessage('Impossibile reinviare l\'email. Riprova più tardi.', 'error');
+          }
+        });
+      }
     }
 
     // === LOGIN ===
     async function handleLogin(e) {
       e.preventDefault();
       if (isProcessing) return;
+      
       isProcessing = true;
 
       const email = document.getElementById('loginEmail').value.trim();
@@ -986,10 +1163,11 @@
       const privacyOk = document.getElementById('loginPrivacy').checked;
 
       if (!privacyOk) {
-        showMessage('Devi accettare l'Informativa Privacy per procedere.', 'error');
+        showMessage('Devi accettare l\'Informativa Privacy per procedere.', 'error');
         isProcessing = false;
         return;
       }
+      
       if (!email || !password) {
         showMessage('Inserisci email e password', 'error');
         isProcessing = false;
@@ -1000,9 +1178,13 @@
         showLoadingButton('loginBtn', true);
         showMessage('Accesso in corso...', 'info');
 
-        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ 
+          email, 
+          password 
+        });
+        
         if (error) throw error;
-        if (!data.user) throw new Error('Errore durante l'autenticazione');
+        if (!data.user) throw new Error('Errore durante l\'autenticazione');
 
         const { data: profile, error: profileError } = await supabaseClient
           .from('user_profiles')
@@ -1011,23 +1193,35 @@
           .single();
 
         if (profileError) {
-          showMessage('Profilo non trovato. Contatta l'amministratore.', 'error');
+          showMessage('Profilo non trovato. Contatta l\'amministratore.', 'error');
           await supabaseClient.auth.signOut();
           return;
         }
 
         showMessage('Login effettuato con successo!', 'success');
-        const redirectUrl = (profile?.role === 'ADMIN' || profile?.role === 'DIRIGENTE') ? 'home_dirigenti.html' : 'home.html';
+        const redirectUrl = (profile?.role === 'ADMIN' || profile?.role === 'DIRIGENTE') 
+          ? 'home_dirigenti.html' 
+          : 'home.html';
+        
         showLoadingOverlay();
-        setTimeout(() => { window.location.href = redirectUrl; }, 1200);
+        setTimeout(() => { 
+          window.location.href = redirectUrl; 
+        }, 1200);
 
       } catch (err) {
         console.error('❌ Errore login:', err);
         let msg = 'Errore durante il login';
-        if (err.message?.includes('Invalid login credentials')) msg = 'Email o password non corretti';
-        else if (err.message?.includes('Email not confirmed')) msg = 'Email non confermata. Controlla la posta.';
-        else if (err.message) msg = err.message;
+        
+        if (err.message?.includes('Invalid login credentials')) {
+          msg = 'Email o password non corretti';
+        } else if (err.message?.includes('Email not confirmed')) {
+          msg = 'Email non confermata. Controlla la posta.';
+        } else if (err.message) {
+          msg = err.message;
+        }
+        
         showMessage(msg, 'error');
+        
       } finally {
         showLoadingButton('loginBtn', false);
         isProcessing = false;
@@ -1038,6 +1232,7 @@
     async function handleRegister(e) {
       e.preventDefault();
       if (isProcessing) return;
+      
       isProcessing = true;
 
       const nome = document.getElementById('registerNome').value.trim();
@@ -1050,6 +1245,7 @@
       const confirmPassword = document.getElementById('confirmPassword').value;
       const privacyOk = document.getElementById('registerPrivacy').checked;
 
+      // Validazioni
       if (!privacyOk) { 
         showMessage('Devi accettare l\'Informativa Privacy per procedere.', 'error'); 
         isProcessing = false; 
@@ -1074,12 +1270,16 @@
         return; 
       }
 
-      // maggiorenne
+      // Controllo maggiore età
       const birth = new Date(dataNascita);
       const now = new Date();
       let age = now.getFullYear() - birth.getFullYear();
-      const m = now.getMonth() - birth.getMonth();
-      if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) age--;
+      const monthDiff = now.getMonth() - birth.getMonth();
+      
+      if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < birth.getDate())) {
+        age--;
+      }
+      
       if (age < 18) { 
         showMessage('Devi essere maggiorenne per registrarti', 'error'); 
         isProcessing = false; 
@@ -1090,7 +1290,6 @@
         showLoadingButton('registerBtn', true);
         showMessage('Registrazione in corso...', 'info');
 
-        // Redirect alla STESSA pagina con flag verified=1 dopo il click sull'email
         const redirectTo = `${window.location.origin}${window.location.pathname}?verified=1`;
 
         const { data, error } = await supabaseClient.auth.signUp({
@@ -1099,85 +1298,54 @@
           options: {
             emailRedirectTo: redirectTo,
             data: {
-              nome, cognome, data_nascita: dataNascita, luogo_nascita: luogoNascita, telefono,
+              nome, 
+              cognome, 
+              data_nascita: dataNascita, 
+              luogo_nascita: luogoNascita, 
+              telefono,
               privacy_accepted_at: new Date().toISOString()
             }
           }
         });
+        
         if (error) throw error;
         if (!data.user) throw new Error('Errore durante la registrazione');
 
-        // Mostra overlay istruzioni + ritorno al login
+        // Mostra overlay e switcha al login
         showVerifyOverlay(email);
-        window.switchToLogin();
-        document.getElementById('loginEmail').value = email;
-        document.getElementById('loginPassword').value = '';
-        document.getElementById('loginPassword').focus();
+        switchToLogin();
+        
+        const loginEmailField = document.getElementById('loginEmail');
+        const loginPasswordField = document.getElementById('loginPassword');
+        
+        if (loginEmailField) loginEmailField.value = email;
+        if (loginPasswordField) {
+          loginPasswordField.value = '';
+          setTimeout(() => loginPasswordField.focus(), 200);
+        }
+        
         showMessage(`Registrazione avviata! Controlla la tua email (${email}) e conferma l'account.`, 'success');
 
       } catch (err) {
         console.error('❌ Errore registrazione:', err);
         let msg = 'Errore durante la registrazione';
-        if (err.message?.includes('already registered')) msg = 'Email già registrata. Prova ad effettuare il login';
-        else if (err.message?.includes('Password should be at least')) msg = 'La password deve essere di almeno 6 caratteri';
-        else if (err.message?.includes('Invalid email')) msg = 'Formato email non valido';
-        else if (err.message) msg = err.message;
+        
+        if (err.message?.includes('already registered')) {
+          msg = 'Email già registrata. Prova ad effettuare il login';
+        } else if (err.message?.includes('Password should be at least')) {
+          msg = 'La password deve essere di almeno 6 caratteri';
+        } else if (err.message?.includes('Invalid email')) {
+          msg = 'Formato email non valido';
+        } else if (err.message) {
+          msg = err.message;
+        }
+        
         showMessage(msg, 'error');
+        
       } finally {
         showLoadingButton('registerBtn', false);
         isProcessing = false;
       }
-    }
-
-    // === UI HELPERS ===
-    function showMessage(message, type = 'info') {
-      const container = document.getElementById('messageContainer');
-      const el = document.createElement('div');
-      el.className = `message message-${type}`;
-      el.textContent = message;
-      container.innerHTML = '';
-      container.appendChild(el);
-      if (type === 'info' || type === 'success') {
-        setTimeout(() => { 
-          if (el.parentNode) { 
-            el.remove(); 
-          } 
-        }, 5000);
-      }
-    }
-    
-    function clearMessages() { 
-      document.getElementById('messageContainer').innerHTML = ''; 
-    }
-    
-    function showLoadingButton(buttonId, loading) {
-      const btn = document.getElementById(buttonId);
-      if (!btn) return;
-      if (loading) { 
-        btn.disabled = true; 
-        btn.innerHTML = '<span class="loading-spinner"></span>Caricamento...'; 
-      } else { 
-        btn.disabled = false; 
-        btn.textContent = (buttonId === 'loginBtn') ? 'Accedi' : 'Registrati'; 
-      }
-    }
-    
-    function showLoadingOverlay() { 
-      document.getElementById('loadingOverlay').style.display = 'flex'; 
-    }
-
-    // Overlay helpers
-    function showVerifyOverlay(email) {
-      document.getElementById('verifyEmail').textContent = email || '';
-      const ov = document.getElementById('verifyOverlay');
-      ov.style.display = 'flex';
-      ov.setAttribute('aria-hidden', 'false');
-    }
-    
-    function hideVerifyOverlay() {
-      const ov = document.getElementById('verifyOverlay');
-      ov.style.display = 'none';
-      ov.setAttribute('aria-hidden', 'true');
     }
   </script>
 </body>
