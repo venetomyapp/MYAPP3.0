@@ -347,21 +347,29 @@
       font-weight: 700; 
       text-align: center; 
       cursor: pointer; 
-      transition: .3s; 
+      transition: all .3s ease; 
       border: none; 
       background: transparent; 
+      color: #64748b;
     }
     
     .auth-tab.active { 
-      background: #fff; 
-      color: #0a0a2e; 
+      background: #fff !important; 
+      color: #0a0a2e !important; 
       box-shadow: 0 2px 8px rgba(0,0,0,.1); 
     }
     
-    .auth-tab:not(.active) { color: #64748b; }
+    .auth-tab:hover:not(.active) { 
+      background: rgba(255,255,255,0.5);
+      color: #374151;
+    }
     
-    .auth-form { display: none; }
-    .auth-form.active { display: block; }
+    .auth-form { 
+      display: none !important; 
+    }
+    .auth-form.active { 
+      display: block !important; 
+    }
     
     .form-row { 
       display: grid; 
@@ -1058,26 +1066,37 @@
 
     // === UI HELPERS ===
     function switchToLogin(){
+      console.log('🔄 Switching to LOGIN');
       document.getElementById('loginTab').classList.add('active');
       document.getElementById('registerTab').classList.remove('active');
       document.getElementById('loginForm').classList.add('active');
       document.getElementById('registerForm').classList.remove('active');
+      document.getElementById('loginTab').setAttribute('aria-selected', 'true');
+      document.getElementById('registerTab').setAttribute('aria-selected', 'false');
       document.getElementById('authTitle').textContent='MyApp';
       document.getElementById('authSubtitle').textContent='by SIM Carabinieri';
       clearMessages();
       updateButtonsEnabled();
-      document.getElementById('loginEmail')?.focus();
+      setTimeout(() => {
+        document.getElementById('loginEmail')?.focus();
+      }, 100);
     }
+    
     function switchToRegister(){
+      console.log('🔄 Switching to REGISTER');
       document.getElementById('loginTab').classList.remove('active');
       document.getElementById('registerTab').classList.add('active');
       document.getElementById('loginForm').classList.remove('active');
       document.getElementById('registerForm').classList.add('active');
+      document.getElementById('loginTab').setAttribute('aria-selected', 'false');
+      document.getElementById('registerTab').setAttribute('aria-selected', 'true');
       document.getElementById('authTitle').textContent='MyApp';
       document.getElementById('authSubtitle').textContent='by SIM Carabinieri';
       clearMessages();
       updateButtonsEnabled();
-      document.getElementById('registerNome')?.focus();
+      setTimeout(() => {
+        document.getElementById('registerNome')?.focus();
+      }, 100);
     }
     function showMessage(message,type='info'){
       const container=document.getElementById('messageContainer');
