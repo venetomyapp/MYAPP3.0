@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Dashboard - MyApp</title>
+    <title>MyApp by SIM Carabinieri - Dashboard</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -11,24 +11,31 @@
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <!-- CONFIGURAZIONE COLORI TAILWIND -->
+    <!-- CONFIGURAZIONE COLORI TAILWIND - BRAND IDENTITY 2025 -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#1a1a2e',
-                        secondary: '#16213e',
-                        accent: '#0f3460',
-                        aurora: '#e94560',
-                        cyan: '#00d4ff',
-                        magenta: '#ff006e',
-                        gold: '#ffd700',
-                        teal: '#03dac6',
-                        dark: '#0a0a23',
-                        light: '#f8fafc',
+                        primary: '#0a0a2e',          // Blu navy molto scuro
+                        secondary: '#1a1a5a',        // Blu scuro
+                        accent: '#6a1b9a',           // Viola intenso
+                        purple: '#6a1b9a',           // Viola vibrante
+                        lightPurple: '#ab47bc',      // Viola chiaro
+                        blue: '#0a0a2e',             // Blu navy
+                        indigo: '#2d1b69',           // Blu viola scuro
+                        violet: '#6a1b9a',           // Violetto intenso
+                        gold: '#FFD700',             // Oro per contrasto
+                        white: '#FFFFFF',            // Bianco puro
+                        dark: '#040815',             // Quasi nero con toni blu
+                        light: '#f1f5f9',            // Grigio chiarissimo
                         textDark: '#1C1C1E',
-                        backgroundLight: '#F4F4F8',
+                        backgroundLight: '#f8fafc',
+                        magenta: '#c2185b',          // Magenta vero
+                        red: '#e53935',              // Rosso intenso finale
+                        teal: '#20B2AA',             // Teal per le card
+                        aurora: '#e53935',           // Rosso per compatibilità
+                        cyan: '#00d4ff',             // Ciano per contrasto
                     },
                     screens: {
                         'xs': '320px',
@@ -45,12 +52,14 @@
         }
     </script>
     
-    <!-- STILI -->
+    <!-- STILI BRAND IDENTITY 2025 -->
     <style>
         :root {
-            --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
-            --gradient-cyber: linear-gradient(135deg, #0a0a23 0%, #1a1a2e 50%, #00d4ff 100%);
-            --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
+            --gradient-main: linear-gradient(180deg, #0a0a2e 0%, #1a1a5a 20%, #2d1b69 40%, #6a1b9a 60%, #c2185b 80%, #e53935 100%);
+            --gradient-button: linear-gradient(135deg, #2d1b69 0%, #6a1b9a 50%, #e53935 100%);
+            --gradient-accent: linear-gradient(135deg, #0a0a2e 0%, #6a1b9a 50%, #e53935 100%);
+            --gradient-cyber: linear-gradient(135deg, #0a0a2e 0%, #2d1b69 50%, #6a1b9a 100%);
+            --gradient-magic: linear-gradient(135deg, #6a1b9a 0%, #c2185b 50%, #e53935 100%);
             --safe-area-inset-top: env(safe-area-inset-top, 0);
             --safe-area-inset-bottom: env(safe-area-inset-bottom, 0);
             --safe-area-inset-left: env(safe-area-inset-left, 0);
@@ -63,7 +72,7 @@
         }
 
         body {
-            background: var(--gradient-aurora);
+            background: var(--gradient-main);
             background-size: 400% 400%;
             animation: aurora 20s ease infinite;
             min-height: 100vh;
@@ -71,6 +80,44 @@
             overflow-x: hidden;
             padding-left: var(--safe-area-inset-left);
             padding-right: var(--safe-area-inset-right);
+        }
+
+        /* LOGO M CORSIVA - GLASSMORPHISM STYLE */
+        .m-logo-italic-v5 {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-style: italic;
+            font-weight: 900;
+            font-size: 28px;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 2px 8px;
+            transform: rotate(-7deg);
+            transition: all 0.3s ease;
+        }
+
+        .m-logo-italic-v5:hover {
+            transform: rotate(-7deg) scale(1.05);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .m-logo-small {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-style: italic;
+            font-weight: 900;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            transform: rotate(-7deg);
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 640px) {
+            .m-logo-italic-v5 { font-size: 24px; }
+            .m-logo-small { font-size: 16px; }
         }
 
         @keyframes aurora {
@@ -83,7 +130,7 @@
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
-        @keyframes glow { 0%, 100% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); } 50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); } }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 10px rgba(194, 24, 91, 0.3); } 50% { box-shadow: 0 0 20px rgba(194, 24, 91, 0.6); } }
 
         @media (prefers-reduced-motion: reduce) {
             * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
@@ -112,11 +159,26 @@
             border: 1px solid rgba(0,0,0,.06); 
         }
 
-        /* Buttons */
+        /* Buttons AURORA & CYBER - Brand Identity 2025 */
         .btn-aurora { 
             background: var(--gradient-magic); 
             color: white; 
-            border: 2px solid rgba(233,69,96,.3); 
+            border: 2px solid rgba(194, 24, 91, 0.4);
+            box-shadow: 0 8px 25px rgba(194, 24, 91, 0.3);
+            transition: all .25s cubic-bezier(.4,0,.2,1); 
+            font-weight: 700; 
+            touch-action: manipulation;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-cyber {
+            background: var(--gradient-cyber);
+            color: white;
+            border: 2px solid rgba(106, 27, 154, 0.4);
+            box-shadow: 0 8px 25px rgba(106, 27, 154, 0.3);
             transition: all .25s cubic-bezier(.4,0,.2,1); 
             font-weight: 700; 
             touch-action: manipulation;
@@ -128,9 +190,9 @@
 
         /* CTA Button Special */
         .btn-cta {
-            background: linear-gradient(135deg, #ffd700 0%, #ff006e 50%, #00d4ff 100%);
-            color: #1a1a2e;
-            border: 2px solid rgba(255, 215, 0, 0.5);
+            background: linear-gradient(135deg, #ffd700 0%, #6a1b9a 50%, #e53935 100%);
+            color: #0a0a2e;
+            border: 2px solid rgba(194, 24, 91, 0.5);
             font-weight: 800;
             animation: glow 2s infinite;
             position: relative;
@@ -156,8 +218,15 @@
         @media (hover: hover) and (pointer: fine) {
             .btn-aurora:hover { 
                 transform: translateY(-2px) scale(1.02); 
-                box-shadow: 0 16px 32px rgba(233,69,96,.35); 
-                border-color: rgba(233,69,96,.7); 
+                box-shadow: 0 25px 50px rgba(194, 24, 91, 0.5);
+                border-color: rgba(194, 24, 91, 0.8);
+                background: linear-gradient(135deg, #6a1b9a 0%, #c2185b 50%, #e53935 100%);
+            }
+            .btn-cyber:hover {
+                transform: translateY(-2px) scale(1.02); 
+                box-shadow: 0 25px 50px rgba(106, 27, 154, 0.5);
+                border-color: rgba(106, 27, 154, 0.8);
+                background: linear-gradient(135deg, #0a0a2e 0%, #2d1b69 50%, #6a1b9a 100%);
             }
             .btn-cta:hover {
                 transform: translateY(-3px) scale(1.05);
@@ -200,7 +269,7 @@
             .action-card:hover {
                 transform: translateY(-3px);
                 box-shadow: 0 12px 24px rgba(0,0,0,0.22);
-                border-color: rgba(233, 69, 96, 0.4);
+                border-color: rgba(194, 24, 91, 0.4);
                 background: linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.10));
             }
         }
@@ -231,7 +300,7 @@
         .action-card:focus-visible,
         button:focus-visible,
         [role="button"]:focus-visible {
-            outline: 3px solid rgba(0,212,255,.65);
+            outline: 3px solid rgba(194, 24, 91, 0.65);
             outline-offset: 2px;
         }
 
@@ -405,27 +474,28 @@
 
 <body class="flex flex-col min-h-screen font-sans">
 
-    <!-- HEADER MOBILE OPTIMIZED -->
+    <!-- HEADER MOBILE OPTIMIZED - BRAND IDENTITY 2025 -->
     <header class="glass-morphism sticky top-0 z-40 header-safe">
         <div class="px-4 py-3">
             <!-- Mobile Header Layout -->
             <div class="flex items-center justify-between">
                 <!-- Logo + Title (Condensed for mobile) -->
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-primary via-secondary to-accent rounded-xl flex items-center justify-center">
-                        <span class="text-white font-black text-lg">📊</span>
+                    <!-- M CORSIVA GLASSMORPHISM LOGO -->
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg">
+                        <span class="m-logo-italic-v5">M</span>
                     </div>
                     <div class="hidden sm:block">
                         <span class="text-ultra-visible text-xl font-black">MyApp</span>
                         <div class="text-white text-xs flex items-center gap-2">
-                            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                            <span class="hidden md:inline">Dashboard Personale</span>
-                            <span class="md:hidden">Online</span>
+                            <span class="text-white/80 font-medium">by SIM Carabinieri</span>
+                            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse ml-1"></span>
                         </div>
                     </div>
                     <!-- Mobile: Show only logo -->
                     <div class="sm:hidden">
                         <span class="text-ultra-visible text-lg font-black">MyApp</span>
+                        <div class="text-white/80 text-xs">by SIM Carabinieri</div>
                     </div>
                 </div>
 
@@ -433,7 +503,7 @@
                 <div class="flex items-center space-x-3">
                     <!-- Notifications -->
                     <div class="relative">
-                        <button id="notificationBtn" class="touch-target text-white hover:text-aurora transition-all duration-300 p-2 rounded-xl" aria-haspopup="true" aria-expanded="false">
+                        <button id="notificationBtn" class="touch-target text-white hover:text-red transition-all duration-300 p-2 rounded-xl" aria-haspopup="true" aria-expanded="false">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2 2 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
                             </svg>
@@ -443,7 +513,7 @@
                             <div class="p-4 border-b border-gray-200">
                                 <div class="flex justify-between items-center">
                                     <h3 class="font-bold text-textDark">🔔 Notifiche</h3>
-                                    <button id="markAllRead" class="text-aurora hover:text-magenta text-sm font-semibold">Segna tutte lette</button>
+                                    <button id="markAllRead" class="text-magenta hover:text-red text-sm font-semibold">Segna tutte lette</button>
                                 </div>
                             </div>
                             <div id="notificationList" class="p-2 max-h-80 overflow-y-auto"></div>
@@ -457,7 +527,7 @@
                             <div id="userWelcome" class="font-semibold text-sm">Caricamento...</div>
                             <div id="userRole" class="text-xs opacity-80">Utente</div>
                         </div>
-                        <div id="userAvatar" class="w-9 h-9 bg-gradient-to-br from-aurora to-cyan rounded-full flex items-center justify-content text-white font-bold text-sm border-2 border-white/20">U</div>
+                        <div id="userAvatar" class="w-9 h-9 bg-gradient-to-br from-magenta to-cyan rounded-full flex items-center justify-content text-white font-bold text-sm border-2 border-white/20">U</div>
                     </div>
 
                     <!-- Logout Button (Hidden on mobile, show hamburger instead) -->
@@ -501,15 +571,15 @@
         <!-- WELCOME SECTION - Mobile First -->
         <section class="mobile-section animate-fade-in">
             <div class="glass-morphism rounded-3xl p-6 md:p-8 relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-aurora/20 to-cyan/20 rounded-full blur-xl"></div>
-                <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-magenta/20 to-teal/20 rounded-full blur-lg"></div>
+                <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-magenta/20 to-cyan/20 rounded-full blur-xl"></div>
+                <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-red/20 to-teal/20 rounded-full blur-lg"></div>
 
                 <div class="relative z-10">
                     <!-- Mobile-optimized welcome -->
                     <div class="text-center md:text-left">
                         <div class="mb-4">
                             <div class="inline-flex items-center gap-2 mb-3">
-                                <div class="w-1 h-6 bg-gradient-to-b from-aurora to-cyan rounded-full"></div>
+                                <div class="w-1 h-6 bg-gradient-to-b from-magenta to-cyan rounded-full"></div>
                                 <span class="text-white/80 text-xs font-semibold uppercase tracking-wider">Dashboard</span>
                             </div>
                         </div>
@@ -520,7 +590,7 @@
                         </h1>
                         
                         <p class="text-white/90 text-base md:text-lg mb-6 max-w-2xl mx-auto md:mx-0">
-                            Accedi ai tuoi servizi personalizzati
+                            Accedi ai tuoi servizi personalizzati <strong class="text-gold">MyApp by SIM Carabinieri</strong>
                         </p>
 
                         <!-- Status indicators - Mobile optimized -->
@@ -606,8 +676,9 @@
         <!-- STATS SECTION - Mobile Grid -->
         <section class="mobile-section animate-slide-up">
             <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 bg-gradient-to-br from-cyan to-teal rounded-xl flex items-center justify-center">
-                    <span class="text-white text-lg">📈</span>
+                <!-- M LOGO SMALL -->
+                <div class="w-10 h-10 bg-gradient-to-br from-cyan to-teal rounded-xl flex items-center justify-center shadow-md">
+                    <span class="m-logo-small text-white">M</span>
                 </div>
                 <h2 class="text-ultra-visible text-xl md:text-2xl font-black">I tuoi dati</h2>
             </div>
@@ -650,8 +721,9 @@
         <!-- TOOLS SECTION - Mobile Grid -->
         <section class="mobile-section animate-slide-up">
             <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 bg-gradient-to-br from-gold to-aurora rounded-xl flex items-center justify-center">
-                    <span class="text-white text-lg">🌟</span>
+                <!-- M LOGO SMALL -->
+                <div class="w-10 h-10 bg-gradient-to-br from-gold to-magenta rounded-xl flex items-center justify-center shadow-md">
+                    <span class="m-logo-small text-white">M</span>
                 </div>
                 <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Strumenti e servizi</h2>
             </div>
@@ -717,8 +789,9 @@
         <section class="mobile-section animate-slide-up">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center">
-                        <span class="text-white text-lg">📋</span>
+                    <!-- M LOGO SMALL -->
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-md">
+                        <span class="m-logo-small text-white">M</span>
                     </div>
                     <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Le Tue Richieste</h2>
                 </div>
@@ -744,8 +817,9 @@
         <section class="mobile-section animate-slide-up" id="newsSection">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-slate-600 to-slate-800 rounded-xl flex items-center justify-center">
-                        <span class="text-white text-lg">📰</span>
+                    <!-- M LOGO SMALL -->
+                    <div class="w-10 h-10 bg-gradient-to-br from-slate-600 to-slate-800 rounded-xl flex items-center justify-center shadow-md">
+                        <span class="m-logo-small text-white">M</span>
                     </div>
                     <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Ultime Notizie</h2>
                 </div>
@@ -771,8 +845,9 @@
         <section class="mobile-section animate-slide-up" id="convenzioniSection">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center">
-                        <span class="text-white text-lg">🤝</span>
+                    <!-- M LOGO SMALL -->
+                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center shadow-md">
+                        <span class="m-logo-small text-white">M</span>
                     </div>
                     <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Convenzioni</h2>
                 </div>
@@ -798,21 +873,27 @@
     <footer class="glass-morphism mt-8 pb-8" style="padding-bottom: max(2rem, var(--safe-area-inset-bottom));">
         <div class="px-4 py-6">
             <div class="text-center text-white">
-                <div class="mb-3">
-                    <span class="font-bold text-lg">MyApp</span>
-                    <span class="text-white/70 text-sm ml-2">Dashboard v5.0</span>
+                <div class="mb-3 flex items-center justify-center gap-3">
+                    <!-- M LOGO SMALL IN FOOTER -->
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center shadow-md">
+                        <span class="text-white text-lg font-bold italic" style="transform: rotate(-7deg); font-family: 'Georgia', serif;">M</span>
+                    </div>
+                    <div>
+                        <span class="font-bold text-lg">MyApp</span>
+                        <div class="text-white/70 text-sm">by SIM Carabinieri</div>
+                    </div>
                 </div>
                 <div class="flex justify-center items-center space-x-4 text-xs opacity-80 mb-4 flex-wrap">
-                    <span>© 2025 MyApp</span>
+                    <span>© 2025 MyApp by SIM Carabinieri</span>
                     <span class="hidden sm:inline">•</span>
                     <span class="hidden sm:inline">Powered by Supabase</span>
                     <span class="hidden sm:inline">•</span>
-                    <span>Design Mobile-First</span>
+                    <span>Brand Identity 2025</span>
                 </div>
                 <div class="flex justify-center space-x-2">
                     <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                    <div class="w-2 h-2 bg-slate-500 rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
-                    <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" style="animation-delay: 1s;"></div>
+                    <div class="w-2 h-2 bg-magenta rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
+                    <div class="w-2 h-2 bg-red rounded-full animate-pulse" style="animation-delay: 1s;"></div>
                 </div>
             </div>
         </div>
@@ -863,7 +944,7 @@
 
         // === INIZIALIZZAZIONE ===
         document.addEventListener('DOMContentLoaded', async () => {
-            console.log('🏠 HOME PAGE LOADED - MyApp Dashboard v5.0 Mobile-First');
+            console.log('🏠 HOME PAGE LOADED - MyApp by SIM Carabinieri Dashboard Brand Identity 2025');
             
             if (typeof supabase === 'undefined') {
                 console.error('❌ Supabase not loaded');
@@ -889,7 +970,7 @@
             // Avvia refresh loop
             startRefreshLoop();
             
-            console.log('✅ Dashboard mobile-first pronta');
+            console.log('✅ Dashboard Brand Identity 2025 - Mobile-First Ready');
         });
 
         // === MOBILE MENU ===
@@ -1648,7 +1729,7 @@
             }[s])); 
         }
 
-        console.log('✅ MyApp Mobile-First Dashboard v5.0 Ready - Fully Responsive & Touch-Optimized');
+        console.log('✅ MyApp by SIM Carabinieri - Brand Identity 2025 - Mobile-First Dashboard Ready');
     </script>
 </body>
 </html>
