@@ -3,31 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Area Dirigenti - MyApp</title>
+    <title>Area Dirigenti - MyApp by SIM Carabinieri</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- CONFIGURAZIONE COLORI TAILWIND -->
+    <!-- CONFIGURAZIONE COLORI TAILWIND - BRAND IDENTITY 2025 -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: { inter: ['Inter','sans-serif'] },
                     colors: {
-                        primary: '#1a1a2e',
-                        secondary: '#16213e', 
-                        accent: '#0f3460',
-                        aurora: '#e94560',
-                        cyan: '#00d4ff',
-                        magenta: '#ff006e',
-                        gold: '#ffd700',
-                        teal: '#03dac6',
-                        dark: '#0a0a23',
-                        light: '#f8fafc',
-                        success: '#10b981',
+                        primary: '#0a0a2e',          // Blu navy molto scuro
+                        secondary: '#1a1a5a',        // Blu scuro
+                        accent: '#6a1b9a',           // Viola intenso
+                        purple: '#6a1b9a',           // Viola vibrante
+                        lightPurple: '#ab47bc',      // Viola chiaro
+                        blue: '#0a0a2e',             // Blu navy
+                        indigo: '#2d1b69',           // Blu viola scuro
+                        violet: '#6a1b9a',           // Violetto intenso
+                        gold: '#FFD700',             // Oro per contrasto
+                        white: '#FFFFFF',            // Bianco puro
+                        dark: '#040815',             // Quasi nero con toni blu
+                        light: '#f1f5f9',            // Grigio chiarissimo
                         textDark: '#1C1C1E',
-                        backgroundLight: '#F4F4F8',
+                        backgroundLight: '#f8fafc',
+                        magenta: '#c2185b',          // Magenta vero
+                        red: '#e53935',              // Rosso intenso finale
+                        teal: '#20B2AA',             // Teal per le card
+                        aurora: '#e53935',           // Rosso per compatibilità
+                        cyan: '#00d4ff',             // Ciano per contrasto
+                        success: '#10b981',
                     },
                     screens: {
                         'xs': '320px',
@@ -42,11 +49,14 @@
         }
     </script>
     
-    <!-- STILI MOBILE-FIRST -->
+    <!-- STILI BRAND IDENTITY 2025 -->
     <style>
         :root {
-            --gradient-aurora: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #e94560 75%, #00d4ff 100%);
-            --gradient-magic: linear-gradient(135deg, #ff006e 0%, #e94560 50%, #03dac6 100%);
+            --gradient-main: linear-gradient(180deg, #0a0a2e 0%, #1a1a5a 20%, #2d1b69 40%, #6a1b9a 60%, #c2185b 80%, #e53935 100%);
+            --gradient-button: linear-gradient(135deg, #2d1b69 0%, #6a1b9a 50%, #e53935 100%);
+            --gradient-accent: linear-gradient(135deg, #0a0a2e 0%, #6a1b9a 50%, #e53935 100%);
+            --gradient-cyber: linear-gradient(135deg, #0a0a2e 0%, #2d1b69 50%, #6a1b9a 100%);
+            --gradient-magic: linear-gradient(135deg, #6a1b9a 0%, #c2185b 50%, #e53935 100%);
             --safe-area-inset-top: env(safe-area-inset-top, 0);
             --safe-area-inset-bottom: env(safe-area-inset-bottom, 0);
             --safe-area-inset-left: env(safe-area-inset-left, 0);
@@ -60,7 +70,7 @@
         }
 
         body {
-            background: var(--gradient-aurora);
+            background: var(--gradient-main);
             background-size: 400% 400%;
             animation: aurora 20s ease infinite;
             min-height: 100vh;
@@ -68,6 +78,44 @@
             overflow-x: hidden;
             padding-left: var(--safe-area-inset-left);
             padding-right: var(--safe-area-inset-right);
+        }
+
+        /* LOGO M CORSIVA - GLASSMORPHISM STYLE */
+        .m-logo-italic-v5 {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-style: italic;
+            font-weight: 900;
+            font-size: 28px;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 2px 8px;
+            transform: rotate(-7deg);
+            transition: all 0.3s ease;
+        }
+
+        .m-logo-italic-v5:hover {
+            transform: rotate(-7deg) scale(1.05);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .m-logo-small {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-style: italic;
+            font-weight: 900;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            transform: rotate(-7deg);
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 640px) {
+            .m-logo-italic-v5 { font-size: 24px; }
+            .m-logo-small { font-size: 16px; }
         }
 
         @keyframes aurora {
@@ -171,11 +219,28 @@
             line-height: 1.3;
         }
 
-        /* Buttons */
+        /* Buttons AURORA & CYBER - Brand Identity 2025 */
         .btn-aurora {
             background: var(--gradient-magic);
             color: #fff;
-            border: 0;
+            border: 2px solid rgba(194, 24, 91, 0.4);
+            box-shadow: 0 8px 25px rgba(194, 24, 91, 0.3);
+            border-radius: 12px;
+            padding: 0.75rem 1.25rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all .25s ease;
+            touch-action: manipulation;
+            min-height: 44px;
+        }
+
+        .btn-cyber {
+            background: var(--gradient-cyber);
+            color: #fff;
+            border: 2px solid rgba(106, 27, 154, 0.4);
+            box-shadow: 0 8px 25px rgba(106, 27, 154, 0.3);
             border-radius: 12px;
             padding: 0.75rem 1.25rem;
             font-weight: 800;
@@ -189,8 +254,16 @@
 
         @media (hover: hover) and (pointer: fine) {
             .btn-aurora:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 8px 16px rgba(233,69,96,.3);
+                transform: translateY(-2px) scale(1.02); 
+                box-shadow: 0 25px 50px rgba(194, 24, 91, 0.5);
+                border-color: rgba(194, 24, 91, 0.8);
+                background: linear-gradient(135deg, #6a1b9a 0%, #c2185b 50%, #e53935 100%);
+            }
+            .btn-cyber:hover {
+                transform: translateY(-2px) scale(1.02); 
+                box-shadow: 0 25px 50px rgba(106, 27, 154, 0.5);
+                border-color: rgba(106, 27, 154, 0.8);
+                background: linear-gradient(135deg, #0a0a2e 0%, #2d1b69 50%, #6a1b9a 100%);
             }
         }
 
@@ -327,7 +400,7 @@
         .function-card:focus-visible,
         button:focus-visible,
         [role="button"]:focus-visible {
-            outline: 3px solid rgba(0,212,255,.65);
+            outline: 3px solid rgba(194, 24, 91, 0.65);
             outline-offset: 2px;
         }
 
@@ -384,18 +457,20 @@
 
 <body class="flex flex-col min-h-screen">
 
-    <!-- HEADER MOBILE OPTIMIZED -->
+    <!-- HEADER MOBILE OPTIMIZED - BRAND IDENTITY 2025 -->
     <header class="sticky top-0 z-40 bg-black/10 backdrop-blur-md border-b border-white/10 header-safe">
         <div class="px-4 py-3">
             <div class="flex items-center justify-between">
                 <!-- Logo + Title -->
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shadow">
-                        <span class="text-xl text-white">🏛️</span>
+                    <!-- M CORSIVA GLASSMORPHISM LOGO DIRIGENTI -->
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg">
+                        <span class="m-logo-italic-v5">M</span>
                     </div>
                     <div>
-                        <div class="text-white font-extrabold leading-none text-sm md:text-base">Area Dirigenti</div>
-                        <div id="whoami" class="text-white/80 text-xs">Caricamento…</div>
+                        <div class="text-white font-extrabold leading-none text-sm md:text-base">MyApp</div>
+                        <div class="text-white/80 text-xs">by SIM Carabinieri • Area Dirigenti</div>
+                        <div id="whoami" class="text-white/70 text-xs">Caricamento…</div>
                     </div>
                 </div>
 
@@ -433,12 +508,18 @@
         <!-- HERO SECTION -->
         <section class="text-center mb-6 animate-fade-in">
             <h1 class="hero-title text-ultra-visible mb-2">Benvenuto nell'Area Dirigenti</h1>
-            <p class="text-white/90 font-semibold text-sm md:text-base">Funzioni direzionali e amministrative</p>
+            <p class="text-white/90 font-semibold text-sm md:text-base">Funzioni direzionali e amministrative MyApp by SIM Carabinieri</p>
         </section>
 
         <!-- AZIONI PERSONALI -->
         <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
-            <h2 class="section-title mb-4 text-center">🧭 Azioni Personali</h2>
+            <div class="flex items-center gap-3 mb-4">
+                <!-- M LOGO SMALL -->
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-md bg-gradient-to-br from-cyan to-teal">
+                    <span class="m-logo-small text-white">M</span>
+                </div>
+                <h2 class="section-title">Azioni Personali</h2>
+            </div>
             <div class="mobile-grid-2">
                 <a class="function-card" href="tessera.html" aria-label="Tessera Digitale">
                     <div class="text-3xl mb-1">🎫</div>
@@ -495,9 +576,15 @@
 
         <!-- DATI DIRIGENZIALI -->
         <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
-            <h2 class="section-title mb-4 text-center">🪪 I Tuoi Dati dirigenziali</h2>
+            <div class="flex items-center gap-3 mb-4">
+                <!-- M LOGO SMALL -->
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-md bg-gradient-to-br from-gold to-magenta">
+                    <span class="m-logo-small text-white">M</span>
+                </div>
+                <h2 class="section-title">I Tuoi Dati dirigenziali</h2>
+            </div>
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
-                <div class="w-14 h-14 rounded-full bg-slate-800 text-white flex items-center justify-center text-2xl flex-shrink-0">
+                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-magenta to-red text-white flex items-center justify-center text-2xl flex-shrink-0">
                     <span id="userIcon">👤</span>
                 </div>
                 <div>
@@ -517,7 +604,13 @@
 
         <!-- PANORAMICA SISTEMA -->
         <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
-            <h2 class="section-title mb-4 text-center">📈 Panoramica di sistema</h2>
+            <div class="flex items-center gap-3 mb-4">
+                <!-- M LOGO SMALL -->
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-md bg-gradient-to-br from-indigo to-violet">
+                    <span class="m-logo-small text-white">M</span>
+                </div>
+                <h2 class="section-title">Panoramica di sistema</h2>
+            </div>
             <div class="stats-grid">
                 <div class="p-4 rounded-xl border border-slate-200 bg-white text-center">
                     <div class="text-2xl mb-1">📰</div>
@@ -544,7 +637,13 @@
 
         <!-- AREA AMMINISTRATIVA -->
         <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
-            <h2 class="section-title mb-4 text-center">🏗️ Area Amministrativa dirigenziale</h2>
+            <div class="flex items-center gap-3 mb-4">
+                <!-- M LOGO SMALL -->
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-md bg-gradient-to-br from-primary to-secondary">
+                    <span class="m-logo-small text-white">M</span>
+                </div>
+                <h2 class="section-title">Area Amministrativa dirigenziale</h2>
+            </div>
             <div class="admin-grid">
                 <!-- NUOVO: Gestione Community Hub -->
                 <a href="admin-academy.html" class="function-card border-2 border-yellow-400 bg-white group" aria-label="Gestione Community Hub">
@@ -580,7 +679,13 @@
 
         <!-- ULTIME NOTIZIE -->
         <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
-            <h2 class="section-title mb-4 text-center">🗞️ Ultime Notizie</h2>
+            <div class="flex items-center gap-3 mb-4">
+                <!-- M LOGO SMALL -->
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-md bg-gradient-to-br from-slate-600 to-slate-800">
+                    <span class="m-logo-small text-white">M</span>
+                </div>
+                <h2 class="section-title">Ultime Notizie</h2>
+            </div>
             <div id="latestNews" class="news-grid">
                 <div class="col-span-full flex items-center justify-center py-8">
                     <span class="spinner"></span>
@@ -594,7 +699,13 @@
 
         <!-- CONVENZIONI IN EVIDENZA -->
         <section class="glass-card p-4 md:p-6 mb-6 animate-slide-up">
-            <h2 class="section-title mb-4 text-center">🤝 Convenzioni in evidenza</h2>
+            <div class="flex items-center gap-3 mb-4">
+                <!-- M LOGO SMALL -->
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-md bg-gradient-to-br from-emerald-600 to-emerald-800">
+                    <span class="m-logo-small text-white">M</span>
+                </div>
+                <h2 class="section-title">Convenzioni in evidenza</h2>
+            </div>
             <div id="featuredConvenzioni" class="news-grid"></div>
             <div id="convEmptyState" class="text-center py-8">
                 <div class="text-4xl mb-3">🔎</div>
@@ -868,7 +979,7 @@
 
         // Initialize App
         (async () => {
-            console.log('🏛️ Area Dirigenti Mobile-First Dashboard Loading...');
+            console.log('🏛️ Area Dirigenti MyApp by SIM Carabinieri - Brand Identity 2025 Loading...');
             
             setupMobileMenu();
             setupLogout();
@@ -884,7 +995,7 @@
                 loadFeaturedConvenzioni()
             ]);
             
-            console.log('✅ Area Dirigenti Dashboard Ready - Mobile Optimized');
+            console.log('✅ Area Dirigenti MyApp by SIM Carabinieri - Brand Identity 2025 Ready - Mobile Optimized');
         })();
     </script>
 </body>
