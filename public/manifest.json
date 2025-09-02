@@ -1,7 +1,7 @@
 {
-  "name": "MyApp - Piattaforma Digitale",
-  "short_name": "MyApp",
-  "description": "Piattaforma digitale moderna per gestione utenti con Supabase",
+  "name": "MyApp by SIM Carabinieri - Piattaforma Digitale",
+  "short_name": "MyApp by SIM Carabinieri",
+  "description": "Piattaforma digitale moderna per ogni esigenza di ogni Carabiniere",
   "version": "4.1.0",
   "start_url": "/",
   "display": "standalone",
@@ -71,14 +71,18 @@
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Dashboard principale"
+      "label": "Dashboard principale MyApp SIM"
     },
     {
       "src": "/screenshots/mobile-1.png",
       "sizes": "375x812",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Vista mobile"
+      "label": "Vista mobile MyApp SIM"
     }
-  ]
+  ],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
 }
