@@ -2,8 +2,42 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>MyApp by SIM Carabinieri - Benvenuto</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Piattaforma digitale moderna per ogni esigenza di ogni Carabiniere">
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Theme Colors -->
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="msapplication-navbutton-color" content="#1a1a2e">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Apple PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="MyApp by SIM Carabinieri">
+    <link rel="apple-touch-icon" href="/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png">
+    
+    <!-- Splash Screens per iOS -->
+    <link rel="apple-touch-startup-image" href="/screenshots/mobile-1.png">
+    
+    <!-- Microsoft PWA Meta Tags -->
+    <meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#1a1a2e">
+    <meta name="msapplication-config" content="/browserconfig.xml">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
+    
+    <!-- Preconnect e DNS Prefetch -->
+    <link rel="preconnect" href="https://your-supabase-url.supabase.co">
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,24 +48,23 @@
             theme: {
                 extend: {
                     colors: {
-                        // Deep Blue to Red Magenta Palette
-                        primary: '#0a0a2e',          // Blu navy molto scuro
-                        secondary: '#1a1a5a',        // Blu scuro
-                        accent: '#6a1b9a',           // Viola intenso
-                        purple: '#6a1b9a',           // Viola vibrante
-                        lightPurple: '#ab47bc',      // Viola chiaro
-                        blue: '#0a0a2e',             // Blu navy
-                        indigo: '#2d1b69',           // Blu viola scuro
-                        violet: '#6a1b9a',           // Violetto intenso
-                        gold: '#FFD700',             // Oro per contrasto
-                        white: '#FFFFFF',            // Bianco puro
-                        dark: '#040815',             // Quasi nero con toni blu
-                        light: '#f1f5f9',            // Grigio chiarissimo
+                        primary: '#0a0a2e',
+                        secondary: '#1a1a5a',
+                        accent: '#6a1b9a',
+                        purple: '#6a1b9a',
+                        lightPurple: '#ab47bc',
+                        blue: '#0a0a2e',
+                        indigo: '#2d1b69',
+                        violet: '#6a1b9a',
+                        gold: '#FFD700',
+                        white: '#FFFFFF',
+                        dark: '#040815',
+                        light: '#f1f5f9',
                         textDark: '#1C1C1E',
                         backgroundLight: '#f8fafc',
-                        magenta: '#c2185b',          // Magenta vero
-                        red: '#e53935',              // Rosso intenso finale
-                        teal: '#20B2AA',             // Teal per le card
+                        magenta: '#c2185b',
+                        red: '#e53935',
+                        teal: '#20B2AA',
                     },
                     fontFamily: {
                         'brand': ['Georgia', 'Times New Roman', 'serif'],
@@ -51,7 +84,7 @@
         }
     </script>
     
-    <!-- STILI CSS COMPLETI -->
+    <!-- STILI CSS COMPLETI + OTTIMIZZAZIONI MOBILE -->
     <style>
         /* === VARIABILI CSS === */
         :root {
@@ -61,26 +94,53 @@
             --gradient-cyber: linear-gradient(135deg, #0a0a2e 0%, #2d1b69 50%, #6a1b9a 100%);
         }
 
+        /* === OTTIMIZZAZIONI MOBILE PRIORITARIE === */
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            box-sizing: border-box;
+        }
+
+        input, textarea, button {
+            -webkit-user-select: text;
+        }
+
+        /* Prevenire zoom automatico su iOS */
+        input[type="text"], input[type="email"], input[type="password"], 
+        textarea, select {
+            font-size: 16px !important;
+        }
+
         /* === SFONDO PRINCIPALE === */
         body {
             background: var(--gradient-main);
             min-height: 100vh;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
         }
 
-        /* === ANIMAZIONI === */
+        /* === SAFE AREA SUPPORT === */
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: env(safe-area-inset-left);
+                padding-right: env(safe-area-inset-right);
+            }
+            
+            .header-safe {
+                padding-top: max(1.5rem, env(safe-area-inset-top));
+            }
+            
+            .footer-safe {
+                padding-bottom: max(2rem, env(safe-area-inset-bottom));
+            }
+        }
+
+        /* === ANIMAZIONI OTTIMIZZATE === */
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-12px); }
-        }
-
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 25px rgba(123, 58, 237, 0.6); }
-            50% { box-shadow: 0 0 45px rgba(91, 33, 182, 0.8); }
         }
 
         @keyframes pulse {
@@ -88,7 +148,12 @@
             50% { opacity: .8; }
         }
 
-        /* === TIPOGRAFIA ULTRA-VISIBILE === */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* === TIPOGRAFIA ULTRA-RESPONSIVA === */
         .text-ultra-visible {
             color: #ffffff;
             text-shadow: 
@@ -106,23 +171,12 @@
                 0 2px 6px rgba(0, 0, 0, 1);
         }
 
-        .brand-text {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            font-style: italic;
-            font-weight: 700;
-            background: linear-gradient(135deg, #ffffff 0%, #F3E5F5 50%, #E1BEE7 100%);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: none;
-        }
-
-        /* === M CORSIVA GLASSMORPHISM === */
+        /* === M CORSIVA OTTIMIZZATA === */
         .m-logo-italic-v5 {
             font-family: 'Georgia', 'Times New Roman', serif;
             font-style: italic;
             font-weight: 900;
-            font-size: 28px;
+            font-size: clamp(20px, 4vw, 28px);
             color: rgba(255, 255, 255, 0.95);
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             background: rgba(255, 255, 255, 0.1);
@@ -132,26 +186,16 @@
             padding: 2px 8px;
             transform: rotate(-7deg);
             transition: all 0.3s ease;
+            will-change: transform;
         }
 
-        .m-logo-italic-v5:hover {
-            transform: rotate(-7deg) scale(1.05);
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        /* === GLASSMORPHISM === */
+        /* === GLASSMORPHISM OTTIMIZZATO === */
         .glass-morphism {
             background: rgba(255, 255, 255, 0.12);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.25);
             box-shadow: 0 8px 32px 0 rgba(45, 27, 105, 0.4);
-        }
-
-        .glass-strong {
-            background: rgba(255, 255, 255, 0.18);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 12px 40px 0 rgba(45, 27, 105, 0.5);
+            will-change: transform;
         }
 
         .glass-card {
@@ -161,74 +205,68 @@
             box-shadow: 0 15px 35px rgba(45, 27, 105, 0.3);
         }
 
-        /* === BOTTONI === */
+        /* === BOTTONI TOUCH-OPTIMIZED === */
+        .btn-aurora, .btn-cyber {
+            min-height: 48px;
+            min-width: 48px;
+            padding: 12px 24px;
+            border-radius: 16px;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            will-change: transform;
+        }
+
         .btn-aurora {
             background: var(--gradient-button);
             color: white;
             border: 2px solid rgba(233, 30, 99, 0.4);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: 700;
             box-shadow: 0 8px 25px rgba(233, 30, 99, 0.3);
-        }
-
-        .btn-aurora:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 25px 50px rgba(229, 57, 53, 0.5);
-            border-color: rgba(229, 57, 53, 0.8);
-            background: linear-gradient(135deg, #6a1b9a 0%, #c2185b 50%, #e53935 100%);
         }
 
         .btn-cyber {
             background: var(--gradient-cyber);
             border: 2px solid rgba(106, 27, 154, 0.4);
             color: white;
-            font-weight: 700;
             box-shadow: 0 8px 25px rgba(106, 27, 154, 0.3);
         }
 
-        .btn-cyber:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 25px 50px rgba(106, 27, 154, 0.5);
-            border-color: rgba(106, 27, 154, 0.8);
-            background: linear-gradient(135deg, #0a0a2e 0%, #2d1b69 50%, #6a1b9a 100%);
+        /* Touch feedback */
+        .btn-aurora:active, .btn-cyber:active {
+            transform: scale(0.98) translateY(-2px);
+            transition: transform 0.1s ease;
         }
 
-        /* === CARDS === */
-        .card-hover {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .card-hover:hover {
-            transform: translateY(-10px) scale(1.03);
-            box-shadow: 0 30px 60px rgba(45, 27, 105, 0.4);
-        }
-
+        /* === CARDS RESPONSIVE === */
         .feature-card {
             background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.08));
             backdrop-filter: blur(18px);
             border: 1px solid rgba(255,255,255,0.25);
-            border-radius: 24px;
-            transition: all 0.4s ease;
+            border-radius: 20px;
+            padding: clamp(1rem, 4vw, 2rem);
+            transition: all 0.3s ease;
             box-shadow: 0 10px 30px rgba(45, 27, 105, 0.3);
+            will-change: transform;
         }
 
-        .feature-card:hover {
-            transform: translateY(-8px) scale(1.03);
-            background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.15));
-            box-shadow: 0 20px 40px rgba(45, 27, 105, 0.4);
-            border-color: rgba(233, 30, 99, 0.3);
+        .feature-card:active {
+            transform: scale(0.98) translateY(-4px);
+            transition: transform 0.1s ease;
         }
 
-        /* === HERO SECTION === */
+        /* === HERO SECTION ULTRA-RESPONSIVA === */
         .hero-title {
-            font-size: clamp(3rem, 12vw, 6rem);
+            font-size: clamp(2rem, 8vw, 6rem);
             font-weight: 900;
             line-height: 1.1;
+            word-break: break-word;
         }
 
         .hero-subtitle {
-            font-size: clamp(1.5rem, 6vw, 2.5rem);
+            font-size: clamp(1.1rem, 4vw, 2.5rem);
             font-weight: 800;
+            line-height: 1.3;
         }
 
         /* === STATUS INDICATORS === */
@@ -248,39 +286,7 @@
             box-shadow: 0 0 10px rgba(244, 67, 54, 0.5);
         }
 
-        /* === LOADING STATES === */
-        .loading {
-            opacity: 0.7;
-            pointer-events: none;
-        }
-
-        .loading::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 20px;
-            height: 20px;
-            margin: -10px 0 0 -10px;
-            border: 2px solid transparent;
-            border-top-color: #ffffff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* === RESPONSIVE === */
-        @media (max-width: 640px) {
-            .hero-title { font-size: 2.25rem; line-height: 2.5rem; }
-            .hero-subtitle { font-size: 1.25rem; line-height: 1.75rem; }
-            .m-logo-italic-v5 { font-size: 24px; }
-        }
-
-        /* === FLOATING HELP === */
+        /* === FLOATING HELP OTTIMIZZATO === */
         .floating-help {
             position: fixed;
             bottom: 80px;
@@ -289,16 +295,163 @@
             animation: float 3s ease-in-out infinite;
         }
 
-        /* === LOGO GRADIENT === */
-        .logo-gradient {
-            background: linear-gradient(135deg, #3730a3 0%, #5b21b6 50%, #7c3aed 100%);
+        @supports (padding: max(0px)) {
+            .floating-help {
+                bottom: max(80px, calc(80px + env(safe-area-inset-bottom)));
+                right: max(20px, env(safe-area-inset-right));
+            }
+        }
+
+        /* === BREAKPOINTS ULTRA-SPECIFICI === */
+        
+        /* iPhone SE e dispositivi molto piccoli */
+        @media screen and (max-width: 375px) {
+            .hero-title { font-size: 2rem !important; }
+            .hero-subtitle { font-size: 1.1rem !important; }
+            .feature-card { padding: 1rem !important; }
+            .btn-aurora, .btn-cyber { 
+                padding: 10px 16px !important;
+                font-size: 0.9rem !important;
+                min-height: 44px !important;
+            }
+            .text-3xl { font-size: 1.5rem !important; }
+            .text-2xl { font-size: 1.25rem !important; }
+        }
+
+        /* iPhone 12 Mini */
+        @media screen and (max-width: 360px) {
+            .container { padding-left: 1rem; padding-right: 1rem; }
+            .grid { gap: 1rem !important; }
+        }
+
+        /* Landscape mobile */
+        @media screen and (max-height: 500px) and (orientation: landscape) {
+            .hero-title { font-size: 1.8rem !important; line-height: 1.2 !important; }
+            .hero-subtitle { font-size: 1rem !important; }
+            .py-12 { padding-top: 1rem; padding-bottom: 1rem; }
+            .mb-12 { margin-bottom: 1rem; }
+            .mb-16 { margin-bottom: 2rem; }
+            .floating-help { display: none; }
+        }
+
+        /* === PWA STANDALONE === */
+        @media all and (display-mode: standalone) {
+            body {
+                padding-top: env(safe-area-inset-top);
+            }
+            
+            .status-bar-bg {
+                background: var(--gradient-main);
+                height: env(safe-area-inset-top);
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 9999;
+            }
+        }
+
+        /* === PERFORMANCE OPTIMIZATIONS === */
+        .gpu-accelerate {
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        /* === REDUCED MOTION === */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            .floating-help {
+                animation: none !important;
+            }
+        }
+
+        /* === HIGH CONTRAST === */
+        @media (prefers-contrast: high) {
+            .text-white, .text-ultra-visible {
+                color: #ffffff !important;
+                text-shadow: 2px 2px 4px #000000 !important;
+            }
+            
+            .glass-morphism, .glass-card, .feature-card {
+                border: 2px solid rgba(255, 255, 255, 0.8) !important;
+            }
+        }
+
+        /* === DARK MODE SYSTEM === */
+        @media (prefers-color-scheme: dark) {
+            .glass-card {
+                background: rgba(20, 20, 30, 0.95) !important;
+                color: white !important;
+            }
+            
+            .text-textDark {
+                color: white !important;
+            }
+        }
+
+        /* === LOADING STATES === */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+            position: relative;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 24px;
+            height: 24px;
+            margin: -12px 0 0 -12px;
+            border: 3px solid transparent;
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            z-index: 100;
+        }
+
+        /* === FORCE MOBILE OPTIMIZATIONS === */
+        @media screen and (max-width: 768px) {
+            .mobile-stack > * {
+                width: 100% !important;
+                margin-bottom: 1rem !important;
+            }
+            
+            .mobile-hide {
+                display: none !important;
+            }
+            
+            /* Force single column on mobile */
+            .grid-cols-2, .grid-cols-3 {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .md\\:grid-cols-2 {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .lg\\:grid-cols-3 {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .lg\\:grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
         }
     </style>
 </head>
 <body class="flex flex-col min-h-screen font-sans">
+    <!-- Status bar per PWA -->
+    <div class="status-bar-bg"></div>
 
     <!-- HEADER -->
-    <header class="glass-morphism">
+    <header class="glass-morphism header-safe">
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
@@ -322,7 +475,7 @@
 
     <!-- MAIN CONTENT -->
     <main class="flex-1 flex items-center justify-center px-4 py-12">
-        <div class="text-center max-w-4xl">
+        <div class="text-center max-w-4xl w-full">
             <!-- HERO SECTION -->
             <div class="mb-12">
                 <h1 class="hero-title text-ultra-visible mb-6">
@@ -331,11 +484,11 @@
                 <p class="hero-subtitle text-white mb-8">
                     La tua piattaforma digitale per avere sempre un dirigente a tua disposizione
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <button onclick="goToLogin()" class="btn-aurora px-8 py-4 rounded-2xl text-xl font-bold">
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mobile-stack">
+                    <button onclick="goToLogin()" class="btn-aurora text-xl font-bold w-full sm:w-auto">
                         🚀 Accedi alla Piattaforma
                     </button>
-                    <button onclick="scrollToFeatures()" class="btn-cyber px-8 py-4 rounded-2xl text-xl font-bold">
+                    <button onclick="scrollToFeatures()" class="btn-cyber text-xl font-bold w-full sm:w-auto">
                         📖 Scopri di più
                     </button>
                 </div>
@@ -346,7 +499,7 @@
                 </div>
             </div>
 
-            <!-- FEATURED SERVICES - Prima delle statistiche -->
+            <!-- FEATURED SERVICES -->
             <div class="mb-16">
                 <div class="text-center mb-8">
                     <h2 class="text-ultra-visible text-3xl font-black mb-4">I Nostri Servizi Esclusivi</h2>
@@ -355,7 +508,7 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <!-- Strumenti Professionali -->
-                    <div class="feature-card card-hover p-8 relative overflow-hidden">
+                    <div class="feature-card relative overflow-hidden">
                         <div class="absolute top-4 right-4 bg-gold text-dark px-3 py-1 rounded-full text-xs font-black">
                             ESCLUSIVO
                         </div>
@@ -364,15 +517,15 @@
                         <p class="text-white mb-4">Utility specializzate create dai Carabinieri per i Carabinieri. Calcoli automatici, moduli pre-compilati, procedure guidate.</p>
                         <div class="space-y-2 mb-6">
                             <div class="flex items-center text-white text-sm">
-                                <div class="w-2 h-2 bg-gold rounded-full mr-3"></div>
+                                <div class="w-2 h-2 bg-gold rounded-full mr-3 flex-shrink-0"></div>
                                 Calcolatori per indennità e benefit
                             </div>
                             <div class="flex items-center text-white text-sm">
-                                <div class="w-2 h-2 bg-gold rounded-full mr-3"></div>
+                                <div class="w-2 h-2 bg-gold rounded-full mr-3 flex-shrink-0"></div>
                                 Modulistica automatica aggiornata
                             </div>
                             <div class="flex items-center text-white text-sm">
-                                <div class="w-2 h-2 bg-gold rounded-full mr-3"></div>
+                                <div class="w-2 h-2 bg-gold rounded-full mr-3 flex-shrink-0"></div>
                                 Procedure operative semplificate
                             </div>
                         </div>
@@ -380,7 +533,7 @@
                     </div>
 
                     <!-- Convenzioni Esclusive -->
-                    <div class="feature-card card-hover p-8 relative overflow-hidden">
+                    <div class="feature-card relative overflow-hidden">
                         <div class="absolute top-4 right-4 bg-magenta text-white px-3 py-1 rounded-full text-xs font-black">
                             RISPARMIA
                         </div>
@@ -389,15 +542,15 @@
                         <p class="text-white mb-4">Sconti riservati ai soci SIM su centinaia di servizi. Risparmia su famiglia, casa, viaggi e tanto altro.</p>
                         <div class="space-y-2 mb-6">
                             <div class="flex items-center text-white text-sm">
-                                <div class="w-2 h-2 bg-magenta rounded-full mr-3"></div>
+                                <div class="w-2 h-2 bg-magenta rounded-full mr-3 flex-shrink-0"></div>
                                 Fino al 40% di sconto sui servizi
                             </div>
                             <div class="flex items-center text-white text-sm">
-                                <div class="w-2 h-2 bg-magenta rounded-full mr-3"></div>
+                                <div class="w-2 h-2 bg-magenta rounded-full mr-3 flex-shrink-0"></div>
                                 350+ partner convenzionati
                             </div>
                             <div class="flex items-center text-white text-sm">
-                                <div class="w-2 h-2 bg-magenta rounded-full mr-3"></div>
+                                <div class="w-2 h-2 bg-magenta rounded-full mr-3 flex-shrink-0"></div>
                                 Nuove offerte ogni settimana
                             </div>
                         </div>
@@ -405,7 +558,7 @@
                     </div>
 
                     <!-- Virgilio AI Chatbot -->
-                    <div class="feature-card card-hover p-8 relative overflow-hidden">
+                    <div class="feature-card relative overflow-hidden">
                         <div class="absolute top-4 right-4 bg-accent text-white px-3 py-1 rounded-full text-xs font-black">
                             AI POWERED
                         </div>
@@ -414,15 +567,15 @@
                         <p class="text-white mb-4">Chatbot intelligente specializzato per Carabinieri. Normative, procedure, dubbi operativi risolti in tempo reale.</p>
                         <div class="space-y-2 mb-6">
                             <div class="flex items-center text-white text-sm">
-                                <div class="w-2 h-2 bg-accent rounded-full mr-3"></div>
+                                <div class="w-2 h-2 bg-accent rounded-full mr-3 flex-shrink-0"></div>
                                 Disponibile 24/7 senza interruzioni
                             </div>
                             <div class="flex items-center text-white text-sm">
-                                <div class="w-2 h-2 bg-accent rounded-full mr-3"></div>
+                                <div class="w-2 h-2 bg-accent rounded-full mr-3 flex-shrink-0"></div>
                                 Database aggiornato in tempo reale
                             </div>
                             <div class="flex items-center text-white text-sm">
-                                <div class="w-2 h-2 bg-accent rounded-full mr-3"></div>
+                                <div class="w-2 h-2 bg-accent rounded-full mr-3 flex-shrink-0"></div>
                                 Risposte precise e verificate
                             </div>
                         </div>
@@ -430,7 +583,7 @@
                     </div>
 
                     <!-- Corsi Online -->
-                    <div class="feature-card card-hover p-8 relative overflow-hidden">
+                    <div class="feature-card relative overflow-hidden">
                         <div class="absolute top-4 right-4 bg-teal text-dark px-3 py-1 rounded-full text-xs font-black">
                             FORMAZIONE
                         </div>
@@ -439,15 +592,15 @@
                         <p class="text-white mb-4">Formazione continua con corsi dedicati ai Carabinieri. Aggiornamenti normativi, nuove procedure, crescita professionale.</p>
                         <div class="space-y-2 mb-6">
                             <div class="flex items-center text-white text-sm">
-                                <div class="w-2 h-2 bg-teal rounded-full mr-3"></div>
+                                <div class="w-2 h-2 bg-teal rounded-full mr-3 flex-shrink-0"></div>
                                 Certificati riconosciuti ufficialmente
                             </div>
                             <div class="flex items-center text-white text-sm">
-                                <div class="w-2 h-2 bg-teal rounded-full mr-3"></div>
+                                <div class="w-2 h-2 bg-teal rounded-full mr-3 flex-shrink-0"></div>
                                 Flessibilità oraria totale
                             </div>
                             <div class="flex items-center text-white text-sm">
-                                <div class="w-2 h-2 bg-teal rounded-full mr-3"></div>
+                                <div class="w-2 h-2 bg-teal rounded-full mr-3 flex-shrink-0"></div>
                                 Docenti esperti del settore
                             </div>
                         </div>
@@ -464,19 +617,19 @@
                 </div>
                 
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-                    <div class="feature-card p-6 text-center">
+                    <div class="feature-card text-center">
                         <div class="text-3xl font-black text-white mb-2">12.500+</div>
                         <div class="text-white opacity-80 text-sm">Utenti Attivi</div>
                     </div>
-                    <div class="feature-card p-6 text-center">
+                    <div class="feature-card text-center">
                         <div class="text-3xl font-black text-white mb-2">98.5%</div>
                         <div class="text-white opacity-80 text-sm">Soddisfazione</div>
                     </div>
-                    <div class="feature-card p-6 text-center">
+                    <div class="feature-card text-center">
                         <div class="text-3xl font-black text-white mb-2">24/7</div>
                         <div class="text-white opacity-80 text-sm">Sempre Online</div>
                     </div>
-                    <div class="feature-card p-6 text-center">
+                    <div class="feature-card text-center">
                         <div class="text-3xl font-black text-white mb-2">2.8k</div>
                         <div class="text-white opacity-80 text-sm">Richieste/Mese</div>
                     </div>
@@ -491,45 +644,45 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="feature-card card-hover p-8">
+                    <div class="feature-card">
                         <div class="text-4xl mb-4">🎫</div>
                         <h3 class="text-ultra-visible text-xl font-bold mb-3">Tessera Digitale</h3>
                         <p class="text-white mb-4">La tua tessera SIM sempre con te. QR code, dati personali e validità istantanea.</p>
                         <div class="text-sm text-white opacity-70">✓ Sempre aggiornata ✓ Verificabile ✓ Sicura</div>
                     </div>
 
-                    <div class="feature-card card-hover p-8">
+                    <div class="feature-card">
                         <div class="text-4xl mb-4">📝</div>
                         <h3 class="text-ultra-visible text-xl font-bold mb-3">Richieste Dirette</h3>
                         <p class="text-white mb-4">Comunica direttamente con i dirigenti. Richieste veloci, risposte tempestive.</p>
                         <div class="text-sm text-white opacity-70">📊 Tracciabilità completa 📈 Tempi medi: 24h</div>
                     </div>
 
-                    <div class="feature-card card-hover p-8">
+                    <div class="feature-card">
                         <div class="text-4xl mb-4">🤖</div>
                         <h3 class="text-ultra-visible text-xl font-bold mb-3">Virgilio AI</h3>
                         <p class="text-white mb-4">Assistente AI specializzato per Carabinieri. Normative, procedure, supporto H24.</p>
                         <div class="text-sm text-white opacity-70">🧠 Sempre aggiornato 🎯 Risposte precise</div>
                     </div>
 
-                    <div class="feature-card card-hover p-8">
+                    <div class="feature-card">
                         <div class="text-4xl mb-4">🤝</div>
                         <h3 class="text-ultra-visible text-xl font-bold mb-3">Convenzioni</h3>
                         <p class="text-white mb-4">Sconti esclusivi riservati ai soci SIM. Risparmia su centinaia di servizi.</p>
                         <div class="text-sm text-white opacity-70">💰 Fino al 40% di sconto 🏪 350+ partner</div>
                     </div>
 
-                    <div class="feature-card card-hover p-8">
+                    <div class="feature-card">
                         <div class="text-4xl mb-4">🛠️</div>
                         <h3 class="text-ultra-visible text-xl font-bold mb-3">Strumenti Professionali</h3>
                         <p class="text-white mb-4">Utility specializzate per il tuo lavoro. Calcoli, modulistica, procedure.</p>
                         <div class="text-sm text-white opacity-70">⚡ Sempre aggiornati 📋 15+ strumenti</div>
                     </div>
 
-                    <div class="feature-card card-hover p-8">
+                    <div class="feature-card">
                         <div class="text-4xl mb-4">📁</div>
                         <h3 class="text-ultra-visible text-xl font-bold mb-3">FileBox Sicuro</h3>
-                        <p class="text-white mb-4">Archivia i tuoi documenti in modo sicuro. Accesso da qualsiasi dispositivo.</p>
+                        <p class="text-white mb-4">Archivio e condivisione dei documenti in modo sicuro. Accesso da qualsiasi dispositivo.</p>
                         <div class="text-sm text-white opacity-70">🔒 Crittografato 💾 Storage illimitato</div>
                     </div>
                 </div>
@@ -543,7 +696,7 @@
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="feature-card p-6">
+                    <div class="feature-card">
                         <div class="mb-4">
                             <div class="text-2xl mb-2">⭐⭐⭐⭐⭐</div>
                             <p class="text-white italic">"Finalmente posso contattare i dirigenti senza perdite di tempo. Le risposte arrivano in giornata!"</p>
@@ -554,7 +707,7 @@
                         </div>
                     </div>
 
-                    <div class="feature-card p-6">
+                    <div class="feature-card">
                         <div class="mb-4">
                             <div class="text-2xl mb-2">⭐⭐⭐⭐⭐</div>
                             <p class="text-white italic">"Virgilio AI mi ha risolto dubbi normativi in pochi secondi. È come avere un consulente sempre disponibile."</p>
@@ -565,7 +718,7 @@
                         </div>
                     </div>
 
-                    <div class="feature-card p-6">
+                    <div class="feature-card">
                         <div class="mb-4">
                             <div class="text-2xl mb-2">⭐⭐⭐⭐⭐</div>
                             <p class="text-white italic">"Le convenzioni mi fanno risparmiare centinaia di euro l'anno. Fantastico!"</p>
@@ -581,7 +734,7 @@
     </main>
 
     <!-- FOOTER -->
-    <footer class="glass-morphism mt-16">
+    <footer class="glass-morphism mt-16 footer-safe">
         <div class="container mx-auto px-4 py-8">
             <div class="text-center">
                 <div class="flex items-center justify-center space-x-3 mb-4">
@@ -596,11 +749,11 @@
                 <p class="text-white text-sm mb-4">
                     Piattaforma digitale moderna per la gestione professionale
                 </p>
-                <div class="flex justify-center space-x-6 text-sm text-white">
+                <div class="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-6 text-sm text-white">
                     <span>© 2025 MyApp by SIM Carabinieri</span>
-                    <span>•</span>
+                    <span class="mobile-hide">•</span>
                     <span>Versione 4.1</span>
-                    <span>•</span>
+                    <span class="mobile-hide">•</span>
                     <span>Powered by Supabase</span>
                 </div>
             </div>
@@ -609,17 +762,17 @@
 
     <!-- FLOATING HELP BUTTON -->
     <div class="floating-help">
-        <button onclick="showHelp()" class="btn-aurora w-14 h-14 rounded-full flex items-center justify-center text-2xl">
+        <button onclick="showHelp()" class="btn-aurora w-14 h-14 rounded-full flex items-center justify-center text-2xl" aria-label="Aiuto">
             ❓
         </button>
     </div>
 
     <!-- HELP MODAL -->
-    <div id="helpModal" class="fixed inset-0 hidden items-center justify-center bg-black/60 z-50">
+    <div id="helpModal" class="fixed inset-0 hidden items-center justify-center bg-black/60 z-50" role="dialog" aria-modal="true">
         <div class="glass-card w-full max-w-md rounded-2xl p-6 m-4">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-bold text-textDark">Aiuto - <span class="text-primary font-bold">MyApp</span></h2>
-                <button onclick="closeHelp()" class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+                <button onclick="closeHelp()" class="text-gray-500 hover:text-gray-700 text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100" aria-label="Chiudi">&times;</button>
             </div>
             <div class="space-y-4 text-textDark">
                 <div>
@@ -647,20 +800,29 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT -->
+    <!-- PWA Install Prompt (apparirà automaticamente) -->
+    <div id="pwaInstallBanner" style="display: none;"></div>
+
+    <!-- JAVASCRIPT COMPLETO -->
     <script>
         // === CONFIGURATION ===
         let systemStatus = 'online';
+        let isStandalone = false;
+        
+        // === MOBILE DETECTION ===
+        const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        const isStandaloneMode = window.matchMedia('(display-mode: standalone)').matches;
         
         // === NAVIGATION FUNCTIONS ===
         function goToLogin() {
-            // Semplice redirect senza controlli di sessione
-            // Aggiungiamo un parametro per evitare redirect automatici
-            window.location.href = 'login.html?from=index';
+            showLoading();
+            setTimeout(() => {
+                window.location.href = 'login.html?from=index';
+            }, 500);
         }
 
         function goToSIMSite() {
-            // Apre il sito SIM Carabinieri in una nuova tab
             window.open('https://www.simcarabinieri.it', '_blank');
         }
 
@@ -674,12 +836,22 @@
             }
         }
 
+        // === LOADING STATE ===
+        function showLoading() {
+            document.body.classList.add('loading');
+            setTimeout(() => {
+                document.body.classList.remove('loading');
+            }, 2000);
+        }
+
         // === HELP MODAL ===
         function showHelp() {
             const modal = document.getElementById('helpModal');
             if (modal) {
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
+                // Focus management for accessibility
+                modal.focus();
             }
         }
 
@@ -697,26 +869,166 @@
             const text = document.getElementById('statusText');
             
             if (systemStatus === 'online') {
-                indicator.classList.remove('status-offline');
-                text.textContent = 'Sistema Online';
+                indicator?.classList.remove('status-offline');
+                if (text) text.textContent = 'Sistema Online';
             } else {
-                indicator.classList.add('status-offline');
-                text.textContent = 'Sistema Offline';
+                indicator?.classList.add('status-offline');
+                if (text) text.textContent = 'Sistema Offline';
             }
+        }
+
+        // === MOBILE OPTIMIZATIONS ===
+        function initMobileOptimizations() {
+            if (isMobile) {
+                // Prevent zoom on double tap
+                document.addEventListener('touchstart', function(e) {
+                    if (e.touches.length > 1) {
+                        e.preventDefault();
+                    }
+                }, { passive: false });
+
+                // Improve iOS scrolling
+                document.body.style.webkitOverflowScrolling = 'touch';
+                
+                // Add mobile class for specific styling
+                document.body.classList.add('is-mobile');
+            }
+
+            if (isIOS) {
+                document.body.classList.add('is-ios');
+                
+                // Handle viewport changes (keyboard)
+                window.addEventListener('resize', handleViewportChange);
+            }
+
+            // Handle orientation change
+            window.addEventListener('orientationchange', function() {
+                setTimeout(() => {
+                    updateLayout();
+                }, 100);
+            });
+        }
+
+        function handleViewportChange() {
+            const viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+            if (viewHeight < 500) {
+                document.body.classList.add('keyboard-open');
+            } else {
+                document.body.classList.remove('keyboard-open');
+            }
+        }
+
+        function updateLayout() {
+            // Trigger layout recalculation
+            window.dispatchEvent(new Event('resize'));
+        }
+
+        // === PERFORMANCE MONITORING ===
+        function initPerformanceMonitoring() {
+            // Monitor scroll performance
+            let scrollTimer;
+            let scrollCount = 0;
+            
+            window.addEventListener('scroll', () => {
+                scrollCount++;
+                clearTimeout(scrollTimer);
+                scrollTimer = setTimeout(() => {
+                    if (scrollCount > 100) {
+                        console.warn('⚠️ High scroll frequency detected');
+                    }
+                    scrollCount = 0;
+                }, 1000);
+            }, { passive: true });
+
+            // Monitor touch response time
+            if (isMobile) {
+                let touchStart;
+                document.addEventListener('touchstart', () => {
+                    touchStart = performance.now();
+                }, { passive: true });
+
+                document.addEventListener('touchend', () => {
+                    if (touchStart) {
+                        const lag = performance.now() - touchStart;
+                        if (lag > 100) {
+                            console.warn(`⚠️ Touch lag: ${Math.round(lag)}ms`);
+                        }
+                    }
+                }, { passive: true });
+            }
+        }
+
+        // === CONNECTION OPTIMIZATION ===
+        function initConnectionOptimization() {
+            if ('connection' in navigator) {
+                const connection = navigator.connection;
+                if (connection.effectiveType === '2g' || connection.effectiveType === 'slow-2g') {
+                    console.log('🐌 Slow connection detected. Applying optimizations...');
+                    applySlowConnectionOptimizations();
+                }
+            }
+        }
+
+        function applySlowConnectionOptimizations() {
+            // Reduce animations
+            const style = document.createElement('style');
+            style.textContent = `
+                *, *::before, *::after {
+                    animation-duration: 0.1s !important;
+                    transition-duration: 0.1s !important;
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Lazy load images
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                if (!img.loading) {
+                    img.loading = 'lazy';
+                }
+            });
+        }
+
+        // === ACCESSIBILITY ===
+        function initAccessibility() {
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                // Press 'L' to go to login
+                if (e.key.toLowerCase() === 'l' && !e.ctrlKey && !e.altKey && !e.target.matches('input, textarea')) {
+                    goToLogin();
+                }
+                // Press 'H' to show help
+                if (e.key.toLowerCase() === 'h' && !e.ctrlKey && !e.altKey && !e.target.matches('input, textarea')) {
+                    showHelp();
+                }
+                // Press Escape to close modals
+                if (e.key === 'Escape') {
+                    closeHelp();
+                }
+            });
+
+            // Click outside modal to close
+            document.getElementById('helpModal')?.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeHelp();
+                }
+            });
         }
 
         // === INITIALIZATION ===
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 MyApp by SIM Carabinieri Index Page Loaded v4.1 - M Corsiva Edition');
+            console.log('🚀 MyApp by SIM Carabinieri - Mobile Optimized v4.1');
+            console.log(`📱 Mobile: ${isMobile}, iOS: ${isIOS}, Standalone: ${isStandaloneMode}`);
             
-            // Update status
+            // Initialize all systems
             updateSystemStatus();
+            initMobileOptimizations();
+            initPerformanceMonitoring();
+            initConnectionOptimization();
+            initAccessibility();
             
-            // Check system status every 30 seconds
-            setInterval(() => {
-                // Qui potresti aggiungere una vera verifica dello stato del sistema
-                updateSystemStatus();
-            }, 30000);
+            // Check system status periodically
+            setInterval(updateSystemStatus, 30000);
             
             // Add smooth scrolling for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -732,30 +1044,42 @@
                 });
             });
             
-            // Keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
-                // Press 'L' to go to login
-                if (e.key.toLowerCase() === 'l' && !e.ctrlKey && !e.altKey) {
-                    goToLogin();
-                }
-                // Press 'H' to show help
-                if (e.key.toLowerCase() === 'h' && !e.ctrlKey && !e.altKey) {
-                    showHelp();
-                }
-                // Press Escape to close help
-                if (e.key === 'Escape') {
-                    closeHelp();
-                }
-            });
-            
-            console.log('✅ MyApp by SIM Index page with M Corsiva fully initialized');
+            console.log('✅ MyApp fully initialized and mobile optimized');
         });
 
         // === PERFORMANCE MONITORING ===
         window.addEventListener('load', function() {
             const loadTime = performance.now();
             console.log(`⚡ Page loaded in ${Math.round(loadTime)}ms`);
+            
+            // Report performance metrics
+            if (loadTime > 3000) {
+                console.warn('⚠️ Slow loading detected');
+            }
         });
+
+        // === GLOBAL ERROR HANDLER ===
+        window.addEventListener('error', function(e) {
+            console.error('🚨 Error:', e.error);
+            // Could send to error reporting service
+        });
+
+        // === SERVICE WORKER REGISTRATION ===
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('✅ SW registered:', registration.scope);
+                    })
+                    .catch(function(error) {
+                        console.log('❌ SW registration failed:', error);
+                    });
+            });
+        }
     </script>
+
+    <!-- PWA INSTALLER SCRIPT -->
+    <script src="/js/pwa-install.js"></script>
+    
 </body>
 </html>
