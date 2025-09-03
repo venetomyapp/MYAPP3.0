@@ -11,6 +11,10 @@
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
+    <!-- BOTPRESS SCRIPTS -->
+    <script src="https://cdn.botpress.cloud/webchat/v3.2/inject.js"></script>
+    <script src="https://files.bpcontent.cloud/2025/08/31/12/20250831122850-F6HD8P79.js" defer></script>
+    
     <!-- CONFIGURAZIONE COLORI TAILWIND - BRAND IDENTITY 2025 -->
     <script>
         tailwind.config = {
@@ -468,6 +472,80 @@
             .mobile-section {
                 padding: 2rem;
             }
+        }
+
+        /* === BOTPRESS CHATBOT CUSTOM STYLING === */
+        /* Style user messages with gradient magenta/aurora theme */
+        #bp-web-widget-container .bp-message.bp-message-user,
+        #bp-web-widget-container [data-from="user"] {
+            background: linear-gradient(135deg, #c2185b 0%, #e94560 50%, #e53935 100%) !important;
+            color: white !important;
+            border-radius: 18px 18px 4px 18px !important;
+            box-shadow: 0 2px 8px rgba(194, 24, 91, 0.3) !important;
+        }
+
+        /* Style bot messages with glass white effect */
+        #bp-web-widget-container .bp-message.bp-message-bot,
+        #bp-web-widget-container [data-from="bot"] {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            border-radius: 18px 18px 18px 4px !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+            color: #1f2937 !important;
+        }
+
+        /* Style the chat widget button with brand colors */
+        #bp-web-widget-container .bp-widget-btn,
+        #bp-web-widget-container .bp-open-btn {
+            background: linear-gradient(135deg, #6a1b9a 0%, #c2185b 50%, #e53935 100%) !important;
+            box-shadow: 0 8px 25px rgba(194, 24, 91, 0.4) !important;
+            border: 2px solid rgba(255, 255, 255, 0.2) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+
+        /* Hover effects for chat button */
+        #bp-web-widget-container .bp-widget-btn:hover,
+        #bp-web-widget-container .bp-open-btn:hover {
+            transform: scale(1.05) !important;
+            box-shadow: 0 12px 30px rgba(194, 24, 91, 0.6) !important;
+        }
+
+        /* Widget header styling */
+        #bp-web-widget-container .bp-widget-header {
+            background: linear-gradient(135deg, #0a0a2e 0%, #2d1b69 50%, #6a1b9a 100%) !important;
+            color: white !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Chat input area styling */
+        #bp-web-widget-container .bp-composer {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px) !important;
+            border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Send button styling */
+        #bp-web-widget-container .bp-send-btn {
+            background: linear-gradient(135deg, #6a1b9a 0%, #c2185b 100%) !important;
+            color: white !important;
+            border-radius: 50% !important;
+        }
+
+        /* Chat window overall styling */
+        #bp-web-widget-container .bp-widget {
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            backdrop-filter: blur(20px) !important;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2) !important;
+            border-radius: 16px !important;
+        }
+
+        /* Hide any unwanted elements */
+        #bp-web-widget-container .bp-widget-sidebar,
+        #bp-web-widget-container [data-testid="share-button"],
+        #bp-web-widget-container .bp-share-btn {
+            display: none !important;
+            visibility: hidden !important;
         }
     </style>
 </head>
@@ -976,7 +1054,7 @@
             // Avvia refresh loop
             startRefreshLoop();
             
-            console.log('✅ Dashboard Brand Identity 2025 - Mobile-First Ready');
+            console.log('✅ Dashboard Brand Identity 2025 - Mobile-First Ready with Virgilio AI Assistant');
         });
 
         // === MOBILE MENU ===
@@ -1736,7 +1814,7 @@
             }[s])); 
         }
 
-        console.log('✅ MyApp by SIM Carabinieri (GA)- Brand Identity 2025 - Mobile-First Dashboard Ready');
+        console.log('✅ MyApp by SIM Carabinieri - Brand Identity 2025 - Mobile-First Dashboard Ready with Virgilio AI Assistant');
     </script>
 </body>
 </html>
