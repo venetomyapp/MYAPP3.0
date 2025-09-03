@@ -1,677 +1,868 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sindacato Italiano Militari - Carabinieri - Tessera Sindacale</title>
-  <meta name="description" content="Iscriviti al Sindacato Italiano Militari - Carabinieri. Convenzioni, tutela legale e servizi professionali per i Carabinieri.">
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#1a1a2e',
-            secondary: '#16213e',
-            accent: '#0f3460',
-            aurora: '#e94560',
-            cyan: '#00d4ff',
-            magenta: '#ff006e',
-            gold: '#ffd700',
-            teal: '#03dac6',
-            dark: '#0a0a23'
-          },
-          fontFamily: {
-            'inter': ['Inter', 'system-ui', 'sans-serif']
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIM Carabinieri - La Tessera Che Si Ripaga da Sola</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /*
+         ******************************************************
+         * 1. VARIABILI E STILI DI BASE
+         ******************************************************
+         */
+
+        :root {
+            --color-blue: #003d82;
+            --color-dark-red: #8b2635;
+            --color-green: #28a745;
+            --color-light-bg: #f5f5f5;
+            --color-text-dark: #333;
+            --color-white: #ffffff;
+            --color-gold: #ffd700;
+            --shadow-card: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-button: 0 8px 15px rgba(0, 0, 0, 0.2);
+            --shadow-glass: 0 8px 32px rgba(31, 38, 135, 0.37);
+            --font-family-primary: 'Inter', sans-serif;
+            --border-radius-card: 24px;
+            --border-radius-button: 16px;
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-      }
-    }
-  </script>
-  
-  <style>
-    :root {
-      --gradient-aurora: linear-gradient(135deg, #1e3a8a 0%, #3730a3 25%, #7c2d12 50%, #be123c 75%, #e11d48 100%);
-      --gradient-magic: linear-gradient(135deg, #1e40af 0%, #be123c 50%, #e11d48 100%);
-      --gradient-accent: linear-gradient(135deg, #1d4ed8 0%, #dc2626 100%);
-      --safe-area-inset-top: env(safe-area-inset-top, 0);
-      --safe-area-inset-bottom: env(safe-area-inset-bottom, 0);
-    }
 
-    * {
-      -webkit-tap-highlight-color: transparent;
-      -webkit-touch-callout: none;
-    }
+        * {
+            box-sizing: border-box;
+        }
 
-    body {
-      background: var(--gradient-aurora);
-      background-size: 400% 400%;
-      animation: aurora 20s ease infinite;
-      font-family: 'Inter', system-ui, sans-serif;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+        body {
+            font-family: var(--font-family-primary);
+            line-height: 1.6;
+            color: var(--color-text-dark);
+            background: linear-gradient(180deg, var(--color-blue) 0%, #1e4a72 25%, #4a5c8a 50%, #7d4f73 75%, var(--color-dark-red) 100%);
+            background-attachment: fixed;
+            padding: 2rem 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
 
-    @keyframes aurora {
-      0%, 100% { background-position: 0% 50%; }
-      25% { background-position: 100% 50%; }
-      50% { background-position: 100% 100%; }
-      75% { background-position: 0% 100%; }
-    }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-20px) rotate(2deg); }
-    }
+        h1, h2, h3 {
+            font-weight: 800;
+            color: var(--color-dark-red);
+            letter-spacing: -0.02em;
+        }
 
-    @keyframes pulse-glow {
-      0%, 100% { 
-        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2); 
-      }
-      50% { 
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); 
-      }
-    }
+        /*
+         ******************************************************
+         * 2. STILI RIUTILIZZABILI MODERNI
+         ******************************************************
+         */
 
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--border-radius-card);
+            padding: 60px;
+            margin-bottom: 40px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition-smooth);
+        }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--color-blue), var(--color-dark-red), var(--color-gold));
+            animation: shimmer 3s ease-in-out infinite;
+        }
 
-    @keyframes bounce-in {
-      0% { opacity: 0; transform: scale(0.3); }
-      50% { opacity: 1; transform: scale(1.05); }
-      70% { transform: scale(0.9); }
-      100% { opacity: 1; transform: scale(1); }
-    }
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.15);
+        }
 
-    .text-ultra-visible {
-      color: #fff;
-      text-shadow: 0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1);
-      font-weight: 800;
-    }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--border-radius-card);
+            padding: 40px;
+            box-shadow: var(--shadow-glass);
+        }
 
-    .text-white {
-      text-shadow: 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1);
-    }
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--color-blue) 0%, var(--color-dark-red) 100%);
+            color: var(--color-white);
+            padding: 20px 40px;
+            border-radius: var(--border-radius-button);
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(0, 61, 130, 0.3);
+            transition: var(--transition-smooth);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
 
-    .glass-morphism {
-      background: rgba(255,255,255,.08);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,.20);
-      box-shadow: 0 8px 32px rgba(31,38,135,.25);
-    }
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
 
-    .glass-card {
-      background: rgba(255,255,255,.95);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(0,0,0,.06);
-    }
+        .cta-button:hover::before {
+            left: 100%;
+        }
 
-    .btn-aurora {
-      background: var(--gradient-magic);
-      color: white;
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      transition: all .3s ease;
-      font-weight: 600;
-      min-height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 61, 130, 0.4);
+        }
 
-    .btn-aurora:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25);
-      border-color: rgba(59, 130, 246, 0.5);
-    }
+        .cta-button:active {
+            transform: translateY(-1px) scale(1.01);
+        }
 
-    .btn-primary {
-      background: var(--gradient-accent);
-      color: white;
-      border: 1px solid rgba(29, 78, 216, 0.3);
-      font-weight: 600;
-    }
+        .pulse-button {
+            animation: pulse 2s infinite;
+        }
 
-    .hero-title {
-      font-size: clamp(2.5rem, 8vw, 4rem);
-      font-weight: 700;
-      line-height: 1.1;
-      color: #ffffff;
-    }
+        .gradient-text {
+            background: linear-gradient(135deg, var(--color-blue), var(--color-dark-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 900;
+        }
 
-    .feature-card {
-      background: rgba(255,255,255,.1);
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(255,255,255,.2);
-      border-radius: 24px;
-      transition: all .3s ease;
-      position: relative;
-      overflow: hidden;
-    }
+        .badge {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9em;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+            border: 2px solid var(--color-gold);
+            color: var(--color-white);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
 
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 2px;
-      background: var(--gradient-magic);
-      transition: left 0.4s ease;
-    }
+        /*
+         ******************************************************
+         * 3. STILI SPECIFICI PER SEZIONE - MODERNIZZATI
+         ******************************************************
+         */
 
-    .feature-card:hover::before {
-      left: 0;
-    }
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 100px 40px;
+            background: transparent;
+            color: var(--color-white);
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+            animation: heroSlideUp 1s ease-out;
+            position: relative;
+        }
 
-    .feature-card:hover {
-      transform: translateY(-8px) scale(1.02);
-      background: rgba(255,255,255,.15);
-      border-color: rgba(0,212,255,.4);
-      box-shadow: 0 20px 40px rgba(0,0,0,.3), 0 0 20px rgba(0,212,255,.2);
-    }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            animation: heroGlow 4s ease-in-out infinite;
+        }
+        
+        .hero-section h1 {
+            font-size: 4em;
+            color: var(--color-white);
+            margin-bottom: 20px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            position: relative;
+            z-index: 2;
+        }
 
-    .money-icon {
-      animation: float 3s ease-in-out infinite;
-    }
+        .hero-section p.subtitle {
+            font-size: 1.6em;
+            color: #e1e1e1;
+            font-weight: 300;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+        }
 
-    .stats-number {
-      font-size: clamp(2rem, 5vw, 3rem);
-      font-weight: 900;
-      background: var(--gradient-magic);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+        .hero-section .badge {
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+        }
 
-    .countdown {
-      background: rgba(255,0,110,.1);
-      border: 2px solid rgba(255,0,110,.3);
-      animation: pulse-glow 2s infinite;
-    }
+        /* Urgency Bar */
+        .urgency-bar {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: var(--border-radius-card);
+            margin: 20px 0;
+            font-weight: 600;
+            animation: urgencyPulse 1.5s ease-in-out infinite;
+        }
 
-    .testimonial {
-      animation: slideUp 0.6s ease-out forwards;
-      opacity: 0;
-    }
+        /* Value Grid */
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
 
-    .testimonial:nth-child(1) { animation-delay: 0.2s; }
-    .testimonial:nth-child(2) { animation-delay: 0.4s; }
-    .testimonial:nth-child(3) { animation-delay: 0.6s; }
+        .value-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: var(--border-radius-card);
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+        }
 
-    .badge-floating {
-      position: absolute;
-      animation: bounce-in 1s ease-out forwards;
-      opacity: 0;
-    }
+        .value-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--color-blue), var(--color-dark-red), var(--color-gold));
+            border-radius: var(--border-radius-card);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
 
-    .back-btn {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      background: rgba(255,255,255,.08);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,.2);
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      transition: all .3s ease;
-      z-index: 1000;
-      cursor: pointer;
-    }
+        .value-card:hover::before {
+            opacity: 1;
+        }
 
-    .back-btn:hover {
-      background: rgba(255,255,255,.15);
-      transform: translateX(-5px) scale(1.1);
-    }
+        .value-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
 
-    @media (max-width: 768px) {
-      .back-btn {
-        top: 15px;
-        left: 15px;
-        width: 45px;
-        height: 45px;
-      }
-    }
+        .value-card .emoji {
+            font-size: 3em;
+            display: block;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
 
-    .animate-slide-up { animation: slideUp 0.6s ease-out; }
-    .animate-fade-in { animation: fadeIn 0.8s ease-out; }
-  </style>
+        .value-card h3 {
+            font-size: 1.5em;
+            margin: 20px 0;
+            color: var(--color-text-dark);
+        }
+
+        .value-card p.price {
+            font-size: 1.2em;
+            color: var(--color-dark-red);
+            font-weight: 800;
+        }
+
+        .value-card .original-price {
+            text-decoration: line-through;
+            color: #dc3545;
+            font-size: 1em;
+            opacity: 0.8;
+        }
+
+        .value-card ul {
+            text-align: left;
+            list-style: none;
+            padding: 0;
+        }
+
+        .value-card li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .value-card li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--color-green);
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        /* ROI Showcase */
+        .roi-showcase {
+            text-align: center;
+            background: linear-gradient(135deg, var(--color-blue) 0%, #1e4a72 50%, var(--color-dark-red) 100%);
+            color: var(--color-white);
+            padding: 80px 50px;
+            border-radius: var(--border-radius-card);
+            margin-top: 50px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .roi-showcase::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
+            animation: rotateSlow 20s linear infinite;
+        }
+
+        .roi-showcase h2 {
+            color: var(--color-white);
+            font-size: 3em;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .roi-total {
+            font-size: 3.5em;
+            font-weight: 900;
+            margin: 30px 0;
+            color: var(--color-gold);
+            letter-spacing: -0.02em;
+            text-shadow: 2px 2px 20px rgba(255, 215, 0, 0.5);
+            position: relative;
+            z-index: 2;
+            animation: counterUp 2s ease-out;
+        }
+        
+        .roi-text {
+            font-size: 1.4em;
+            font-weight: 400;
+            line-height: 1.8;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-button);
+            padding: 30px 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 900;
+            color: var(--color-gold);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            padding: 80px 40px;
+            background: linear-gradient(135deg, var(--color-dark-red) 0%, var(--color-blue) 100%);
+            border-radius: var(--border-radius-card);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            color: var(--color-white);
+            margin-top: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" patternUnits="userSpaceOnUse" width="100" height="100"><circle cx="25" cy="25" r="1" fill="white" opacity="0.05"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.05"/><circle cx="25" cy="75" r="1" fill="white" opacity="0.05"/><circle cx="75" cy="25" r="1" fill="white" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        }
+
+        .cta-section h2 {
+            color: var(--color-white);
+            font-size: 3em;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-section .highlight-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-button);
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Footer */
+        .main-footer {
+            text-align: center;
+            padding: 60px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-card);
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95em;
+            margin-top: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /*
+         ******************************************************
+         * 4. ANIMAZIONI MODERNE
+         ******************************************************
+         */
+
+        @keyframes heroSlideUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(50px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        @keyframes heroGlow {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1); 
+                opacity: 0.3; 
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.2); 
+                opacity: 0.1; 
+            }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+            100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+        }
+
+        @keyframes urgencyPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.02); opacity: 0.9; }
+        }
+
+        @keyframes rotateSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes counterUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /*
+         ******************************************************
+         * 5. MEDIA QUERIES RESPONSIVE
+         ******************************************************
+         */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0;
+            }
+            .container {
+                padding: 0 15px;
+            }
+            .hero-section {
+                padding: 60px 20px;
+            }
+            .hero-section h1 {
+                font-size: 2.5em;
+            }
+            .hero-section p.subtitle {
+                font-size: 1.3em;
+            }
+            .section {
+                padding: 40px;
+            }
+            .cta-button {
+                padding: 18px 35px;
+                font-size: 1.1em;
+            }
+            .roi-showcase, .cta-section {
+                padding: 50px 30px;
+            }
+            .roi-showcase h2, .cta-section h2 {
+                font-size: 2.2em;
+            }
+            .roi-total {
+                font-size: 2.8em;
+            }
+            .value-card {
+                padding: 30px;
+            }
+            .value-card .emoji {
+                font-size: 2.5em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-section h1 {
+                font-size: 2em;
+            }
+            .hero-section p.subtitle {
+                font-size: 1.1em;
+            }
+            .value-card {
+                padding: 25px;
+            }
+            .section {
+                padding: 30px;
+            }
+            .roi-showcase h2, .cta-section h2 {
+                font-size: 1.8em;
+            }
+            .roi-total {
+                font-size: 2.2em;
+            }
+        }
+
+        /*
+         ******************************************************
+         * 6. ELEMENTI INTERATTIVI MODERNI
+         ******************************************************
+         */
+
+        .parallax-element {
+            transition: transform 0.1s ease-out;
+        }
+
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Loading states */
+        .loading-shimmer {
+            background: linear-gradient(90deg, 
+                rgba(255,255,255,0) 0%, 
+                rgba(255,255,255,0.2) 50%, 
+                rgba(255,255,255,0) 100%);
+            background-size: 200px 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: -200px 0; }
+            100% { background-position: calc(200px + 100%) 0; }
+        }
+    </style>
 </head>
-
-<body class="font-inter">
-
-  <!-- Back Button -->
-  <button id="back-btn" class="back-btn" aria-label="Torna indietro">
-    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-    </svg>
-  </button>
-
-  <!-- Floating Badges -->
-  <div class="badge-floating top-20 right-4 bg-gold text-primary px-3 py-1 rounded-full text-sm font-bold z-50" style="animation-delay: 1s;">
-    💰 Si ripaga da sola!
-  </div>
-  <div class="badge-floating bottom-32 left-4 bg-teal text-white px-3 py-1 rounded-full text-sm font-bold z-50" style="animation-delay: 1.5s;">
-    ✅ Attivazione immediata
-  </div>
-
-  <!-- Hero Section -->
-  <section class="min-h-screen flex items-center justify-center px-4 py-20 relative overflow-hidden">
-    
-    <!-- Animated Background Elements -->
-    <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-aurora/20 to-cyan/20 rounded-full blur-3xl animate-pulse"></div>
-    <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-r from-magenta/20 to-teal/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
-    
-    <div class="max-w-6xl mx-auto relative z-10">
-      <div class="grid lg:grid-cols-2 gap-12 items-center">
-        
-        <!-- Left Content -->
-        <div class="text-center lg:text-left animate-fade-in">
-          
-          <!-- Badge -->
-          <div class="inline-flex items-center gap-2 mb-6 glass-morphism px-4 py-2 rounded-full">
-            <div class="w-3 h-3 bg-teal rounded-full animate-pulse"></div>
-            <span class="text-white text-sm font-semibold">Vantaggi esclusivi per iscritti</span>
-          </div>
-          
-          <!-- Main Title -->
-          <h1 class="hero-title mb-6">
-            Sindacato Italiano<br>
-            <span class="text-red-300">Militari</span><br>
-            <span class="text-red-200">Carabinieri</span>
-          </h1>
-          
-          <!-- Subtitle -->
-          <p class="text-white text-lg leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0">
-            <strong class="text-red-300">Iscriviti al Sindacato</strong> e accedi a convenzioni, tutela legale e servizi dedicati ai Carabinieri. 
-            Assistenza professionale e vantaggi concreti per la tua carriera.
-          </p>
-          
-          <!-- Value Proposition -->
-          <div class="bg-gradient-to-r from-red-600/10 to-blue-600/10 border border-red-500/30 rounded-2xl p-6 mb-8">
-            <div class="flex items-center justify-center lg:justify-start gap-4 mb-4">
-              <div class="text-3xl">🏛️</div>
-              <div>
-                <h3 class="text-white text-xl font-bold">Servizi Professionali</h3>
-                <p class="text-red-300 text-sm font-semibold">Tutela e supporto per i Carabinieri</p>
-              </div>
-            </div>
-            <div class="grid grid-cols-3 gap-4 text-center">
-              <div>
-                <div class="text-2xl font-bold text-red-300">100+</div>
-                <div class="text-white text-xs">Convenzioni attive</div>
-              </div>
-              <div>
-                <div class="text-2xl font-bold text-red-300">24/7</div>
-                <div class="text-white text-xs">Assistenza legale</div>
-              </div>
-              <div>
-                <div class="text-2xl font-bold text-red-300">15K+</div>
-                <div class="text-white text-xs">Iscritti attivi</div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- CTA Buttons -->
-          <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
-            <a href="https://form.jotform.com/252383243723051" 
-               class="btn-primary px-8 py-4 rounded-xl text-lg font-semibold flex items-center justify-center gap-2">
-               <span>Iscriviti Ora</span>
-            </a>
-            <a href="https://simc-restyle.clion.it/" target="_blank"
-               class="btn-aurora px-8 py-4 rounded-xl text-lg font-semibold flex items-center justify-center gap-2">
-              <span>Informazioni</span>
-            </a>
-          </div>
-          
-          <!-- Trust Indicators -->
-          <div class="flex flex-wrap justify-center lg:justify-start gap-4 text-sm text-white/80">
-            <div class="flex items-center gap-2">
-              <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-              </svg>
-              <span>Attivazione immediata</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
-              </svg>
-              <span>Dati sicuri e protetti</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/>
-              </svg>
-              <span>Soddisfatto o rimborsato</span>
-            </div>
-          </div>
-          
-        </div>
-        
-        <!-- Right Content - Benefits -->
-        <div class="animate-slide-up">
-          <div class="glass-morphism rounded-3xl p-8 relative">
+<body>
+    <div class="container">
+        <header class="hero-section scroll-reveal">
+            <h1>SIM Carabinieri: La Tessera Che Si Ripaga da Sola</h1>
+            <p class="subtitle">Investimento Intelligente: €9 al Mese per Centinaia di Euro di Servizi</p>
+            <span class="badge">#maipiùsoli</span>
             
-            <!-- Header -->
-            <div class="text-center mb-8">
-              <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-gold to-cyan rounded-full mb-4">
-                <span class="text-2xl">🎯</span>
-              </div>
-              <h2 class="text-white text-2xl font-bold mb-2">Cosa ottieni subito</h2>
-              <p class="text-white/80">Vantaggi immediati con la tua iscrizione</p>
+            <div class="urgency-bar" style="background: linear-gradient(135deg, var(--color-blue), var(--color-dark-red)); animation: none;">
+                🤝 <strong>UNISCITI ALLA FAMIGLIA SIM</strong> - Protezione e servizi garantiti per tutti
             </div>
+        </header>
+
+        <main>
+            <section class="section scroll-reveal">
+                <h2 class="gradient-text" style="text-align: center; margin-bottom: 50px; font-size: 2.5em;">💰 ANALISI DEI RISPARMI CONCRETI</h2>
+                <div class="value-grid">
+                    <div class="value-card">
+                        <span class="emoji">⚖️</span>
+                        <h3>Tutela Legale Professionale</h3>
+                        <p class="original-price">Costo assistenza privata: €3.000-10.000+</p>
+                        <p class="price">Con tessera SIM: <strong>COPERTURA COMPLETA</strong></p>
+                        <div style="margin-top: 20px;">
+                            <p><strong>Protezione fino a €20.000 senza franchigia</strong></p>
+                            <ul>
+                                <li>Scelta libera del legale</li>
+                                <li>Periti e consulenti inclusi</li>
+                                <li>Copertura penale, civile, disciplinare</li>
+                                <li>Assistenza 24/7</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="value-card">
+                        <span class="emoji">🩺</span>
+                        <h3>Dr.Feel - Servizio Sanitario Digitale</h3>
+                        <p class="original-price">Valore di mercato: €348/anno</p>
+                        <p class="price">Con tessera SIM: <strong>GRATUITO</strong></p>
+                        <div style="margin-top: 20px;">
+                            <p><strong>Copertura per tutto il nucleo familiare</strong></p>
+                            <ul>
+                                <li>Consulenze mediche 24/7 via app</li>
+                                <li>Visite specialistiche online</li>
+                                <li>Prescrizioni mediche digitali</li>
+                                <li>Telemedicina avanzata</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="value-card">
+                        <span class="emoji">📊</span>
+                        <h3>Servizi Fiscali e Previdenziali</h3>
+                        <p class="original-price">Costo CAF privato: €130/anno</p>
+                        <p class="price">Con tessera SIM: <strong>TUTTO GRATUITO</strong></p>
+                        <div style="margin-top: 20px;">
+                            <p><strong>Assistenza fiscale completa</strong></p>
+                            <ul>
+                                <li>Dichiarazione 730 gratuita</li>
+                                <li>Calcolo e invio ISEE gratuito</li>
+                                <li>Pratiche previdenziali (pensioni)</li>
+                                <li>Consulenza personalizzata</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="value-card">
+                        <span class="emoji">🎯</span>
+                        <h3>Convenzioni Esclusive</h3>
+                        <p class="original-price">Costo convenzioni: Variabile</p>
+                        <p class="price">Risparmio stimato: <strong>€300/anno</strong></p>
+                        <div style="margin-top: 20px;">
+                            <p><strong>Sconti e agevolazioni riservate</strong></p>
+                            <ul>
+                                <li>Carabinieristore.it: fino al 40%</li>
+                                <li>Hotels VOI: sconto del 10%</li>
+                                <li>Previmedical: servizi agevolati</li>
+                                <li>E molto altro ancora...</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="roi-showcase scroll-reveal">
+                <h2>IL TUO RITORNO ECONOMICO</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">€108</span>
+                        <span class="stat-label">Investimento annuale</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">€778</span>
+                        <span class="stat-label">Valore dei servizi</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">€20.000</span>
+                        <span class="stat-label">Protezione legale</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">7X</span>
+                        <span class="stat-label">Ritorno investimento</span>
+                    </div>
+                </div>
+
+                <div class="roi-total">
+                    GUADAGNO NETTO: €670/anno
+                </div>
+                <p class="roi-text">
+                    <strong>Ogni euro investito ne vale oltre 7 in benefici concreti!</strong><br>
+                    <em>La tessera sindacale che conviene davvero</em>
+                </p>
+            </section>
+
+            <section class="cta-section scroll-reveal">
+                <h2>LA SCELTA INTELLIGENTE PER IL TUO FUTURO</h2>
+                
+                <div class="highlight-box">
+                    <div style="font-size: 1.6em; font-weight: 600; margin-bottom: 15px;">
+                        💎 <strong>€9 al mese</strong> per oltre <strong>€778 di valore annuale</strong>
+                    </div>
+                    <div style="font-size: 1.2em; opacity: 0.9;">
+                        La tessera sindacale che ti fa risparmiare davvero!
+                    </div>
+                </div>
+
+                <div style="margin: 40px 0;">
+                    <p style="font-size: 1.3em; margin-bottom: 10px;">
+                        ⏰ <strong>Non aspettare!</strong> Ogni giorno che passa perdi denaro
+                    </p>
+                    <p style="font-size: 1.1em; opacity: 0.9;">
+                        Unisciti a migliaia di colleghi che hanno già scelto la convenienza
+                    </p>
+                </div>
+
+                <a href="https://www.simcarabinieri.com/iscrizione.php" class="cta-button pulse-button">
+                    🚀 ISCRIVITI ORA E INIZIA A RISPARMIARE
+                </a>
+
+                <div style="margin-top: 30px; font-size: 0.9em; opacity: 0.8;">
+                    ✅ Iscrizione sicura • ✅ Attivazione immediata • ✅ Soddisfatti o rimborsati
+                </div>
+            </section>
+        </main>
+
+        <footer class="main-footer">
+            <p style="font-size: 1.1em; margin-bottom: 20px;">
+                <strong style="color: var(--color-gold);">SIM Carabinieri</strong><br>
+                <em>Sindacato Italiano Militari Carabinieri</em>
+            </p>
+            <p style="font-style: italic; opacity: 0.9;">
+                "Il sindacato che valorizza il tuo impegno e fa crescere il tuo risparmio"
+            </p>
             
-            <!-- Features List -->
-            <div class="space-y-4 mb-8">
-              
-              <div class="feature-card p-4">
-                <div class="flex items-start gap-4">
-                  <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-teal to-cyan rounded-xl flex items-center justify-center">
-                    <span class="text-xl">💳</span>
-                  </div>
-                  <div>
-                    <h3 class="text-white font-bold mb-1">Convenzioni Immediate</h3>
-                    <p class="text-white/80 text-sm">Accesso istantaneo a oltre 100 sconti su salute, automotive, viaggi e molto altro</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="feature-card p-4">
-                <div class="flex items-start gap-4">
-                  <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-aurora to-magenta rounded-xl flex items-center justify-center">
-                    <span class="text-xl">⚖️</span>
-                  </div>
-                  <div>
-                    <h3 class="text-white font-bold mb-1">Tutela Legale Completa</h3>
-                    <p class="text-white/80 text-sm">Assistenza legale specializzata e consulenza professionale sempre disponibile</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="feature-card p-4">
-                <div class="flex items-start gap-4">
-                  <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-gold to-aurora rounded-xl flex items-center justify-center">
-                    <span class="text-xl">🎓</span>
-                  </div>
-                  <div>
-                    <h3 class="text-white font-bold mb-1">Formazione Esclusiva</h3>
-                    <p class="text-white/80 text-sm">Corsi di aggiornamento professionale e seminari specialistici gratuiti</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="feature-card p-4">
-                <div class="flex items-start gap-4">
-                  <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-cyan to-teal rounded-xl flex items-center justify-center">
-                    <span class="text-xl">🏥</span>
-                  </div>
-                  <div>
-                    <h3 class="text-white font-bold mb-1">Assistenza Sanitaria</h3>
-                    <p class="text-white/80 text-sm">Convenzioni con strutture mediche private e check-up scontati</p>
-                  </div>
-                </div>
-              </div>
-              
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+                <p style="font-size: 0.9em; opacity: 0.8;">
+                    🔒 I tuoi dati sono protetti • 📞 Supporto clienti dedicato • 💯 Trasparenza totale
+                </p>
+                <p style="font-size: 0.8em; opacity: 0.7; margin-top: 15px;">
+                    * Quota media versata. L'importo può variare in base alla categoria di appartenenza.
+                </p>
             </div>
-            
-            <!-- Bottom CTA -->
-            <div class="text-center">
-              <a href="https://form.jotform.com/252383243723051" 
-                 class="btn-aurora w-full py-4 rounded-xl font-bold text-lg">
-                ✨ ATTIVA ORA I TUOI VANTAGGI
-              </a>
-              <p class="text-white/60 text-xs mt-3">
-                💡 La tessera si ripaga già dal primo utilizzo delle convenzioni
-              </p>
-            </div>
-            
-          </div>
-        </div>
-        
-      </div>
+        </footer>
     </div>
-  </section>
 
-  <!-- Social Proof Section -->
-  <section class="py-20 px-4 relative">
-    <div class="max-w-4xl mx-auto">
-      
-      <div class="text-center mb-12">
-        <h2 class="text-ultra-visible text-3xl font-bold mb-4">
-          Servizi per i Carabinieri
-        </h2>
-        <p class="text-white text-lg">Convenzioni e assistenza professionale per i Carabinieri</p>
-      </div>
-      
-      <!-- Stats -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
-        <div class="text-center glass-morphism rounded-2xl p-6">
-          <div class="text-2xl font-bold text-red-300 mb-2">15.000+</div>
-          <div class="text-white font-semibold">Iscritti</div>
-        </div>
-        <div class="text-center glass-morphism rounded-2xl p-6">
-          <div class="text-2xl font-bold text-red-300 mb-2">100+</div>
-          <div class="text-white font-semibold">Convenzioni</div>
-        </div>
-        <div class="text-center glass-morphism rounded-2xl p-6">
-          <div class="text-2xl font-bold text-red-300 mb-2">24/7</div>
-          <div class="text-white font-semibold">Assistenza</div>
-        </div>
-        <div class="text-center glass-morphism rounded-2xl p-6">
-          <div class="text-2xl font-bold text-red-300 mb-2">20</div>
-          <div class="text-white font-semibold">Anni esperienza</div>
-        </div>
-      </div>
-      
-      <!-- Testimonials -->
-      <div class="grid md:grid-cols-3 gap-6">
-        
-        <div class="testimonial glass-card rounded-2xl p-6">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-12 h-12 bg-gradient-to-r from-teal to-cyan rounded-full flex items-center justify-center text-white font-bold">
-              MR
-            </div>
-            <div>
-              <div class="font-bold text-textDark">Marco R.</div>
-              <div class="text-sm text-gray-600">Carabiniere - Roma</div>
-            </div>
-          </div>
-          <p class="text-gray-700 text-sm leading-relaxed mb-3">
-            "Ho recuperato il costo della tessera già con la prima visita medica privata. Uno sconto del 40% che da solo vale l'iscrizione annuale!"
-          </p>
-          <div class="flex text-gold text-sm">
-            ⭐⭐⭐⭐⭐
-          </div>
-        </div>
-        
-        <div class="testimonial glass-card rounded-2xl p-6">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-12 h-12 bg-gradient-to-r from-aurora to-magenta rounded-full flex items-center justify-center text-white font-bold">
-              LC
-            </div>
-            <div>
-              <div class="font-bold text-textDark">Laura C.</div>
-              <div class="text-sm text-gray-600">Carabiniere - Milano</div>
-            </div>
-          </div>
-          <p class="text-gray-700 text-sm leading-relaxed mb-3">
-            "La convenzione automotive mi ha fatto risparmiare 800€ sulla manutenzione dell'auto. Sono già in attivo per i prossimi 3 anni!"
-          </p>
-          <div class="flex text-gold text-sm">
-            ⭐⭐⭐⭐⭐
-          </div>
-        </div>
-        
-        <div class="testimonial glass-card rounded-2xl p-6">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-12 h-12 bg-gradient-to-r from-gold to-aurora rounded-full flex items-center justify-center text-white font-bold">
-              AP
-            </div>
-            <div>
-              <div class="font-bold text-textDark">Alessandro P.</div>
-              <div class="text-sm text-gray-600">Maresciallo - Napoli</div>
-            </div>
-          </div>
-          <p class="text-gray-700 text-sm leading-relaxed mb-3">
-            "Assistenza legale impeccabile e convenzioni che uso ogni mese. La tessera si è ripagata in un lampo e continuo a risparmiare!"
-          </p>
-          <div class="flex text-gold text-sm">
-            ⭐⭐⭐⭐⭐
-          </div>
-        </div>
-        
-      </div>
-      
-    </div>
-  </section>
+    <script>
+        // Animazioni scroll reveal
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
 
-  <!-- Final CTA Section -->
-  <section class="py-20 px-4 relative">
-    <div class="absolute inset-0 bg-gradient-to-r from-red-900/30 to-blue-900/30"></div>
-    <div class="max-w-4xl mx-auto text-center relative z-10">
-      
-      <div class="glass-morphism rounded-3xl p-8 md:p-12">
-        
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-red-600 to-blue-700 rounded-full mb-6">
-          <span class="text-2xl">🏛️</span>
-        </div>
-        
-        <h2 class="text-ultra-visible text-3xl font-bold mb-4">
-          Unisciti al Sindacato
-        </h2>
-        
-        <p class="text-white text-lg mb-8 max-w-2xl mx-auto">
-          Iscriviti ora per accedere a tutti i servizi dedicati ai Carabinieri. 
-          <strong class="text-red-300">Tutela professionale</strong> e convenzioni esclusive.
-        </p>
-        
-        <!-- Final CTA -->
-        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <a href="https://form.jotform.com/252383243723051" 
-             class="btn-primary px-10 py-4 rounded-xl text-lg font-semibold flex items-center gap-2">
-            <span>Compila Iscrizione</span>
-          </a>
-          <div class="text-white/80 text-sm">
-            Iscrizione sicura e riservata<br>
-            Attivazione entro 48h
-          </div>
-        </div>
-        
-        <!-- Professional Guarantee -->
-        <div class="mt-8 p-4 bg-red-600/10 border border-red-600/30 rounded-xl inline-block">
-          <div class="text-red-300 font-semibold text-sm mb-1">Assistenza Garantita</div>
-          <div class="text-white text-sm">Supporto legale e sindacale per tutta la durata dell'iscrizione</div>
-        </div>
-        
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="glass-morphism mt-8 py-6 px-4">
-    <div class="max-w-4xl mx-auto text-center">
-      <div class="text-white mb-4">
-        <div class="font-bold text-lg mb-2">Sindacato Italiano Militari - Carabinieri</div>
-        <div class="text-white/70 text-sm">Tutela e servizi per i Carabinieri</div>
-      </div>
-      <div class="flex justify-center items-center space-x-4 text-xs text-white/60 mb-4 flex-wrap">
-        <span>© 2025 MyApp</span>
-        <span>•</span>
-        <a href="https://simc-restyle.clion.it/" target="_blank" class="hover:text-white transition-colors">Sito Web</a>
-        <span>•</span>
-        <span>Privacy • Termini</span>
-      </div>
-      <div class="text-white/60 text-xs">
-        Per informazioni: <a href="mailto:info@myappgo.it" class="text-red-300 hover:underline">info@myappgo.it</a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- JavaScript -->
-  <script>
-    // Back button functionality
-    document.addEventListener('DOMContentLoaded', function() {
-      const backBtn = document.getElementById('back-btn');
-      
-      function goBack() {
-        // Check URL parameters first
-        const params = new URLSearchParams(window.location.search);
-        const profilo = params.get('profilo') || '';
-        
-        if (profilo === 'dirigenti') {
-          window.location.href = 'home_dirigenti.html';
-          return;
-        }
-        
-        // Check referrer
-        const referrer = document.referrer;
-        if (referrer.includes('home_dirigenti.html')) {
-          window.location.href = 'home_dirigenti.html';
-        } else if (referrer.includes('home.html') || referrer) {
-          window.location.href = 'home.html';
-        } else if (window.history.length > 1) {
-          window.history.back();
-        } else {
-          window.location.href = 'home.html';
-        }
-      }
-      
-      backBtn.addEventListener('click', goBack);
-      
-      // Handle escape key
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-          goBack();
-        }
-      });
-      
-      // Analytics tracking
-      window.addEventListener('load', () => {
-        try {
-          window.dataLayer = window.dataLayer || [];
-          window.dataLayer.push({
-            event: 'landing_view_persuasive',
-            page: 'landing_tessera_ripaga',
-            ts: Date.now()
-          });
-        } catch (err) { /* no-op */ }
-      });
-      
-      // Track CTA clicks
-      const ctaButtons = document.querySelectorAll('a[href*="jotform"]');
-      ctaButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          try {
-            window.dataLayer = window.dataLayer || [];
-            window.dataLayer.push({
-              event: 'cta_click',
-              cta_text: btn.textContent.trim(),
-              position: btn.closest('section')?.querySelector('h1, h2')?.textContent || 'unknown'
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
             });
-          } catch (err) { /* no-op */ }
-        });
-      });
-    });
-  </script>
+        }, observerOptions);
 
+        document.querySelectorAll('.scroll-reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Effetto parallax leggero sui movimenti del mouse
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            document.querySelectorAll('.parallax-element').forEach(el => {
+                const speed = el.dataset.speed || 0.5;
+                const x = (mouseX - 0.5) * speed;
+                const y = (mouseY - 0.5) * speed;
+                el.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+
+        // Animazione contatore per il ROI
+        const animateCounter = (element, target) => {
+            const duration = 2000;
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = current.toFixed(0);
+            }, 16);
+        };
+
+        // Attiva animazione quando l'elemento è visibile
+        const roiElement = document.querySelector('.roi-total');
+        if (roiElement) {
+            const roiObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            animateCounter(entry.target, 670);
+                        }, 500);
+                        roiObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            roiObserver.observe(roiElement);
+        }
+    </script>
 </body>
 </html>
