@@ -64,6 +64,18 @@
             --gradient-accent: linear-gradient(135deg, #0a0a2e 0%, #6a1b9a 50%, #e53935 100%);
             --gradient-cyber: linear-gradient(135deg, #0a0a2e 0%, #2d1b69 50%, #6a1b9a 100%);
             --gradient-magic: linear-gradient(135deg, #6a1b9a 0%, #c2185b 50%, #e53935 100%);
+            
+            /* Nuovi gradienti per tool categories */
+            --gradient-requests: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --gradient-profile: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --gradient-tools: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --gradient-ai: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            --gradient-contacts: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            --gradient-deals: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            --gradient-files: linear-gradient(135deg, #84cc16 0%, #65a30d 100%);
+            --gradient-community: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            --gradient-support: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+            
             --safe-area-inset-top: env(safe-area-inset-top, 0);
             --safe-area-inset-bottom: env(safe-area-inset-bottom, 0);
             --safe-area-inset-left: env(safe-area-inset-left, 0);
@@ -132,9 +144,13 @@
         }
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUpFromBottom { from { opacity: 0; transform: translateY(100%); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
         @keyframes glow { 0%, 100% { box-shadow: 0 0 10px rgba(194, 24, 91, 0.3); } 50% { box-shadow: 0 0 20px rgba(194, 24, 91, 0.6); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+        @keyframes scale { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
         @media (prefers-reduced-motion: reduce) {
             * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
@@ -238,8 +254,102 @@
             }
         }
 
-        /* Cards with better mobile interaction */
-        .tool-card,
+        /* Enhanced Tool Cards with Category Colors */
+        .tool-card {
+            border: 1.5px solid rgba(255,255,255,0.25);
+            border-radius: 20px;
+            transition: all .3s cubic-bezier(.4,0,.2,1);
+            will-change: transform;
+            touch-action: manipulation;
+            min-height: 120px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(15px);
+        }
+
+        /* Tool Card Categories */
+        .tool-card.category-requests {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(29, 78, 216, 0.1));
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .tool-card.category-profile {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.1));
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .tool-card.category-tools {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.1));
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .tool-card.category-ai {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(124, 58, 237, 0.1));
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .tool-card.category-contacts {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.1));
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .tool-card.category-deals {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(8, 145, 178, 0.1));
+            border-color: rgba(6, 182, 212, 0.3);
+        }
+
+        .tool-card.category-files {
+            background: linear-gradient(135deg, rgba(132, 204, 22, 0.15), rgba(101, 163, 13, 0.1));
+            border-color: rgba(132, 204, 22, 0.3);
+        }
+
+        .tool-card.category-community {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(234, 88, 12, 0.1));
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+
+        .tool-card.category-support {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(219, 39, 119, 0.1));
+            border-color: rgba(236, 72, 153, 0.3);
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: currentColor;
+            transition: left 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .tool-card:active {
+            transform: scale(0.95);
+        }
+
+        .tool-card:active::before {
+            left: 0;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .tool-card:hover {
+                transform: translateY(-5px) scale(1.02);
+                box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            }
+
+            .tool-card.category-requests:hover { box-shadow: 0 20px 40px rgba(45, 21, 85, 0.25); }
+            .tool-card.category-profile:hover { box-shadow: 0 20px 40px rgba(74, 36, 114, 0.25); }
+            .tool-card.category-tools:hover { box-shadow: 0 20px 40px rgba(107, 53, 143, 0.25); }
+            .tool-card.category-ai:hover { box-shadow: 0 20px 40px rgba(139, 74, 156, 0.25); }
+            .tool-card.category-contacts:hover { box-shadow: 0 20px 40px rgba(168, 87, 138, 0.25); }
+            .tool-card.category-deals:hover { box-shadow: 0 20px 40px rgba(26, 11, 61, 0.25); }
+            .tool-card.category-files:hover { box-shadow: 0 20px 40px rgba(74, 36, 114, 0.25); }
+            .tool-card.category-community:hover { box-shadow: 0 20px 40px rgba(107, 53, 143, 0.25); }
+            .tool-card.category-support:hover { box-shadow: 0 20px 40px rgba(45, 21, 85, 0.25); }
+        }
+
         .action-card {
             background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.08));
             border: 1.5px solid rgba(255,255,255,0.25);
@@ -252,7 +362,7 @@
             overflow: hidden;
         }
 
-        .tool-card::before {
+        .action-card::before {
             content: '';
             position: absolute;
             top: 0;
@@ -263,13 +373,11 @@
             transition: left 0.3s ease;
         }
 
-        .tool-card:active::before,
         .action-card:active::before {
             left: 0;
         }
 
         @media (hover: hover) and (pointer: fine) {
-            .tool-card:hover,
             .action-card:hover {
                 transform: translateY(-3px);
                 box-shadow: 0 12px 24px rgba(0,0,0,0.22);
@@ -284,19 +392,91 @@
             backdrop-filter: blur(15px); 
             border: 1px solid rgba(255,255,255,.22); 
             border-radius: 24px; 
-            transition: all .2s ease;
+            transition: all .3s cubic-bezier(.4,0,.2,1);
             min-height: 100px;
         }
 
         .stat-card:active {
-            transform: scale(0.98);
+            transform: scale(0.95);
         }
 
         @media (hover: hover) and (pointer: fine) { 
             .stat-card:hover { 
-                transform: translateY(-2px); 
+                transform: translateY(-3px) scale(1.02); 
                 background: linear-gradient(135deg, rgba(255,255,255,.25), rgba(255,255,255,.12)); 
+                box-shadow: 0 15px 30px rgba(0,0,0,0.1);
             } 
+        }
+
+        /* CTA BANNER POPUP STYLES */
+        .cta-banner-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(.4,0,.2,1);
+            padding-bottom: max(1rem, var(--safe-area-inset-bottom));
+        }
+
+        .cta-banner-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .cta-banner-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px 24px 0 0;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 16px;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(.4,0,.2,1);
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-banner-overlay.show .cta-banner-content {
+            transform: translateY(0);
+        }
+
+        .cta-banner-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .cta-banner-close:hover {
+            background: rgba(0, 0, 0, 0.2);
+            transform: scale(1.1);
+        }
+
+        .cta-banner-close:active {
+            transform: scale(0.95);
         }
 
         /* Focus states */
@@ -547,10 +727,95 @@
             display: none !important;
             visibility: hidden !important;
         }
+
+        /* Enhanced micro-animations */
+        .tool-card.animate-scale {
+            animation: scale 0.6s ease-in-out;
+        }
+
+        .tool-card.animate-bounce {
+            animation: bounce 0.8s ease-in-out;
+        }
+
+        @media (max-width: 640px) {
+            .cta-banner-content {
+                margin: 0;
+                border-radius: 24px 24px 0 0;
+            }
+        }
     </style>
 </head>
 
 <body class="flex flex-col min-h-screen font-sans">
+
+    <!-- CTA BANNER POPUP -->
+    <div id="ctaBannerOverlay" class="cta-banner-overlay" role="dialog" aria-labelledby="ctaBannerTitle" aria-modal="true">
+        <div class="cta-banner-content">
+            <button id="ctaBannerClose" class="cta-banner-close" aria-label="Chiudi banner">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+            </button>
+
+            <div class="p-6 text-center relative overflow-hidden">
+                <!-- Background effects -->
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-gradient-to-r from-gold/20 via-magenta/20 to-cyan/20 rounded-full blur-2xl"></div>
+                
+                <div class="relative z-10">
+                    <div class="flex items-center justify-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-gold to-magenta rounded-xl flex items-center justify-center">
+                            <span class="text-white text-2xl">⭐</span>
+                        </div>
+                        <h2 id="ctaBannerTitle" class="text-gray-900 text-xl font-black">Vuoi di più?</h2>
+                    </div>
+                    
+                    <p class="text-gray-700 text-base mb-6 max-w-sm mx-auto">
+                        Scopri tutti i vantaggi del <strong class="text-magenta">Sindacato Italiano Militari - Carabinieri</strong>. 
+                        Convenzioni esclusive, tutela legale e servizi dedicati.
+                    </p>
+                    
+                    <div class="flex flex-col gap-4 items-center">
+                        <a href="https://form.jotform.com/252383243723051" 
+                           target="_blank"
+                           class="btn-cta px-6 py-3 rounded-2xl text-lg font-black flex items-center gap-3 shadow-2xl transform transition-all duration-300"
+                           onclick="trackCtaClick(); closeBanner();">
+                            <span>🚀 ISCRIVITI SUBITO</span>
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                        </a>
+                        
+                        <div class="text-center">
+                            <div class="text-gray-600 text-sm">
+                                ✅ Iscrizione sicura e veloce<br>
+                                ✅ Attivazione immediata
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Benefits Preview -->
+                    <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                        <div class="text-gray-600">
+                            <div class="text-2xl mb-1">🤝</div>
+                            <div class="text-xs font-semibold">Convenzioni</div>
+                        </div>
+                        <div class="text-gray-600">
+                            <div class="text-2xl mb-1">⚖️</div>
+                            <div class="text-xs font-semibold">Tutela Legale</div>
+                        </div>
+                        <div class="text-gray-600">
+                            <div class="text-2xl mb-1">🎓</div>
+                            <div class="text-xs font-semibold">Formazione</div>
+                        </div>
+                        <div class="text-gray-600">
+                            <div class="text-2xl mb-1">🏥</div>
+                            <div class="text-xs font-semibold">Assistenza</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- HEADER MOBILE OPTIMIZED - BRAND IDENTITY 2025 -->
     <header class="glass-morphism sticky top-0 z-40 header-safe">
@@ -690,67 +955,6 @@
             </div>
         </section>
 
-        <!-- CTA ISCRIZIONE SECTION - NEW -->
-        <section class="mobile-section animate-slide-up">
-            <div class="glass-morphism rounded-3xl p-6 md:p-8 text-center relative overflow-hidden">
-                <!-- Background effects -->
-                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-gradient-to-r from-gold/20 via-magenta/20 to-cyan/20 rounded-full blur-2xl"></div>
-                
-                <div class="relative z-10">
-                    <div class="flex items-center justify-center gap-3 mb-4">
-                        <div class="w-12 h-12 bg-gradient-to-br from-gold to-magenta rounded-xl flex items-center justify-center">
-                            <span class="text-white text-2xl">⭐</span>
-                        </div>
-                        <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Vuoi di più?</h2>
-                    </div>
-                    
-                    <p class="text-white/90 text-base md:text-lg mb-6 max-w-lg mx-auto">
-                        Scopri tutti i vantaggi del <strong class="text-gold">Sindacato Italiano Militari - Carabinieri</strong>. 
-                        Convenzioni esclusive, tutela legale e servizi dedicati.
-                    </p>
-                    
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                        <a href="https://form.jotform.com/252383243723051" 
-                           target="_blank"
-                           class="btn-cta px-8 py-4 rounded-2xl text-lg font-black flex items-center gap-3 shadow-2xl transform transition-all duration-300"
-                           onclick="trackCtaClick()">
-                            <span>🚀 ISCRIVITI SUBITO</span>
-                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                            </svg>
-                        </a>
-                        
-                        <div class="text-center">
-                            <div class="text-white/80 text-sm">
-                                ✅ Iscrizione sicura e veloce<br>
-                                ✅ Attivazione immediata
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Benefits Preview -->
-                    <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                        <div class="text-white/80">
-                            <div class="text-2xl mb-1">🤝</div>
-                            <div class="text-xs font-semibold">Convenzioni</div>
-                        </div>
-                        <div class="text-white/80">
-                            <div class="text-2xl mb-1">⚖️</div>
-                            <div class="text-xs font-semibold">Tutela Legale</div>
-                        </div>
-                        <div class="text-white/80">
-                            <div class="text-2xl mb-1">🎓</div>
-                            <div class="text-xs font-semibold">Formazione</div>
-                        </div>
-                        <div class="text-white/80">
-                            <div class="text-2xl mb-1">🏥</div>
-                            <div class="text-xs font-semibold">Assistenza</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- STATS SECTION - Mobile Grid -->
         <section class="mobile-section animate-slide-up">
             <div class="flex items-center gap-3 mb-4">
@@ -796,7 +1000,7 @@
             </div>
         </section>
 
-        <!-- TOOLS SECTION - Mobile Grid -->
+        <!-- TOOLS SECTION - Mobile Grid with Enhanced Colors -->
         <section class="mobile-section animate-slide-up">
             <div class="flex items-center gap-3 mb-4">
                 <!-- M LOGO SMALL -->
@@ -807,61 +1011,61 @@
             </div>
 
             <div class="mobile-grid">
-                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Nuova Richiesta" onclick="goToRichieste()" onkeydown="keyActivate(event,'goToRichieste')">
+                <div class="tool-card category-requests p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Nuova Richiesta" onclick="goToRichieste()" onkeydown="keyActivate(event,'goToRichieste')">
                     <div class="text-3xl mb-2">📝</div>
                     <h3 class="text-white text-sm font-bold mb-1">Nuova Richiesta</h3>
                     <p class="text-white/80 text-xs line-clamp-2">Invia richiesta</p>
                 </div>
 
-                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Tessera Digitale" onclick="goToTessera()" onkeydown="keyActivate(event,'goToTessera')">
+                <div class="tool-card category-profile p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Tessera Digitale" onclick="goToTessera()" onkeydown="keyActivate(event,'goToTessera')">
                     <div class="text-3xl mb-2">🎫</div>
                     <h3 class="text-white text-sm font-bold mb-1">Tessera</h3>
                     <p class="text-white/80 text-xs line-clamp-2">Visualizza tessera</p>
                 </div>
 
-                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Il Mio Profilo" onclick="goToProfilo()" onkeydown="keyActivate(event,'goToProfilo')">
+                <div class="tool-card category-profile p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Il Mio Profilo" onclick="goToProfilo()" onkeydown="keyActivate(event,'goToProfilo')">
                     <div class="text-3xl mb-2">👤</div>
                     <h3 class="text-white text-sm font-bold mb-1">Profilo</h3>
                     <p class="text-white/80 text-xs line-clamp-2">Gestisci dati</p>
                 </div>
 
-                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Strumenti" onclick="goToStrumenti()" onkeydown="keyActivate(event,'goToStrumenti')">
+                <div class="tool-card category-tools p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Strumenti" onclick="goToStrumenti()" onkeydown="keyActivate(event,'goToStrumenti')">
                     <div class="text-3xl mb-2">🛠️</div>
                     <h3 class="text-white text-sm font-bold mb-1">Strumenti</h3>
                     <p class="text-white/80 text-xs line-clamp-2">Utility lavoro</p>
                 </div>
 
-                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Virgilio AI" onclick="goToVirgilio()" onkeydown="keyActivate(event,'goToVirgilio')">
+                <div class="tool-card category-ai p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Virgilio AI" onclick="goToVirgilio()" onkeydown="keyActivate(event,'goToVirgilio')">
                     <div class="text-3xl mb-2">🤖</div>
                     <h3 class="text-white text-sm font-bold mb-1">Virgilio AI</h3>
                     <p class="text-white/80 text-xs line-clamp-2">Assistente AI</p>
                 </div>
 
-                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Dirigenti" onclick="goToDirigenti()" onkeydown="keyActivate(event,'goToDirigenti')">
+                <div class="tool-card category-contacts p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Dirigenti" onclick="goToDirigenti()" onkeydown="keyActivate(event,'goToDirigenti')">
                     <div class="text-3xl mb-2">👥</div>
                     <h3 class="text-white text-sm font-bold mb-1">Dirigenti</h3>
                     <p class="text-white/80 text-xs line-clamp-2">Contatti</p>
                 </div>
 
-                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Convenzioni" onclick="goToConvenzioni()" onkeydown="keyActivate(event,'goToConvenzioni')">
+                <div class="tool-card category-deals p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Convenzioni" onclick="goToConvenzioni()" onkeydown="keyActivate(event,'goToConvenzioni')">
                     <div class="text-3xl mb-2">🤝</div>
                     <h3 class="text-white text-sm font-bold mb-1">Convenzioni</h3>
                     <p class="text-white/80 text-xs line-clamp-2">Sconti e offerte</p>
                 </div>
 
-                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="FileBox" onclick="goToFileBox()" onkeydown="keyActivate(event,'goToFileBox')">
+                <div class="tool-card category-files p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="FileBox" onclick="goToFileBox()" onkeydown="keyActivate(event,'goToFileBox')">
                     <div class="text-3xl mb-2">📁</div>
                     <h3 class="text-white text-sm font-bold mb-1">FileBox</h3>
                     <p class="text-white/80 text-xs line-clamp-2">File e documenti</p>
                 </div>
 
-                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Community Hub" onclick="goToCommunity()" onkeydown="keyActivate(event,'goToCommunity')">
+                <div class="tool-card category-community p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Community Hub" onclick="goToCommunity()" onkeydown="keyActivate(event,'goToCommunity')">
                     <div class="text-3xl mb-2">👥</div>
                     <h3 class="text-white text-sm font-bold mb-1">Community Hub</h3>
                     <p class="text-white/80 text-xs line-clamp-2">Forum e discussioni</p>
                 </div>
 
-                <div class="tool-card p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Assistenza" onclick="goToAssistenza()" onkeydown="keyActivate(event,'goToAssistenza')">
+                <div class="tool-card category-support p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Assistenza" onclick="goToAssistenza()" onkeydown="keyActivate(event,'goToAssistenza')">
                     <div class="text-3xl mb-2">🛟</div>
                     <h3 class="text-white text-sm font-bold mb-1">Assistenza</h3>
                     <p class="text-white/80 text-xs line-clamp-2">Supporto</p>
@@ -1003,6 +1207,12 @@
         // Mobile menu state
         let mobileMenuOpen = false;
 
+        // CTA Banner state
+        let ctaBannerTimer = null;
+        let ctaBannerRecurringTimer = null;
+        let ctaBannerDismissed = false;
+        let ctaBannerShown = false;
+
         // CTA Analytics tracking
         function trackCtaClick() {
             try {
@@ -1010,12 +1220,72 @@
                 window.dataLayer.push({
                     event: 'cta_sindacato_click',
                     page: 'home',
-                    cta_location: 'vuoi_di_piu_section',
+                    cta_location: 'popup_banner',
                     ts: Date.now()
                 });
             } catch (err) { 
                 console.log('Analytics tracking non disponibile');
             }
+        }
+
+        // CTA Banner Management
+        function showBanner() {
+            if (ctaBannerDismissed) return;
+            
+            const overlay = document.getElementById('ctaBannerOverlay');
+            if (overlay) {
+                overlay.classList.add('show');
+                ctaBannerShown = true;
+                
+                // Add subtle animation to tool cards when banner shows
+                document.querySelectorAll('.tool-card').forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('animate-bounce');
+                        setTimeout(() => card.classList.remove('animate-bounce'), 800);
+                    }, index * 100);
+                });
+            }
+        }
+
+        function closeBanner() {
+            const overlay = document.getElementById('ctaBannerOverlay');
+            if (overlay) {
+                overlay.classList.remove('show');
+                ctaBannerDismissed = true;
+                
+                // Clear existing timers
+                if (ctaBannerTimer) {
+                    clearTimeout(ctaBannerTimer);
+                    ctaBannerTimer = null;
+                }
+                if (ctaBannerRecurringTimer) {
+                    clearTimeout(ctaBannerRecurringTimer);
+                    ctaBannerRecurringTimer = null;
+                }
+                
+                // Set up recurring timer for 10 minutes
+                ctaBannerRecurringTimer = setTimeout(() => {
+                    ctaBannerDismissed = false;
+                    ctaBannerShown = false;
+                    showBanner();
+                    
+                    // Set up next recurring cycle
+                    setRecurringBanner();
+                }, 10 * 60 * 1000); // 10 minutes
+            }
+        }
+
+        function setRecurringBanner() {
+            if (ctaBannerRecurringTimer) {
+                clearTimeout(ctaBannerRecurringTimer);
+            }
+            
+            ctaBannerRecurringTimer = setTimeout(() => {
+                if (!ctaBannerDismissed && !ctaBannerShown) {
+                    showBanner();
+                }
+                setRecurringBanner(); // Continue the cycle
+            }, 10 * 60 * 1000); // 10 minutes
         }
 
         // Attivazione via tastiera per "role=button"
@@ -1024,6 +1294,30 @@
                 e.preventDefault();
                 if (typeof window[fnName] === 'function') window[fnName](...args);
             }
+        }
+
+        // Enhanced mobile interactions
+        function addMobileInteractions() {
+            // Add stagger animations to tool cards
+            const toolCards = document.querySelectorAll('.tool-card');
+            toolCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                
+                // Add touch feedback
+                card.addEventListener('touchstart', () => {
+                    card.style.transform = 'scale(0.95)';
+                }, { passive: true });
+                
+                card.addEventListener('touchend', () => {
+                    card.style.transform = '';
+                }, { passive: true });
+            });
+
+            // Enhanced stats cards animation
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.15}s`;
+            });
         }
 
         // === INIZIALIZZAZIONE ===
@@ -1043,6 +1337,8 @@
             setupEventListeners();
             setupLazySections();
             setupMobileMenu();
+            setupCtaBanner();
+            addMobileInteractions();
 
             // Carica dati principali
             await Promise.all([
@@ -1054,8 +1350,38 @@
             // Avvia refresh loop
             startRefreshLoop();
             
-            console.log('✅ Dashboard Brand Identity 2025 - Mobile-First Ready with Virgilio AI Assistant');
+            console.log('✅ Dashboard Brand Identity 2025 - Mobile-First Ready with Enhanced CTA Banner and Virgilio AI Assistant');
         });
+
+        // Setup CTA Banner
+        function setupCtaBanner() {
+            // Set initial timer for 7 seconds
+            ctaBannerTimer = setTimeout(() => {
+                if (!ctaBannerDismissed && !ctaBannerShown) {
+                    showBanner();
+                }
+            }, 7000);
+
+            // Set up recurring timer system
+            setRecurringBanner();
+
+            // Close button event
+            document.getElementById('ctaBannerClose')?.addEventListener('click', closeBanner);
+
+            // Close on overlay click (only the overlay, not the content)
+            document.getElementById('ctaBannerOverlay')?.addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) {
+                    closeBanner();
+                }
+            });
+
+            // Close on escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && document.getElementById('ctaBannerOverlay')?.classList.contains('show')) {
+                    closeBanner();
+                }
+            });
+        }
 
         // === MOBILE MENU ===
         function setupMobileMenu() {
@@ -1210,8 +1536,25 @@
         }
         
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden) stopRefreshLoop();
-            else startRefreshLoop();
+            if (document.hidden) {
+                stopRefreshLoop();
+                // Pause CTA banner timers when page is hidden
+                if (ctaBannerTimer) {
+                    clearTimeout(ctaBannerTimer);
+                    ctaBannerTimer = null;
+                }
+                if (ctaBannerRecurringTimer) {
+                    clearTimeout(ctaBannerRecurringTimer);
+                    ctaBannerRecurringTimer = null;
+                }
+            } else {
+                startRefreshLoop();
+                // Resume CTA banner cycle when page is visible
+                if (!ctaBannerDismissed && !ctaBannerShown) {
+                    ctaBannerTimer = setTimeout(showBanner, 7000);
+                }
+                setRecurringBanner();
+            }
         });
 
         // === DATI SEZIONI ===
@@ -1814,7 +2157,7 @@
             }[s])); 
         }
 
-        console.log('✅ MyApp by SIM Carabinieri - Brand Identity 2025 - Mobile-First Dashboard Ready with Virgilio AI Assistant');
+        console.log('✅ MyApp by SIM Carabinieri - Brand Identity 2025 - by G/A');
     </script>
 </body>
 </html>
