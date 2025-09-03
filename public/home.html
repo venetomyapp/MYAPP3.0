@@ -56,9 +56,10 @@
         }
     </script>
     
-    <!-- STILI BRAND IDENTITY 2025 -->
+    <!-- STILI BRAND IDENTITY 2025 - GRADIENTE INVERTITO -->
     <style>
         :root {
+            /* GRADIENTE PRINCIPALE INVERTITO: DA ROSSO SCURO (BASE) A BLU (ALTO) */
             --gradient-main: linear-gradient(180deg, #0a0a2e 0%, #1a1a5a 20%, #2d1b69 40%, #6a1b9a 60%, #c2185b 80%, #e53935 100%);
             --gradient-button: linear-gradient(135deg, #2d1b69 0%, #6a1b9a 50%, #e53935 100%);
             --gradient-accent: linear-gradient(135deg, #0a0a2e 0%, #6a1b9a 50%, #e53935 100%);
@@ -88,9 +89,10 @@
         }
 
         body {
-            background: var(--gradient-main);
+            /* GRADIENTE CORRETTO: BLU in alto, ROSSO SCURO in fondo */
+            background: linear-gradient(180deg, #0a0a2e 0%, #1e3a8a 15%, #1e40af 35%, #dc2626 65%, #b91c1c 80%, #8b1538 100%);
             background-size: 400% 400%;
-            animation: aurora 20s ease infinite;
+            animation: aurora 25s ease infinite;
             min-height: 100vh;
             min-height: 100dvh;
             overflow-x: hidden;
@@ -166,17 +168,18 @@
             text-shadow: 0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1); 
         }
 
-        /* Glass effects */
+        /* Glass effects migliorati */
         .glass-morphism { 
-            background: rgba(255,255,255,.08); 
-            backdrop-filter: blur(12px); 
-            border: 1px solid rgba(255,255,255,.20); 
-            box-shadow: 0 8px 32px rgba(31,38,135,.25); 
+            background: rgba(255,255,255,.12); 
+            backdrop-filter: blur(16px); 
+            border: 2px solid rgba(255,255,255,.35); 
+            box-shadow: 0 8px 32px rgba(31,38,135,.35), inset 0 1px 0 rgba(255,255,255,.4); 
         }
         .glass-card { 
-            background: rgba(255,255,255,.95); 
-            backdrop-filter: blur(16px); 
-            border: 1px solid rgba(0,0,0,.06); 
+            background: rgba(255,255,255,.98); 
+            backdrop-filter: blur(20px); 
+            border: 2px solid rgba(255,255,255,.8); 
+            box-shadow: 0 12px 40px rgba(0,0,0,.15), inset 0 1px 0 rgba(255,255,255,.6);
         }
 
         /* Buttons AURORA & CYBER - Brand Identity 2025 */
@@ -254,9 +257,9 @@
             }
         }
 
-        /* Enhanced Tool Cards with High Contrast Colors - Red to Blue Gradient System */
+        /* Enhanced Tool Cards con BORDI PIÙ VISIBILI - Red to Blue Gradient System */
         .tool-card {
-            border: 3px solid rgba(255,255,255,0.4);
+            border: 3px solid rgba(255,255,255,0.6);
             border-radius: 20px;
             transition: all .3s cubic-bezier(.4,0,.2,1);
             will-change: transform;
@@ -264,63 +267,63 @@
             min-height: 120px;
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(24px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 2px 0 rgba(255, 255, 255, 0.3);
         }
 
-        /* Tool Card Categories with High Contrast Red-to-Blue Gradient System */
+        /* Tool Card Categories con BORDI ANCORA PIÙ EVIDENTI */
         .tool-card.category-requests {
-            background: linear-gradient(135deg, rgba(139, 34, 82, 0.85), rgba(127, 29, 29, 0.75));
-            border: 3px solid rgba(239, 68, 68, 0.6);
-            box-shadow: 0 8px 32px rgba(139, 34, 82, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, rgba(139, 34, 82, 0.92), rgba(127, 29, 29, 0.85));
+            border: 4px solid rgba(239, 68, 68, 0.8);
+            box-shadow: 0 12px 40px rgba(139, 34, 82, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4);
         }
 
         .tool-card.category-profile {
-            background: linear-gradient(135deg, rgba(153, 27, 27, 0.85), rgba(185, 28, 28, 0.75));
-            border: 3px solid rgba(239, 68, 68, 0.7);
-            box-shadow: 0 8px 32px rgba(153, 27, 27, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, rgba(153, 27, 27, 0.92), rgba(185, 28, 28, 0.85));
+            border: 4px solid rgba(239, 68, 68, 0.9);
+            box-shadow: 0 12px 40px rgba(153, 27, 27, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4);
         }
 
         .tool-card.category-tools {
-            background: linear-gradient(135deg, rgba(180, 83, 9, 0.85), rgba(194, 65, 12, 0.75));
-            border: 3px solid rgba(251, 146, 60, 0.6);
-            box-shadow: 0 8px 32px rgba(180, 83, 9, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, rgba(180, 83, 9, 0.92), rgba(194, 65, 12, 0.85));
+            border: 4px solid rgba(251, 146, 60, 0.8);
+            box-shadow: 0 12px 40px rgba(180, 83, 9, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4);
         }
 
         .tool-card.category-ai {
-            background: linear-gradient(135deg, rgba(88, 28, 135, 0.85), rgba(109, 40, 217, 0.75));
-            border: 3px solid rgba(147, 51, 234, 0.6);
-            box-shadow: 0 8px 32px rgba(88, 28, 135, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, rgba(88, 28, 135, 0.92), rgba(109, 40, 217, 0.85));
+            border: 4px solid rgba(147, 51, 234, 0.8);
+            box-shadow: 0 12px 40px rgba(88, 28, 135, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4);
         }
 
         .tool-card.category-contacts {
-            background: linear-gradient(135deg, rgba(30, 58, 138, 0.85), rgba(29, 78, 216, 0.75));
-            border: 3px solid rgba(59, 130, 246, 0.6);
-            box-shadow: 0 8px 32px rgba(30, 58, 138, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.92), rgba(29, 78, 216, 0.85));
+            border: 4px solid rgba(59, 130, 246, 0.8);
+            box-shadow: 0 12px 40px rgba(30, 58, 138, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4);
         }
 
         .tool-card.category-deals {
-            background: linear-gradient(135deg, rgba(12, 74, 110, 0.85), rgba(14, 116, 144, 0.75));
-            border: 3px solid rgba(34, 197, 94, 0.6);
-            box-shadow: 0 8px 32px rgba(12, 74, 110, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, rgba(12, 74, 110, 0.92), rgba(14, 116, 144, 0.85));
+            border: 4px solid rgba(34, 197, 94, 0.8);
+            box-shadow: 0 12px 40px rgba(12, 74, 110, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4);
         }
 
         .tool-card.category-files {
-            background: linear-gradient(135deg, rgba(21, 128, 61, 0.85), rgba(22, 163, 74, 0.75));
-            border: 3px solid rgba(34, 197, 94, 0.7);
-            box-shadow: 0 8px 32px rgba(21, 128, 61, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, rgba(21, 128, 61, 0.92), rgba(22, 163, 74, 0.85));
+            border: 4px solid rgba(34, 197, 94, 0.9);
+            box-shadow: 0 12px 40px rgba(21, 128, 61, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4);
         }
 
         .tool-card.category-community {
-            background: linear-gradient(135deg, rgba(23, 37, 84, 0.85), rgba(30, 58, 138, 0.75));
-            border: 3px solid rgba(59, 130, 246, 0.7);
-            box-shadow: 0 8px 32px rgba(23, 37, 84, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, rgba(23, 37, 84, 0.92), rgba(30, 58, 138, 0.85));
+            border: 4px solid rgba(59, 130, 246, 0.9);
+            box-shadow: 0 12px 40px rgba(23, 37, 84, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4);
         }
 
         .tool-card.category-support {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.75));
-            border: 3px solid rgba(100, 116, 139, 0.6);
-            box-shadow: 0 8px 32px rgba(15, 23, 42, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.85));
+            border: 4px solid rgba(100, 116, 139, 0.8);
+            box-shadow: 0 12px 40px rgba(15, 23, 42, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4);
         }
 
         .tool-card::before {
@@ -346,50 +349,50 @@
         @media (hover: hover) and (pointer: fine) {
             .tool-card:hover {
                 transform: translateY(-8px) scale(1.05);
-                border-width: 4px;
+                border-width: 5px;
             }
 
             .tool-card.category-requests:hover { 
-                box-shadow: 0 25px 50px rgba(139, 34, 82, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-                border-color: rgba(239, 68, 68, 0.9);
+                box-shadow: 0 30px 60px rgba(139, 34, 82, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5);
+                border-color: rgba(239, 68, 68, 1);
             }
             .tool-card.category-profile:hover { 
-                box-shadow: 0 25px 50px rgba(153, 27, 27, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-                border-color: rgba(239, 68, 68, 0.9);
+                box-shadow: 0 30px 60px rgba(153, 27, 27, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5);
+                border-color: rgba(239, 68, 68, 1);
             }
             .tool-card.category-tools:hover { 
-                box-shadow: 0 25px 50px rgba(180, 83, 9, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-                border-color: rgba(251, 146, 60, 0.9);
+                box-shadow: 0 30px 60px rgba(180, 83, 9, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5);
+                border-color: rgba(251, 146, 60, 1);
             }
             .tool-card.category-ai:hover { 
-                box-shadow: 0 25px 50px rgba(88, 28, 135, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-                border-color: rgba(147, 51, 234, 0.9);
+                box-shadow: 0 30px 60px rgba(88, 28, 135, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5);
+                border-color: rgba(147, 51, 234, 1);
             }
             .tool-card.category-contacts:hover { 
-                box-shadow: 0 25px 50px rgba(30, 58, 138, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-                border-color: rgba(59, 130, 246, 0.9);
+                box-shadow: 0 30px 60px rgba(30, 58, 138, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5);
+                border-color: rgba(59, 130, 246, 1);
             }
             .tool-card.category-deals:hover { 
-                box-shadow: 0 25px 50px rgba(12, 74, 110, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-                border-color: rgba(34, 197, 94, 0.9);
+                box-shadow: 0 30px 60px rgba(12, 74, 110, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5);
+                border-color: rgba(34, 197, 94, 1);
             }
             .tool-card.category-files:hover { 
-                box-shadow: 0 25px 50px rgba(21, 128, 61, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-                border-color: rgba(34, 197, 94, 0.9);
+                box-shadow: 0 30px 60px rgba(21, 128, 61, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5);
+                border-color: rgba(34, 197, 94, 1);
             }
             .tool-card.category-community:hover { 
-                box-shadow: 0 25px 50px rgba(23, 37, 84, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-                border-color: rgba(59, 130, 246, 0.9);
+                box-shadow: 0 30px 60px rgba(23, 37, 84, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5);
+                border-color: rgba(59, 130, 246, 1);
             }
             .tool-card.category-support:hover { 
-                box-shadow: 0 25px 50px rgba(15, 23, 42, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-                border-color: rgba(100, 116, 139, 0.9);
+                box-shadow: 0 30px 60px rgba(15, 23, 42, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5);
+                border-color: rgba(100, 116, 139, 1);
             }
         }
 
         .action-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.08));
-            border: 1.5px solid rgba(255,255,255,0.25);
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.10));
+            border: 2px solid rgba(255,255,255,0.35);
             border-radius: 20px;
             transition: all .2s ease;
             will-change: transform;
@@ -397,6 +400,7 @@
             min-height: 120px;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.3);
         }
 
         .action-card::before {
@@ -417,20 +421,21 @@
         @media (hover: hover) and (pointer: fine) {
             .action-card:hover {
                 transform: translateY(-3px);
-                box-shadow: 0 12px 24px rgba(0,0,0,0.22);
-                border-color: rgba(194, 24, 91, 0.4);
-                background: linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.10));
+                box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+                border-color: rgba(194, 24, 91, 0.5);
+                background: linear-gradient(135deg, rgba(255,255,255,0.20), rgba(255,255,255,0.14));
             }
         }
 
-        /* Mobile optimized stats */
+        /* Mobile optimized stats migliorati */
         .stat-card { 
-            background: linear-gradient(135deg, rgba(255,255,255,.15), rgba(255,255,255,.05)); 
-            backdrop-filter: blur(15px); 
-            border: 1px solid rgba(255,255,255,.22); 
+            background: linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.08)); 
+            backdrop-filter: blur(18px); 
+            border: 2px solid rgba(255,255,255,.30); 
             border-radius: 24px; 
             transition: all .3s cubic-bezier(.4,0,.2,1);
             min-height: 100px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.25);
         }
 
         .stat-card:active {
@@ -440,20 +445,21 @@
         @media (hover: hover) and (pointer: fine) { 
             .stat-card:hover { 
                 transform: translateY(-3px) scale(1.02); 
-                background: linear-gradient(135deg, rgba(255,255,255,.25), rgba(255,255,255,.12)); 
-                box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+                background: linear-gradient(135deg, rgba(255,255,255,.30), rgba(255,255,255,.15)); 
+                box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+                border-color: rgba(255,255,255,0.45);
             } 
         }
 
-        /* CTA BANNER POPUP STYLES */
+        /* CTA BANNER POPUP STYLES MIGLIORATI */
         .cta-banner-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(6px);
             z-index: 9999;
             display: flex;
             align-items: flex-end;
@@ -461,7 +467,7 @@
             padding: 0;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.4s cubic-bezier(.4,0,.2,1);
+            transition: all 0.3s cubic-bezier(.4,0,.2,1);
             padding-bottom: max(1rem, var(--safe-area-inset-bottom));
         }
 
@@ -471,16 +477,16 @@
         }
 
         .cta-banner-content {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(24px);
+            border: 2px solid rgba(255, 255, 255, 0.4);
             border-radius: 24px 24px 0 0;
             width: 100%;
-            max-width: 500px;
+            max-width: 480px;
             margin: 0 16px;
             transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(.4,0,.2,1);
-            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+            box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.25);
             position: relative;
             overflow: hidden;
         }
@@ -489,14 +495,15 @@
             transform: translateY(0);
         }
 
+        /* PULSANTE DI CHIUSURA PIÙ VISIBILE E ACCESSIBILE */
         .cta-banner-close {
             position: absolute;
-            top: 16px;
-            right: 16px;
-            width: 36px;
-            height: 36px;
-            border: none;
-            background: rgba(0, 0, 0, 0.1);
+            top: 12px;
+            right: 12px;
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -505,15 +512,35 @@
             transition: all 0.2s ease;
             backdrop-filter: blur(10px);
             z-index: 10;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .cta-banner-close:hover {
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            border-color: rgba(239, 68, 68, 0.5);
             transform: scale(1.1);
         }
 
         .cta-banner-close:active {
             transform: scale(0.95);
+        }
+
+        /* AGGIUNTA: Pulsante "Chiudi" testuale per maggiore accessibilità */
+        .cta-banner-dismiss {
+            background: transparent;
+            color: #6b7280;
+            border: 1px solid #d1d5db;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .cta-banner-dismiss:hover {
+            background: #f3f4f6;
+            color: #374151;
         }
 
         /* Focus states */
@@ -539,11 +566,11 @@
             position: absolute; 
             top: calc(100% + 8px); 
             right: 0; 
-            background: rgba(255,255,255,.96); 
-            backdrop-filter: blur(20px); 
-            border: 1px solid rgba(0,0,0,.06); 
+            background: rgba(255,255,255,.98); 
+            backdrop-filter: blur(24px); 
+            border: 2px solid rgba(255,255,255,.8); 
             border-radius: 20px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,.18); 
+            box-shadow: 0 20px 50px rgba(0,0,0,.2); 
             width: min(350px, calc(100vw - 32px)); 
             max-height: 60vh; 
             overflow-y: auto; 
@@ -785,11 +812,11 @@
 
 <body class="flex flex-col min-h-screen font-sans">
 
-    <!-- CTA BANNER POPUP -->
+    <!-- CTA BANNER POPUP MIGLIORATO -->
     <div id="ctaBannerOverlay" class="cta-banner-overlay" role="dialog" aria-labelledby="ctaBannerTitle" aria-modal="true">
         <div class="cta-banner-content">
             <button id="ctaBannerClose" class="cta-banner-close" aria-label="Chiudi banner">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
                 </svg>
             </button>
@@ -821,6 +848,11 @@
                                 <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
                             </svg>
                         </a>
+                        
+                        <!-- PULSANTE CHIUDI PIÙ ACCESSIBILE -->
+                        <button onclick="closeBanner()" class="cta-banner-dismiss">
+                            Non ora, grazie
+                        </button>
                         
                         <div class="text-center">
                             <div class="text-gray-600 text-sm">
@@ -907,7 +939,7 @@
                             <div id="userWelcome" class="font-semibold text-sm">Caricamento...</div>
                             <div id="userRole" class="text-xs opacity-80">Utente</div>
                         </div>
-                        <div id="userAvatar" class="w-9 h-9 bg-gradient-to-br from-magenta to-cyan rounded-full flex items-center justify-content text-white font-bold text-sm border-2 border-white/20">U</div>
+                        <div id="userAvatar" class="w-9 h-9 bg-gradient-to-br from-magenta to-cyan rounded-full flex items-center justify-center text-white font-bold text-sm border-2 border-white/20">U</div>
                     </div>
 
                     <!-- Logout Button (Hidden on mobile, show hamburger instead) -->
@@ -1037,7 +1069,7 @@
             </div>
         </section>
 
-        <!-- TOOLS SECTION - Mobile Grid with Enhanced Colors -->
+        <!-- TOOLS SECTION - Mobile Grid con BORDI EVIDENZIATI -->
         <section class="mobile-section animate-slide-up">
             <div class="flex items-center gap-3 mb-4">
                 <!-- M LOGO SMALL -->
@@ -1244,7 +1276,7 @@
         // Mobile menu state
         let mobileMenuOpen = false;
 
-        // CTA Banner state
+        // CTA Banner state - TIMER PIÙ LUNGO (20 secondi)
         let ctaBannerTimer = null;
         let ctaBannerRecurringTimer = null;
         let ctaBannerDismissed = false;
@@ -1265,7 +1297,7 @@
             }
         }
 
-        // CTA Banner Management
+        // CTA Banner Management MIGLIORATO
         function showBanner() {
             if (ctaBannerDismissed) return;
             
@@ -1300,7 +1332,7 @@
                     ctaBannerRecurringTimer = null;
                 }
                 
-                // Set up recurring timer for 10 minutes
+                // Set up recurring timer for 15 minutes (increased from 10)
                 ctaBannerRecurringTimer = setTimeout(() => {
                     ctaBannerDismissed = false;
                     ctaBannerShown = false;
@@ -1308,7 +1340,7 @@
                     
                     // Set up next recurring cycle
                     setRecurringBanner();
-                }, 10 * 60 * 1000); // 10 minutes
+                }, 15 * 60 * 1000); // 15 minutes
             }
         }
 
@@ -1322,7 +1354,7 @@
                     showBanner();
                 }
                 setRecurringBanner(); // Continue the cycle
-            }, 10 * 60 * 1000); // 10 minutes
+            }, 15 * 60 * 1000); // 15 minutes
         }
 
         // Attivazione via tastiera per "role=button"
@@ -1387,17 +1419,17 @@
             // Avvia refresh loop
             startRefreshLoop();
             
-            console.log('✅ Dashboard Brand Identity 2025 - Mobile-First Ready with Enhanced CTA Banner and Virgilio AI Assistant');
+            console.log('✅ Dashboard Brand Identity 2025 - Mobile-First Ready with Enhanced CTA Banner and Improved UX');
         });
 
-        // Setup CTA Banner
+        // Setup CTA Banner MIGLIORATO
         function setupCtaBanner() {
-            // Set initial timer for 7 seconds
+            // Set initial timer for 20 seconds (increased from 7)
             ctaBannerTimer = setTimeout(() => {
                 if (!ctaBannerDismissed && !ctaBannerShown) {
                     showBanner();
                 }
-            }, 7000);
+            }, 20000); // 20 seconds
 
             // Set up recurring timer system
             setRecurringBanner();
@@ -1418,6 +1450,19 @@
                     closeBanner();
                 }
             });
+
+            // Close banner if user scrolls significantly (improved UX)
+            let lastScrollY = window.scrollY;
+            window.addEventListener('scroll', () => {
+                const currentScrollY = window.scrollY;
+                if (Math.abs(currentScrollY - lastScrollY) > 300) {
+                    const overlay = document.getElementById('ctaBannerOverlay');
+                    if (overlay?.classList.contains('show')) {
+                        closeBanner();
+                    }
+                }
+                lastScrollY = currentScrollY;
+            }, { passive: true });
         }
 
         // === MOBILE MENU ===
@@ -1588,7 +1633,7 @@
                 startRefreshLoop();
                 // Resume CTA banner cycle when page is visible
                 if (!ctaBannerDismissed && !ctaBannerShown) {
-                    ctaBannerTimer = setTimeout(showBanner, 7000);
+                    ctaBannerTimer = setTimeout(showBanner, 20000); // 20 seconds
                 }
                 setRecurringBanner();
             }
@@ -2194,7 +2239,7 @@
             }[s])); 
         }
 
-        console.log('✅ MyApp by SIM Carabinieri - Brand Identity 2025 - Enhanced Mobile-First Dashboard Ready with CTA Banner System and Virgilio AI Assistant');
+        console.log('✅ MyApp by SIM Carabinieri - Brand Identity 2025 - Enhanced Mobile-First Dashboard Ready with Improved CTA Banner, Inverted Gradient, and High-Contrast Tool Cards');
     </script>
 </body>
 </html>
