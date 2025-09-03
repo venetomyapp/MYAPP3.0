@@ -254,9 +254,9 @@
             }
         }
 
-        /* Enhanced Tool Cards with Category Colors */
+        /* Enhanced Tool Cards with High Contrast Colors - Red to Blue Gradient System */
         .tool-card {
-            border: 1.5px solid rgba(255,255,255,0.25);
+            border: 3px solid rgba(255,255,255,0.4);
             border-radius: 20px;
             transition: all .3s cubic-bezier(.4,0,.2,1);
             will-change: transform;
@@ -264,53 +264,63 @@
             min-height: 120px;
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
-        /* Tool Card Categories */
+        /* Tool Card Categories with High Contrast Red-to-Blue Gradient System */
         .tool-card.category-requests {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(29, 78, 216, 0.1));
-            border-color: rgba(59, 130, 246, 0.3);
+            background: linear-gradient(135deg, rgba(139, 34, 82, 0.85), rgba(127, 29, 29, 0.75));
+            border: 3px solid rgba(239, 68, 68, 0.6);
+            box-shadow: 0 8px 32px rgba(139, 34, 82, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
 
         .tool-card.category-profile {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.1));
-            border-color: rgba(16, 185, 129, 0.3);
+            background: linear-gradient(135deg, rgba(153, 27, 27, 0.85), rgba(185, 28, 28, 0.75));
+            border: 3px solid rgba(239, 68, 68, 0.7);
+            box-shadow: 0 8px 32px rgba(153, 27, 27, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
 
         .tool-card.category-tools {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.1));
-            border-color: rgba(245, 158, 11, 0.3);
+            background: linear-gradient(135deg, rgba(180, 83, 9, 0.85), rgba(194, 65, 12, 0.75));
+            border: 3px solid rgba(251, 146, 60, 0.6);
+            box-shadow: 0 8px 32px rgba(180, 83, 9, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
 
         .tool-card.category-ai {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(124, 58, 237, 0.1));
-            border-color: rgba(139, 92, 246, 0.3);
+            background: linear-gradient(135deg, rgba(88, 28, 135, 0.85), rgba(109, 40, 217, 0.75));
+            border: 3px solid rgba(147, 51, 234, 0.6);
+            box-shadow: 0 8px 32px rgba(88, 28, 135, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
 
         .tool-card.category-contacts {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.1));
-            border-color: rgba(239, 68, 68, 0.3);
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.85), rgba(29, 78, 216, 0.75));
+            border: 3px solid rgba(59, 130, 246, 0.6);
+            box-shadow: 0 8px 32px rgba(30, 58, 138, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
 
         .tool-card.category-deals {
-            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(8, 145, 178, 0.1));
-            border-color: rgba(6, 182, 212, 0.3);
+            background: linear-gradient(135deg, rgba(12, 74, 110, 0.85), rgba(14, 116, 144, 0.75));
+            border: 3px solid rgba(34, 197, 94, 0.6);
+            box-shadow: 0 8px 32px rgba(12, 74, 110, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
 
         .tool-card.category-files {
-            background: linear-gradient(135deg, rgba(132, 204, 22, 0.15), rgba(101, 163, 13, 0.1));
-            border-color: rgba(132, 204, 22, 0.3);
+            background: linear-gradient(135deg, rgba(21, 128, 61, 0.85), rgba(22, 163, 74, 0.75));
+            border: 3px solid rgba(34, 197, 94, 0.7);
+            box-shadow: 0 8px 32px rgba(21, 128, 61, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
 
         .tool-card.category-community {
-            background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(234, 88, 12, 0.1));
-            border-color: rgba(249, 115, 22, 0.3);
+            background: linear-gradient(135deg, rgba(23, 37, 84, 0.85), rgba(30, 58, 138, 0.75));
+            border: 3px solid rgba(59, 130, 246, 0.7);
+            box-shadow: 0 8px 32px rgba(23, 37, 84, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
 
         .tool-card.category-support {
-            background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(219, 39, 119, 0.1));
-            border-color: rgba(236, 72, 153, 0.3);
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.75));
+            border: 3px solid rgba(100, 116, 139, 0.6);
+            box-shadow: 0 8px 32px rgba(15, 23, 42, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
 
         .tool-card::before {
@@ -335,19 +345,46 @@
 
         @media (hover: hover) and (pointer: fine) {
             .tool-card:hover {
-                transform: translateY(-5px) scale(1.02);
-                box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+                transform: translateY(-8px) scale(1.05);
+                border-width: 4px;
             }
 
-            .tool-card.category-requests:hover { box-shadow: 0 20px 40px rgba(45, 21, 85, 0.25); }
-            .tool-card.category-profile:hover { box-shadow: 0 20px 40px rgba(74, 36, 114, 0.25); }
-            .tool-card.category-tools:hover { box-shadow: 0 20px 40px rgba(107, 53, 143, 0.25); }
-            .tool-card.category-ai:hover { box-shadow: 0 20px 40px rgba(139, 74, 156, 0.25); }
-            .tool-card.category-contacts:hover { box-shadow: 0 20px 40px rgba(168, 87, 138, 0.25); }
-            .tool-card.category-deals:hover { box-shadow: 0 20px 40px rgba(26, 11, 61, 0.25); }
-            .tool-card.category-files:hover { box-shadow: 0 20px 40px rgba(74, 36, 114, 0.25); }
-            .tool-card.category-community:hover { box-shadow: 0 20px 40px rgba(107, 53, 143, 0.25); }
-            .tool-card.category-support:hover { box-shadow: 0 20px 40px rgba(45, 21, 85, 0.25); }
+            .tool-card.category-requests:hover { 
+                box-shadow: 0 25px 50px rgba(139, 34, 82, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+                border-color: rgba(239, 68, 68, 0.9);
+            }
+            .tool-card.category-profile:hover { 
+                box-shadow: 0 25px 50px rgba(153, 27, 27, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+                border-color: rgba(239, 68, 68, 0.9);
+            }
+            .tool-card.category-tools:hover { 
+                box-shadow: 0 25px 50px rgba(180, 83, 9, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+                border-color: rgba(251, 146, 60, 0.9);
+            }
+            .tool-card.category-ai:hover { 
+                box-shadow: 0 25px 50px rgba(88, 28, 135, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+                border-color: rgba(147, 51, 234, 0.9);
+            }
+            .tool-card.category-contacts:hover { 
+                box-shadow: 0 25px 50px rgba(30, 58, 138, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+                border-color: rgba(59, 130, 246, 0.9);
+            }
+            .tool-card.category-deals:hover { 
+                box-shadow: 0 25px 50px rgba(12, 74, 110, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+                border-color: rgba(34, 197, 94, 0.9);
+            }
+            .tool-card.category-files:hover { 
+                box-shadow: 0 25px 50px rgba(21, 128, 61, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+                border-color: rgba(34, 197, 94, 0.9);
+            }
+            .tool-card.category-community:hover { 
+                box-shadow: 0 25px 50px rgba(23, 37, 84, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+                border-color: rgba(59, 130, 246, 0.9);
+            }
+            .tool-card.category-support:hover { 
+                box-shadow: 0 25px 50px rgba(15, 23, 42, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+                border-color: rgba(100, 116, 139, 0.9);
+            }
         }
 
         .action-card {
