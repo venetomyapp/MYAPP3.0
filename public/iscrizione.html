@@ -469,6 +469,169 @@
 
         /*
          ******************************************************
+         * FUTURE SECTION - OTTIMIZZATA PER MOBILE
+         ******************************************************
+         */
+
+        .future-section {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: var(--color-white);
+            border-radius: var(--border-radius-card);
+            padding: 80px 50px;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .future-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-gold), #ffed4e, var(--color-gold));
+            animation: shimmer 2s ease-in-out infinite;
+        }
+
+        .future-main-title {
+            font-size: 2.8em;
+            font-weight: 800;
+            line-height: 1.2;
+            margin: 0 0 30px 0;
+            color: var(--color-white);
+            letter-spacing: -0.02em;
+            position: relative;
+            z-index: 2;
+        }
+
+        .future-content-wrapper {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px auto;
+            max-width: 900px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .pension-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 35px;
+            margin: 40px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .pension-icon {
+            font-size: 2.8em;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .pension-title {
+            color: var(--color-white);
+            font-size: 1.4em;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+            line-height: 1.3;
+        }
+
+        .pension-subtitle {
+            color: var(--color-gold);
+            font-size: 0.95em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .benefits-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+            font-size: 1em;
+            line-height: 1.7;
+        }
+
+        .benefits-list li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .benefits-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--color-gold);
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .vision-box {
+            background: rgba(255, 215, 0, 0.2);
+            border: 2px solid var(--color-gold);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .vision-title {
+            color: var(--color-gold);
+            font-size: 1.4em;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+        }
+
+        .vision-text {
+            font-size: 1.1em;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .future-inspiring-text {
+            font-size: 1.2em;
+            font-style: italic;
+            opacity: 0.9;
+            margin: 30px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .future-final-cta {
+            background: linear-gradient(135deg, var(--color-gold), #ffed4e);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 40px 0 0 0;
+            color: var(--color-text-dark);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .future-final-cta-title {
+            font-size: 1.8em;
+            font-weight: 900;
+            margin: 0;
+            line-height: 1.3;
+            text-shadow: none;
+        }
+
+        .future-cta-highlight {
+            color: var(--color-blue);
+            display: block;
+            margin-top: 5px;
+        }
+
+        /*
+         ******************************************************
          * 4. ANIMAZIONI MODERNE
          ******************************************************
          */
@@ -531,6 +694,17 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /*
          ******************************************************
          * 5. MEDIA QUERIES RESPONSIVE - COMPLETO
@@ -543,7 +717,7 @@
                 max-width: 95%;
                 padding: 0 20px;
             }
-            .section {
+            .section, .future-section {
                 padding: 50px;
             }
             .hero-section h1 {
@@ -575,7 +749,7 @@
                 font-size: 1.2em;
                 line-height: 1.4;
             }
-            .section {
+            .section, .future-section {
                 padding: 35px;
                 margin-bottom: 20px;
             }
@@ -628,6 +802,56 @@
             .main-footer {
                 padding: 35px;
             }
+
+            /* Future Section Mobile Optimizations */
+            .future-main-title {
+                font-size: 1.8em;
+                line-height: 1.2;
+                margin-bottom: 20px;
+            }
+            .future-content-wrapper {
+                padding: 25px 20px;
+                margin: 25px 0;
+            }
+            .pension-card {
+                padding: 25px 20px;
+                margin: 30px 0;
+            }
+            .pension-icon {
+                font-size: 2.2em;
+                margin-bottom: 15px;
+            }
+            .pension-title {
+                font-size: 1.3em;
+            }
+            .pension-subtitle {
+                font-size: 0.9em;
+            }
+            .benefits-list {
+                font-size: 0.95em;
+            }
+            .benefits-list li {
+                padding: 10px 0;
+            }
+            .vision-box {
+                padding: 20px;
+                margin: 20px 0;
+            }
+            .vision-title {
+                font-size: 1.2em;
+            }
+            .vision-text {
+                font-size: 1em;
+                line-height: 1.5;
+            }
+            .future-final-cta {
+                padding: 20px;
+                margin: 25px 0 0 0;
+            }
+            .future-final-cta-title {
+                font-size: 1.4em;
+                line-height: 1.3;
+            }
         }
 
         /* Mobile landscape e tablet small */
@@ -642,7 +866,7 @@
             .hero-section p.subtitle {
                 font-size: 1.1em;
             }
-            .section {
+            .section, .future-section {
                 padding: 25px;
                 margin-bottom: 18px;
             }
@@ -680,6 +904,38 @@
             .main-footer {
                 padding: 30px;
             }
+
+            /* Future Section Optimizations */
+            .future-main-title {
+                font-size: 1.7em;
+            }
+            .future-content-wrapper {
+                padding: 20px 15px;
+            }
+            .pension-card {
+                padding: 20px 15px;
+            }
+            .pension-icon {
+                font-size: 2em;
+            }
+            .pension-title {
+                font-size: 1.2em;
+            }
+            .benefits-list {
+                font-size: 0.9em;
+            }
+            .vision-box {
+                padding: 18px;
+            }
+            .vision-title {
+                font-size: 1.1em;
+            }
+            .future-final-cta {
+                padding: 18px;
+            }
+            .future-final-cta-title {
+                font-size: 1.3em;
+            }
         }
 
         /* Mobile portrait standard */
@@ -712,7 +968,7 @@
                 padding: 10px;
                 border-radius: 16px;
             }
-            .section {
+            .section, .future-section {
                 padding: 25px;
                 border-radius: 20px;
                 margin-bottom: 15px;
@@ -802,6 +1058,71 @@
                 font-size: 0.9em;
                 border-radius: 20px;
             }
+
+            /* Future Section Mobile Portrait */
+            .future-section {
+                padding: 25px 15px;
+                border-radius: 20px;
+            }
+            .future-main-title {
+                font-size: 1.6em;
+                line-height: 1.2;
+                margin-bottom: 15px;
+            }
+            .future-content-wrapper {
+                padding: 20px 15px;
+                margin: 20px 0;
+                border-radius: 16px;
+            }
+            .pension-card {
+                padding: 20px 15px;
+                margin: 25px 0;
+                border-radius: 14px;
+            }
+            .pension-icon {
+                font-size: 2em;
+                margin-bottom: 12px;
+            }
+            .pension-title {
+                font-size: 1.2em;
+                margin-bottom: 10px;
+            }
+            .pension-subtitle {
+                font-size: 0.85em;
+                margin-bottom: 15px;
+            }
+            .benefits-list {
+                font-size: 0.9em;
+            }
+            .benefits-list li {
+                padding: 8px 0;
+            }
+            .vision-box {
+                padding: 15px;
+                margin: 20px 0;
+                border-radius: 12px;
+            }
+            .vision-title {
+                font-size: 1.1em;
+                margin-bottom: 10px;
+            }
+            .vision-text {
+                font-size: 0.95em;
+                line-height: 1.4;
+            }
+            .future-inspiring-text {
+                font-size: 1em;
+                margin: 20px 0;
+            }
+            .future-final-cta {
+                padding: 15px;
+                margin: 20px 0 0 0;
+                border-radius: 14px;
+            }
+            .future-final-cta-title {
+                font-size: 1.2em;
+                line-height: 1.3;
+            }
         }
 
         /* Mobile portrait piccolo (iPhone SE, etc.) */
@@ -820,7 +1141,7 @@
                 font-size: 1em;
                 line-height: 1.3;
             }
-            .section {
+            .section, .future-section {
                 padding: 20px;
                 margin-bottom: 12px;
             }
@@ -866,6 +1187,54 @@
             .main-footer {
                 padding: 20px;
             }
+
+            /* Future Section iPhone SE */
+            .future-section {
+                padding: 20px 12px;
+            }
+            .future-main-title {
+                font-size: 1.5em;
+            }
+            .future-content-wrapper {
+                padding: 18px 12px;
+                margin: 18px 0;
+            }
+            .pension-card {
+                padding: 18px 12px;
+                margin: 20px 0;
+            }
+            .pension-icon {
+                font-size: 1.8em;
+            }
+            .pension-title {
+                font-size: 1.1em;
+            }
+            .pension-subtitle {
+                font-size: 0.8em;
+            }
+            .benefits-list {
+                font-size: 0.85em;
+            }
+            .benefits-list li {
+                padding: 7px 0;
+            }
+            .vision-box {
+                padding: 12px;
+                margin: 18px 0;
+            }
+            .vision-title {
+                font-size: 1em;
+            }
+            .vision-text {
+                font-size: 0.9em;
+            }
+            .future-final-cta {
+                padding: 12px;
+                margin: 18px 0 0 0;
+            }
+            .future-final-cta-title {
+                font-size: 1.1em;
+            }
         }
 
         /* Mobile molto piccolo */
@@ -876,10 +1245,10 @@
             .hero-section p.subtitle {
                 font-size: 0.95em;
             }
-            .section {
+            .section, .future-section {
                 padding: 15px;
             }
-            .section h2 {
+            .section h2, .future-main-title {
                 font-size: 1.4em;
             }
             .value-card {
@@ -903,6 +1272,48 @@
             .cta-button {
                 padding: 12px 18px;
                 font-size: 0.9em;
+            }
+
+            /* Future Section Ultra Small */
+            .future-section {
+                padding: 15px 10px;
+            }
+            .future-main-title {
+                font-size: 1.3em;
+            }
+            .future-content-wrapper {
+                padding: 15px 10px;
+                margin: 15px 0;
+            }
+            .pension-card {
+                padding: 15px 10px;
+                margin: 18px 0;
+            }
+            .pension-icon {
+                font-size: 1.6em;
+            }
+            .pension-title {
+                font-size: 1em;
+            }
+            .benefits-list {
+                font-size: 0.8em;
+            }
+            .vision-box {
+                padding: 10px;
+                margin: 15px 0;
+            }
+            .vision-title {
+                font-size: 0.95em;
+            }
+            .vision-text {
+                font-size: 0.85em;
+            }
+            .future-final-cta {
+                padding: 10px;
+                margin: 15px 0 0 0;
+            }
+            .future-final-cta-title {
+                font-size: 1em;
             }
         }
 
@@ -931,14 +1342,11 @@
 
         /* Ottimizzazioni per dispositivi touch */
         @media (hover: none) and (pointer: coarse) {
-            .cta-button {
+            .cta-button, .pension-card {
                 min-height: 48px;
                 touch-action: manipulation;
             }
-            .value-card:hover {
-                transform: none;
-            }
-            .section:hover {
+            .value-card:hover, .section:hover {
                 transform: none;
             }
             /* Riduci animazioni per prestazioni migliori su mobile */
@@ -953,12 +1361,31 @@
             .hero-section {
                 padding: 20px 15px;
             }
-            .section {
+            .section, .future-section {
                 padding: 20px;
                 margin-bottom: 10px;
             }
             .roi-showcase, .cta-section {
                 padding: 25px 20px;
+            }
+        }
+
+        /* Accessibilità */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+            .future-section, .section {
+                border: 2px solid var(--color-white);
+            }
+            .future-content-wrapper, .pension-card {
+                border: 1px solid var(--color-white);
             }
         }
 
@@ -1138,61 +1565,43 @@
                 </div>
             </section>
 
-            <!-- SIM Carabinieri pensa al tuo futuro - SPOSTATA QUI -->
-            <section class="section scroll-reveal" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: var(--color-white); text-align: center; padding: 80px 50px;">
-                <div style="position: relative; z-index: 2;">
-                    <h2 style="color: var(--color-white); font-size: 2.8em; margin-bottom: 30px; line-height: 1.2;">
-                        🚀 SIM CARABINIERI PENSA AL TUO FUTURO
-                    </h2>
-                    <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border-radius: 20px; padding: 40px; margin: 40px auto; max-width: 900px; border: 1px solid rgba(255, 255, 255, 0.2);">
+            <!-- SIM Carabinieri pensa al tuo futuro - VERSIONE OTTIMIZZATA -->
+            <section class="future-section scroll-reveal">
+                <h2 class="future-main-title">
+                    🚀 SIM CARABINIERI PENSA AL TUO FUTURO
+                </h2>
+                
+                <div class="future-content-wrapper">
+                    <div class="pension-card">
+                        <div class="pension-icon">💰</div>
+                        <h3 class="pension-title">Fondo Pensione "Insieme"</h3>
+                        <p class="pension-subtitle">Partnership con Allianz e AON</p>
                         
-                        <div style="display: flex; justify-content: center; margin-top: 40px;">
-                            <div style="background: rgba(255, 255, 255, 0.1); padding: 35px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.2); max-width: 500px; width: 100%;">
-                                <div style="font-size: 2.8em; margin-bottom: 20px; text-align: center;">💰</div>
-                                <h3 style="color: var(--color-white); font-size: 1.4em; margin-bottom: 15px; text-align: center;">Fondo Pensione "Insieme"</h3>
-                                <p style="font-size: 0.95em; margin-bottom: 15px; color: var(--color-gold); font-weight: 600; text-align: center;">Partnership con Allianz e AON</p>
-                                <ul style="text-align: left; font-size: 1em; line-height: 1.7; list-style: none; padding: 0;">
-                                    <li style="padding: 8px 0; position: relative; padding-left: 25px;">
-                                        <span style="position: absolute; left: 0; color: var(--color-gold); font-weight: bold; font-size: 1.1em;">✓</span>
-                                        <strong>Sicuro e Trasparente</strong>
-                                    </li>
-                                    <li style="padding: 8px 0; position: relative; padding-left: 25px;">
-                                        <span style="position: absolute; left: 0; color: var(--color-gold); font-weight: bold; font-size: 1.1em;">✓</span>
-                                        <strong>Deducibile</strong> che si trasforma in guadagno
-                                    </li>
-                                    <li style="padding: 8px 0; position: relative; padding-left: 25px;">
-                                        <span style="position: absolute; left: 0; color: var(--color-gold); font-weight: bold; font-size: 1.1em;">✓</span>
-                                        <strong>Rendimenti tassati</strong> in modo agevolato
-                                    </li>
-                                    <li style="padding: 8px 0; position: relative; padding-left: 25px;">
-                                        <span style="position: absolute; left: 0; color: var(--color-gold); font-weight: bold; font-size: 1.1em;">✓</span>
-                                        <strong>Sospensione senza penali</strong>
-                                    </li>
-                                    <li style="padding: 8px 0; position: relative; padding-left: 25px;">
-                                        <span style="position: absolute; left: 0; color: var(--color-gold); font-weight: bold; font-size: 1.1em;">✓</span>
-                                        <strong>Anticipo fino al 75%</strong> della posizione maturata
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        
-                        <div style="margin-top: 40px; padding: 25px; background: rgba(255, 215, 0, 0.2); border-radius: 15px; border: 2px solid var(--color-gold);">
-                            <h4 style="color: var(--color-gold); font-size: 1.4em; margin-bottom: 15px;">🌟 LA VISIONE SIM</h4>
-                            <p style="font-size: 1.1em; line-height: 1.5; margin: 0;">
-                                Crediamo che ogni Carabiniere meriti non solo protezione oggi, ma anche opportunità concrete per costruire un futuro brillante. Il nostro impegno va oltre la tessera sindacale: è un investimento nella tua crescita personale e professionale.
-                            </p>
-                        </div>
-                        
-                        <p style="font-size: 1.2em; margin-top: 30px; font-style: italic; opacity: 0.9;">
-                            💡 Il tuo futuro inizia con una scelta intelligente di oggi
+                        <ul class="benefits-list">
+                            <li><strong>Sicuro e Trasparente</strong></li>
+                            <li><strong>Deducibile</strong> che si trasforma in guadagno</li>
+                            <li><strong>Rendimenti tassati</strong> in modo agevolato</li>
+                            <li><strong>Sospensione senza penali</strong></li>
+                            <li><strong>Anticipo fino al 75%</strong> della posizione maturata</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="vision-box">
+                        <h4 class="vision-title">🌟 LA VISIONE SIM</h4>
+                        <p class="vision-text">
+                            Crediamo che ogni Carabiniere meriti non solo protezione oggi, ma anche opportunità concrete per costruire un futuro brillante. Il nostro impegno va oltre la tessera sindacale: è un investimento nella tua crescita personale e professionale.
                         </p>
-                        
-                        <div style="margin-top: 40px; padding: 30px; background: linear-gradient(135deg, var(--color-gold), #ffed4e); border-radius: 20px; color: var(--color-text-dark);">
-                            <h3 style="color: var(--color-dark-red); font-size: 1.8em; font-weight: 900; margin: 0; text-shadow: none;">
-                                🚀 SIM CARABINIERI NON È SOLO PRESENTE<br>
-                                <span style="color: var(--color-blue);">MA È IL TUO FUTURO</span>
-                            </h3>
-                        </div>
+                    </div>
+                    
+                    <p class="future-inspiring-text">
+                        💡 Il tuo futuro inizia con una scelta intelligente di oggi
+                    </p>
+                    
+                    <div class="future-final-cta">
+                        <h3 class="future-final-cta-title">
+                            🚀 SIM CARABINIERI NON È SOLO PRESENTE
+                            <span class="future-cta-highlight">MA È IL TUO FUTURO</span>
+                        </h3>
                     </div>
                 </div>
             </section>
@@ -1341,6 +1750,53 @@
             roiObserver.observe(roiElement);
         }
 
+        // === FUTURE SECTION MOBILE OPTIMIZATIONS ===
+        document.addEventListener('DOMContentLoaded', function() {
+            // Touch feedback per la pension card
+            const pensionCards = document.querySelectorAll('.pension-card');
+            pensionCards.forEach(card => {
+                card.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.98)';
+                }, { passive: true });
+                
+                card.addEventListener('touchend', function() {
+                    this.style.transform = 'scale(1)';
+                }, { passive: true });
+            });
+
+            // Lazy loading ottimizzato per la sezione future
+            const futureObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Animazione staggered per gli elementi interni
+                        const elements = entry.target.querySelectorAll('.pension-card, .vision-box, .future-final-cta');
+                        elements.forEach((el, index) => {
+                            setTimeout(() => {
+                                el.style.opacity = '1';
+                                el.style.transform = 'translateY(0)';
+                            }, index * 200);
+                        });
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -30px 0px'
+            });
+
+            const futureSection = document.querySelector('.future-section');
+            if (futureSection) {
+                // Inizializza gli elementi per l'animazione
+                const elements = futureSection.querySelectorAll('.pension-card, .vision-box, .future-final-cta');
+                elements.forEach(el => {
+                    el.style.opacity = '0';
+                    el.style.transform = 'translateY(20px)';
+                    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                });
+                
+                futureObserver.observe(futureSection);
+            }
+        });
+
         // === SMOOTH SCROLL FOR ANCHOR LINKS ===
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -1355,10 +1811,26 @@
             });
         });
 
+        // === ORIENTATION CHANGE OPTIMIZATION ===
+        window.addEventListener('orientationchange', function() {
+            setTimeout(() => {
+                // Fix per bug di layout su orientation change
+                window.scrollTo(0, window.scrollY + 1);
+                window.scrollTo(0, window.scrollY - 1);
+            }, 100);
+        });
+
         // === INITIAL LOAD OPTIMIZATIONS ===
         window.addEventListener('load', () => {
             // Add loaded class for any load-dependent animations
             document.body.classList.add('loaded');
+            
+            // Preload critical images
+            const criticalImages = document.querySelectorAll('img[data-preload]');
+            criticalImages.forEach(img => {
+                const preloadImg = new Image();
+                preloadImg.src = img.src;
+            });
         });
     </script>
 </body>
