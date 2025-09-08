@@ -172,6 +172,19 @@
             animation: glow 2s ease-in-out infinite alternate;
         }
 
+        /* Video box sempre bianco */
+        .video-box-fixed,
+        .video-box-fixed:hover,
+        .video-box-fixed:focus,
+        .video-box-fixed:active {
+            background: #ffffff !important;
+            background-color: #ffffff !important;
+        }
+
+        .video-box-fixed * {
+            background: transparent !important;
+        }
+
         /*
          ******************************************************
          * 3. STILI SPECIFICI PER SEZIONE - MODERNIZZATI
@@ -1439,7 +1452,7 @@
 
         <header class="hero-section scroll-reveal">
             <h1>SIM Carabinieri: La Tessera Che Si Ripaga da Sola</h1>
-            <p class="subtitle">Investimento Intelligente: €9 al Mese per Centinaia di Euro di Servizi</p>
+            <p class="subtitle">Investimento Intelligente: €9* al Mese per Centinaia di Euro di Servizi</p>
             <span class="badge">#maipiùsoli</span>
             
             <div class="urgency-bar" style="background: linear-gradient(135deg, var(--color-blue), var(--color-dark-red)); animation: none;">
@@ -1516,11 +1529,11 @@
                                 <li>Prescrizioni mediche digitali</li>
                                 <li>Telemedicina avanzata</li>
                             </ul>
-                            <div style="margin-top: 15px; padding: 10px; background: rgba(0, 61, 130, 0.1); border-radius: 8px;">
-                                <p style="margin: 0; font-size: 0.9em;">
-                                    🎥 <strong>Scopri come funziona:</strong><br>
-                                    <a href="https://www.youtube.com/watch?feature=shared&v=OYa_y9vscN4" target="_blank" style="color: var(--color-blue); text-decoration: none; font-weight: 600;">
-                                        Guarda il video dimostrativo
+                            <div style="margin-top: 15px; padding: 15px; background: #ffffff; border: 2px solid var(--color-blue); border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 61, 130, 0.2);">
+                                <p style="margin: 0; font-size: 1em; color: var(--color-text-dark);">
+                                    🎥 <strong style="color: var(--color-blue);">Scopri come funziona:</strong><br>
+                                    <a href="https://www.youtube.com/watch?feature=shared&v=OYa_y9vscN4" target="_blank" style="color: var(--color-dark-red); text-decoration: underline; font-weight: 700; font-size: 1.05em;">
+                                        Guarda il video dimostrativo →
                                     </a>
                                 </p>
                             </div>
@@ -1642,7 +1655,7 @@
                 
                 <div class="highlight-box">
                     <div style="font-size: 1.6em; font-weight: 600; margin-bottom: 15px;">
-                        💎 <strong>€9 al mese</strong> per oltre <strong>€878 di valore annuale</strong>
+                        💎 <strong>€9* al mese</strong> per oltre <strong>€878 di valore annuale</strong>
                     </div>
                     <div style="font-size: 1.2em; opacity: 0.9;">
                         La tessera sindacale che ti fa risparmiare davvero!
@@ -1664,6 +1677,10 @@
 
                 <div style="margin-top: 30px; font-size: 0.9em; opacity: 0.8;">
                     ✅ Iscrizione sicura • ✅ Attivazione immediata • ✅ Soddisfatti o rimborsati
+                </div>
+                
+                <div style="margin-top: 25px; font-size: 0.85em; opacity: 0.7; font-style: italic; border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 15px;">
+                    * €9 rappresenta la quota media versata mensilmente da un iscritto
                 </div>
             </section>
         </main>
