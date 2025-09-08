@@ -358,7 +358,7 @@
         .value-card li {
             padding: 8px 0;
             position: relative;
-            padding-left: 25px;
+            padding-left: 30px;
         }
 
         .value-card li::before {
@@ -368,6 +368,18 @@
             color: var(--color-green);
             font-weight: bold;
             font-size: 1.1em;
+            width: 25px;
+            text-align: center;
+        }
+
+        /* Classe per evidenziare le percentuali di sconto */
+        .discount-highlight {
+            background: linear-gradient(135deg, var(--color-gold), #ffed4e);
+            color: var(--color-text-dark);
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-weight: 800;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
         }
 
         /* ROI Showcase */
@@ -603,7 +615,7 @@
         .benefits-list li {
             padding: 8px 0;
             position: relative;
-            padding-left: 25px;
+            padding-left: 30px;
         }
 
         .benefits-list li::before {
@@ -613,6 +625,8 @@
             color: var(--color-gold);
             font-weight: bold;
             font-size: 1.1em;
+            width: 25px;
+            text-align: center;
         }
 
         .vision-box {
@@ -806,6 +820,9 @@
             .value-card h3 {
                 font-size: 1.3em;
             }
+            .value-card li {
+                padding-left: 35px;
+            }
             .cta-button {
                 padding: 16px 30px;
                 font-size: 1.05em;
@@ -872,6 +889,7 @@
             }
             .benefits-list li {
                 padding: 10px 0;
+                padding-left: 35px;
             }
             .vision-box {
                 padding: 20px;
@@ -919,6 +937,9 @@
             .value-card .emoji {
                 font-size: 2.3em;
             }
+            .value-card li {
+                padding-left: 40px;
+            }
             .roi-showcase, .cta-section {
                 padding: 35px 20px;
             }
@@ -963,6 +984,9 @@
             }
             .benefits-list {
                 font-size: 0.9em;
+            }
+            .benefits-list li {
+                padding-left: 40px;
             }
             .vision-box {
                 padding: 18px;
@@ -1040,6 +1064,12 @@
             }
             .value-card li {
                 padding: 6px 0;
+                padding-left: 40px;
+            }
+            
+            .value-card li::before {
+                font-size: 1em;
+                width: 30px;
             }
             .cta-button {
                 padding: 16px 25px;
@@ -1136,6 +1166,7 @@
             }
             .benefits-list li {
                 padding: 8px 0;
+                padding-left: 40px;
             }
             .vision-box {
                 padding: 15px;
@@ -1198,6 +1229,12 @@
                 font-size: 1.1em;
                 line-height: 1.25;
             }
+            .value-card li {
+                padding-left: 45px;
+            }
+            .value-card li::before {
+                width: 35px;
+            }
             .roi-showcase, .cta-section {
                 padding: 25px 15px;
             }
@@ -1257,6 +1294,7 @@
             }
             .benefits-list li {
                 padding: 7px 0;
+                padding-left: 45px;
             }
             .vision-box {
                 padding: 12px;
@@ -1300,6 +1338,12 @@
             .value-card h3 {
                 font-size: 1em;
             }
+            .value-card li {
+                padding-left: 50px;
+            }
+            .value-card li::before {
+                width: 40px;
+            }
             .roi-showcase, .cta-section {
                 padding: 20px 12px;
             }
@@ -1337,6 +1381,9 @@
             }
             .benefits-list {
                 font-size: 0.8em;
+            }
+            .benefits-list li {
+                padding-left: 50px;
             }
             .vision-box {
                 padding: 10px;
@@ -1591,13 +1638,11 @@
                         <div style="margin-top: 20px;">
                             <p><strong>Sconti e agevolazioni riservate</strong></p>
                             <ul>
-                                <li>Italo Treno 1° classe: sconto del 40%</li>
-                                <li>Samoiraghi & Viganò: 30% su occhiali da vista e sole</li>
-                                <li>GrandVision: fino a -50€ su occhiali graduati</li>
+                                <li>Italo Treno 1° classe: sconto del <span class="discount-highlight">40%</span></li>
+                                <li>Samoiraghi & Viganò: <span class="discount-highlight">30%</span> su occhiali da vista e sole</li>
+                                <li>GrandVision: fino a <span class="discount-highlight">-50€</span> su occhiali graduati</li>
                                 <li>Gruppo Stellantis: sconti esclusivi autovetture</li>
-                                <li>Alpitour World: sconto fino all'11%</li>
-                                <li>Hotels VOI: sconto del 10%</li>
-                                <li>Centro Studi il Sapere: università €1.530/anno</li>
+                                <li>Alpitour World: sconto fino all'<span class="discount-highlight">11%</span></li>
                                 <li>E oltre 50 altre convenzioni attive!</li>
                             </ul>
                         </div>
