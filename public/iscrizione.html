@@ -296,6 +296,33 @@
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
         }
 
+        .value-card:hover,
+        .value-card:hover h3,
+        .value-card:hover p,
+        .value-card:hover li,
+        .value-card:hover .price,
+        .value-card:hover .original-price,
+        .value-card:hover ul,
+        .value-card:hover strong,
+        .value-card:hover a {
+            color: white !important;
+        }
+
+        /* Eccezione per il riquadro video - mantiene colori originali */
+        .value-card:hover div[style*="background: #ffffff"] *,
+        .value-card:hover div[style*="background: #ffffff"] strong,
+        .value-card:hover div[style*="background: #ffffff"] a {
+            color: var(--color-text-dark) !important;
+        }
+        
+        .value-card:hover div[style*="background: #ffffff"] strong[style*="color: var(--color-blue)"] {
+            color: var(--color-blue) !important;
+        }
+        
+        .value-card:hover div[style*="background: #ffffff"] a[style*="color: var(--color-dark-red)"] {
+            color: var(--color-dark-red) !important;
+        }
+
         .value-card .emoji {
             font-size: 3em;
             display: block;
