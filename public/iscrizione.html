@@ -6,580 +6,924 @@
     <title>SIM Carabinieri - La Tessera Che Si Ripaga da Sola</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        /*
-         ******************************************************
-         * 1. VARIABILI E STILI DI BASE
-         ******************************************************
-         */
-
         :root {
-            --color-blue: #003d82;
-            --color-dark-red: #8b2635;
-            --color-green: #28a745;
-            --color-light-bg: #f5f5f5;
-            --color-text-dark: #333;
-            --color-white: #ffffff;
-            --color-gold: #ffd700;
-            --shadow-card: 0 10px 25px rgba(0, 0, 0, 0.1);
-            --shadow-button: 0 8px 15px rgba(0, 0, 0, 0.2);
-            --shadow-glass: 0 8px 32px rgba(31, 38, 135, 0.37);
-            --font-family-primary: 'Inter', sans-serif;
-            --border-radius-card: 24px;
-            --border-radius-button: 16px;
-            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --primary-blue: #003d82;
+            --primary-red: #8b2635;
+            --accent-gold: #ffd700;
+            --accent-green: #28a745;
+            --neutral-white: #ffffff;
+            --neutral-black: #0a0a0a;
+            --neutral-gray: #8a8a8a;
+            --surface-light: #f8fafc;
+            --surface-dark: #1e293b;
+            --gradient-primary: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-red) 100%);
+            --gradient-gold: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 8px 25px rgba(0,0,0,0.08);
+            --shadow-lg: 0 25px 50px rgba(0,0,0,0.12);
+            --shadow-xl: 0 35px 80px rgba(0,0,0,0.15);
+            --blur-sm: 10px;
+            --blur-md: 20px;
+            --blur-lg: 40px;
+            --radius-sm: 12px;
+            --radius-md: 20px;
+            --radius-lg: 32px;
+            --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-spring: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: var(--font-family-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
-            color: var(--color-text-dark);
-            background: linear-gradient(180deg, var(--color-blue) 0%, #1e4a72 25%, #4a5c8a 50%, #7d4f73 75%, var(--color-dark-red) 100%);
-            background-attachment: fixed;
-            padding: 2rem 0;
-            margin: 0;
+            color: var(--neutral-black);
+            background: var(--neutral-white);
             overflow-x: hidden;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        h1, h2, h3 {
-            font-weight: 800;
-            color: var(--color-dark-red);
-            letter-spacing: -0.02em;
-        }
-
-        /*
-         ******************************************************
-         * 2. STILI RIUTILIZZABILI MODERNI
-         ******************************************************
-         */
-
-        .section {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: var(--border-radius-card);
-            padding: 60px;
-            margin-bottom: 40px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            position: relative;
-            overflow: hidden;
-            transition: var(--transition-smooth);
-        }
-
-        .section::before {
-            content: '';
-            position: absolute;
-            top: 0;
+        /* ===== SMART SIDEBAR NAVIGATION ===== */
+        .smart-sidebar {
+            position: fixed;
             left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--color-blue), var(--color-dark-red), var(--color-gold));
-            animation: shimmer 3s ease-in-out infinite;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            transition: var(--transition-smooth);
+            opacity: 0;
+            visibility: hidden;
         }
 
-        .section:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.15);
+        .smart-sidebar.visible {
+            opacity: 1;
+            visibility: visible;
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: var(--border-radius-card);
-            padding: 40px;
-            box-shadow: var(--shadow-glass);
+        .sidebar-trigger {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 40px;
+            z-index: 999;
+            cursor: pointer;
         }
 
-        .cta-button {
-            display: inline-flex;
+        .sidebar-container {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(var(--blur-lg));
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 0 25px 25px 0;
+            padding: 1.5rem 0.75rem;
+            margin-left: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            box-shadow: var(--shadow-xl);
+            transform: translateX(-100%);
+            transition: var(--transition-spring);
+        }
+
+        .smart-sidebar.active .sidebar-container {
+            transform: translateX(0);
+        }
+
+        .sidebar-logo {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            background: linear-gradient(135deg, var(--color-blue) 0%, var(--color-dark-red) 100%);
-            color: var(--color-white);
-            padding: 20px 40px;
-            border-radius: var(--border-radius-button);
+            color: var(--neutral-white);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 900;
+            font-size: 0.8rem;
             text-decoration: none;
-            font-size: 1.2em;
-            font-weight: 700;
-            box-shadow: 0 10px 30px rgba(0, 61, 130, 0.3);
-            transition: var(--transition-smooth);
-            border: none;
-            cursor: pointer;
+            box-shadow: var(--shadow-md);
             position: relative;
             overflow: hidden;
         }
 
-        .cta-button::before {
+        .sidebar-logo::before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
         }
 
-        .cta-button:hover::before {
+        .sidebar-logo:hover::before {
             left: 100%;
         }
 
-        .cta-button:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0, 61, 130, 0.4);
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
         }
 
-        .cta-button:active {
-            transform: translateY(-1px) scale(1.01);
-        }
-
-        .pulse-button {
-            animation: pulse 2s infinite;
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, var(--color-blue), var(--color-dark-red));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 900;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 0.9em;
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
-            border: 2px solid var(--color-gold);
-            color: var(--color-white);
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-
-        /* Video box sempre bianco */
-        .video-box-fixed,
-        .video-box-fixed:hover,
-        .video-box-fixed:focus,
-        .video-box-fixed:active {
-            background: #ffffff !important;
-            background-color: #ffffff !important;
-        }
-
-        .video-box-fixed * {
-            background: transparent !important;
-        }
-
-        /*
-         ******************************************************
-         * 3. STILI SPECIFICI PER SEZIONE - MODERNIZZATI
-         ******************************************************
-         */
-
-        /* Hero Section */
-        .hero-section {
-            text-align: center;
-            padding: 100px 40px;
-            background: transparent;
-            color: var(--color-white);
-            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-            animation: heroSlideUp 1s ease-out;
+        .nav-item {
             position: relative;
-        }
-
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
-            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            animation: heroGlow 4s ease-in-out infinite;
-        }
-        
-        .hero-section h1 {
-            font-size: 4em;
-            color: var(--color-white);
-            margin-bottom: 20px;
-            font-weight: 900;
-            letter-spacing: -0.02em;
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-section p.subtitle {
-            font-size: 1.6em;
-            color: #e1e1e1;
-            font-weight: 300;
-            margin-bottom: 30px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-section .badge {
-            margin-top: 20px;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Urgency Bar */
-        .urgency-bar {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            color: white;
-            padding: 15px;
-            text-align: center;
-            border-radius: var(--border-radius-card);
-            margin: 20px 0;
-            font-weight: 600;
-            animation: urgencyPulse 1.5s ease-in-out infinite;
-        }
-
-        /* Value Grid */
-        .value-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-        }
-
-        .value-card {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            border-radius: var(--border-radius-card);
-            padding: 40px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            transition: var(--transition-smooth);
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.3rem;
+            transition: var(--transition-spring);
+            background: transparent;
+            color: var(--primary-blue);
             cursor: pointer;
         }
 
-        .value-card::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, var(--color-blue), var(--color-dark-red), var(--color-gold));
-            border-radius: var(--border-radius-card);
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .nav-item:hover {
+            background: var(--primary-blue);
+            color: var(--neutral-white);
+            transform: scale(1.15) rotate(5deg);
         }
 
-        .value-card:hover::before {
-            opacity: 1;
-        }
-
-        .value-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-        }
-
-        .value-card:hover,
-        .value-card:hover h3,
-        .value-card:hover p,
-        .value-card:hover li,
-        .value-card:hover .price,
-        .value-card:hover .original-price,
-        .value-card:hover ul,
-        .value-card:hover strong,
-        .value-card:hover a {
-            color: white !important;
-        }
-
-        /* Eccezione per il riquadro video - mantiene colori originali */
-        .value-card:hover div[style*="background: #ffffff"] *,
-        .value-card:hover div[style*="background: #ffffff"] strong,
-        .value-card:hover div[style*="background: #ffffff"] a {
-            color: var(--color-text-dark) !important;
-        }
-        
-        .value-card:hover div[style*="background: #ffffff"] strong[style*="color: var(--color-blue)"] {
-            color: var(--color-blue) !important;
-        }
-        
-        .value-card:hover div[style*="background: #ffffff"] a[style*="color: var(--color-dark-red)"] {
-            color: var(--color-dark-red) !important;
-        }
-
-        .value-card .emoji {
-            font-size: 3em;
-            display: block;
-            margin-bottom: 20px;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .value-card h3 {
-            font-size: 1.5em;
-            margin: 20px 0;
-            color: var(--color-text-dark);
-        }
-
-        .value-card p.price {
-            font-size: 1.2em;
-            color: var(--color-dark-red);
-            font-weight: 800;
-        }
-
-        .value-card .original-price {
-            text-decoration: line-through;
-            color: #dc3545;
-            font-size: 1em;
-            opacity: 0.8;
-        }
-
-        .value-card ul {
-            text-align: left;
-            list-style: none;
-            padding: 0;
-        }
-
-        .value-card li {
-            padding: 8px 0;
-            position: relative;
-            padding-left: 30px;
-        }
-
-        .value-card li::before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: var(--color-green);
-            font-weight: bold;
-            font-size: 1.1em;
-            width: 25px;
-            text-align: center;
-        }
-
-        /* Classe per evidenziare le percentuali di sconto */
-        .discount-highlight {
-            background: linear-gradient(135deg, var(--color-gold), #ffed4e);
-            color: var(--color-text-dark);
-            padding: 2px 6px;
-            border-radius: 6px;
-            font-weight: 800;
-            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
-        }
-
-        /* ROI Showcase */
-        .roi-showcase {
-            text-align: center;
-            background: linear-gradient(135deg, var(--color-blue) 0%, #1e4a72 50%, var(--color-dark-red) 100%);
-            color: var(--color-white);
-            padding: 80px 50px;
-            border-radius: var(--border-radius-card);
-            margin-top: 50px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .roi-showcase::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
-            animation: rotateSlow 20s linear infinite;
-        }
-
-        .roi-showcase h2 {
-            color: var(--color-white);
-            font-size: 3em;
-            margin-bottom: 30px;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .roi-total {
-            font-size: 3.5em;
+        .nav-item.cta {
+            background: var(--gradient-gold);
+            color: var(--neutral-black);
             font-weight: 900;
-            margin: 30px 0;
-            color: var(--color-gold);
-            letter-spacing: -0.02em;
-            text-shadow: 2px 2px 20px rgba(255, 215, 0, 0.5);
-            position: relative;
-            z-index: 2;
-            animation: counterUp 2s ease-out;
-        }
-        
-        .roi-text {
-            font-size: 1.4em;
-            font-weight: 400;
-            line-height: 1.8;
-            position: relative;
-            z-index: 2;
+            animation: pulse 2s ease-in-out infinite;
         }
 
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 40px 0;
+        .nav-item.cta:hover {
+            background: var(--gradient-primary);
+            color: var(--neutral-white);
+            animation: none;
         }
 
-        .stat-card {
+        /* Tooltip System */
+        .nav-tooltip {
+            position: absolute;
+            left: 70px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--neutral-black);
+            color: var(--neutral-white);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition-fast);
+            pointer-events: none;
+        }
+
+        .nav-tooltip::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 8px solid transparent;
+            border-right-color: var(--neutral-black);
+        }
+
+        .nav-item:hover .nav-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) translateX(10px);
+        }
+
+        /* Progress Indicator */
+        .scroll-progress {
+            position: absolute;
+            right: -2px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: rgba(255,215,0,0.2);
+            border-radius: 2px;
+        }
+
+        .progress-fill {
+            width: 100%;
+            background: var(--gradient-gold);
+            border-radius: 2px;
+            transition: height 0.1s ease;
+            height: 0%;
+        }
+
+        /* Mobile Hide */
+        @media (max-width: 1024px) {
+            .smart-sidebar,
+            .sidebar-trigger {
+                display: none;
+            }
+        }
+
+        /* ===== GLASSMORPHISM UTILITIES ===== */
+        .glass {
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: var(--border-radius-button);
-            padding: 30px 20px;
-            text-align: center;
+            backdrop-filter: blur(var(--blur-md));
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .stat-number {
-            font-size: 2.5em;
-            font-weight: 900;
-            color: var(--color-gold);
-            display: block;
+        .glass-dark {
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(var(--blur-md));
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
-        .stat-label {
-            font-size: 0.9em;
-            opacity: 0.9;
-            margin-top: 10px;
+        /* ===== ANIMATED BACKGROUND ===== */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(-45deg, 
+                var(--primary-blue), 
+                #1e4a72, 
+                var(--primary-red), 
+                #2563eb,
+                var(--primary-blue)
+            );
+            background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite;
         }
 
-        /* CTA Section */
-        .cta-section {
-            text-align: center;
-            padding: 80px 40px;
-            background: linear-gradient(135deg, var(--color-dark-red) 0%, var(--color-blue) 100%);
-            border-radius: var(--border-radius-card);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
-            color: var(--color-white);
-            margin-top: 40px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-section::before {
+        .animated-bg::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" patternUnits="userSpaceOnUse" width="100" height="100"><circle cx="25" cy="25" r="1" fill="white" opacity="0.05"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.05"/><circle cx="25" cy="75" r="1" fill="white" opacity="0.05"/><circle cx="75" cy="25" r="1" fill="white" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            background: radial-gradient(circle at 25% 75%, rgba(255,215,0,0.1) 0%, transparent 40%),
+                        radial-gradient(circle at 75% 25%, rgba(40,167,69,0.05) 0%, transparent 40%),
+                        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 60%);
+            animation: floatingOrbs 20s ease-in-out infinite;
         }
 
-        .cta-section h2 {
-            color: var(--color-white);
-            font-size: 3em;
-            margin-bottom: 20px;
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+        }
+
+        @keyframes floatingOrbs {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(180deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,215,0,0.7); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255,215,0,0); }
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
             position: relative;
+            padding: 0 2rem;
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-content {
             z-index: 2;
         }
 
-        .cta-section .highlight-box {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: var(--border-radius-button);
-            padding: 30px;
-            margin: 30px 0;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--gradient-gold);
+            color: var(--neutral-black);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .hero-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            color: var(--neutral-white);
+            margin-bottom: 1.5rem;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .hero-title .highlight {
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             position: relative;
-            z-index: 2;
         }
 
-        /* Footer */
-        .main-footer {
-            text-align: center;
-            padding: 60px;
-            background: rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
-            border-radius: var(--border-radius-card);
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.95em;
-            margin-top: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 2rem;
+            max-width: 500px;
+            line-height: 1.6;
         }
 
-        /*
-         ******************************************************
-         * FUTURE SECTION - OTTIMIZZATA PER MOBILE
-         ******************************************************
-         */
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
 
-        .future-section {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: var(--color-white);
-            border-radius: var(--border-radius-card);
-            padding: 80px 50px;
+        .hero-stat {
             text-align: center;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-stat-number {
+            display: block;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--accent-gold);
+            line-height: 1;
+            text-shadow: 0 2px 10px rgba(255,215,0,0.3);
+        }
+
+        .hero-stat-label {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+            margin-top: 0.5rem;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--gradient-gold);
+            color: var(--neutral-black);
+            padding: 1.25rem 2.5rem;
+            border-radius: var(--radius-md);
+            font-size: 1.1rem;
+            font-weight: 800;
+            text-decoration: none;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition-spring);
             position: relative;
             overflow: hidden;
-            margin-bottom: 40px;
         }
 
-        .future-section::before {
+        .hero-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .hero-cta:hover::before {
+            left: 100%;
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .hero-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(var(--blur-lg));
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: var(--radius-lg);
+            padding: 3rem;
+            box-shadow: var(--shadow-xl);
+            transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);
+            transition: var(--transition-smooth);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .hero-card:hover {
+            transform: perspective(1000px) rotateY(0deg) rotateX(0deg) translateY(-10px);
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-container {
+            background: var(--neutral-white);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: auto;
+            max-height: 120px;
+            object-fit: contain;
+            border-radius: var(--radius-sm);
+        }
+
+        .hero-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .investment-amount {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .investment-amount .price {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary-red);
+            line-height: 1;
+        }
+
+        .investment-amount .period {
+            font-size: 1rem;
+            color: var(--neutral-gray);
+            margin-top: 0.5rem;
+        }
+
+        .value-comparison {
+            background: var(--gradient-primary);
+            color: var(--neutral-white);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .value-comparison .value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-cta {
+            background: var(--primary-blue);
+            color: var(--neutral-white);
+            padding: 1rem 2rem;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            transition: var(--transition-smooth);
+        }
+
+        .card-cta:hover {
+            background: var(--primary-red);
+            transform: translateY(-2px);
+        }
+
+        /* ===== FLOATING ELEMENTS ===== */
+        .floating-element {
+            position: absolute;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(odd) {
+            animation-delay: -3s;
+        }
+
+        .floating-1 {
+            top: 20%;
+            left: 10%;
+            width: 100px;
+            height: 100px;
+            background: var(--gradient-gold);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation-duration: 8s;
+        }
+
+        .floating-2 {
+            top: 60%;
+            right: 15%;
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-sm);
+            opacity: 0.08;
+            animation-duration: 12s;
+        }
+
+        .floating-3 {
+            bottom: 20%;
+            left: 20%;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, var(--accent-green), #34d399);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            opacity: 0.06;
+            animation-duration: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(10px) rotate(240deg); }
+        }
+
+        /* ===== BENEFITS SECTION ===== */
+        .benefits {
+            padding: 8rem 2rem;
+            position: relative;
+        }
+
+        .benefits-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 900;
+            color: var(--neutral-white);
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.3);
+        }
+
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255,255,255,0.8);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .benefit-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(var(--blur-md));
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition-smooth);
+            cursor: pointer;
+        }
+
+        .benefit-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--color-gold), #ffed4e, var(--color-gold));
-            animation: shimmer 2s ease-in-out infinite;
+            height: 4px;
+            background: var(--gradient-primary);
         }
 
-        .future-main-title {
-            font-size: 2.8em;
+        .benefit-card::after {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        .benefit-card:hover::after {
+            top: 0;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+            color: var(--neutral-white);
+        }
+
+        .benefit-card:hover .benefit-icon,
+        .benefit-card:hover .benefit-title,
+        .benefit-card:hover .benefit-description,
+        .benefit-card:hover .benefit-list,
+        .benefit-card:hover .benefit-list li {
+            color: var(--neutral-white);
+        }
+
+        .benefit-card:hover .video-highlight {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .benefit-card:hover .video-highlight * {
+            color: var(--neutral-white) !important;
+        }
+
+        .benefit-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            text-align: center;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1));
+        }
+
+        .benefit-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .benefit-pricing {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .price-before {
+            text-decoration: line-through;
+            color: var(--neutral-gray);
+            font-size: 0.9rem;
+        }
+
+        .price-after {
+            background: var(--gradient-gold);
+            color: var(--neutral-black);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
             font-weight: 800;
-            line-height: 1.2;
-            margin: 0 0 30px 0;
-            color: var(--color-white);
-            letter-spacing: -0.02em;
-            position: relative;
-            z-index: 2;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .future-content-wrapper {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            margin: 40px auto;
-            max-width: 900px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .benefit-description {
+            color: var(--neutral-gray);
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .benefit-list {
+            list-style: none;
+        }
+
+        .benefit-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: var(--neutral-black);
+        }
+
+        .benefit-list li::before {
+            content: '✓';
+            background: var(--gradient-primary);
+            color: var(--neutral-white);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .discount-highlight {
+            background: var(--gradient-gold);
+            color: var(--neutral-black);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .video-highlight {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border: 2px solid var(--primary-blue);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            text-align: center;
+            transition: var(--transition-smooth);
+        }
+
+        .video-highlight a {
+            color: var(--primary-red);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        /* ===== ROI SECTION ===== */
+        .roi {
+            padding: 8rem 2rem;
             position: relative;
-            z-index: 2;
+        }
+
+        .roi-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .roi-dashboard {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(var(--blur-lg));
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: var(--radius-lg);
+            padding: 4rem;
+            box-shadow: var(--shadow-xl);
+            text-align: center;
+        }
+
+        .roi-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--primary-blue);
+            margin-bottom: 3rem;
+        }
+
+        .roi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .roi-metric {
+            background: var(--gradient-primary);
+            color: var(--neutral-white);
+            padding: 2rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-smooth);
+        }
+
+        .roi-metric:hover {
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .roi-metric-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--accent-gold);
+            line-height: 1;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .roi-metric-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+
+        .roi-result {
+            background: var(--gradient-gold);
+            color: var(--neutral-black);
+            padding: 2rem;
+            border-radius: var(--radius-md);
+            margin: 3rem 0;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .roi-result-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .roi-description {
+            font-size: 1.2rem;
+            color: var(--neutral-gray);
+            margin-top: 1rem;
+        }
+
+        /* ===== FUTURE SECTION ===== */
+        .future {
+            padding: 8rem 2rem;
+            position: relative;
+        }
+
+        .future-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .future-content h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 900;
+            color: var(--neutral-white);
+            margin-bottom: 2rem;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.3);
+        }
+
+        .future-description {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        .vision-card {
+            background: rgba(255,215,0,0.1);
+            border: 2px solid var(--accent-gold);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            backdrop-filter: blur(var(--blur-sm));
+        }
+
+        .vision-card h4 {
+            color: var(--accent-gold);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .vision-card p {
+            color: rgba(255,255,255,0.9);
+            line-height: 1.6;
         }
 
         .pension-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 35px;
-            margin: 40px 0;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(var(--blur-lg));
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: var(--radius-lg);
+            padding: 3rem;
+            box-shadow: var(--shadow-xl);
             transition: var(--transition-smooth);
             cursor: pointer;
             position: relative;
@@ -593,8 +937,8 @@
             left: -2px;
             right: -2px;
             bottom: -2px;
-            background: linear-gradient(45deg, var(--color-blue), var(--color-dark-red), var(--color-gold));
-            border-radius: 15px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-lg);
             z-index: -1;
             opacity: 0;
             transition: opacity 0.3s ease;
@@ -606,1238 +950,809 @@
 
         .pension-card:hover {
             transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow-xl);
+            color: var(--neutral-white);
         }
 
-        .pension-card:hover,
         .pension-card:hover .pension-title,
         .pension-card:hover .pension-subtitle,
-        .pension-card:hover .benefits-list li,
-        .pension-card:hover .pension-icon {
-            color: white !important;
+        .pension-card:hover .benefit-list li {
+            color: var(--neutral-white);
         }
 
         .pension-icon {
-            font-size: 2.8em;
-            margin-bottom: 20px;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
             display: block;
         }
 
         .pension-title {
-            color: var(--color-white);
-            font-size: 1.4em;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6rem;
             font-weight: 700;
-            margin: 0 0 15px 0;
-            line-height: 1.3;
+            color: var(--primary-blue);
+            text-align: center;
+            margin-bottom: 0.5rem;
         }
 
         .pension-subtitle {
-            color: var(--color-gold);
-            font-size: 0.95em;
+            color: var(--accent-gold);
             font-weight: 600;
-            margin-bottom: 15px;
+            text-align: center;
+            margin-bottom: 2rem;
         }
 
-        .benefits-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            text-align: left;
-            font-size: 1em;
-            line-height: 1.7;
-        }
-
-        .benefits-list li {
-            padding: 8px 0;
+        /* ===== CTA SECTION ===== */
+        .cta {
+            padding: 8rem 2rem;
             position: relative;
-            padding-left: 30px;
-        }
-
-        .benefits-list li::before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: var(--color-gold);
-            font-weight: bold;
-            font-size: 1.1em;
-            width: 25px;
             text-align: center;
         }
 
-        .vision-box {
-            background: rgba(255, 215, 0, 0.2);
-            border: 2px solid var(--color-gold);
-            border-radius: 15px;
-            padding: 25px;
-            margin: 25px 0;
+        .cta-container {
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .vision-title {
-            color: var(--color-gold);
-            font-size: 1.4em;
-            font-weight: 700;
-            margin: 0 0 15px 0;
+        .cta-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(var(--blur-lg));
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: var(--radius-lg);
+            padding: 4rem;
+            box-shadow: var(--shadow-xl);
         }
 
-        .vision-text {
-            font-size: 1.1em;
-            line-height: 1.5;
-            margin: 0;
-        }
-
-        .future-inspiring-text {
-            font-size: 1.2em;
-            font-style: italic;
-            opacity: 0.9;
-            margin: 30px 0;
-            position: relative;
-            z-index: 2;
-        }
-
-        .future-final-cta {
-            background: linear-gradient(135deg, var(--color-gold), #ffed4e);
-            border-radius: 20px;
-            padding: 30px;
-            margin: 40px 0 0 0;
-            color: var(--color-text-dark);
-            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
-            position: relative;
-            z-index: 2;
-        }
-
-        .future-final-cta-title {
-            font-size: 1.8em;
+        .cta-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 4vw, 3rem);
             font-weight: 900;
-            margin: 0;
-            line-height: 1.3;
-            text-shadow: none;
+            color: var(--primary-blue);
+            margin-bottom: 2rem;
         }
 
-        .future-cta-highlight {
-            color: var(--color-blue);
-            display: block;
-            margin-top: 5px;
+        .cta-highlight {
+            background: var(--gradient-primary);
+            color: var(--neutral-white);
+            padding: 2rem;
+            border-radius: var(--radius-md);
+            margin: 2rem 0;
         }
 
-        /*
-         ******************************************************
-         * 4. ANIMAZIONI MODERNE
-         ******************************************************
-         */
-
-        @keyframes heroSlideUp {
-            from { 
-                opacity: 0; 
-                transform: translateY(50px); 
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            }
+        .cta-highlight-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
         }
 
-        @keyframes heroGlow {
-            0%, 100% { 
-                transform: translate(-50%, -50%) scale(1); 
-                opacity: 0.3; 
-            }
-            50% { 
-                transform: translate(-50%, -50%) scale(1.2); 
-                opacity: 0.1; 
-            }
+        .cta-highlight-subtitle {
+            opacity: 0.9;
         }
 
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+        .cta-description {
+            font-size: 1.1rem;
+            color: var(--neutral-gray);
+            margin-bottom: 3rem;
+            line-height: 1.6;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .cta-button-main {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--gradient-gold);
+            color: var(--neutral-black);
+            padding: 1.5rem 3rem;
+            border-radius: var(--radius-md);
+            font-size: 1.2rem;
+            font-weight: 900;
+            text-decoration: none;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition-spring);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        .cta-button-main:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-xl);
         }
 
-        @keyframes glow {
-            0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
-            100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--surface-dark);
+            color: var(--neutral-white);
+            padding: 4rem 2rem 2rem;
+            text-align: center;
         }
 
-        @keyframes urgencyPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.02); opacity: 0.9; }
+        .footer-container {
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        @keyframes rotateSlow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .footer-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--accent-gold);
+            margin-bottom: 1rem;
         }
 
-        @keyframes counterUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .footer-tagline {
+            font-style: italic;
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-bottom: 2rem;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .footer-contact {
+            background: rgba(255,255,255,0.05);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            margin-bottom: 2rem;
         }
 
-        /*
-         ******************************************************
-         * 5. MEDIA QUERIES RESPONSIVE - COMPLETO
-         ******************************************************
-         */
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
 
-        /* Tablet landscape e desktop small */
+        .footer-links a {
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition-fast);
+        }
+
+        .footer-links a:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
         @media (max-width: 1024px) {
-            .container {
-                max-width: 95%;
-                padding: 0 20px;
-            }
-            .section, .future-section {
-                padding: 50px;
-            }
-            .hero-section h1 {
-                font-size: 3.2em;
-            }
-        }
-
-        /* Tablet portrait */
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem 0;
-                font-size: 15px;
-            }
-            .container {
-                padding: 0 12px;
-            }
-            .logo-container img {
-                max-height: 120px !important;
-            }
-            .hero-section {
-                padding: 50px 20px;
-            }
-            .hero-section h1 {
-                font-size: 2.2em;
-                line-height: 1.1;
-                margin-bottom: 15px;
-            }
-            .hero-section p.subtitle {
-                font-size: 1.2em;
-                line-height: 1.4;
-            }
-            .section, .future-section {
-                padding: 35px;
-                margin-bottom: 20px;
-            }
-            .value-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            .value-card {
-                padding: 30px;
-            }
-            .value-card .emoji {
-                font-size: 2.5em;
-            }
-            .value-card h3 {
-                font-size: 1.3em;
-            }
-            .value-card li {
-                padding-left: 35px;
-            }
-            .cta-button {
-                padding: 16px 30px;
-                font-size: 1.05em;
-                width: 100%;
-                max-width: 450px;
-                margin: 0 auto;
-                display: flex;
-            }
-            .roi-showcase, .cta-section {
-                padding: 45px 30px;
-            }
-            .roi-showcase h2, .cta-section h2 {
-                font-size: 2em;
-                line-height: 1.2;
-            }
-            .roi-total {
-                font-size: 2.5em;
-                line-height: 1.1;
-            }
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
-            }
-            .stat-card {
-                padding: 20px 15px;
-            }
-            .stat-number {
-                font-size: 2em;
-            }
-            .urgency-bar {
-                font-size: 0.9em;
-                padding: 12px;
-            }
-            .main-footer {
-                padding: 35px;
-            }
-
-            /* Future Section Mobile Optimizations */
-            .future-main-title {
-                font-size: 1.8em;
-                line-height: 1.2;
-                margin-bottom: 20px;
-            }
-            .future-content-wrapper {
-                padding: 25px 20px;
-                margin: 25px 0;
-            }
-            .pension-card {
-                padding: 25px 20px;
-                margin: 30px 0;
-            }
-            .pension-icon {
-                font-size: 2.2em;
-                margin-bottom: 15px;
-            }
-            .pension-title {
-                font-size: 1.3em;
-            }
-            .pension-subtitle {
-                font-size: 0.9em;
-            }
-            .benefits-list {
-                font-size: 0.95em;
-            }
-            .benefits-list li {
-                padding: 10px 0;
-                padding-left: 35px;
-            }
-            .vision-box {
-                padding: 20px;
-                margin: 20px 0;
-            }
-            .vision-title {
-                font-size: 1.2em;
-            }
-            .vision-text {
-                font-size: 1em;
-                line-height: 1.5;
-            }
-            .future-final-cta {
-                padding: 20px;
-                margin: 25px 0 0 0;
-            }
-            .future-final-cta-title {
-                font-size: 1.4em;
-                line-height: 1.3;
-            }
-        }
-
-        /* Mobile landscape e tablet small */
-        @media (max-width: 640px) {
-            .hero-section {
-                padding: 35px 15px;
-            }
-            .hero-section h1 {
-                font-size: 1.9em;
-                margin-bottom: 12px;
-            }
-            .hero-section p.subtitle {
-                font-size: 1.1em;
-            }
-            .section, .future-section {
-                padding: 25px;
-                margin-bottom: 18px;
-            }
-            .value-card {
-                padding: 25px;
-            }
-            .value-card h3 {
-                font-size: 1.2em;
-            }
-            .value-card .emoji {
-                font-size: 2.3em;
-            }
-            .value-card li {
-                padding-left: 40px;
-            }
-            .roi-showcase, .cta-section {
-                padding: 35px 20px;
-            }
-            .roi-showcase h2, .cta-section h2 {
-                font-size: 1.8em;
-            }
-            .roi-total {
-                font-size: 2.2em;
-            }
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-            }
-            .stat-card {
-                padding: 18px 12px;
-            }
-            .stat-number {
-                font-size: 1.8em;
-            }
-            .stat-label {
-                font-size: 0.8em;
-            }
-            .main-footer {
-                padding: 30px;
-            }
-
-            /* Future Section Optimizations */
-            .future-main-title {
-                font-size: 1.7em;
-            }
-            .future-content-wrapper {
-                padding: 20px 15px;
-            }
-            .pension-card {
-                padding: 20px 15px;
-            }
-            .pension-icon {
-                font-size: 2em;
-            }
-            .pension-title {
-                font-size: 1.2em;
-            }
-            .benefits-list {
-                font-size: 0.9em;
-            }
-            .benefits-list li {
-                padding-left: 40px;
-            }
-            .vision-box {
-                padding: 18px;
-            }
-            .vision-title {
-                font-size: 1.1em;
-            }
-            .future-final-cta {
-                padding: 18px;
-            }
-            .future-final-cta-title {
-                font-size: 1.3em;
-            }
-        }
-
-        /* Mobile portrait standard */
-        @media (max-width: 480px) {
-            body {
-                padding: 0.5rem 0;
-            }
-            .container {
-                padding: 0 12px;
-            }
-            .hero-section {
-                padding: 40px 15px;
-            }
-            .hero-section h1 {
-                font-size: 1.9em;
-                line-height: 1.15;
-                margin-bottom: 10px;
-            }
-            .hero-section p.subtitle {
-                font-size: 1.1em;
-                line-height: 1.3;
-            }
-            .badge {
-                font-size: 0.8em;
-                padding: 10px 20px;
-                letter-spacing: 1px;
-            }
-            .urgency-bar {
-                font-size: 0.9em;
-                padding: 10px;
-                border-radius: 16px;
-            }
-            .section, .future-section {
-                padding: 25px;
-                border-radius: 20px;
-                margin-bottom: 15px;
-            }
-            .section h2 {
-                font-size: 1.8em;
-                line-height: 1.2;
-                margin-bottom: 30px;
-            }
-            .value-card {
-                padding: 25px;
-                border-radius: 20px;
-            }
-            .value-card .emoji {
-                font-size: 2.2em;
-                margin-bottom: 15px;
-            }
-            .value-card h3 {
-                font-size: 1.2em;
-                margin: 15px 0;
-                line-height: 1.3;
-            }
-            .value-card p {
-                font-size: 0.95em;
-                line-height: 1.4;
-            }
-            .value-card ul {
-                font-size: 0.9em;
-            }
-            .value-card li {
-                padding: 6px 0;
-                padding-left: 40px;
-            }
-            
-            .value-card li::before {
-                font-size: 1em;
-                width: 30px;
-            }
-            .cta-button {
-                padding: 16px 25px;
-                font-size: 1em;
-                border-radius: 14px;
-                width: 100%;
-                max-width: 350px;
-            }
-            .roi-showcase, .cta-section {
-                padding: 35px 20px;
-                border-radius: 20px;
-            }
-            .roi-showcase h2, .cta-section h2 {
-                font-size: 1.7em;
-                line-height: 1.2;
-                margin-bottom: 20px;
-            }
-            .roi-total {
-                font-size: 2em;
-                line-height: 1.1;
-                margin: 20px 0;
-            }
-            .roi-text {
-                font-size: 1.1em;
-                line-height: 1.5;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 10px;
-                margin: 25px 0;
-            }
-            .stat-card {
-                padding: 20px 15px;
-                border-radius: 12px;
-            }
-            .stat-number {
-                font-size: 1.8em;
-            }
-            .stat-label {
-                font-size: 0.8em;
-            }
-            .highlight-box {
-                padding: 20px;
-                border-radius: 12px;
-                margin: 20px 0;
-            }
-            .highlight-box > div:first-child {
-                font-size: 1.3em !important;
-                line-height: 1.3;
-            }
-            .highlight-box > div:last-child {
-                font-size: 1em !important;
-            }
-            .main-footer {
-                padding: 30px;
-                font-size: 0.9em;
-                border-radius: 20px;
-            }
-
-            /* Future Section Mobile Portrait */
-            .future-section {
-                padding: 25px 15px;
-                border-radius: 20px;
-            }
-            .future-main-title {
-                font-size: 1.6em;
-                line-height: 1.2;
-                margin-bottom: 15px;
-            }
-            .future-content-wrapper {
-                padding: 20px 15px;
-                margin: 20px 0;
-                border-radius: 16px;
-            }
-            .pension-card {
-                padding: 20px 15px;
-                margin: 25px 0;
-                border-radius: 14px;
-            }
-            .pension-icon {
-                font-size: 2em;
-                margin-bottom: 12px;
-            }
-            .pension-title {
-                font-size: 1.2em;
-                margin-bottom: 10px;
-            }
-            .pension-subtitle {
-                font-size: 0.85em;
-                margin-bottom: 15px;
-            }
-            .benefits-list {
-                font-size: 0.9em;
-            }
-            .benefits-list li {
-                padding: 8px 0;
-                padding-left: 40px;
-            }
-            .vision-box {
-                padding: 15px;
-                margin: 20px 0;
-                border-radius: 12px;
-            }
-            .vision-title {
-                font-size: 1.1em;
-                margin-bottom: 10px;
-            }
-            .vision-text {
-                font-size: 0.95em;
-                line-height: 1.4;
-            }
-            .future-inspiring-text {
-                font-size: 1em;
-                margin: 20px 0;
-            }
-            .future-final-cta {
-                padding: 15px;
-                margin: 20px 0 0 0;
-                border-radius: 14px;
-            }
-            .future-final-cta-title {
-                font-size: 1.2em;
-                line-height: 1.3;
-            }
-        }
-
-        /* Mobile portrait piccolo (iPhone SE, etc.) */
-        @media (max-width: 375px) {
-            .container {
-                padding: 0 10px;
-            }
-            .hero-section {
-                padding: 30px 12px;
-            }
-            .hero-section h1 {
-                font-size: 1.7em;
-                line-height: 1.1;
-            }
-            .hero-section p.subtitle {
-                font-size: 1em;
-                line-height: 1.3;
-            }
-            .section, .future-section {
-                padding: 20px;
-                margin-bottom: 12px;
-            }
-            .section h2 {
-                font-size: 1.6em;
-            }
-            .value-card {
-                padding: 20px;
-            }
-            .value-card .emoji {
-                font-size: 2em;
-            }
-            .value-card h3 {
-                font-size: 1.1em;
-                line-height: 1.25;
-            }
-            .value-card li {
-                padding-left: 45px;
-            }
-            .value-card li::before {
-                width: 35px;
-            }
-            .roi-showcase, .cta-section {
-                padding: 25px 15px;
-            }
-            .roi-showcase h2, .cta-section h2 {
-                font-size: 1.5em;
-            }
-            .roi-total {
-                font-size: 1.8em;
-                margin: 15px 0;
-            }
-            .stat-card {
-                padding: 15px 10px;
-            }
-            .stat-number {
-                font-size: 1.6em;
-            }
-            .cta-button {
-                padding: 14px 20px;
-                font-size: 0.95em;
-            }
-            .highlight-box {
-                padding: 15px;
-            }
-            .highlight-box > div:first-child {
-                font-size: 1.1em !important;
-            }
-            .main-footer {
-                padding: 20px;
-            }
-
-            /* Future Section iPhone SE */
-            .future-section {
-                padding: 20px 12px;
-            }
-            .future-main-title {
-                font-size: 1.5em;
-            }
-            .future-content-wrapper {
-                padding: 18px 12px;
-                margin: 18px 0;
-            }
-            .pension-card {
-                padding: 18px 12px;
-                margin: 20px 0;
-            }
-            .pension-icon {
-                font-size: 1.8em;
-            }
-            .pension-title {
-                font-size: 1.1em;
-            }
-            .pension-subtitle {
-                font-size: 0.8em;
-            }
-            .benefits-list {
-                font-size: 0.85em;
-            }
-            .benefits-list li {
-                padding: 7px 0;
-                padding-left: 45px;
-            }
-            .vision-box {
-                padding: 12px;
-                margin: 18px 0;
-            }
-            .vision-title {
-                font-size: 1em;
-            }
-            .vision-text {
-                font-size: 0.9em;
-            }
-            .future-final-cta {
-                padding: 12px;
-                margin: 18px 0 0 0;
-            }
-            .future-final-cta-title {
-                font-size: 1.1em;
-            }
-        }
-
-        /* Mobile molto piccolo */
-        @media (max-width: 320px) {
-            .hero-section h1 {
-                font-size: 1.5em;
-            }
-            .hero-section p.subtitle {
-                font-size: 0.95em;
-            }
-            .section, .future-section {
-                padding: 15px;
-            }
-            .section h2, .future-main-title {
-                font-size: 1.4em;
-            }
-            .value-card {
-                padding: 15px;
-            }
-            .value-card .emoji {
-                font-size: 1.8em;
-            }
-            .value-card h3 {
-                font-size: 1em;
-            }
-            .value-card li {
-                padding-left: 50px;
-            }
-            .value-card li::before {
-                width: 40px;
-            }
-            .roi-showcase, .cta-section {
-                padding: 20px 12px;
-            }
-            .roi-showcase h2, .cta-section h2 {
-                font-size: 1.3em;
-            }
-            .roi-total {
-                font-size: 1.6em;
-            }
-            .cta-button {
-                padding: 12px 18px;
-                font-size: 0.9em;
-            }
-
-            /* Future Section Ultra Small */
-            .future-section {
-                padding: 15px 10px;
-            }
-            .future-main-title {
-                font-size: 1.3em;
-            }
-            .future-content-wrapper {
-                padding: 15px 10px;
-                margin: 15px 0;
-            }
-            .pension-card {
-                padding: 15px 10px;
-                margin: 18px 0;
-            }
-            .pension-icon {
-                font-size: 1.6em;
-            }
-            .pension-title {
-                font-size: 1em;
-            }
-            .benefits-list {
-                font-size: 0.8em;
-            }
-            .benefits-list li {
-                padding-left: 50px;
-            }
-            .vision-box {
-                padding: 10px;
-                margin: 15px 0;
-            }
-            .vision-title {
-                font-size: 0.95em;
-            }
-            .vision-text {
-                font-size: 0.85em;
-            }
-            .future-final-cta {
-                padding: 10px;
-                margin: 15px 0 0 0;
-            }
-            .future-final-cta-title {
-                font-size: 1em;
-            }
-        }
-
-        /* Logo responsive styles */
-        .logo-container img {
-            transition: all 0.3s ease;
+            .hero-container { grid-template-columns: 1fr; gap: 3rem; }
+            .future-container { grid-template-columns: 1fr; }
+            .hero-card { max-width: none; }
         }
 
         @media (max-width: 768px) {
-            .logo-container img {
-                max-height: 150px;
-            }
+            .hero { padding: 0 1rem; }
+            .benefits, .roi, .future, .cta { padding: 4rem 1rem; }
+            .hero-stats { flex-direction: column; gap: 1rem; }
+            .benefits-grid { grid-template-columns: 1fr; }
+            .roi-grid { grid-template-columns: repeat(2, 1fr); }
+            .pension-card { padding: 2rem; }
+            .cta-card { padding: 2rem; }
+            .footer-links { flex-direction: column; gap: 1rem; }
         }
 
         @media (max-width: 480px) {
-            .logo-container img {
-                max-height: 120px;
-            }
-        }
-
-        @media (max-width: 320px) {
-            .logo-container img {
-                max-height: 100px;
-            }
-        }
-
-        /* Ottimizzazioni per dispositivi touch */
-        @media (hover: none) and (pointer: coarse) {
-            .cta-button, .pension-card {
-                min-height: 48px;
-                touch-action: manipulation;
-            }
-            .value-card:hover, .section:hover {
-                transform: none;
-            }
-            /* Riduci animazioni per prestazioni migliori su mobile */
-            *, *::before, *::after {
-                animation-duration: 0.3s !important;
-                transition-duration: 0.3s !important;
-            }
-        }
-
-        /* Landscape mobile - ottimizzazione altezza */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .hero-section {
-                padding: 20px 15px;
-            }
-            .section, .future-section {
-                padding: 20px;
-                margin-bottom: 10px;
-            }
-            .roi-showcase, .cta-section {
-                padding: 25px 20px;
-            }
-        }
-
-        /* Accessibilità */
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-
-        /* High contrast mode */
-        @media (prefers-contrast: high) {
-            .future-section, .section {
-                border: 2px solid var(--color-white);
-            }
-            .future-content-wrapper, .pension-card {
-                border: 1px solid var(--color-white);
-            }
-        }
-
-        /*
-         ******************************************************
-         * 6. ELEMENTI INTERATTIVI MODERNI
-         ******************************************************
-         */
-
-        .parallax-element {
-            transition: transform 0.1s ease-out;
-        }
-
-        .scroll-reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease-out;
-        }
-
-        .scroll-reveal.revealed {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Loading states */
-        .loading-shimmer {
-            background: linear-gradient(90deg, 
-                rgba(255,255,255,0) 0%, 
-                rgba(255,255,255,0.2) 50%, 
-                rgba(255,255,255,0) 100%);
-            background-size: 200px 100%;
-            animation: loading 1.5s infinite;
-        }
-
-        @keyframes loading {
-            0% { background-position: -200px 0; }
-            100% { background-position: calc(200px + 100%) 0; }
+            .hero-card { padding: 2rem; }
+            .benefit-card { padding: 1.5rem; }
+            .roi-dashboard { padding: 2rem; }
+            .roi-grid { grid-template-columns: 1fr; }
+            .cta-button-main { padding: 1rem 2rem; font-size: 1rem; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo-section" style="text-align: center; padding: 20px 0 0 0; margin-bottom: 20px;">
-            <div class="logo-container" style="width: 100%; max-width: 1200px; margin: 0 auto; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 20px; padding: 0; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); overflow: hidden;">
-                <img src="https://i0.wp.com/www.simcarabinieri.it/wp-content/uploads/2019/04/cropped-LOG1.jpg?ssl=1" alt="SIM Carabinieri Logo" style="width: 100%; height: auto; max-height: 200px; object-fit: cover; display: block; margin: 0; border-radius: 20px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                <div style="display: none; color: var(--color-blue); font-weight: 800; font-size: 1.8em; letter-spacing: -0.02em; padding: 15px;">
-                    SIM CARABINIERI
-                </div>
+    <div class="animated-bg"></div>
+
+    <!-- Floating Elements -->
+    <div class="floating-element floating-1"></div>
+    <div class="floating-element floating-2"></div>
+    <div class="floating-element floating-3"></div>
+
+    <!-- Smart Sidebar Navigation -->
+    <div class="sidebar-trigger" id="sidebarTrigger"></div>
+    <nav class="smart-sidebar" id="smartSidebar">
+        <div class="sidebar-container">
+            <a href="#" class="sidebar-logo">
+                SIM
+            </a>
+            
+            <div class="sidebar-nav">
+                <a href="#servizi" class="nav-item" data-section="servizi">
+                    📋
+                    <div class="nav-tooltip">Servizi</div>
+                </a>
+                <a href="#vantaggi" class="nav-item" data-section="vantaggi">
+                    💎
+                    <div class="nav-tooltip">Vantaggi</div>
+                </a>
+                <a href="#futuro" class="nav-item" data-section="futuro">
+                    🚀
+                    <div class="nav-tooltip">Futuro</div>
+                </a>
+                <a href="https://www.simcarabinieri.com/iscrizione.php" class="nav-item cta" target="_blank">
+                    ✓
+                    <div class="nav-tooltip">Iscriviti Ora</div>
+                </a>
+            </div>
+            
+            <div class="scroll-progress">
+                <div class="progress-fill" id="progressFill"></div>
             </div>
         </div>
+    </nav>
 
-        <header class="hero-section scroll-reveal">
-            <h1>SIM Carabinieri: La Tessera Che Si Ripaga da Sola</h1>
-            <p class="subtitle">Investimento Intelligente: €9* al Mese per Centinaia di Euro di Servizi</p>
-            <span class="badge">#maipiùsoli</span>
-            
-            <div class="urgency-bar" style="background: linear-gradient(135deg, var(--color-blue), var(--color-dark-red)); animation: none;">
-                🤝 <strong>UNISCITI ALLA FAMIGLIA SIM</strong> - Protezione e servizi garantiti per tutti
-            </div>
-        </header>
-
-        <main>
-            <!-- Social Proof Section -->
-            <section class="section scroll-reveal" style="background: linear-gradient(135deg, var(--color-blue) 0%, var(--color-dark-red) 100%); color: var(--color-white); text-align: center; padding: 50px; margin-bottom: 40px;">
-                <div style="position: relative; z-index: 2;">
-                    <div style="font-size: 1.2em; margin-bottom: 20px; opacity: 0.9;">
-                        🏆 LEADER INDISCUSSO DELLE FORZE ARMATE
-                    </div>
-                    <h2 style="color: var(--color-white); font-size: 2.5em; margin-bottom: 30px; line-height: 1.2;">
-                        GIÀ PIÙ DI <span style="color: var(--color-gold); font-size: 1.2em;">15.000 PERSONE</span><br>
-                        HANNO SCELTO SIM CARABINIERI
-                    </h2>
-                    <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; margin: 30px auto; max-width: 800px; border: 1px solid rgba(255, 255, 255, 0.2);">
-                        <p style="font-size: 1.4em; font-weight: 700; line-height: 1.4; margin: 0;">
-                            IL PRIMO SINDACATO DELL'ARMA DEI CARABINIERI<br>
-                            E DELLE FORZE ARMATE CON PIÙ ISCRITTI!
-                        </p>
-                    </div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 40px;">
-                        <div style="background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.2);">
-                            <div style="font-size: 2.5em; font-weight: 900; color: var(--color-gold);">15.000+</div>
-                            <div style="font-size: 0.95em; opacity: 0.9; margin-top: 5px;">Iscritti Attivi</div>
-                        </div>
-                        <div style="background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.2);">
-                            <div style="font-size: 2.5em; font-weight: 900; color: var(--color-gold);">1°</div>
-                            <div style="font-size: 0.95em; opacity: 0.9; margin-top: 5px;">Sindacato dell'Arma</div>
-                        </div>
-                        <div style="background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.2);">
-                            <div style="font-size: 2.5em; font-weight: 900; color: var(--color-gold);">98%</div>
-                            <div style="font-size: 0.95em; opacity: 0.9; margin-top: 5px;">Soddisfazione</div>
-                        </div>
-                    </div>
-                    <p style="font-size: 1.1em; margin-top: 30px; opacity: 0.8; font-style: italic;">
-                        🤝 La fiducia di migliaia di colleghi è la nostra migliore garanzia
-                    </p>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    #maipiùsoli
                 </div>
-            </section>
+                
+                <h1 class="hero-title">
+                    La Tessera Che Si <span class="highlight">Ripaga da Sola</span>
+                </h1>
+                
+                <p class="hero-subtitle">
+                    Investimento Intelligente: 9€ al mese per centinaia di euro di servizi. Il sindacato che investe nel tuo futuro.
+                </p>
 
-            <section class="section scroll-reveal">
-                <h2 class="gradient-text" style="text-align: center; margin-bottom: 50px; font-size: 2.5em;">💰 ANALISI DEI RISPARMI CONCRETI</h2>
-                <div class="value-grid">
-                    <div class="value-card">
-                        <span class="emoji">⚖️</span>
-                        <h3>Tutela Legale Professionale</h3>
-                        <p class="original-price">Costo assistenza privata: €3.000-10.000+</p>
-                        <p class="price">Con tessera SIM: <strong>COPERTURA COMPLETA</strong></p>
-                        <div style="margin-top: 20px;">
-                            <p><strong>Protezione fino a €20.000 senza franchigia</strong></p>
-                            <ul>
-                                <li>Scelta libera del legale</li>
-                                <li><strong>Periti e consulenti inclusi</strong></li>
-                                <li>Copertura penale, <strong>penale militare</strong>, disciplinare</li>
-                                <li>Assistenza 24/7</li>
-                            </ul>
-                        </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="hero-stat-number">15.000+</span>
+                        <span class="hero-stat-label">Iscritti Attivi</span>
                     </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-number">1°</span>
+                        <span class="hero-stat-label">Sindacato dell'Arma</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-number">98%</span>
+                        <span class="hero-stat-label">Soddisfazione</span>
+                    </div>
+                </div>
 
-                    <div class="value-card">
-                        <span class="emoji">🩺</span>
-                        <h3>Dr.Feel - Servizio Sanitario Digitale</h3>
-                        <p class="original-price">Valore di mercato: €348/anno</p>
-                        <p class="price">Con tessera SIM: <strong>GRATUITO</strong></p>
-                        <div style="margin-top: 20px;">
-                            <p><strong>Copertura per tutto il nucleo familiare</strong></p>
-                            <ul>
-                                <li>Consulenze mediche 24/7 via app</li>
-                                <li>Visite specialistiche online</li>
-                                <li>Prescrizioni mediche digitali</li>
-                                <li>Telemedicina avanzata</li>
-                            </ul>
-                            <div style="margin-top: 15px; padding: 15px; background: #ffffff; border: 2px solid var(--color-blue); border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 61, 130, 0.2);">
-                                <p style="margin: 0; font-size: 1em; color: var(--color-text-dark);">
-                                    🎥 <strong style="color: var(--color-blue);">Scopri come funziona:</strong><br>
-                                    <a href="https://www.youtube.com/watch?feature=shared&v=OYa_y9vscN4" target="_blank" style="color: var(--color-dark-red); text-decoration: underline; font-weight: 700; font-size: 1.05em;">
-                                        Guarda il video dimostrativo →
-                                    </a>
-                                </p>
+                <a href="https://www.simcarabinieri.com/iscrizione.php" class="hero-cta">
+                    🚀 Inizia a Risparmiare Ora
+                </a>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-card">
+                    <div class="logo-section">
+                        <div class="logo-container">
+                            <img src="https://i0.wp.com/www.simcarabinieri.it/wp-content/uploads/2019/04/cropped-LOG1.jpg?ssl=1" alt="SIM Carabinieri Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <div style="display: none; color: var(--primary-blue); font-weight: 800; font-size: 1.8em;">
+                                SIM CARABINIERI
                             </div>
                         </div>
                     </div>
+
+                    <h3>Investimento Mensile</h3>
                     
-                    <div class="value-card">
-                        <span class="emoji">📊</span>
-                        <h3>Servizi Fiscali e Previdenziali</h3>
-                        <p class="original-price">Costo CAF privato: €130/anno</p>
-                        <p class="price">Con tessera SIM: <strong>TUTTO GRATUITO</strong></p>
-                        <div style="margin-top: 20px;">
-                            <p><strong>Assistenza fiscale completa</strong></p>
-                            <ul>
-                                <li>Dichiarazione 730 gratuita</li>
-                                <li>Calcolo e invio ISEE gratuito</li>
-                                <li>Pratiche previdenziali (pensioni)</li>
-                                <li>Consulenza personalizzata</li>
-                            </ul>
-                        </div>
+                    <div class="investment-amount">
+                        <div class="price">9€*</div>
+                        <div class="period">al mese</div>
                     </div>
-                    
-                    <div class="value-card">
-                        <span class="emoji">🎯</span>
-                        <h3>Convenzioni Esclusive</h3>
-                        <p class="original-price">Costo convenzioni: Variabile</p>
-                        <p class="price">Risparmio stimato: <strong>€400/anno</strong></p>
-                        <div style="margin-top: 20px;">
-                            <p><strong>Sconti e agevolazioni riservate</strong></p>
-                            <ul>
-                                <li>Italo Treno 1° classe: sconto del <span class="discount-highlight">40%</span></li>
-                                <li>Samoiraghi & Viganò: <span class="discount-highlight">30%</span> su occhiali da vista e sole</li>
-                                <li>GrandVision: fino a <span class="discount-highlight">-50€</span> su occhiali graduati</li>
-                                <li>Gruppo Stellantis: sconti esclusivi autovetture</li>
-                                <li>Alpitour World: sconto fino all'<span class="discount-highlight">11%</span></li>
-                                <li>E oltre 50 altre convenzioni attive!</li>
-                            </ul>
-                        </div>
+
+                    <div class="value-comparison">
+                        <div class="value">Oltre 878€ di valore annuale</div>
+                        <div>8X ritorno dell'investimento</div>
+                    </div>
+
+                    <a href="https://www.simcarabinieri.com/iscrizione.php" class="card-cta">
+                        Iscriviti Subito
+                    </a>
+
+                    <div style="margin-top: 1rem; font-size: 0.8rem; color: var(--neutral-gray); font-style: italic; text-align: center;">
+                        * Quota media mensile per iscritto
                     </div>
                 </div>
-            </section>
+            </div>
+        </div>
+    </section>
 
-            <!-- SIM Carabinieri pensa al tuo futuro - VERSIONE OTTIMIZZATA -->
-            <section class="future-section scroll-reveal">
-                <h2 class="future-main-title">
-                    🚀 SIM CARABINIERI PENSA AL TUO FUTURO
-                </h2>
+    <!-- Benefits Section -->
+    <section class="benefits" id="servizi">
+        <div class="benefits-container">
+            <div class="section-header">
+                <h2 class="section-title">Analisi dei Risparmi Concreti</h2>
+                <p class="section-subtitle">Ogni euro investito genera valore reale e misurabile per te e la tua famiglia</p>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <span class="benefit-icon">⚖️</span>
+                    <h3 class="benefit-title">Tutela Legale Professionale</h3>
+                    <div class="benefit-pricing">
+                        <span class="price-before">Costo assistenza privata: €3.000-10.000+</span>
+                        <span class="price-after">Incluso</span>
+                    </div>
+                    <p class="benefit-description">Protezione fino a €20.000 senza franchigia</p>
+                    <ul class="benefit-list">
+                        <li>Scelta libera del legale</li>
+                        <li>Periti e consulenti inclusi</li>
+                        <li>Copertura penale, penale militare, disciplinare</li>
+                        <li>Assistenza 24/7</li>
+                    </ul>
+                </div>
+
+                <div class="benefit-card">
+                    <span class="benefit-icon">🩺</span>
+                    <h3 class="benefit-title">Dr.Feel - Servizio Sanitario Digitale</h3>
+                    <div class="benefit-pricing">
+                        <span class="price-before">Valore di mercato: €348/anno</span>
+                        <span class="price-after">Gratuito</span>
+                    </div>
+                    <p class="benefit-description">Copertura per tutto il nucleo familiare</p>
+                    <ul class="benefit-list">
+                        <li>Consulenze mediche 24/7 via app</li>
+                        <li>Visite specialistiche online</li>
+                        <li>Prescrizioni mediche digitali</li>
+                        <li>Telemedicina avanzata</li>
+                    </ul>
+                    <div class="video-highlight">
+                        🎥 <strong>Scopri come funziona:</strong><br>
+                        <a href="https://www.youtube.com/watch?feature=shared&v=OYa_y9vscN4" target="_blank">
+                            Guarda il video dimostrativo →
+                        </a>
+                    </div>
+                </div>
+
+                <div class="benefit-card">
+                    <span class="benefit-icon">📊</span>
+                    <h3 class="benefit-title">Servizi Fiscali e Previdenziali</h3>
+                    <div class="benefit-pricing">
+                        <span class="price-before">Costo CAF privato: €130/anno</span>
+                        <span class="price-after">Gratuito</span>
+                    </div>
+                    <p class="benefit-description">Assistenza fiscale completa</p>
+                    <ul class="benefit-list">
+                        <li>Dichiarazione 730 gratuita</li>
+                        <li>Calcolo e invio ISEE gratuito</li>
+                        <li>Pratiche previdenziali (pensioni)</li>
+                        <li>Consulenza personalizzata</li>
+                    </ul>
+                </div>
+
+                <div class="benefit-card">
+                    <span class="benefit-icon">🎯</span>
+                    <h3 class="benefit-title">Convenzioni Esclusive</h3>
+                    <div class="benefit-pricing">
+                        <span class="price-before">Costo convenzioni: Variabile</span>
+                        <span class="price-after">Risparmi €400/anno</span>
+                    </div>
+                    <p class="benefit-description">Sconti e agevolazioni riservate</p>
+                    <ul class="benefit-list">
+                        <li>Italo Treno 1° classe: sconto <span class="discount-highlight">40%</span></li>
+                        <li>Samoiraghi & Viganò: <span class="discount-highlight">30%</span> su occhiali da vista e sole</li>
+                        <li>GrandVision: fino a <span class="discount-highlight">-50€</span> su occhiali graduati</li>
+                        <li>Gruppo Stellantis: sconti esclusivi autovetture</li>
+                        <li>Alpitour World: sconto fino all'<span class="discount-highlight">11%</span></li>
+                        <li>E oltre 50 altre convenzioni attive!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI Section -->
+    <section class="roi" id="vantaggi">
+        <div class="roi-container">
+            <div class="roi-dashboard">
+                <h2 class="roi-title">Il Tuo Ritorno Economico</h2>
                 
-                <div class="future-content-wrapper">
-                    <div class="pension-card">
-                        <div class="pension-icon">💰</div>
-                        <h3 class="pension-title">Fondo Pensione "Insieme"</h3>
-                        <p class="pension-subtitle">Partnership con Allianz e AON</p>
-                        
-                        <ul class="benefits-list">
-                            <li><strong>Sicuro e Trasparente</strong></li>
-                            <li><strong>Deducibile</strong> che si trasforma in guadagno</li>
-                            <li><strong>Rendimenti tassati</strong> in modo agevolato</li>
-                            <li><strong>Sospensione senza penali</strong></li>
-                            <li><strong>Anticipo fino al 75%</strong> della posizione maturata</li>
-                        </ul>
+                <div class="roi-grid">
+                    <div class="roi-metric">
+                        <div class="roi-metric-value">€108</div>
+                        <div class="roi-metric-label">Investimento annuale</div>
                     </div>
-                    
-                    <div class="vision-box">
-                        <h4 class="vision-title">🌟 LA VISIONE SIM</h4>
-                        <p class="vision-text">
-                            Crediamo che ogni Carabiniere meriti non solo protezione oggi, ma anche opportunità concrete per costruire un futuro brillante. Il nostro impegno va oltre la tessera sindacale: è un investimento nella tua crescita personale e professionale.
-                        </p>
+                    <div class="roi-metric">
+                        <div class="roi-metric-value">€878</div>
+                        <div class="roi-metric-label">Valore dei servizi</div>
                     </div>
-                    
-                    <p class="future-inspiring-text">
-                        💡 Il tuo futuro inizia con una scelta intelligente di oggi
-                    </p>
-                    
-                    <div class="future-final-cta">
-                        <h3 class="future-final-cta-title">
-                            🚀 SIM CARABINIERI NON È SOLO PRESENTE
-                            <span class="future-cta-highlight">MA È IL TUO FUTURO</span>
-                        </h3>
+                    <div class="roi-metric">
+                        <div class="roi-metric-value">€20.000</div>
+                        <div class="roi-metric-label">Protezione legale</div>
+                    </div>
+                    <div class="roi-metric">
+                        <div class="roi-metric-value">8X</div>
+                        <div class="roi-metric-label">Ritorno investimento</div>
                     </div>
                 </div>
-            </section>
 
-            <section class="roi-showcase scroll-reveal">
-                <h2>IL TUO RITORNO ECONOMICO</h2>
+                <div class="roi-result">
+                    <div class="roi-result-value">GUADAGNO NETTO: €770/anno</div>
+                </div>
                 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <span class="stat-number">€108</span>
-                        <span class="stat-label">Investimento annuale</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number">€878</span>
-                        <span class="stat-label">Valore dei servizi</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number">€20.000</span>
-                        <span class="stat-label">Protezione legale</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number">8X</span>
-                        <span class="stat-label">Ritorno investimento</span>
-                    </div>
-                </div>
-
-                <div class="roi-total">
-                    GUADAGNO NETTO: €770/anno
-                </div>
-                <p class="roi-text">
+                <p class="roi-description">
                     <strong>Ogni euro investito ne vale oltre 8 in benefici concreti!</strong><br>
-                    <em>La tessera sindacale che conviene davvero</em>
+                    La tessera sindacale che conviene davvero.
                 </p>
-            </section>
+            </div>
+        </div>
+    </section>
 
-            <section class="cta-section scroll-reveal">
-                <h2>LA SCELTA INTELLIGENTE PER IL TUO FUTURO</h2>
+    <!-- Future Section -->
+    <section class="future" id="futuro">
+        <div class="future-container">
+            <div class="future-content">
+                <h2>🚀 SIM Carabinieri Pensa al Tuo Futuro</h2>
+                <p class="future-description">
+                    Crediamo che ogni Carabiniere meriti non solo protezione oggi, ma anche opportunità concrete per costruire un futuro brillante. Il nostro impegno va oltre la tessera sindacale: è un investimento nella tua crescita personale e professionale.
+                </p>
+
+                <div class="vision-card">
+                    <h4>🌟 La Visione SIM</h4>
+                    <p>
+                        Il tuo futuro inizia con una scelta intelligente di oggi. SIM Carabinieri non è solo presente, ma è il tuo futuro.
+                    </p>
+                </div>
+            </div>
+
+            <div class="pension-card">
+                <div class="pension-icon">💰</div>
+                <h3 class="pension-title">Fondo Pensione "Insieme"</h3>
+                <div class="pension-subtitle">Partnership con Allianz e AON</div>
                 
-                <div class="highlight-box">
-                    <div style="font-size: 1.6em; font-weight: 600; margin-bottom: 15px;">
-                        💎 <strong>€9* al mese</strong> per oltre <strong>€878 di valore annuale</strong>
-                    </div>
-                    <div style="font-size: 1.2em; opacity: 0.9;">
-                        La tessera sindacale che ti fa risparmiare davvero!
-                    </div>
+                <ul class="benefit-list">
+                    <li>Sicuro e Trasparente</li>
+                    <li>Deducibile che si trasforma in guadagno</li>
+                    <li>Rendimenti tassati in modo agevolato</li>
+                    <li>Sospensione senza penali</li>
+                    <li>Anticipo fino al 75% della posizione maturata</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-container">
+            <div class="cta-card">
+                <h2 class="cta-title">La Scelta Intelligente per il Tuo Futuro</h2>
+                
+                <div class="cta-highlight">
+                    <div class="cta-highlight-title">💎 €9 al mese per oltre €878 di valore annuale</div>
+                    <div class="cta-highlight-subtitle">La tessera sindacale che ti fa risparmiare davvero!</div>
                 </div>
 
-                <div style="margin: 40px 0;">
-                    <p style="font-size: 1.3em; margin-bottom: 10px;">
-                        ⏰ <strong>Non aspettare!</strong> Ogni giorno che passa perdi denaro
-                    </p>
-                    <p style="font-size: 1.1em; opacity: 0.9;">
-                        Unisciti a migliaia di colleghi che hanno già scelto la convenienza
-                    </p>
-                </div>
+                <p class="cta-description">
+                    Non aspettare! Ogni giorno che passa perdi denaro. Unisciti a migliaia di colleghi che hanno già scelto la convenienza.
+                </p>
 
-                <a href="https://www.simcarabinieri.com/iscrizione.php" class="cta-button pulse-button">
-                    🚀 ISCRIVITI ORA E INIZIA A RISPARMIARE
+                <a href="https://www.simcarabinieri.com/iscrizione.php" class="cta-button-main">
+                    🚀 Iscriviti Ora e Inizia a Risparmiare
                 </a>
+            </div>
+        </div>
+    </section>
 
-                <div style="margin-top: 25px; font-size: 0.85em; opacity: 0.7; font-style: italic; border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 15px;">
-                    * €9 rappresenta la quota media versata mensilmente da un iscritto
-                </div>
-            </section>
-        </main>
-
-        <footer class="main-footer">
-            <p style="font-size: 1.1em; margin-bottom: 20px;">
-                <strong style="color: var(--color-gold);">SIM Carabinieri</strong><br>
-                <em>Sindacato Italiano Militari Carabinieri</em>
-            </p>
-            <p style="font-style: italic; opacity: 0.9; margin-bottom: 30px;">
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <h3 class="footer-title">SIM Carabinieri</h3>
+            <p class="footer-tagline">
                 "Il sindacato che valorizza il tuo impegno e fa crescere il tuo risparmio"
             </p>
             
-            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
-                <p style="font-size: 0.9em; opacity: 0.9;">
-                    🌐 <a href="https://www.simcarabinieri.it" target="_blank" style="color: var(--color-gold); text-decoration: none;">www.simcarabinieri.it</a> • 
-                    📧 <a href="mailto:info@simcarabinieri.cc" style="color: var(--color-gold); text-decoration: none;">info@simcarabinieri.cc</a>
+            <div class="footer-contact">
+                <p style="margin-bottom: 1rem;">
+                    <strong>Sindacato Italiano Militari Carabinieri</strong><br>
+                    Via Magnagrecia 13 – 00183 Roma
                 </p>
-                <p style="font-size: 0.9em; opacity: 0.9; margin-top: 10px;">
-                    📍 Via Magnagrecia 13 – 00183 Roma • 
-                    📞 <a href="tel:+390669217447" style="color: var(--color-gold); text-decoration: none;">06 6921 7447</a>
-                </p>
+                
+                <div class="footer-links">
+                    <a href="https://www.simcarabinieri.it" target="_blank">🌐 www.simcarabinieri.it</a>
+                    <a href="mailto:info@simcarabinieri.cc">📧 info@simcarabinieri.cc</a>
+                    <a href="tel:+390669217447">📞 06 6921 7447</a>
+                </div>
             </div>
-        </footer>
-    </div>
+        </div>
+    </footer>
 
     <script>
-        // === ENHANCED SCROLL REVEAL ===
+        // ===== DEVICE DETECTION & NAVIGATION SYSTEM =====
+        let currentDevice = 'desktop';
+        let isMouseOnLeft = false;
+        let scrollTimer = null;
+        let lastScrollTop = 0;
+
+        const sidebar = document.getElementById('smartSidebar');
+        const sidebarTrigger = document.getElementById('sidebarTrigger');
+        const tabletNav = document.getElementById('tabletNav');
+        const mobileNav = document.getElementById('mobileNav');
+        const mobileFab = document.getElementById('mobileFab');
+        const progressFill = document.getElementById('progressFill');
+
+        // Device detection
+        function detectDevice() {
+            const width = window.innerWidth;
+            if (width >= 1024) {
+                currentDevice = 'desktop';
+            } else if (width >= 768) {
+                currentDevice = 'tablet';
+            } else {
+                currentDevice = 'mobile';
+            }
+        }
+
+        // Initialize device detection
+        detectDevice();
+        window.addEventListener('resize', detectDevice);
+
+        // ===== DESKTOP SIDEBAR SYSTEM =====
+        function updateSidebarVisibility() {
+            if (currentDevice !== 'desktop') return;
+            
+            const showSidebar = isMouseOnLeft || window.pageYOffset > 200;
+            
+            if (showSidebar) {
+                sidebar.classList.add('visible');
+            } else {
+                sidebar.classList.remove('visible');
+                sidebar.classList.remove('active');
+            }
+        }
+
+        // Mouse detection for left edge (desktop only)
+        if (sidebarTrigger) {
+            sidebarTrigger.addEventListener('mouseenter', () => {
+                if (currentDevice === 'desktop') {
+                    isMouseOnLeft = true;
+                    updateSidebarVisibility();
+                    setTimeout(() => {
+                        sidebar.classList.add('active');
+                    }, 100);
+                }
+            });
+
+            sidebarTrigger.addEventListener('mouseleave', () => {
+                if (currentDevice === 'desktop') {
+                    isMouseOnLeft = false;
+                    setTimeout(() => {
+                        if (!sidebar.matches(':hover')) {
+                            sidebar.classList.remove('active');
+                            updateSidebarVisibility();
+                        }
+                    }, 200);
+                }
+            });
+        }
+
+        if (sidebar) {
+            sidebar.addEventListener('mouseenter', () => {
+                if (currentDevice === 'desktop') {
+                    sidebar.classList.add('active');
+                }
+            });
+
+            sidebar.addEventListener('mouseleave', () => {
+                if (currentDevice === 'desktop' && !isMouseOnLeft) {
+                    sidebar.classList.remove('active');
+                    updateSidebarVisibility();
+                }
+            });
+        }
+
+        // ===== UNIVERSAL PROGRESS INDICATOR =====
+        function updateProgress() {
+            if (!progressFill) return;
+            
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressFill.style.height = scrolled + '%';
+        }
+
+        // ===== MOBILE FAB HIDE/SHOW =====
+        function updateMobileFab() {
+            if (currentDevice !== 'mobile' || !mobileFab) return;
+            
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                // Scrolling down
+                mobileFab.style.transform = 'scale(0)';
+                mobileFab.style.opacity = '0';
+            } else {
+                // Scrolling up
+                mobileFab.style.transform = 'scale(1)';
+                mobileFab.style.opacity = '1';
+            }
+        }
+
+        // ===== SCROLL MANAGEMENT =====
+        let scrollDirection = 'down';
+        window.addEventListener('scroll', () => {
+            const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            scrollDirection = currentScrollTop > lastScrollTop ? 'down' : 'up';
+            lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+            
+            updateProgress();
+            updateSidebarVisibility();
+            updateMobileFab();
+            highlightActiveSection();
+            
+            // Desktop sidebar scroll behavior
+            if (currentDevice === 'desktop') {
+                if (scrollTimer) clearTimeout(scrollTimer);
+                
+                if (!isMouseOnLeft && currentScrollTop > 200) {
+                    sidebar.classList.add('visible');
+                    
+                    scrollTimer = setTimeout(() => {
+                        if (!isMouseOnLeft && !sidebar.matches(':hover')) {
+                            sidebar.classList.remove('visible');
+                            sidebar.classList.remove('active');
+                        }
+                    }, 1500);
+                }
+            }
+        }, { passive: true });
+
+        // ===== ACTIVE SECTION HIGHLIGHTING (ALL DEVICES) =====
+        function highlightActiveSection() {
+            const sections = document.querySelectorAll('section[id], .hero');
+            let currentSection = 'home';
+            
+            // Check which section is currently in view
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                const threshold = currentDevice === 'mobile' ? 150 : 100;
+                
+                if (rect.top <= threshold && rect.bottom >= threshold) {
+                    currentSection = section.id || 'home';
+                }
+            });
+            
+            // Update all navigation systems
+            updateActiveNavItems(currentSection);
+        }
+
+        function updateActiveNavItems(activeSection) {
+            // Desktop sidebar
+            const sidebarItems = document.querySelectorAll('.smart-sidebar .nav-item[data-section]');
+            sidebarItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.section === activeSection) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Tablet navigation
+            const tabletItems = document.querySelectorAll('.tablet-nav-menu a[data-section]');
+            tabletItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.section === activeSection) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Mobile navigation
+            const mobileItems = document.querySelectorAll('.mobile-nav-item[data-section]');
+            mobileItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.section === activeSection) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // ===== SMOOTH SCROLLING (ALL DEVICES) =====
+        function smoothScrollTo(targetId) {
+            const target = document.querySelector(targetId);
+            if (!target) return;
+            
+            let offset = 20;
+            
+            // Adjust offset based on device and navigation
+            switch (currentDevice) {
+                case 'tablet':
+                    offset = 80; // Account for tablet nav height
+                    break;
+                case 'mobile':
+                    offset = 20; // Mobile nav is at bottom
+                    break;
+                default:
+                    offset = 20; // Desktop sidebar doesn't affect scroll
+            }
+            
+            const targetPosition = target.offsetTop - offset;
+            
+            // Smooth scroll with optimized behavior for mobile
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+        }
+
+        // Apply smooth scrolling to all navigation links
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a[href^="#"]');
+            if (link) {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                if (targetId && targetId !== '#') {
+                    smoothScrollTo(targetId);
+                }
+            }
+        });
+
+        // ===== TOUCH EVENTS FOR MOBILE =====
+        if ('ontouchstart' in window) {
+            // Improve touch responsiveness
+            document.addEventListener('touchstart', () => {}, { passive: true });
+            
+            // Mobile swipe detection for future enhancements
+            let startY = 0;
+            let startX = 0;
+            
+            document.addEventListener('touchstart', (e) => {
+                startY = e.touches[0].clientY;
+                startX = e.touches[0].clientX;
+            }, { passive: true });
+            
+            document.addEventListener('touchend', (e) => {
+                const endY = e.changedTouches[0].clientY;
+                const endX = e.changedTouches[0].clientX;
+                const diffY = startY - endY;
+                const diffX = startX - endX;
+                
+                // Swipe up from bottom edge could trigger mobile nav (future enhancement)
+                if (Math.abs(diffY) > Math.abs(diffX) && diffY > 50 && startY > window.innerHeight - 100) {
+                    // Potential swipe up gesture from bottom
+                }
+            }, { passive: true });
+        }
+
+        // ===== INTERSECTION OBSERVER FOR BETTER PERFORMANCE =====
+        if ('IntersectionObserver' in window) {
+            const navObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const sectionId = entry.target.id || 'home';
+                    if (entry.isIntersecting) {
+                        updateActiveNavItems(sectionId);
+                    }
+                });
+            }, {
+                threshold: 0.2,
+                rootMargin: '-10% 0px -10% 0px'
+            });
+            
+            // Observe all sections
+            document.querySelectorAll('section[id], .hero').forEach(section => {
+                navObserver.observe(section);
+            });
+        }
+
+        // ===== ENHANCED ANIMATIONS =====
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
         };
 
-        const observer = new IntersectionObserver((entries) => {
+        const cardObserver = new IntersectionObserver((entries) => {
             entries.forEach((entry, index) => {
                 if (entry.isIntersecting) {
-                    // Staggered animation delay
                     setTimeout(() => {
-                        entry.target.classList.add('revealed');
-                        
-                        // Add special effects for cards
-                        if (entry.target.classList.contains('value-card')) {
-                            entry.target.style.animationDelay = `${index * 0.1}s`;
-                        }
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
                     }, index * 100);
                 }
             });
         }, observerOptions);
 
-        document.querySelectorAll('.scroll-reveal').forEach(el => {
-            observer.observe(el);
+        // Initialize animations for cards
+        document.querySelectorAll('.benefit-card, .roi-metric, .pension-card').forEach((el) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            cardObserver.observe(el);
         });
 
-        // === ROI COUNTER ANIMATION ===
+        // ===== ROI COUNTER ANIMATION =====
         const animateCounter = (element, target) => {
             const duration = 2000;
             const start = 0;
@@ -1854,7 +1769,7 @@
             }, 16);
         };
 
-        const roiElement = document.querySelector('.roi-total');
+        const roiElement = document.querySelector('.roi-result-value');
         if (roiElement) {
             const roiObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -1870,88 +1785,85 @@
             roiObserver.observe(roiElement);
         }
 
-        // === FUTURE SECTION MOBILE OPTIMIZATIONS ===
-        document.addEventListener('DOMContentLoaded', function() {
-            // Touch feedback per la pension card
-            const pensionCards = document.querySelectorAll('.pension-card');
-            pensionCards.forEach(card => {
-                card.addEventListener('touchstart', function() {
-                    this.style.transform = 'scale(0.98)';
-                }, { passive: true });
-                
-                card.addEventListener('touchend', function() {
-                    this.style.transform = 'scale(1)';
-                }, { passive: true });
+        // ===== PARALLAX EFFECT (DESKTOP ONLY) =====
+        function updateParallax() {
+            if (currentDevice === 'mobile') return; // Skip parallax on mobile for performance
+            
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+            
+            const floatingElements = document.querySelectorAll('.floating-element');
+            floatingElements.forEach((el, index) => {
+                const speed = 0.5 + (index * 0.2);
+                el.style.transform = `translate3d(0, ${rate * speed}px, 0)`;
             });
+        }
 
-            // Lazy loading ottimizzato per la sezione future
-            const futureObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        // Animazione staggered per gli elementi interni
-                        const elements = entry.target.querySelectorAll('.pension-card, .vision-box, .future-final-cta');
-                        elements.forEach((el, index) => {
-                            setTimeout(() => {
-                                el.style.opacity = '1';
-                                el.style.transform = 'translateY(0)';
-                            }, index * 200);
-                        });
-                    }
-                });
-            }, {
-                threshold: 0.1,
-                rootMargin: '0px 0px -30px 0px'
-            });
+        window.addEventListener('scroll', updateParallax, { passive: true });
 
-            const futureSection = document.querySelector('.future-section');
-            if (futureSection) {
-                // Inizializza gli elementi per l'animazione
-                const elements = futureSection.querySelectorAll('.pension-card, .vision-box, .future-final-cta');
-                elements.forEach(el => {
-                    el.style.opacity = '0';
-                    el.style.transform = 'translateY(20px)';
-                    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                });
-                
-                futureObserver.observe(futureSection);
+        // ===== KEYBOARD ACCESSIBILITY =====
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab' && currentDevice === 'desktop') {
+                if (document.activeElement && document.activeElement.closest('.sidebar-container')) {
+                    sidebar.classList.add('visible');
+                    sidebar.classList.add('active');
+                }
             }
         });
 
-        // === SMOOTH SCROLL FOR ANCHOR LINKS ===
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
+        // ===== PERFORMANCE OPTIMIZATIONS =====
+        
+        // Debounced resize handler
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                detectDevice();
+                updateProgress();
+                highlightActiveSection();
+            }, 250);
         });
 
-        // === ORIENTATION CHANGE OPTIMIZATION ===
-        window.addEventListener('orientationchange', function() {
-            setTimeout(() => {
-                // Fix per bug di layout su orientation change
-                window.scrollTo(0, window.scrollY + 1);
-                window.scrollTo(0, window.scrollY - 1);
-            }, 100);
-        });
-
-        // === INITIAL LOAD OPTIMIZATIONS ===
-        window.addEventListener('load', () => {
-            // Add loaded class for any load-dependent animations
-            document.body.classList.add('loaded');
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', () => {
+            detectDevice();
+            updateProgress();
+            highlightActiveSection();
             
-            // Preload critical images
-            const criticalImages = document.querySelectorAll('img[data-preload]');
-            criticalImages.forEach(img => {
-                const preloadImg = new Image();
-                preloadImg.src = img.src;
-            });
+            // Add active styles
+            const style = document.createElement('style');
+            style.textContent = `
+                .nav-item.active,
+                .tablet-nav-menu a.active,
+                .mobile-nav-item.active {
+                    background: var(--primary-blue) !important;
+                    color: var(--neutral-white) !important;
+                    transform: scale(1.05);
+                }
+                
+                .mobile-nav-item.active.cta {
+                    background: var(--gradient-primary) !important;
+                    color: var(--neutral-white) !important;
+                }
+            `;
+            document.head.appendChild(style);
         });
+
+        // ===== PWA-LIKE FEATURES FOR MOBILE =====
+        
+        // Prevent zoom on double tap
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (event) => {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Smooth scrolling optimization for iOS
+        document.documentElement.style.setProperty('-webkit-overflow-scrolling', 'touch');
+        
     </script>
 </body>
 </html>
