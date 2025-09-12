@@ -932,20 +932,50 @@
                 try {
                     console.log('🔄 Caricamento dirigenti da Supabase...');
                     
-                    const { data, error } = await supabase
+                    // Test 1: Query semplice senza filtri
+                    console.log('Test 1: Query base senza filtri');
+                    let { data, error } = await supabase
                         .from('organico_dirigentisindacali')
-                        .select('*')
-                        .eq('attivo', true)
-                        .order('ordine', { ascending: true });
+                        .select('*');
+
+                    console.log('Risultato test 1:', { data, error });
+
+                    if (error) {
+                        console.log('Errore nel test 1, provo con schema public...');
+                        
+                        // Test 2: Con schema esplicito
+                        const result2 = await supabase
+                            .from('public.organico_dirigentisindacali')
+                            .select('*');
+                        
+                        console.log('Risultato test 2:', result2);
+                        data = result2.data;
+                        error = result2.error;
+                    }
 
                     if (error) {
                         throw new Error(`Errore Supabase: ${error.message}`);
                     }
 
-                    this.allDirigenti = data || [];
+                    // Filtra i dati lato client se necessario
+                    let dirigenti = data || [];
+                    
+                    // Applica filtro attivo se il campo esiste
+                    if (dirigenti.length > 0 && dirigenti[0].hasOwnProperty('attivo')) {
+                        dirigenti = dirigenti.filter(d => d.attivo === true || d.attivo === null);
+                        console.log(`Filtrati ${dirigenti.length} dirigenti attivi`);
+                    }
+
+                    // Ordina per campo ordine se esiste
+                    if (dirigenti.length > 0 && dirigenti[0].hasOwnProperty('ordine')) {
+                        dirigenti.sort((a, b) => (a.ordine || 999) - (b.ordine || 999));
+                    }
+
+                    this.allDirigenti = dirigenti;
                     this.filteredDirigenti = [...this.allDirigenti];
                     
                     console.log(`✅ Caricati ${this.allDirigenti.length} dirigenti da Supabase`);
+                    console.log('Esempio dirigente:', this.allDirigenti[0]);
                     
                     this.renderDirigenti();
                     this.updateStats();
