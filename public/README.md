@@ -1,4 +1,4 @@
-# 🏛️ Sistema Sindacale
+# 🏛️ MyApp By SIM Carabinieri
 
 **Progressive Web App enterprise** - Piattaforma completa per la gestione sindacale con calcoli stipendiali, turni, licenze, tessere digitali e knowledge base integrata.
 
