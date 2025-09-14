@@ -1,579 +1,271 @@
-# 🛡️ MyApp
+# 🏛️ Sistema Sindacale
 
-**Progressive Web App moderna** - Una piattaforma avanzata e sicura per gestire servizi, richieste e comunicazioni per tutti i membri della community.
+**Progressive Web App enterprise** - Piattaforma completa per la gestione sindacale con calcoli stipendiali, turni, licenze, tessere digitali e knowledge base integrata.
 
 ---
 
 ## 🚀 Caratteristiche Principali
 
-- ✅ **Autenticazione sicura** con Appwrite
+- ✅ **Autenticazione sicura** con Supabase Auth
 - 📱 **Progressive Web App** (PWA) installabile
-- 🎨 **Design Aurora Boreale 2025** ultra-moderno
-- 👑 **Dashboard Amministrativa** per dirigenti
-- 🎫 **Tessere digitali** personalizzate
-- 📊 **Analytics avanzate** in tempo reale
-- 🔄 **Sincronizzazione offline** automatica
+- 🎨 **Design moderno** responsive per tutti i dispositivi
+- 👑 **Dashboard dirigenziale** con analytics avanzate
+- 🎫 **Tessere sindacali digitali** personalizzate
+- 💰 **Calcoli automatici** indennità e straordinari
+- 📅 **Gestione turni e licenze** complete
+- 📚 **Knowledge base integrata** con documenti
+- 📊 **Analytics e reporting** in tempo reale
+- 🔄 **Sincronizzazione automatica** e backup
 - 📱 **Notifiche push** native
-- 🔒 **Gestione ruoli** (USER/ADMIN/DIRIGENTE)
-- 🌐 **Responsive design** per tutti i dispositivi
+- 🔒 **Gestione ruoli avanzata** con RLS
+- 🌐 **Sistema multiutente** scalabile
 
 ---
 
-## 🛠️ Setup del Progetto
+## 🛠️ Architettura del Sistema
 
-### 1. **Setup Appwrite**
+### **🗄️ Database Supabase**
 
-#### I tuoi dati di configurazione:
+#### **Configurazione:**
+```
 
+---
+
+## 🚀 Setup del Progetto
+
+### **1. Configurazione Supabase**
+
+#### **Variabili d'Ambiente:**
+```bash
+# .env.local
+NEXT_PUBLIC_SUPABASE_URL=https://[IL-TUO-PROGETTO].supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ[LA-TUA-ANON-KEY]...
+SUPABASE_SERVICE_ROLE_KEY=eyJ[LA-TUA-SERVICE-KEY]...
+```
+
+#### **Configurazione Client:**
 ```javascript
-const APPWRITE_CONFIG = {
-    endpoint: 'https://fra.cloud.appwrite.io/v1',
-    projectId: '688db9670010e3113d56', // ✅ Project ID corretto
-    databaseId: '688dbfaf001fcce68c0f', // main-database
-    
-    collections: {
-        user_profiles: '688dca4f00345547d52f',
-        tessere: '688e6222002987f97521',
-        notizie: '688e02b3000595a16b2c',
-        convenzioni: '688e03f000195871d9e',
-        organico_dirigenti: '688e0501000254ad0966'
-    }
-};
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+export const supabase = createClient(supabaseUrl, supabaseKey)
 ```
 
-✅ **La configurazione è già stata applicata a tutti i file!**
+### **2. Database Setup**
 
-#### Verifica delle Collections esistenti:
+#### **Creazione Tabelle:**
+Le 37 tabelle sono già configurate con:
+- ✅ **UUID Primary Keys** con `gen_random_uuid()`
+- ✅ **RLS Policies** per sicurezza
+- ✅ **Indexes ottimizzati** per performance
+- ✅ **Triggers automatici** per timestamp
+- ✅ **Foreign Keys** per integrità referenziale
 
-Le tue collections sono già configurate:
-- ✅ **user_profiles** (`688dca4f00345547d52f`)
-- ✅ **tessere** (`688e6222002987f97521`)  
-- ✅ **notizie** (`688e02b3000595a16b2c`)
-- ✅ **convenzioni** (`688e03f000195871d9e`)
-- ✅ **organico_dirigenti** (`688e0501000254ad0966`)
-
-##### Collection 1: **user_profiles**
-```json
-{
-  "name": "user_profiles",
-  "permissions": [
-    "read(\"users\")",
-    "write(\"users\")"
-  ],
-  "attributes": [
-    {
-      "key": "user_id",
-      "type": "string",
-      "size": 255,
-      "required": true
-    },
-    {
-      "key": "email",
-      "type": "string", 
-      "size": 255,
-      "required": true
-    },
-    {
-      "key": "full_name",
-      "type": "string",
-      "size": 255,
-      "required": true
-    },
-    {
-      "key": "cognome",
-      "type": "string",
-      "size": 255,
-      "required": true
-    },
-    {
-      "key": "telefono",
-      "type": "string",
-      "size": 50,
-      "required": true
-    },
-    {
-      "key": "role",
-      "type": "string",
-      "size": 50,
-      "required": true,
-      "default": "USER"
-    },
-    {
-      "key": "data_nascita",
-      "type": "string",
-      "size": 20,
-      "required": true
-    },
-    {
-      "key": "luogo_nascita",
-      "type": "string",
-      "size": 255,
-      "required": true
-    },
-    {
-      "key": "created_at",
-      "type": "datetime",
-      "required": true
-    },
-    {
-      "key": "updated_at",
-      "type": "datetime",
-      "required": true
-    }
-  ],
-  "indexes": [
-    {
-      "key": "user_id_index",
-      "type": "key",
-      "attributes": ["user_id"]
-    },
-    {
-      "key": "email_index", 
-      "type": "key",
-      "attributes": ["email"]
-    },
-    {
-      "key": "role_index",
-      "type": "key", 
-      "attributes": ["role"]
-    }
-  ]
-}
+#### **Popolazione Dati Iniziali:**
+```sql
+-- Primo amministratore
+INSERT INTO user_profiles (
+    user_id, email, full_name, role, stato
+) VALUES (
+    '[UUID_UTENTE_AUTH]',
+    'admin@sindacato.it',
+    'Amministratore Sistema',
+    'DIRIGENTE',
+    'ATTIVO'
+);
 ```
 
-##### Collection 2: **tessere**
-```json
-{
-  "name": "tessere",
-  "permissions": [
-    "read(\"users\")",
-    "write(\"users\")"
-  ],
-  "attributes": [
-    {
-      "key": "user_id",
-      "type": "string",
-      "size": 255,
-      "required": true
-    },
-    {
-      "key": "numero_tessera",
-      "type": "string",
-      "size": 50,
-      "required": true
-    },
-    {
-      "key": "nome_completo",
-      "type": "string",
-      "size": 255,
-      "required": true
-    },
-    {
-      "key": "email",
-      "type": "string",
-      "size": 255,
-      "required": true
-    },
-    {
-      "key": "telefono",
-      "type": "string",
-      "size": 50,
-      "required": true
-    },
-    {
-      "key": "data_emissione",
-      "type": "datetime",
-      "required": true
-    },
-    {
-      "key": "data_scadenza",
-      "type": "datetime",
-      "required": true
-    },
-    {
-      "key": "stato",
-      "type": "string",
-      "size": 20,
-      "required": true,
-      "default": "ATTIVA"
-    },
-    {
-      "key": "tipo",
-      "type": "string",
-      "size": 20,
-      "required": true,
-      "default": "STANDARD"
-    },
-    {
-      "key": "created_at",
-      "type": "datetime",
-      "required": true
-    }
-  ],
-  "indexes": [
-    {
-      "key": "user_id_index",
-      "type": "key",
-      "attributes": ["user_id"]
-    },
-    {
-      "key": "numero_tessera_index",
-      "type": "unique",
-      "attributes": ["numero_tessera"]
-    },
-    {
-      "key": "stato_index",
-      "type": "key",
-      "attributes": ["stato"]
-    }
-  ]
-}
+### **3. Deploy**
+
+#### **Su Vercel (Consigliato):**
+```bash
+# 1. Push su GitHub
+git add .
+git commit -m "Initial commit"
+git push origin main
+
+# 2. Deploy su Vercel
+vercel --prod
+
+# 3. Configura variabili ambiente su Vercel Dashboard
 ```
 
-##### Collection 3: **requests** (Opzionale)
-```json
-{
-  "name": "requests",
-  "permissions": [
-    "read(\"users\")",
-    "write(\"users\")"
-  ],
-  "attributes": [
-    {
-      "key": "user_id",
-      "type": "string",
-      "size": 255,
-      "required": true
-    },
-    {
-      "key": "title",
-      "type": "string",
-      "size": 255,
-      "required": true
-    },
-    {
-      "key": "description",
-      "type": "string",
-      "size": 2000,
-      "required": true
-    },
-    {
-      "key": "category",
-      "type": "string",
-      "size": 100,
-      "required": true
-    },
-    {
-      "key": "priority",
-      "type": "string",
-      "size": 20,
-      "required": true,
-      "default": "NORMAL"
-    },
-    {
-      "key": "status",
-      "type": "string",
-      "size": 20,
-      "required": true,
-      "default": "PENDING"
-    },
-    {
-      "key": "admin_notes",
-      "type": "string",
-      "size": 1000,
-      "required": false
-    },
-    {
-      "key": "created_at",
-      "type": "datetime",
-      "required": true
-    },
-    {
-      "key": "updated_at",
-      "type": "datetime",
-      "required": true
-    }
-  ]
-}
-```
+#### **Su Netlify:**
+```bash
+# netlify.toml
+[build]
+  publish = "out"
+  command = "npm run build && npm run export"
 
-### 2. **Deploy su Render**
-
-#### Preparazione Repository GitHub:
-
-1. Crea un nuovo repository GitHub chiamato **"myapp"**
-2. Fai push di tutti i file del progetto
-3. Assicurati che la struttura sia corretta
-
-#### Deploy su Render:
-
-1. Vai su [Render.com](https://render.com)
-2. Connetti il tuo account GitHub
-3. Crea un nuovo **Static Site**
-4. Seleziona il repository **myapp**
-5. Configura:
-   ```
-   Build Command: (lascia vuoto per siti statici)
-   Publish Directory: .
-   ```
-6. Fai deploy!
-
-#### URL di Deploy:
-```
-Primary Domain: myapp.onrender.com
-Custom Domain: app.tuodominio.it (se disponibile)
+[build.environment]
+  NODE_VERSION = "18"
 ```
 
 ---
 
-## 🎯 Prossimi Passi
+## 👥 Sistema dei Ruoli
 
-### **Setup Immediato:**
+### **Ruoli Disponibili:**
 
-1. ✅ **Appwrite già configurato** - Tutti i tuoi dati sono stati inseriti
-2. 📁 **Upload su GitHub** - Crea repository e carica i file
-3. 🚀 **Deploy su Render** - Connetti GitHub e fai deploy
-4. 🎨 **Test dell'app** - Verifica funzionamento completo
+#### **🔵 USER (Utente Standard):**
+- Visualizzazione tessera digitale
+- Richieste personali
+- Accesso documenti pubblici
+- Gestione profilo personale
+- Calcolo indennità personali
+- Visualizzazione turni assegnati
 
-### **Primo Amministratore:**
+#### **🟡 DIRIGENTE (Amministratore):**
+- **Tutte le funzionalità USER** +
+- Dashboard dirigenziale completa
+- Gestione richieste utenti
+- Analytics e reporting
+- Gestione tessere
+- Calcoli per tutti gli utenti
+- Gestione turni e licenze
+- Amministrazione knowledge base
+- Accesso ai backup
 
-1. Registra un utente normale nell'app
-2. Accedi al Database Appwrite Console
-3. Vai alla collection **user_profiles**
-4. Trova il tuo utente e modifica il campo `role` da `USER` a `ADMIN`
-5. Fai logout e login per aggiornare i privilegi
-6. Ora avrai accesso alla dashboard dirigenti
+#### **🔴 ADMIN (Super Amministratore):**
+- **Tutte le funzionalità DIRIGENTE** +
+- Gestione utenti e ruoli
+- Configurazioni sistema
+- Accesso logs completi
+- Gestione webhook
+- Controllo backup e sync
+
+### **Promozione Primo Amministratore:**
+
+1. **Registra un utente normale** nell'app
+2. **Accedi a Supabase Dashboard**
+3. Vai alla tabella **`user_profiles`**
+4. Trova il tuo utente e modifica:
+   ```sql
+   UPDATE user_profiles 
+   SET role = 'DIRIGENTE' 
+   WHERE email = 'tua-email@example.com';
+   ```
+5. **Logout e Login** per aggiornare i privilegi
 
 ---
 
-## 📱 Struttura Files
+## 📱 Funzionalità Principali
+
+### **🎫 Tessere Digitali Avanzate:**
+- **Generazione automatica** numero tessera univoco
+- **QR Code integrato** per validazione
+- **Foto tessera** uploadable
+- **Scadenza automatica** (1 anno dalla emissione)
+- **Stati dinamici:** ATTIVA, SCADUTA, SOSPESA
+- **Tipi personalizzabili:** STANDARD, PREMIUM, DIRIGENTE
+
+### **💰 Calcoli Automatici:**
+- **Indennità personalizzate** per ruolo
+- **Straordinari automatici** con tariffe
+- **Recuperi e compensi** tracciati
+- **Report PDF** esportabili
+- **Storico completo** per audit
+
+### **📅 Gestione Turni e Licenze:**
+- **Pianificazione turni** avanzata
+- **Gestione permessi** con saldi
+- **Licenze residue** automatiche
+- **Configurazioni personali** flessibili
+- **Notifiche automatiche** scadenze
+
+### **📚 Knowledge Base Intelligente:**
+- **Documenti categorizzati** e indicizzati
+- **Ricerca full-text** avanzata
+- **Chunk processing** per AI
+- **Progress tracking** utenti
+- **Bookmarks personali**
+
+### **📊 Analytics Enterprise:**
+- **Dashboard real-time** per dirigenti
+- **Metriche personalizzate** per reparto
+- **Report automatici** schedulati
+- **Export dati** in formato Excel/PDF
+- **Tracking eventi** dettagliato
+
+---
+
+## 🔧 Struttura Files
 
 ```
-myapp/
+sistema-sindacale/
 │
-├── index.html                 # ✅ Landing page (aggiornata)
-├── auth.html                  # ✅ Login/Registrazione (la tua versione)
-├── home.html                  # ✅ Dashboard utenti (aggiornata)
-├── home_dirigenti.html        # ✅ Dashboard admin (aggiornata)
-├── manifest.json              # ✅ PWA config (aggiornata)
-├── service-worker.js          # ✅ Service Worker (aggiornato)
-├── appwrite-config.js         # ✅ Config Appwrite (con i tuoi dati)
+├── pages/                     # Next.js pages
+│   ├── index.js              # Landing page
+│   ├── auth.js               # Autenticazione
+│   ├── dashboard.js          # Dashboard utenti
+│   ├── dirigenti.js          # Dashboard dirigenti
+│   ├── tessera.js            # Tessera digitale
+│   ├── richieste.js          # Sistema richieste
+│   ├── calcoli.js            # Calcoli stipendiali
+│   ├── turni.js              # Gestione turni
+│   ├── knowledge.js          # Knowledge base
+│   └── api/                  # API routes
+│       ├── auth/             # Autenticazione
+│       ├── calcoli/          # Calcoli
+│       ├── tessere/          # Tessere
+│       └── reports/          # Report
 │
-├── public/
-│   ├── icons/                 # Icone PWA (da aggiungere)
-│   │   ├── icon-192x192.png
-│   │   ├── icon-512x512.png
-│   │   ├── apple-touch-icon.png
-│   │   └── favicon-32x32.png
-│   │
-│   └── screenshots/           # Screenshot per store
+├── components/               # Componenti React
+│   ├── layout/              # Layout components
+│   ├── auth/                # Auth components
+│   ├── dashboard/           # Dashboard components
+│   ├── tessera/             # Tessera components
+│   └── forms/               # Form components
 │
-└── README.md                  # ✅ Questa guida (aggiornata)
+├── lib/                     # Utilities
+│   ├── supabase.js          # Client Supabase
+│   ├── auth.js              # Auth helpers
+│   ├── calculations.js      # Logiche calcoli
+│   └── utils.js             # Utilities generali
+│
+├── public/                  # Static assets
+│   ├── icons/               # PWA icons
+│   ├── images/              # Immagini
+│   └── documents/           # Documenti pubblici
+│
+├── styles/                  # Styling
+│   ├── globals.css          # Global styles
+│   └── components/          # Component styles
+│
+├── .env.local               # Variabili ambiente
+├── next.config.js           # Configurazione Next.js
+├── package.json             # Dependencies
+└── README.md                # Questa documentazione
 ```
 
 ---
 
 ## 🔒 Sicurezza e Backup
 
-- ✅ Database su **Appwrite Frankfurt** (europa)
-- ✅ Backup automatici ogni 24h
-- ✅ Versioning delle configurazioni  
-- ✅ HTTPS nativo su Render
-- ✅ Headers di sicurezza configurati
+### **🛡️ Misure di Sicurezza:**
+- ✅ **Row Level Security (RLS)** su tutte le tabelle
+- ✅ **Autenticazione robusta** con Supabase Auth
+- ✅ **Validazione input** lato client e server
+- ✅ **Rate limiting** automatico
+- ✅ **Audit logs** completi
+- ✅ **Headers di sicurezza** configurati
+- ✅ **HTTPS obbligatorio** su tutti gli endpoint
 
----
+### **🔄 Sistema Backup:**
+- **Backup automatici** ogni 6 ore
+- **Versioning** dei documenti
+- **Sync logs** dettagliati
+- **Recovery point** configurabili
+- **Monitoring** stato sincronizzazione
 
-## 📞 Supporto Tecnico
-
-Per assistenza tecnica:
-
-- 📧 **Email:** tech@myapp.it
-- 🌐 **Website:** [www.myapp.it](https://www.myapp.it)
-- 📱 **GitHub:** [github.com/myapp](https://github.com/myapp)
-- ☎️ **Telefono:** +39 06 123 456 789
-
----
-
-## 🎉 Il Tuo Setup è Completo!
-
-**Tutti i file sono stati aggiornati con i tuoi dati reali di Appwrite.** 
-
-### ✅ **Cosa è già fatto:**
-- Configurazione Appwrite con i tuoi ID reali
-- Rimozione riferimenti "Sindacato Carabinieri"  
-- App rinominata semplicemente "MyApp"
-- Tutti i collections ID configurati correttamente
-- PWA pronta per l'installazione
-- Design moderno Aurora Boreale 2025
-
-### 🚀 **Prossimo passo:**
-1. Carica tutto su GitHub
-2. Fai deploy su Render  
-3. Inizia a usare la tua app!
-
-**🎯 La tua app MyApp è pronta per il lancio!**_TUO_COLLECTION_ID',        // ⚠️ SOSTITUISCI
-        requests: 'IL_TUO_COLLECTION_ID'        // ⚠️ SOSTITUISCI (opzionale)
-    }
-};
-```
-
-#### Struttura cartelle richiesta:
-```
-myapp-sindacato/
-│
-├── index.html                 # Landing page
-├── auth.html                  # Login/Registrazione  
-├── home.html                  # Dashboard utenti
-├── home_dirigenti.html        # Dashboard amministratori
-├── manifest.json              # Configurazione PWA
-├── service-worker.js          # Service Worker
-├── appwrite-config.js         # Configurazione Appwrite
-│
-├── public/
-│   ├── icons/                 # Icone PWA
-│   │   ├── icon-192x192.png
-│   │   ├── icon-512x512.png
-│   │   ├── apple-touch-icon.png
-│   │   └── favicon-32x32.png
-│   │
-│   └── screenshots/           # Screenshot per store
-│       ├── mobile-home.png
-│       ├── mobile-tessera.png
-│       └── desktop-admin.png
-│
-└── README.md                  # Questo file
-```
-
-### 3. **Deploy su Render**
-
-#### Preparazione Repository GitHub:
-
-1. Crea un nuovo repository GitHub
-2. Fai push di tutti i file del progetto
-3. Assicurati che la struttura sia corretta
-
-#### Deploy su Render:
-
-1. Vai su [Render.com](https://render.com)
-2. Connetti il tuo account GitHub
-3. Crea un nuovo **Static Site**
-4. Seleziona il repository
-5. Configura:
-   ```
-   Build Command: (lascia vuoto per siti statici)
-   Publish Directory: .
-   ```
-6. Fai deploy!
-
-#### Configurazione Domini (Opzionale):
-```
-Primary Domain: myapp-sindacato.onrender.com
-Custom Domain: myapp.sindacatocarabinieri.it (se disponibile)
-```
-
----
-
-## 🔧 Configurazione Avanzata
-
-### **Abilitare Notifiche Push**
-
-In `service-worker.js`, configura:
-```javascript
-// Aggiungi la tua VAPID Key
-const VAPID_PUBLIC_KEY = 'LA_TUA_VAPID_KEY';
-```
-
-### **Analytics e Monitoraggio**
-
-Aggiungi Google Analytics (opzionale):
-```html
-<!-- In <head> di ogni pagina -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'GA_MEASUREMENT_ID');
-</script>
-```
-
-### **Sicurezza Headers**
-
-Aggiungi in `_headers` (Render):
-```
-/*
-  X-Frame-Options: DENY
-  X-Content-Type-Options: nosniff
-  X-XSS-Protection: 1; mode=block
-  Referrer-Policy: strict-origin-when-cross-origin
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com;
-```
-
----
-
-## 👥 Gestione Utenti
-
-### **Ruoli Disponibili:**
-
-1. **USER** - Utente standard
-   - Accesso a `home.html`
-   - Visualizzazione tessera
-   - Creazione richieste
-   - Accesso documenti personali
-
-2. **DIRIGENTE/ADMIN** - Amministratore
-   - Accesso a `home_dirigenti.html`  
-   - Gestione utenti
-   - Gestione richieste
-   - Analytics complete
-   - Configurazione sistema
-
-### **Primo Amministratore:**
-
-1. Registra un utente normale
-2. Accedi al Database Appwrite  
-3. Modifica il campo `role` da `USER` a `ADMIN`
-4. Fai logout e login per aggiornare i privilegi
-
----
-
-## 📱 PWA Features
-
-### **Installazione:**
-- L'app può essere installata su desktop e mobile
-- Prompt automatico di installazione  
-- Icone e splash screen personalizzate
-
-### **Offline Support:**
-- Cache intelligente delle pagine principali
-- Sincronizzazione automatica quando torna online
-- Storage locale per dati critici
-
-### **Notifiche Push:**
-- Notifiche native del sistema operativo
-- Gestione degli stati (lette/non lette)
-- Analytics delle notifiche
-
----
-
-## 🔒 Sicurezza
-
-### **Misure Implementate:**
-
-- ✅ Autenticazione robusta con Appwrite
-- ✅ Validazione input lato client e server
-- ✅ Gestione sessioni sicure
-- ✅ Headers di sicurezza configurabili
-- ✅ Controllo ruoli e permessi
-- ✅ Validazione CSRF token
-- ✅ Rate limiting
-
-### **Backup e Recovery:**
-
-- Database automaticamente replicato su Appwrite Cloud
-- Versioning delle configurazioni
-- Logs di sicurezza e accessi
-- Procedure di disaster recovery
+### **📊 Monitoring e Logs:**
+- **System logs** completi
+- **Analytics events** tracciati
+- **Webhook debugging** integrato
+- **Performance monitoring** real-time
+- **Error tracking** automatico
 
 ---
 
@@ -581,71 +273,173 @@ Aggiungi in `_headers` (Render):
 
 ### **Errori Comuni:**
 
-**Errore: "Project not found"**
+**❌ "Row Level Security violated"**
 ```bash
-Soluzione: Verifica che il PROJECT_ID in appwrite-config.js sia corretto
+Soluzione: Verifica che l'utente abbia il ruolo corretto e le policy RLS siano configurate
 ```
 
-**Errore: "Collection not found"**  
+**❌ "Invalid API key"**
 ```bash
-Soluzione: Verifica che tutti i COLLECTION_ID siano configurati correttamente
+Soluzione: Controlla che NEXT_PUBLIC_SUPABASE_ANON_KEY sia configurata correttamente
 ```
 
-**Errore: "Permission denied"**
+**❌ "Column not found"**
 ```bash
-Soluzione: Controlla i permessi delle collections in Appwrite Console
+Soluzione: Verifica che tutte le migrazioni siano state applicate al database
 ```
 
-**PWA non si installa**
+**❌ "Permission denied for schema public"**
 ```bash
-Soluzione: Verifica che manifest.json sia accessibile e service-worker.js sia registrato
+Soluzione: Controlla i permessi del ruolo postgres e le policy RLS
 ```
 
 ### **Debug Mode:**
-
-Aggiungi in console del browser:
 ```javascript
+// Abilita debug mode in console
 localStorage.setItem('DEBUG_MODE', 'true');
+localStorage.setItem('SUPABASE_DEBUG', 'true');
 location.reload();
+```
+
+### **Verifica Sistema:**
+```sql
+-- Controllo tabelle
+SELECT COUNT(*) as tabelle_totali 
+FROM information_schema.tables 
+WHERE table_schema = 'public';
+
+-- Controllo RLS
+SELECT tablename, rowsecurity 
+FROM pg_tables 
+WHERE schemaname = 'public' 
+AND rowsecurity = false;
+
+-- Controllo utenti
+SELECT role, COUNT(*) as utenti 
+FROM user_profiles 
+GROUP BY role;
 ```
 
 ---
 
 ## 📞 Supporto
 
-Per assistenza tecnica:
-
-- 📧 **Email:** tech@sindacatocarabinieri.it
-- 🌐 **Website:** [www.sindacatocarabinieri.it](https://www.sindacatocarabinieri.it)
-- 📱 **Telegram:** @SindacatoCarabinieri
+### **Contatti Tecnici:**
+- 📧 **Email:** tech@sindacato.it
+- 🌐 **Website:** [sistema.sindacato.it](https://sistema.sindacato.it)
+- 📱 **GitHub:** [github.com/sindacato/sistema](https://github.com/sindacato/sistema)
 - ☎️ **Telefono:** +39 06 123 456 789
+
+### **Documentazione:**
+- 📖 **Manuale Utente:** [docs.sindacato.it/user](https://docs.sindacato.it/user)
+- 👨‍💼 **Manuale Dirigenti:** [docs.sindacato.it/admin](https://docs.sindacato.it/admin)
+- 🛠️ **API Documentation:** [api.sindacato.it](https://api.sindacato.it)
+
+---
+
+## 🎯 Roadmap
+
+### **🚀 v2.0 - Prossimi Sviluppi:**
+- [ ] **App mobile nativa** (React Native)
+- [ ] **Integrazione AI** per assistenza automatica
+- [ ] **Sistema chat** interno
+- [ ] **Pagamenti digitali** integrati
+- [ ] **Firma digitale** documenti
+- [ ] **Geolocalizzazione** per presenze
+
+### **📈 v2.1 - Advanced Features:**
+- [ ] **Dashboard BI** con grafici avanzati
+- [ ] **API pubbliche** per integrazioni
+- [ ] **Multi-tenant** per più sindacati
+- [ ] **Integrazione SPID** per autenticazione
+- [ ] **Machine Learning** per previsioni
+- [ ] **Blockchain** per certificazioni
+
+### **🌍 v2.2 - Scale Up:**
+- [ ] **Multi-lingua** (English, Français)
+- [ ] **Federazione sindacati** multi-ente
+- [ ] **Marketplace servizi** integrato
+- [ ] **Integration hub** con sistemi esterni
+- [ ] **Advanced analytics** con AI
+- [ ] **Compliance GDPR** automatizzata
 
 ---
 
 ## 📜 Licenza
 
-© 2025 MyApp. Tutti i diritti riservati.
+© 2025 Sistema Sindacale. Tutti i diritti riservati.
 
-**Uso riservato esclusivamente ai membri autorizzati.**
+**Software proprietario - Uso riservato esclusivamente ai membri autorizzati del sindacato.**
 
----
-
-## 🎯 Roadmap Future
-
-### **v1.1 - Prossime Feature:**
-- [ ] Chat integrata tra membri
-- [ ] Sistema di voting per decisioni
-- [ ] Integrazione calendario eventi
-- [ ] Marketplace convenzioni avanzato
-- [ ] App mobile nativa (React Native)
-
-### **v1.2 - Advanced Features:**
-- [ ] AI Assistant per supporto automatico  
-- [ ] Sistema di pagamenti integrato
-- [ ] Multi-lingua (English, Français)
-- [ ] API pubbliche per integrazioni
-- [ ] Dashboard analytics avanzate con BI
+### **🔒 Termini di Utilizzo:**
+- Accesso limitato ai membri tesserati
+- Divieto di redistribuzione del codice
+- Protezione dati personali secondo GDPR
+- Backup e sicurezza garantiti
+- Supporto tecnico incluso
 
 ---
 
-**🚀 Buon lavoro con MyApp!**
+## 🏆 Credits
+
+**Sviluppato con:**
+- ⚡ **Next.js** - Framework React
+- 🗄️ **Supabase** - Backend as a Service
+- 🎨 **Tailwind CSS** - Styling framework
+- 📱 **PWA** - Progressive Web App
+- 🔒 **Row Level Security** - Sicurezza dati
+- 📊 **Analytics** - Tracking avanzato
+
+**Team di Sviluppo:**
+- 👨‍💻 **Lead Developer** - Sistema core e architettura
+- 🎨 **UI/UX Designer** - Interfaccia e esperienza utente  
+- 📊 **Data Analyst** - Analytics e reporting
+- 🔒 **Security Expert** - Sicurezza e compliance
+
+---
+
+**🎯 Sistema Sindacale - La gestione sindacale del futuro, oggi!**javascript
+const supabaseConfig = {
+    url: 'https://[IL-TUO-PROGETTO].supabase.co',
+    anonKey: 'eyJ[LA-TUA-ANON-KEY]...',
+    serviceKey: 'eyJ[LA-TUA-SERVICE-KEY]...' // Solo per operazioni admin
+};
+```
+
+#### **Database Schema - 37 Tabelle:**
+
+**👥 Gestione Utenti:**
+- `user_profiles` - Profili utenti completi con anagrafica
+- `tessere` - Tessere sindacali digitali
+- `organico_dirigentisindacali` - Dirigenti e ruoli
+
+**💰 Gestione Economica:**
+- `calcoli_indennita` - Calcoli automatici indennità
+- `calcoli_straordinario` - Gestione straordinari
+- `recuperi` - Gestione recuperi e compensi
+
+**📅 Gestione Tempo:**
+- `turni` - Pianificazione turni di lavoro
+- `licenze` - Gestione permessi e licenze
+- `gestione_licenze_residue` - Residui e saldi
+- `user_license_config` - Configurazioni personali
+
+**📋 Sistema Richieste:**
+- `richieste_personali` - Richieste utenti standard
+- `richieste_per_dirigenti` - Richieste dirigenziali
+- `richieste_messaggi` - Comunicazioni
+- `richieste_log` - Log delle operazioni
+
+**📚 Knowledge Base:**
+- `knowledge_documents` - Documenti della base di conoscenza
+- `knowledge_chunks` - Sezioni indicizzate
+- `learning_resources` - Risorse formative
+- `user_bookmarks` - Segnalibri personali
+- `user_progress` - Progresso apprendimento
+
+**📄 Documenti:**
+- `documenti` - Gestione documenti
+- `documents` - Documenti alternativi
+- `documents_stats` - Statistiche documenti
+- `documents_summary` - Riassunti automatici
+- `download_links`
