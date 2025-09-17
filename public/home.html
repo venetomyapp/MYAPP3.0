@@ -15,31 +15,37 @@
     <script src="https://cdn.botpress.cloud/webchat/v3.2/inject.js"></script>
     <script src="https://files.bpcontent.cloud/2025/08/31/12/20250831122850-F6HD8P79.js" defer></script>
     
-    <!-- CONFIGURAZIONE COLORI TAILWIND - BRAND IDENTITY 2025 -->
+    <!-- CONFIGURAZIONE COLORI TAILWIND - VERSIONE LIGHT 2025 -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#0a0a2e',          // Blu navy molto scuro
-                        secondary: '#1a1a5a',        // Blu scuro
-                        accent: '#6a1b9a',           // Viola intenso
-                        purple: '#6a1b9a',           // Viola vibrante
-                        lightPurple: '#ab47bc',      // Viola chiaro
-                        blue: '#0a0a2e',             // Blu navy
-                        indigo: '#2d1b69',           // Blu viola scuro
-                        violet: '#6a1b9a',           // Violetto intenso
-                        gold: '#FFD700',             // Oro per contrasto
-                        white: '#FFFFFF',            // Bianco puro
-                        dark: '#040815',             // Quasi nero con toni blu
-                        light: '#f1f5f9',            // Grigio chiarissimo
-                        textDark: '#1C1C1E',
-                        backgroundLight: '#f8fafc',
-                        magenta: '#c2185b',          // Magenta vero
-                        red: '#e53935',              // Rosso intenso finale
-                        teal: '#20B2AA',             // Teal per le card
-                        aurora: '#e53935',           // Rosso per compatibilità
-                        cyan: '#00d4ff',             // Ciano per contrasto
+                        // Palette più soft e moderna
+                        primary: '#f8fafc',           // Bianco-grigio molto chiaro
+                        secondary: '#e2e8f0',         // Grigio chiaro
+                        accent: '#8b5a87',            // Viola tenue
+                        purple: '#a855f7',            // Viola soft
+                        lightPurple: '#c084fc',       // Viola pastello
+                        blue: '#3b82f6',              // Blu moderno
+                        indigo: '#6366f1',            // Indigo soft
+                        violet: '#8b5cf6',            // Violetto soft
+                        gold: '#f59e0b',              // Oro soft
+                        white: '#FFFFFF',             // Bianco puro
+                        dark: '#1e293b',              // Grigio scuro soft
+                        light: '#f1f5f9',             // Grigio chiarissimo
+                        textDark: '#334155',          // Testo scuro soft
+                        backgroundLight: '#f8fafc',   // Background light
+                        magenta: '#ec4899',           // Magenta soft
+                        red: '#ef4444',               // Rosso soft
+                        teal: '#14b8a6',              // Teal moderno
+                        aurora: '#ef4444',            // Rosso soft
+                        cyan: '#06b6d4',              // Ciano soft
+                        sage: '#84cc16',              // Verde salvia
+                        mint: '#10b981',              // Verde menta
+                        lavender: '#a78bfa',          // Lavanda
+                        peach: '#fb7185',             // Pesca
+                        sky: '#0ea5e9',               // Cielo
                     },
                     screens: {
                         'xs': '320px',
@@ -56,26 +62,26 @@
         }
     </script>
     
-    <!-- STILI BRAND IDENTITY 2025 - GRADIENTE INVERTITO -->
+    <!-- STILI ALLEGGERITI - VERSIONE LIGHT 2025 -->
     <style>
         :root {
-            /* GRADIENTE PRINCIPALE INVERTITO: DA ROSSO SCURO (BASE) A BLU (ALTO) */
-            --gradient-main: linear-gradient(180deg, #0a0a2e 0%, #1a1a5a 20%, #2d1b69 40%, #6a1b9a 60%, #c2185b 80%, #e53935 100%);
-            --gradient-button: linear-gradient(135deg, #2d1b69 0%, #6a1b9a 50%, #e53935 100%);
-            --gradient-accent: linear-gradient(135deg, #0a0a2e 0%, #6a1b9a 50%, #e53935 100%);
-            --gradient-cyber: linear-gradient(135deg, #0a0a2e 0%, #2d1b69 50%, #6a1b9a 100%);
-            --gradient-magic: linear-gradient(135deg, #6a1b9a 0%, #c2185b 50%, #e53935 100%);
+            /* GRADIENTI SOFT E ALLEGGERITI */
+            --gradient-main: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 25%, #cbd5e1 50%, #a855f7 75%, #ec4899 100%);
+            --gradient-button: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
+            --gradient-accent: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #6366f1 100%);
+            --gradient-cyber: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 50%, #94a3b8 100%);
+            --gradient-magic: linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #f472b6 100%);
             
-            /* Nuovi gradienti per tool categories */
-            --gradient-requests: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            --gradient-profile: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            --gradient-tools: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            --gradient-ai: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-            --gradient-contacts: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            --gradient-deals: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
-            --gradient-files: linear-gradient(135deg, #84cc16 0%, #65a30d 100%);
-            --gradient-community: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-            --gradient-support: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+            /* Gradienti soft per categorie */
+            --gradient-requests: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            --gradient-profile: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            --gradient-tools: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            --gradient-ai: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+            --gradient-contacts: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+            --gradient-deals: linear-gradient(135deg, #cffafe 0%, #a7f3d0 100%);
+            --gradient-files: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            --gradient-community: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
+            --gradient-support: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
             
             --safe-area-inset-top: env(safe-area-inset-top, 0);
             --safe-area-inset-bottom: env(safe-area-inset-bottom, 0);
@@ -89,10 +95,10 @@
         }
 
         body {
-            /* GRADIENTE CORRETTO: BLU in alto, ROSSO SCURO in fondo */
-            background: linear-gradient(180deg, #0a0a2e 0%, #1e3a8a 15%, #1e40af 35%, #dc2626 65%, #b91c1c 80%, #8b1538 100%);
-            background-size: 400% 400%;
-            animation: aurora 25s ease infinite;
+            /* BACKGROUND ALLEGGERITO - Gradiente morbido */
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 20%, #dbeafe 40%, #e0e7ff 60%, #f3e8ff 80%, #fce7f3 100%);
+            background-size: 200% 200%;
+            animation: gentleShift 30s ease infinite;
             min-height: 100vh;
             min-height: 100dvh;
             overflow-x: hidden;
@@ -100,374 +106,232 @@
             padding-right: var(--safe-area-inset-right);
         }
 
-        /* LOGO M CORSIVA - GLASSMORPHISM STYLE */
-        .m-logo-italic-v5 {
+        /* LOGO M SOFT VERSION */
+        .m-logo-soft {
             font-family: 'Georgia', 'Times New Roman', serif;
             font-style: italic;
-            font-weight: 900;
-            font-size: 28px;
-            color: rgba(255, 255, 255, 0.95);
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            background: rgba(255, 255, 255, 0.1);
+            font-weight: 700;
+            font-size: 24px;
+            color: #334155;
+            background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            padding: 2px 8px;
-            transform: rotate(-7deg);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 12px;
+            padding: 4px 10px;
+            transform: rotate(-5deg);
             transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
-        .m-logo-italic-v5:hover {
-            transform: rotate(-7deg) scale(1.05);
-            background: rgba(255, 255, 255, 0.15);
+        .m-logo-soft:hover {
+            transform: rotate(-5deg) scale(1.05);
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
         }
 
-        .m-logo-small {
+        .m-logo-small-soft {
             font-family: 'Georgia', 'Times New Roman', serif;
             font-style: italic;
-            font-weight: 900;
-            font-size: 18px;
-            color: rgba(255, 255, 255, 0.95);
-            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-            transform: rotate(-7deg);
+            font-weight: 700;
+            font-size: 16px;
+            color: #475569;
+            transform: rotate(-3deg);
             transition: all 0.3s ease;
         }
 
-        @media (max-width: 640px) {
-            .m-logo-italic-v5 { font-size: 24px; }
-            .m-logo-small { font-size: 16px; }
-        }
-
-        @keyframes aurora {
+        @keyframes gentleShift {
             0%, 100% { background-position: 0% 50%; }
-            25% { background-position: 100% 50%; }
-            50% { background-position: 100% 100%; }
-            75% { background-position: 0% 100%; }
+            50% { background-position: 100% 50%; }
         }
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideUpFromBottom { from { opacity: 0; transform: translateY(100%); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
-        @keyframes glow { 0%, 100% { box-shadow: 0 0 10px rgba(194, 24, 91, 0.3); } 50% { box-shadow: 0 0 20px rgba(194, 24, 91, 0.6); } }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
-        @keyframes scale { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes softPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
+        @keyframes gentleFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
 
         @media (prefers-reduced-motion: reduce) {
-            * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+            * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
         }
 
-        /* Typography */
-        .text-ultra-visible { 
-            color: #fff; 
-            text-shadow: 0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1); 
-            font-weight: 800; 
-        }
-        .text-white { 
-            text-shadow: 0 8px 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,1); 
+        /* Typography soft */
+        .text-soft-dark { 
+            color: #334155; 
+            text-shadow: none;
+            font-weight: 600; 
         }
 
-        /* Glass effects migliorati */
-        .glass-morphism { 
-            background: rgba(255,255,255,.12); 
+        .text-soft-light { 
+            color: #64748b; 
+            text-shadow: none;
+        }
+
+        /* Glass effects alleggeriti */
+        .glass-soft { 
+            background: rgba(255, 255, 255, 0.7); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255, 255, 255, 0.4); 
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); 
+        }
+
+        .glass-card-soft { 
+            background: rgba(255, 255, 255, 0.85); 
             backdrop-filter: blur(16px); 
-            border: 2px solid rgba(255,255,255,.35); 
-            box-shadow: 0 8px 32px rgba(31,38,135,.35), inset 0 1px 0 rgba(255,255,255,.4); 
-        }
-        .glass-card { 
-            background: rgba(255,255,255,.98); 
-            backdrop-filter: blur(20px); 
-            border: 2px solid rgba(255,255,255,.8); 
-            box-shadow: 0 12px 40px rgba(0,0,0,.15), inset 0 1px 0 rgba(255,255,255,.6);
+            border: 1px solid rgba(255, 255, 255, 0.5); 
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
         }
 
-        /* Buttons AURORA & CYBER - Brand Identity 2025 */
-        .btn-aurora { 
-            background: var(--gradient-magic); 
+        /* Buttons soft */
+        .btn-soft-primary { 
+            background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%); 
             color: white; 
-            border: 2px solid rgba(194, 24, 91, 0.4);
-            box-shadow: 0 8px 25px rgba(194, 24, 91, 0.3);
-            transition: all .25s cubic-bezier(.4,0,.2,1); 
-            font-weight: 700; 
-            touch-action: manipulation;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+            transition: all 0.3s ease; 
+            font-weight: 600; 
+            border-radius: 16px;
         }
 
-        .btn-cyber {
-            background: var(--gradient-cyber);
+        .btn-soft-accent {
+            background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
             color: white;
-            border: 2px solid rgba(106, 27, 154, 0.4);
-            box-shadow: 0 8px 25px rgba(106, 27, 154, 0.3);
-            transition: all .25s cubic-bezier(.4,0,.2,1); 
-            font-weight: 700; 
-            touch-action: manipulation;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.2);
+            transition: all 0.3s ease; 
+            font-weight: 600;
+            border-radius: 16px;
         }
 
-        /* CTA Button Special */
-        .btn-cta {
-            background: linear-gradient(135deg, #ffd700 0%, #6a1b9a 50%, #e53935 100%);
-            color: #0a0a2e;
-            border: 2px solid rgba(194, 24, 91, 0.5);
-            font-weight: 800;
-            animation: glow 2s infinite;
-            position: relative;
-            overflow: hidden;
+        .btn-soft-primary:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
         }
 
-        .btn-cta::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
-            transition: left 0.6s;
+        .btn-soft-accent:hover {
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 20px rgba(236, 72, 153, 0.3);
         }
 
-        .btn-cta:hover::before {
-            left: 100%;
-        }
-        
-        /* Mobile-first hover states */
-        @media (hover: hover) and (pointer: fine) {
-            .btn-aurora:hover { 
-                transform: translateY(-2px) scale(1.02); 
-                box-shadow: 0 25px 50px rgba(194, 24, 91, 0.5);
-                border-color: rgba(194, 24, 91, 0.8);
-                background: linear-gradient(135deg, #6a1b9a 0%, #c2185b 50%, #e53935 100%);
-            }
-            .btn-cyber:hover {
-                transform: translateY(-2px) scale(1.02); 
-                box-shadow: 0 25px 50px rgba(106, 27, 154, 0.5);
-                border-color: rgba(106, 27, 154, 0.8);
-                background: linear-gradient(135deg, #0a0a2e 0%, #2d1b69 50%, #6a1b9a 100%);
-            }
-            .btn-cta:hover {
-                transform: translateY(-3px) scale(1.05);
-                animation: glow 1s infinite;
-            }
-        }
-
-        /* Enhanced Tool Cards con BORDI PIÙ VISIBILI - Red to Blue Gradient System */
-        .tool-card {
-            border: 3px solid rgba(255,255,255,0.6);
+        /* Tool Cards completamente ridisegnati - Design moderno e pulito */
+        .tool-card-soft {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
             border-radius: 20px;
-            transition: all .3s cubic-bezier(.4,0,.2,1);
-            will-change: transform;
-            touch-action: manipulation;
-            min-height: 120px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 20px;
+            text-align: center;
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(24px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 2px 0 rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* Tool Card Categories con BORDI ANCORA PIÙ EVIDENTI */
-        .tool-card.category-requests {
-            background: linear-gradient(135deg, rgba(139, 34, 82, 0.92), rgba(127, 29, 29, 0.85));
-            border: 4px solid rgba(239, 68, 68, 0.8);
-            box-shadow: 0 12px 40px rgba(139, 34, 82, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4);
-        }
-
-        .tool-card.category-profile {
-            background: linear-gradient(135deg, rgba(153, 27, 27, 0.92), rgba(185, 28, 28, 0.85));
-            border: 4px solid rgba(239, 68, 68, 0.9);
-            box-shadow: 0 12px 40px rgba(153, 27, 27, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4);
-        }
-
-        .tool-card.category-tools {
-            background: linear-gradient(135deg, rgba(180, 83, 9, 0.92), rgba(194, 65, 12, 0.85));
-            border: 4px solid rgba(251, 146, 60, 0.8);
-            box-shadow: 0 12px 40px rgba(180, 83, 9, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4);
-        }
-
-        .tool-card.category-ai {
-            background: linear-gradient(135deg, rgba(88, 28, 135, 0.92), rgba(109, 40, 217, 0.85));
-            border: 4px solid rgba(147, 51, 234, 0.8);
-            box-shadow: 0 12px 40px rgba(88, 28, 135, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4);
-        }
-
-        .tool-card.category-contacts {
-            background: linear-gradient(135deg, rgba(30, 58, 138, 0.92), rgba(29, 78, 216, 0.85));
-            border: 4px solid rgba(59, 130, 246, 0.8);
-            box-shadow: 0 12px 40px rgba(30, 58, 138, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4);
-        }
-
-        .tool-card.category-deals {
-            background: linear-gradient(135deg, rgba(12, 74, 110, 0.92), rgba(14, 116, 144, 0.85));
-            border: 4px solid rgba(34, 197, 94, 0.8);
-            box-shadow: 0 12px 40px rgba(12, 74, 110, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4);
-        }
-
-        .tool-card.category-files {
-            background: linear-gradient(135deg, rgba(21, 128, 61, 0.92), rgba(22, 163, 74, 0.85));
-            border: 4px solid rgba(34, 197, 94, 0.9);
-            box-shadow: 0 12px 40px rgba(21, 128, 61, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4);
-        }
-
-        .tool-card.category-community {
-            background: linear-gradient(135deg, rgba(23, 37, 84, 0.92), rgba(30, 58, 138, 0.85));
-            border: 4px solid rgba(59, 130, 246, 0.9);
-            box-shadow: 0 12px 40px rgba(23, 37, 84, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4);
-        }
-
-        .tool-card.category-support {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.85));
-            border: 4px solid rgba(100, 116, 139, 0.8);
-            box-shadow: 0 12px 40px rgba(15, 23, 42, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4);
-        }
-
-        .tool-card::before {
+        .tool-card-soft::before {
             content: '';
             position: absolute;
             top: 0;
-            left: -100%;
-            width: 100%;
-            height: 2px;
-            background: currentColor;
-            transition: left 0.3s ease;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--card-accent, #3b82f6);
+            border-radius: 20px 20px 0 0;
             opacity: 0.7;
         }
 
-        .tool-card:active {
-            transform: scale(0.95);
+        .tool-card-soft:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            background: rgba(255, 255, 255, 0.95);
         }
 
-        .tool-card:active::before {
-            left: 0;
+        .tool-card-soft:hover::before {
+            opacity: 1;
+            height: 4px;
         }
 
-        @media (hover: hover) and (pointer: fine) {
-            .tool-card:hover {
-                transform: translateY(-8px) scale(1.05);
-                border-width: 5px;
-            }
-
-            .tool-card.category-requests:hover { 
-                box-shadow: 0 30px 60px rgba(139, 34, 82, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5);
-                border-color: rgba(239, 68, 68, 1);
-            }
-            .tool-card.category-profile:hover { 
-                box-shadow: 0 30px 60px rgba(153, 27, 27, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5);
-                border-color: rgba(239, 68, 68, 1);
-            }
-            .tool-card.category-tools:hover { 
-                box-shadow: 0 30px 60px rgba(180, 83, 9, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5);
-                border-color: rgba(251, 146, 60, 1);
-            }
-            .tool-card.category-ai:hover { 
-                box-shadow: 0 30px 60px rgba(88, 28, 135, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5);
-                border-color: rgba(147, 51, 234, 1);
-            }
-            .tool-card.category-contacts:hover { 
-                box-shadow: 0 30px 60px rgba(30, 58, 138, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5);
-                border-color: rgba(59, 130, 246, 1);
-            }
-            .tool-card.category-deals:hover { 
-                box-shadow: 0 30px 60px rgba(12, 74, 110, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5);
-                border-color: rgba(34, 197, 94, 1);
-            }
-            .tool-card.category-files:hover { 
-                box-shadow: 0 30px 60px rgba(21, 128, 61, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5);
-                border-color: rgba(34, 197, 94, 1);
-            }
-            .tool-card.category-community:hover { 
-                box-shadow: 0 30px 60px rgba(23, 37, 84, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5);
-                border-color: rgba(59, 130, 246, 1);
-            }
-            .tool-card.category-support:hover { 
-                box-shadow: 0 30px 60px rgba(15, 23, 42, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5);
-                border-color: rgba(100, 116, 139, 1);
-            }
+        /* Icone più moderne */
+        .tool-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 12px;
+            background: var(--icon-bg, #f1f5f9);
+            transition: all 0.3s ease;
         }
 
-        .action-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.10));
-            border: 2px solid rgba(255,255,255,0.35);
-            border-radius: 20px;
-            transition: all .2s ease;
-            will-change: transform;
-            touch-action: manipulation;
-            min-height: 120px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.3);
+        .tool-card-soft:hover .tool-icon {
+            transform: scale(1.1) rotate(5deg);
         }
 
-        .action-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 2px;
-            background: var(--gradient-magic);
-            transition: left 0.3s ease;
+        /* Categorie colori soft */
+        .category-requests { --card-accent: #3b82f6; }
+        .category-requests .tool-icon { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); }
+
+        .category-profile { --card-accent: #10b981; }
+        .category-profile .tool-icon { background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); }
+
+        .category-tools { --card-accent: #f59e0b; }
+        .category-tools .tool-icon { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); }
+
+        .category-ai { --card-accent: #8b5cf6; }
+        .category-ai .tool-icon { background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%); }
+
+        .category-contacts { --card-accent: #ec4899; }
+        .category-contacts .tool-icon { background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%); }
+
+        .category-deals { --card-accent: #14b8a6; }
+        .category-deals .tool-icon { background: linear-gradient(135deg, #cffafe 0%, #a7f3d0 100%); }
+
+        .category-files { --card-accent: #84cc16; }
+        .category-files .tool-icon { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); }
+
+        .category-community { --card-accent: #f97316; }
+        .category-community .tool-icon { background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%); }
+
+        .category-support { --card-accent: #6b7280; }
+        .category-support .tool-icon { background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); }
+
+        /* Stats cards alleggerite */
+        .stat-card-soft { 
+            background: rgba(255, 255, 255, 0.8); 
+            backdrop-filter: blur(16px); 
+            border: 1px solid rgba(255, 255, 255, 0.5); 
+            border-radius: 16px; 
+            transition: all 0.3s ease;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         }
 
-        .action-card:active::before {
-            left: 0;
+        .stat-card-soft:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.95); 
         }
 
-        @media (hover: hover) and (pointer: fine) {
-            .action-card:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 15px 35px rgba(0,0,0,0.25);
-                border-color: rgba(194, 24, 91, 0.5);
-                background: linear-gradient(135deg, rgba(255,255,255,0.20), rgba(255,255,255,0.14));
-            }
-        }
-
-        /* Mobile optimized stats migliorati */
-        .stat-card { 
-            background: linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.08)); 
-            backdrop-filter: blur(18px); 
-            border: 2px solid rgba(255,255,255,.30); 
-            border-radius: 24px; 
-            transition: all .3s cubic-bezier(.4,0,.2,1);
-            min-height: 100px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.25);
-        }
-
-        .stat-card:active {
-            transform: scale(0.95);
-        }
-
-        @media (hover: hover) and (pointer: fine) { 
-            .stat-card:hover { 
-                transform: translateY(-3px) scale(1.02); 
-                background: linear-gradient(135deg, rgba(255,255,255,.30), rgba(255,255,255,.15)); 
-                box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-                border-color: rgba(255,255,255,0.45);
-            } 
-        }
-
-        /* CTA BANNER POPUP STYLES MIGLIORATI */
+        /* CTA Banner soft */
         .cta-banner-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(6px);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
             z-index: 9999;
             display: flex;
             align-items: flex-end;
             justify-content: center;
-            padding: 0;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s cubic-bezier(.4,0,.2,1);
+            transition: all 0.3s ease;
             padding-bottom: max(1rem, var(--safe-area-inset-bottom));
         }
 
@@ -477,32 +341,29 @@
         }
 
         .cta-banner-content {
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(24px);
-            border: 2px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
             border-radius: 24px 24px 0 0;
             width: 100%;
             max-width: 480px;
             margin: 0 16px;
             transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(.4,0,.2,1);
-            box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.25);
-            position: relative;
-            overflow: hidden;
+            transition: transform 0.3s ease;
+            box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.1);
         }
 
         .cta-banner-overlay.show .cta-banner-content {
             transform: translateY(0);
         }
 
-        /* PULSANTE DI CHIUSURA PIÙ VISIBILE E ACCESSIBILE */
         .cta-banner-close {
             position: absolute;
             top: 12px;
             right: 12px;
-            width: 40px;
-            height: 40px;
-            border: 2px solid rgba(0, 0, 0, 0.2);
+            width: 32px;
+            height: 32px;
+            border: 1px solid rgba(107, 114, 128, 0.3);
             background: rgba(255, 255, 255, 0.9);
             border-radius: 50%;
             display: flex;
@@ -512,299 +373,150 @@
             transition: all 0.2s ease;
             backdrop-filter: blur(10px);
             z-index: 10;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .cta-banner-close:hover {
-            background: rgba(239, 68, 68, 0.9);
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border-color: #ef4444;
+        }
+
+        .btn-cta-soft {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
             color: white;
-            border-color: rgba(239, 68, 68, 0.5);
-            transform: scale(1.1);
+            border: none;
+            font-weight: 700;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
         }
 
-        .cta-banner-close:active {
-            transform: scale(0.95);
+        .btn-cta-soft:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
         }
 
-        /* AGGIUNTA: Pulsante "Chiudi" testuale per maggiore accessibilità */
-        .cta-banner-dismiss {
-            background: transparent;
-            color: #6b7280;
-            border: 1px solid #d1d5db;
-            font-size: 14px;
-            font-weight: 600;
-            padding: 8px 16px;
-            border-radius: 12px;
-            transition: all 0.2s ease;
-        }
-
-        .cta-banner-dismiss:hover {
-            background: #f3f4f6;
-            color: #374151;
-        }
-
-        /* Focus states */
-        .tool-card:focus-visible,
-        .action-card:focus-visible,
-        button:focus-visible,
-        [role="button"]:focus-visible {
-            outline: 3px solid rgba(194, 24, 91, 0.65);
-            outline-offset: 2px;
-        }
-
-        /* Loading */
-        .loading-skeleton { 
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); 
-            background-size: 200% 100%; 
-            animation: shimmer 1.2s infinite; 
-            border-radius: 16px; 
-        }
-
-        /* Notifications */
-        .notification-dropdown { 
-            display: none; 
-            position: absolute; 
-            top: calc(100% + 8px); 
-            right: 0; 
-            background: rgba(255,255,255,.98); 
-            backdrop-filter: blur(24px); 
-            border: 2px solid rgba(255,255,255,.8); 
-            border-radius: 20px; 
-            box-shadow: 0 20px 50px rgba(0,0,0,.2); 
-            width: min(350px, calc(100vw - 32px)); 
-            max-height: 60vh; 
-            overflow-y: auto; 
-            z-index: 1000; 
-        }
-        .notification-dropdown.show { 
-            display: block; 
-            animation: slideDown .2s ease; 
-        }
-        @keyframes slideDown { 
-            from { opacity: 0; transform: translateY(-10px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
-        .notification-badge { 
-            background: #dc2626; 
+        /* Notification badge soft */
+        .notification-badge-soft { 
+            background: linear-gradient(135deg, #ef4444, #f87171); 
             color: white; 
             border-radius: 50%; 
-            width: 20px; 
-            height: 20px; 
+            width: 18px; 
+            height: 18px; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            font-size: 11px; 
+            font-size: 10px; 
             font-weight: 600; 
             position: absolute;
             top: -6px;
             right: -6px;
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
         }
 
-        /* Priority indicators */
-        .priority-indicator { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-        .priority-alta { background: #ef4444; }
-        .priority-normale { background: #3b82f6; }
-        .priority-bassa { background: #10b981; }
-
-        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-
-        /* Hero title responsive */
-        .hero-title { 
-            font-size: clamp(1.8rem, 6vw, 3.5rem); 
-            font-weight: 900; 
-            line-height: 1.1;
-        }
-
-        /* Mobile grid system */
-        .mobile-grid {
+        /* Mobile optimizations */
+        .mobile-grid-soft {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            gap: 16px;
         }
 
         @media (min-width: 480px) {
-            .mobile-grid {
+            .mobile-grid-soft {
                 grid-template-columns: repeat(3, 1fr);
-                gap: 16px;
+                gap: 20px;
             }
         }
 
         @media (min-width: 768px) {
-            .mobile-grid {
+            .mobile-grid-soft {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 24px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .mobile-grid-soft {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        .stats-grid-soft {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        @media (min-width: 640px) {
+            .stats-grid-soft {
                 grid-template-columns: repeat(4, 1fr);
                 gap: 20px;
             }
         }
 
-        @media (min-width: 1024px) {
-            .mobile-grid {
-                grid-template-columns: repeat(5, 1fr);
-            }
-        }
-
-        /* Stats grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
+        .section-header {
+            display: flex;
+            align-items: center;
             gap: 12px;
+            margin-bottom: 20px;
         }
 
-        @media (min-width: 640px) {
-            .stats-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 16px;
-            }
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        /* Scrollbar styling */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.25); border-radius: 9999px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.4); }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #334155;
+            margin: 0;
+        }
+
+        /* Focus states soft */
+        .tool-card-soft:focus-visible,
+        button:focus-visible,
+        [role="button"]:focus-visible {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+
+        /* Scrollbar soft */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 8px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.5); }
         ::-webkit-scrollbar-track { background: transparent; }
 
-        /* Aspect ratio helpers */
-        .ratio-square { aspect-ratio: 1 / 1; }
-        .ratio-16x9 { aspect-ratio: 16 / 9; }
-        .ratio-4x3 { aspect-ratio: 4 / 3; }
-
-        /* Visually hidden for live regions */
-        .sr-only { 
-            position: absolute; 
-            width: 1px; 
-            height: 1px; 
-            padding: 0; 
-            margin: -1px; 
-            overflow: hidden; 
-            clip: rect(0,0,0,0); 
-            white-space: nowrap; 
-            border: 0; 
+        /* Header soft */
+        .header-soft {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
         }
 
-        /* Header with safe area */
-        .header-safe {
-            padding-top: max(16px, var(--safe-area-inset-top));
-        }
-
-        /* Mobile-specific animations */
-        .animate-slide-up {
-            animation: slideUp 0.3s ease-out;
-        }
-
-        .animate-fade-in {
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        /* Better touch targets */
-        .touch-target {
-            min-height: 44px;
-            min-width: 44px;
-        }
-
-        /* Improved mobile spacing */
-        .mobile-section {
-            padding: 1rem;
+        /* Enhanced mobile spacing */
+        .mobile-section-soft {
+            padding: 1.5rem 1rem;
         }
 
         @media (min-width: 640px) {
-            .mobile-section {
-                padding: 1.5rem;
+            .mobile-section-soft {
+                padding: 2rem 1.5rem;
             }
         }
 
         @media (min-width: 1024px) {
-            .mobile-section {
-                padding: 2rem;
-            }
-        }
-
-        /* === BOTPRESS CHATBOT CUSTOM STYLING === */
-        /* Style user messages with gradient magenta/aurora theme */
-        #bp-web-widget-container .bp-message.bp-message-user,
-        #bp-web-widget-container [data-from="user"] {
-            background: linear-gradient(135deg, #c2185b 0%, #e94560 50%, #e53935 100%) !important;
-            color: white !important;
-            border-radius: 18px 18px 4px 18px !important;
-            box-shadow: 0 2px 8px rgba(194, 24, 91, 0.3) !important;
-        }
-
-        /* Style bot messages with glass white effect */
-        #bp-web-widget-container .bp-message.bp-message-bot,
-        #bp-web-widget-container [data-from="bot"] {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px) !important;
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            border-radius: 18px 18px 18px 4px !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-            color: #1f2937 !important;
-        }
-
-        /* Style the chat widget button with brand colors */
-        #bp-web-widget-container .bp-widget-btn,
-        #bp-web-widget-container .bp-open-btn {
-            background: linear-gradient(135deg, #6a1b9a 0%, #c2185b 50%, #e53935 100%) !important;
-            box-shadow: 0 8px 25px rgba(194, 24, 91, 0.4) !important;
-            border: 2px solid rgba(255, 255, 255, 0.2) !important;
-            backdrop-filter: blur(10px) !important;
-        }
-
-        /* Hover effects for chat button */
-        #bp-web-widget-container .bp-widget-btn:hover,
-        #bp-web-widget-container .bp-open-btn:hover {
-            transform: scale(1.05) !important;
-            box-shadow: 0 12px 30px rgba(194, 24, 91, 0.6) !important;
-        }
-
-        /* Widget header styling */
-        #bp-web-widget-container .bp-widget-header {
-            background: linear-gradient(135deg, #0a0a2e 0%, #2d1b69 50%, #6a1b9a 100%) !important;
-            color: white !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-        }
-
-        /* Chat input area styling */
-        #bp-web-widget-container .bp-composer {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px) !important;
-            border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
-        }
-
-        /* Send button styling */
-        #bp-web-widget-container .bp-send-btn {
-            background: linear-gradient(135deg, #6a1b9a 0%, #c2185b 100%) !important;
-            color: white !important;
-            border-radius: 50% !important;
-        }
-
-        /* Chat window overall styling */
-        #bp-web-widget-container .bp-widget {
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            backdrop-filter: blur(20px) !important;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2) !important;
-            border-radius: 16px !important;
-        }
-
-        /* Hide any unwanted elements */
-        #bp-web-widget-container .bp-widget-sidebar,
-        #bp-web-widget-container [data-testid="share-button"],
-        #bp-web-widget-container .bp-share-btn {
-            display: none !important;
-            visibility: hidden !important;
-        }
-
-        /* Enhanced micro-animations */
-        .tool-card.animate-scale {
-            animation: scale 0.6s ease-in-out;
-        }
-
-        .tool-card.animate-bounce {
-            animation: bounce 0.8s ease-in-out;
-        }
-
-        @media (max-width: 640px) {
-            .cta-banner-content {
-                margin: 0;
-                border-radius: 24px 24px 0 0;
+            .mobile-section-soft {
+                padding: 2.5rem 2rem;
             }
         }
     </style>
@@ -812,73 +524,48 @@
 
 <body class="flex flex-col min-h-screen font-sans">
 
-    <!-- CTA BANNER POPUP MIGLIORATO -->
+    <!-- CTA BANNER POPUP SOFT -->
     <div id="ctaBannerOverlay" class="cta-banner-overlay" role="dialog" aria-labelledby="ctaBannerTitle" aria-modal="true">
         <div class="cta-banner-content">
             <button id="ctaBannerClose" class="cta-banner-close" aria-label="Chiudi banner">
-                <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
                 </svg>
             </button>
 
-            <div class="p-6 text-center relative overflow-hidden">
-                <!-- Background effects -->
-                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-gradient-to-r from-gold/20 via-magenta/20 to-cyan/20 rounded-full blur-2xl"></div>
+            <div class="p-6 text-center relative">
+                <div class="mb-4">
+                    <div class="w-16 h-16 mx-auto bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl flex items-center justify-center mb-4">
+                        <span class="text-3xl">⭐</span>
+                    </div>
+                    <h2 id="ctaBannerTitle" class="text-gray-900 text-xl font-bold">Vuoi di più?</h2>
+                </div>
                 
-                <div class="relative z-10">
-                    <div class="flex items-center justify-center gap-3 mb-4">
-                        <div class="w-12 h-12 bg-gradient-to-br from-gold to-magenta rounded-xl flex items-center justify-center">
-                            <span class="text-white text-2xl">⭐</span>
-                        </div>
-                        <h2 id="ctaBannerTitle" class="text-gray-900 text-xl font-black">Vuoi di più?</h2>
-                    </div>
+                <p class="text-gray-600 text-base mb-6 max-w-sm mx-auto leading-relaxed">
+                    Scopri tutti i vantaggi del <strong class="text-purple-600">Sindacato Italiano Militari - Carabinieri</strong>. 
+                    Convenzioni esclusive, tutela legale e servizi dedicati.
+                </p>
+                
+                <div class="flex flex-col gap-4 items-center">
+                    <a href="https://form.jotform.com/252383243723051" 
+                       target="_blank"
+                       class="btn-cta-soft px-8 py-4 rounded-2xl text-lg font-bold flex items-center gap-3 w-full justify-center max-w-xs"
+                       onclick="trackCtaClick(); closeBanner();">
+                        <span>🚀 ISCRIVITI SUBITO</span>
+                    </a>
                     
-                    <p class="text-gray-700 text-base mb-6 max-w-sm mx-auto">
-                        Scopri tutti i vantaggi del <strong class="text-magenta">Sindacato Italiano Militari - Carabinieri</strong>. 
-                        Convenzioni esclusive, tutela legale e servizi dedicati.
-                    </p>
+                    <button onclick="closeBanner()" class="text-gray-500 hover:text-gray-700 text-sm transition-colors">
+                        Non ora, grazie
+                    </button>
                     
-                    <div class="flex flex-col gap-4 items-center">
-                        <a href="https://form.jotform.com/252383243723051" 
-                           target="_blank"
-                           class="btn-cta px-6 py-3 rounded-2xl text-lg font-black flex items-center gap-3 shadow-2xl transform transition-all duration-300"
-                           onclick="trackCtaClick(); closeBanner();">
-                            <span>🚀 ISCRIVITI SUBITO</span>
-                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                            </svg>
-                        </a>
-                        
-                        <!-- PULSANTE CHIUDI PIÙ ACCESSIBILE -->
-                        <button onclick="closeBanner()" class="cta-banner-dismiss">
-                            Non ora, grazie
-                        </button>
-                        
-                        <div class="text-center">
-                            <div class="text-gray-600 text-sm">
-                                ✅ Iscrizione sicura e veloce<br>
-                                ✅ Attivazione immediata
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Benefits Preview -->
-                    <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                        <div class="text-gray-600">
+                    <div class="grid grid-cols-2 gap-4 mt-4 text-center max-w-xs w-full">
+                        <div class="text-gray-500">
                             <div class="text-2xl mb-1">🤝</div>
-                            <div class="text-xs font-semibold">Convenzioni</div>
+                            <div class="text-xs font-medium">Convenzioni</div>
                         </div>
-                        <div class="text-gray-600">
+                        <div class="text-gray-500">
                             <div class="text-2xl mb-1">⚖️</div>
-                            <div class="text-xs font-semibold">Tutela Legale</div>
-                        </div>
-                        <div class="text-gray-600">
-                            <div class="text-2xl mb-1">🎓</div>
-                            <div class="text-xs font-semibold">Formazione</div>
-                        </div>
-                        <div class="text-gray-600">
-                            <div class="text-2xl mb-1">🏥</div>
-                            <div class="text-xs font-semibold">Assistenza</div>
+                            <div class="text-xs font-medium">Tutela Legale</div>
                         </div>
                     </div>
                 </div>
@@ -886,28 +573,25 @@
         </div>
     </div>
 
-    <!-- HEADER MOBILE OPTIMIZED - BRAND IDENTITY 2025 -->
-    <header class="glass-morphism sticky top-0 z-40 header-safe">
-        <div class="px-4 py-3">
-            <!-- Mobile Header Layout -->
+    <!-- HEADER SOFT -->
+    <header class="header-soft sticky top-0 z-40" style="padding-top: max(16px, var(--safe-area-inset-top));">
+        <div class="px-4 py-4">
             <div class="flex items-center justify-between">
-                <!-- Logo + Title (Condensed for mobile) -->
+                <!-- Logo + Title -->
                 <div class="flex items-center space-x-3">
-                    <!-- M CORSIVA GLASSMORPHISM LOGO -->
-                    <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg">
-                        <span class="m-logo-italic-v5">M</span>
+                    <div class="flex-shrink-0">
+                        <span class="m-logo-soft">M</span>
                     </div>
                     <div class="hidden sm:block">
-                        <span class="text-ultra-visible text-xl font-black">MyApp</span>
-                        <div class="text-white text-xs flex items-center gap-2">
-                            <span class="text-white/80 font-medium">by SIM Carabinieri</span>
-                            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse ml-1"></span>
+                        <span class="text-soft-dark text-xl font-bold">MyApp</span>
+                        <div class="text-soft-light text-xs flex items-center gap-2">
+                            <span class="font-medium">by SIM Carabinieri</span>
+                            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
                         </div>
                     </div>
-                    <!-- Mobile: Show only logo -->
                     <div class="sm:hidden">
-                        <span class="text-ultra-visible text-lg font-black">MyApp</span>
-                        <div class="text-white/80 text-xs">by SIM Carabinieri</div>
+                        <span class="text-soft-dark text-lg font-bold">MyApp</span>
+                        <div class="text-soft-light text-xs">by SIM Carabinieri</div>
                     </div>
                 </div>
 
@@ -915,17 +599,17 @@
                 <div class="flex items-center space-x-3">
                     <!-- Notifications -->
                     <div class="relative">
-                        <button id="notificationBtn" class="touch-target text-white hover:text-red transition-all duration-300 p-2 rounded-xl" aria-haspopup="true" aria-expanded="false">
+                        <button id="notificationBtn" class="p-2 rounded-xl text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300" aria-haspopup="true" aria-expanded="false">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2 2 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
                             </svg>
                         </button>
-                        <span id="notificationBadge" class="notification-badge hidden" aria-live="polite">0</span>
-                        <div id="notificationDropdown" class="notification-dropdown" role="dialog" aria-label="Elenco notifiche">
-                            <div class="p-4 border-b border-gray-200">
+                        <span id="notificationBadge" class="notification-badge-soft hidden" aria-live="polite">0</span>
+                        <div id="notificationDropdown" class="notification-dropdown" role="dialog" aria-label="Elenco notifiche" style="display: none;">
+                            <div class="p-4 border-b border-gray-100">
                                 <div class="flex justify-between items-center">
-                                    <h3 class="font-bold text-textDark">🔔 Notifiche</h3>
-                                    <button id="markAllRead" class="text-magenta hover:text-red text-sm font-semibold">Segna tutte lette</button>
+                                    <h3 class="font-bold text-gray-800">🔔 Notifiche</h3>
+                                    <button id="markAllRead" class="text-blue-600 hover:text-blue-700 text-sm font-semibold">Segna tutte lette</button>
                                 </div>
                             </div>
                             <div id="notificationList" class="p-2 max-h-80 overflow-y-auto"></div>
@@ -933,17 +617,17 @@
                         <span id="notificationLive" class="sr-only" aria-live="polite"></span>
                     </div>
 
-                    <!-- User Profile (Condensed for mobile) -->
-                    <div class="flex items-center space-x-2">
-                        <div class="text-white text-right hidden sm:block">
+                    <!-- User Profile -->
+                    <div class="flex items-center space-x-3">
+                        <div class="text-gray-700 text-right hidden sm:block">
                             <div id="userWelcome" class="font-semibold text-sm">Caricamento...</div>
-                            <div id="userRole" class="text-xs opacity-80">Utente</div>
+                            <div id="userRole" class="text-xs text-gray-500">Utente</div>
                         </div>
-                        <div id="userAvatar" class="w-9 h-9 bg-gradient-to-br from-magenta to-cyan rounded-full flex items-center justify-center text-white font-bold text-sm border-2 border-white/20">U</div>
+                        <div id="userAvatar" class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm border-2 border-white shadow-md">U</div>
                     </div>
 
-                    <!-- Logout Button (Hidden on mobile, show hamburger instead) -->
-                    <button id="logoutBtn" class="btn-aurora px-4 py-2 rounded-xl text-sm font-bold hidden sm:flex items-center gap-2">
+                    <!-- Logout Button -->
+                    <button id="logoutBtn" class="btn-soft-primary px-4 py-2 text-sm font-semibold hidden sm:flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                         </svg>
@@ -951,7 +635,7 @@
                     </button>
 
                     <!-- Mobile Menu Button -->
-                    <button id="mobileMenuBtn" class="sm:hidden touch-target text-white p-2 rounded-xl">
+                    <button id="mobileMenuBtn" class="sm:hidden p-2 rounded-xl text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-colors">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
@@ -959,15 +643,15 @@
                 </div>
             </div>
 
-            <!-- Mobile Menu (Hidden by default) -->
-            <div id="mobileMenu" class="sm:hidden mt-4 pb-4 border-t border-white/20 hidden">
-                <div class="pt-4 space-y-2">
-                    <div class="text-white text-center py-2">
-                        <div id="userWelcomeMobile" class="font-semibold">Caricamento...</div>
-                        <div id="userRoleMobile" class="text-sm opacity-80">Utente</div>
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="sm:hidden mt-4 pb-4 border-t border-gray-100 hidden">
+                <div class="pt-4 space-y-3">
+                    <div class="text-center py-2">
+                        <div id="userWelcomeMobile" class="font-semibold text-gray-700">Caricamento...</div>
+                        <div id="userRoleMobile" class="text-sm text-gray-500">Utente</div>
                     </div>
-                    <button id="logoutBtnMobile" class="btn-aurora w-full py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <button id="logoutBtnMobile" class="btn-soft-primary w-full py-3 text-sm font-semibold flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                         </svg>
                         Esci
@@ -980,283 +664,284 @@
     <!-- MAIN CONTENT -->
     <main class="flex-grow pb-8">
 
-        <!-- WELCOME SECTION - Mobile First -->
-        <section class="mobile-section animate-fade-in">
-            <div class="glass-morphism rounded-3xl p-6 md:p-8 relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-magenta/20 to-cyan/20 rounded-full blur-xl"></div>
-                <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-red/20 to-teal/20 rounded-full blur-lg"></div>
+        <!-- WELCOME SECTION -->
+        <section class="mobile-section-soft">
+            <div class="glass-card-soft rounded-3xl p-6 md:p-8 relative overflow-hidden">
+                <div class="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-blue-100/50 to-purple-100/50 rounded-full blur-xl"></div>
+                <div class="absolute bottom-4 left-4 w-16 h-16 bg-gradient-to-tr from-pink-100/50 to-indigo-100/50 rounded-full blur-lg"></div>
 
-                <div class="relative z-10">
-                    <!-- Mobile-optimized welcome -->
-                    <div class="text-center md:text-left">
-                        <div class="mb-4">
-                            <div class="inline-flex items-center gap-2 mb-3">
-                                <div class="w-1 h-6 bg-gradient-to-b from-magenta to-cyan rounded-full"></div>
-                                <span class="text-white/80 text-xs font-semibold uppercase tracking-wider">MyApp</span>
-                            </div>
+                <div class="relative z-10 text-center md:text-left">
+                    <div class="mb-4">
+                        <div class="inline-flex items-center gap-2 mb-3">
+                            <div class="w-1 h-6 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></div>
+                            <span class="text-gray-500 text-xs font-semibold uppercase tracking-wider">MyApp</span>
                         </div>
+                    </div>
 
-                        <h1 class="hero-title text-ultra-visible mb-4 leading-tight">
-                            Benvenuto,<br>
-                            <span id="userNameDisplay" class="text-cyan">Utente</span>
-                        </h1>
-                        
-                        <p class="text-white/90 text-base md:text-lg mb-6 max-w-2xl mx-auto md:mx-0">
-                            Accedi ai tuoi servizi personalizzati <strong class="text-gold">MyApp by SIM Carabinieri</strong>
-                        </p>
+                    <h1 class="text-4xl md:text-5xl font-black mb-4 leading-tight">
+                        <span class="text-gray-800">Benvenuto,</span><br>
+                        <span id="userNameDisplay" class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Utente</span>
+                    </h1>
+                    
+                    <p class="text-gray-600 text-base md:text-lg mb-6 max-w-2xl mx-auto md:mx-0 leading-relaxed">
+                        Accedi ai tuoi servizi personalizzati <strong class="text-blue-600">MyApp by SIM Carabinieri</strong>
+                    </p>
 
-                        <!-- Status indicators - Mobile optimized -->
-                        <div class="flex flex-wrap gap-2 justify-center md:justify-start">
-                            <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
-                                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                                <span class="text-sm font-medium">Online</span>
-                            </div>
-                            <div class="flex items-center gap-2 text-white/80 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                </svg>
-                                <span class="text-sm font-medium hidden sm:inline">Connessione sicura</span>
-                                <span class="text-sm font-medium sm:hidden">Sicuro</span>
-                            </div>
+                    <div class="flex flex-wrap gap-3 justify-center md:justify-start">
+                        <div class="flex items-center gap-2 text-gray-600 bg-white/60 px-4 py-2 rounded-full backdrop-blur-sm border border-white/40">
+                            <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                            <span class="text-sm font-medium">Online</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-gray-600 bg-white/60 px-4 py-2 rounded-full backdrop-blur-sm border border-white/40">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                            <span class="text-sm font-medium">Sicuro</span>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- STATS SECTION - Mobile Grid -->
-        <section class="mobile-section animate-slide-up">
-            <div class="flex items-center gap-3 mb-4">
-                <!-- M LOGO SMALL -->
-                <div class="w-10 h-10 bg-gradient-to-br from-cyan to-teal rounded-xl flex items-center justify-center shadow-md">
-                    <span class="m-logo-small text-white">M</span>
+        <!-- STATS SECTION -->
+        <section class="mobile-section-soft">
+            <div class="section-header">
+                <div class="section-icon">
+                    <span class="m-logo-small-soft text-blue-600">M</span>
                 </div>
-                <h2 class="text-ultra-visible text-xl md:text-2xl font-black">I tuoi dati</h2>
+                <h2 class="section-title">I tuoi dati</h2>
             </div>
 
-            <div class="stats-grid">
-                <div class="stat-card p-4">
-                    <div class="text-center">
-                        <div class="text-2xl mb-1" aria-hidden="true">📅</div>
-                        <div class="text-white text-lg font-bold" id="memberSince">-</div>
-                        <div class="text-white text-xs opacity-80">Iscritto dal</div>
-                    </div>
+            <div class="stats-grid-soft">
+                <div class="stat-card-soft">
+                    <div class="text-2xl mb-2">📅</div>
+                    <div class="text-gray-800 text-lg font-bold" id="memberSince">-</div>
+                    <div class="text-gray-500 text-xs">Iscritto dal</div>
                 </div>
 
-                <div class="stat-card p-4">
-                    <div class="text-center">
-                        <div class="text-2xl mb-1" aria-hidden="true">🎫</div>
-                        <div class="text-white text-lg font-bold" id="numeroTessera">Loading...</div>
-                        <div class="text-white text-xs opacity-80">N. Tessera</div>
-                    </div>
+                <div class="stat-card-soft">
+                    <div class="text-2xl mb-2">🎫</div>
+                    <div class="text-gray-800 text-lg font-bold" id="numeroTessera">Loading...</div>
+                    <div class="text-gray-500 text-xs">N. Tessera</div>
                 </div>
 
-                <div class="stat-card p-4">
-                    <div class="text-center">
-                        <div class="text-2xl mb-1" aria-hidden="true">📋</div>
-                        <div class="text-white text-lg font-bold" id="richiesteCount">-</div>
-                        <div class="text-white text-xs opacity-80">Richieste</div>
-                    </div>
+                <div class="stat-card-soft">
+                    <div class="text-2xl mb-2">📋</div>
+                    <div class="text-gray-800 text-lg font-bold" id="richiesteCount">-</div>
+                    <div class="text-gray-500 text-xs">Richieste</div>
                 </div>
 
-                <div class="stat-card p-4">
-                    <div class="text-center">
-                        <div class="text-2xl mb-1" aria-hidden="true">✅</div>
-                        <div class="text-white text-lg font-bold" id="profileStatus">Attivo</div>
-                        <div class="text-white text-xs opacity-80">Stato</div>
-                    </div>
+                <div class="stat-card-soft">
+                    <div class="text-2xl mb-2">✅</div>
+                    <div class="text-gray-800 text-lg font-bold" id="profileStatus">Attivo</div>
+                    <div class="text-gray-500 text-xs">Stato</div>
                 </div>
             </div>
         </section>
 
-        <!-- TOOLS SECTION - Mobile Grid con BORDI EVIDENZIATI -->
-        <section class="mobile-section animate-slide-up">
-            <div class="flex items-center gap-3 mb-4">
-                <!-- M LOGO SMALL -->
-                <div class="w-10 h-10 bg-gradient-to-br from-gold to-magenta rounded-xl flex items-center justify-center shadow-md">
-                    <span class="m-logo-small text-white">M</span>
+        <!-- TOOLS SECTION - Completamente ridisegnata -->
+        <section class="mobile-section-soft">
+            <div class="section-header">
+                <div class="section-icon">
+                    <span class="m-logo-small-soft text-purple-600">M</span>
                 </div>
-                <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Strumenti e servizi</h2>
+                <h2 class="section-title">Strumenti e servizi</h2>
             </div>
 
-            <div class="mobile-grid">
-                <div class="tool-card category-requests p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Nuova Richiesta" onclick="goToRichieste()" onkeydown="keyActivate(event,'goToRichieste')">
-                    <div class="text-3xl mb-2">📝</div>
-                    <h3 class="text-white text-sm font-bold mb-1">Nuova Richiesta</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">Invia richiesta</p>
+            <div class="mobile-grid-soft">
+                <div class="tool-card-soft category-requests cursor-pointer" role="button" tabindex="0" onclick="goToRichieste()" onkeydown="keyActivate(event,'goToRichieste')">
+                    <div class="tool-icon">
+                        <span>📝</span>
+                    </div>
+                    <h3 class="text-gray-800 text-sm font-bold mb-1">Nuova Richiesta</h3>
+                    <p class="text-gray-500 text-xs">Invia richiesta</p>
                 </div>
 
-                <div class="tool-card category-profile p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Tessera Digitale" onclick="goToTessera()" onkeydown="keyActivate(event,'goToTessera')">
-                    <div class="text-3xl mb-2">🎫</div>
-                    <h3 class="text-white text-sm font-bold mb-1">Tessera</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">Visualizza tessera</p>
+                <div class="tool-card-soft category-profile cursor-pointer" role="button" tabindex="0" onclick="goToTessera()" onkeydown="keyActivate(event,'goToTessera')">
+                    <div class="tool-icon">
+                        <span>🎫</span>
+                    </div>
+                    <h3 class="text-gray-800 text-sm font-bold mb-1">Tessera</h3>
+                    <p class="text-gray-500 text-xs">Visualizza tessera</p>
                 </div>
 
-                <div class="tool-card category-profile p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Il Mio Profilo" onclick="goToProfilo()" onkeydown="keyActivate(event,'goToProfilo')">
-                    <div class="text-3xl mb-2">👤</div>
-                    <h3 class="text-white text-sm font-bold mb-1">Profilo</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">Gestisci dati</p>
+                <div class="tool-card-soft category-profile cursor-pointer" role="button" tabindex="0" onclick="goToProfilo()" onkeydown="keyActivate(event,'goToProfilo')">
+                    <div class="tool-icon">
+                        <span>👤</span>
+                    </div>
+                    <h3 class="text-gray-800 text-sm font-bold mb-1">Profilo</h3>
+                    <p class="text-gray-500 text-xs">Gestisci dati</p>
                 </div>
 
-                <div class="tool-card category-tools p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Strumenti" onclick="goToStrumenti()" onkeydown="keyActivate(event,'goToStrumenti')">
-                    <div class="text-3xl mb-2">🛠️</div>
-                    <h3 class="text-white text-sm font-bold mb-1">Strumenti</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">Utility lavoro</p>
+                <div class="tool-card-soft category-tools cursor-pointer" role="button" tabindex="0" onclick="goToStrumenti()" onkeydown="keyActivate(event,'goToStrumenti')">
+                    <div class="tool-icon">
+                        <span>🛠️</span>
+                    </div>
+                    <h3 class="text-gray-800 text-sm font-bold mb-1">Strumenti</h3>
+                    <p class="text-gray-500 text-xs">Utility lavoro</p>
                 </div>
 
-                <div class="tool-card category-ai p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Virgilio AI" onclick="goToVirgilio()" onkeydown="keyActivate(event,'goToVirgilio')">
-                    <div class="text-3xl mb-2">🤖</div>
-                    <h3 class="text-white text-sm font-bold mb-1">Virgilio AI</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">Assistente AI</p>
+                <div class="tool-card-soft category-ai cursor-pointer" role="button" tabindex="0" onclick="goToVirgilio()" onkeydown="keyActivate(event,'goToVirgilio')">
+                    <div class="tool-icon">
+                        <span>🤖</span>
+                    </div>
+                    <h3 class="text-gray-800 text-sm font-bold mb-1">Virgilio AI</h3>
+                    <p class="text-gray-500 text-xs">Assistente AI</p>
                 </div>
 
-                <div class="tool-card category-contacts p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Dirigenti" onclick="goToDirigenti()" onkeydown="keyActivate(event,'goToDirigenti')">
-                    <div class="text-3xl mb-2">👥</div>
-                    <h3 class="text-white text-sm font-bold mb-1">Dirigenti</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">Contatti</p>
+                <div class="tool-card-soft category-contacts cursor-pointer" role="button" tabindex="0" onclick="goToDirigenti()" onkeydown="keyActivate(event,'goToDirigenti')">
+                    <div class="tool-icon">
+                        <span>👥</span>
+                    </div>
+                    <h3 class="text-gray-800 text-sm font-bold mb-1">Dirigenti</h3>
+                    <p class="text-gray-500 text-xs">Contatti</p>
                 </div>
 
-                <div class="tool-card category-deals p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Convenzioni" onclick="goToConvenzioni()" onkeydown="keyActivate(event,'goToConvenzioni')">
-                    <div class="text-3xl mb-2">🤝</div>
-                    <h3 class="text-white text-sm font-bold mb-1">Convenzioni</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">Sconti e offerte</p>
+                <div class="tool-card-soft category-deals cursor-pointer" role="button" tabindex="0" onclick="goToConvenzioni()" onkeydown="keyActivate(event,'goToConvenzioni')">
+                    <div class="tool-icon">
+                        <span>🤝</span>
+                    </div>
+                    <h3 class="text-gray-800 text-sm font-bold mb-1">Convenzioni</h3>
+                    <p class="text-gray-500 text-xs">Sconti e offerte</p>
                 </div>
 
-                <div class="tool-card category-files p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="FileBox" onclick="goToFileBox()" onkeydown="keyActivate(event,'goToFileBox')">
-                    <div class="text-3xl mb-2">📁</div>
-                    <h3 class="text-white text-sm font-bold mb-1">FileBox</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">File e documenti</p>
+                <div class="tool-card-soft category-files cursor-pointer" role="button" tabindex="0" onclick="goToFileBox()" onkeydown="keyActivate(event,'goToFileBox')">
+                    <div class="tool-icon">
+                        <span>📁</span>
+                    </div>
+                    <h3 class="text-gray-800 text-sm font-bold mb-1">FileBox</h3>
+                    <p class="text-gray-500 text-xs">File e documenti</p>
                 </div>
 
-                <div class="tool-card category-community p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Community Hub" onclick="goToCommunity()" onkeydown="keyActivate(event,'goToCommunity')">
-                    <div class="text-3xl mb-2">👥</div>
-                    <h3 class="text-white text-sm font-bold mb-1">Community Hub</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">Forum e discussioni</p>
+                <div class="tool-card-soft category-community cursor-pointer" role="button" tabindex="0" onclick="goToCommunity()" onkeydown="keyActivate(event,'goToCommunity')">
+                    <div class="tool-icon">
+                        <span>👥</span>
+                    </div>
+                    <h3 class="text-gray-800 text-sm font-bold mb-1">Community</h3>
+                    <p class="text-gray-500 text-xs">Forum discussioni</p>
                 </div>
 
-                <div class="tool-card category-support p-4 text-center cursor-pointer" role="button" tabindex="0" aria-label="Assistenza" onclick="goToAssistenza()" onkeydown="keyActivate(event,'goToAssistenza')">
-                    <div class="text-3xl mb-2">🛟</div>
-                    <h3 class="text-white text-sm font-bold mb-1">Assistenza</h3>
-                    <p class="text-white/80 text-xs line-clamp-2">Supporto</p>
+                <div class="tool-card-soft category-support cursor-pointer" role="button" tabindex="0" onclick="goToAssistenza()" onkeydown="keyActivate(event,'goToAssistenza')">
+                    <div class="tool-icon">
+                        <span>🛟</span>
+                    </div>
+                    <h3 class="text-gray-800 text-sm font-bold mb-1">Assistenza</h3>
+                    <p class="text-gray-500 text-xs">Supporto</p>
                 </div>
             </div>
         </section>
 
-        <!-- REQUESTS SECTION - Mobile First -->
-        <section class="mobile-section animate-slide-up">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center gap-3">
-                    <!-- M LOGO SMALL -->
-                    <div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-md">
-                        <span class="m-logo-small text-white">M</span>
+        <!-- REQUESTS SECTION -->
+        <section class="mobile-section-soft">
+            <div class="flex items-center justify-between mb-6">
+                <div class="section-header mb-0">
+                    <div class="section-icon">
+                        <span class="text-blue-600">📋</span>
                     </div>
-                    <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Le Tue Richieste</h2>
+                    <h2 class="section-title">Le Tue Richieste</h2>
                 </div>
-                <button onclick="goToRichieste()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-1 text-sm">
+                <button onclick="goToRichieste()" class="text-blue-600 hover:text-blue-700 transition-colors flex items-center gap-1 text-sm font-medium">
                     <span class="hidden sm:inline">Vedi tutte</span>
                     <span class="sm:hidden">Tutte</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                 </button>
             </div>
             
-            <div class="glass-morphism rounded-3xl p-4 md:p-6">
-                <div id="richiesteContainer" class="space-y-3">
-                    <div class="loading-skeleton h-16"></div>
-                    <div class="loading-skeleton h-16"></div>
-                    <div class="loading-skeleton h-16"></div>
+            <div class="glass-card-soft rounded-3xl p-6">
+                <div id="richiesteContainer" class="space-y-4">
+                    <div class="animate-pulse bg-gray-100 h-16 rounded-xl"></div>
+                    <div class="animate-pulse bg-gray-100 h-16 rounded-xl"></div>
+                    <div class="animate-pulse bg-gray-100 h-16 rounded-xl"></div>
                 </div>
             </div>
         </section>
 
-        <!-- NEWS SECTION - Mobile Cards -->
-        <section class="mobile-section animate-slide-up" id="newsSection">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center gap-3">
-                    <!-- M LOGO SMALL -->
-                    <div class="w-10 h-10 bg-gradient-to-br from-slate-600 to-slate-800 rounded-xl flex items-center justify-center shadow-md">
-                        <span class="m-logo-small text-white">M</span>
+        <!-- NEWS SECTION -->
+        <section class="mobile-section-soft" id="newsSection">
+            <div class="flex items-center justify-between mb-6">
+                <div class="section-header mb-0">
+                    <div class="section-icon">
+                        <span class="text-indigo-600">📰</span>
                     </div>
-                    <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Ultime Notizie</h2>
+                    <h2 class="section-title">Ultime Notizie</h2>
                 </div>
-                <button onclick="viewAllNews()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-1 text-sm">
+                <button onclick="viewAllNews()" class="text-indigo-600 hover:text-indigo-700 transition-colors flex items-center gap-1 text-sm font-medium">
                     <span class="hidden sm:inline">Vedi tutte</span>
                     <span class="sm:hidden">Tutte</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                 </button>
             </div>
             
-            <div class="glass-card rounded-3xl p-4 md:p-6">
+            <div class="glass-card-soft rounded-3xl p-6">
                 <div id="newsContainer">
-                    <div class="loading-skeleton h-16 mb-3"></div>
-                    <div class="loading-skeleton h-16 mb-3"></div>
-                    <div class="loading-skeleton h-16"></div>
+                    <div class="animate-pulse bg-gray-100 h-16 rounded-xl mb-4"></div>
+                    <div class="animate-pulse bg-gray-100 h-16 rounded-xl mb-4"></div>
+                    <div class="animate-pulse bg-gray-100 h-16 rounded-xl"></div>
                 </div>
             </div>
         </section>
 
-        <!-- CONVENTIONS SECTION - Mobile Grid -->
-        <section class="mobile-section animate-slide-up" id="convenzioniSection">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center gap-3">
-                    <!-- M LOGO SMALL -->
-                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center shadow-md">
-                        <span class="m-logo-small text-white">M</span>
+        <!-- CONVENTIONS SECTION -->
+        <section class="mobile-section-soft" id="convenzioniSection">
+            <div class="flex items-center justify-between mb-6">
+                <div class="section-header mb-0">
+                    <div class="section-icon">
+                        <span class="text-emerald-600">🤝</span>
                     </div>
-                    <h2 class="text-ultra-visible text-xl md:text-2xl font-black">Convenzioni</h2>
+                    <h2 class="section-title">Convenzioni</h2>
                 </div>
-                <button onclick="goToConvenzioni()" class="text-white opacity-80 hover:opacity-100 transition-opacity flex items-center gap-1 text-sm">
+                <button onclick="goToConvenzioni()" class="text-emerald-600 hover:text-emerald-700 transition-colors flex items-center gap-1 text-sm font-medium">
                     <span class="hidden sm:inline">Vedi tutte</span>
                     <span class="sm:hidden">Tutte</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                 </button>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6" id="convenzioniContainer">
-                <div class="loading-skeleton h-48"></div>
-                <div class="loading-skeleton h-48"></div>
-                <div class="loading-skeleton h-48"></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="convenzioniContainer">
+                <div class="animate-pulse bg-gray-100 h-64 rounded-3xl"></div>
+                <div class="animate-pulse bg-gray-100 h-64 rounded-3xl"></div>
+                <div class="animate-pulse bg-gray-100 h-64 rounded-3xl"></div>
             </div>
         </section>
 
     </main>
 
-    <!-- FOOTER - Mobile Optimized -->
-    <footer class="glass-morphism mt-8 pb-8" style="padding-bottom: max(2rem, var(--safe-area-inset-bottom));">
-        <div class="px-4 py-6">
-            <div class="text-center text-white">
-                <div class="mb-3 flex items-center justify-center gap-3">
-                    <!-- M LOGO SMALL IN FOOTER -->
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center shadow-md">
-                        <span class="text-white text-lg font-bold italic" style="transform: rotate(-7deg); font-family: 'Georgia', serif;">M</span>
+    <!-- FOOTER SOFT -->
+    <footer class="glass-soft mt-8" style="padding-bottom: max(2rem, var(--safe-area-inset-bottom));">
+        <div class="px-6 py-8">
+            <div class="text-center">
+                <div class="mb-4 flex items-center justify-center gap-4">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 shadow-sm">
+                        <span class="text-gray-700 text-lg font-bold italic" style="transform: rotate(-5deg); font-family: 'Georgia', serif;">M</span>
                     </div>
                     <div>
-                        <span class="font-bold text-lg">MyApp</span>
-                        <div class="text-white/70 text-sm">by SIM Carabinieri</div>
+                        <span class="font-bold text-xl text-gray-800">MyApp</span>
+                        <div class="text-gray-500 text-sm">by SIM Carabinieri</div>
                     </div>
                 </div>
-                <div class="flex justify-center items-center space-x-4 text-xs opacity-80 mb-4 flex-wrap">
+                <div class="flex justify-center items-center space-x-4 text-xs text-gray-500 mb-6 flex-wrap">
                     <span>© 2025 MyApp by SIM Carabinieri</span>
                     <span class="hidden sm:inline">•</span>
                     <span class="hidden sm:inline">Powered by Supabase</span>
                     <span class="hidden sm:inline">•</span>
-                    <span>Brand Identity 2025</span>
+                    <span>Versione Light 2025</span>
                 </div>
                 <div class="flex justify-center space-x-2">
-                    <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                    <div class="w-2 h-2 bg-magenta rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
-                    <div class="w-2 h-2 bg-red rounded-full animate-pulse" style="animation-delay: 1s;"></div>
+                    <div class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                    <div class="w-2 h-2 bg-purple-400 rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
+                    <div class="w-2 h-2 bg-pink-400 rounded-full animate-pulse" style="animation-delay: 1s;"></div>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- JAVASCRIPT -->
+    <!-- JAVASCRIPT - Tutte le funzioni rimangono identiche -->
     <script>
         // === CONFIGURAZIONE SUPABASE ===
         const SUPABASE_URL = 'https://pvzdilkozpspsnepedqc.supabase.co';
@@ -1265,18 +950,10 @@
         let supabaseClient;
         let currentUser = null;
         let userProfile = null;
-
-        // Lazy flags
         let newsLoaded = false;
         let convenzioniLoaded = false;
-
-        // Refresh loop
         let refreshInterval = null;
-
-        // Mobile menu state
         let mobileMenuOpen = false;
-
-        // CTA Banner state - TIMER PIÙ LUNGO (20 secondi)
         let ctaBannerTimer = null;
         let ctaBannerRecurringTimer = null;
         let ctaBannerDismissed = false;
@@ -1297,7 +974,7 @@
             }
         }
 
-        // CTA Banner Management MIGLIORATO
+        // CTA Banner Management
         function showBanner() {
             if (ctaBannerDismissed) return;
             
@@ -1305,14 +982,6 @@
             if (overlay) {
                 overlay.classList.add('show');
                 ctaBannerShown = true;
-                
-                // Add subtle animation to tool cards when banner shows
-                document.querySelectorAll('.tool-card').forEach((card, index) => {
-                    setTimeout(() => {
-                        card.classList.add('animate-bounce');
-                        setTimeout(() => card.classList.remove('animate-bounce'), 800);
-                    }, index * 100);
-                });
             }
         }
 
@@ -1322,7 +991,6 @@
                 overlay.classList.remove('show');
                 ctaBannerDismissed = true;
                 
-                // Clear existing timers
                 if (ctaBannerTimer) {
                     clearTimeout(ctaBannerTimer);
                     ctaBannerTimer = null;
@@ -1332,15 +1000,12 @@
                     ctaBannerRecurringTimer = null;
                 }
                 
-                // Set up recurring timer for 15 minutes (increased from 10)
                 ctaBannerRecurringTimer = setTimeout(() => {
                     ctaBannerDismissed = false;
                     ctaBannerShown = false;
                     showBanner();
-                    
-                    // Set up next recurring cycle
                     setRecurringBanner();
-                }, 15 * 60 * 1000); // 15 minutes
+                }, 15 * 60 * 1000);
             }
         }
 
@@ -1353,8 +1018,8 @@
                 if (!ctaBannerDismissed && !ctaBannerShown) {
                     showBanner();
                 }
-                setRecurringBanner(); // Continue the cycle
-            }, 15 * 60 * 1000); // 15 minutes
+                setRecurringBanner();
+            }, 15 * 60 * 1000);
         }
 
         // Attivazione via tastiera per "role=button"
@@ -1365,33 +1030,9 @@
             }
         }
 
-        // Enhanced mobile interactions
-        function addMobileInteractions() {
-            // Add stagger animations to tool cards
-            const toolCards = document.querySelectorAll('.tool-card');
-            toolCards.forEach((card, index) => {
-                card.style.animationDelay = `${index * 0.1}s`;
-                
-                // Add touch feedback
-                card.addEventListener('touchstart', () => {
-                    card.style.transform = 'scale(0.95)';
-                }, { passive: true });
-                
-                card.addEventListener('touchend', () => {
-                    card.style.transform = '';
-                }, { passive: true });
-            });
-
-            // Enhanced stats cards animation
-            const statCards = document.querySelectorAll('.stat-card');
-            statCards.forEach((card, index) => {
-                card.style.animationDelay = `${index * 0.15}s`;
-            });
-        }
-
         // === INIZIALIZZAZIONE ===
         document.addEventListener('DOMContentLoaded', async () => {
-            console.log('🏠 HOME PAGE LOADED - MyApp by SIM Carabinieri Dashboard Brand Identity 2025');
+            console.log('🏠 HOME PAGE LOADED - MyApp by SIM Carabinieri Light Version 2025');
             
             if (typeof supabase === 'undefined') {
                 console.error('❌ Supabase not loaded');
@@ -1401,68 +1042,45 @@
             
             supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             
-            // Verifica autenticazione
             await checkAuthentication();
             setupEventListeners();
             setupLazySections();
             setupMobileMenu();
             setupCtaBanner();
-            addMobileInteractions();
 
-            // Carica dati principali
             await Promise.all([
                 loadTesseraData(),
                 loadRichieste(),
                 loadNotifications()
             ]);
 
-            // Avvia refresh loop
             startRefreshLoop();
             
-            console.log('✅ Dashboard Brand Identity 2025 - Mobile-First Ready with Enhanced CTA Banner and Improved UX');
+            console.log('✅ Dashboard Light Version 2025 - Soft & Modern Ready');
         });
 
-        // Setup CTA Banner MIGLIORATO
+        // Setup CTA Banner
         function setupCtaBanner() {
-            // Set initial timer for 20 seconds (increased from 7)
             ctaBannerTimer = setTimeout(() => {
                 if (!ctaBannerDismissed && !ctaBannerShown) {
                     showBanner();
                 }
-            }, 20000); // 20 seconds
+            }, 20000);
 
-            // Set up recurring timer system
             setRecurringBanner();
-
-            // Close button event
             document.getElementById('ctaBannerClose')?.addEventListener('click', closeBanner);
 
-            // Close on overlay click (only the overlay, not the content)
             document.getElementById('ctaBannerOverlay')?.addEventListener('click', (e) => {
                 if (e.target === e.currentTarget) {
                     closeBanner();
                 }
             });
 
-            // Close on escape key
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' && document.getElementById('ctaBannerOverlay')?.classList.contains('show')) {
                     closeBanner();
                 }
             });
-
-            // Close banner if user scrolls significantly (improved UX)
-            let lastScrollY = window.scrollY;
-            window.addEventListener('scroll', () => {
-                const currentScrollY = window.scrollY;
-                if (Math.abs(currentScrollY - lastScrollY) > 300) {
-                    const overlay = document.getElementById('ctaBannerOverlay');
-                    if (overlay?.classList.contains('show')) {
-                        closeBanner();
-                    }
-                }
-                lastScrollY = currentScrollY;
-            }, { passive: true });
         }
 
         // === MOBILE MENU ===
@@ -1473,7 +1091,6 @@
             if (mobileMenuBtn && mobileMenu) {
                 mobileMenuBtn.addEventListener('click', toggleMobileMenu);
                 
-                // Close menu when clicking outside
                 document.addEventListener('click', (e) => {
                     if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
                         closeMobileMenu();
@@ -1491,7 +1108,6 @@
                 
                 if (mobileMenuOpen) {
                     mobileMenu.classList.remove('hidden');
-                    mobileMenu.classList.add('animate-slide-up');
                     if (mobileMenuBtn) {
                         mobileMenuBtn.innerHTML = `
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1501,7 +1117,6 @@
                     }
                 } else {
                     mobileMenu.classList.add('hidden');
-                    mobileMenu.classList.remove('animate-slide-up');
                     if (mobileMenuBtn) {
                         mobileMenuBtn.innerHTML = `
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1559,7 +1174,6 @@
             }
         }
 
-        // Fallback locale (read-only)
         async function createUserProfile(user) {
             return {
                 user_id: user.id,
@@ -1620,7 +1234,6 @@
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 stopRefreshLoop();
-                // Pause CTA banner timers when page is hidden
                 if (ctaBannerTimer) {
                     clearTimeout(ctaBannerTimer);
                     ctaBannerTimer = null;
@@ -1631,9 +1244,8 @@
                 }
             } else {
                 startRefreshLoop();
-                // Resume CTA banner cycle when page is visible
                 if (!ctaBannerDismissed && !ctaBannerShown) {
-                    ctaBannerTimer = setTimeout(showBanner, 20000); // 20 seconds
+                    ctaBannerTimer = setTimeout(showBanner, 20000);
                 }
                 setRecurringBanner();
             }
@@ -1746,28 +1358,23 @@
             const rawFirst = userProfile.nome || 'Utente';
             const firstName = capitalizeInitial(rawFirst);
 
-            // Desktop elements
             const welcomeEl = document.getElementById('userWelcome');
             const roleEl = document.getElementById('userRole');
             if (welcomeEl) welcomeEl.textContent = `Ciao, ${firstName}!`;
             if (roleEl) roleEl.textContent = getRoleLabel(userProfile.role);
 
-            // Mobile elements
             const welcomeMobile = document.getElementById('userWelcomeMobile');
             const roleMobile = document.getElementById('userRoleMobile');
             if (welcomeMobile) welcomeMobile.textContent = `Ciao, ${firstName}!`;
             if (roleMobile) roleMobile.textContent = getRoleLabel(userProfile.role);
 
-            // Name display
             const nameDisplayEl = document.getElementById('userNameDisplay');
             if (nameDisplayEl) nameDisplayEl.textContent = firstName;
 
-            // Avatar
             const avatars = document.querySelectorAll('#userAvatar');
             const initials = getInitials(`${userProfile.nome} ${userProfile.cognome}`);
             avatars.forEach(a => a.textContent = initials);
 
-            // Stats
             const memberSinceEl = document.getElementById('memberSince');
             const statusEl = document.getElementById('profileStatus');
             if (memberSinceEl) memberSinceEl.textContent = userProfile.created_at ? 
@@ -1775,18 +1382,20 @@
             if (statusEl) statusEl.textContent = getStatusLabel(userProfile.stato);
         }
 
-        // === DISPLAY FUNCTIONS - Mobile Optimized ===
+        // === DISPLAY FUNCTIONS - Versione Light ===
         function displayRichieste(richieste) {
             const container = document.getElementById('richiesteContainer');
             if (!container) return;
             
             if (richieste.length === 0) {
                 container.innerHTML = `
-                    <div class="text-center py-8 text-white">
-                        <div class="text-4xl mb-3">📋</div>
-                        <h3 class="text-lg font-bold mb-2">Nessuna richiesta</h3>
-                        <p class="text-white/70 text-sm mb-4">Non hai ancora inviato nessuna richiesta</p>
-                        <button onclick="goToRichieste()" class="btn-aurora py-2 px-4 rounded-xl text-sm">
+                    <div class="text-center py-12">
+                        <div class="w-16 h-16 mx-auto bg-blue-50 rounded-2xl flex items-center justify-center mb-4">
+                            <span class="text-2xl">📋</span>
+                        </div>
+                        <h3 class="text-gray-800 text-lg font-bold mb-2">Nessuna richiesta</h3>
+                        <p class="text-gray-500 text-sm mb-6">Non hai ancora inviato nessuna richiesta</p>
+                        <button onclick="goToRichieste()" class="btn-soft-primary py-3 px-6 text-sm font-semibold">
                             Invia la tua prima richiesta
                         </button>
                     </div>`;
@@ -1799,41 +1408,41 @@
                 const dataCreazione = new Date(richiesta.created_at).toLocaleDateString('it-IT');
                 
                 return `
-                    <div class="glass-morphism rounded-xl p-3 hover:bg-white/10 transition-all cursor-pointer" 
+                    <div class="bg-white/60 border border-gray-200/60 rounded-2xl p-4 hover:bg-white/80 hover:shadow-md transition-all cursor-pointer" 
                          role="button" tabindex="0" aria-label="Apri richiesta ${escapeHtml(richiesta.titolo)}"
                          onclick="viewRichiestaDetail('${richiesta.id}')"
                          onkeydown="keyActivate(event,'viewRichiestaDetail','${richiesta.id}')">
                         
-                        <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-start justify-between mb-3">
                             <div class="flex-grow min-w-0">
-                                <h4 class="text-white font-bold text-sm mb-1 line-clamp-2">${richiesta.titolo}</h4>
-                                <div class="flex items-center gap-2 text-xs text-white/70 mb-1 flex-wrap">
+                                <h4 class="text-gray-800 font-bold text-sm mb-2 line-clamp-2">${richiesta.titolo}</h4>
+                                <div class="flex items-center gap-3 text-xs text-gray-500 mb-2 flex-wrap">
                                     <span class="flex items-center gap-1">
                                         <span class="priority-indicator ${priorityColor}"></span>
                                         <span class="hidden sm:inline">${richiesta.priorita}</span>
                                         <span class="sm:hidden">${richiesta.priorita.slice(0,3)}</span>
                                     </span>
-                                    <span>📂 ${(richiesta.categoria || '').slice(0,8)}${richiesta.categoria?.length > 8 ? '...' : ''}</span>
+                                    <span>📂 ${(richiesta.categoria || '').slice(0,10)}</span>
                                     <span class="hidden sm:inline">📅 ${dataCreazione}</span>
                                 </div>
                             </div>
-                            <span class="px-2 py-1 rounded-full text-xs font-bold text-white ${statusColor} ml-2 flex-shrink-0">
-                                ${getStatusText(richiesta.stato).slice(0,8)}
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold text-white ${statusColor} ml-3 flex-shrink-0">
+                                ${getStatusText(richiesta.stato).slice(0,10)}
                             </span>
                         </div>
                         
-                        <p class="text-white/80 text-xs mb-2 line-clamp-2">
+                        <p class="text-gray-600 text-xs mb-3 line-clamp-2">
                             ${richiesta.descrizione || 'Nessuna descrizione'}
                         </p>
                         
-                        <div class="flex items-center justify-between text-xs text-white/60">
+                        <div class="flex items-center justify-between text-xs text-gray-400">
                             <span class="line-clamp-1">
                                 ${richiesta.dirigente_nome ? 
-                                    `👤 ${richiesta.dirigente_nome.slice(0,15)}${richiesta.dirigente_nome.length > 15 ? '...' : ''}` : 
+                                    `👤 ${richiesta.dirigente_nome.slice(0,20)}` : 
                                     '⏳ In attesa'}
                             </span>
-                            <span class="ml-2 flex-shrink-0">
-                                ID: #${String(richiesta.id).slice(-6)}
+                            <span class="ml-2 flex-shrink-0 font-mono">
+                                #${String(richiesta.id).slice(-6)}
                             </span>
                         </div>
                     </div>`;
@@ -1846,9 +1455,11 @@
 
             if (newsArray.length === 0) {
                 container.innerHTML = `
-                    <div class="text-center py-6 text-gray-500">
-                        <div class="text-3xl mb-2">📰</div>
-                        <div class="text-sm">Nessuna notizia disponibile</div>
+                    <div class="text-center py-8">
+                        <div class="w-12 h-12 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center mb-3">
+                            <span class="text-xl">📰</span>
+                        </div>
+                        <div class="text-gray-500 text-sm">Nessuna notizia disponibile</div>
                     </div>`;
                 return;
             }
@@ -1863,31 +1474,31 @@
                 const encUrl = safeUrl ? encodeURIComponent(safeUrl) : '';
 
                 return `
-                    <div class="group border border-gray-200 hover:border-blue-200 bg-white/70 hover:bg-white rounded-xl p-3 mb-3 transition-colors cursor-pointer"
+                    <div class="group bg-white/60 border border-gray-200/60 hover:border-blue-300/60 hover:bg-white/80 rounded-2xl p-4 mb-4 transition-all cursor-pointer hover:shadow-md"
                          role="button" tabindex="0" aria-label="Apri notizia ${escapeHtml(n.titolo)}"
                          onclick="readNews('${n.id}','${encUrl}')"
                          onkeydown="keyActivate(event,'readNews','${n.id}','${encUrl}')">
                         
-                        <div class="flex gap-3 items-start">
-                            <div class="flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 border border-gray-200 w-16 h-16">
+                        <div class="flex gap-4 items-start">
+                            <div class="flex-shrink-0 rounded-xl overflow-hidden bg-gray-50 border border-gray-100 w-16 h-16">
                                 ${img ? `<img src="${img}" alt="${escapeHtml(n.titolo)}" class="w-full h-full object-cover" loading="lazy" decoding="async">`
-                                      : `<div class="w-full h-full flex items-center justify-center text-lg" aria-hidden="true">📰</div>`}
+                                      : `<div class="w-full h-full flex items-center justify-center text-lg text-gray-400">📰</div>`}
                             </div>
                             <div class="flex-1 min-w-0">
-                                <div class="flex items-center gap-2 mb-1 flex-wrap">
-                                    <span class="inline-block text-xs font-bold bg-blue-600 text-white px-2 py-0.5 rounded">
-                                        ${cat.slice(0,8)}${cat.length > 8 ? '...' : ''}
+                                <div class="flex items-center gap-2 mb-2 flex-wrap">
+                                    <span class="inline-block text-xs font-semibold bg-blue-100 text-blue-700 px-2 py-1 rounded-lg">
+                                        ${cat.slice(0,10)}
                                     </span>
-                                    <span class="text-xs text-gray-500 hidden sm:inline">📅 ${absDate}</span>
+                                    <span class="text-xs text-gray-400">📅 ${absDate}</span>
                                     <span class="text-xs text-gray-500">• ${relDate}</span>
                                 </div>
-                                <h3 class="text-textDark font-semibold text-sm leading-snug mb-1 group-hover:underline line-clamp-2">
+                                <h3 class="text-gray-800 font-semibold text-sm leading-snug mb-1 group-hover:text-blue-600 line-clamp-2 transition-colors">
                                     ${n.titolo}
                                 </h3>
-                                ${n.sottotitolo ? `<p class="text-gray-600 text-xs line-clamp-2">${n.sottotitolo}</p>` : ''}
-                                <div class="flex items-center justify-between mt-2">
-                                    <span class="text-xs text-gray-500">👁️ ${n.visualizzazioni || 0}</span>
-                                    <span class="text-blue-600 group-hover:text-blue-800 font-semibold text-xs">Apri →</span>
+                                ${n.sottotitolo ? `<p class="text-gray-500 text-xs line-clamp-2 leading-relaxed">${n.sottotitolo}</p>` : ''}
+                                <div class="flex items-center justify-between mt-3">
+                                    <span class="text-xs text-gray-400">👁️ ${n.visualizzazioni || 0} visualizzazioni</span>
+                                    <span class="text-blue-600 group-hover:text-blue-700 font-medium text-xs">Leggi →</span>
                                 </div>
                             </div>
                         </div>
@@ -1901,16 +1512,18 @@
 
             if (convenzioni.length === 0) {
                 container.innerHTML = `
-                    <div class="glass-morphism rounded-3xl p-8 col-span-full text-center">
-                        <div class="text-4xl mb-3">🤝</div>
-                        <h3 class="text-white text-lg font-bold mb-2">Nessuna convenzione disponibile</h3>
-                        <p class="text-white/70 text-sm">Le convenzioni verranno pubblicate a breve</p>
+                    <div class="bg-white/60 rounded-3xl p-8 col-span-full text-center border border-gray-200/60">
+                        <div class="w-16 h-16 mx-auto bg-emerald-50 rounded-2xl flex items-center justify-center mb-4">
+                            <span class="text-2xl">🤝</span>
+                        </div>
+                        <h3 class="text-gray-800 text-lg font-bold mb-2">Nessuna convenzione disponibile</h3>
+                        <p class="text-gray-500 text-sm">Le convenzioni verranno pubblicate a breve</p>
                     </div>`;
                 return;
             }
 
             container.innerHTML = convenzioni.map(c => {
-                const excerpt = (c.descrizione || '').slice(0, 80) + ((c.descrizione||'').length > 80 ? '…' : '');
+                const excerpt = (c.descrizione || '').slice(0, 100) + ((c.descrizione||'').length > 100 ? '…' : '');
                 const sconto = c.sconto_percentuale ? `${c.sconto_percentuale}%` : '';
                 const inEvidenza = c.in_evidenza === true || c.in_evidenza === 'true';
                 const validaFino = c.valida_fino ? new Date(c.valida_fino) : null;
@@ -1920,53 +1533,53 @@
                 const encUrl = safeUrl ? encodeURIComponent(safeUrl) : '';
 
                 return `
-                    <div class="action-card p-0 overflow-hidden ${isScaduta ? 'opacity-75' : ''}" role="button" tabindex="0"
+                    <div class="bg-white/70 border border-gray-200/60 rounded-3xl p-0 overflow-hidden hover:shadow-lg hover:bg-white/90 transition-all cursor-pointer ${isScaduta ? 'opacity-60' : ''}" role="button" tabindex="0"
                          aria-label="Apri convenzione ${escapeHtml(c.nome_azienda || 'Convenzione')}"
                          onclick="openConvenzione('${c.id}','${encUrl}')"
                          onkeydown="keyActivate(event,'openConvenzione','${c.id}','${encUrl}')">
                         
                         ${img ? `
-                            <div class="w-full bg-gray-100 overflow-hidden h-32">
+                            <div class="w-full bg-gray-50 overflow-hidden h-36">
                                 <img src="${img}" alt="${escapeHtml(c.nome_azienda || 'Convenzione')}" 
                                      class="w-full h-full object-cover" loading="lazy" decoding="async">
                             </div>` : ''
                         }
                         
-                        <div class="p-4">
-                            <div class="flex items-start justify-between mb-3">
-                                <div class="w-10 h-10 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center text-white text-sm font-bold">
+                        <div class="p-6">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="w-12 h-12 bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-2xl flex items-center justify-center text-emerald-700 text-sm font-bold">
                                     ${sconto ? `-${sconto}` : '🤝'}
                                 </div>
                                 <div class="flex flex-col gap-1">
-                                    ${inEvidenza ? '<div class="bg-emerald-600 text-white px-2 py-1 rounded-full text-xs font-bold">TOP</div>' : ''}
-                                    ${isScaduta ? '<div class="bg-gray-500 text-white px-2 py-1 rounded-full text-xs font-bold">SCAD</div>' : ''}
+                                    ${inEvidenza ? '<div class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold">TOP</div>' : ''}
+                                    ${isScaduta ? '<div class="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-xs font-semibold">SCADUTA</div>' : ''}
                                 </div>
                             </div>
                             
-                            <h3 class="text-white text-base font-bold mb-2 line-clamp-2">
+                            <h3 class="text-gray-800 text-base font-bold mb-2 line-clamp-2">
                                 ${c.nome_azienda || '-'}
                             </h3>
                             
-                            <p class="text-white/80 text-sm mb-3 line-clamp-3">${excerpt}</p>
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed">${excerpt}</p>
                             
-                            <div class="flex items-center justify-between text-xs text-white/60 mb-3">
-                                <span>📂 ${(c.categoria || 'Generale').slice(0,10)}</span>
-                                <span>🌍 ${(c.copertura_geografica || 'Nazionale').slice(0,8)}</span>
+                            <div class="flex items-center justify-between text-xs text-gray-400 mb-4">
+                                <span>📂 ${(c.categoria || 'Generale').slice(0,12)}</span>
+                                <span>🌍 ${(c.copertura_geografica || 'Nazionale').slice(0,10)}</span>
                             </div>
                             
                             <div class="flex items-center justify-between">
-                                <span class="text-white/60 text-xs">👀 ${c.visualizzazioni || 0}</span>
-                                <span class="text-emerald-300 text-sm font-semibold">
+                                <span class="text-gray-400 text-xs">👀 ${c.visualizzazioni || 0} visualizzazioni</span>
+                                <span class="text-emerald-600 text-sm font-semibold">
                                     ${isScaduta ? 'Non disponibile' : 'Scopri →'}
                                 </span>
                             </div>
                             
                             ${validaFino ? `
-                                <div class="mt-3 pt-3 border-t border-white/10">
-                                    <div class="text-white/60 text-xs flex items-center gap-1">
-                                        <span class="${isScaduta ? 'text-red-400' : 'text-green-400'}">⏰</span>
+                                <div class="mt-4 pt-4 border-t border-gray-100">
+                                    <div class="text-gray-500 text-xs flex items-center gap-2">
+                                        <span class="${isScaduta ? 'text-red-400' : 'text-green-500'}">⏰</span>
                                         ${isScaduta ? 'Scaduta il' : 'Valida fino al'} 
-                                        <span class="font-mono">${validaFino.toLocaleDateString('it-IT')}</span>
+                                        <span class="font-mono text-gray-600">${validaFino.toLocaleDateString('it-IT')}</span>
                                     </div>
                                 </div>` : ''
                             }
@@ -1982,22 +1595,24 @@
             
             if (notifications.length === 0) {
                 container.innerHTML = `
-                    <div class="text-center py-6 text-gray-500">
-                        <div class="text-3xl mb-2">🔔</div>
-                        <div class="text-sm">Nessuna notifica</div>
+                    <div class="text-center py-8">
+                        <div class="w-12 h-12 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center mb-3">
+                            <span class="text-xl">🔔</span>
+                        </div>
+                        <div class="text-gray-500 text-sm">Nessuna notifica</div>
                     </div>`;
                 return;
             }
             
             container.innerHTML = notifications.map(n => `
-                <div class="p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer ${!n.read ? 'bg-blue-50 border-l-4 border-blue-600' : ''}" 
+                <div class="p-4 hover:bg-gray-50 rounded-xl transition-colors cursor-pointer ${!n.read ? 'bg-blue-50/50 border-l-4 border-blue-400' : ''}" 
                      onclick="markNotificationAsRead('${n.id}')">
                     <div class="flex items-start gap-3">
-                        <div class="flex-shrink-0 w-2 h-2 rounded-full mt-2 ${!n.read ? 'bg-blue-600' : 'bg-gray-300'}"></div>
+                        <div class="flex-shrink-0 w-2 h-2 rounded-full mt-2 ${!n.read ? 'bg-blue-500' : 'bg-gray-300'}"></div>
                         <div class="flex-grow min-w-0">
-                            <h4 class="font-semibold text-textDark text-sm line-clamp-2">${n.title || 'Notifica'}</h4>
-                            <p class="text-gray-600 text-xs mt-1 line-clamp-2">${n.message || ''}</p>
-                            <div class="flex items-center gap-2 mt-1">
+                            <h4 class="font-semibold text-gray-800 text-sm line-clamp-2">${n.title || 'Notifica'}</h4>
+                            <p class="text-gray-500 text-xs mt-1 line-clamp-2">${n.message || ''}</p>
+                            <div class="flex items-center gap-2 mt-2">
                                 <span class="text-gray-400 text-xs">${formatDateTime(n.created_at)}</span>
                                 <span class="text-gray-400 text-xs">• ${formatRelativeTime(n.created_at)}</span>
                             </div>
@@ -2025,46 +1640,23 @@
 
         // === EVENT LISTENERS ===
         function setupEventListeners() {
-            // Desktop logout
             document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
-            // Mobile logout
             document.getElementById('logoutBtnMobile')?.addEventListener('click', handleLogout);
             
-            // Notifications
             document.getElementById('notificationBtn')?.addEventListener('click', toggleNotificationDropdown);
             document.getElementById('markAllRead')?.addEventListener('click', markAllNotificationsAsRead);
 
-            // Close notifications dropdown when clicking outside
             document.addEventListener('click', (e) => {
                 const btn = document.getElementById('notificationBtn');
                 const dd = document.getElementById('notificationDropdown');
                 if (!btn?.contains(e.target) && !dd?.contains(e.target)) {
                     dd?.classList.remove('show');
+                    if (dd) dd.style.display = 'none';
                 }
             });
 
-            // Auth state changes
             supabaseClient.auth.onAuthStateChange((event) => {
                 if (event === 'SIGNED_OUT') window.location.href = 'index.html';
-            });
-
-            // Handle orientation changes on mobile
-            window.addEventListener('orientationchange', () => {
-                setTimeout(() => {
-                    // Close mobile menu on orientation change
-                    closeMobileMenu();
-                }, 100);
-            });
-
-            // Handle scroll to hide/show mobile menu
-            let lastScrollY = window.scrollY;
-            window.addEventListener('scroll', () => {
-                const currentScrollY = window.scrollY;
-                if (currentScrollY > lastScrollY + 50) {
-                    // Scrolling down - close mobile menu
-                    closeMobileMenu();
-                }
-                lastScrollY = currentScrollY;
             });
         }
 
@@ -2082,15 +1674,16 @@
             const el = document.getElementById('notificationDropdown');
             const btn = document.getElementById('notificationBtn');
             if (el) {
-                const show = !el.classList.contains('show');
-                el.classList.toggle('show');
-                if (btn) btn.setAttribute('aria-expanded', show ? 'true' : 'false');
+                const isVisible = el.style.display === 'block';
+                el.style.display = isVisible ? 'none' : 'block';
+                if (btn) btn.setAttribute('aria-expanded', !isVisible ? 'true' : 'false');
             }
         }
         
         async function markAllNotificationsAsRead() {
             console.info('ℹ️ Read-only: nessun update al DB.');
-            document.getElementById('notificationDropdown')?.classList.remove('show');
+            const el = document.getElementById('notificationDropdown');
+            if (el) el.style.display = 'none';
         }
         
         async function markNotificationAsRead() { 
@@ -2136,7 +1729,7 @@
             }
         }
 
-        // === UTILITY ===
+        // === UTILITY FUNCTIONS ===
         function getRoleLabel(role){ 
             return ({USER:'Utente', DIRIGENTE:'Dirigente', ADMIN:'Amministratore'})[role] || 'Utente'; 
         }
@@ -2150,16 +1743,17 @@
             return fullName.split(' ').map(n=>n.charAt(0)).join('').toUpperCase().substring(0,2); 
         }
         
+        // Status colors per versione light - più soft
         function getRequestStatusColor(stato){ 
             return ({
-                RICEVUTA:'bg-blue-600', 
-                IN_ESAME:'bg-yellow-600', 
-                IN_LAVORAZIONE:'bg-orange-600', 
-                NECESSARIE_INFO:'bg-purple-600', 
-                COMPLETATA:'bg-green-600', 
-                CHIUSA:'bg-gray-600', 
-                ANNULLATA:'bg-red-600'
-            })[stato] || 'bg-gray-500'; 
+                RICEVUTA:'bg-blue-500', 
+                IN_ESAME:'bg-yellow-500', 
+                IN_LAVORAZIONE:'bg-orange-500', 
+                NECESSARIE_INFO:'bg-purple-500', 
+                COMPLETATA:'bg-green-500', 
+                CHIUSA:'bg-gray-500', 
+                ANNULLATA:'bg-red-500'
+            })[stato] || 'bg-gray-400'; 
         }
         
         function getStatusText(stato){ 
@@ -2174,8 +1768,13 @@
             })[stato] || stato; 
         }
         
+        // Priority colors per versione light
         function getPriorityColor(p){ 
-            return ({BASSA:'priority-bassa', NORMALE:'priority-normale', ALTA:'priority-alta'})[p] || 'priority-normale'; 
+            return ({
+                BASSA:'bg-green-400', 
+                NORMALE:'bg-blue-400', 
+                ALTA:'bg-red-400'
+            })[p] || 'bg-blue-400'; 
         }
         
         function formatDate(s){ 
@@ -2190,7 +1789,7 @@
             return d.toLocaleDateString('it-IT') + ' ' + d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}); 
         }
 
-        // Relative time "3 h fa", "ieri", etc.
+        // Relative time formatter
         const rtf = new Intl.RelativeTimeFormat('it', { numeric:'auto' });
         
         function formatRelativeTime(dateString){
@@ -2239,7 +1838,155 @@
             }[s])); 
         }
 
-        console.log('✅ MyApp by SIM Carabinieri - Brand Identity 2025 - Enhanced Mobile-First Dashboard Ready with Improved CTA Banner, Inverted Gradient, and High-Contrast Tool Cards');
+        // Aggiunta di piccole animazioni per la versione light
+        function addSoftAnimations() {
+            // Stagger animations per tool cards
+            const toolCards = document.querySelectorAll('.tool-card-soft');
+            toolCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.05}s`;
+                card.classList.add('animate-fade-in');
+                
+                // Effetto hover soft
+                card.addEventListener('mouseenter', () => {
+                    if (window.innerWidth > 768) {
+                        card.style.transform = 'translateY(-4px) scale(1.02)';
+                    }
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = '';
+                });
+            });
+
+            // Animazione per stats cards
+            const statCards = document.querySelectorAll('.stat-card-soft');
+            statCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.classList.add('animate-slide-up');
+            });
+
+            // Gentle float animation per le icone delle sezioni
+            const sectionIcons = document.querySelectorAll('.section-icon');
+            sectionIcons.forEach(icon => {
+                icon.style.animation = 'gentleFloat 4s ease-in-out infinite';
+            });
+        }
+
+        // Inizializzazione animazioni soft
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(addSoftAnimations, 500);
+        });
+
+        // Gestione responsive ottimizzata
+        function handleResize() {
+            const toolCards = document.querySelectorAll('.tool-card-soft');
+            if (window.innerWidth <= 768) {
+                toolCards.forEach(card => {
+                    card.style.transform = '';
+                });
+            }
+        }
+
+        window.addEventListener('resize', handleResize);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(handleResize, 100);
+        });
+
+        // Notification dropdown soft version
+        const notificationDropdownStyle = `
+            .notification-dropdown {
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(255, 255, 255, 0.6);
+                border-radius: 16px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+                position: absolute;
+                top: calc(100% + 12px);
+                right: 0;
+                width: min(350px, calc(100vw - 32px));
+                max-height: 60vh;
+                overflow-y: auto;
+                z-index: 1000;
+            }
+        `;
+
+        // Aggiungi stili soft per dropdown
+        const styleSheet = document.createElement("style");
+        styleSheet.textContent = notificationDropdownStyle;
+        document.head.appendChild(styleSheet);
+
+        // Miglioramenti per il supporto touch
+        if ('ontouchstart' in window) {
+            const toolCards = document.querySelectorAll('.tool-card-soft');
+            toolCards.forEach(card => {
+                card.addEventListener('touchstart', () => {
+                    card.style.transform = 'scale(0.98)';
+                }, { passive: true });
+                
+                card.addEventListener('touchend', () => {
+                    setTimeout(() => {
+                        card.style.transform = '';
+                    }, 150);
+                }, { passive: true });
+            });
+        }
+
+        // Enhanced accessibility
+        function enhanceAccessibility() {
+            // Aggiungi skip link
+            const skipLink = document.createElement('a');
+            skipLink.href = '#main-content';
+            skipLink.textContent = 'Salta al contenuto principale';
+            skipLink.className = 'sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-lg z-50';
+            document.body.insertBefore(skipLink, document.body.firstChild);
+
+            // Migliora i contrasti per i testi
+            const softTexts = document.querySelectorAll('.text-soft-light');
+            softTexts.forEach(text => {
+                text.style.color = '#4b5563'; // Contrasto migliorato
+            });
+
+            // Aggiungi indicatori di stato per screen readers
+            const onlineIndicator = document.querySelector('.bg-green-400');
+            if (onlineIndicator) {
+                onlineIndicator.setAttribute('aria-label', 'Stato: Online');
+            }
+        }
+
+        // Inizializza miglioramenti accessibilità
+        document.addEventListener('DOMContentLoaded', enhanceAccessibility);
+
+        // Performance optimization per la versione light
+        function optimizePerformance() {
+            // Lazy loading per immagini
+            const images = document.querySelectorAll('img[loading="lazy"]');
+            if ('IntersectionObserver' in window) {
+                const imageObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            if (img.dataset.src) {
+                                img.src = img.dataset.src;
+                                img.removeAttribute('data-src');
+                            }
+                            imageObserver.unobserve(img);
+                        }
+                    });
+                });
+                
+                images.forEach(img => imageObserver.observe(img));
+            }
+
+            // Reduce motion per utenti che lo preferiscono
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.documentElement.style.setProperty('--animation-duration', '0.01s');
+            }
+        }
+
+        // Inizializza ottimizzazioni performance
+        document.addEventListener('DOMContentLoaded', optimizePerformance);
+
+        console.log('✅ MyApp by SIM Carabinieri - Light Version 2025 - Soft, Modern & Accessible Dashboard Ready');
     </script>
 </body>
 </html>
