@@ -1,0 +1,1933 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perché SIM Carabinieri? La Risposta che Cercavi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=Space+Grotesk:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #003d82;
+            --primary-red: #8b2635;
+            --accent-gold: #ffd700;
+            --accent-green: #28a745;
+            --neutral-white: #ffffff;
+            --neutral-black: #0a0a0a;
+            --neutral-gray: #6b7280;
+            --neutral-light: #f1f5f9;
+            --surface-dark: #1e293b;
+            --gradient-primary: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-red) 100%);
+            --gradient-gold: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            --gradient-hero: linear-gradient(135deg, var(--primary-blue) 0%, #1e4a72 50%, var(--primary-red) 100%);
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 8px 25px rgba(0,0,0,0.08);
+            --shadow-lg: 0 25px 50px rgba(0,0,0,0.12);
+            --shadow-xl: 0 35px 80px rgba(0,0,0,0.15);
+            --radius-sm: 12px;
+            --radius-md: 20px;
+            --radius-lg: 32px;
+            --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-spring: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--neutral-black);
+            background: var(--neutral-white);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ===== ENHANCED LOGO WATERMARK ===== */
+        .watermark {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.12;
+        }
+
+        .watermark-layer-1 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url('https://www.simcarabinieri.com/img/logo_small.png'),
+                url('https://www.simcarabinieri.com/img/logo_small.png'),
+                url('https://www.simcarabinieri.com/img/logo_small.png'),
+                url('https://www.simcarabinieri.com/img/logo_small.png'),
+                url('https://www.simcarabinieri.com/img/logo_small.png');
+            background-size: 
+                150px 150px, 
+                120px 120px, 
+                180px 180px, 
+                100px 100px, 
+                140px 140px;
+            background-position: 
+                15% 25%, 
+                70% 15%, 
+                85% 50%, 
+                30% 70%, 
+                50% 85%;
+            background-repeat: no-repeat;
+            transform: rotate(-12deg);
+            animation: watermarkFloat1 35s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        .watermark-layer-2 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url('https://www.simcarabinieri.com/img/logo_small.png'),
+                url('https://www.simcarabinieri.com/img/logo_small.png'),
+                url('https://www.simcarabinieri.com/img/logo_small.png'),
+                url('https://www.simcarabinieri.com/img/logo_small.png');
+            background-size: 
+                110px 110px, 
+                160px 160px, 
+                90px 90px, 
+                130px 130px;
+            background-position: 
+                45% 20%, 
+                20% 55%, 
+                75% 75%, 
+                60% 40%;
+            background-repeat: no-repeat;
+            transform: rotate(18deg);
+            animation: watermarkFloat2 28s ease-in-out infinite reverse;
+            opacity: 0.4;
+        }
+
+        .watermark-layer-3 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url('https://www.simcarabinieri.com/img/logo_small.png'),
+                url('https://www.simcarabinieri.com/img/logo_small.png'),
+                url('https://www.simcarabinieri.com/img/logo_small.png');
+            background-size: 
+                200px 200px, 
+                80px 80px, 
+                125px 125px;
+            background-position: 
+                5% 60%, 
+                90% 25%, 
+                35% 5%;
+            background-repeat: no-repeat;
+            transform: rotate(-25deg);
+            animation: watermarkFloat3 42s ease-in-out infinite;
+            opacity: 0.3;
+        }
+
+        .watermark-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            height: 400px;
+            transform: translate(-50%, -50%) rotate(45deg);
+            background-image: url('https://www.simcarabinieri.com/img/logo_small.png');
+            background-size: 300px 300px;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.04;
+            animation: watermarkCenterFloat 60s ease-in-out infinite;
+        }
+
+        /* Enhanced animation keyframes */
+        @keyframes watermarkFloat1 {
+            0%, 100% { 
+                transform: rotate(-12deg) translateY(0px) translateX(0px); 
+                opacity: 0.6; 
+            }
+            25% { 
+                transform: rotate(-8deg) translateY(-15px) translateX(10px); 
+                opacity: 0.8; 
+            }
+            50% { 
+                transform: rotate(-15deg) translateY(-5px) translateX(-8px); 
+                opacity: 0.7; 
+            }
+            75% { 
+                transform: rotate(-10deg) translateY(8px) translateX(12px); 
+                opacity: 0.9; 
+            }
+        }
+
+        @keyframes watermarkFloat2 {
+            0%, 100% { 
+                transform: rotate(18deg) translateX(0px) translateY(0px); 
+                opacity: 0.4; 
+            }
+            33% { 
+                transform: rotate(22deg) translateX(20px) translateY(-10px); 
+                opacity: 0.6; 
+            }
+            66% { 
+                transform: rotate(15deg) translateX(-15px) translateY(5px); 
+                opacity: 0.5; 
+            }
+        }
+
+        @keyframes watermarkFloat3 {
+            0%, 100% { 
+                transform: rotate(-25deg) translateY(0px) translateX(0px) scale(1); 
+                opacity: 0.3; 
+            }
+            20% { 
+                transform: rotate(-20deg) translateY(12px) translateX(-8px) scale(1.02); 
+                opacity: 0.5; 
+            }
+            40% { 
+                transform: rotate(-28deg) translateY(-8px) translateX(15px) scale(0.98); 
+                opacity: 0.4; 
+            }
+            60% { 
+                transform: rotate(-22deg) translateY(5px) translateX(-12px) scale(1.01); 
+                opacity: 0.6; 
+            }
+            80% { 
+                transform: rotate(-26deg) translateY(-3px) translateX(8px) scale(0.99); 
+                opacity: 0.35; 
+            }
+        }
+
+        @keyframes watermarkCenterFloat {
+            0%, 100% { 
+                transform: translate(-50%, -50%) rotate(45deg) scale(1); 
+                opacity: 0.04; 
+            }
+            25% { 
+                transform: translate(-50%, -50%) rotate(50deg) scale(1.1); 
+                opacity: 0.06; 
+            }
+            50% { 
+                transform: translate(-50%, -50%) rotate(40deg) scale(0.9); 
+                opacity: 0.03; 
+            }
+            75% { 
+                transform: translate(-50%, -50%) rotate(48deg) scale(1.05); 
+                opacity: 0.05; 
+            }
+        }
+
+        /* Assicura che tutti i contenuti siano sopra la filigrana */
+        .hero-question,
+        .answer-intro,
+        .departments,
+        .services-value,
+        .final-cta,
+        .footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== HERO QUESTION SECTION ===== */
+        .hero-question {
+            min-height: 100vh;
+            background: var(--gradient-hero);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-question::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255,215,0,0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(40,167,69,0.05) 0%, transparent 40%),
+                radial-gradient(circle at 40% 40%, rgba(255,255,255,0.05) 0%, transparent 60%);
+            animation: heroPattern 20s ease-in-out infinite;
+        }
+
+        @keyframes heroPattern {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.1) rotate(180deg); opacity: 0.8; }
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .question-mark {
+            font-size: clamp(8rem, 15vw, 20rem);
+            font-weight: 900;
+            color: rgba(255,215,0,0.1);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            animation: questionFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes questionFloat {
+            0%, 100% { transform: translate(-50%, -50%) rotate(-5deg) scale(1); }
+            50% { transform: translate(-50%, -50%) rotate(5deg) scale(1.05); }
+        }
+
+        .hero-question-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 900;
+            color: var(--neutral-white);
+            text-shadow: 0 4px 30px rgba(0,0,0,0.5);
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .hero-question-text .highlight {
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            margin-top: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 2.5vw, 2rem);
+            color: rgba(255,255,255,0.9);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            font-weight: 400;
+        }
+
+        .hero-proof {
+            background: rgba(255,215,0,0.15);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--accent-gold);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            color: var(--neutral-white);
+        }
+
+        .hero-cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--gradient-gold);
+            color: var(--neutral-black);
+            padding: 1.5rem 3rem;
+            border-radius: var(--radius-lg);
+            font-size: 1.2rem;
+            font-weight: 900;
+            text-decoration: none;
+            box-shadow: var(--shadow-xl);
+            transition: var(--transition-spring);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .hero-cta-button:hover::before {
+            left: 100%;
+        }
+
+        .hero-cta-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 40px 100px rgba(255,215,0,0.4);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--neutral-white);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .scroll-arrow {
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+            display: block;
+            margin-top: 0.5rem;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* ===== ANSWER INTRO ===== */
+        .answer-intro {
+            padding: 6rem 2rem;
+            background: var(--neutral-white);
+            text-align: center;
+        }
+
+        .answer-intro-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .answer-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            color: var(--primary-blue);
+            margin-bottom: 2rem;
+        }
+
+        .answer-lead {
+            font-size: 1.5rem;
+            color: var(--neutral-gray);
+            max-width: 900px;
+            margin: 0 auto 2rem;
+            font-weight: 500;
+        }
+
+        .value-proposition {
+            background: var(--gradient-primary);
+            color: var(--neutral-white);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            margin: 3rem auto;
+            max-width: 800px;
+        }
+
+        .value-proposition h3 {
+            font-size: 1.8rem;
+            color: var(--accent-gold);
+            margin-bottom: 1rem;
+        }
+
+        .stats-highlight {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--neutral-light) 0%, rgba(255,255,255,0.8) 100%);
+            border-radius: var(--radius-md);
+            border: 2px solid transparent;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: left 0.5s ease;
+            z-index: -1;
+        }
+
+        .stat-item:hover::before {
+            left: 0;
+        }
+
+        .stat-item:hover {
+            color: var(--neutral-white);
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary-red);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item:hover .stat-number {
+            color: var(--accent-gold);
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        /* ===== DEPARTMENTS SECTION ===== */
+        .departments {
+            padding: 8rem 2rem;
+            background: var(--neutral-white);
+        }
+
+        .departments-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 900;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: var(--neutral-gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .departments-intro {
+            background: var(--gradient-primary);
+            color: var(--neutral-white);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            margin: 3rem auto;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .departments-intro h3 {
+            font-size: 1.8rem;
+            color: var(--accent-gold);
+            margin-bottom: 1rem;
+        }
+
+        .departments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .department-card {
+            background: var(--neutral-white);
+            border-radius: var(--radius-md);
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-smooth);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            opacity: 1;
+        }
+
+        .department-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .department-card::after {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: top 0.4s ease;
+            z-index: -1;
+        }
+
+        .department-card:hover::after {
+            top: 0;
+        }
+
+        .department-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-blue);
+            color: var(--neutral-white);
+        }
+
+        .department-card:hover .department-name,
+        .department-card:hover .department-benefit {
+            color: var(--neutral-white);
+        }
+
+        .department-icon {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .department-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .department-benefit {
+            font-size: 0.95rem;
+            color: var(--neutral-gray);
+            text-align: center;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .departments-bottom {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 3rem;
+            background: linear-gradient(135deg, var(--neutral-light) 0%, rgba(255,255,255,0.9) 100%);
+            border-radius: var(--radius-lg);
+        }
+
+        .departments-bottom h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .departments-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .dept-stat {
+            text-align: center;
+        }
+
+        .dept-stat-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--primary-red);
+            display: block;
+        }
+
+        .dept-stat-label {
+            font-size: 0.9rem;
+            color: var(--neutral-gray);
+            margin-top: 0.5rem;
+        }
+
+        /* ===== SERVICES VALUE SECTION ===== */
+        .services-value {
+            padding: 8rem 2rem;
+            background: var(--gradient-hero);
+            color: var(--neutral-white);
+        }
+
+        .services-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .services-value .section-title {
+            color: var(--neutral-white);
+        }
+
+        .services-value .section-subtitle {
+            color: var(--neutral-white);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .service-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: var(--radius-lg);
+            padding: 3rem;
+            color: var(--neutral-black);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition-smooth);
+        }
+
+        .service-card::after {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: top 0.5s ease;
+            z-index: -1;
+        }
+
+        .service-card:hover::after {
+            top: 0;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            color: var(--neutral-white);
+        }
+
+        .service-card:hover .service-title,
+        .service-card:hover .service-description,
+        .service-card:hover .service-features li {
+            color: var(--neutral-white);
+        }
+
+        .service-icon {
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        .service-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .service-description {
+            color: var(--neutral-gray);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .service-features {
+            list-style: none;
+        }
+
+        .service-features li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: var(--neutral-black);
+        }
+
+        .service-features li::before {
+            content: '✓';
+            background: var(--gradient-primary);
+            color: var(--neutral-white);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .video-callout {
+            background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+            border: 2px solid var(--primary-blue);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .video-callout a {
+            color: var(--primary-red);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        /* ===== FINAL CTA SECTION ===== */
+        .final-cta {
+            padding: 8rem 2rem;
+            background: var(--gradient-hero);
+            text-align: center;
+            color: var(--neutral-white);
+        }
+
+        .cta-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 2rem;
+        }
+
+        .cta-summary {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-lg);
+            padding: 3rem;
+            margin: 3rem 0;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .cta-summary-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent-gold);
+            margin-bottom: 1rem;
+        }
+
+        .cta-summary-text {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* ===== HIGHLIGHT STYLES ===== */
+        .highlight-number {
+            background: var(--gradient-gold);
+            color: var(--neutral-black);
+            padding: 0.2rem 0.6rem;
+            border-radius: 8px;
+            font-weight: 900;
+            font-size: 1.3em;
+            text-shadow: none;
+            box-shadow: 0 2px 8px rgba(255,215,0,0.3);
+            display: inline-block;
+            margin: 0 0.1rem;
+            animation: numberGlow 2s ease-in-out infinite alternate;
+        }
+
+        .discount-highlight {
+            background: linear-gradient(135deg, #ff4757, #ff6b7a);
+            color: var(--neutral-white);
+            padding: 0.1rem 0.4rem;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 1.1em;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 6px rgba(255,71,87,0.3);
+            display: inline-block;
+            margin: 0 0.1rem;
+            animation: discountPulse 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes numberGlow {
+            0% { 
+                box-shadow: 0 2px 8px rgba(255,215,0,0.3);
+                transform: scale(1);
+            }
+            100% { 
+                box-shadow: 0 4px 16px rgba(255,215,0,0.6);
+                transform: scale(1.02);
+            }
+        }
+
+        @keyframes discountPulse {
+            0% { 
+                box-shadow: 0 2px 6px rgba(255,71,87,0.3);
+                transform: scale(1);
+            }
+            100% { 
+                box-shadow: 0 4px 12px rgba(255,71,87,0.6);
+                transform: scale(1.05);
+            }
+        }
+
+        .multiple-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--gradient-gold);
+            color: var(--neutral-black);
+            padding: 2rem 4rem;
+            border-radius: var(--radius-lg);
+            font-size: 1.3rem;
+            font-weight: 900;
+            text-decoration: none;
+            box-shadow: var(--shadow-xl);
+            transition: var(--transition-spring);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 40px 100px rgba(255,215,0,0.4);
+        }
+
+        /* ===== FLOATING CTA ===== */
+        .floating-cta {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--gradient-gold);
+            color: var(--neutral-black);
+            padding: 1rem 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            z-index: 1000;
+            text-decoration: none;
+            font-weight: 700;
+            transition: var(--transition-smooth);
+            opacity: 0;
+            transform: translateY(100px);
+        }
+
+        .floating-cta:hover {
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--surface-dark);
+            color: var(--neutral-white);
+            padding: 4rem 2rem 2rem;
+            text-align: center;
+        }
+
+        .footer-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--accent-gold);
+        }
+
+        .footer-tagline {
+            font-style: italic;
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 3rem;
+        }
+
+        .footer-contact {
+            background: rgba(255,255,255,0.05);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition-fast);
+        }
+
+        .footer-links a:hover {
+            opacity: 0.8;
+            transform: translateY(-2px);
+        }
+
+        /* ===== RESPONSIVE DESIGN - MOBILE FIRST ===== */
+        @media (max-width: 768px) {
+            /* Hero Section Mobile Optimization */
+            .hero-question {
+                min-height: 100vh;
+                padding: 1rem;
+            }
+            
+            .hero-container {
+                padding: 0 1rem;
+            }
+            
+            .hero-question-text {
+                font-size: clamp(2.5rem, 12vw, 4rem);
+                line-height: 1.2;
+                margin-bottom: 1.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: clamp(1rem, 4vw, 1.4rem);
+                margin-bottom: 1.5rem;
+            }
+            
+            .hero-proof {
+                padding: 1.2rem;
+                margin: 1.5rem auto;
+                font-size: 0.9rem;
+                max-width: 95%;
+            }
+            
+            .hero-cta-button {
+                padding: 1.2rem 2rem;
+                font-size: 1rem;
+                margin-top: 1.5rem;
+                width: 90%;
+                max-width: 300px;
+                text-align: center;
+                justify-content: center;
+            }
+            
+            .question-mark {
+                font-size: clamp(6rem, 20vw, 12rem);
+                opacity: 0.05;
+            }
+            
+            /* Sections Mobile Padding */
+            .answer-intro { 
+                padding: 3rem 1rem; 
+            }
+            
+            .departments { 
+                padding: 3rem 1rem; 
+            }
+            
+            .services-value { 
+                padding: 3rem 1rem; 
+            }
+            
+            .final-cta { 
+                padding: 3rem 1rem; 
+            }
+            
+            /* Typography Mobile */
+            .answer-title,
+            .section-title,
+            .cta-title {
+                font-size: clamp(1.8rem, 8vw, 2.5rem);
+                margin-bottom: 1.5rem;
+                line-height: 1.3;
+            }
+            
+            .answer-lead,
+            .section-subtitle {
+                font-size: 1.1rem;
+                line-height: 1.6;
+                margin-bottom: 1.5rem;
+            }
+            
+            /* Stats Mobile Layout */
+            .stats-highlight { 
+                grid-template-columns: 1fr 1fr; 
+                gap: 1rem; 
+                margin-top: 2rem;
+            }
+            
+            .stat-item {
+                padding: 1.5rem 1rem;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .stat-label {
+                font-size: 0.9rem;
+            }
+            
+            /* Services Mobile Grid */
+            .services-grid { 
+                grid-template-columns: 1fr; 
+                gap: 2rem;
+                margin-top: 2rem;
+            }
+            
+            .service-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .service-icon {
+                font-size: 3rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .service-title {
+                font-size: 1.3rem;
+                margin-bottom: 1rem;
+            }
+            
+            .service-description {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .service-features li {
+                font-size: 0.95rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            /* Departments Mobile Grid */
+            .departments-grid { 
+                grid-template-columns: 1fr; 
+                gap: 1.5rem;
+            }
+            
+            .department-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .department-icon {
+                font-size: 2.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .department-name {
+                font-size: 1.1rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .department-benefit {
+                font-size: 0.9rem;
+                line-height: 1.4;
+            }
+            
+            /* CTA Mobile */
+            .multiple-cta {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .cta-button { 
+                padding: 1.5rem 2.5rem; 
+                font-size: 1.1rem;
+                width: 90%;
+                max-width: 320px;
+                text-align: center;
+                justify-content: center;
+            }
+            
+            .cta-summary {
+                padding: 2rem 1.5rem;
+                margin: 2rem 0;
+            }
+            
+            .cta-summary-title {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .cta-summary-text {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+            
+            /* Floating CTA Mobile */
+            .floating-cta {
+                bottom: 15px;
+                right: 15px;
+                left: 15px;
+                text-align: center;
+                padding: 1rem 1.5rem;
+                font-size: 1rem;
+                border-radius: 15px;
+            }
+            
+            /* Footer Mobile */
+            .footer {
+                padding: 3rem 1rem 2rem;
+            }
+            
+            .footer-logo-text {
+                font-size: 2rem;
+            }
+            
+            .footer-tagline {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+            
+            .footer-contact {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+            }
+            
+            /* Highlight Numbers Mobile */
+            .highlight-number {
+                padding: 0.15rem 0.4rem;
+                font-size: 1.2em;
+                margin: 0 0.05rem;
+                border-radius: 6px;
+            }
+            
+            .discount-highlight {
+                padding: 0.1rem 0.3rem;
+                font-size: 1.05em;
+                border-radius: 4px;
+            }
+            
+            /* Value Proposition Mobile */
+            .value-proposition {
+                padding: 1.5rem;
+                margin: 2rem auto;
+                max-width: 95%;
+            }
+            
+            .value-proposition h3 {
+                font-size: 1.4rem;
+                margin-bottom: 1rem;
+            }
+            
+            .value-proposition p {
+                font-size: 0.95rem;
+                line-height: 1.5;
+            }
+            
+            /* Departments Intro Mobile */
+            .departments-intro {
+                padding: 1.5rem;
+                margin: 2rem auto;
+                max-width: 95%;
+            }
+            
+            .departments-intro h3 {
+                font-size: 1.4rem;
+                margin-bottom: 1rem;
+            }
+            
+            .departments-intro p {
+                font-size: 0.95rem;
+                line-height: 1.5;
+            }
+            
+            /* Departments Bottom Mobile */
+            .departments-bottom {
+                padding: 2rem 1.5rem;
+                margin-top: 2rem;
+            }
+            
+            .departments-bottom h3 {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .departments-stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 1.5rem;
+                margin-top: 1.5rem;
+            }
+            
+            .dept-stat-number {
+                font-size: 2rem;
+            }
+            
+            .dept-stat-label {
+                font-size: 0.85rem;
+                margin-top: 0.3rem;
+            }
+            
+            /* Video Callout Mobile */
+            .video-callout {
+                padding: 1rem;
+                margin-top: 1rem;
+                font-size: 0.9rem;
+            }
+            
+            /* Scroll Indicator Mobile */
+            .scroll-indicator {
+                bottom: 1.5rem;
+                font-size: 0.8rem;
+            }
+            
+            .scroll-arrow {
+                font-size: 1.5rem;
+                margin-top: 0.3rem;
+            }
+
+            /* Adjustments for mobile watermark */
+            .watermark-layer-1 {
+                background-size: 
+                    100px 100px, 
+                    80px 80px, 
+                    120px 120px, 
+                    70px 70px, 
+                    90px 90px;
+                opacity: 0.4;
+            }
+            
+            .watermark-layer-2 {
+                background-size: 
+                    80px 80px, 
+                    110px 110px, 
+                    60px 60px, 
+                    85px 85px;
+                opacity: 0.3;
+            }
+            
+            .watermark-layer-3 {
+                background-size: 
+                    140px 140px, 
+                    50px 50px, 
+                    75px 75px;
+                opacity: 0.2;
+            }
+            
+            .watermark-center {
+                width: 250px;
+                height: 250px;
+                background-size: 200px 200px;
+                opacity: 0.03;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* Extra Small Mobile Optimization */
+            .hero-question-text {
+                font-size: clamp(2rem, 10vw, 3rem);
+                letter-spacing: -0.01em;
+            }
+            
+            .hero-subtitle {
+                font-size: clamp(0.9rem, 3.5vw, 1.2rem);
+            }
+            
+            .hero-proof {
+                padding: 1rem;
+                font-size: 0.85rem;
+            }
+            
+            .hero-cta-button {
+                padding: 1rem 1.5rem;
+                font-size: 0.95rem;
+                width: 95%;
+            }
+            
+            .service-card { 
+                padding: 1.5rem 1rem; 
+            }
+            
+            .department-card {
+                padding: 1.5rem 1rem;
+            }
+            
+            .cta-button { 
+                padding: 1.2rem 2rem; 
+                font-size: 1rem;
+                width: 95%;
+            }
+            
+            .cta-summary {
+                padding: 1.5rem 1rem;
+            }
+            
+            .cta-summary-title {
+                font-size: 1.3rem;
+            }
+            
+            .cta-summary-text {
+                font-size: 0.95rem;
+            }
+            
+            .stats-highlight {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .departments-stats {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .floating-cta {
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            /* Further mobile watermark adjustments */
+            .watermark-layer-1 {
+                background-size: 
+                    80px 80px, 
+                    60px 60px, 
+                    100px 100px, 
+                    50px 50px, 
+                    70px 70px;
+                opacity: 0.3;
+            }
+            
+            .watermark-layer-2 {
+                background-size: 
+                    60px 60px, 
+                    90px 90px, 
+                    45px 45px, 
+                    65px 65px;
+                opacity: 0.2;
+            }
+            
+            .watermark-layer-3 {
+                background-size: 
+                    110px 110px, 
+                    40px 40px, 
+                    55px 55px;
+                opacity: 0.15;
+            }
+            
+            .watermark-center {
+                width: 180px;
+                height: 180px;
+                background-size: 150px 150px;
+                opacity: 0.02;
+            }
+        }
+
+        /* ===== TOUCH INTERACTIONS ===== */
+        @media (hover: none) and (pointer: coarse) {
+            .department-card:hover,
+            .service-card:hover,
+            .stat-item:hover {
+                transform: none;
+            }
+            
+            .department-card:active,
+            .service-card:active {
+                transform: translateY(-3px) scale(1.01);
+            }
+            
+            .cta-button:active,
+            .hero-cta-button:active {
+                transform: translateY(-2px) scale(1.02);
+            }
+        }
+
+        /* ===== LANDSCAPE MOBILE ===== */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .hero-question {
+                min-height: 100vh;
+                padding: 0.5rem;
+            }
+            
+            .hero-question-text {
+                font-size: clamp(2rem, 8vw, 3rem);
+                margin-bottom: 1rem;
+            }
+            
+            .hero-subtitle {
+                font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+                margin-bottom: 1rem;
+            }
+            
+            .hero-proof {
+                margin: 1rem auto;
+                padding: 1rem;
+            }
+            
+            .hero-cta-button {
+                margin-top: 1rem;
+                padding: 1rem 2rem;
+            }
+            
+            .scroll-indicator {
+                bottom: 1rem;
+            }
+        }
+
+        /* ===== ANIMATION UTILITY CLASSES ===== */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Enhanced Logo Watermark -->
+    <div class="watermark">
+        <div class="watermark-layer-1"></div>
+        <div class="watermark-layer-2"></div>
+        <div class="watermark-layer-3"></div>
+        <div class="watermark-center"></div>
+    </div>
+    
+    <!-- Hero Question Section -->
+    <section class="hero-question">
+        <div class="question-mark">?</div>
+        <div class="hero-container">
+            <h1 class="hero-question-text">
+                PERCHÉ
+                <span class="highlight">SIM CARABINIERI</span>
+            </h1>
+            <p class="hero-subtitle">
+                La domanda che ogni Carabiniere si pone. Ecco la risposta completa che stavi cercando.
+            </p>
+            <div class="hero-proof">
+                <strong>🎯 FATTO CONCRETO:</strong> I nostri +15.000 iscritti hanno accesso a servizi che normalmente costerebbero oltre €800 all'anno. 
+                Tu quanto stai perdendo in protezione ogni giorno che rimandi?
+            </div>
+            <a href="https://www.simcarabinieri.com/iscrizione.php" class="hero-cta-button pulse">
+                💡 Scopri Subito Perché
+            </a>
+        </div>
+        <div class="scroll-indicator">
+            <div>Scorri per scoprire</div>
+            <div class="scroll-arrow">↓</div>
+        </div>
+    </section>
+
+    <!-- Answer Introduction -->
+    <section class="answer-intro">
+        <div class="answer-intro-container">
+            <h2 class="answer-title">LA RISPOSTA È NELLA PROTEZIONE</h2>
+            <p class="answer-lead">
+                SIM Carabinieri non è solo un sindacato: è il tuo scudo professionale completo. 
+                17 dipartimenti specializzati che ti proteggono in ogni momento della tua carriera.
+            </p>
+            
+            <div class="value-proposition">
+                <h3>🛡️ Protezione Totale in 3 Pilastri</h3>
+                <p>
+                    <strong>1.</strong> Tutela legale professionale fino a €20.000 senza franchigia<br>
+                    <strong>2.</strong> Assistenza sanitaria H24 per te e la tua famiglia<br>
+                    <strong>3.</strong> 17 dipartimenti ultra-specializzati sempre al tuo fianco
+                </p>
+            </div>
+            
+            <div class="stats-highlight">
+                <div class="stat-item">
+                    <span class="stat-number">+15.000</span>
+                    <span class="stat-label">Carabinieri che si fidano di noi</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">1°</span>
+                    <span class="stat-label">Sindacato dell'Arma per numero di iscritti</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">17</span>
+                    <span class="stat-label">Dipartimenti specializzati</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">Assistenza sempre attiva</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Departments Section -->
+    <section class="departments">
+        <div class="departments-container">
+            <div class="section-header">
+                <h2 class="section-title">17 Dipartimenti = Il Tuo Esercito Personale</h2>
+                <p class="section-subtitle">
+                    Non sono solo uffici. Sono 17 team di specialisti che lavorano H24 per la TUA protezione e i TUOI diritti.
+                </p>
+            </div>
+
+            <div class="departments-intro">
+                <h3>🎯 La Specializzazione Che Ti Protegge</h3>
+                <p>
+                    SIM Carabinieri ha creato 17 dipartimenti ultra-specializzati per garantirti una protezione totale e mirata. 
+                    Ogni situazione della tua carriera ha il SUO esperto dedicato che conosce perfettamente le tue esigenze specifiche.
+                </p>
+            </div>
+            
+            <div class="departments-grid">
+                <div class="department-card">
+                    <div class="department-icon">⚖️</div>
+                    <div class="department-name">Affari Giuridici e Legislativi</div>
+                    <div class="department-benefit">Ti protegge nelle questioni legali più complesse con esperti specializzati nel diritto militare</div>
+                </div>
+                
+                <div class="department-card">
+                    <div class="department-icon">🛡️</div>
+                    <div class="department-name">Cause di Servizio e Vittime del Dovere</div>
+                    <div class="department-benefit">Assistenza completa per infortuni e malattie da servizio, massimizzando i tuoi riconoscimenti</div>
+                </div>
+                
+                <div class="department-card">
+                    <div class="department-icon">📢</div>
+                    <div class="department-name">Comunicazione e Immagine</div>
+                    <div class="department-benefit">Difende la tua reputazione professionale e gestisce situazioni mediatiche delicate</div>
+                </div>
+                
+                <div class="department-card">
+                    <div class="department-icon">💰</div>
+                    <div class="department-name">Direzione Amministrativa Finanziaria</div>
+                    <div class="department-benefit">Verifica che tu riceva ogni euro che ti spetta, recuperando arretrati e correggendo errori</div>
+                </div>
+                
+                <div class="department-card">
+                    <div class="department-icon">⚡</div>
+                    <div class="department-name">Disciplina</div>
+                    <div class="department-benefit">Ti difende nei procedimenti disciplinari con strategie collaudate e specializzate</div>
+                </div>
+                
+                <div class="department-card">
+                    <div class="department-icon">🌲</div>
+                    <div class="department-name">Forestale</div>
+                    <div class="department-benefit">Tutela specifica per il personale del corpo forestale con competenze uniche</div>
+                </div>
+                
+                <div class="department-card">
+                    <div class="department-icon">👔</div>
+                    <div class="department-name">Area Negoziale Dirigenti</div>
+                    <div class="department-benefit">Tutela specifica per i dirigenti dell'Arma</div>
+                </div>
+                
+                <div class="department-card">
+                    <div class="department-icon">⚖️</div>
+                    <div class="department-name">Pari Opportunità</div>
+                    <div class="department-benefit">Garantisce equità di trattamento e combatte ogni forma di discriminazione</div>
+                </div>
+                
+                <div class="department-card">
+                    <div class="department-icon">🧠</div>
+                    <div class="department-name">Psicologia On Line</div>
+                    <div class="department-benefit">Supporto psicologico H24 per te e la tua famiglia con professionisti qualificati</div>
+                </div>
+                
+                <div class="department-card">
+                    <div class="department-icon">🎖️</div>
+                    <div class="department-name">Reparti Speciali</div>
+                    <div class="department-benefit">Assistenza dedicata per personale di reparti speciali con esigenze uniche</div>
+                </div>
+                
+                <div class="department-card">
+                    <div class="department-icon">💪</div>
+                    <div class="department-name">Salute e Benessere</div>
+                    <div class="department-benefit">Programmi di prevenzione e assistenza per la tua salute fisica e mentale</div>
+                </div>
+                
+                <div class="department-card">
+                    <div class="department-icon">🏥</div>
+                    <div class="department-name">Sanità</div>
+                    <div class="department-benefit">Tutela per questioni sanitarie e supporto nelle pratiche medico-legali</div>
+                </div>
+                
+                <div class="department-card">
+                    <div class="department-icon">🎓</div>
+                    <div class="department-name">Scuole Arma</div>
+                    <div class="department-benefit">Supporto per personale delle scuole dell'Arma con competenze formative specifiche</div>
+                </div>
+                
+                <div class="department-card">
+                    <div class="department-icon">🦺</div>
+                    <div class="department-name">Sicurezza Lavoro</div>
+                    <div class="department-benefit">Verifica condizioni di sicurezza e previene rischi sul tuo posto di lavoro</div>
+                </div>
+                
+                <div class="department-card">
+                    <div class="department-icon">📚</div>
+                    <div class="department-name">Storia e Cultura dell'Arma</div>
+                    <div class="department-benefit">Valorizza tradizioni e promuove la cultura dell'Arma dei Carabinieri</div>
+                </div>
+                
+                <div class="department-card">
+                    <div class="department-icon">🏢</div>
+                    <div class="department-name">Territoriale / Stazioni</div>
+                    <div class="department-benefit">Tutela specifica per il personale delle stazioni e comandi territoriali</div>
+                </div>
+                
+                <div class="department-card">
+                    <div class="department-icon">💳</div>
+                    <div class="department-name">Trattamento Stipendiale e Pensionistico</div>
+                    <div class="department-benefit">Massimizza stipendio e pensione, recuperando ogni euro che ti spetta per legge</div>
+                </div>
+            </div>
+
+            <div class="departments-bottom">
+                <h3>🎯 Il Risultato: Protezione Totale</h3>
+                <p>17 dipartimenti specializzati = Zero punti scoperti nella tua protezione professionale</p>
+                
+                <div class="departments-stats">
+                    <div class="dept-stat">
+                        <span class="dept-stat-number">100%</span>
+                        <span class="dept-stat-label">Copertura situazioni</span>
+                    </div>
+                    <div class="dept-stat">
+                        <span class="dept-stat-number">24/7</span>
+                        <span class="dept-stat-label">Disponibilità</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Value Section -->
+    <section class="services-value">
+        <div class="services-container">
+            <div class="section-header">
+                <h2 class="section-title">I Servizi Che Fanno la Differenza</h2>
+                <p class="section-subtitle">
+                    Questi non sono "benefit aggiuntivi". Sono servizi essenziali che ti proteggono e assistono H24.
+                </p>
+            </div>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">⚖️</div>
+                    <h3 class="service-title">Tutela Legale Professionale</h3>
+                    <p class="service-description">Protezione fino a €20.000 senza franchigia</p>
+                    <ul class="service-features">
+                        <li>Scelta libera del legale</li>
+                        <li>Periti e consulenti inclusi</li>
+                        <li>Copertura penale, penale militare, disciplinare</li>
+                        <li>Assistenza 24/7 per emergenze</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">🩺</div>
+                    <h3 class="service-title">Dr.Feel - Servizio Sanitario Digitale</h3>
+                    <p class="service-description">Copertura per tutto il nucleo familiare</p>
+                    <ul class="service-features">
+                        <li>Consulenze mediche 24/7 via app</li>
+                        <li>Visite specialistiche online</li>
+                        <li>Prescrizioni mediche digitali</li>
+                        <li>Telemedicina avanzata</li>
+                    </ul>
+                    <div class="video-callout">
+                        🎥 <strong>Scopri come funziona:</strong><br>
+                        <a href="https://www.youtube.com/watch?feature=shared&v=OYa_y9vscN4" target="_blank">
+                            Guarda il video dimostrativo →
+                        </a>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">📊</div>
+                    <h3 class="service-title">CAF e Servizi Fiscali</h3>
+                    <p class="service-description">Assistenza fiscale completa</p>
+                    <ul class="service-features">
+                        <li>Dichiarazione 730 gratuita</li>
+                        <li>Calcolo e invio ISEE gratuito</li>
+                        <li>Pratiche previdenziali (pensioni)</li>
+                        <li>Consulenza personalizzata</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">🎯</div>
+                    <h3 class="service-title">Convenzioni Esclusive</h3>
+                    <p class="service-description">Sconti riservati solo agli iscritti SIM</p>
+                    <ul class="service-features">
+                        <li>Italo Treno 1° classe: sconto <span class="discount-highlight">40%</span></li>
+                        <li>Samoiraghi & Viganò: <span class="discount-highlight">30%</span> su occhiali</li>
+                        <li>GrandVision: fino a <span class="discount-highlight">-50€</span> su occhiali graduati</li>
+                        <li>Gruppo Stellantis: sconti esclusivi autovetture</li>
+                        <li>Alpitour World: sconto fino all'<span class="discount-highlight">11%</span></li>
+                        <li>E oltre <span class="discount-highlight">50</span> altre convenzioni attive!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="final-cta">
+        <div class="cta-container">
+            <h2 class="cta-title">La Tua Risposta È Qui</h2>
+            
+            <div class="cta-summary">
+                <div class="cta-summary-title">💎 PERCHÉ SIM CARABINIERI</div>
+                <div class="cta-summary-text">
+                    <span class="highlight-number">€9</span> al mese per oltre <span class="highlight-number">€800</span> di valore annuale + <span class="highlight-number">€20.000</span> di protezione legale + <span class="highlight-number">17</span> dipartimenti specializzati + 
+                    <span class="highlight-number">15.000+</span> colleghi soddisfatti = <strong>LA SCELTA PIÙ INTELLIGENTE</strong>
+                </div>
+            </div>
+
+            <div class="multiple-cta">
+                <a href="https://www.simcarabinieri.com/iscrizione.php" class="cta-button pulse">
+                    🚀 ISCRIVITI ORA
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating CTA -->
+    <a href="https://www.simcarabinieri.com/iscrizione.php" class="floating-cta">
+        🔥 ISCRIVITI SUBITO
+    </a>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <div class="footer-logo-text">SIM CARABINIERI</div>
+            </div>
+            <p class="footer-tagline">
+                "Il sindacato che trasforma la tua domanda in una certezza matematica"
+            </p>
+            
+            <div class="footer-contact">
+                <p style="margin-bottom: 1rem;">
+                    <strong>Sindacato Italiano Militari Carabinieri</strong><br>
+                    Via Magnagrecia 13 – 00183 Roma
+                </p>
+                
+                <div class="footer-links">
+                    <a href="https://www.simcarabinieri.it" target="_blank">🌐 www.simcarabinieri.it</a>
+                    <a href="mailto:info@simcarabinieri.cc">📧 info@simcarabinieri.cc</a>
+                    <a href="tel:+390669217447">📞 06 6921 7447</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ===== FLOATING CTA VISIBILITY =====
+        const floatingCTA = document.querySelector('.floating-cta');
+        let lastScrollY = window.scrollY;
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 1000) {
+                floatingCTA.style.opacity = '1';
+                floatingCTA.style.transform = 'translateY(0)';
+            } else {
+                floatingCTA.style.opacity = '0';
+                floatingCTA.style.transform = 'translateY(100px)';
+            }
+        });
+
+        // ===== ENHANCED HOVER EFFECTS =====
+        document.querySelectorAll('.department-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // ===== CTA TRACKING =====
+        document.querySelectorAll('a[href*="iscrizione"]').forEach(link => {
+            link.addEventListener('click', function() {
+                console.log('CTA clicked:', this.textContent);
+            });
+        });
+
+        // ===== SMOOTH SCROLLING =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ===== WATERMARK INTERACTION =====
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.1;
+            
+            document.querySelector('.watermark-layer-1').style.transform = `rotate(-12deg) translateY(${rate}px)`;
+            document.querySelector('.watermark-layer-2').style.transform = `rotate(18deg) translateX(${rate * 0.5}px)`;
+            document.querySelector('.watermark-layer-3').style.transform = `rotate(-25deg) translateY(${rate * 0.3}px)`;
+        });
+    </script>
+</body>
+</html>
