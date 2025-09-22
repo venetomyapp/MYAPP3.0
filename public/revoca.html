@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light" />
+  <meta name="format-detection" content="telephone=no" />
+  <title>Modulo Revoca Disdetta – A4 (Firmabile v4)</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js" defer></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root { --border:#d0d7de; --text:#222; --muted:#555; --brand:#1f883d; }
+    html, body { height: 100%; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; line-height: 1.35; color: var(--text); margin:0; background:#f6f7f9; font-size: 12px; }
+    .page { width: 210mm; min-height: 297mm; margin: 8mm auto; padding: 0; display:flex; align-items:stretch; justify-content:center; }
+    .card { background:#fff; border:1px solid var(--border); border-radius:10px; padding: 10mm; box-shadow: 0 2px 8px rgba(0,0,0,.04); width: 100%; max-width: calc(210mm - 16mm); }
+    h1 { font-size: 16px; margin:0 0 6px; text-align:center; } .subtitle{ text-align:center; color:var(--muted); margin-top:-2px; margin-bottom:10px; }
+    .grid{ display:grid; gap:8px; } @media (min-width:720px){ .grid.cols-2{ grid-template-columns:1fr 1fr; } }
+    label{ font-weight:600; display:block; margin-bottom:4px; }
+    input[type=text], input[type=date], input[type=email], textarea { width:100%; padding:8px; border:1px solid var(--border); border-radius:6px; font-size:12px; }
+    textarea{ min-height:80px; resize:vertical; }
+    .address-section p{ margin:0; } .address-section{ font-size:11.5px; margin:8px 0 10px; }
+    .muted{ color:var(--muted); font-size:11.5px; }
+    ol{ padding-left:18px; margin:6px 0; } ol li{ margin-bottom:4px; }
+    .signature-section{ margin-top:8px; position:relative; } 
+    .signature-pad { border:1px solid #000; border-radius:6px; width:100%; height:120px; touch-action:none; background:#fff; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; overscroll-behavior: contain; cursor: crosshair; position: relative; z-index: 10; }
+    .signature-row{ display:flex; align-items:center; gap:8px; justify-content:flex-end; margin-top:6px; }
+    .actions{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:10px; }
+    button,.btn{ appearance:none; border:1px solid transparent; border-radius:8px; padding:8px 12px; cursor:pointer; background:var(--brand); color:#fff; font-weight:600; font-size:12px; }
+    button.secondary{ background:#fff; color:#111; border-color:var(--border); }
+    .attachments{ list-style:none; padding-left:0; margin:6px 0; } .attachments li{ display:flex; gap:8px; align-items:center; font-size:12px; }
+    .footer-note{ margin-top:8px; font-size:11px; color:var(--muted); }
+    @page{ size:A4; margin:12mm; }
+    @media print{ *{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }  body{ background:#fff; font-size:11px; line-height:1.30; } .no-print{ display:none !important; } .page{ margin:0; padding:0; width:auto; min-height:auto; } .card{ border:none; box-shadow:none; border-radius:0; padding:6mm; } .card>*{ break-inside:avoid; } h1{ font-size:14px; } .signature-pad{ border:1px solid #000; height:80px; } .grid{ gap:6px; } ol{ margin:4px 0; } }
+    .card.compact{ padding:6mm; } .card.compact h1{ font-size:14px; margin-bottom:4px; } .card.compact .subtitle{ margin-bottom:6px; } .card.compact .grid{ gap:6px; }
+    .card.compact input[type=text], .card.compact input[type=date], .card.compact input[type=email], .card.compact textarea{ padding:6px; font-size:11px; }
+    .card.compact ol{ margin:4px 0; } .card.compact ol li{ margin-bottom:3px; } .card.compact .signature-pad{ height:90px; }
+    .card.ultra{ font-size:11px; line-height:1.28; } .card.ultra h1{ font-size:13px; } .card.ultra .signature-pad{ height:80px; }
+    .card.micro{ font-size:10.5px; line-height:1.25; } .card.micro .signature-pad{ height:72px; }
+    /* --- PDF/readability helpers --- */
+    .print-field, .print-inline{
+      color:#000 !important; background:#fff !important; border:1px solid #000 !important;
+      border-radius:4px; font-weight:600; line-height:1.5;
+      white-space:pre-wrap; word-break:break-word; overflow-wrap:anywhere;
+    }
+    .print-field{ display:block; width:100%; box-sizing:border-box; padding:8px 10px; min-height:28px; }
+    .print-inline{ display:inline-block; vertical-align:middle; max-width:100%; padding:2px 6px; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <form id="revocaForm" class="card" novalidate aria-describedby="form-status">
+      <h1>Revoca della disdetta e conferma di adesione</h1>
+      <p class="subtitle">Modulo per revocare la disdetta prima della sua efficacia</p>
+      <p><strong>Oggetto:</strong> Revoca della disdetta e conferma dell'adesione prima dell'efficacia.</p>
+
+      <section class="address-section" aria-label="Destinatari">
+        <p><strong>Al Comando Generale dell'Arma dei Carabinieri</strong></p>
+        <p>Centro Nazionale Amministrativo</p>
+        <p>Ufficio Trattamento Economico Attività</p>
+        <p><a href="mailto:cnateadeleghe@pec.carabinieri.it">cnateadeleghe@pec.carabinieri.it</a></p>
+        <br />
+        <p><strong>Spett.le Sindacato Italiano Militare Carabinieri</strong></p>
+        <p><a href="mailto:segreteria@pec.simcarabinieri.it">segreteria@pec.simcarabinieri.it</a></p>
+        <p>Via Magnagrecia 13, 00183 Roma</p>
+      </section>
+
+      <fieldset class="grid cols-2">
+        <legend class="sr-only">Dati anagrafici</legend>
+        <div>
+          <label for="nomeCognome">Il/La sottoscritto/a *</label>
+          <input id="nomeCognome" name="nomeCognome" type="text" placeholder="Nome Cognome" autocomplete="name" required />
+        </div>
+        <div>
+          <label for="luogoNascita">nato/a a *</label>
+          <input id="luogoNascita" name="luogoNascita" type="text" placeholder="Luogo di nascita" required />
+        </div>
+        <div>
+          <label for="dataNascita">il *</label>
+          <input id="dataNascita" name="dataNascita" type="date" required />
+        </div>
+        <div>
+          <label for="cip">CIP *</label>
+          <input id="cip" name="cip" type="text" placeholder="CIP" required inputmode="text" pattern="[A-Za-z0-9.\/-]{3,20}" title="Inserisci un CIP valido (3–20 caratteri alfanumerici, punti, / o -)" autocomplete="off" />
+        </div>
+        <div>
+          <label for="servizioPresso">in servizio presso *</label>
+          <input id="servizioPresso" name="servizioPresso" type="text" placeholder="Ente/Reparto/Ufficio" required />
+        </div>
+        <div>
+          <label for="telefono">Recapito telefonico</label>
+          <input id="telefono" name="telefono" type="text" inputmode="tel" placeholder="Numero di telefono" autocomplete="tel" pattern="[0-9()+\- ]{6,20}" title="Inserisci un numero di telefono valido" />
+        </div>
+        <div>
+          <label for="emailPecRecapito">E-mail / PEC</label>
+          <input id="emailPecRecapito" name="emailPecRecapito" type="email" placeholder="email/PEC" autocomplete="email" autocapitalize="none" autocorrect="off" />
+        </div>
+      </fieldset>
+
+      <p><strong>Premesso che</strong> in data
+        <input id="dataDisdetta" name="dataDisdetta" type="date" required style="width:165px; display:inline-block" />
+        ho trasmesso comunicazione di disdetta dall'Associazione SIM Carabinieri (Sindacato Italiano Militari Carabinieri), con decorrenza prevista per legge,
+      </p>
+
+      <p><strong>comunico</strong> ai sensi e per gli effetti di legge di revocare integralmente la sopra citata disdetta prima della sua efficacia.</p>
+
+      <p><strong>Pertanto, chiedo:</strong></p>
+      <ol>
+        <li>di mantenere senza soluzione di continuità la mia adesione all'Associazione SIM Carabinieri (Sindacato Italiano Militari Carabinieri);</li>
+        <li>di non dar corso ad alcuna cessazione della delega contributiva e di proseguire le trattenute associative già in essere;</li>
+        <li>di ricevere conferma scritta della presente revoca all'indirizzo
+          <input id="emailPec" name="emailPec" type="email" autocapitalize="none" autocorrect="off" placeholder="email/PEC" style="width:240px; display:inline-block" required />.
+        </li>
+      </ol>
+
+      <p class="muted">Resta confermato il consenso al trattamento dei dati personali limitatamente alle finalità associative, come da informativa dell'Associazione.</p>
+
+      <div class="grid cols-2">
+        <div>
+          <label for="luogo">Luogo</label>
+          <input id="luogo" name="luogo" type="text" placeholder="Luogo" autocomplete="address-level2" />
+        </div>
+        <div>
+          <label for="dataDocumento">Data</label>
+          <input id="dataDocumento" name="dataDocumento" type="date" />
+        </div>
+      </div>
+
+      <section class="signature-section" aria-label="Firma">
+        <label for="signature-pad">Firma *</label>
+        <canvas id="signature-pad" class="signature-pad" width="800" height="120" role="img" aria-label="Area per firma"></canvas>
+        <div class="signature-row">
+          <button type="button" id="clear-signature" class="secondary no-print">Cancella firma</button>
+          <button type="button" id="force-sig" class="secondary no-print">Forza firma</button>
+        </div>
+      </section>
+
+      <section aria-label="Allegati">
+        <p><strong>Allegati:</strong></p>
+        <ul class="attachments">
+          <li>
+            <input type="checkbox" id="all-docId" name="allDocId" />
+            <label for="all-docId">Copia documento di identità (fronte/retro)</label>
+          </li>
+          <li>
+            <input type="checkbox" id="all-disdetta" name="allDisdetta" />
+            <label for="all-disdetta">(facoltativo) Copia della precedente disdetta del
+              <input id="dataDisdettaPrecedente" name="dataDisdettaPrecedente" type="date" style="width:165px; display:inline-block" />
+            </label>
+          </li>
+        </ul>
+      </section>
+
+      <section aria-label="Invio e-mail" class="email-section no-print">
+        <label for="destEmail">Destinatario e‑mail</label>
+        <input id="destEmail" name="destEmail" type="email" multiple autocapitalize="none" autocorrect="off" placeholder="es. nome@dominio.it, altro@dominio.it" value="segretariogenerale@simcarabinieri.it" />
+        <p class="muted">Puoi inserire più indirizzi separati da virgole; questo blocco non viene incluso nel PDF.</p>
+      </section>
+
+      <section class="no-print muted" aria-label="Opzioni PDF" style="margin:6px 0; display:flex; gap:12px; align-items:center;">
+        <label style="display:flex;align-items:center;gap:6px;">
+          <input type="checkbox" id="pdfEditable" name="pdfEditable" checked />
+          Esporta PDF compilabile (iOS)
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;">
+          <input type="checkbox" id="debugMode" />
+          Modalità test (ignora firma/campi)
+        </label>
+      </section>
+
+      <div class="actions no-print">
+        <button type="button" id="download-button" class="btn">Salva Modulo (PDF)</button>
+        <button type="button" id="email-button" class="secondary">Invia E‑mail</button>
+        <button type="button" id="print-button" class="secondary">Stampa</button>
+        <button type="button" id="reset-form" class="secondary">Pulisci campi</button>
+      </div>
+
+      <section class="no-print" aria-label="Diagnostica" id="diag-panel" style="margin:8px 0;">
+        <details>
+          <summary>Diagnostica</summary>
+          <div class="grid">
+            <button type="button" id="run-diagnostics" class="secondary">Esegui test diagnostico</button>
+            <pre id="diag-output" style="white-space:pre-wrap; max-height:200px; overflow:auto; border:1px solid var(--border); border-radius:6px; padding:8px; background:#fafbfc;"></pre>
+          </div>
+        </details>
+      </section>
+
+      <p id="form-status" class="footer-note no-print" aria-live="polite">Suggerimento: i campi vengono salvati automaticamente nel browser e ripristinati al prossimo accesso.</p>
+    </form>
+  </div>
+
+  <script>
+  (() => {
+    const qs = new URLSearchParams(location.search);
+    const DEBUG = qs.has('debug') || false;
+
+    const form = document.getElementById('revocaForm');
+    const statusEl = document.getElementById('form-status');
+    const canvas = document.getElementById('signature-pad');
+    const clearBtn = document.getElementById('clear-signature');
+    const forceBtn = document.getElementById('force-sig');
+    const ctx = canvas.getContext('2d');
+
+    // Aggiunge opzione 'Modalità iOS leggera' se non presente
+    (function(){
+      const sec = document.querySelector('section[aria-label="Opzioni PDF"]');
+      if (sec && !document.getElementById('iosLight')){
+        const lbl = document.createElement('label');
+        lbl.style.display='flex'; lbl.style.alignItems='center'; lbl.style.gap='6px';
+        lbl.innerHTML = '<input type="checkbox" id="iosLight" /> Modalità iOS leggera';
+        sec.appendChild(lbl);
+      }
+    })();
+
+    // ------- Canvas setup (DPR-safe) -------
+    function fitCanvas() {
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      const css = canvas.getBoundingClientRect();
+      const w = Math.max(1, Math.floor(css.width * dpr));
+      const h = Math.max(1, Math.floor(css.height * dpr));
+      if (canvas.width !== w || canvas.height !== h) {
+        const snapshot = document.createElement('canvas');
+        snapshot.width = canvas.width; snapshot.height = canvas.height;
+        if (snapshot.width && snapshot.height) snapshot.getContext('2d').drawImage(canvas, 0, 0);
+        canvas.width = w; canvas.height = h;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#000';
+        // background bianco
+        ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.fillStyle = '#fff'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.restore();
+        if (snapshot.width && snapshot.height) ctx.drawImage(snapshot, 0, 0);
+      }
+    }
+    fitCanvas();
+    window.addEventListener('resize', fitCanvas);
+    window.addEventListener('orientationchange', () => setTimeout(fitCanvas, 150));
+
+    // ------- Disegno: Pointer Events unificati -------
+    canvas.style.touchAction = 'none';
+    // iOS gesture zoom/pinch guard
+    canvas.addEventListener('gesturestart', e => e.preventDefault());
+    canvas.addEventListener('gesturechange', e => e.preventDefault());
+    canvas.addEventListener('gestureend', e => e.preventDefault());
+    let drawing = false, lastX = 0, lastY = 0, signatureDirty = false;
+
+    function getXY(e){
+      const r = canvas.getBoundingClientRect();
+      const x = (e.clientX ?? (e.touches && e.touches[0]?.clientX) ?? 0) - r.left;
+      const y = (e.clientY ?? (e.touches && e.touches[0]?.clientY) ?? 0) - r.top;
+      return { x, y };
+    }
+
+    function startDraw(e){
+      e.preventDefault();
+      const p = getXY(e);
+      drawing = true; lastX = p.x; lastY = p.y;
+      if (e.pointerId && canvas.setPointerCapture) { try { canvas.setPointerCapture(e.pointerId); } catch{} }
+      ctx.beginPath(); ctx.moveTo(p.x, p.y);
+    }
+    function moveDraw(e){ if (!drawing) return; e.preventDefault(); const p = getXY(e); ctx.lineTo(p.x, p.y); ctx.stroke(); lastX = p.x; lastY = p.y; signatureDirty = true; }
+    function endDraw(e){ if (!drawing) return; drawing = false; // tap-only -> puntino
+      if (!signatureDirty) { ctx.beginPath(); ctx.arc(lastX, lastY, 0.6, 0, Math.PI*2); ctx.fillStyle = '#000'; ctx.fill(); signatureDirty = true; }
+      if (e && e.pointerId && canvas.releasePointerCapture) { try { canvas.releasePointerCapture(e.pointerId); } catch{} }
+    }
+
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const usePointer = ('PointerEvent' in window) && !isIOS;
+
+    if (usePointer) {
+      canvas.addEventListener('pointerdown', startDraw, { passive:false });
+      canvas.addEventListener('pointermove', moveDraw, { passive:false });
+      canvas.addEventListener('pointerup', endDraw);
+      canvas.addEventListener('pointercancel', endDraw);
+      canvas.addEventListener('pointerleave', endDraw);
+    } else {
+      // Mouse path
+      canvas.addEventListener('mousedown', startDraw);
+      canvas.addEventListener('mousemove', moveDraw);
+      window.addEventListener('mouseup', endDraw);
+      // iOS touch path (no pointer events)
+      canvas.addEventListener('touchstart', startDraw, { passive:false 
+}
+);
+      canvas.addEventListener('touchmove', moveDraw, { passive:false });
+      canvas.addEventListener('touchend', endDraw);
+      canvas.addEventListener('touchcancel', endDraw);
+    }
+
+    function clearSignature(){ ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,canvas.width,canvas.height); ctx.restore(); fitCanvas(); signatureDirty = false; saveState(); statusEl.textContent = 'Firma cancellata.'; }
+    clearBtn.addEventListener('click', clearSignature);
+    forceBtn.addEventListener('click', () => { if (!signatureDirty){ ctx.beginPath(); ctx.rect(1,1,0.5,0.5); ctx.fillStyle = '#000'; ctx.fill(); signatureDirty = true; } alert('Firma forzata: puoi procedere.'); });
+
+    // ------- Stato firma -------
+    function hasInk(){
+      // campiona pixel per evitare falsi positivi
+      const w = canvas.width, h = canvas.height; if (!w||!h) return false;
+      const step = Math.max(1, Math.floor(Math.max(w,h)/64));
+      const data = ctx.getImageData(0,0,w,h).data;
+      for (let y=0; y<h; y+=step) for (let x=0; x<w; x+=step) if (data[(y*w+x)*4+3] !== 0) return true;
+      return false;
+    }
+    function isSignaturePresent(){ return signatureDirty || hasInk(); }
+
+    // ------- Storage -------
+    const STORAGE_KEY = 'revoca-disdetta-form-v4';
+    function signatureDataURL(){
+      const exp = document.createElement('canvas'); exp.width = canvas.width; exp.height = canvas.height; const cx = exp.getContext('2d');
+      cx.fillStyle = '#fff'; cx.fillRect(0,0,exp.width,exp.height); cx.drawImage(canvas,0,0); return exp.toDataURL('image/png');
+    }
+    function saveState(){ const data={ fields:{}, _sig: isSignaturePresent()? signatureDataURL(): '' }; for (const el of Array.from(form.elements)){ if (!el.id) continue; data.fields[el.id] = (el.type==='checkbox')? el.checked : el.value; } try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }catch{} }
+    function loadState(){ try{ const raw = localStorage.getItem(STORAGE_KEY); if (!raw) return; const data = JSON.parse(raw); for (const [id,val] of Object.entries(data.fields||{})){ const el=document.getElementById(id); if (!el) continue; if (el.type==='checkbox') el.checked=!!val; else el.value=val; }
+      if (data._sig){ const img = new Image(); img.onload = () => { fitCanvas(); ctx.drawImage(img,0,0, canvas.width/(window.devicePixelRatio||1), canvas.height/(window.devicePixelRatio||1)); signatureDirty = true; }; img.src = data._sig; }
+    }catch{} }
+    form.addEventListener('input', saveState);
+    window.addEventListener('beforeunload', saveState);
+
+    // ------- Date max & default -------
+    const todayISO = new Date().toISOString().slice(0,10);
+    ['dataNascita','dataDisdetta','dataDisdettaPrecedente','dataDocumento'].forEach(id=>{ const el=document.getElementById(id); if (el) el.max=todayISO; });
+    const dd = document.getElementById('dataDocumento'); if (dd && !dd.value) dd.value = todayISO;
+    loadState();
+
+    // ------- PDF helpers -------
+    function getJsPDF(){ return (window.jspdf && window.jspdf.jsPDF) || null; }
+    function safeFileName(s){ s=(s||'').normalize('NFKD'); s=s.replace(/[^A-Za-z0-9]+/g,'_').replace(/^_+|_+$/g,'').toLowerCase(); return s||'utente'; }
+
+    function addAcroFieldsScaled(doc, clone, pxPerMm, scale, xOff, yOff){
+      try{
+        const root = clone.getBoundingClientRect();
+        const TextCtor = doc.AcroFormTextField || (doc.AcroForm && doc.AcroForm.TextField);
+        const CheckCtor = doc.AcroFormCheckBox || (doc.AcroForm && doc.AcroForm.CheckBox);
+        if (!TextCtor && !CheckCtor) return false;
+        const rectMm = (el) => { const r = el.getBoundingClientRect(); return [ xOff + ((r.left-root.left)/pxPerMm)*scale, yOff + ((r.top-root.top)/pxPerMm)*scale, (r.width/pxPerMm)*scale, (r.height/pxPerMm)*scale ]; };
+        const addText = (id) => { const el = clone.querySelector('#'+CSS.escape(id)); if(!el||!TextCtor) return; const [x,y,w,h]=rectMm(el); const f=new TextCtor(); f.Rect=[x,y,w,h]; f.T=id; f.V=el.value||''; if (el.required) f.required=true; doc.addField(f); };
+        const addCheck = (id) => { const el = clone.querySelector('#'+CSS.escape(id)); if(!el||!CheckCtor) return; let [x,y,w,h]=rectMm(el); const size=Math.min(w,h); const f=new CheckCtor(); f.Rect=[x,y,size,size]; f.T=id; f.V=el.checked?'Yes':'Off'; doc.addField(f); };
+        ['nomeCognome','luogoNascita','dataNascita','cip','servizioPresso','telefono','emailPecRecapito','dataDisdetta','emailPec','luogo','dataDocumento'].forEach(addText);
+        ['all-docId','all-disdetta'].forEach(addCheck);
+        return true;
+      } catch(e){ console.warn('AcroForm non disponibile', e); return false; }
+    }
+
+    async function buildPdfFile(){
+      const JS = getJsPDF(); if (!JS) throw new Error('jsPDF non disponibile');
+      const doc = new JS({ orientation:'p', unit:'mm', format:'a4', compress:true });
+
+      // Clona form e sostituisci la firma con immagine PNG su fondo bianco (nitida in stampa)
+      const clone = form.cloneNode(true);
+      clone.querySelectorAll('.no-print').forEach(n=>n.remove());
+      const sig = clone.querySelector('#signature-pad');
+      if (sig){ const img=document.createElement('img'); img.src = signatureDataURL(); img.alt='Firma'; img.style.width='100%'; img.style.maxHeight='120px'; sig.replaceWith(img); }
+
+      // --- Trasforma input/textarea in blocchi testo ad alta leggibilità ---
+      const inlineIds = new Set(['emailPec','dataDisdetta','dataDisdettaPrecedente']);
+      const toText = (el) => {
+        const inline = inlineIds.has(el.id) || (getComputedStyle(el).display || '').includes('inline');
+        const node = document.createElement(inline ? 'span' : 'div');
+        node.className = inline ? 'print-inline' : 'print-field';
+        let v = (el.value || '').trim();
+        if (el.type === 'date' && v){ const [y,m,d] = v.split('-'); if (y&&m&&d) v = `${d}/${m}/${y}`; }
+        node.textContent = v || '—';
+        if (el.tagName === 'TEXTAREA') node.style.minHeight = '28px';
+        el.replaceWith(node);
+      };
+      clone.querySelectorAll('input[type="text"],input[type="email"],input[type="date"]').forEach(toText);
+      clone.querySelectorAll('textarea').forEach(toText);
+      clone.querySelectorAll('input[type="checkbox"]').forEach(cb=>{ const mark=document.createElement('span'); mark.className='print-inline'; mark.textContent = cb.checked ? '☑' : '☐'; cb.replaceWith(mark); });
+
+      // Staging off-screen per misure reali
+      const staging = document.createElement('div'); staging.style.position='fixed'; staging.style.left='-10000px'; staging.style.top='0'; staging.style.width='210mm'; staging.className='pdf-stage';
+      const wrapper = document.createElement('div'); wrapper.style.width = '194mm'; wrapper.style.boxSizing = 'border-box';
+      wrapper.appendChild(clone); staging.appendChild(wrapper); document.body.appendChild(staging);
+
+      const pxPerMm = staging.getBoundingClientRect().width / 210;
+      const MAX_H = 297 - 16; // area utile in mm (8mm margini)
+      const heightMm = () => wrapper.getBoundingClientRect().height / pxPerMm;
+      clone.classList.add('compact'); if (heightMm() > MAX_H) clone.classList.add('ultra'); if (heightMm() > MAX_H) clone.classList.add('micro');
+
+      if (typeof html2canvas === 'undefined') throw new Error('html2canvas non disponibile');
+      // Calcola scala per ~300 DPI reali sul PDF: scale = (DPI / 25.4) / pxPerMm
+      const targetDpi = (document.getElementById('iosLight')?.checked ? 180 : 300);
+      const scale300 = Math.min(3, Math.max(1, (targetDpi / 25.4) / pxPerMm));
+      const cssW = wrapper.getBoundingClientRect().width;
+      const cssH = wrapper.getBoundingClientRect().height;
+      let h2cScale = scale300;
+      const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      if (iOS) {
+        const MAX_DIM = 3800; // limite sicuro per canvas Safari iOS
+        h2cScale = Math.min(h2cScale, Math.max(1, MAX_DIM / Math.max(cssW, cssH)));
+      }
+      const snap = await html2canvas(wrapper, { scale: h2cScale, backgroundColor: '#FFFFFF', useCORS: true, imageTimeout: 0 });
+
+      // Fit in A4 (una sola pagina) mantenendo proporzioni
+      const wmm = wrapper.getBoundingClientRect().width / pxPerMm; // ~194mm
+      const hmm = wrapper.getBoundingClientRect().height / pxPerMm;
+      const maxW = 194, maxH = 281; // 210-16, 297-16
+      const fitScale = Math.min(maxW / wmm, maxH / hmm, 1);
+      const destW = wmm * fitScale, destH = hmm * fitScale; const x = 8 + (maxW - destW)/2; const y = 8;
+      const imgData = snap.toDataURL('image/png');
+      doc.addImage(imgData, 'PNG', x, y, destW, destH);
+
+      if (document.getElementById('pdfEditable')?.checked){ addAcroFieldsScaled(doc, clone, pxPerMm, fitScale, x, y); }
+      staging.remove();
+
+      const nome = (form.elements.nomeCognome?.value || 'utente').trim();
+      const fname = `revoca_disdetta_${safeFileName(nome)}_${new Date().toISOString().slice(0,10)}.pdf`;
+      const blob = doc.output('blob');
+      const file = (typeof File === 'function') ? new File([blob], fname, { type:'application/pdf' }) : blob;
+      return { file, fname };
+    }
+    window.buildPdfFile = buildPdfFile; // per diagnostica
+
+    // ------- Validazione -------
+    const debugBox = document.getElementById('debugMode'); if (DEBUG) debugBox.checked = true;
+    function ensureValid(){
+      if (debugBox.checked) return true;
+      if (!form.checkValidity()){ form.reportValidity(); return false; }
+      if (!isSignaturePresent()){ alert('Per favore, apponi la firma.'); return false; }
+      return true;
+    }
+
+    // ------- Azioni -------
+    document.getElementById('download-button').addEventListener('click', async (e)=>{
+      if (!ensureValid()) return; const btn=e.currentTarget; btn.disabled=true; statusEl.textContent='Creazione PDF in corso...';
+      try{ const { file, fname } = await buildPdfFile(); const a=document.createElement('a'); a.href=URL.createObjectURL(file); a.download=fname; document.body.appendChild(a); a.click(); a.remove(); statusEl.textContent=`PDF salvato: ${fname}`; }
+      catch(err){ console.error(err); statusEl.textContent='Errore: impossibile salvare il PDF.'; }
+      finally{ btn.disabled=false; }
+    });
+
+    document.getElementById('print-button').addEventListener('click', ()=>{ if (!ensureValid()) return; window.print(); });
+
+    document.getElementById('email-button').addEventListener('click', async ()=>{
+      if (!ensureValid()) return; const btn=document.getElementById('email-button'); btn.disabled=true; statusEl.textContent='Preparazione e-mail in corso...';
+      try{
+        const { file, fname } = await buildPdfFile();
+        const nome = (form.elements.nomeCognome?.value || '').trim();
+        const cip = (form.elements.cip?.value || '').trim();
+        const ente = (form.elements.servizioPresso?.value || '').trim();
+        const emailRec = (form.elements.emailPecRecapito?.value || form.elements.emailPec?.value || '').trim();
+        const luogo = (form.elements.luogo?.value || '').trim();
+        const dataDoc = (form.elements.dataDocumento?.value || new Date().toISOString().slice(0,10));
+        const dataDisd = (form.elements.dataDisdetta?.value || '');
+        const subject = `Revoca disdetta – ${nome || 'Utente'} – CIP ${cip || '-'}`;
+        const body = [
+          'Gentile Segretario Generale,','trasmetto la revoca della disdetta in allegato.','',
+          `Nominativo: ${nome || '-'}`,`CIP: ${cip || '-'}`,`Ente/Reparto: ${ente || '-'}`,
+          `Recapito: ${emailRec || '-'}`,`Data disdetta inviata: ${dataDisd || '-'}`,
+          `Luogo e data documento: ${luogo || '-'}, ${dataDoc || '-'}`
+        ].join('\n');
+        const toVal = (form.elements.destEmail?.value || 'segretariogenerale@simcarabinieri.it').trim();
+        const to = toVal.split(/[;,]+/).map(s=>s.trim()).filter(Boolean).join(',');
+        if (navigator.canShare && navigator.canShare({ files: [file] })){
+          await navigator.share({ title: subject, text: body, files: [file] }); statusEl.textContent='E‑mail condivisa tramite app di sistema.';
+        } else {
+          const a=document.createElement('a'); a.href=URL.createObjectURL(file); a.download=fname; document.body.appendChild(a); a.click(); a.remove();
+          const mailto=`mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body+"\n\n(Allega il PDF scaricato: "+fname+")")}`; setTimeout(()=>{ location.href = mailto; }, 400);
+          statusEl.textContent='PDF scaricato. Si apre il client e‑mail per l’invio.';
+        }
+      } catch(err){ console.error(err); statusEl.textContent='Errore durante la preparazione e‑mail.'; }
+      finally{ btn.disabled=false; }
+    });
+
+    document.getElementById('reset-form').addEventListener('click', ()=>{ try{ localStorage.removeItem('revoca-disdetta-form-v4'); }catch{} form.reset(); clearSignature(); statusEl.textContent='Campi puliti.'; });
+
+    // ------- Diagnostica -------
+    (function(){ const out=document.getElementById('diag-output'); const btn=document.getElementById('run-diagnostics'); if (!out||!btn) return; 
+      window.addEventListener('error', (e)=>{ out.textContent += '\nJS Error: '+e.message; }, true);
+      btn.addEventListener('click', async ()=>{
+        const logs=[]; const snapInk = isSignaturePresent();
+        logs.push('UA: '+navigator.userAgent);
+        logs.push('PointerEvent: '+(typeof PointerEvent!=='undefined'));
+        logs.push('touch-action on canvas: '+getComputedStyle(canvas).touchAction);
+        logs.push('html2canvas loaded: '+(typeof html2canvas!=='undefined'));
+        logs.push('jsPDF loaded: '+(!!getJsPDF()));
+        logs.push('Signature present (flag/pixels): '+snapInk);
+        try{ const sctx = canvas.getContext('2d'); sctx.beginPath(); sctx.moveTo(2,2); sctx.lineTo(80,2); sctx.stroke(); const d=sctx.getImageData(2,2,1,1).data; logs.push('Draw test alpha>0: '+(d[3]>0)); }catch(e){ logs.push('Canvas draw ERR: '+e.message); }
+        out.textContent = logs.join('\n');
+      }); })();
+  })();
+  </script>
+</body>
+</html>
