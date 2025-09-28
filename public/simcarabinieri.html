@@ -3,34 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perché SIM Carabinieri? La Risposta che Cercavi</title>
+    <title>SIM Carabinieri - La Tua Protezione Totale</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=Space+Grotesk:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-blue: #003d82;
-            --primary-red: #8b2635;
-            --accent-gold: #ffd700;
-            --accent-green: #28a745;
+            --primary-red: #dc2626;
+            --accent-gold: #fbbf24;
+            --accent-cyan: #06b6d4;
             --neutral-white: #ffffff;
-            --neutral-black: #0a0a0a;
-            --neutral-gray: #6b7280;
-            --neutral-light: #f1f5f9;
+            --neutral-black: #0f172a;
+            --neutral-gray: #64748b;
             --surface-dark: #1e293b;
+            --surface-glass: rgba(255, 255, 255, 0.1);
             --gradient-primary: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-red) 100%);
-            --gradient-gold: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-            --gradient-hero: linear-gradient(135deg, var(--primary-blue) 0%, #1e4a72 50%, var(--primary-red) 100%);
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-            --shadow-md: 0 8px 25px rgba(0,0,0,0.08);
-            --shadow-lg: 0 25px 50px rgba(0,0,0,0.12);
-            --shadow-xl: 0 35px 80px rgba(0,0,0,0.15);
-            --radius-sm: 12px;
-            --radius-md: 20px;
-            --radius-lg: 32px;
-            --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-spring: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --gradient-cyber: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 50%, #ec4899 100%);
+            --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            --shadow-glow: 0 0 40px rgba(251, 191, 36, 0.3);
+            --shadow-cyber: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
 
         * {
@@ -44,30 +36,87 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Rajdhani', sans-serif;
             line-height: 1.6;
-            color: var(--neutral-black);
-            background: var(--neutral-white);
+            color: var(--neutral-white);
+            background: #0f0f23;
             overflow-x: hidden;
             position: relative;
         }
 
-        /* ===== ENHANCED LOGO WATERMARK ===== */
+        /* ===== ANIMATED BACKGROUND ===== */
+        .cyber-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(251, 191, 36, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(220, 38, 38, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #0f0f23 0%, #1e1b4b 50%, #312e81 100%);
+            animation: bgShift 20s ease-in-out infinite;
+        }
+
+        @keyframes bgShift {
+            0%, 100% { filter: hue-rotate(0deg) brightness(1); }
+            50% { filter: hue-rotate(30deg) brightness(1.1); }
+        }
+
+        /* ===== FLOATING PARTICLES ===== */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* ===== WATERMARK BACKGROUND ===== */
         .watermark {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
+            z-index: -1;
             pointer-events: none;
-            opacity: 0.12;
+            opacity: 0.08;
         }
 
-        .watermark-layer-1 {
+        .watermark-layer {
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             background-image: 
@@ -75,849 +124,288 @@
                 url('https://www.simcarabinieri.com/img/logo_small.png'),
                 url('https://www.simcarabinieri.com/img/logo_small.png'),
                 url('https://www.simcarabinieri.com/img/logo_small.png'),
+                url('https://www.simcarabinieri.com/img/logo_small.png'),
                 url('https://www.simcarabinieri.com/img/logo_small.png');
             background-size: 
-                150px 150px, 
                 120px 120px, 
-                180px 180px, 
+                80px 80px, 
+                150px 150px, 
                 100px 100px, 
-                140px 140px;
+                90px 90px,
+                110px 110px;
             background-position: 
                 15% 25%, 
                 70% 15%, 
-                85% 50%, 
-                30% 70%, 
-                50% 85%;
+                85% 60%, 
+                30% 75%, 
+                50% 40%,
+                20% 80%;
             background-repeat: no-repeat;
-            transform: rotate(-12deg);
-            animation: watermarkFloat1 35s ease-in-out infinite;
-            opacity: 0.6;
+            animation: watermarkFloat 25s ease-in-out infinite;
         }
 
-        .watermark-layer-2 {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                url('https://www.simcarabinieri.com/img/logo_small.png'),
-                url('https://www.simcarabinieri.com/img/logo_small.png'),
-                url('https://www.simcarabinieri.com/img/logo_small.png'),
-                url('https://www.simcarabinieri.com/img/logo_small.png');
-            background-size: 
-                110px 110px, 
-                160px 160px, 
-                90px 90px, 
-                130px 130px;
-            background-position: 
-                45% 20%, 
-                20% 55%, 
-                75% 75%, 
-                60% 40%;
-            background-repeat: no-repeat;
-            transform: rotate(18deg);
-            animation: watermarkFloat2 28s ease-in-out infinite reverse;
-            opacity: 0.4;
-        }
-
-        .watermark-layer-3 {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                url('https://www.simcarabinieri.com/img/logo_small.png'),
-                url('https://www.simcarabinieri.com/img/logo_small.png'),
-                url('https://www.simcarabinieri.com/img/logo_small.png');
-            background-size: 
-                200px 200px, 
-                80px 80px, 
-                125px 125px;
-            background-position: 
-                5% 60%, 
-                90% 25%, 
-                35% 5%;
-            background-repeat: no-repeat;
-            transform: rotate(-25deg);
-            animation: watermarkFloat3 42s ease-in-out infinite;
-            opacity: 0.3;
-        }
-
-        .watermark-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 400px;
-            height: 400px;
-            transform: translate(-50%, -50%) rotate(45deg);
-            background-image: url('https://www.simcarabinieri.com/img/logo_small.png');
-            background-size: 300px 300px;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0.04;
-            animation: watermarkCenterFloat 60s ease-in-out infinite;
-        }
-
-        /* Enhanced animation keyframes */
-        @keyframes watermarkFloat1 {
+        @keyframes watermarkFloat {
             0%, 100% { 
-                transform: rotate(-12deg) translateY(0px) translateX(0px); 
-                opacity: 0.6; 
+                transform: translateY(0px) translateX(0px) rotate(0deg); 
+                opacity: 0.08; 
             }
             25% { 
-                transform: rotate(-8deg) translateY(-15px) translateX(10px); 
-                opacity: 0.8; 
+                transform: translateY(-10px) translateX(5px) rotate(2deg); 
+                opacity: 0.12; 
             }
             50% { 
-                transform: rotate(-15deg) translateY(-5px) translateX(-8px); 
-                opacity: 0.7; 
-            }
-            75% { 
-                transform: rotate(-10deg) translateY(8px) translateX(12px); 
-                opacity: 0.9; 
-            }
-        }
-
-        @keyframes watermarkFloat2 {
-            0%, 100% { 
-                transform: rotate(18deg) translateX(0px) translateY(0px); 
-                opacity: 0.4; 
-            }
-            33% { 
-                transform: rotate(22deg) translateX(20px) translateY(-10px); 
-                opacity: 0.6; 
-            }
-            66% { 
-                transform: rotate(15deg) translateX(-15px) translateY(5px); 
-                opacity: 0.5; 
-            }
-        }
-
-        @keyframes watermarkFloat3 {
-            0%, 100% { 
-                transform: rotate(-25deg) translateY(0px) translateX(0px) scale(1); 
-                opacity: 0.3; 
-            }
-            20% { 
-                transform: rotate(-20deg) translateY(12px) translateX(-8px) scale(1.02); 
-                opacity: 0.5; 
-            }
-            40% { 
-                transform: rotate(-28deg) translateY(-8px) translateX(15px) scale(0.98); 
-                opacity: 0.4; 
-            }
-            60% { 
-                transform: rotate(-22deg) translateY(5px) translateX(-12px) scale(1.01); 
-                opacity: 0.6; 
-            }
-            80% { 
-                transform: rotate(-26deg) translateY(-3px) translateX(8px) scale(0.99); 
-                opacity: 0.35; 
-            }
-        }
-
-        @keyframes watermarkCenterFloat {
-            0%, 100% { 
-                transform: translate(-50%, -50%) rotate(45deg) scale(1); 
-                opacity: 0.04; 
-            }
-            25% { 
-                transform: translate(-50%, -50%) rotate(50deg) scale(1.1); 
+                transform: translateY(-5px) translateX(-8px) rotate(-1deg); 
                 opacity: 0.06; 
             }
-            50% { 
-                transform: translate(-50%, -50%) rotate(40deg) scale(0.9); 
-                opacity: 0.03; 
-            }
             75% { 
-                transform: translate(-50%, -50%) rotate(48deg) scale(1.05); 
-                opacity: 0.05; 
+                transform: translateY(8px) translateX(12px) rotate(1deg); 
+                opacity: 0.10; 
             }
         }
 
-        /* Assicura che tutti i contenuti siano sopra la filigrana */
-        .hero-question,
-        .answer-intro,
-        .departments,
-        .services-value,
-        .final-cta,
-        .footer {
-            position: relative;
-            z-index: 1;
+        /* ===== NAVIGATION ===== */
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--surface-glass);
+            z-index: 1000;
+            transition: all 0.3s ease;
         }
 
-        /* ===== HERO QUESTION SECTION ===== */
-        .hero-question {
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background-image: url('https://www.simcarabinieri.com/img/logo_small.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            border-radius: 4px;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
             min-height: 100vh;
-            background: var(--gradient-hero);
             display: flex;
             align-items: center;
             position: relative;
             overflow: hidden;
+            padding: 6rem 2rem 4rem;
         }
 
-        .hero-question::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(255,215,0,0.1) 0%, transparent 40%),
-                radial-gradient(circle at 80% 20%, rgba(40,167,69,0.05) 0%, transparent 40%),
-                radial-gradient(circle at 40% 40%, rgba(255,255,255,0.05) 0%, transparent 60%);
-            animation: heroPattern 20s ease-in-out infinite;
-        }
-
-        @keyframes heroPattern {
-            0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
-            50% { transform: scale(1.1) rotate(180deg); opacity: 0.8; }
-        }
-
-        .hero-container {
+        .hero-grid {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            background: var(--gradient-cyber);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--neutral-gray);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            background: var(--surface-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
             text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .stat-number {
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--accent-gold);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--neutral-white);
+            margin-top: 0.5rem;
+        }
+
+        .hero-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .central-logo {
+            width: 200px;
+            height: 200px;
+            background-image: url('https://www.simcarabinieri.com/img/logo_small.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            animation: logoPulse 3s ease-in-out infinite;
             position: relative;
             z-index: 2;
         }
 
-        .question-mark {
-            font-size: clamp(8rem, 15vw, 20rem);
-            font-weight: 900;
-            color: rgba(255,215,0,0.1);
+        @keyframes logoPulse {
+            0%, 100% { 
+                transform: scale(1);
+                filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.4));
+            }
+            50% { 
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 40px rgba(251, 191, 36, 0.8));
+            }
+        }
+
+        .logo-glow {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 1;
-            animation: questionFloat 6s ease-in-out infinite;
-        }
-
-        @keyframes questionFloat {
-            0%, 100% { transform: translate(-50%, -50%) rotate(-5deg) scale(1); }
-            50% { transform: translate(-50%, -50%) rotate(5deg) scale(1.05); }
-        }
-
-        .hero-question-text {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(3rem, 8vw, 8rem);
-            font-weight: 900;
-            color: var(--neutral-white);
-            text-shadow: 0 4px 30px rgba(0,0,0,0.5);
-            margin-bottom: 2rem;
-            letter-spacing: -0.02em;
-            line-height: 1.1;
-        }
-
-        .hero-question-text .highlight {
-            background: var(--gradient-gold);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            display: block;
-            margin-top: 1rem;
-        }
-
-        .hero-subtitle {
-            font-size: clamp(1.2rem, 2.5vw, 2rem);
-            color: rgba(255,255,255,0.9);
-            max-width: 800px;
-            margin: 0 auto 2rem;
-            font-weight: 400;
-        }
-
-        .hero-proof {
-            background: rgba(255,215,0,0.15);
-            backdrop-filter: blur(10px);
-            border: 2px solid var(--accent-gold);
-            border-radius: var(--radius-lg);
-            padding: 1.5rem;
-            margin: 2rem auto;
-            max-width: 600px;
-            color: var(--neutral-white);
-        }
-
-        .hero-cta-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 1rem;
-            background: var(--gradient-gold);
-            color: var(--neutral-black);
-            padding: 1.5rem 3rem;
-            border-radius: var(--radius-lg);
-            font-size: 1.2rem;
-            font-weight: 900;
-            text-decoration: none;
-            box-shadow: var(--shadow-xl);
-            transition: var(--transition-spring);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-cta-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .hero-cta-button:hover::before {
-            left: 100%;
-        }
-
-        .hero-cta-button:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 40px 100px rgba(255,215,0,0.4);
-        }
-
-        .scroll-indicator {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            color: var(--neutral-white);
-            font-size: 0.9rem;
-            text-align: center;
-        }
-
-        .scroll-arrow {
-            font-size: 2rem;
-            animation: bounce 2s infinite;
-            display: block;
-            margin-top: 0.5rem;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
-        }
-
-        /* ===== ANSWER INTRO ===== */
-        .answer-intro {
-            padding: 6rem 2rem;
-            background: var(--neutral-white);
-            text-align: center;
-        }
-
-        .answer-intro-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .answer-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 900;
-            color: var(--primary-blue);
-            margin-bottom: 2rem;
-        }
-
-        .answer-lead {
-            font-size: 1.5rem;
-            color: var(--neutral-gray);
-            max-width: 900px;
-            margin: 0 auto 2rem;
-            font-weight: 500;
-        }
-
-        .value-proposition {
-            background: var(--gradient-primary);
-            color: var(--neutral-white);
-            padding: 2rem;
-            border-radius: var(--radius-lg);
-            margin: 3rem auto;
-            max-width: 800px;
-        }
-
-        .value-proposition h3 {
-            font-size: 1.8rem;
-            color: var(--accent-gold);
-            margin-bottom: 1rem;
-        }
-
-        .stats-highlight {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 3rem;
-            margin-top: 4rem;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 2rem;
-            background: linear-gradient(135deg, var(--neutral-light) 0%, rgba(255,255,255,0.8) 100%);
-            border-radius: var(--radius-md);
-            border: 2px solid transparent;
-            transition: var(--transition-smooth);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: var(--gradient-primary);
-            transition: left 0.5s ease;
-            z-index: -1;
-        }
-
-        .stat-item:hover::before {
-            left: 0;
-        }
-
-        .stat-item:hover {
-            color: var(--neutral-white);
-            transform: translateY(-5px);
-        }
-
-        .stat-number {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 3rem;
-            font-weight: 900;
-            color: var(--primary-red);
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-item:hover .stat-number {
-            color: var(--accent-gold);
-        }
-
-        .stat-label {
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        /* ===== DEPARTMENTS SECTION ===== */
-        .departments {
-            padding: 8rem 2rem;
-            background: var(--neutral-white);
-        }
-
-        .departments-container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 5rem;
-        }
-
-        .section-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(2rem, 4vw, 3.5rem);
-            font-weight: 900;
-            color: var(--primary-blue);
-            margin-bottom: 1rem;
-        }
-
-        .section-subtitle {
-            font-size: 1.25rem;
-            color: var(--neutral-gray);
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .departments-intro {
-            background: var(--gradient-primary);
-            color: var(--neutral-white);
-            padding: 2rem;
-            border-radius: var(--radius-lg);
-            margin: 3rem auto;
-            max-width: 800px;
-            text-align: center;
-        }
-
-        .departments-intro h3 {
-            font-size: 1.8rem;
-            color: var(--accent-gold);
-            margin-bottom: 1rem;
-        }
-
-        .departments-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-        }
-
-        .department-card {
-            background: var(--neutral-white);
-            border-radius: var(--radius-md);
-            padding: 2.5rem;
-            box-shadow: var(--shadow-md);
-            transition: var(--transition-smooth);
-            border: 2px solid transparent;
-            position: relative;
-            overflow: hidden;
-            opacity: 1;
-        }
-
-        .department-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient-primary);
-        }
-
-        .department-card::after {
-            content: '';
-            position: absolute;
-            top: -100%;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--gradient-primary);
-            transition: top 0.4s ease;
-            z-index: -1;
-        }
-
-        .department-card:hover::after {
-            top: 0;
-        }
-
-        .department-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: var(--shadow-xl);
-            border-color: var(--primary-blue);
-            color: var(--neutral-white);
-        }
-
-        .department-card:hover .department-name,
-        .department-card:hover .department-benefit {
-            color: var(--neutral-white);
-        }
-
-        .department-icon {
-            font-size: 3rem;
-            text-align: center;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .department-name {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--primary-blue);
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-
-        .department-benefit {
-            font-size: 0.95rem;
-            color: var(--neutral-gray);
-            text-align: center;
-            margin-bottom: 1rem;
-            line-height: 1.5;
-        }
-
-        .departments-bottom {
-            text-align: center;
-            margin-top: 4rem;
-            padding: 3rem;
-            background: linear-gradient(135deg, var(--neutral-light) 0%, rgba(255,255,255,0.9) 100%);
-            border-radius: var(--radius-lg);
-        }
-
-        .departments-bottom h3 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--primary-blue);
-            margin-bottom: 1rem;
-        }
-
-        .departments-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .dept-stat {
-            text-align: center;
-        }
-
-        .dept-stat-number {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--primary-red);
-            display: block;
-        }
-
-        .dept-stat-label {
-            font-size: 0.9rem;
-            color: var(--neutral-gray);
-            margin-top: 0.5rem;
-        }
-
-        /* ===== SERVICES VALUE SECTION ===== */
-        .services-value {
-            padding: 8rem 2rem;
-            background: var(--gradient-hero);
-            color: var(--neutral-white);
-        }
-
-        .services-container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .services-value .section-title {
-            color: var(--neutral-white);
-        }
-
-        .services-value .section-subtitle {
-            color: var(--neutral-white);
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 3rem;
-            margin-top: 4rem;
-        }
-
-        .service-card {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: var(--radius-lg);
-            padding: 3rem;
-            color: var(--neutral-black);
-            position: relative;
-            overflow: hidden;
-            transition: var(--transition-smooth);
-        }
-
-        .service-card::after {
-            content: '';
-            position: absolute;
-            top: -100%;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--gradient-primary);
-            transition: top 0.5s ease;
-            z-index: -1;
-        }
-
-        .service-card:hover::after {
-            top: 0;
-        }
-
-        .service-card:hover {
-            transform: translateY(-10px);
-            color: var(--neutral-white);
-        }
-
-        .service-card:hover .service-title,
-        .service-card:hover .service-description,
-        .service-card:hover .service-features li {
-            color: var(--neutral-white);
-        }
-
-        .service-icon {
-            font-size: 4rem;
-            text-align: center;
-            margin-bottom: 2rem;
-            display: block;
-        }
-
-        .service-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-blue);
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .service-description {
-            color: var(--neutral-gray);
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .service-features {
-            list-style: none;
-        }
-
-        .service-features li {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            color: var(--neutral-black);
-        }
-
-        .service-features li::before {
-            content: '✓';
-            background: var(--gradient-primary);
-            color: var(--neutral-white);
-            width: 24px;
-            height: 24px;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.2) 0%, transparent 70%);
             border-radius: 50%;
+            animation: glowPulse 4s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.3;
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.6;
+            }
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .floating-icon {
+            position: absolute;
+            background: var(--surface-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            font-size: 0.8rem;
-            flex-shrink: 0;
+            font-size: 1.5rem;
+            animation: float-around 8s ease-in-out infinite;
         }
 
-        .video-callout {
-            background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
-            border: 2px solid var(--primary-blue);
-            border-radius: var(--radius-md);
-            padding: 1.5rem;
-            margin-top: 1.5rem;
-            text-align: center;
+        .floating-icon:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
         }
 
-        .video-callout a {
-            color: var(--primary-red);
-            text-decoration: none;
-            font-weight: 700;
+        .floating-icon:nth-child(2) {
+            top: 20%;
+            right: 10%;
+            animation-delay: 2s;
         }
 
-        /* ===== FINAL CTA SECTION ===== */
-        .final-cta {
-            padding: 8rem 2rem;
-            background: var(--gradient-hero);
-            text-align: center;
-            color: var(--neutral-white);
+        .floating-icon:nth-child(3) {
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
         }
 
-        .cta-container {
-            max-width: 900px;
-            margin: 0 auto;
+        .floating-icon:nth-child(4) {
+            bottom: 10%;
+            right: 20%;
+            animation-delay: 6s;
         }
 
-        .cta-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 900;
-            margin-bottom: 2rem;
+        @keyframes float-around {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
         }
 
-        .cta-summary {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: var(--radius-lg);
-            padding: 3rem;
-            margin: 3rem 0;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .cta-summary-title {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--accent-gold);
-            margin-bottom: 1rem;
-        }
-
-        .cta-summary-text {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-
-        /* ===== HIGHLIGHT STYLES ===== */
-        .highlight-number {
-            background: var(--gradient-gold);
-            color: var(--neutral-black);
-            padding: 0.2rem 0.6rem;
-            border-radius: 8px;
-            font-weight: 900;
-            font-size: 1.3em;
-            text-shadow: none;
-            box-shadow: 0 2px 8px rgba(255,215,0,0.3);
-            display: inline-block;
-            margin: 0 0.1rem;
-            animation: numberGlow 2s ease-in-out infinite alternate;
-        }
-
-        .discount-highlight {
-            background: linear-gradient(135deg, #ff4757, #ff6b7a);
-            color: var(--neutral-white);
-            padding: 0.1rem 0.4rem;
-            border-radius: 6px;
-            font-weight: 800;
-            font-size: 1.1em;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-            box-shadow: 0 2px 6px rgba(255,71,87,0.3);
-            display: inline-block;
-            margin: 0 0.1rem;
-            animation: discountPulse 1.5s ease-in-out infinite alternate;
-        }
-
-        @keyframes numberGlow {
-            0% { 
-                box-shadow: 0 2px 8px rgba(255,215,0,0.3);
-                transform: scale(1);
-            }
-            100% { 
-                box-shadow: 0 4px 16px rgba(255,215,0,0.6);
-                transform: scale(1.02);
-            }
-        }
-
-        @keyframes discountPulse {
-            0% { 
-                box-shadow: 0 2px 6px rgba(255,71,87,0.3);
-                transform: scale(1);
-            }
-            100% { 
-                box-shadow: 0 4px 12px rgba(255,71,87,0.6);
-                transform: scale(1.05);
-            }
-        }
-
-        .multiple-cta {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 3rem;
-        }
-
+        /* ===== CTA BUTTON ===== */
         .cta-button {
             display: inline-flex;
             align-items: center;
             gap: 1rem;
             background: var(--gradient-gold);
             color: var(--neutral-black);
-            padding: 2rem 4rem;
-            border-radius: var(--radius-lg);
-            font-size: 1.3rem;
-            font-weight: 900;
+            padding: 1.5rem 3rem;
+            border-radius: 50px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
             text-decoration: none;
-            box-shadow: var(--shadow-xl);
-            transition: var(--transition-spring);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            box-shadow: var(--shadow-cyber);
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
@@ -938,41 +426,330 @@
         }
 
         .cta-button:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 40px 100px rgba(255,215,0,0.4);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(251, 191, 36, 0.4);
         }
 
-        /* ===== FLOATING CTA ===== */
-        .floating-cta {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
+        /* ===== DEPARTMENTS SECTION ===== */
+        .departments {
+            padding: 8rem 2rem;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: var(--gradient-cyber);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: 1.3rem;
+            color: var(--neutral-gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .departments-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .dept-card {
+            background: var(--surface-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dept-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-gold);
+        }
+
+        .dept-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-glow);
+            border-color: var(--accent-gold);
+        }
+
+        .dept-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+            text-align: center;
+        }
+
+        .dept-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .dept-description {
+            color: var(--neutral-gray);
+            text-align: center;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        /* ===== SERVICES SECTION ===== */
+        .services {
+            padding: 8rem 2rem;
+            background: linear-gradient(135deg, rgba(15, 15, 35, 0.8) 0%, rgba(30, 27, 75, 0.8) 100%);
+        }
+
+        .services-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+        }
+
+        .service-card {
+            background: var(--surface-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .service-icon {
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+            display: block;
+            text-align: center;
+        }
+
+        .service-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .service-description {
+            color: var(--neutral-gray);
+            margin-bottom: 2rem;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .service-features {
+            list-style: none;
+        }
+
+        .service-features li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.8rem;
+            color: var(--neutral-white);
+            font-size: 0.95rem;
+        }
+
+        .service-features li::before {
+            content: '✓';
             background: var(--gradient-gold);
             color: var(--neutral-black);
-            padding: 1rem 2rem;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-xl);
-            z-index: 1000;
-            text-decoration: none;
-            font-weight: 700;
-            transition: var(--transition-smooth);
-            opacity: 0;
-            transform: translateY(100px);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            flex-shrink: 0;
         }
 
-        .floating-cta:hover {
-            transform: translateY(-5px) scale(1.05);
+        .highlight-value {
+            background: var(--gradient-gold);
+            color: var(--neutral-black);
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+        }
+
+        /* ===== PROOF SECTION ===== */
+        .proof {
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .proof-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .proof-card {
+            background: var(--surface-glass);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--accent-gold);
+            border-radius: 24px;
+            padding: 3rem;
+            position: relative;
+        }
+
+        .proof-card::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: var(--gradient-gold);
+            border-radius: 24px;
+            z-index: -1;
+            opacity: 0.3;
+            animation: borderGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes borderGlow {
+            0% { opacity: 0.3; transform: scale(1); }
+            100% { opacity: 0.6; transform: scale(1.02); }
+        }
+
+        .proof-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--accent-gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .proof-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: var(--neutral-white);
+        }
+
+        .proof-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .proof-stat {
+            text-align: center;
+        }
+
+        .proof-stat-number {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--accent-gold);
+            display: block;
+        }
+
+        .proof-stat-label {
+            color: var(--neutral-white);
+            margin-top: 0.5rem;
+        }
+
+        /* ===== FINAL CTA ===== */
+        .final-cta {
+            padding: 8rem 2rem;
+            text-align: center;
+            background: var(--gradient-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .final-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 30% 70%, rgba(251, 191, 36, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+            animation: ctaPattern 15s ease-in-out infinite;
+        }
+
+        @keyframes ctaPattern {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 2rem;
+        }
+
+        .cta-summary {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin: 3rem 0;
+            font-size: 1.3rem;
+            line-height: 1.6;
+        }
+
+        .value-highlight {
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            color: var(--accent-gold);
+            font-size: 1.4em;
         }
 
         /* ===== FOOTER ===== */
         .footer {
             background: var(--surface-dark);
-            color: var(--neutral-white);
             padding: 4rem 2rem 2rem;
             text-align: center;
         }
 
-        .footer-container {
+        .footer-content {
             max-width: 800px;
             margin: 0 auto;
         }
@@ -985,23 +762,34 @@
             margin-bottom: 1rem;
         }
 
+        .footer-logo-icon {
+            width: 50px;
+            height: 50px;
+            background-image: url('https://www.simcarabinieri.com/img/logo_small.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
         .footer-logo-text {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2.5rem;
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
             font-weight: 900;
             color: var(--accent-gold);
         }
 
         .footer-tagline {
+            font-size: 1.1rem;
+            color: var(--neutral-gray);
+            margin-bottom: 2rem;
             font-style: italic;
-            font-size: 1.2rem;
-            opacity: 0.8;
-            margin-bottom: 3rem;
         }
 
         .footer-contact {
-            background: rgba(255,255,255,0.05);
-            border-radius: var(--radius-md);
+            background: var(--surface-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
             padding: 2rem;
             margin-bottom: 2rem;
         }
@@ -1017,7 +805,7 @@
             color: var(--accent-gold);
             text-decoration: none;
             font-weight: 500;
-            transition: var(--transition-fast);
+            transition: all 0.3s ease;
         }
 
         .footer-links a:hover {
@@ -1026,585 +814,707 @@
         }
 
         /* ===== RESPONSIVE DESIGN - MOBILE FIRST ===== */
-        @media (max-width: 768px) {
-            /* Hero Section Mobile Optimization */
-            .hero-question {
-                min-height: 100vh;
-                padding: 1rem;
+        
+        /* Extra Large Screens */
+        @media (min-width: 1400px) {
+            .hero-grid {
+                max-width: 1600px;
+                gap: 6rem;
             }
             
-            .hero-container {
-                padding: 0 1rem;
+            .central-logo {
+                width: 250px;
+                height: 250px;
             }
             
-            .hero-question-text {
-                font-size: clamp(2.5rem, 12vw, 4rem);
-                line-height: 1.2;
-                margin-bottom: 1.5rem;
+            .logo-glow {
+                width: 300px;
+                height: 300px;
+            }
+        }
+
+        /* Large Tablets and Small Desktops */
+        @media (max-width: 1024px) {
+            .hero-grid {
+                gap: 3rem;
             }
             
-            .hero-subtitle {
-                font-size: clamp(1rem, 4vw, 1.4rem);
-                margin-bottom: 1.5rem;
-            }
-            
-            .hero-proof {
-                padding: 1.2rem;
-                margin: 1.5rem auto;
-                font-size: 0.9rem;
-                max-width: 95%;
-            }
-            
-            .hero-cta-button {
-                padding: 1.2rem 2rem;
-                font-size: 1rem;
-                margin-top: 1.5rem;
-                width: 90%;
-                max-width: 300px;
-                text-align: center;
-                justify-content: center;
-            }
-            
-            .question-mark {
-                font-size: clamp(6rem, 20vw, 12rem);
-                opacity: 0.05;
-            }
-            
-            /* Sections Mobile Padding */
-            .answer-intro { 
-                padding: 3rem 1rem; 
-            }
-            
-            .departments { 
-                padding: 3rem 1rem; 
-            }
-            
-            .services-value { 
-                padding: 3rem 1rem; 
-            }
-            
-            .final-cta { 
-                padding: 3rem 1rem; 
-            }
-            
-            /* Typography Mobile */
-            .answer-title,
-            .section-title,
-            .cta-title {
-                font-size: clamp(1.8rem, 8vw, 2.5rem);
-                margin-bottom: 1.5rem;
-                line-height: 1.3;
-            }
-            
-            .answer-lead,
-            .section-subtitle {
-                font-size: 1.1rem;
-                line-height: 1.6;
-                margin-bottom: 1.5rem;
-            }
-            
-            /* Stats Mobile Layout */
-            .stats-highlight { 
-                grid-template-columns: 1fr 1fr; 
-                gap: 1rem; 
-                margin-top: 2rem;
-            }
-            
-            .stat-item {
-                padding: 1.5rem 1rem;
-            }
-            
-            .stat-number {
-                font-size: 2rem;
-            }
-            
-            .stat-label {
-                font-size: 0.9rem;
-            }
-            
-            /* Services Mobile Grid */
-            .services-grid { 
-                grid-template-columns: 1fr; 
-                gap: 2rem;
-                margin-top: 2rem;
-            }
-            
-            .service-card {
-                padding: 2rem 1.5rem;
-            }
-            
-            .service-icon {
-                font-size: 3rem;
-                margin-bottom: 1.5rem;
-            }
-            
-            .service-title {
-                font-size: 1.3rem;
-                margin-bottom: 1rem;
-            }
-            
-            .service-description {
-                font-size: 1rem;
-                margin-bottom: 1.5rem;
-            }
-            
-            .service-features li {
-                font-size: 0.95rem;
-                margin-bottom: 0.8rem;
-            }
-            
-            /* Departments Mobile Grid */
-            .departments-grid { 
-                grid-template-columns: 1fr; 
+            .departments-grid,
+            .services-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
                 gap: 1.5rem;
             }
             
-            .department-card {
+            .service-card,
+            .dept-card {
                 padding: 2rem 1.5rem;
             }
             
-            .department-icon {
-                font-size: 2.5rem;
-                margin-bottom: 1rem;
+            .floating-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Tablets */
+        @media (max-width: 768px) {
+            .nav {
+                padding: 0.8rem 1rem;
             }
             
-            .department-name {
-                font-size: 1.1rem;
-                margin-bottom: 0.8rem;
-            }
-            
-            .department-benefit {
-                font-size: 0.9rem;
-                line-height: 1.4;
-            }
-            
-            /* CTA Mobile */
-            .multiple-cta {
+            .nav-content {
                 flex-direction: column;
-                align-items: center;
                 gap: 1rem;
             }
             
-            .cta-button { 
-                padding: 1.5rem 2.5rem; 
-                font-size: 1.1rem;
-                width: 90%;
-                max-width: 320px;
-                text-align: center;
-                justify-content: center;
+            .logo {
+                font-size: 1.2rem;
             }
             
-            .cta-summary {
-                padding: 2rem 1.5rem;
+            .logo-icon {
+                width: 35px;
+                height: 35px;
+            }
+
+            .hero {
+                padding: 5rem 1rem 3rem;
+                min-height: auto;
+            }
+            
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .hero-content h1 {
+                font-size: clamp(2rem, 8vw, 3rem);
+                margin-bottom: 1.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .hero-stats {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.8rem;
                 margin: 2rem 0;
             }
-            
-            .cta-summary-title {
+
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .stat-number {
                 font-size: 1.5rem;
+            }
+
+            .stat-label {
+                font-size: 0.8rem;
+            }
+
+            .logo-container {
+                width: 200px;
+                height: 200px;
+            }
+
+            .central-logo {
+                width: 150px;
+                height: 150px;
+            }
+
+            .logo-glow {
+                width: 180px;
+                height: 180px;
+            }
+
+            .floating-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .cta-button {
+                padding: 1.2rem 2rem;
+                font-size: 1rem;
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            /* Sections */
+            .departments,
+            .services,
+            .proof,
+            .final-cta {
+                padding: 4rem 1rem;
+            }
+
+            .section-title {
+                font-size: clamp(1.8rem, 6vw, 2.5rem);
                 margin-bottom: 1rem;
             }
-            
-            .cta-summary-text {
-                font-size: 1rem;
-                line-height: 1.6;
-            }
-            
-            /* Floating CTA Mobile */
-            .floating-cta {
-                bottom: 15px;
-                right: 15px;
-                left: 15px;
-                text-align: center;
-                padding: 1rem 1.5rem;
-                font-size: 1rem;
-                border-radius: 15px;
-            }
-            
-            /* Footer Mobile */
-            .footer {
-                padding: 3rem 1rem 2rem;
-            }
-            
-            .footer-logo-text {
-                font-size: 2rem;
-            }
-            
-            .footer-tagline {
+
+            .section-subtitle {
                 font-size: 1rem;
                 margin-bottom: 2rem;
             }
-            
+
+            .departments-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .dept-card {
+                padding: 1.5rem;
+            }
+
+            .dept-icon {
+                font-size: 2rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .dept-name {
+                font-size: 1rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .dept-description {
+                font-size: 0.9rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .service-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .service-icon {
+                font-size: 2.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .service-title {
+                font-size: 1.2rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .service-description {
+                font-size: 0.95rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .service-features li {
+                font-size: 0.9rem;
+                margin-bottom: 0.6rem;
+            }
+
+            .proof-card {
+                padding: 2rem 1.5rem;
+                margin: 2rem 0;
+            }
+
+            .proof-title {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .proof-text {
+                font-size: 1rem;
+                line-height: 1.5;
+            }
+
+            .proof-stats {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1rem;
+                margin-top: 2rem;
+            }
+
+            .proof-stat-number {
+                font-size: 1.8rem;
+            }
+
+            .proof-stat-label {
+                font-size: 0.8rem;
+            }
+
+            .cta-title {
+                font-size: clamp(2rem, 6vw, 2.8rem);
+                margin-bottom: 1.5rem;
+            }
+
+            .cta-summary {
+                padding: 1.5rem;
+                margin: 2rem 0;
+                font-size: 1rem;
+                line-height: 1.5;
+            }
+
+            .value-highlight {
+                font-size: 1.2em;
+            }
+
+            .footer {
+                padding: 3rem 1rem 2rem;
+            }
+
+            .footer-logo-text {
+                font-size: 1.5rem;
+            }
+
+            .footer-logo-icon {
+                width: 40px;
+                height: 40px;
+            }
+
+            .footer-tagline {
+                font-size: 0.95rem;
+                margin-bottom: 1.5rem;
+            }
+
             .footer-contact {
                 padding: 1.5rem;
                 margin-bottom: 1.5rem;
+                font-size: 0.9rem;
             }
-            
+
             .footer-links {
                 flex-direction: column;
                 gap: 1rem;
                 align-items: center;
             }
-            
-            /* Highlight Numbers Mobile */
-            .highlight-number {
-                padding: 0.15rem 0.4rem;
-                font-size: 1.2em;
-                margin: 0 0.05rem;
-                border-radius: 6px;
-            }
-            
-            .discount-highlight {
-                padding: 0.1rem 0.3rem;
-                font-size: 1.05em;
-                border-radius: 4px;
-            }
-            
-            /* Value Proposition Mobile */
-            .value-proposition {
-                padding: 1.5rem;
-                margin: 2rem auto;
-                max-width: 95%;
-            }
-            
-            .value-proposition h3 {
-                font-size: 1.4rem;
-                margin-bottom: 1rem;
-            }
-            
-            .value-proposition p {
-                font-size: 0.95rem;
-                line-height: 1.5;
-            }
-            
-            /* Departments Intro Mobile */
-            .departments-intro {
-                padding: 1.5rem;
-                margin: 2rem auto;
-                max-width: 95%;
-            }
-            
-            .departments-intro h3 {
-                font-size: 1.4rem;
-                margin-bottom: 1rem;
-            }
-            
-            .departments-intro p {
-                font-size: 0.95rem;
-                line-height: 1.5;
-            }
-            
-            /* Departments Bottom Mobile */
-            .departments-bottom {
-                padding: 2rem 1.5rem;
-                margin-top: 2rem;
-            }
-            
-            .departments-bottom h3 {
-                font-size: 1.5rem;
-                margin-bottom: 1rem;
-            }
-            
-            .departments-stats {
-                grid-template-columns: 1fr 1fr;
-                gap: 1.5rem;
-                margin-top: 1.5rem;
-            }
-            
-            .dept-stat-number {
-                font-size: 2rem;
-            }
-            
-            .dept-stat-label {
-                font-size: 0.85rem;
-                margin-top: 0.3rem;
-            }
-            
-            /* Video Callout Mobile */
-            .video-callout {
-                padding: 1rem;
-                margin-top: 1rem;
-                font-size: 0.9rem;
-            }
-            
-            /* Scroll Indicator Mobile */
-            .scroll-indicator {
-                bottom: 1.5rem;
-                font-size: 0.8rem;
-            }
-            
-            .scroll-arrow {
-                font-size: 1.5rem;
-                margin-top: 0.3rem;
-            }
-
-            /* Adjustments for mobile watermark */
-            .watermark-layer-1 {
-                background-size: 
-                    100px 100px, 
-                    80px 80px, 
-                    120px 120px, 
-                    70px 70px, 
-                    90px 90px;
-                opacity: 0.4;
-            }
-            
-            .watermark-layer-2 {
-                background-size: 
-                    80px 80px, 
-                    110px 110px, 
-                    60px 60px, 
-                    85px 85px;
-                opacity: 0.3;
-            }
-            
-            .watermark-layer-3 {
-                background-size: 
-                    140px 140px, 
-                    50px 50px, 
-                    75px 75px;
-                opacity: 0.2;
-            }
-            
-            .watermark-center {
-                width: 250px;
-                height: 250px;
-                background-size: 200px 200px;
-                opacity: 0.03;
-            }
         }
 
+        /* Mobile Phones */
         @media (max-width: 480px) {
-            /* Extra Small Mobile Optimization */
-            .hero-question-text {
-                font-size: clamp(2rem, 10vw, 3rem);
-                letter-spacing: -0.01em;
+            .nav {
+                padding: 0.5rem 0.8rem;
             }
             
-            .hero-subtitle {
-                font-size: clamp(0.9rem, 3.5vw, 1.2rem);
-            }
-            
-            .hero-proof {
-                padding: 1rem;
-                font-size: 0.85rem;
-            }
-            
-            .hero-cta-button {
-                padding: 1rem 1.5rem;
-                font-size: 0.95rem;
-                width: 95%;
-            }
-            
-            .service-card { 
-                padding: 1.5rem 1rem; 
-            }
-            
-            .department-card {
-                padding: 1.5rem 1rem;
-            }
-            
-            .cta-button { 
-                padding: 1.2rem 2rem; 
+            .logo {
                 font-size: 1rem;
-                width: 95%;
             }
             
-            .cta-summary {
-                padding: 1.5rem 1rem;
+            .logo-icon {
+                width: 30px;
+                height: 30px;
             }
-            
-            .cta-summary-title {
+
+            .hero {
+                padding: 4rem 0.8rem 2rem;
+            }
+
+            .hero-content h1 {
+                font-size: clamp(1.8rem, 10vw, 2.5rem);
+                line-height: 1.1;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+                margin: 1.5rem 0;
+            }
+
+            .stat-card {
+                padding: 0.8rem;
+            }
+
+            .stat-number {
                 font-size: 1.3rem;
             }
-            
-            .cta-summary-text {
-                font-size: 0.95rem;
+
+            .logo-container {
+                width: 150px;
+                height: 150px;
             }
-            
-            .stats-highlight {
-                grid-template-columns: 1fr;
-                gap: 1rem;
+
+            .central-logo {
+                width: 120px;
+                height: 120px;
             }
-            
-            .departments-stats {
-                grid-template-columns: 1fr;
-                gap: 1rem;
+
+            .logo-glow {
+                width: 140px;
+                height: 140px;
             }
-            
-            .floating-cta {
-                bottom: 10px;
-                right: 10px;
-                left: 10px;
-                padding: 0.8rem 1rem;
+
+            .floating-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+            }
+
+            .cta-button {
+                padding: 1rem 1.5rem;
+                font-size: 0.9rem;
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .departments,
+            .services,
+            .proof,
+            .final-cta {
+                padding: 3rem 0.8rem;
+            }
+
+            .section-title {
+                font-size: clamp(1.5rem, 8vw, 2rem);
+                line-height: 1.2;
+            }
+
+            .section-subtitle {
                 font-size: 0.9rem;
             }
-            
-            /* Further mobile watermark adjustments */
-            .watermark-layer-1 {
+
+            .dept-card,
+            .service-card {
+                padding: 1.2rem 1rem;
+            }
+
+            .dept-icon,
+            .service-icon {
+                font-size: 1.8rem;
+                margin-bottom: 0.6rem;
+            }
+
+            .dept-name,
+            .service-title {
+                font-size: 0.95rem;
+                margin-bottom: 0.6rem;
+            }
+
+            .dept-description,
+            .service-description {
+                font-size: 0.85rem;
+                line-height: 1.4;
+            }
+
+            .service-features li {
+                font-size: 0.8rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .proof-card {
+                padding: 1.5rem 1rem;
+            }
+
+            .proof-title {
+                font-size: 1.3rem;
+            }
+
+            .proof-text {
+                font-size: 0.9rem;
+            }
+
+            .proof-stats {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .proof-stat-number {
+                font-size: 1.5rem;
+            }
+
+            .cta-title {
+                font-size: clamp(1.8rem, 8vw, 2.2rem);
+            }
+
+            .cta-summary {
+                padding: 1.2rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .value-highlight {
+                font-size: 1.1em;
+            }
+
+            .footer-logo {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .footer-logo-text {
+                font-size: 1.2rem;
+            }
+
+            .footer-logo-icon {
+                width: 35px;
+                height: 35px;
+            }
+
+            .footer-tagline {
+                font-size: 0.85rem;
+            }
+
+            .footer-contact {
+                padding: 1rem;
+                font-size: 0.8rem;
+            }
+
+            /* Watermark adjustments for mobile */
+            .watermark-layer {
                 background-size: 
                     80px 80px, 
                     60px 60px, 
                     100px 100px, 
-                    50px 50px, 
-                    70px 70px;
-                opacity: 0.3;
+                    70px 70px, 
+                    65px 65px,
+                    75px 75px;
+                opacity: 0.06;
             }
-            
-            .watermark-layer-2 {
+        }
+
+        /* Extra Small Phones */
+        @media (max-width: 360px) {
+            .hero-content h1 {
+                font-size: clamp(1.5rem, 12vw, 2rem);
+            }
+
+            .section-title {
+                font-size: clamp(1.3rem, 10vw, 1.8rem);
+            }
+
+            .logo-container {
+                width: 120px;
+                height: 120px;
+            }
+
+            .central-logo {
+                width: 100px;
+                height: 100px;
+            }
+
+            .logo-glow {
+                width: 120px;
+                height: 120px;
+            }
+
+            .cta-button {
+                padding: 0.8rem 1.2rem;
+                font-size: 0.85rem;
+            }
+
+            .dept-card,
+            .service-card {
+                padding: 1rem 0.8rem;
+            }
+
+            .watermark-layer {
                 background-size: 
                     60px 60px, 
-                    90px 90px, 
                     45px 45px, 
-                    65px 65px;
-                opacity: 0.2;
-            }
-            
-            .watermark-layer-3 {
-                background-size: 
-                    110px 110px, 
-                    40px 40px, 
-                    55px 55px;
-                opacity: 0.15;
-            }
-            
-            .watermark-center {
-                width: 180px;
-                height: 180px;
-                background-size: 150px 150px;
-                opacity: 0.02;
+                    75px 75px, 
+                    55px 55px, 
+                    50px 50px,
+                    60px 60px;
+                opacity: 0.04;
             }
         }
 
-        /* ===== TOUCH INTERACTIONS ===== */
+        /* Landscape Mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .hero {
+                padding: 2rem 1rem;
+                min-height: 100vh;
+            }
+
+            .hero-grid {
+                gap: 1.5rem;
+            }
+
+            .hero-content h1 {
+                font-size: clamp(1.8rem, 6vw, 2.5rem);
+                margin-bottom: 1rem;
+            }
+
+            .hero-subtitle {
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+            }
+
+            .hero-stats {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.5rem;
+                margin: 1rem 0;
+            }
+
+            .logo-container {
+                width: 120px;
+                height: 120px;
+            }
+
+            .central-logo {
+                width: 100px;
+                height: 100px;
+            }
+
+            .floating-icon {
+                width: 25px;
+                height: 25px;
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Touch-friendly interactions */
         @media (hover: none) and (pointer: coarse) {
-            .department-card:hover,
+            .dept-card,
+            .service-card,
+            .stat-card {
+                transition: transform 0.2s ease;
+            }
+
+            .dept-card:hover,
             .service-card:hover,
-            .stat-item:hover {
+            .stat-card:hover {
                 transform: none;
             }
-            
-            .department-card:active,
+
+            .dept-card:active,
             .service-card:active {
-                transform: translateY(-3px) scale(1.01);
-            }
-            
-            .cta-button:active,
-            .hero-cta-button:active {
                 transform: translateY(-2px) scale(1.02);
             }
-        }
 
-        /* ===== LANDSCAPE MOBILE ===== */
-        @media (max-width: 768px) and (orientation: landscape) {
-            .hero-question {
-                min-height: 100vh;
+            .cta-button:hover {
+                transform: none;
+            }
+
+            .cta-button:active {
+                transform: scale(0.98);
+            }
+
+            /* Larger touch targets for mobile */
+            .cta-button {
+                min-height: 48px;
+                padding: 1.2rem 2rem;
+            }
+
+            .footer-links a {
                 padding: 0.5rem;
-            }
-            
-            .hero-question-text {
-                font-size: clamp(2rem, 8vw, 3rem);
-                margin-bottom: 1rem;
-            }
-            
-            .hero-subtitle {
-                font-size: clamp(0.9rem, 2.5vw, 1.2rem);
-                margin-bottom: 1rem;
-            }
-            
-            .hero-proof {
-                margin: 1rem auto;
-                padding: 1rem;
-            }
-            
-            .hero-cta-button {
-                margin-top: 1rem;
-                padding: 1rem 2rem;
-            }
-            
-            .scroll-indicator {
-                bottom: 1rem;
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
         }
 
-        /* ===== ANIMATION UTILITY CLASSES ===== */
-        .pulse {
-            animation: pulse 2s infinite;
+        /* High DPI displays */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .central-logo,
+            .logo-icon,
+            .footer-logo-icon {
+                image-rendering: -webkit-optimize-contrast;
+                image-rendering: crisp-edges;
+            }
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        /* Reduced motion for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .particles,
+            .watermark {
+                display: none;
+            }
+        }
+
+        /* ===== SCROLLBAR STYLING ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--surface-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-gold);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-gold);
         }
     </style>
 </head>
 <body>
-    <!-- Enhanced Logo Watermark -->
+    <!-- Animated Background -->
+    <div class="cyber-bg"></div>
+    
+    <!-- Watermark Background -->
     <div class="watermark">
-        <div class="watermark-layer-1"></div>
-        <div class="watermark-layer-2"></div>
-        <div class="watermark-layer-3"></div>
-        <div class="watermark-center"></div>
+        <div class="watermark-layer"></div>
     </div>
     
-    <!-- Hero Question Section -->
-    <section class="hero-question">
-        <div class="question-mark">?</div>
-        <div class="hero-container">
-            <h1 class="hero-question-text">
-                PERCHÉ
-                <span class="highlight">SIM CARABINIERI</span>
-            </h1>
-            <p class="hero-subtitle">
-                La domanda che ogni Carabiniere si pone. Ecco la risposta completa che stavi cercando.
-            </p>
-            <div class="hero-proof">
-                <strong>🎯 FATTO CONCRETO:</strong> I nostri +15.000 iscritti hanno accesso a servizi che normalmente costerebbero oltre €800 all'anno. 
-                Tu quanto stai perdendo in protezione ogni giorno che rimandi?
-            </div>
-            <a href="https://www.simcarabinieri.com/iscrizione.php" class="hero-cta-button pulse">
-                💡 Scopri Subito Perché
-            </a>
-        </div>
-        <div class="scroll-indicator">
-            <div>Scorri per scoprire</div>
-            <div class="scroll-arrow">↓</div>
-        </div>
-    </section>
+    <!-- Floating Particles -->
+    <div class="particles" id="particles"></div>
 
-    <!-- Answer Introduction -->
-    <section class="answer-intro">
-        <div class="answer-intro-container">
-            <h2 class="answer-title">LA RISPOSTA È NELLA PROTEZIONE</h2>
-            <p class="answer-lead">
-                SIM Carabinieri non è solo un sindacato: è il tuo scudo professionale completo. 
-                17 dipartimenti specializzati che ti proteggono in ogni momento della tua carriera.
-            </p>
-            
-            <div class="value-proposition">
-                <h3>🛡️ Protezione Totale in 3 Pilastri</h3>
-                <p>
-                    <strong>1.</strong> Tutela legale professionale fino a €20.000 senza franchigia<br>
-                    <strong>2.</strong> Assistenza sanitaria H24 per te e la tua famiglia<br>
-                    <strong>3.</strong> 17 dipartimenti ultra-specializzati sempre al tuo fianco
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <span>SIM CARABINIERI</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-grid">
+            <div class="hero-content">
+                <h1>LA TUA PROTEZIONE TOTALE INIZIA QUI</h1>
+                <p class="hero-subtitle">
+                    17 dipartimenti specializzati, protezione legale fino a €20.000, 
+                    assistenza sanitaria H24 e oltre 15.000 colleghi che si fidano di noi.
                 </p>
+                
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <span class="stat-number">15K+</span>
+                        <span class="stat-label">Iscritti</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">€20K</span>
+                        <span class="stat-label">Tutela Legale</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">Assistenza</span>
+                    </div>
+                </div>
+
+                <a href="https://www.simcarabinieri.com/iscrizione.php" class="cta-button">
+                    🚀 ISCRIVITI SUBITO
+                </a>
             </div>
             
-            <div class="stats-highlight">
-                <div class="stat-item">
-                    <span class="stat-number">+15.000</span>
-                    <span class="stat-label">Carabinieri che si fidano di noi</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">1°</span>
-                    <span class="stat-label">Sindacato dell'Arma per numero di iscritti</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">17</span>
-                    <span class="stat-label">Dipartimenti specializzati</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">24/7</span>
-                    <span class="stat-label">Assistenza sempre attiva</span>
+            <div class="hero-visual">
+                <div class="logo-container">
+                    <div class="logo-glow"></div>
+                    <div class="central-logo"></div>
+                    <div class="floating-elements">
+                        <div class="floating-icon">⚖️</div>
+                        <div class="floating-icon">🩺</div>
+                        <div class="floating-icon">📊</div>
+                        <div class="floating-icon">🎯</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1612,244 +1522,238 @@
 
     <!-- Departments Section -->
     <section class="departments">
-        <div class="departments-container">
-            <div class="section-header">
-                <h2 class="section-title">17 Dipartimenti = Il Tuo Esercito Personale</h2>
-                <p class="section-subtitle">
-                    Non sono solo uffici. Sono 17 team di specialisti che lavorano H24 per la TUA protezione e i TUOI diritti.
-                </p>
-            </div>
-
-            <div class="departments-intro">
-                <h3>🎯 La Specializzazione Che Ti Protegge</h3>
-                <p>
-                    SIM Carabinieri ha creato 17 dipartimenti ultra-specializzati per garantirti una protezione totale e mirata. 
-                    Ogni situazione della tua carriera ha il SUO esperto dedicato che conosce perfettamente le tue esigenze specifiche.
-                </p>
+        <div class="section-header">
+            <h2 class="section-title">17 DIPARTIMENTI SPECIALIZZATI</h2>
+            <p class="section-subtitle">
+                Il tuo esercito personale di esperti che lavorano H24 per la tua protezione e i tuoi diritti.
+            </p>
+        </div>
+        
+        <div class="departments-grid">
+            <div class="dept-card">
+                <div class="dept-icon">⚖️</div>
+                <div class="dept-name">Affari Giuridici e Legislativi</div>
+                <div class="dept-description">Protezione nelle questioni legali più complesse con esperti in diritto militare</div>
             </div>
             
-            <div class="departments-grid">
-                <div class="department-card">
-                    <div class="department-icon">⚖️</div>
-                    <div class="department-name">Affari Giuridici e Legislativi</div>
-                    <div class="department-benefit">Ti protegge nelle questioni legali più complesse con esperti specializzati nel diritto militare</div>
-                </div>
-                
-                <div class="department-card">
-                    <div class="department-icon">🛡️</div>
-                    <div class="department-name">Cause di Servizio e Vittime del Dovere</div>
-                    <div class="department-benefit">Assistenza completa per infortuni e malattie da servizio, massimizzando i tuoi riconoscimenti</div>
-                </div>
-                
-                <div class="department-card">
-                    <div class="department-icon">📢</div>
-                    <div class="department-name">Comunicazione e Immagine</div>
-                    <div class="department-benefit">Difende la tua reputazione professionale e gestisce situazioni mediatiche delicate</div>
-                </div>
-                
-                <div class="department-card">
-                    <div class="department-icon">💰</div>
-                    <div class="department-name">Direzione Amministrativa Finanziaria</div>
-                    <div class="department-benefit">Verifica che tu riceva ogni euro che ti spetta, recuperando arretrati e correggendo errori</div>
-                </div>
-                
-                <div class="department-card">
-                    <div class="department-icon">⚡</div>
-                    <div class="department-name">Disciplina</div>
-                    <div class="department-benefit">Ti difende nei procedimenti disciplinari con strategie collaudate e specializzate</div>
-                </div>
-                
-                <div class="department-card">
-                    <div class="department-icon">🌲</div>
-                    <div class="department-name">Forestale</div>
-                    <div class="department-benefit">Tutela specifica per il personale del corpo forestale con competenze uniche</div>
-                </div>
-                
-                <div class="department-card">
-                    <div class="department-icon">👔</div>
-                    <div class="department-name">Area Negoziale Dirigenti</div>
-                    <div class="department-benefit">Tutela specifica per i dirigenti dell'Arma</div>
-                </div>
-                
-                <div class="department-card">
-                    <div class="department-icon">⚖️</div>
-                    <div class="department-name">Pari Opportunità</div>
-                    <div class="department-benefit">Garantisce equità di trattamento e combatte ogni forma di discriminazione</div>
-                </div>
-                
-                <div class="department-card">
-                    <div class="department-icon">🧠</div>
-                    <div class="department-name">Psicologia On Line</div>
-                    <div class="department-benefit">Supporto psicologico H24 per te e la tua famiglia con professionisti qualificati</div>
-                </div>
-                
-                <div class="department-card">
-                    <div class="department-icon">🎖️</div>
-                    <div class="department-name">Reparti Speciali</div>
-                    <div class="department-benefit">Assistenza dedicata per personale di reparti speciali con esigenze uniche</div>
-                </div>
-                
-                <div class="department-card">
-                    <div class="department-icon">💪</div>
-                    <div class="department-name">Salute e Benessere</div>
-                    <div class="department-benefit">Programmi di prevenzione e assistenza per la tua salute fisica e mentale</div>
-                </div>
-                
-                <div class="department-card">
-                    <div class="department-icon">🏥</div>
-                    <div class="department-name">Sanità</div>
-                    <div class="department-benefit">Tutela per questioni sanitarie e supporto nelle pratiche medico-legali</div>
-                </div>
-                
-                <div class="department-card">
-                    <div class="department-icon">🎓</div>
-                    <div class="department-name">Scuole Arma</div>
-                    <div class="department-benefit">Supporto per personale delle scuole dell'Arma con competenze formative specifiche</div>
-                </div>
-                
-                <div class="department-card">
-                    <div class="department-icon">🦺</div>
-                    <div class="department-name">Sicurezza Lavoro</div>
-                    <div class="department-benefit">Verifica condizioni di sicurezza e previene rischi sul tuo posto di lavoro</div>
-                </div>
-                
-                <div class="department-card">
-                    <div class="department-icon">📚</div>
-                    <div class="department-name">Storia e Cultura dell'Arma</div>
-                    <div class="department-benefit">Valorizza tradizioni e promuove la cultura dell'Arma dei Carabinieri</div>
-                </div>
-                
-                <div class="department-card">
-                    <div class="department-icon">🏢</div>
-                    <div class="department-name">Territoriale / Stazioni</div>
-                    <div class="department-benefit">Tutela specifica per il personale delle stazioni e comandi territoriali</div>
-                </div>
-                
-                <div class="department-card">
-                    <div class="department-icon">💳</div>
-                    <div class="department-name">Trattamento Stipendiale e Pensionistico</div>
-                    <div class="department-benefit">Massimizza stipendio e pensione, recuperando ogni euro che ti spetta per legge</div>
-                </div>
+            <div class="dept-card">
+                <div class="dept-icon">🛡️</div>
+                <div class="dept-name">Cause di Servizio</div>
+                <div class="dept-description">Assistenza completa per infortuni e malattie da servizio</div>
             </div>
-
-            <div class="departments-bottom">
-                <h3>🎯 Il Risultato: Protezione Totale</h3>
-                <p>17 dipartimenti specializzati = Zero punti scoperti nella tua protezione professionale</p>
-                
-                <div class="departments-stats">
-                    <div class="dept-stat">
-                        <span class="dept-stat-number">100%</span>
-                        <span class="dept-stat-label">Copertura situazioni</span>
-                    </div>
-                    <div class="dept-stat">
-                        <span class="dept-stat-number">24/7</span>
-                        <span class="dept-stat-label">Disponibilità</span>
-                    </div>
-                </div>
+            
+            <div class="dept-card">
+                <div class="dept-icon">📢</div>
+                <div class="dept-name">Comunicazione e Immagine</div>
+                <div class="dept-description">Difende la tua reputazione professionale</div>
+            </div>
+            
+            <div class="dept-card">
+                <div class="dept-icon">💰</div>
+                <div class="dept-name">Direzione Amministrativa</div>
+                <div class="dept-description">Verifica che ricevi ogni euro che ti spetta</div>
+            </div>
+            
+            <div class="dept-card">
+                <div class="dept-icon">⚡</div>
+                <div class="dept-name">Disciplina</div>
+                <div class="dept-description">Difesa nei procedimenti disciplinari</div>
+            </div>
+            
+            <div class="dept-card">
+                <div class="dept-icon">🌲</div>
+                <div class="dept-name">Forestale</div>
+                <div class="dept-description">Tutela specifica per il corpo forestale</div>
+            </div>
+            
+            <div class="dept-card">
+                <div class="dept-icon">👔</div>
+                <div class="dept-name">Area Dirigenti</div>
+                <div class="dept-description">Tutela specifica per dirigenti dell'Arma</div>
+            </div>
+            
+            <div class="dept-card">
+                <div class="dept-icon">⚖️</div>
+                <div class="dept-name">Pari Opportunità</div>
+                <div class="dept-description">Garantisce equità di trattamento</div>
+            </div>
+            
+            <div class="dept-card">
+                <div class="dept-icon">🧠</div>
+                <div class="dept-name">Psicologia Online</div>
+                <div class="dept-description">Supporto psicologico H24 per te e famiglia</div>
+            </div>
+            
+            <div class="dept-card">
+                <div class="dept-icon">🎖️</div>
+                <div class="dept-name">Reparti Speciali</div>
+                <div class="dept-description">Assistenza per reparti speciali</div>
+            </div>
+            
+            <div class="dept-card">
+                <div class="dept-icon">💪</div>
+                <div class="dept-name">Salute e Benessere</div>
+                <div class="dept-description">Programmi prevenzione e salute</div>
+            </div>
+            
+            <div class="dept-card">
+                <div class="dept-icon">🏥</div>
+                <div class="dept-name">Sanità</div>
+                <div class="dept-description">Tutela questioni sanitarie</div>
+            </div>
+            
+            <div class="dept-card">
+                <div class="dept-icon">🎓</div>
+                <div class="dept-name">Scuole Arma</div>
+                <div class="dept-description">Supporto personale scuole</div>
+            </div>
+            
+            <div class="dept-card">
+                <div class="dept-icon">🦺</div>
+                <div class="dept-name">Sicurezza Lavoro</div>
+                <div class="dept-description">Verifica condizioni sicurezza</div>
+            </div>
+            
+            <div class="dept-card">
+                <div class="dept-icon">📚</div>
+                <div class="dept-name">Storia e Cultura</div>
+                <div class="dept-description">Valorizza tradizioni dell'Arma</div>
+            </div>
+            
+            <div class="dept-card">
+                <div class="dept-icon">🏢</div>
+                <div class="dept-name">Territoriale/Stazioni</div>
+                <div class="dept-description">Tutela personale territoriale</div>
+            </div>
+            
+            <div class="dept-card">
+                <div class="dept-icon">💳</div>
+                <div class="dept-name">Trattamento Stipendiale</div>
+                <div class="dept-description">Massimizza stipendio e pensione</div>
             </div>
         </div>
     </section>
 
-    <!-- Services Value Section -->
-    <section class="services-value">
-        <div class="services-container">
-            <div class="section-header">
-                <h2 class="section-title">I Servizi Che Fanno la Differenza</h2>
-                <p class="section-subtitle">
-                    Questi non sono "benefit aggiuntivi". Sono servizi essenziali che ti proteggono e assistono H24.
-                </p>
+    <!-- Services Section -->
+    <section class="services">
+        <div class="section-header">
+            <h2 class="section-title">SERVIZI CHE FANNO LA DIFFERENZA</h2>
+            <p class="section-subtitle">
+                Non sono "benefit aggiuntivi". Sono servizi essenziali che ti proteggono e assistono H24.
+            </p>
+        </div>
+        
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">⚖️</div>
+                <h3 class="service-title">Tutela Legale Professionale</h3>
+                <p class="service-description">Protezione fino a <span class="highlight-value">€20.000</span> senza franchigia</p>
+                <ul class="service-features">
+                    <li>Scelta libera del legale</li>
+                    <li>Periti e consulenti inclusi</li>
+                    <li>Copertura penale, penale militare, disciplinare</li>
+                    <li>Assistenza 24/7 per emergenze</li>
+                </ul>
             </div>
-            
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">⚖️</div>
-                    <h3 class="service-title">Tutela Legale Professionale</h3>
-                    <p class="service-description">Protezione fino a €20.000 senza franchigia</p>
-                    <ul class="service-features">
-                        <li>Scelta libera del legale</li>
-                        <li>Periti e consulenti inclusi</li>
-                        <li>Copertura penale, penale militare, disciplinare</li>
-                        <li>Assistenza 24/7 per emergenze</li>
-                    </ul>
-                </div>
 
-                <div class="service-card">
-                    <div class="service-icon">🩺</div>
-                    <h3 class="service-title">Dr.Feel - Servizio Sanitario Digitale</h3>
-                    <p class="service-description">Copertura per tutto il nucleo familiare</p>
-                    <ul class="service-features">
-                        <li>Consulenze mediche 24/7 via app</li>
-                        <li>Visite specialistiche online</li>
-                        <li>Prescrizioni mediche digitali</li>
-                        <li>Telemedicina avanzata</li>
-                    </ul>
-                    <div class="video-callout">
-                        🎥 <strong>Scopri come funziona:</strong><br>
-                        <a href="https://www.youtube.com/watch?feature=shared&v=OYa_y9vscN4" target="_blank">
-                            Guarda il video dimostrativo →
-                        </a>
-                    </div>
-                </div>
+            <div class="service-card">
+                <div class="service-icon">🩺</div>
+                <h3 class="service-title">Dr.Feel - Servizio Sanitario</h3>
+                <p class="service-description">Copertura per tutto il nucleo familiare</p>
+                <ul class="service-features">
+                    <li>Consulenze mediche 24/7 via app</li>
+                    <li>Visite specialistiche online</li>
+                    <li>Prescrizioni mediche digitali</li>
+                    <li>Telemedicina avanzata</li>
+                </ul>
+            </div>
 
-                <div class="service-card">
-                    <div class="service-icon">📊</div>
-                    <h3 class="service-title">CAF e Servizi Fiscali</h3>
-                    <p class="service-description">Assistenza fiscale completa</p>
-                    <ul class="service-features">
-                        <li>Dichiarazione 730 gratuita</li>
-                        <li>Calcolo e invio ISEE gratuito</li>
-                        <li>Pratiche previdenziali (pensioni)</li>
-                        <li>Consulenza personalizzata</li>
-                    </ul>
-                </div>
+            <div class="service-card">
+                <div class="service-icon">📊</div>
+                <h3 class="service-title">CAF e Servizi Fiscali</h3>
+                <p class="service-description">Assistenza fiscale completa</p>
+                <ul class="service-features">
+                    <li>Dichiarazione 730 gratuita</li>
+                    <li>Calcolo e invio ISEE gratuito</li>
+                    <li>Pratiche previdenziali (pensioni)</li>
+                    <li>Consulenza personalizzata</li>
+                </ul>
+            </div>
 
-                <div class="service-card">
-                    <div class="service-icon">🎯</div>
-                    <h3 class="service-title">Convenzioni Esclusive</h3>
-                    <p class="service-description">Sconti riservati solo agli iscritti SIM</p>
-                    <ul class="service-features">
-                        <li>Italo Treno 1° classe: sconto <span class="discount-highlight">40%</span></li>
-                        <li>Samoiraghi & Viganò: <span class="discount-highlight">30%</span> su occhiali</li>
-                        <li>GrandVision: fino a <span class="discount-highlight">-50€</span> su occhiali graduati</li>
-                        <li>Gruppo Stellantis: sconti esclusivi autovetture</li>
-                        <li>Alpitour World: sconto fino all'<span class="discount-highlight">11%</span></li>
-                        <li>E oltre <span class="discount-highlight">50</span> altre convenzioni attive!</li>
-                    </ul>
-                </div>
+            <div class="service-card">
+                <div class="service-icon">🎯</div>
+                <h3 class="service-title">Convenzioni Esclusive</h3>
+                <p class="service-description">Sconti riservati solo agli iscritti SIM</p>
+                <ul class="service-features">
+                    <li>Italo Treno 1° classe: sconto <span class="highlight-value">40%</span></li>
+                    <li>Samoiraghi & Viganò: <span class="highlight-value">30%</span> su occhiali</li>
+                    <li>GrandVision: fino a <span class="highlight-value">-50€</span></li>
+                    <li>Gruppo Stellantis: sconti esclusivi</li>
+                    <li>Alpitour World: sconto <span class="highlight-value">11%</span></li>
+                    <li>Oltre <span class="highlight-value">50</span> convenzioni attive!</li>
+                </ul>
             </div>
         </div>
     </section>
 
-    <!-- Final CTA Section -->
+    <!-- Proof Section -->
+    <section class="proof">
+        <div class="proof-container">
+            <div class="proof-card">
+                <h2 class="proof-title">LA MATEMATICA NON MENTE</h2>
+                <p class="proof-text">
+                    I nostri <strong>+15.000 iscritti</strong> hanno accesso a servizi che normalmente costerebbero 
+                    <strong>oltre €800 all'anno</strong>. Tu quanto stai perdendo in protezione ogni giorno che rimandi?
+                </p>
+                
+                <div class="proof-stats">
+                    <div class="proof-stat">
+                        <span class="proof-stat-number">€9*</span>
+                        <span class="proof-stat-label">Al mese</span>
+                    </div>
+                    <div class="proof-stat">
+                        <span class="proof-stat-number">€800+</span>
+                        <span class="proof-stat-label">Valore annuale</span>
+                    </div>
+                    <div class="proof-stat">
+                        <span class="proof-stat-number">1°</span>
+                        <span class="proof-stat-label">Sindacato per iscritti</span>
+                    </div>
+                </div>
+                
+                <p style="font-size: 0.85rem; color: var(--neutral-gray); margin-top: 1.5rem; font-style: italic;">
+                    *Quota mensile media versata D.Lgs. 192/2023 art. 11
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
     <section class="final-cta">
-        <div class="cta-container">
-            <h2 class="cta-title">La Tua Risposta È Qui</h2>
+        <div class="cta-content">
+            <h2 class="cta-title">LA TUA RISPOSTA È QUI</h2>
             
             <div class="cta-summary">
-                <div class="cta-summary-title">💎 PERCHÉ SIM CARABINIERI</div>
-                <div class="cta-summary-text">
-                    <span class="highlight-number">€9</span> al mese per oltre <span class="highlight-number">€800</span> di valore annuale + <span class="highlight-number">€20.000</span> di protezione legale + <span class="highlight-number">17</span> dipartimenti specializzati + 
-                    <span class="highlight-number">15.000+</span> colleghi soddisfatti = <strong>LA SCELTA PIÙ INTELLIGENTE</strong>
-                </div>
+                <span class="value-highlight">€9*</span> al mese per oltre <span class="value-highlight">€800</span> di valore annuale + 
+                <span class="value-highlight">€20.000</span> di protezione legale + <span class="value-highlight">17</span> dipartimenti specializzati + 
+                <span class="value-highlight">15.000+</span> colleghi soddisfatti = <strong>LA SCELTA PIÙ INTELLIGENTE</strong>
+                
+                <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-top: 1rem; font-style: italic;">
+                    *Quota mensile media versata D.Lgs. 192/2023 art. 11
+                </p>
             </div>
 
-            <div class="multiple-cta">
-                <a href="https://www.simcarabinieri.com/iscrizione.php" class="cta-button pulse">
-                    🚀 ISCRIVITI ORA
-                </a>
-            </div>
+            <a href="https://www.simcarabinieri.com/iscrizione.php" class="cta-button">
+                🚀 ISCRIVITI SUBITO
+            </a>
         </div>
     </section>
-
-    <!-- Floating CTA -->
-    <a href="https://www.simcarabinieri.com/iscrizione.php" class="floating-cta">
-        🔥 ISCRIVITI SUBITO
-    </a>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-container">
+        <div class="footer-content">
             <div class="footer-logo">
+                <div class="footer-logo-icon"></div>
                 <div class="footer-logo-text">SIM CARABINIERI</div>
             </div>
             <p class="footer-tagline">
@@ -1857,76 +1761,95 @@
             </p>
             
             <div class="footer-contact">
-                <p style="margin-bottom: 1rem;">
-                    <strong>Sindacato Italiano Militari Carabinieri</strong><br>
-                    Via Magnagrecia 13 – 00183 Roma
-                </p>
-                
-                <div class="footer-links">
-                    <a href="https://www.simcarabinieri.it" target="_blank">🌐 www.simcarabinieri.it</a>
-                    <a href="mailto:info@simcarabinieri.cc">📧 info@simcarabinieri.cc</a>
-                    <a href="tel:+390669217447">📞 06 6921 7447</a>
-                </div>
+                <p><strong>Sindacato Italiano Militari Carabinieri</strong><br>
+                Via Magnagrecia 13 – 00183 Roma</p>
+            </div>
+            
+            <div class="footer-links">
+                <a href="https://www.simcarabinieri.it" target="_blank">🌐 www.simcarabinieri.it</a>
+                <a href="mailto:info@simcarabinieri.cc">📧 info@simcarabinieri.cc</a>
+                <a href="tel:+390669217447">📞 06 6921 7447</a>
             </div>
         </div>
     </footer>
 
     <script>
-        // ===== FLOATING CTA VISIBILITY =====
-        const floatingCTA = document.querySelector('.floating-cta');
-        let lastScrollY = window.scrollY;
+        // Particle system
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
 
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Navbar scroll effect
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 1000) {
-                floatingCTA.style.opacity = '1';
-                floatingCTA.style.transform = 'translateY(0)';
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 100) {
+                nav.style.background = 'rgba(15, 15, 35, 0.98)';
+                nav.style.borderBottom = '1px solid rgba(251, 191, 36, 0.3)';
             } else {
-                floatingCTA.style.opacity = '0';
-                floatingCTA.style.transform = 'translateY(100px)';
+                nav.style.background = 'rgba(15, 15, 35, 0.95)';
+                nav.style.borderBottom = '1px solid rgba(255, 255, 255, 0.1)';
             }
         });
 
-        // ===== ENHANCED HOVER EFFECTS =====
-        document.querySelectorAll('.department-card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-8px) scale(1.02)';
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.style.opacity = '1';
+                }
+            });
+        }, observerOptions);
+
+        // Observe cards
+        document.querySelectorAll('.dept-card, .service-card, .stat-card').forEach(card => {
+            card.style.transform = 'translateY(30px)';
+            card.style.opacity = '0';
+            card.style.transition = 'all 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Initialize particles
+        createParticles();
+
+        // CTA button hover effect
+        document.querySelectorAll('.cta-button').forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px) scale(1.05)';
             });
             
-            card.addEventListener('mouseleave', function() {
+            button.addEventListener('mouseleave', function() {
                 this.style.transform = 'translateY(0) scale(1)';
             });
         });
 
-        // ===== CTA TRACKING =====
-        document.querySelectorAll('a[href*="iscrizione"]').forEach(link => {
-            link.addEventListener('click', function() {
-                console.log('CTA clicked:', this.textContent);
-            });
-        });
-
-        // ===== SMOOTH SCROLLING =====
+        // Smooth scrolling for internal links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetSection = document.querySelector(targetId);
-                if (targetSection) {
-                    targetSection.scrollIntoView({
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
                         behavior: 'smooth',
                         block: 'start'
                     });
                 }
             });
-        });
-
-        // ===== WATERMARK INTERACTION =====
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const rate = scrolled * -0.1;
-            
-            document.querySelector('.watermark-layer-1').style.transform = `rotate(-12deg) translateY(${rate}px)`;
-            document.querySelector('.watermark-layer-2').style.transform = `rotate(18deg) translateX(${rate * 0.5}px)`;
-            document.querySelector('.watermark-layer-3').style.transform = `rotate(-25deg) translateY(${rate * 0.3}px)`;
         });
     </script>
 </body>
