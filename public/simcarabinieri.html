@@ -444,13 +444,31 @@
             margin-bottom: 1rem;
             display: block;
             text-align: center;
-            color: var(--accent-gold);
             transition: all 0.3s ease;
         }
 
+        /* Tematizzazione colori icone dipartimenti */
+        .dept-card:nth-child(1) .dept-icon { color: #dc2626; } /* Affari Giuridici - Rosso */
+        .dept-card:nth-child(2) .dept-icon { color: #059669; } /* Cause di Servizio - Verde */
+        .dept-card:nth-child(3) .dept-icon { color: #7c3aed; } /* Comunicazione - Viola */
+        .dept-card:nth-child(4) .dept-icon { color: #2563eb; } /* Direzione Amministrativa - Blu */
+        .dept-card:nth-child(5) .dept-icon { color: #ea580c; } /* Disciplina - Arancione */
+        .dept-card:nth-child(6) .dept-icon { color: #16a34a; } /* Forestale - Verde bosco */
+        .dept-card:nth-child(7) .dept-icon { color: #7c2d12; } /* Area Dirigenti - Marrone */
+        .dept-card:nth-child(8) .dept-icon { color: #ec4899; } /* Pari Opportunità - Rosa */
+        .dept-card:nth-child(9) .dept-icon { color: #06b6d4; } /* Psicologia - Ciano */
+        .dept-card:nth-child(10) .dept-icon { color: #fbbf24; } /* Reparti Speciali - Oro */
+        .dept-card:nth-child(11) .dept-icon { color: #ef4444; } /* Salute e Benessere - Rosso salute */
+        .dept-card:nth-child(12) .dept-icon { color: #10b981; } /* Sanità - Verde medico */
+        .dept-card:nth-child(13) .dept-icon { color: #3b82f6; } /* Scuole Arma - Blu educativo */
+        .dept-card:nth-child(14) .dept-icon { color: #f59e0b; } /* Sicurezza Lavoro - Giallo sicurezza */
+        .dept-card:nth-child(15) .dept-icon { color: #8b5cf6; } /* Storia e Cultura - Viola storico */
+        .dept-card:nth-child(16) .dept-icon { color: #14b8a6; } /* Territoriale - Turchese */
+        .dept-card:nth-child(17) .dept-icon { color: #22c55e; } /* Trattamento Stipendiale - Verde denaro */
+
         .dept-card:hover .dept-icon {
             transform: scale(1.1);
-            color: var(--neutral-white);
+            filter: brightness(1.2);
         }
 
         .dept-name {
@@ -503,13 +521,17 @@
             margin-bottom: 2rem;
             display: block;
             text-align: center;
-            color: var(--accent-gold);
             transition: all 0.3s ease;
         }
 
+        /* Tematizzazione colori icone servizi */
+        .service-card:nth-child(1) .service-icon { color: #dc2626; } /* Tutela Legale - Rosso giustizia */
+        .service-card:nth-child(3) .service-icon { color: #2563eb; } /* CAF Fiscali - Blu business */
+        .service-card:nth-child(4) .service-icon { color: #7c3aed; } /* Convenzioni - Viola premium */
+
         .service-card:hover .service-icon {
             transform: scale(1.1);
-            color: var(--neutral-white);
+            filter: brightness(1.2);
         }
 
         .service-title {
@@ -996,7 +1018,7 @@
             </div>
 
             <div class="service-card">
-                <i class="service-icon fas fa-user-md"></i>
+                <div class="service-icon" style="background-image: url('https://drfeel.com/assets/logo-drfeel-colori.svg'); background-size: contain; background-repeat: no-repeat; background-position: center; width: 80px; height: 80px; margin: 0 auto 2rem;"></div>
                 <h3 class="service-title">Dr.Feel - Servizio Sanitario</h3>
                 <p class="service-description">Copertura per tutto il nucleo familiare</p>
                 <ul class="service-features">
@@ -1061,7 +1083,7 @@
                 </div>
                 
                 <p style="font-size: clamp(0.75rem, 2vw, 0.85rem); color: var(--neutral-black); margin-top: 1.5rem; font-style: italic;">
-                    *Art. 1478, comma 3, del decreto legislativo 15 marzo 2010, n. 66
+                    *Quota media secondo l'Art. 1478, comma 3, del decreto legislativo 15 marzo 2010, n. 66
                 </p>
             </div>
         </div>
@@ -1078,7 +1100,7 @@
                 <span class="value-highlight">15.000+</span> colleghi soddisfatti = <strong>LA SCELTA PIÙ INTELLIGENTE</strong>
                 
                 <p style="font-size: clamp(0.8rem, 2.5vw, 0.9rem); color: rgba(255,255,255,0.8); margin-top: 1rem; font-style: italic;">
-                    *Art. 1478, comma 3, del decreto legislativo 15 marzo 2010, n. 66
+                    *Quota media secondo l'Art. 1478, comma 3, del decreto legislativo 15 marzo 2010, n. 66
                 </p>
             </div>
 
