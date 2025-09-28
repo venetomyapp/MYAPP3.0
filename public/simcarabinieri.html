@@ -167,7 +167,7 @@
 
         .hero-content h1 {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-size: clamp(2rem, 5vw, 4.5rem);
             font-weight: 900;
             line-height: 1.1;
             margin-bottom: 2rem;
@@ -178,7 +178,7 @@
         }
 
         .hero-subtitle {
-            font-size: 1.4rem;
+            font-size: clamp(1rem, 3vw, 1.4rem);
             color: var(--neutral-gray);
             margin-bottom: 2rem;
             line-height: 1.6;
@@ -208,14 +208,14 @@
 
         .stat-number {
             font-family: 'Orbitron', monospace;
-            font-size: 2rem;
+            font-size: clamp(1.2rem, 4vw, 2rem);
             font-weight: 900;
             color: var(--accent-gold);
             display: block;
         }
 
         .stat-label {
-            font-size: 0.9rem;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
             color: var(--neutral-white);
             margin-top: 0.5rem;
         }
@@ -344,13 +344,15 @@
             padding: 1.5rem 3rem;
             border-radius: 50px;
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 3vw, 1.2rem);
             font-weight: 700;
             text-decoration: none;
             box-shadow: var(--shadow-cyber);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            width: fit-content;
+            margin: 0 auto;
         }
 
         .cta-button::before {
@@ -386,7 +388,7 @@
 
         .section-title {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-size: clamp(1.5rem, 4vw, 3.5rem);
             font-weight: 900;
             margin-bottom: 1rem;
             background: var(--gradient-cyber);
@@ -396,7 +398,7 @@
         }
 
         .section-subtitle {
-            font-size: 1.3rem;
+            font-size: clamp(1rem, 3vw, 1.3rem);
             color: var(--neutral-white);
             max-width: 700px;
             margin: 0 auto;
@@ -512,7 +514,7 @@
 
         .service-title {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
             font-weight: 700;
             color: var(--accent-gold);
             margin-bottom: 1rem;
@@ -523,7 +525,7 @@
             color: var(--neutral-gray);
             margin-bottom: 2rem;
             text-align: center;
-            font-size: 1.1rem;
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
         }
 
         .service-features {
@@ -536,7 +538,7 @@
             gap: 1rem;
             margin-bottom: 0.8rem;
             color: var(--neutral-white);
-            font-size: 0.95rem;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
         }
 
         .service-features li::before {
@@ -563,6 +565,18 @@
             font-family: 'Orbitron', monospace;
         }
 
+        /* ===== VALUE HIGHLIGHT ===== */
+        .value-highlight {
+            background: var(--gradient-gold);
+            color: var(--neutral-black);
+            padding: 0.3rem 0.6rem;
+            border-radius: 8px;
+            font-weight: 900;
+            font-family: 'Orbitron', monospace;
+            display: inline-block;
+            margin: 0 0.2rem;
+        }
+
         /* ===== RESPONSIVE DESIGN ===== */
         @media (max-width: 768px) {
             .nav {
@@ -570,12 +584,12 @@
             }
             
             .logo {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
             }
             
             .logo-icon {
-                width: 35px;
-                height: 35px;
+                width: 32px;
+                height: 32px;
             }
 
             .hero {
@@ -589,10 +603,24 @@
                 text-align: center;
             }
 
+            .hero-content h1 {
+                font-size: clamp(1.8rem, 8vw, 3rem);
+                margin-bottom: 1.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: clamp(0.95rem, 4vw, 1.2rem);
+                margin-bottom: 1.5rem;
+            }
+
             .hero-stats {
                 grid-template-columns: repeat(3, 1fr);
                 gap: 0.8rem;
                 margin: 2rem 0;
+            }
+
+            .stat-card {
+                padding: 1rem;
             }
 
             .logo-container {
@@ -601,14 +629,27 @@
             }
 
             .central-logo {
-                width: 150px;
-                height: 150px;
+                width: 140px;
+                height: 140px;
+            }
+
+            .logo-glow {
+                width: 180px;
+                height: 180px;
             }
 
             .floating-icon {
-                width: 40px;
-                height: 40px;
+                width: 35px;
+                height: 35px;
                 font-size: 1rem;
+            }
+
+            .cta-button {
+                padding: 1.2rem 2rem;
+                font-size: 1rem;
+                display: block;
+                text-align: center;
+                max-width: 280px;
             }
 
             .departments,
@@ -616,10 +657,18 @@
                 padding: 4rem 1rem;
             }
 
-            .departments-grid,
-            .services-grid {
+            .section-header {
+                margin-bottom: 3rem;
+            }
+
+            .departments-grid {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
             }
 
             .dept-card,
@@ -634,13 +683,64 @@
             .service-icon {
                 font-size: 2.5rem;
             }
+
+            .service-card {
+                padding: 2rem;
+            }
         }
 
         @media (max-width: 480px) {
+            .hero {
+                padding: 4.5rem 0.8rem 2rem;
+            }
+
+            .hero-content h1 {
+                font-size: clamp(1.5rem, 10vw, 2.5rem);
+                line-height: 1.2;
+            }
+
+            .hero-subtitle {
+                font-size: clamp(0.9rem, 5vw, 1.1rem);
+            }
+
+            .hero-stats {
+                gap: 0.5rem;
+                margin: 1.5rem 0;
+            }
+
+            .stat-card {
+                padding: 0.8rem;
+                border-radius: 12px;
+            }
+
+            .stat-number {
+                font-size: clamp(1rem, 6vw, 1.5rem);
+            }
+
+            .stat-label {
+                font-size: clamp(0.7rem, 3vw, 0.8rem);
+            }
+
+            .logo-container {
+                width: 160px;
+                height: 160px;
+            }
+
+            .central-logo {
+                width: 110px;
+                height: 110px;
+            }
+
             .floating-icon {
-                width: 30px;
-                height: 30px;
+                width: 28px;
+                height: 28px;
                 font-size: 0.8rem;
+            }
+
+            .cta-button {
+                padding: 1rem 1.5rem;
+                font-size: 0.9rem;
+                max-width: 250px;
             }
 
             .dept-icon {
@@ -649,6 +749,50 @@
 
             .service-icon {
                 font-size: 2rem;
+            }
+
+            .dept-card,
+            .service-card {
+                padding: 1.2rem;
+            }
+
+            .departments,
+            .services {
+                padding: 3rem 0.8rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .nav {
+                padding: 0.6rem 0.8rem;
+            }
+
+            .logo {
+                font-size: 1rem;
+                gap: 0.5rem;
+            }
+
+            .logo-icon {
+                width: 28px;
+                height: 28px;
+            }
+
+            .hero {
+                padding: 4rem 0.5rem 1.5rem;
+            }
+
+            .hero-content h1 {
+                font-size: clamp(1.3rem, 12vw, 2rem);
+            }
+
+            .hero-subtitle {
+                font-size: clamp(0.85rem, 6vw, 1rem);
+            }
+
+            .cta-button {
+                padding: 0.9rem 1.2rem;
+                font-size: 0.85rem;
+                max-width: 220px;
             }
         }
     </style>
@@ -895,28 +1039,28 @@
     <section class="proof">
         <div class="proof-container" style="max-width: 900px; margin: 0 auto; padding: 6rem 2rem; text-align: center;">
             <div class="proof-card" style="background: var(--gradient-gold); backdrop-filter: blur(20px); border: 2px solid var(--accent-gold); border-radius: 24px; padding: 3rem; position: relative; box-shadow: 0 0 60px rgba(251, 191, 36, 0.4);">
-                <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 900; color: var(--neutral-black); margin-bottom: 1.5rem;">LA MATEMATICA NON MENTE</h2>
-                <p style="font-size: 1.2rem; line-height: 1.6; color: var(--neutral-black);">
+                <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.5rem, 5vw, 2rem); font-weight: 900; color: var(--neutral-black); margin-bottom: 1.5rem;">LA MATEMATICA NON MENTE</h2>
+                <p style="font-size: clamp(1rem, 3vw, 1.2rem); line-height: 1.6; color: var(--neutral-black);">
                     I nostri <strong>+15.000 iscritti</strong> hanno accesso a servizi che normalmente costerebbero 
                     <strong>oltre €800 all'anno</strong>. Tu quanto stai perdendo in protezione ogni giorno che rimandi?
                 </p>
                 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 3rem;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 2rem; margin-top: 3rem;">
                     <div style="text-align: center;">
-                        <span style="font-family: 'Orbitron', monospace; font-size: 2.5rem; font-weight: 900; color: var(--neutral-black); display: block;">€9*</span>
-                        <span style="color: var(--neutral-black); margin-top: 0.5rem;">Al mese</span>
+                        <span style="font-family: 'Orbitron', monospace; font-size: clamp(1.5rem, 6vw, 2.5rem); font-weight: 900; color: var(--neutral-black); display: block;">€9*</span>
+                        <span style="color: var(--neutral-black); margin-top: 0.5rem; font-size: clamp(0.8rem, 2.5vw, 1rem);">Al mese</span>
                     </div>
                     <div style="text-align: center;">
-                        <span style="font-family: 'Orbitron', monospace; font-size: 2.5rem; font-weight: 900; color: var(--neutral-black); display: block;">€800+</span>
-                        <span style="color: var(--neutral-black); margin-top: 0.5rem;">Valore annuale</span>
+                        <span style="font-family: 'Orbitron', monospace; font-size: clamp(1.5rem, 6vw, 2.5rem); font-weight: 900; color: var(--neutral-black); display: block;">€800+</span>
+                        <span style="color: var(--neutral-black); margin-top: 0.5rem; font-size: clamp(0.8rem, 2.5vw, 1rem);">Valore annuale</span>
                     </div>
                     <div style="text-align: center;">
-                        <span style="font-family: 'Orbitron', monospace; font-size: 2.5rem; font-weight: 900; color: var(--neutral-black); display: block;">1°</span>
-                        <span style="color: var(--neutral-black); margin-top: 0.5rem;">Sindacato per iscritti</span>
+                        <span style="font-family: 'Orbitron', monospace; font-size: clamp(1.5rem, 6vw, 2.5rem); font-weight: 900; color: var(--neutral-black); display: block;">1°</span>
+                        <span style="color: var(--neutral-black); margin-top: 0.5rem; font-size: clamp(0.8rem, 2.5vw, 1rem);">Sindacato per iscritti</span>
                     </div>
                 </div>
                 
-                <p style="font-size: 0.85rem; color: var(--neutral-black); margin-top: 1.5rem; font-style: italic;">
+                <p style="font-size: clamp(0.75rem, 2vw, 0.85rem); color: var(--neutral-black); margin-top: 1.5rem; font-style: italic;">
                     *Art. 1478, comma 3, del decreto legislativo 15 marzo 2010, n. 66
                 </p>
             </div>
@@ -924,16 +1068,16 @@
     </section>
 
     <!-- Final CTA -->
-    <section style="padding: 8rem 2rem; text-align: center; background: var(--gradient-primary); position: relative; overflow: hidden;">
+    <section style="padding: 6rem 2rem; text-align: center; background: var(--gradient-primary); position: relative; overflow: hidden;">
         <div style="max-width: 800px; margin: 0 auto; position: relative; z-index: 1;">
-            <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; margin-bottom: 2rem;">LA TUA RISPOSTA È QUI</h2>
+            <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.8rem, 6vw, 4rem); font-weight: 900; margin-bottom: 2rem;">LA TUA RISPOSTA È QUI</h2>
             
-            <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 2.5rem; margin: 3rem 0; font-size: 1.3rem; line-height: 1.6;">
+            <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: clamp(1.5rem, 4vw, 2.5rem); margin: 3rem 0; font-size: clamp(1rem, 3vw, 1.3rem); line-height: 1.6;">
                 <span class="value-highlight">€9*</span> al mese per oltre <span class="value-highlight">€800</span> di valore annuale + 
                 <span class="value-highlight">€20.000</span> di protezione legale + <span class="value-highlight">17</span> dipartimenti specializzati + 
                 <span class="value-highlight">15.000+</span> colleghi soddisfatti = <strong>LA SCELTA PIÙ INTELLIGENTE</strong>
                 
-                <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-top: 1rem; font-style: italic;">
+                <p style="font-size: clamp(0.8rem, 2.5vw, 0.9rem); color: rgba(255,255,255,0.8); margin-top: 1rem; font-style: italic;">
                     *Art. 1478, comma 3, del decreto legislativo 15 marzo 2010, n. 66
                 </p>
             </div>
@@ -947,23 +1091,23 @@
     <!-- Footer -->
     <footer style="background: var(--surface-dark); padding: 4rem 2rem 2rem; text-align: center;">
         <div style="max-width: 800px; margin: 0 auto;">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
-                <div style="width: 50px; height: 50px; background-image: url('https://www.simcarabinieri.com/img/logo_small.png'); background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
-                <div style="font-family: 'Orbitron', monospace; font-size: 2rem; font-weight: 900; color: var(--accent-gold);">SIM CARABINIERI</div>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                <div style="width: clamp(40px, 10vw, 50px); height: clamp(40px, 10vw, 50px); background-image: url('https://www.simcarabinieri.com/img/logo_small.png'); background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
+                <div style="font-family: 'Orbitron', monospace; font-size: clamp(1.2rem, 4vw, 2rem); font-weight: 900; color: var(--accent-gold);">SIM CARABINIERI</div>
             </div>
-            <p style="font-size: 1.1rem; color: var(--neutral-gray); margin-bottom: 2rem; font-style: italic;">
+            <p style="font-size: clamp(1rem, 3vw, 1.1rem); color: var(--neutral-gray); margin-bottom: 2rem; font-style: italic;">
                 "Il sindacato che trasforma la tua domanda in una certezza matematica"
             </p>
             
             <div style="background: var(--surface-glass); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 2rem; margin-bottom: 2rem;">
-                <p><strong>Sindacato Italiano Militari Carabinieri</strong><br>
+                <p style="font-size: clamp(0.9rem, 2.5vw, 1rem);"><strong>Sindacato Italiano Militari Carabinieri</strong><br>
                 Via Magnagrecia 13 – 00183 Roma</p>
             </div>
             
-            <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
-                <a href="https://www.simcarabinieri.it" target="_blank" style="color: var(--accent-gold); text-decoration: none; font-weight: 500; transition: all 0.3s ease; padding: 0.5rem; min-height: 44px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-globe"></i> www.simcarabinieri.it</a>
-                <a href="mailto:info@simcarabinieri.cc" style="color: var(--accent-gold); text-decoration: none; font-weight: 500; transition: all 0.3s ease; padding: 0.5rem; min-height: 44px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-envelope"></i> info@simcarabinieri.cc</a>
-                <a href="tel:+390669217447" style="color: var(--accent-gold); text-decoration: none; font-weight: 500; transition: all 0.3s ease; padding: 0.5rem; min-height: 44px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-phone"></i> 06 6921 7447</a>
+            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                <a href="https://www.simcarabinieri.it" target="_blank" style="color: var(--accent-gold); text-decoration: none; font-weight: 500; transition: all 0.3s ease; padding: 0.5rem; min-height: 44px; display: flex; align-items: center; justify-content: center; font-size: clamp(0.8rem, 2.5vw, 1rem);"><i class="fas fa-globe"></i> www.simcarabinieri.it</a>
+                <a href="mailto:info@simcarabinieri.cc" style="color: var(--accent-gold); text-decoration: none; font-weight: 500; transition: all 0.3s ease; padding: 0.5rem; min-height: 44px; display: flex; align-items: center; justify-content: center; font-size: clamp(0.8rem, 2.5vw, 1rem);"><i class="fas fa-envelope"></i> info@simcarabinieri.cc</a>
+                <a href="tel:+390669217447" style="color: var(--accent-gold); text-decoration: none; font-weight: 500; transition: all 0.3s ease; padding: 0.5rem; min-height: 44px; display: flex; align-items: center; justify-content: center; font-size: clamp(0.8rem, 2.5vw, 1rem);"><i class="fas fa-phone"></i> 06 6921 7447</a>
             </div>
         </div>
     </footer>
@@ -972,7 +1116,7 @@
         // Particle system
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
-            const particleCount = 30;
+            const particleCount = window.innerWidth < 768 ? 15 : 30; // Fewer particles on mobile
 
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
@@ -1011,36 +1155,54 @@
             });
         }, observerOptions);
 
-        // Observe cards
-        document.querySelectorAll('.dept-card, .service-card, .stat-card').forEach(card => {
+        // Observe cards with delay for mobile
+        document.querySelectorAll('.dept-card, .service-card, .stat-card').forEach((card, index) => {
             card.style.transform = 'translateY(30px)';
             card.style.opacity = '0';
             card.style.transition = 'all 0.6s ease';
+            card.style.transitionDelay = window.innerWidth < 768 ? `${index * 0.1}s` : '0s';
             observer.observe(card);
         });
 
         // Initialize particles
         createParticles();
 
-        // CTA button hover effect
+        // CTA button hover effect with touch support
         document.querySelectorAll('.cta-button').forEach(button => {
             button.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-3px) scale(1.05)';
+                if (window.innerWidth > 768) {
+                    this.style.transform = 'translateY(-3px) scale(1.05)';
+                }
             });
             
             button.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0) scale(1)';
+                if (window.innerWidth > 768) {
+                    this.style.transform = 'translateY(0) scale(1)';
+                }
+            });
+
+            // Touch events for mobile
+            button.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.95)';
+            });
+
+            button.addEventListener('touchend', function() {
+                this.style.transform = 'scale(1)';
             });
         });
 
-        // Icon hover effects
+        // Icon hover effects with touch support
         document.querySelectorAll('.dept-icon, .service-icon').forEach(icon => {
             icon.addEventListener('mouseenter', function() {
-                this.style.transform = 'scale(1.2) rotate(5deg)';
+                if (window.innerWidth > 768) {
+                    this.style.transform = 'scale(1.2) rotate(5deg)';
+                }
             });
             
             icon.addEventListener('mouseleave', function() {
-                this.style.transform = 'scale(1) rotate(0deg)';
+                if (window.innerWidth > 768) {
+                    this.style.transform = 'scale(1) rotate(0deg)';
+                }
             });
         });
 
@@ -1057,6 +1219,21 @@
                 }
             });
         });
+
+        // Optimize performance on mobile
+        if (window.innerWidth < 768) {
+            // Reduce animation complexity on mobile
+            document.querySelectorAll('.floating-icon').forEach(icon => {
+                icon.style.animation = 'float-around 12s ease-in-out infinite';
+            });
+        }
+
+        // Resize handler for responsive particles
+        window.addEventListener('resize', () => {
+            const particles = document.getElementById('particles');
+            particles.innerHTML = '';
+            createParticles();
+        });
     </script>
 </body>
-</html
+</html>
