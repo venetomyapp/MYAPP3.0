@@ -501,26 +501,33 @@
             backdrop-filter: blur(10px);
             border: 3px solid #ffd700;
             border-radius: 20px;
-            padding: 30px;
+            padding: 30px 20px;
             max-width: 600px;
             margin: 0 auto 30px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .website-icon-container {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: 10px;
             margin-bottom: 15px;
+            width: 100%;
         }
 
         .website-icon {
-            font-size: 40px;
+            font-size: 50px;
         }
 
         .website-text {
-            text-align: left;
+            text-align: center;
+            width: 100%;
         }
 
         .website-label {
@@ -550,6 +557,7 @@
             color: rgba(255, 255, 255, 0.9);
             margin-top: 15px;
             font-weight: 600;
+            text-align: center;
         }
 
         .website-features {
