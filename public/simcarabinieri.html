@@ -70,7 +70,7 @@
 
         .logo-title {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 42px;
+            font-size: 52px;
             font-weight: 900;
             color: white;
             letter-spacing: 3px;
@@ -435,6 +435,150 @@
             box-shadow: 0 15px 40px rgba(255, 215, 0, 0.6);
         }
 
+        /* Website Highlight Section */
+        .website-highlight-section {
+            background: linear-gradient(135deg, #1a0033 0%, #4a0080 50%, #c41e3a 100%);
+            padding: 50px 40px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .website-highlight-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .website-highlight-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .website-badge {
+            display: inline-block;
+            background: #ffd700;
+            color: #1a0033;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 900;
+            font-size: 14px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .website-highlight-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            color: white;
+            line-height: 1.2;
+        }
+
+        .website-highlight-gold {
+            color: #ffd700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+        }
+
+        .website-description {
+            font-size: 20px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .website-box {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 3px solid #ffd700;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .website-icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .website-icon {
+            font-size: 40px;
+        }
+
+        .website-text {
+            text-align: left;
+        }
+
+        .website-label {
+            font-size: 14px;
+            color: #ffd700;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .website-url {
+            color: white;
+            text-decoration: none;
+            font-size: 32px;
+            font-weight: 900;
+            font-family: 'Space Grotesk', sans-serif;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .website-url:hover {
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        }
+
+        .website-access {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        .website-features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .website-feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .website-feature-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .website-feature-text {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffd700;
+        }
+
         @media print {
             body {
                 padding: 0;
@@ -465,8 +609,8 @@
             }
 
             .logo-box {
-                width: 60px;
-                height: 60px;
+                width: 80px;
+                height: 80px;
             }
 
             .logo-title {
@@ -923,47 +1067,47 @@
         </div>
 
         <!-- Website Highlight Section -->
-        <div style="background: linear-gradient(135deg, #1a0033 0%, #4a0080 50%, #c41e3a 100%); padding: 50px 40px; text-align: center; color: white; position: relative; overflow: hidden;">
-            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.15) 0%, transparent 70%); pointer-events: none;"></div>
+        <div class="website-highlight-section">
+            <div class="website-highlight-overlay"></div>
             
-            <div style="position: relative; z-index: 1;">
-                <span style="display: inline-block; background: #ffd700; color: #1a0033; padding: 8px 20px; border-radius: 25px; font-weight: 900; font-size: 14px; margin-bottom: 20px; letter-spacing: 1px;">✨ NOVITÀ 2025</span>
+            <div class="website-highlight-content">
+                <span class="website-badge">✨ NOVITÀ 2025</span>
                 
-                <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 48px; font-weight: 900; margin-bottom: 20px; color: white; line-height: 1.2;">
-                    Visita il nostro<br><span style="color: #ffd700; text-shadow: 0 0 30px rgba(255, 215, 0, 0.6);">NUOVO SITO WEB</span>
+                <h2 class="website-highlight-title">
+                    Visita il nostro<br><span class="website-highlight-gold">NUOVO SITO WEB</span>
                 </h2>
                 
-                <p style="font-size: 20px; margin-bottom: 30px; font-weight: 600; max-width: 700px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+                <p class="website-description">
                     Un'esperienza completamente rinnovata per essere ancora più vicini a te. Scopri tutti i servizi, le convenzioni e rimani aggiornato sulle ultime novità del sindacato.
                 </p>
                 
-                <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border: 3px solid #ffd700; border-radius: 20px; padding: 30px; max-width: 600px; margin: 0 auto 30px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);">
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px;">
-                        <span style="font-size: 40px;">🌐</span>
-                        <div style="text-align: left;">
-                            <div style="font-size: 14px; color: #ffd700; font-weight: 700; margin-bottom: 5px;">IL NOSTRO SITO</div>
-                            <a href="https://www.simcarabinieri.it" target="_blank" style="color: white; text-decoration: none; font-size: 32px; font-weight: 900; font-family: 'Space Grotesk', sans-serif; display: block; transition: all 0.3s ease;">
+                <div class="website-box">
+                    <div class="website-icon-container">
+                        <span class="website-icon">🌐</span>
+                        <div class="website-text">
+                            <div class="website-label">IL NOSTRO SITO</div>
+                            <a href="https://www.simcarabinieri.it" target="_blank" class="website-url">
                                 www.simcarabinieri.it
                             </a>
                         </div>
                     </div>
-                    <p style="font-size: 15px; color: rgba(255, 255, 255, 0.9); margin-top: 15px; font-weight: 600;">
+                    <p class="website-access">
                         Accessibile da PC, tablet e smartphone 📱💻
                     </p>
                 </div>
                 
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 800px; margin: 0 auto;">
-                    <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 12px; padding: 20px;">
-                        <div style="font-size: 32px; margin-bottom: 10px;">📄</div>
-                        <div style="font-size: 16px; font-weight: 700; color: #ffd700;">Documenti e Guide</div>
+                <div class="website-features">
+                    <div class="website-feature-card">
+                        <div class="website-feature-icon">📄</div>
+                        <div class="website-feature-text">Documenti e Guide</div>
                     </div>
-                    <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 12px; padding: 20px;">
-                        <div style="font-size: 32px; margin-bottom: 10px;">📰</div>
-                        <div style="font-size: 16px; font-weight: 700; color: #ffd700;">News e Aggiornamenti</div>
+                    <div class="website-feature-card">
+                        <div class="website-feature-icon">📰</div>
+                        <div class="website-feature-text">News e Aggiornamenti</div>
                     </div>
-                    <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 12px; padding: 20px;">
-                        <div style="font-size: 32px; margin-bottom: 10px;">🎁</div>
-                        <div style="font-size: 16px; font-weight: 700; color: #ffd700;">Tutte le Convenzioni</div>
+                    <div class="website-feature-card">
+                        <div class="website-feature-icon">🎁</div>
+                        <div class="website-feature-text">Tutte le Convenzioni</div>
                     </div>
                 </div>
             </div>
