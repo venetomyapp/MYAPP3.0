@@ -3,551 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIM Carabinieri - Icone Professionali</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Font Awesome Icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <title>SIM Carabinieri - Volantino Completo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700;800&family=Space+Grotesk:wght@600;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-blue: #003d82;
-            --primary-red: #dc2626;
-            --accent-gold: #fbbf24;
-            --accent-cyan: #06b6d4;
-            --neutral-white: #ffffff;
-            --neutral-black: #0f172a;
-            --neutral-gray: #64748b;
-            --surface-dark: #1e293b;
-            --surface-glass: rgba(255, 255, 255, 0.1);
-            --gradient-primary: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-red) 100%);
-            --gradient-cyber: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 50%, #ec4899 100%);
-            --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            --shadow-glow: 0 0 40px rgba(251, 191, 36, 0.3);
-            --shadow-cyber: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
-
         body {
             font-family: 'Rajdhani', sans-serif;
-            line-height: 1.6;
-            color: var(--neutral-white);
-            background: #0f0f23;
-            overflow-x: hidden;
-            position: relative;
+            background: #1a1a2e;
+            padding: 20px;
         }
 
-        /* ===== ANIMATED BACKGROUND ===== */
-        .cyber-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(251, 191, 36, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(220, 38, 38, 0.1) 0%, transparent 50%),
-                linear-gradient(135deg, #0f0f23 0%, #1e1b4b 50%, #312e81 100%);
-            animation: bgShift 20s ease-in-out infinite;
-        }
-
-        @keyframes bgShift {
-            0%, 100% { filter: hue-rotate(0deg) brightness(1); }
-            50% { filter: hue-rotate(30deg) brightness(1.1); }
-        }
-
-        /* ===== FLOATING PARTICLES ===== */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: var(--accent-gold);
-            border-radius: 50%;
-            opacity: 0.6;
-            animation: float 15s infinite linear;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.6;
-            }
-            90% {
-                opacity: 0.6;
-            }
-            100% {
-                transform: translateY(-100px) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        /* ===== NAVIGATION ===== */
-        .nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 1rem 2rem;
-            background: rgba(15, 15, 35, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--surface-glass);
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-
-        .nav-content {
-            max-width: 1400px;
+        .flyer {
+            width: 210mm;
             margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: white;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            font-family: 'Orbitron', monospace;
-            font-weight: 900;
-            font-size: 1.5rem;
-            color: var(--accent-gold);
-        }
-
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background-image: url('https://www.simcarabinieri.com/img/logo_small.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            border-radius: 4px;
-        }
-
-        /* ===== HERO SECTION ===== */
+        /* Hero Section */
         .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-            padding: 6rem 2rem 4rem;
-        }
-
-        .hero-grid {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-
-        .hero-content h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(2rem, 5vw, 4.5rem);
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 2rem;
-            background: var(--gradient-cyber);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-subtitle {
-            font-size: clamp(1rem, 3vw, 1.4rem);
-            color: var(--neutral-white);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .hero-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin: 3rem 0;
-        }
-
-        .stat-card {
-            background: var(--surface-glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 1.5rem;
+            background: linear-gradient(135deg, #c41e3a 0%, #8b0000 35%, #4a0080 70%, #1a0033 100%);
+            padding: 50px 40px;
             text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .stat-number {
-            font-family: 'Orbitron', monospace;
-            font-size: clamp(1.2rem, 4vw, 2rem);
-            font-weight: 900;
-            color: var(--accent-gold);
-            display: block;
-        }
-
-        .stat-label {
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
-            color: var(--neutral-white);
-            margin-top: 0.5rem;
-        }
-
-        .hero-visual {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .logo-container {
-            position: relative;
-            width: 300px;
-            height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .central-logo {
-            width: 200px;
-            height: 200px;
-            background-image: url('https://www.simcarabinieri.com/img/logo_small.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            animation: logoPulse 3s ease-in-out infinite;
-            position: relative;
-            z-index: 2;
-        }
-
-        @keyframes logoPulse {
-            0%, 100% { 
-                transform: scale(1);
-                filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.4));
-            }
-            50% { 
-                transform: scale(1.05);
-                filter: drop-shadow(0 0 40px rgba(251, 191, 36, 0.8));
-            }
-        }
-
-        .logo-glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 250px;
-            height: 250px;
-            background: radial-gradient(circle, rgba(251, 191, 36, 0.2) 0%, transparent 70%);
-            border-radius: 50%;
-            animation: glowPulse 4s ease-in-out infinite;
-            z-index: 1;
-        }
-
-        @keyframes glowPulse {
-            0%, 100% { 
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 0.3;
-            }
-            50% { 
-                transform: translate(-50%, -50%) scale(1.2);
-                opacity: 0.6;
-            }
-        }
-
-        .floating-elements {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
-
-        .floating-icon {
-            position: absolute;
-            background: var(--surface-glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            animation: float-around 8s ease-in-out infinite;
-            color: var(--accent-gold);
-        }
-
-        .floating-icon:nth-child(1) {
-            top: 10%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .floating-icon:nth-child(2) {
-            top: 20%;
-            right: 10%;
-            animation-delay: 2s;
-        }
-
-        .floating-icon:nth-child(3) {
-            bottom: 20%;
-            left: 20%;
-            animation-delay: 4s;
-        }
-
-        .floating-icon:nth-child(4) {
-            bottom: 10%;
-            right: 20%;
-            animation-delay: 6s;
-        }
-
-        @keyframes float-around {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
-
-        /* ===== CTA BUTTON ===== */
-        .cta-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 1rem;
-            background: var(--gradient-gold);
-            color: var(--neutral-black);
-            padding: 1.5rem 3rem;
-            border-radius: 50px;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(1rem, 3vw, 1.2rem);
-            font-weight: 700;
-            text-decoration: none;
-            box-shadow: var(--shadow-cyber);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            width: fit-content;
-            margin: 0 auto;
-        }
-
-        .cta-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .cta-button:hover::before {
-            left: 100%;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(251, 191, 36, 0.4);
-        }
-
-        /* ===== DEPARTMENTS SECTION ===== */
-        .departments {
-            padding: 8rem 2rem;
-            position: relative;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .section-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(1.5rem, 4vw, 3.5rem);
-            font-weight: 900;
-            margin-bottom: 1rem;
-            background: var(--gradient-cyber);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .section-subtitle {
-            font-size: clamp(1rem, 3vw, 1.3rem);
-            color: var(--neutral-white);
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .departments-grid {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .dept-card {
-            background: var(--surface-glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 2rem;
-            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .dept-card::before {
+        .hero::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
-            background: var(--gradient-gold);
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.08) 0%, transparent 50%);
+            pointer-events: none;
         }
 
-        .dept-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-glow);
-            border-color: var(--accent-gold);
+        .hero-content {
+            position: relative;
+            z-index: 1;
         }
 
-        .dept-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            display: block;
-            text-align: center;
-            transition: all 0.3s ease;
+        .logo-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
         }
 
-        /* Tematizzazione colori icone dipartimenti */
-        .dept-card:nth-child(1) .dept-icon { color: #dc2626; } /* Affari Giuridici - Rosso */
-        .dept-card:nth-child(2) .dept-icon { color: #059669; } /* Cause di Servizio - Verde */
-        .dept-card:nth-child(3) .dept-icon { color: #7c3aed; } /* Comunicazione - Viola */
-        .dept-card:nth-child(4) .dept-icon { color: #2563eb; } /* Direzione Amministrativa - Blu */
-        .dept-card:nth-child(5) .dept-icon { color: #ea580c; } /* Disciplina - Arancione */
-        .dept-card:nth-child(6) .dept-icon { color: #16a34a; } /* Forestale - Verde bosco */
-        .dept-card:nth-child(7) .dept-icon { color: #7c2d12; } /* Area Dirigenti - Marrone */
-        .dept-card:nth-child(8) .dept-icon { color: #ec4899; } /* Pari Opportunità - Rosa */
-        .dept-card:nth-child(9) .dept-icon { color: #06b6d4; } /* Psicologia - Ciano */
-        .dept-card:nth-child(10) .dept-icon { color: #fbbf24; } /* Reparti Speciali - Oro */
-        .dept-card:nth-child(11) .dept-icon { color: #ef4444; } /* Salute e Benessere - Rosso salute */
-        .dept-card:nth-child(12) .dept-icon { color: #10b981; } /* Sanità - Verde medico */
-        .dept-card:nth-child(13) .dept-icon { color: #3b82f6; } /* Scuole Arma - Blu educativo */
-        .dept-card:nth-child(14) .dept-icon { color: #f59e0b; } /* Sicurezza Lavoro - Giallo sicurezza */
-        .dept-card:nth-child(15) .dept-icon { color: #8b5cf6; } /* Storia e Cultura - Viola storico */
-        .dept-card:nth-child(16) .dept-icon { color: #14b8a6; } /* Territoriale - Turchese */
-        .dept-card:nth-child(17) .dept-icon { color: #22c55e; } /* Trattamento Stipendiale - Verde denaro */
-
-        .dept-card:hover .dept-icon {
-            transform: scale(1.1);
-            filter: brightness(1.2);
+        .logo-box {
+            width: 100px;
+            height: 100px;
+            background: url('https://simc-restyle.clion.it/img/logo_small.webp') center/contain no-repeat;
+            border-radius: 10px;
+            filter: drop-shadow(0 8px 24px rgba(255, 215, 0, 0.4));
         }
 
-        .dept-name {
+        .logo-title {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--accent-gold);
-            margin-bottom: 1rem;
+            font-size: 42px;
+            font-weight: 900;
+            color: white;
+            letter-spacing: 3px;
+            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 48px;
+            font-weight: 900;
+            color: white;
+            line-height: 1.1;
+            margin-bottom: 15px;
+        }
+
+        .highlight {
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .stat-num {
+            font-size: 36px;
+            font-weight: 900;
+            color: #ffd700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: white;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        /* About Section */
+        .about-section {
+            background: linear-gradient(135deg, #c41e3a 0%, #4a0080 100%);
+            padding: 40px;
+            color: white;
+        }
+
+        .about-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 15px;
             text-align: center;
         }
 
-        .dept-description {
-            color: var(--neutral-white);
+        .about-text {
+            font-size: 16px;
+            line-height: 1.6;
             text-align: center;
-            line-height: 1.5;
-            font-size: 0.95rem;
+            max-width: 900px;
+            margin: 0 auto;
         }
 
-        /* ===== SERVICES SECTION ===== */
-        .services {
-            padding: 8rem 2rem;
-            background: linear-gradient(135deg, rgba(15, 15, 35, 0.8) 0%, rgba(30, 27, 75, 0.8) 100%);
+        .about-highlight {
+            color: #ffd700;
+            font-weight: 800;
+        }
+
+        /* Services Section */
+        .services-section {
+            padding: 40px;
+            background: white;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 32px;
+            font-weight: 900;
+            color: #1a0033;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
         }
 
         .services-grid {
-            max-width: 1400px;
-            margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 3rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
         .service-card {
-            background: var(--surface-glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 3rem;
-            transition: all 0.3s ease;
-            position: relative;
+            background: linear-gradient(135deg, rgba(196, 30, 58, 0.05) 0%, rgba(74, 0, 128, 0.05) 100%);
+            border: 2px solid #c41e3a;
+            border-radius: 15px;
+            padding: 25px;
         }
 
-        .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-glow);
+        .service-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
         }
 
         .service-icon {
-            font-size: 3.5rem;
-            margin-bottom: 2rem;
-            display: block;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        /* Tematizzazione colori icone servizi */
-        .service-card:nth-child(1) .service-icon { color: #dc2626; } /* Tutela Legale - Rosso giustizia */
-        .service-card:nth-child(3) .service-icon { color: #2563eb; } /* CAF Fiscali - Blu business */
-        .service-card:nth-child(4) .service-icon { color: #7c3aed; } /* Convenzioni - Viola premium */
-
-        .service-card:hover .service-icon {
-            transform: scale(1.1);
-            filter: brightness(1.2);
+            font-size: 28px;
         }
 
         .service-title {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(1.2rem, 3vw, 1.5rem);
-            font-weight: 700;
-            color: var(--accent-gold);
-            margin-bottom: 1rem;
-            text-align: center;
+            font-size: 20px;
+            font-weight: 800;
+            color: #c41e3a;
         }
 
-        .service-description {
-            color: var(--neutral-gray);
-            margin-bottom: 2rem;
-            text-align: center;
-            font-size: clamp(1rem, 2.5vw, 1.1rem);
+        .service-desc {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            font-weight: 600;
         }
 
         .service-features {
@@ -555,707 +225,800 @@
         }
 
         .service-features li {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 0.8rem;
-            color: var(--neutral-white);
-            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            font-size: 14px;
+            color: #444;
+            margin-bottom: 6px;
+            padding-left: 20px;
+            position: relative;
+            font-weight: 600;
         }
 
         .service-features li::before {
             content: '✓';
-            background: var(--gradient-gold);
-            color: var(--neutral-black);
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
+            position: absolute;
+            left: 0;
+            color: #ffd700;
+            font-weight: 900;
+            font-size: 16px;
+        }
+
+        .value-badge {
+            background: #ffd700;
+            color: #1a0033;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 900;
+            display: inline-block;
+            font-size: 14px;
+        }
+
+        /* Departments Section */
+        .departments-section {
+            background: linear-gradient(135deg, #4a0080 0%, #1a0033 100%);
+            padding: 40px;
+            color: white;
+        }
+
+        .departments-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .dept-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .dept-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .dept-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffd700;
+        }
+
+        /* Partners Section */
+        .partners-section {
+            background: white;
+            padding: 40px;
+        }
+
+        .partners-text {
+            font-size: 15px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+
+        .partners-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            align-items: center;
+        }
+
+        .partner-logo {
+            background: linear-gradient(135deg, rgba(196, 30, 58, 0.1) 0%, rgba(74, 0, 128, 0.1) 100%);
+            border: 2px solid #c41e3a;
+            border-radius: 12px;
+            padding: 20px;
+            height: 90px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            font-size: 0.8rem;
-            flex-shrink: 0;
-        }
-
-        .highlight-value {
-            background: var(--gradient-gold);
-            color: var(--neutral-black);
-            padding: 0.2rem 0.5rem;
-            border-radius: 6px;
-            font-weight: 700;
-            font-family: 'Orbitron', monospace;
-        }
-
-        /* ===== VALUE HIGHLIGHT ===== */
-        .value-highlight {
-            background: var(--gradient-gold);
-            color: var(--neutral-black);
-            padding: 0.3rem 0.6rem;
-            border-radius: 8px;
             font-weight: 900;
-            font-family: 'Orbitron', monospace;
-            display: inline-block;
-            margin: 0 0.2rem;
+            color: #1a0033;
+            font-size: 18px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(196, 30, 58, 0.15);
         }
 
-        /* ===== RESPONSIVE DESIGN ===== */
-        @media (max-width: 768px) {
-            .nav {
-                padding: 0.8rem 1rem;
+        .partner-logo:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(196, 30, 58, 0.25);
+            border-color: #ffd700;
+        }
+
+        /* Final CTA */
+        .cta-section {
+            background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+            padding: 50px 40px;
+            text-align: center;
+            color: white;
+        }
+
+        .cta-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+
+        .cta-box {
+            background: rgba(255, 215, 0, 0.15);
+            border: 3px solid #ffd700;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .cta-text {
+            font-size: 18px;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+
+        .price-big {
+            font-size: 56px;
+            color: #ffd700;
+            font-weight: 900;
+            display: inline-block;
+            margin: 0 5px;
+        }
+
+        .disclaimer {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.8);
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1a0033;
+            padding: 30px 40px;
+            text-align: center;
+            color: white;
+        }
+
+        .footer-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+
+        .footer-address {
+            font-size: 14px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .footer-contacts {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .footer-contacts a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+
+        .footer-motto {
+            font-size: 16px;
+            font-style: italic;
+            margin-top: 15px;
+            color: #ffd700;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #ffd700;
+            color: #1a0033;
+            font-size: 24px;
+            font-weight: 900;
+            padding: 20px 50px;
+            border-radius: 50px;
+            text-decoration: none;
+            margin-top: 25px;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .cta-button:hover {
+            background: #fff;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.6);
+        }
+
+        @media print {
+            body {
+                padding: 0;
             }
-            
-            .logo {
-                font-size: 1.1rem;
+            .flyer {
+                box-shadow: none;
             }
-            
-            .logo-icon {
-                width: 32px;
-                height: 32px;
+        }
+
+        /* Mobile Responsive */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 0;
+            }
+
+            .flyer {
+                width: 100%;
+                box-shadow: none;
             }
 
             .hero {
-                padding: 5rem 1rem 3rem;
-                min-height: auto;
-            }
-            
-            .hero-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-                text-align: center;
+                padding: 30px 20px;
             }
 
-            .hero-content h1 {
-                font-size: clamp(1.8rem, 8vw, 3rem);
-                margin-bottom: 1.5rem;
+            .logo-section {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .logo-box {
+                width: 60px;
+                height: 60px;
+            }
+
+            .logo-title {
+                font-size: 28px;
+                letter-spacing: 2px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
             }
 
             .hero-subtitle {
-                font-size: clamp(0.95rem, 4vw, 1.2rem);
-                margin-bottom: 1.5rem;
+                font-size: 16px;
             }
 
-            .hero-stats {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 0.8rem;
-                margin: 2rem 0;
-            }
-
-            .stat-card {
-                padding: 1rem;
-            }
-
-            .logo-container {
-                width: 200px;
-                height: 200px;
-            }
-
-            .central-logo {
-                width: 140px;
-                height: 140px;
-            }
-
-            .logo-glow {
-                width: 180px;
-                height: 180px;
-            }
-
-            .floating-icon {
-                width: 35px;
-                height: 35px;
-                font-size: 1rem;
-            }
-
-            .cta-button {
-                padding: 1.2rem 2rem;
-                font-size: 1rem;
-                display: block;
-                text-align: center;
-                max-width: 280px;
-            }
-
-            .departments,
-            .services {
-                padding: 4rem 1rem;
-            }
-
-            .section-header {
-                margin-bottom: 3rem;
-            }
-
-            .departments-grid {
+            .stats-row {
                 grid-template-columns: 1fr;
-                gap: 1.5rem;
+                gap: 12px;
+                max-width: 100%;
+            }
+
+            .stat {
+                padding: 12px;
+            }
+
+            .stat-num {
+                font-size: 28px;
+            }
+
+            .stat-label {
+                font-size: 12px;
+            }
+
+            .about-section,
+            .services-section,
+            .departments-section,
+            .partners-section,
+            .cta-section {
+                padding: 30px 20px;
+            }
+
+            .section-title,
+            .about-title {
+                font-size: 24px;
+            }
+
+            .section-subtitle {
+                font-size: 14px;
             }
 
             .services-grid {
                 grid-template-columns: 1fr;
-                gap: 2rem;
+                gap: 15px;
             }
 
-            .dept-card,
             .service-card {
-                padding: 1.5rem;
+                padding: 20px;
+            }
+
+            .service-title {
+                font-size: 18px;
+            }
+
+            .service-desc {
+                font-size: 14px;
+            }
+
+            .service-features li {
+                font-size: 13px;
+            }
+
+            .departments-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .dept-card {
+                padding: 12px;
             }
 
             .dept-icon {
-                font-size: 2rem;
+                font-size: 20px;
             }
 
-            .service-icon {
-                font-size: 2.5rem;
+            .dept-name {
+                font-size: 11px;
             }
 
-            .service-card {
-                padding: 2rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero {
-                padding: 4.5rem 0.8rem 2rem;
+            .partners-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
             }
 
-            .hero-content h1 {
-                font-size: clamp(1.5rem, 10vw, 2.5rem);
-                line-height: 1.2;
+            .partner-logo {
+                height: 70px;
+                font-size: 14px;
+                padding: 15px;
             }
 
-            .hero-subtitle {
-                font-size: clamp(0.9rem, 5vw, 1.1rem);
+            .cta-title {
+                font-size: 28px;
             }
 
-            .hero-stats {
-                gap: 0.5rem;
-                margin: 1.5rem 0;
+            .cta-text {
+                font-size: 15px;
             }
 
-            .stat-card {
-                padding: 0.8rem;
-                border-radius: 12px;
-            }
-
-            .stat-number {
-                font-size: clamp(1rem, 6vw, 1.5rem);
-            }
-
-            .stat-label {
-                font-size: clamp(0.7rem, 3vw, 0.8rem);
-            }
-
-            .logo-container {
-                width: 160px;
-                height: 160px;
-            }
-
-            .central-logo {
-                width: 110px;
-                height: 110px;
-            }
-
-            .floating-icon {
-                width: 28px;
-                height: 28px;
-                font-size: 0.8rem;
+            .price-big {
+                font-size: 40px;
             }
 
             .cta-button {
-                padding: 1rem 1.5rem;
-                font-size: 0.9rem;
-                max-width: 250px;
+                font-size: 20px;
+                padding: 15px 35px;
+                width: 90%;
+                text-align: center;
             }
 
-            .dept-icon {
-                font-size: 1.8rem;
+            .footer {
+                padding: 20px;
             }
 
-            .service-icon {
-                font-size: 2rem;
+            .footer-title {
+                font-size: 14px;
             }
 
-            .dept-card,
-            .service-card {
-                padding: 1.2rem;
+            .footer-address,
+            .footer-contacts {
+                font-size: 12px;
             }
 
-            .departments,
-            .services {
-                padding: 3rem 0.8rem;
+            .footer-motto {
+                font-size: 14px;
             }
         }
 
-        @media (max-width: 360px) {
-            .nav {
-                padding: 0.6rem 0.8rem;
+        @media screen and (max-width: 480px) {
+            .logo-title {
+                font-size: 24px;
             }
 
-            .logo {
-                font-size: 1rem;
-                gap: 0.5rem;
+            .hero h1 {
+                font-size: 28px;
             }
 
-            .logo-icon {
-                width: 28px;
-                height: 28px;
+            .section-title,
+            .about-title {
+                font-size: 22px;
             }
 
-            .hero {
-                padding: 4rem 0.5rem 1.5rem;
-            }
-
-            .hero-content h1 {
-                font-size: clamp(1.3rem, 12vw, 2rem);
-            }
-
-            .hero-subtitle {
-                font-size: clamp(0.85rem, 6vw, 1rem);
+            .departments-grid {
+                grid-template-columns: 1fr;
             }
 
             .cta-button {
-                padding: 0.9rem 1.2rem;
-                font-size: 0.85rem;
-                max-width: 220px;
+                font-size: 18px;
+                padding: 12px 30px;
+                width: 95%;
+            }
+
+            .website-features {
+                grid-template-columns: 1fr !important;
+                gap: 10px !important;
+            }
+
+            .website-highlight-title {
+                font-size: 32px !important;
+            }
+
+            .website-url {
+                font-size: 24px !important;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Animated Background -->
-    <div class="cyber-bg"></div>
-    
-    <!-- Floating Particles -->
-    <div class="particles" id="particles"></div>
-
-    <!-- Navigation -->
-    <nav class="nav">
-        <div class="nav-content">
-            <div class="logo">
-                <div class="logo-icon"></div>
-                <span>SIM CARABINIERI</span>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-grid">
+    <div class="flyer">
+        
+        <!-- Hero Section -->
+        <div class="hero">
             <div class="hero-content">
-                <h1>LA TUA PROTEZIONE TOTALE INIZIA QUI</h1>
+                <div class="logo-section">
+                    <div class="logo-box"></div>
+                    <div class="logo-title">SIM CARABINIERI</div>
+                </div>
+                
+                <h1>Da oggi, non sarete<br><span class="highlight">mai più soli!</span></h1>
+                
                 <p class="hero-subtitle">
-                    17 dipartimenti specializzati, protezione legale fino a €20.000, 
-                    assistenza sanitaria H24 e oltre 15.000 colleghi che si fidano di noi.
+                    Siamo nati per dare voce, tutele e diritti a tutti i Carabinieri
                 </p>
                 
-                <div class="hero-stats">
-                    <div class="stat-card">
-                        <span class="stat-number">15K+</span>
-                        <span class="stat-label">Iscritti</span>
+                <div class="stats-row">
+                    <div class="stat">
+                        <span class="stat-num">+15.000</span>
+                        <span class="stat-label">Carabinieri di ogni categoria che si sono uniti al SIM Carabinieri</span>
                     </div>
-                    <div class="stat-card">
-                        <span class="stat-number">€20K</span>
-                        <span class="stat-label">Tutela Legale</span>
+                    <div class="stat">
+                        <span class="stat-num">+200</span>
+                        <span class="stat-label">Dirigenti Sindacali in ogni regione d'Italia qui per rappresentarti</span>
                     </div>
-                    <div class="stat-card">
-                        <span class="stat-number">24/7</span>
-                        <span class="stat-label">Assistenza</span>
+                    <div class="stat">
+                        <span class="stat-num">17</span>
+                        <span class="stat-label">Dipartimenti che trattano ogni singolo aspetto del lavoro di ogni Carabiniere</span>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <a href="https://www.simcarabinieri.com/iscrizione.php" class="cta-button">
-                    <i class="fas fa-rocket"></i> ISCRIVITI SUBITO
+        <!-- About Section -->
+        <div class="about-section">
+            <h2 class="about-title">Su di noi</h2>
+            <p class="about-text">
+                Fondato nel Febbraio 2019, il SIM Carabinieri è stato il <span class="about-highlight">primo Sindacato Militare in Italia</span> e, ad oggi, è ancora primo per numero di iscritti, di ogni categoria, tra tutti i sindacati delle Forze Armate Italiane.
+            </p>
+        </div>
+
+        <!-- Services Section -->
+        <div class="services-section">
+            <h2 class="section-title">Non offriamo risposte, ma <span style="color: #ffd700;">soluzioni</span></h2>
+            <p class="section-subtitle">
+                Da sempre facciamo la differenza con i nostri servizi, per offrire tutto ciò di cui un Carabiniere ha bisogno.
+            </p>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-icon">⚖️</span>
+                        <h3 class="service-title">Tutela Legale in servizio fino a 20.000€ senza franchigia</h3>
+                    </div>
+                    <p class="service-desc">
+                        Protezione nelle questioni legali più complesse con esperti in diritto militare
+                    </p>
+                    <ul class="service-features">
+                        <li>Scelta libera del legale</li>
+                        <li>Periti e consulenti inclusi</li>
+                        <li>Copertura penale, penale militare, disciplinare</li>
+                        <li>Assistenza 24/7 per emergenze</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-icon">🏥</span>
+                        <h3 class="service-title">Area negoziale contrattuale di base e dirigenziale</h3>
+                    </div>
+                    <p class="service-desc">
+                        Rappresentanza nelle trattative contrattuali per garantire i tuoi diritti economici e normativi
+                    </p>
+                    <ul class="service-features">
+                        <li>Negoziazione aumenti retributivi</li>
+                        <li>Tutela diritti previdenziali</li>
+                        <li>Miglioramento condizioni di lavoro</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-icon">💼</span>
+                        <h3 class="service-title">Supporto e tutela disciplinare e assistenze gratuite</h3>
+                    </div>
+                    <p class="service-desc">
+                        Difesa completa in procedimenti disciplinari con assistenza legale specializzata
+                    </p>
+                    <ul class="service-features">
+                        <li>Assistenza in procedimenti disciplinari</li>
+                        <li>Consulenza preventiva</li>
+                        <li>Rappresentanza in commissioni</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-icon">🎯</span>
+                        <h3 class="service-title">Consulenza e assistenza gratuita per cause di servizio e vittime del dovere</h3>
+                    </div>
+                    <p class="service-desc">
+                        Supporto completo per il riconoscimento di cause di servizio e status di vittima del dovere
+                    </p>
+                    <ul class="service-features">
+                        <li>Assistenza per infortuni in servizio</li>
+                        <li>Pratiche equo indennizzo</li>
+                        <li>Riconoscimento vittime del dovere</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, rgba(196, 30, 58, 0.1) 0%, rgba(74, 0, 128, 0.1) 100%); border: 2px solid #c41e3a; border-radius: 15px; padding: 25px; margin-top: 20px;">
+                <div class="service-header" style="justify-content: center; margin-bottom: 15px;">
+                    <span class="service-icon">🏥</span>
+                    <h3 class="service-title">Dr.Feel - Servizio Sanitario H24</h3>
+                </div>
+                <p class="service-desc" style="text-align: center; margin-bottom: 15px;">
+                    Copertura sanitaria completa per tutto il nucleo familiare con telemedicina avanzata
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <ul class="service-features">
+                        <li>Consulenze mediche 24/7 via app</li>
+                        <li>Visite specialistiche online</li>
+                    </ul>
+                    <ul class="service-features">
+                        <li>Prescrizioni mediche digitali</li>
+                        <li>Supporto psicologico incluso</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, rgba(196, 30, 58, 0.1) 0%, rgba(74, 0, 128, 0.1) 100%); border: 2px solid #c41e3a; border-radius: 15px; padding: 25px; margin-top: 20px;">
+                <div class="service-header" style="justify-content: center; margin-bottom: 15px;">
+                    <span class="service-icon">📊</span>
+                    <h3 class="service-title">CAF e Servizi Fiscali Completi</h3>
+                </div>
+                <p class="service-desc" style="text-align: center; margin-bottom: 15px;">
+                    Assistenza fiscale e previdenziale completa per massimizzare i tuoi benefici economici
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <ul class="service-features">
+                        <li>Dichiarazione 730 gratuita</li>
+                        <li>Calcolo e invio ISEE gratuito</li>
+                    </ul>
+                    <ul class="service-features">
+                        <li>Pratiche previdenziali (pensioni)</li>
+                        <li>Consulenza fiscale personalizzata</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, rgba(196, 30, 58, 0.1) 0%, rgba(74, 0, 128, 0.1) 100%); border: 2px solid #c41e3a; border-radius: 15px; padding: 25px; margin-top: 20px;">
+                <div class="service-header" style="justify-content: center; margin-bottom: 15px;">
+                    <span class="service-icon">🎁</span>
+                    <h3 class="service-title">Convenzioni Esclusive Riservate agli Iscritti</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <ul class="service-features">
+                        <li>Italo Treno 1° classe: sconto <span class="value-badge">40%</span></li>
+                        <li>Samoiraghi & Viganò: <span class="value-badge">30%</span> su occhiali</li>
+                        <li>GrandVision: fino a <span class="value-badge">-50€</span></li>
+                    </ul>
+                    <ul class="service-features">
+                        <li>Gruppo Stellantis: sconti esclusivi</li>
+                        <li>Alpitour World: sconto <span class="value-badge">11%</span></li>
+                        <li>Oltre <span class="value-badge">50</span> convenzioni attive!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Departments Section -->
+        <div class="departments-section">
+            <h2 class="section-title" style="color: white; margin-bottom: 15px;">
+                L'unica tessera che si <span style="color: #ffd700;">ripaga</span> da sola!
+            </h2>
+            <p style="text-align: center; font-size: 15px; margin-bottom: 30px; font-weight: 600;">
+                Conosciamo le esigenze di tutti i Carabinieri e ci impegniamo con più di 200 professionisti, aziende, agenzie ed attività commerciali, ad offrire solo il meglio.
+            </p>
+            
+            <h3 style="text-align: center; font-size: 28px; font-weight: 900; margin-bottom: 25px; color: #ffd700;">
+                17 DIPARTIMENTI SPECIALIZZATI
+            </h3>
+            
+            <div class="departments-grid">
+                <div class="dept-card">
+                    <span class="dept-icon">⚖️</span>
+                    <div class="dept-name">Affari Giuridici e Legislativi</div>
+                </div>
+                <div class="dept-card">
+                    <span class="dept-icon">🛡️</span>
+                    <div class="dept-name">Cause di Servizio</div>
+                </div>
+                <div class="dept-card">
+                    <span class="dept-icon">📢</span>
+                    <div class="dept-name">Comunicazione e Immagine</div>
+                </div>
+                <div class="dept-card">
+                    <span class="dept-icon">🧮</span>
+                    <div class="dept-name">Direzione Amministrativa</div>
+                </div>
+                <div class="dept-card">
+                    <span class="dept-icon">⚠️</span>
+                    <div class="dept-name">Disciplina</div>
+                </div>
+                <div class="dept-card">
+                    <span class="dept-icon">🌲</span>
+                    <div class="dept-name">Forestale</div>
+                </div>
+                <div class="dept-card">
+                    <span class="dept-icon">👔</span>
+                    <div class="dept-name">Area Dirigenti</div>
+                </div>
+                <div class="dept-card">
+                    <span class="dept-icon">⚖️</span>
+                    <div class="dept-name">Pari Opportunità</div>
+                </div>
+                <div class="dept-card">
+                    <span class="dept-icon">🧠</span>
+                    <div class="dept-name">Psicologia Online</div>
+                </div>
+                <div class="dept-card">
+                    <span class="dept-icon">🎖️</span>
+                    <div class="dept-name">Reparti Speciali</div>
+                </div>
+                <div class="dept-card">
+                    <span class="dept-icon">💚</span>
+                    <div class="dept-name">Salute e Benessere</div>
+                </div>
+                <div class="dept-card">
+                    <span class="dept-icon">🏥</span>
+                    <div class="dept-name">Sanità</div>
+                </div>
+                <div class="dept-card">
+                    <span class="dept-icon">🎓</span>
+                    <div class="dept-name">Scuole Arma</div>
+                </div>
+                <div class="dept-card">
+                    <span class="dept-icon">🦺</span>
+                    <div class="dept-name">Sicurezza Lavoro</div>
+                </div>
+                <div class="dept-card">
+                    <span class="dept-icon">📚</span>
+                    <div class="dept-name">Storia e Cultura</div>
+                </div>
+                <div class="dept-card">
+                    <span class="dept-icon">📍</span>
+                    <div class="dept-name">Territoriale/Stazioni</div>
+                </div>
+                <div class="dept-card">
+                    <span class="dept-icon">💰</span>
+                    <div class="dept-name">Trattamento Stipendiale</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Partners Section -->
+        <div class="partners-section">
+            <h2 class="section-title">I nostri Partner Principali</h2>
+            <p class="partners-text">
+                Solo alcuni dei nostri partners più importanti. Con SIM Carabinieri avrai accesso ad un ecosistema di servizi che ti ripagheranno la quota associativa... e oltre!
+            </p>
+            
+            <div class="partners-grid">
+                <div class="partner-logo">Confartigianato</div>
+                <div class="partner-logo">Dr.Feel</div>
+                <div class="partner-logo">Allianz</div>
+                <div class="partner-logo">AON</div>
+            </div>
+        </div>
+
+        <!-- Historical Section -->
+        <div class="about-section">
+            <h2 class="about-title">Dalla parte giusta della storia</h2>
+            <p class="about-text">
+                Scegli di unirti al più grande Sindacato Militare Italiano. Diventa un membro SIM Carabinieri e scopri cosa significa far parte del primo Sindacato Militare in Italia. Scegli il benessere del tuo futuro e di quello della tua famiglia, scegli SIM Carabinieri.
+            </p>
+        </div>
+
+        <!-- Website Highlight Section -->
+        <div style="background: linear-gradient(135deg, #1a0033 0%, #4a0080 50%, #c41e3a 100%); padding: 50px 40px; text-align: center; color: white; position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.15) 0%, transparent 70%); pointer-events: none;"></div>
+            
+            <div style="position: relative; z-index: 1;">
+                <span style="display: inline-block; background: #ffd700; color: #1a0033; padding: 8px 20px; border-radius: 25px; font-weight: 900; font-size: 14px; margin-bottom: 20px; letter-spacing: 1px;">✨ NOVITÀ 2025</span>
+                
+                <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 48px; font-weight: 900; margin-bottom: 20px; color: white; line-height: 1.2;">
+                    Visita il nostro<br><span style="color: #ffd700; text-shadow: 0 0 30px rgba(255, 215, 0, 0.6);">NUOVO SITO WEB</span>
+                </h2>
+                
+                <p style="font-size: 20px; margin-bottom: 30px; font-weight: 600; max-width: 700px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+                    Un'esperienza completamente rinnovata per essere ancora più vicini a te. Scopri tutti i servizi, le convenzioni e rimani aggiornato sulle ultime novità del sindacato.
+                </p>
+                
+                <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border: 3px solid #ffd700; border-radius: 20px; padding: 30px; max-width: 600px; margin: 0 auto 30px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px;">
+                        <span style="font-size: 40px;">🌐</span>
+                        <div style="text-align: left;">
+                            <div style="font-size: 14px; color: #ffd700; font-weight: 700; margin-bottom: 5px;">IL NOSTRO SITO</div>
+                            <a href="https://www.simcarabinieri.it" target="_blank" style="color: white; text-decoration: none; font-size: 32px; font-weight: 900; font-family: 'Space Grotesk', sans-serif; display: block; transition: all 0.3s ease;">
+                                www.simcarabinieri.it
+                            </a>
+                        </div>
+                    </div>
+                    <p style="font-size: 15px; color: rgba(255, 255, 255, 0.9); margin-top: 15px; font-weight: 600;">
+                        Accessibile da PC, tablet e smartphone 📱💻
+                    </p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 800px; margin: 0 auto;">
+                    <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 12px; padding: 20px;">
+                        <div style="font-size: 32px; margin-bottom: 10px;">📄</div>
+                        <div style="font-size: 16px; font-weight: 700; color: #ffd700;">Documenti e Guide</div>
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 12px; padding: 20px;">
+                        <div style="font-size: 32px; margin-bottom: 10px;">📰</div>
+                        <div style="font-size: 16px; font-weight: 700; color: #ffd700;">News e Aggiornamenti</div>
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 12px; padding: 20px;">
+                        <div style="font-size: 32px; margin-bottom: 10px;">🎁</div>
+                        <div style="font-size: 16px; font-weight: 700; color: #ffd700;">Tutte le Convenzioni</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Website Section -->
+        <div class="services-section">
+            <h2 class="section-title">Vicini ai Carabinieri, <span style="color: #ffd700;">ovunque</span></h2>
+            <p class="section-subtitle">Il nostro sito, un mondo di valore a portata di click!</p>
+            <p style="text-align: center; font-size: 15px; color: #333; line-height: 1.8; font-weight: 600; max-width: 800px; margin: 0 auto;">
+                Da smartphone o da PC, da casa e ovunque tu sia, SIM Carabinieri è insieme a te e ti segue passo dopo passo per ogni tua esigenza. Richieste, accesso ai servizi, news, consultazione convenzioni e tanto altro dalla nostra web APP o dal nostro sito.
+            </p>
+        </div>
+
+        <!-- Final CTA -->
+        <div class="cta-section">
+            <h2 class="cta-title">LA TUA RISPOSTA È QUI</h2>
+            
+            <div class="cta-box">
+                <p class="cta-text">
+                    <span class="price-big">€9*</span> al mese per oltre <span class="value-badge">€800</span> di valore annuale + 
+                    <span class="value-badge">€20.000</span> di protezione legale + <span class="value-badge">17</span> dipartimenti specializzati + 
+                    <span class="value-badge">15.000+</span> colleghi soddisfatti = <strong>LA SCELTA PIÙ INTELLIGENTE</strong>
+                </p>
+                <p class="disclaimer">
+                    *Quota media secondo l'Art. 1478, comma 3, del decreto legislativo 15 marzo 2010, n. 66
+                </p>
+            </div>
+
+            <div style="font-size: 20px; font-weight: 700; margin-top: 30px; margin-bottom: 15px;">
+                📱 Scopri tutti i servizi e vantaggi sul nostro sito:<br>
+                <a href="https://www.simcarabinieri.it" target="_blank" style="color: #ffd700; text-decoration: none; font-size: 26px; font-weight: 900; text-shadow: 0 2px 10px rgba(255, 215, 0, 0.5);">
+                    www.simcarabinieri.it
                 </a>
             </div>
             
-            <div class="hero-visual">
-                <div class="logo-container">
-                    <div class="logo-glow"></div>
-                    <div class="central-logo"></div>
-                    <div class="floating-elements">
-                        <div class="floating-icon"><i class="fas fa-balance-scale"></i></div>
-                        <div class="floating-icon"><i class="fas fa-user-md"></i></div>
-                        <div class="floating-icon"><i class="fas fa-chart-line"></i></div>
-                        <div class="floating-icon"><i class="fas fa-bullseye"></i></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Departments Section -->
-    <section class="departments">
-        <div class="section-header">
-            <h2 class="section-title">17 DIPARTIMENTI SPECIALIZZATI</h2>
-            <p class="section-subtitle">
-                Il tuo esercito personale di esperti che lavorano H24 per la tua protezione e i tuoi diritti.
-            </p>
-        </div>
-        
-        <div class="departments-grid">
-            <div class="dept-card">
-                <i class="dept-icon fas fa-gavel"></i>
-                <div class="dept-name">Affari Giuridici e Legislativi</div>
-                <div class="dept-description">Protezione nelle questioni legali più complesse con esperti in diritto militare</div>
-            </div>
-            
-            <div class="dept-card">
-                <i class="dept-icon fas fa-shield-alt"></i>
-                <div class="dept-name">Cause di Servizio</div>
-                <div class="dept-description">Assistenza completa per infortuni e malattie da servizio</div>
-            </div>
-            
-            <div class="dept-card">
-                <i class="dept-icon fas fa-bullhorn"></i>
-                <div class="dept-name">Comunicazione e Immagine</div>
-                <div class="dept-description">Difende la tua reputazione professionale</div>
-            </div>
-            
-            <div class="dept-card">
-                <i class="dept-icon fas fa-calculator"></i>
-                <div class="dept-name">Direzione Amministrativa</div>
-                <div class="dept-description">Verifica che ricevi ogni euro che ti spetta</div>
-            </div>
-            
-            <div class="dept-card">
-                <i class="dept-icon fas fa-exclamation-triangle"></i>
-                <div class="dept-name">Disciplina</div>
-                <div class="dept-description">Difesa nei procedimenti disciplinari</div>
-            </div>
-            
-            <div class="dept-card">
-                <i class="dept-icon fas fa-tree"></i>
-                <div class="dept-name">Forestale</div>
-                <div class="dept-description">Tutela specifica per il corpo forestale</div>
-            </div>
-            
-            <div class="dept-card">
-                <i class="dept-icon fas fa-user-tie"></i>
-                <div class="dept-name">Area Dirigenti</div>
-                <div class="dept-description">Tutela specifica per dirigenti dell'Arma</div>
-            </div>
-            
-            <div class="dept-card">
-                <i class="dept-icon fas fa-balance-scale"></i>
-                <div class="dept-name">Pari Opportunità</div>
-                <div class="dept-description">Garantisce equità di trattamento</div>
-            </div>
-            
-            <div class="dept-card">
-                <i class="dept-icon fas fa-brain"></i>
-                <div class="dept-name">Psicologia Online</div>
-                <div class="dept-description">Supporto psicologico H24 per te e famiglia</div>
-            </div>
-            
-            <div class="dept-card">
-                <i class="dept-icon fas fa-medal"></i>
-                <div class="dept-name">Reparti Speciali</div>
-                <div class="dept-description">Assistenza per reparti speciali</div>
-            </div>
-            
-            <div class="dept-card">
-                <i class="dept-icon fas fa-heartbeat"></i>
-                <div class="dept-name">Salute e Benessere</div>
-                <div class="dept-description">Programmi prevenzione e salute</div>
-            </div>
-            
-            <div class="dept-card">
-                <i class="dept-icon fas fa-hospital"></i>
-                <div class="dept-name">Sanità</div>
-                <div class="dept-description">Tutela questioni sanitarie</div>
-            </div>
-            
-            <div class="dept-card">
-                <i class="dept-icon fas fa-graduation-cap"></i>
-                <div class="dept-name">Scuole Arma</div>
-                <div class="dept-description">Supporto personale scuole</div>
-            </div>
-            
-            <div class="dept-card">
-                <i class="dept-icon fas fa-hard-hat"></i>
-                <div class="dept-name">Sicurezza Lavoro</div>
-                <div class="dept-description">Verifica condizioni sicurezza</div>
-            </div>
-            
-            <div class="dept-card">
-                <i class="dept-icon fas fa-book"></i>
-                <div class="dept-name">Storia e Cultura</div>
-                <div class="dept-description">Valorizza tradizioni dell'Arma</div>
-            </div>
-            
-            <div class="dept-card">
-                <i class="dept-icon fas fa-map-marker-alt"></i>
-                <div class="dept-name">Territoriale/Stazioni</div>
-                <div class="dept-description">Tutela personale territoriale</div>
-            </div>
-            
-            <div class="dept-card">
-                <i class="dept-icon fas fa-euro-sign"></i>
-                <div class="dept-name">Trattamento Stipendiale</div>
-                <div class="dept-description">Massimizza stipendio e pensione</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Services Section -->
-    <section class="services">
-        <div class="section-header">
-            <h2 class="section-title">SERVIZI CHE FANNO LA DIFFERENZA</h2>
-            <p class="section-subtitle">
-                Non sono "benefit aggiuntivi". Sono servizi essenziali che ti proteggono e assistono H24.
-            </p>
-        </div>
-        
-        <div class="services-grid">
-            <div class="service-card">
-                <i class="service-icon fas fa-gavel"></i>
-                <h3 class="service-title">Tutela Legale Professionale</h3>
-                <p class="service-description">Protezione fino a <span class="highlight-value">€20.000</span> senza franchigia</p>
-                <ul class="service-features">
-                    <li>Scelta libera del legale</li>
-                    <li>Periti e consulenti inclusi</li>
-                    <li>Copertura penale, penale militare, disciplinare</li>
-                    <li>Assistenza 24/7 per emergenze</li>
-                </ul>
-            </div>
-
-            <div class="service-card">
-                <div class="service-icon" style="background-image: url('https://drfeel.com/assets/logo-drfeel-colori.svg'); background-size: contain; background-repeat: no-repeat; background-position: center; width: 80px; height: 80px; margin: 0 auto 2rem;"></div>
-                <h3 class="service-title">Dr.Feel - Servizio Sanitario</h3>
-                <p class="service-description">Copertura per tutto il nucleo familiare</p>
-                <ul class="service-features">
-                    <li>Consulenze mediche 24/7 via app</li>
-                    <li>Visite specialistiche online</li>
-                    <li>Prescrizioni mediche digitali</li>
-                    <li>Telemedicina avanzata</li>
-                </ul>
-            </div>
-
-            <div class="service-card">
-                <i class="service-icon fas fa-chart-line"></i>
-                <h3 class="service-title">CAF e Servizi Fiscali</h3>
-                <p class="service-description">Assistenza fiscale completa</p>
-                <ul class="service-features">
-                    <li>Dichiarazione 730 gratuita</li>
-                    <li>Calcolo e invio ISEE gratuito</li>
-                    <li>Pratiche previdenziali (pensioni)</li>
-                    <li>Consulenza personalizzata</li>
-                </ul>
-            </div>
-
-            <div class="service-card">
-                <i class="service-icon fas fa-bullseye"></i>
-                <h3 class="service-title">Convenzioni Esclusive</h3>
-                <p class="service-description">Sconti riservati solo agli iscritti SIM</p>
-                <ul class="service-features">
-                    <li>Italo Treno 1° classe: sconto <span class="highlight-value">40%</span></li>
-                    <li>Samoiraghi & Viganò: <span class="highlight-value">30%</span> su occhiali</li>
-                    <li>GrandVision: fino a <span class="highlight-value">-50€</span></li>
-                    <li>Gruppo Stellantis: sconti esclusivi</li>
-                    <li>Alpitour World: sconto <span class="highlight-value">11%</span></li>
-                    <li>Oltre <span class="highlight-value">50</span> convenzioni attive!</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- Proof Section -->
-    <section class="proof">
-        <div class="proof-container" style="max-width: 900px; margin: 0 auto; padding: 6rem 2rem; text-align: center;">
-            <div class="proof-card" style="background: var(--gradient-gold); backdrop-filter: blur(20px); border: 2px solid var(--accent-gold); border-radius: 24px; padding: 3rem; position: relative; box-shadow: 0 0 60px rgba(251, 191, 36, 0.4);">
-                <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.5rem, 5vw, 2rem); font-weight: 900; color: var(--neutral-black); margin-bottom: 1.5rem;">LA MATEMATICA NON MENTE</h2>
-                <p style="font-size: clamp(1rem, 3vw, 1.2rem); line-height: 1.6; color: var(--neutral-black);">
-                    I nostri <strong>+15.000 iscritti</strong> hanno accesso a servizi che normalmente costerebbero 
-                    <strong>oltre €800 all'anno</strong>. Tu quanto stai perdendo in protezione ogni giorno che rimandi?
-                </p>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 2rem; margin-top: 3rem;">
-                    <div style="text-align: center;">
-                        <span style="font-family: 'Orbitron', monospace; font-size: clamp(1.5rem, 6vw, 2.5rem); font-weight: 900; color: var(--neutral-black); display: block;">€9*</span>
-                        <span style="color: var(--neutral-black); margin-top: 0.5rem; font-size: clamp(0.8rem, 2.5vw, 1rem);">Al mese</span>
-                    </div>
-                    <div style="text-align: center;">
-                        <span style="font-family: 'Orbitron', monospace; font-size: clamp(1.5rem, 6vw, 2.5rem); font-weight: 900; color: var(--neutral-black); display: block;">€800+</span>
-                        <span style="color: var(--neutral-black); margin-top: 0.5rem; font-size: clamp(0.8rem, 2.5vw, 1rem);">Valore annuale</span>
-                    </div>
-                    <div style="text-align: center;">
-                        <span style="font-family: 'Orbitron', monospace; font-size: clamp(1.5rem, 6vw, 2.5rem); font-weight: 900; color: var(--neutral-black); display: block;">1°</span>
-                        <span style="color: var(--neutral-black); margin-top: 0.5rem; font-size: clamp(0.8rem, 2.5vw, 1rem);">Sindacato per iscritti</span>
-                    </div>
-                </div>
-                
-                <p style="font-size: clamp(0.75rem, 2vw, 0.85rem); color: var(--neutral-black); margin-top: 1.5rem; font-style: italic;">
-                    *Quota media secondo l'Art. 1478, comma 3, del decreto legislativo 15 marzo 2010, n. 66
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Final CTA -->
-    <section style="padding: 6rem 2rem; text-align: center; background: var(--gradient-primary); position: relative; overflow: hidden;">
-        <div style="max-width: 800px; margin: 0 auto; position: relative; z-index: 1;">
-            <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.8rem, 6vw, 4rem); font-weight: 900; margin-bottom: 2rem;">LA TUA RISPOSTA È QUI</h2>
-            
-            <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: clamp(1.5rem, 4vw, 2.5rem); margin: 3rem 0; font-size: clamp(1rem, 3vw, 1.3rem); line-height: 1.6;">
-                <span class="value-highlight">€9*</span> al mese per oltre <span class="value-highlight">€800</span> di valore annuale + 
-                <span class="value-highlight">€20.000</span> di protezione legale + <span class="value-highlight">17</span> dipartimenti specializzati + 
-                <span class="value-highlight">15.000+</span> colleghi soddisfatti = <strong>LA SCELTA PIÙ INTELLIGENTE</strong>
-                
-                <p style="font-size: clamp(0.8rem, 2.5vw, 0.9rem); color: rgba(255,255,255,0.8); margin-top: 1rem; font-style: italic;">
-                    *Quota media secondo l'Art. 1478, comma 3, del decreto legislativo 15 marzo 2010, n. 66
-                </p>
-            </div>
-
-            <a href="https://www.simcarabinieri.com/iscrizione.php" class="cta-button">
-                <i class="fas fa-rocket"></i> ISCRIVITI SUBITO
+            <a href="https://www.simcarabinieri.com/iscrizione.php" target="_blank" class="cta-button">
+                🚀 ISCRIVITI SUBITO
             </a>
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer style="background: var(--surface-dark); padding: 4rem 2rem 2rem; text-align: center;">
-        <div style="max-width: 800px; margin: 0 auto;">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
-                <div style="width: clamp(40px, 10vw, 50px); height: clamp(40px, 10vw, 50px); background-image: url('https://www.simcarabinieri.com/img/logo_small.png'); background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
-                <div style="font-family: 'Orbitron', monospace; font-size: clamp(1.2rem, 4vw, 2rem); font-weight: 900; color: var(--accent-gold);">SIM CARABINIERI</div>
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-title">SINDACATO ITALIANO MILITARI CARABINIERI</div>
+            <p class="footer-motto">"#mai più soli"</p>
+            <div class="footer-address">
+                Via Magnagrecia 13 – 00183 Roma
             </div>
-            <p style="font-size: clamp(1rem, 3vw, 1.1rem); color: var(--neutral-white); margin-bottom: 2rem; font-style: italic;">
-                "#mai più soli"
-            </p>
-            
-            <div style="background: var(--surface-glass); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 2rem; margin-bottom: 2rem;">
-                <p style="font-size: clamp(0.9rem, 2.5vw, 1rem);"><strong>Sindacato Italiano Militari Carabinieri</strong><br>
-                Via Magnagrecia 13 – 00183 Roma</p>
-            </div>
-            
-            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-                <a href="https://www.simcarabinieri.it" target="_blank" style="color: var(--accent-gold); text-decoration: none; font-weight: 500; transition: all 0.3s ease; padding: 0.5rem; min-height: 44px; display: flex; align-items: center; justify-content: center; font-size: clamp(0.8rem, 2.5vw, 1rem);"><i class="fas fa-globe"></i> www.simcarabinieri.it</a>
-                <a href="mailto:info@simcarabinieri.cc" style="color: var(--accent-gold); text-decoration: none; font-weight: 500; transition: all 0.3s ease; padding: 0.5rem; min-height: 44px; display: flex; align-items: center; justify-content: center; font-size: clamp(0.8rem, 2.5vw, 1rem);"><i class="fas fa-envelope"></i> info@simcarabinieri.cc</a>
-                <a href="tel:+390669217447" style="color: var(--accent-gold); text-decoration: none; font-weight: 500; transition: all 0.3s ease; padding: 0.5rem; min-height: 44px; display: flex; align-items: center; justify-content: center; font-size: clamp(0.8rem, 2.5vw, 1rem);"><i class="fas fa-phone"></i> 06 6921 7447</a>
+            <div class="footer-contacts">
+                🌐 <a href="https://www.simcarabinieri.it">www.simcarabinieri.it</a> | 
+                📧 <a href="mailto:info@simcarabinieri.cc">info@simcarabinieri.cc</a> | 
+                📞 06 6921 7447
             </div>
         </div>
-    </footer>
 
-    <script>
-        // Particle system
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = window.innerWidth < 768 ? 15 : 30; // Fewer particles on mobile
-
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 15 + 's';
-                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-                particlesContainer.appendChild(particle);
-            }
-        }
-
-        // Navbar scroll effect
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('.nav');
-            if (window.scrollY > 100) {
-                nav.style.background = 'rgba(15, 15, 35, 0.98)';
-                nav.style.borderBottom = '1px solid rgba(251, 191, 36, 0.3)';
-            } else {
-                nav.style.background = 'rgba(15, 15, 35, 0.95)';
-                nav.style.borderBottom = '1px solid rgba(255, 255, 255, 0.1)';
-            }
-        });
-
-        // Intersection Observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.transform = 'translateY(0)';
-                    entry.target.style.opacity = '1';
-                }
-            });
-        }, observerOptions);
-
-        // Observe cards with delay for mobile
-        document.querySelectorAll('.dept-card, .service-card, .stat-card').forEach((card, index) => {
-            card.style.transform = 'translateY(30px)';
-            card.style.opacity = '0';
-            card.style.transition = 'all 0.6s ease';
-            card.style.transitionDelay = window.innerWidth < 768 ? `${index * 0.1}s` : '0s';
-            observer.observe(card);
-        });
-
-        // Initialize particles
-        createParticles();
-
-        // CTA button hover effect with touch support
-        document.querySelectorAll('.cta-button').forEach(button => {
-            button.addEventListener('mouseenter', function() {
-                if (window.innerWidth > 768) {
-                    this.style.transform = 'translateY(-3px) scale(1.05)';
-                }
-            });
-            
-            button.addEventListener('mouseleave', function() {
-                if (window.innerWidth > 768) {
-                    this.style.transform = 'translateY(0) scale(1)';
-                }
-            });
-
-            // Touch events for mobile
-            button.addEventListener('touchstart', function() {
-                this.style.transform = 'scale(0.95)';
-            });
-
-            button.addEventListener('touchend', function() {
-                this.style.transform = 'scale(1)';
-            });
-        });
-
-        // Icon hover effects with touch support
-        document.querySelectorAll('.dept-icon, .service-icon').forEach(icon => {
-            icon.addEventListener('mouseenter', function() {
-                if (window.innerWidth > 768) {
-                    this.style.transform = 'scale(1.2) rotate(5deg)';
-                }
-            });
-            
-            icon.addEventListener('mouseleave', function() {
-                if (window.innerWidth > 768) {
-                    this.style.transform = 'scale(1) rotate(0deg)';
-                }
-            });
-        });
-
-        // Smooth scrolling for internal links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Optimize performance on mobile
-        if (window.innerWidth < 768) {
-            // Reduce animation complexity on mobile
-            document.querySelectorAll('.floating-icon').forEach(icon => {
-                icon.style.animation = 'float-around 12s ease-in-out infinite';
-            });
-        }
-
-        // Resize handler for responsive particles
-        window.addEventListener('resize', () => {
-            const particles = document.getElementById('particles');
-            particles.innerHTML = '';
-            createParticles();
-        });
-    </script>
+    </div>
 </body>
 </html>
