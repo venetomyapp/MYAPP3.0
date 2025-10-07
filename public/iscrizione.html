@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIM Carabinieri - La Tessera Che Si Ripaga da Sola</title>
+    <title>Perché 15.000 Carabinieri Hanno Scelto SIM? | SIM Carabinieri</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -11,6 +11,7 @@
         :root {
             --primary-blue: #003d82;
             --primary-red: #8b2635;
+            --purple-primary: #5a1090;
             --accent-gold: #ffd700;
             --accent-green: #28a745;
             --neutral-white: #ffffff;
@@ -18,6 +19,7 @@
             --neutral-gray: #8a8a8a;
             --surface-light: #f8fafc;
             --surface-dark: #1e293b;
+            --dark-bg: #1a0033;
             --gradient-primary: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-red) 100%);
             --gradient-gold: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
             --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
@@ -174,7 +176,6 @@
             animation: none;
         }
 
-        /* Tooltip System */
         .nav-tooltip {
             position: absolute;
             left: 70px;
@@ -209,7 +210,6 @@
             transform: translateY(-50%) translateX(10px);
         }
 
-        /* Progress Indicator */
         .scroll-progress {
             position: absolute;
             right: -2px;
@@ -228,7 +228,6 @@
             height: 0%;
         }
 
-        /* Mobile Hide */
         @media (max-width: 1024px) {
             .smart-sidebar,
             .sidebar-trigger {
@@ -236,7 +235,6 @@
             }
         }
 
-        /* ===== GLASSMORPHISM UTILITIES ===== */
         .glass {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(var(--blur-md));
@@ -336,6 +334,15 @@
             margin-bottom: 2rem;
             box-shadow: var(--shadow-md);
             animation: pulse 2s ease-in-out infinite;
+        }
+
+        .hero-logo-top {
+            width: 120px;
+            height: auto;
+            margin: 0 auto 2rem;
+            display: block;
+            filter: drop-shadow(0 8px 24px rgba(255, 215, 0, 0.4));
+            border-radius: 15px;
         }
 
         .hero-title {
@@ -1067,9 +1074,79 @@
             text-align: center;
         }
 
+        /* ===== FINAL QUESTION BOX ===== */
+        .final-question {
+            padding: 4rem 2rem;
+            position: relative;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(90, 16, 144, 0.1) 0%, rgba(196, 30, 58, 0.1) 100%);
+        }
+
+        .question-box {
+            max-width: 700px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(var(--blur-lg));
+            border: 2px solid var(--accent-gold);
+            border-radius: var(--radius-lg);
+            padding: 3rem 2rem;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .question-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--primary-red);
+            margin-bottom: 1.5rem;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            color: var(--neutral-gray);
+            margin-bottom: 2rem;
+        }
+
+        .question-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--gradient-primary);
+            color: var(--neutral-white);
+            padding: 1rem 2.5rem;
+            border-radius: var(--radius-md);
+            font-size: 1.1rem;
+            font-weight: 800;
+            text-decoration: none;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-smooth);
+        }
+
+        .question-link:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
         .footer-container {
             max-width: 800px;
             margin: 0 auto;
+        }
+
+        .footer-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gradient-gold);
+            color: var(--neutral-black);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            animation: pulse 2s ease-in-out infinite;
         }
 
         .footer-title {
@@ -1121,34 +1198,420 @@
         }
 
         @media (max-width: 768px) {
-            .hero { padding: 0 1rem; }
-            .benefits, .roi, .future, .cta { padding: 4rem 1rem; }
-            .hero-stats { flex-direction: column; gap: 1rem; }
-            .benefits-grid { grid-template-columns: 1fr; }
-            .roi-grid { grid-template-columns: repeat(2, 1fr); }
-            .pension-card { padding: 2rem; }
-            .cta-card { padding: 2rem; }
-            .footer-links { flex-direction: column; gap: 1rem; }
+            .hero { 
+                padding: 2rem 1rem;
+                min-height: auto;
+            }
+            
+            .hero-logo-top {
+                width: 90px;
+                margin-bottom: 1.5rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .benefits, .roi, .future, .cta { 
+                padding: 3rem 1rem; 
+            }
+            
+            .hero-stats { 
+                flex-direction: column; 
+                gap: 1rem; 
+                margin-bottom: 2rem;
+            }
+            
+            .hero-stat {
+                width: 100%;
+            }
+            
+            .benefits-grid { 
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .benefit-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .roi-grid { 
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .roi-dashboard {
+                padding: 2.5rem 1.5rem;
+            }
+            
+            .roi-title {
+                font-size: 1.8rem;
+            }
+            
+            .pension-card { 
+                padding: 2rem 1.5rem; 
+            }
+            
+            .cta-card { 
+                padding: 2.5rem 1.5rem; 
+            }
+            
+            .footer-links { 
+                flex-direction: column; 
+                gap: 1rem; 
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .section-subtitle {
+                font-size: 1rem;
+            }
         }
 
         @media (max-width: 480px) {
-            .hero-card { padding: 2rem; }
-            .benefit-card { padding: 1.5rem; }
-            .roi-dashboard { padding: 2rem; }
-            .roi-grid { grid-template-columns: 1fr; }
-            .cta-button-main { padding: 1rem 2rem; font-size: 1rem; }
+            .hero {
+                padding: 1.5rem 1rem;
+            }
+            
+            .hero-logo-top {
+                width: 70px;
+                margin-bottom: 1rem;
+            }
+            
+            .hero-title {
+                font-size: 1.75rem;
+                margin-bottom: 1rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 0.95rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .hero-stat-number {
+                font-size: 2rem;
+            }
+            
+            .hero-stat-label {
+                font-size: 0.85rem;
+            }
+            
+            .hero-cta {
+                padding: 1rem 1.5rem;
+                font-size: 0.95rem;
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .hero-card { 
+                padding: 2rem 1.5rem; 
+            }
+            
+            .logo-container {
+                padding: 0.75rem;
+            }
+            
+            .logo-container img {
+                max-height: 80px;
+            }
+            
+            .investment-amount .price {
+                font-size: 2.5rem;
+            }
+            
+            .card-cta {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.95rem;
+            }
+            
+            .benefit-card { 
+                padding: 1.5rem 1rem; 
+            }
+            
+            .benefit-icon {
+                font-size: 3rem;
+                margin-bottom: 1rem;
+            }
+            
+            .benefit-icon img {
+                width: 60px !important;
+            }
+            
+            .benefit-title {
+                font-size: 1.2rem;
+            }
+            
+            .benefit-description {
+                font-size: 0.9rem;
+            }
+            
+            .benefit-list li {
+                font-size: 0.9rem;
+                padding-left: 30px;
+            }
+            
+            .benefit-list li::before {
+                width: 20px;
+                height: 20px;
+                font-size: 0.7rem;
+            }
+            
+            .video-highlight {
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .roi-dashboard { 
+                padding: 2rem 1rem; 
+            }
+            
+            .roi-title {
+                font-size: 1.5rem;
+                margin-bottom: 2rem;
+            }
+            
+            .roi-grid { 
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .roi-metric {
+                padding: 1.5rem 1rem;
+            }
+            
+            .roi-metric-value {
+                font-size: 2rem;
+            }
+            
+            .roi-metric-label {
+                font-size: 0.85rem;
+            }
+            
+            .roi-result {
+                padding: 1.5rem 1rem;
+                margin: 2rem 0;
+            }
+            
+            .roi-result-value {
+                font-size: 1.5rem;
+            }
+            
+            .roi-description {
+                font-size: 1rem;
+            }
+            
+            .section-header {
+                margin-bottom: 3rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .section-subtitle {
+                font-size: 0.95rem;
+            }
+            
+            .future-content h2 {
+                font-size: 1.5rem;
+            }
+            
+            .future-description {
+                font-size: 1rem;
+            }
+            
+            .vision-card {
+                padding: 1.5rem;
+            }
+            
+            .vision-card h4 {
+                font-size: 1.1rem;
+            }
+            
+            .pension-card {
+                padding: 1.5rem 1rem;
+            }
+            
+            .pension-icon {
+                font-size: 2.5rem;
+            }
+            
+            .pension-title {
+                font-size: 1.3rem;
+            }
+            
+            .pension-subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .cta-card {
+                padding: 2rem 1rem;
+            }
+            
+            .cta-title {
+                font-size: 1.5rem;
+            }
+            
+            .cta-highlight {
+                padding: 1.5rem 1rem;
+            }
+            
+            .cta-highlight-title {
+                font-size: 1.2rem;
+            }
+            
+            .cta-highlight-subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .cta-description {
+                font-size: 0.95rem;
+                margin-bottom: 2rem;
+            }
+            
+            .cta-button-main { 
+                padding: 1rem 1.5rem; 
+                font-size: 0.95rem;
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .footer {
+                padding: 3rem 1rem 2rem;
+            }
+            
+            .footer-title {
+                font-size: 1.5rem;
+            }
+            
+            .footer-tagline {
+                font-size: 0.95rem;
+            }
+            
+            .footer-badge {
+                padding: 0.625rem 1.25rem;
+                font-size: 0.8rem;
+            }
+            
+            .footer-contact {
+                padding: 1.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            /* Final question box mobile */
+            .final-question {
+                padding: 3rem 1rem;
+            }
+            
+            .question-box {
+                padding: 2rem 1.5rem;
+            }
+            
+            .question-title {
+                font-size: 1.4rem;
+            }
+            
+            .question-text {
+                font-size: 0.95rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .question-link {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.95rem;
+                width: 100%;
+                justify-content: center;
+            }
+            
+            /* Dipartimenti section mobile */
+            #dipartimenti {
+                padding: 3rem 1rem !important;
+            }
+            
+            #dipartimenti .section-title {
+                font-size: 1.5rem;
+            }
+            
+            #dipartimenti .section-subtitle {
+                font-size: 0.95rem;
+            }
+            
+            #dipartimenti img {
+                border-radius: 12px;
+            }
+            
+            #dipartimenti > div > div:last-child {
+                padding: 1.5rem 1rem !important;
+            }
+            
+            #dipartimenti h3 {
+                font-size: 1.2rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+            
+            #dipartimenti > div > div:last-child > div {
+                grid-template-columns: 1fr !important;
+                gap: 0.75rem !important;
+            }
+            
+            #dipartimenti > div > div:last-child > div > div {
+                padding: 0.875rem 1rem !important;
+            }
+            
+            #dipartimenti > div > div:last-child > div > div span:first-child {
+                font-size: 0.9rem !important;
+                min-width: 24px !important;
+            }
+            
+            #dipartimenti > div > div:last-child > div > div span:last-child {
+                font-size: 0.875rem !important;
+            }
+            
+            /* Bottoni nelle card mobile */
+            .benefit-card a[style*="display: inline-flex"] {
+                padding: 0.625rem 1.25rem !important;
+                font-size: 0.875rem !important;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .hero-title {
+                font-size: 1.5rem;
+            }
+            
+            .hero-logo-top {
+                width: 60px;
+            }
+            
+            .investment-amount .price {
+                font-size: 2rem;
+            }
+            
+            .roi-result-value {
+                font-size: 1.25rem;
+            }
+            
+            .benefit-title {
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="animated-bg"></div>
 
-    <!-- Floating Elements -->
     <div class="floating-element floating-1"></div>
     <div class="floating-element floating-2"></div>
     <div class="floating-element floating-3"></div>
 
-    <!-- Smart Sidebar Navigation -->
     <div class="sidebar-trigger" id="sidebarTrigger"></div>
     <nav class="smart-sidebar" id="smartSidebar">
         <div class="sidebar-container">
@@ -1164,6 +1627,10 @@
                 <a href="#vantaggi" class="nav-item" data-section="vantaggi">
                     💎
                     <div class="nav-tooltip">Vantaggi</div>
+                </a>
+                <a href="#dipartimenti" class="nav-item" data-section="dipartimenti">
+                    🏢
+                    <div class="nav-tooltip">Dipartimenti</div>
                 </a>
                 <a href="#futuro" class="nav-item" data-section="futuro">
                     🚀
@@ -1181,16 +1648,13 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section class="hero">
         <div class="hero-container">
             <div class="hero-content">
-                <div class="hero-badge">
-                    #maipiùsoli
-                </div>
+                <img src="https://simcarabinieri.com/thumb.php?width=1800&height=1200&file=uploads/aree/images/7/logo_small.png" alt="SIM Carabinieri" class="hero-logo-top">
                 
                 <h1 class="hero-title">
-                    La Tessera Che Si <span class="highlight">Ripaga da Sola</span>
+                    Perché 15.000 Carabinieri Hanno <span class="highlight">Scelto SIM?</span> Scoprilo Ora
                 </h1>
                 
                 <p class="hero-subtitle">
@@ -1221,10 +1685,7 @@
                 <div class="hero-card">
                     <div class="logo-section">
                         <div class="logo-container">
-                            <img src="https://i0.wp.com/www.simcarabinieri.it/wp-content/uploads/2019/04/cropped-LOG1.jpg?ssl=1" alt="SIM Carabinieri Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                            <div style="display: none; color: var(--primary-blue); font-weight: 800; font-size: 1.8em;">
-                                SIM CARABINIERI
-                            </div>
+                            <img src="https://i0.wp.com/www.simcarabinieri.it/wp-content/uploads/2019/04/cropped-LOG1.jpg?ssl=1" alt="SIM Carabinieri Logo" onerror="this.style.display='none';">
                         </div>
                     </div>
 
@@ -1252,7 +1713,6 @@
         </div>
     </section>
 
-    <!-- Benefits Section -->
     <section class="benefits" id="servizi">
         <div class="benefits-container">
             <div class="section-header">
@@ -1275,10 +1735,17 @@
                         <li>Copertura penale, penale militare, disciplinare</li>
                         <li>Assistenza 24/7</li>
                     </ul>
+                    <div style="margin-top: 1.5rem; text-align: center;">
+                        <a href="https://simcarabinieri.com/servizio_visitatori.php?sezione=18" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--gradient-primary); color: white; padding: 0.75rem 1.5rem; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 0.95rem; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                            ⚖️ Scopri la Tutela Legale →
+                        </a>
+                    </div>
                 </div>
 
                 <div class="benefit-card">
-                    <span class="benefit-icon">🩺</span>
+                    <span class="benefit-icon">
+                        <img src="https://www.simcarabinieri.com/thumb.php?width=100&height=100&file=uploads/servizi/images/17/dr.png" alt="Dr.Feel" style="width: 80px; height: auto;">
+                    </span>
                     <h3 class="benefit-title">Dr.Feel - Servizio Sanitario Digitale</h3>
                     <div class="benefit-pricing">
                         <span class="price-before">Valore di mercato: €348/anno</span>
@@ -1331,12 +1798,16 @@
                         <li>Alpitour World: sconto fino all'<span class="discount-highlight">11%</span></li>
                         <li>E oltre 50 altre convenzioni attive!</li>
                     </ul>
+                    <div style="margin-top: 1.5rem; text-align: center;">
+                        <a href="https://simcarabinieri.com/convenzioni.php" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--gradient-primary); color: white; padding: 0.75rem 1.5rem; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 0.95rem; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                            📋 Scopri Tutte le Convenzioni →
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ROI Section -->
     <section class="roi" id="vantaggi">
         <div class="roi-container">
             <div class="roi-dashboard">
@@ -1373,7 +1844,94 @@
         </div>
     </section>
 
-    <!-- Future Section -->
+    <section class="benefits" id="dipartimenti" style="background: linear-gradient(135deg, var(--purple-primary) 0%, var(--dark-bg) 100%);">
+        <div class="benefits-container">
+            <div class="section-header">
+                <h2 class="section-title">17 Dipartimenti Specializzati</h2>
+                <p class="section-subtitle">Conosciamo le esigenze di tutti i Carabinieri e ci impegniamo con più di 200 professionisti ad offrire solo il meglio.</p>
+            </div>
+
+            <div style="max-width: 900px; margin: 0 auto 3rem; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-xl); border: 3px solid var(--accent-gold);">
+                <img src="https://simcarabinieri.com/thumb.php?width=1800&height=1200&file=uploads/banner/images/59/dip_base.png" alt="17 Dipartimenti SIM Carabinieri" style="width: 100%; height: auto; display: block;">
+            </div>
+
+            <div style="max-width: 800px; margin: 0 auto; background: rgba(255,255,255,0.1); backdrop-filter: blur(var(--blur-md)); border: 2px solid rgba(255,215,0,0.3); border-radius: var(--radius-lg); padding: 2.5rem;">
+                <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 900; color: var(--accent-gold); text-align: center; margin-bottom: 2rem;">TUTTI I NOSTRI DIPARTIMENTI</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.08); padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid rgba(255,215,0,0.2); transition: all 0.3s ease;">
+                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 900; color: var(--accent-gold); min-width: 28px; text-align: center;">01</span>
+                        <span style="font-size: 0.95rem; color: white; font-weight: 600;">Affari Giuridici</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.08); padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid rgba(255,215,0,0.2); transition: all 0.3s ease;">
+                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 900; color: var(--accent-gold); min-width: 28px; text-align: center;">02</span>
+                        <span style="font-size: 0.95rem; color: white; font-weight: 600;">Cause di Servizio</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.08); padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid rgba(255,215,0,0.2); transition: all 0.3s ease;">
+                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 900; color: var(--accent-gold); min-width: 28px; text-align: center;">03</span>
+                        <span style="font-size: 0.95rem; color: white; font-weight: 600;">Comunicazione</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.08); padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid rgba(255,215,0,0.2); transition: all 0.3s ease;">
+                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 900; color: var(--accent-gold); min-width: 28px; text-align: center;">04</span>
+                        <span style="font-size: 0.95rem; color: white; font-weight: 600;">Amministrazione</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.08); padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid rgba(255,215,0,0.2); transition: all 0.3s ease;">
+                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 900; color: var(--accent-gold); min-width: 28px; text-align: center;">05</span>
+                        <span style="font-size: 0.95rem; color: white; font-weight: 600;">Disciplina</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.08); padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid rgba(255,215,0,0.2); transition: all 0.3s ease;">
+                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 900; color: var(--accent-gold); min-width: 28px; text-align: center;">06</span>
+                        <span style="font-size: 0.95rem; color: white; font-weight: 600;">Forestale</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.08); padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid rgba(255,215,0,0.2); transition: all 0.3s ease;">
+                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 900; color: var(--accent-gold); min-width: 28px; text-align: center;">07</span>
+                        <span style="font-size: 0.95rem; color: white; font-weight: 600;">Dirigenti</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.08); padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid rgba(255,215,0,0.2); transition: all 0.3s ease;">
+                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 900; color: var(--accent-gold); min-width: 28px; text-align: center;">08</span>
+                        <span style="font-size: 0.95rem; color: white; font-weight: 600;">Pari Opportunità</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.08); padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid rgba(255,215,0,0.2); transition: all 0.3s ease;">
+                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 900; color: var(--accent-gold); min-width: 28px; text-align: center;">09</span>
+                        <span style="font-size: 0.95rem; color: white; font-weight: 600;">Psicologia</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.08); padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid rgba(255,215,0,0.2); transition: all 0.3s ease;">
+                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 900; color: var(--accent-gold); min-width: 28px; text-align: center;">10</span>
+                        <span style="font-size: 0.95rem; color: white; font-weight: 600;">Reparti Speciali</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.08); padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid rgba(255,215,0,0.2); transition: all 0.3s ease;">
+                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 900; color: var(--accent-gold); min-width: 28px; text-align: center;">11</span>
+                        <span style="font-size: 0.95rem; color: white; font-weight: 600;">Benessere</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.08); padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid rgba(255,215,0,0.2); transition: all 0.3s ease;">
+                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 900; color: var(--accent-gold); min-width: 28px; text-align: center;">12</span>
+                        <span style="font-size: 0.95rem; color: white; font-weight: 600;">Sanità</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.08); padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid rgba(255,215,0,0.2); transition: all 0.3s ease;">
+                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 900; color: var(--accent-gold); min-width: 28px; text-align: center;">13</span>
+                        <span style="font-size: 0.95rem; color: white; font-weight: 600;">Scuole Arma</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.08); padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid rgba(255,215,0,0.2); transition: all 0.3s ease;">
+                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 900; color: var(--accent-gold); min-width: 28px; text-align: center;">14</span>
+                        <span style="font-size: 0.95rem; color: white; font-weight: 600;">Sicurezza sul Lavoro</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.08); padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid rgba(255,215,0,0.2); transition: all 0.3s ease;">
+                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 900; color: var(--accent-gold); min-width: 28px; text-align: center;">15</span>
+                        <span style="font-size: 0.95rem; color: white; font-weight: 600;">Storia e Cultura</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.08); padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid rgba(255,215,0,0.2); transition: all 0.3s ease;">
+                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 900; color: var(--accent-gold); min-width: 28px; text-align: center;">16</span>
+                        <span style="font-size: 0.95rem; color: white; font-weight: 600;">Territoriale</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.08); padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid rgba(255,215,0,0.2); transition: all 0.3s ease;">
+                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 900; color: var(--accent-gold); min-width: 28px; text-align: center;">17</span>
+                        <span style="font-size: 0.95rem; color: white; font-weight: 600;">Stipendiale e Previdenziale</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="future" id="futuro">
         <div class="future-container">
             <div class="future-content">
@@ -1406,7 +1964,6 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
     <section class="cta">
         <div class="cta-container">
             <div class="cta-card">
@@ -1428,9 +1985,22 @@
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- Final Question Section -->
+    <section class="final-question">
+        <div class="question-box">
+            <h2 class="question-title">Non sei ancora convinto?</h2>
+            <p class="question-text">
+                Visita il nostro sito per scoprire tutti i dettagli, i servizi completi e le testimonianze dei nostri iscritti.
+            </p>
+            <a href="https://www.simcarabinieri.com" target="_blank" class="question-link">
+                🌐 Visita www.simcarabinieri.com
+            </a>
+        </div>
+    </section>
+
     <footer class="footer">
         <div class="footer-container">
+            <div class="footer-badge">#maipiùsoli</div>
             <h3 class="footer-title">SIM Carabinieri</h3>
             <p class="footer-tagline">
                 "Il sindacato che valorizza il tuo impegno e fa crescere il tuo risparmio"
@@ -1443,7 +2013,7 @@
                 </p>
                 
                 <div class="footer-links">
-                    <a href="https://www.simcarabinieri.it" target="_blank">🌐 www.simcarabinieri.it</a>
+                    <a href="https://www.simcarabinieri.com" target="_blank">🌐 www.simcarabinieri.com</a>
                     <a href="mailto:info@simcarabinieri.cc">📧 info@simcarabinieri.cc</a>
                     <a href="tel:+390669217447">📞 06 6921 7447</a>
                 </div>
@@ -1452,7 +2022,6 @@
     </footer>
 
     <script>
-        // ===== DEVICE DETECTION & NAVIGATION SYSTEM =====
         let currentDevice = 'desktop';
         let isMouseOnLeft = false;
         let scrollTimer = null;
@@ -1460,12 +2029,8 @@
 
         const sidebar = document.getElementById('smartSidebar');
         const sidebarTrigger = document.getElementById('sidebarTrigger');
-        const tabletNav = document.getElementById('tabletNav');
-        const mobileNav = document.getElementById('mobileNav');
-        const mobileFab = document.getElementById('mobileFab');
         const progressFill = document.getElementById('progressFill');
 
-        // Device detection
         function detectDevice() {
             const width = window.innerWidth;
             if (width >= 1024) {
@@ -1477,11 +2042,9 @@
             }
         }
 
-        // Initialize device detection
         detectDevice();
         window.addEventListener('resize', detectDevice);
 
-        // ===== DESKTOP SIDEBAR SYSTEM =====
         function updateSidebarVisibility() {
             if (currentDevice !== 'desktop') return;
             
@@ -1495,7 +2058,6 @@
             }
         }
 
-        // Mouse detection for left edge (desktop only)
         if (sidebarTrigger) {
             sidebarTrigger.addEventListener('mouseenter', () => {
                 if (currentDevice === 'desktop') {
@@ -1535,7 +2097,6 @@
             });
         }
 
-        // ===== UNIVERSAL PROGRESS INDICATOR =====
         function updateProgress() {
             if (!progressFill) return;
             
@@ -1545,24 +2106,32 @@
             progressFill.style.height = scrolled + '%';
         }
 
-        // ===== MOBILE FAB HIDE/SHOW =====
-        function updateMobileFab() {
-            if (currentDevice !== 'mobile' || !mobileFab) return;
+        function highlightActiveSection() {
+            const sections = document.querySelectorAll('section[id], .hero');
+            let currentSection = 'home';
             
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                const threshold = currentDevice === 'mobile' ? 150 : 100;
+                
+                if (rect.top <= threshold && rect.bottom >= threshold) {
+                    currentSection = section.id || 'home';
+                }
+            });
             
-            if (scrollTop > lastScrollTop && scrollTop > 100) {
-                // Scrolling down
-                mobileFab.style.transform = 'scale(0)';
-                mobileFab.style.opacity = '0';
-            } else {
-                // Scrolling up
-                mobileFab.style.transform = 'scale(1)';
-                mobileFab.style.opacity = '1';
-            }
+            updateActiveNavItems(currentSection);
         }
 
-        // ===== SCROLL MANAGEMENT =====
+        function updateActiveNavItems(activeSection) {
+            const sidebarItems = document.querySelectorAll('.smart-sidebar .nav-item[data-section]');
+            sidebarItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.section === activeSection) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
         let scrollDirection = 'down';
         window.addEventListener('scroll', () => {
             const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -1572,10 +2141,8 @@
             
             updateProgress();
             updateSidebarVisibility();
-            updateMobileFab();
             highlightActiveSection();
             
-            // Desktop sidebar scroll behavior
             if (currentDevice === 'desktop') {
                 if (scrollTimer) clearTimeout(scrollTimer);
                 
@@ -1592,83 +2159,31 @@
             }
         }, { passive: true });
 
-        // ===== ACTIVE SECTION HIGHLIGHTING (ALL DEVICES) =====
-        function highlightActiveSection() {
-            const sections = document.querySelectorAll('section[id], .hero');
-            let currentSection = 'home';
-            
-            // Check which section is currently in view
-            sections.forEach(section => {
-                const rect = section.getBoundingClientRect();
-                const threshold = currentDevice === 'mobile' ? 150 : 100;
-                
-                if (rect.top <= threshold && rect.bottom >= threshold) {
-                    currentSection = section.id || 'home';
-                }
-            });
-            
-            // Update all navigation systems
-            updateActiveNavItems(currentSection);
-        }
-
-        function updateActiveNavItems(activeSection) {
-            // Desktop sidebar
-            const sidebarItems = document.querySelectorAll('.smart-sidebar .nav-item[data-section]');
-            sidebarItems.forEach(item => {
-                item.classList.remove('active');
-                if (item.dataset.section === activeSection) {
-                    item.classList.add('active');
-                }
-            });
-            
-            // Tablet navigation
-            const tabletItems = document.querySelectorAll('.tablet-nav-menu a[data-section]');
-            tabletItems.forEach(item => {
-                item.classList.remove('active');
-                if (item.dataset.section === activeSection) {
-                    item.classList.add('active');
-                }
-            });
-            
-            // Mobile navigation
-            const mobileItems = document.querySelectorAll('.mobile-nav-item[data-section]');
-            mobileItems.forEach(item => {
-                item.classList.remove('active');
-                if (item.dataset.section === activeSection) {
-                    item.classList.add('active');
-                }
-            });
-        }
-
-        // ===== SMOOTH SCROLLING (ALL DEVICES) =====
         function smoothScrollTo(targetId) {
             const target = document.querySelector(targetId);
             if (!target) return;
             
             let offset = 20;
             
-            // Adjust offset based on device and navigation
             switch (currentDevice) {
                 case 'tablet':
-                    offset = 80; // Account for tablet nav height
+                    offset = 80;
                     break;
                 case 'mobile':
-                    offset = 20; // Mobile nav is at bottom
+                    offset = 20;
                     break;
                 default:
-                    offset = 20; // Desktop sidebar doesn't affect scroll
+                    offset = 20;
             }
             
             const targetPosition = target.offsetTop - offset;
             
-            // Smooth scroll with optimized behavior for mobile
             window.scrollTo({
                 top: targetPosition,
                 behavior: 'smooth'
             });
         }
 
-        // Apply smooth scrolling to all navigation links
         document.addEventListener('click', (e) => {
             const link = e.target.closest('a[href^="#"]');
             if (link) {
@@ -1680,12 +2195,9 @@
             }
         });
 
-        // ===== TOUCH EVENTS FOR MOBILE =====
         if ('ontouchstart' in window) {
-            // Improve touch responsiveness
             document.addEventListener('touchstart', () => {}, { passive: true });
             
-            // Mobile swipe detection for future enhancements
             let startY = 0;
             let startX = 0;
             
@@ -1699,15 +2211,9 @@
                 const endX = e.changedTouches[0].clientX;
                 const diffY = startY - endY;
                 const diffX = startX - endX;
-                
-                // Swipe up from bottom edge could trigger mobile nav (future enhancement)
-                if (Math.abs(diffY) > Math.abs(diffX) && diffY > 50 && startY > window.innerHeight - 100) {
-                    // Potential swipe up gesture from bottom
-                }
             }, { passive: true });
         }
 
-        // ===== INTERSECTION OBSERVER FOR BETTER PERFORMANCE =====
         if ('IntersectionObserver' in window) {
             const navObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -1721,13 +2227,11 @@
                 rootMargin: '-10% 0px -10% 0px'
             });
             
-            // Observe all sections
             document.querySelectorAll('section[id], .hero').forEach(section => {
                 navObserver.observe(section);
             });
         }
 
-        // ===== ENHANCED ANIMATIONS =====
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -1744,7 +2248,6 @@
             });
         }, observerOptions);
 
-        // Initialize animations for cards
         document.querySelectorAll('.benefit-card, .roi-metric, .pension-card').forEach((el) => {
             el.style.opacity = '0';
             el.style.transform = 'translateY(30px)';
@@ -1752,7 +2255,6 @@
             cardObserver.observe(el);
         });
 
-        // ===== ROI COUNTER ANIMATION =====
         const animateCounter = (element, target) => {
             const duration = 2000;
             const start = 0;
@@ -1785,9 +2287,8 @@
             roiObserver.observe(roiElement);
         }
 
-        // ===== PARALLAX EFFECT (DESKTOP ONLY) =====
         function updateParallax() {
-            if (currentDevice === 'mobile') return; // Skip parallax on mobile for performance
+            if (currentDevice === 'mobile') return;
             
             const scrolled = window.pageYOffset;
             const rate = scrolled * -0.5;
@@ -1801,7 +2302,6 @@
 
         window.addEventListener('scroll', updateParallax, { passive: true });
 
-        // ===== KEYBOARD ACCESSIBILITY =====
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Tab' && currentDevice === 'desktop') {
                 if (document.activeElement && document.activeElement.closest('.sidebar-container')) {
@@ -1811,9 +2311,6 @@
             }
         });
 
-        // ===== PERFORMANCE OPTIMIZATIONS =====
-        
-        // Debounced resize handler
         let resizeTimer;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
@@ -1824,34 +2321,22 @@
             }, 250);
         });
 
-        // ===== INITIALIZATION =====
         document.addEventListener('DOMContentLoaded', () => {
             detectDevice();
             updateProgress();
             highlightActiveSection();
             
-            // Add active styles
             const style = document.createElement('style');
             style.textContent = `
-                .nav-item.active,
-                .tablet-nav-menu a.active,
-                .mobile-nav-item.active {
+                .nav-item.active {
                     background: var(--primary-blue) !important;
                     color: var(--neutral-white) !important;
                     transform: scale(1.05);
-                }
-                
-                .mobile-nav-item.active.cta {
-                    background: var(--gradient-primary) !important;
-                    color: var(--neutral-white) !important;
                 }
             `;
             document.head.appendChild(style);
         });
 
-        // ===== PWA-LIKE FEATURES FOR MOBILE =====
-        
-        // Prevent zoom on double tap
         let lastTouchEnd = 0;
         document.addEventListener('touchend', (event) => {
             const now = (new Date()).getTime();
@@ -1861,9 +2346,7 @@
             lastTouchEnd = now;
         }, false);
 
-        // Smooth scrolling optimization for iOS
         document.documentElement.style.setProperty('-webkit-overflow-scrolling', 'touch');
-        
     </script>
 </body>
 </html>
