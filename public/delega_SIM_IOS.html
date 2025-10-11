@@ -7,9 +7,9 @@
 <style>
         body {
             font-family: Arial, sans-serif; 
-            font-size: 8.5px;
+            font-size: 8px;
             line-height: 1.05;
-            padding: 3mm 1mm;
+            padding: 2mm 3mm;
             width: 210mm;
             min-height: 297mm;
             margin: 0 auto;
@@ -58,8 +58,8 @@
         }
         .form-field {
             flex: 1;
-            min-width: 200px;
-            margin-right: 10px;
+            min-width: 180px;
+            margin-right: 8px;
             max-width: 100%;
         }
         label {
@@ -236,13 +236,13 @@
         function generateAndEmailPDF() {
             var element = document.getElementById('document-content');
             var opt = {
-                margin: [8, 10, 8, 10],
+                margin: [7, 7, 7, 7],
                 filename: 'delega_firmata.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { 
                     scale: 2, 
                     scrollY: 0, 
-                    windowWidth: 900,
+                    windowWidth: 850,
                     x: 0,
                     y: 0,
                     useCORS: true,
