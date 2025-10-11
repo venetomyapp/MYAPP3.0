@@ -9,7 +9,7 @@
             font-family: Arial, sans-serif; 
             font-size: 8.5px;
             line-height: 1.05;
-            padding: 3mm;
+            padding: 3mm 2mm;
             width: 210mm;
             min-height: 297mm;
             margin: 0 auto;
@@ -21,6 +21,7 @@
             max-width: 100%;
             margin: 0;
             padding: 0;
+            overflow: hidden;
         }
         .header {
             text-align: center;
@@ -59,6 +60,7 @@
             flex: 1;
             min-width: 250px;
             margin-right: 20px;
+            max-width: 100%;
         }
         label {
             display: block;
@@ -68,17 +70,21 @@
             font-weight: bold;
             font-style: italic;
             color: blue;
-            width: 100%;
+            width: calc(100% - 4px);
+            max-width: 100%;
             padding: 2px;
             border: none;
             border-bottom: 1px solid #000;
+            box-sizing: border-box;
         }
         select {
-            width: 100%; 
+            width: calc(100% - 4px);
+            max-width: 100%;
             padding: 2px; 
             color: blue; 
             font-weight: bold; 
             font-style: italic;
+            box-sizing: border-box;
         }
         .checkbox-row {
             display: flex;
@@ -95,6 +101,9 @@
             padding: 5px;
             margin-top: 5px;
             margin-bottom: 5px;
+            max-width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
         }
         .firma-box label {
             margin: 2px 0;
@@ -227,7 +236,7 @@
         function generateAndEmailPDF() {
             var element = document.getElementById('document-content');
             var opt = {
-                margin: [8, 0, 8, 0],
+                margin: [8, 5, 8, 5],
                 filename: 'delega_firmata.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { 
@@ -235,9 +244,17 @@
                     scrollY: 0, 
                     windowWidth: 800,
                     x: 0,
-                    y: 0
+                    y: 0,
+                    useCORS: true
                 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true, putOnlyUsedFonts:true }
+                jsPDF: { 
+                    unit: 'mm', 
+                    format: 'a4', 
+                    orientation: 'portrait', 
+                    compress: true, 
+                    putOnlyUsedFonts: true,
+                    hotfixes: ['px_scaling']
+                }
             };
 
             html2pdf().from(element).set(opt).output('blob').then(function (pdfBlob) {
