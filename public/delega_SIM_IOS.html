@@ -12,10 +12,15 @@
             padding: 3mm;
             width: 210mm;
             min-height: 297mm;
-            margin: auto;
+            margin: 0 auto;
             border: 1px solid #ccc;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             box-sizing: border-box;
+        }
+        #document-content {
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
         }
         .header {
             text-align: center;
@@ -222,10 +227,16 @@
         function generateAndEmailPDF() {
             var element = document.getElementById('document-content');
             var opt = {
-                margin: [5, 5, 5, 5],
+                margin: [8, 0, 8, 0],
                 filename: 'delega_firmata.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, scrollY: 0, windowWidth: 800 },
+                html2canvas: { 
+                    scale: 2, 
+                    scrollY: 0, 
+                    windowWidth: 800,
+                    x: 0,
+                    y: 0
+                },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true, putOnlyUsedFonts:true }
             };
 
