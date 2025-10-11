@@ -1,142 +1,80 @@
 <!DOCTYPE html>
+
 <html lang="it">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Delega Sindacato SIM Carabinieri</title>
 <style>
+        /* Stili per il formato A4 e la formattazione generale */
         body {
-            font-family: Arial, sans-serif; 
-            font-size: 7.5px;
-            line-height: 1.05;
-            padding: 0;
-            margin: 0;
-            background-color: #f5f5f5;
-        }
-        #document-content {
-            width: 190mm;
-            min-height: 287mm;
-            margin: 5mm auto;
-            padding: 4mm 6mm;
-            background-color: white;
+            font-family: Arial, sans-serif; font-size: 10px;
+            line-height: 1.1;
+            padding: 4mm;
+            width: 210mm;
+            min-height: 297mm;
+            margin: auto;
+            border: 1px solid #ccc;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            box-sizing: border-box;
+            box-sizing: border-box; /* Assicura che padding e border siano inclusi nella larghezza */
         }
         .header {
             text-align: center;
-            margin-bottom: 6px;
-        }
-        .header p {
-            margin: 2px 0;
+            margin-bottom: 20px;
         }
         h2 {
             text-align: center;
-            font-size: 1.15em;
-            margin: 4px 0;
-        }
-        hr {
-            margin: 4px 0;
-            border: none;
-            border-top: 1px solid #000;
-        }
-        p {
-            margin: 3px 0;
-            text-align: justify;
-        }
-        ul {
-            margin: 3px 0;
-            padding-left: 18px;
-        }
-        ul li {
-            margin: 2px 0;
+            font-size: 1.2em;
         }
         .form-section {
-            margin-top: 4px;
+            margin-top: 10px;
         }
         .form-row {
             display: flex;
             flex-wrap: wrap;
-            margin-bottom: 1px;
-            gap: 5px;
+            margin-bottom: 2px; /* Aggiunto più spazio tra le righe */
         }
         .form-field {
             flex: 1;
-            min-width: 150px;
-            max-width: 100%;
+            min-width: 250px;
+            margin-right: 20px;
         }
         label {
             display: block;
             font-weight: bold;
-            font-size: 7.5px;
         }
-        input[type="text"], input[type="email"], input[type="tel"], input[type="date"] {
-            font-weight: bold;
-            font-style: italic;
-            color: blue;
+        input[type="text"], input[type="email"], input[type="tel"] {
+    font-weight: bold;
+    font-style: italic;
+    color: blue;
             width: 100%;
-            padding: 1px 2px;
+            padding: 5px;
             border: none;
             border-bottom: 1px solid #000;
-            box-sizing: border-box;
-            font-size: 7.5px;
-        }
-        select {
-            width: 100%;
-            padding: 1px 2px; 
-            color: blue; 
-            font-weight: bold; 
-            font-style: italic;
-            box-sizing: border-box;
-            font-size: 7.5px;
         }
         .checkbox-row {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin: 4px 0;
-        }
-        .checkbox-row p {
-            margin: 0;
+            gap: 10px;
+            margin-top: 10px;
         }
         .firma-box {
             border: 1px solid #000;
-            padding: 4px;
-            margin: 4px 0;
-            box-sizing: border-box;
-        }
-        .firma-box label {
-            margin: 2px 0;
-        }
-        .firma-box input {
-            font-size: 7px;
+            padding: 10px;
+            margin-top: 10px;
         }
         #signature-pad, #signature-pad-2 {
             border: 1px solid #000;
             cursor: crosshair;
             background-color: #f9f9f9;
-            width: 100%;
-            max-width: 280px;
-            height: 80px;
         }
         .signature-buttons {
-            margin-top: 4px;
+            margin-top: 10px;
         }
         button {
-            padding: 5px 10px;
+            padding: 8px 15px;
             cursor: pointer;
-            margin-right: 8px;
-            font-size: 8px;
-        }
-        @media print {
-            body {
-                background-color: white;
-            }
-            #document-content {
-                width: 100%;
-                margin: 0;
-                box-shadow: none;
-                padding: 5mm;
-            }
+            margin-right: 10px;
         }
     </style>
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
@@ -166,11 +104,11 @@
 <label for="nato-a">NATO/A A</label>
 <input id="nato-a" name="nato-a" type="text"/>
 </div>
-<div class="form-field" style="flex: 0.5; min-width: 80px;">
+<div class="form-field">
 <label for="provincia">PROV.</label>
 <input id="provincia" name="provincia" type="text"/>
 </div>
-<div class="form-field" style="flex: 0.8; min-width: 120px;">
+<div class="form-field">
 <label for="data-nascita">IL</label>
 <input id="data-nascita" name="data-nascita" type="date"/>
 </div>
@@ -190,7 +128,7 @@
 <label for="reparto">REPARTO DI APPARTENENZA</label>
 <input id="reparto" name="reparto" type="text"/>
 </div>
-<div class="form-field" style="flex: 0.5; min-width: 80px;">
+<div class="form-field">
 <label for="cap">CAP</label>
 <input id="cap" name="cap" type="text"/>
 </div>
@@ -198,7 +136,7 @@
 <div class="form-row">
 <div class="form-field">
 <label for="regione">REGIONE</label>
-<select name="regione"><option value="Abruzzo">Abruzzo</option><option value="Basilicata">Basilicata</option><option value="Calabria">Calabria</option><option value="Campania">Campania</option><option value="Emilia-Romagna">Emilia-Romagna</option><option value="Friuli Venezia Giulia">Friuli Venezia Giulia</option><option value="Lazio">Lazio</option><option value="Liguria">Liguria</option><option value="Lombardia">Lombardia</option><option value="Marche">Marche</option><option value="Molise">Molise</option><option value="Piemonte">Piemonte</option><option value="Puglia">Puglia</option><option value="Sardegna">Sardegna</option><option value="Sicilia">Sicilia</option><option value="Toscana">Toscana</option><option value="Trentino-Alto Adige">Trentino-Alto Adige</option><option value="Umbria">Umbria</option><option value="Valle d'Aosta">Valle d'Aosta</option><option value="Veneto">Veneto</option></select>
+<select name="regione" style="width: 100%; padding: 5px; color: blue; font-weight: bold; font-style: italic;"><option value="Abruzzo">Abruzzo</option><option value="Basilicata">Basilicata</option><option value="Calabria">Calabria</option><option value="Campania">Campania</option><option value="Emilia-Romagna">Emilia-Romagna</option><option value="Friuli Venezia Giulia">Friuli Venezia Giulia</option><option value="Lazio">Lazio</option><option value="Liguria">Liguria</option><option value="Lombardia">Lombardia</option><option value="Marche">Marche</option><option value="Molise">Molise</option><option value="Piemonte">Piemonte</option><option value="Puglia">Puglia</option><option value="Sardegna">Sardegna</option><option value="Sicilia">Sicilia</option><option value="Toscana">Toscana</option><option value="Trentino-Alto Adige">Trentino-Alto Adige</option><option value="Umbria">Umbria</option><option value="Valle d'Aosta">Valle d'Aosta</option><option value="Veneto">Veneto</option></select>
 </div>
 <div class="form-field">
 <label for="citta">CITTA' E PROV.</label>
@@ -230,77 +168,64 @@
 </ul>
 <p>Validità temporale della delega. La presente delega ha validità dal primo giorno del mese successivo a quello del rilascio fino al 31 dicembre di ogni anno e si intende tacitamente rinnovata se non è revocata dall'interessato entro il 31 ottobre, ai sensi dell'art. 7 co. 3. della Legge n. 46 del 28 aprile 2022.</p>
 <p>L'eventuale revoca della delega dovrà essere trasmessa, in forma scritta, all'amministrazione e al S.I.M Carabinieri presso la sede legale nazionale Via Magnagrecia n. 13, 00183 Roma con raccomandata A/R o con PEC. ai sensi dell'art. art. 7 co. 3 della legge n. 46 del 28 aprile 2022.</p>
-<div class="firma-box">
-<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3px; flex-wrap: wrap; gap: 5px;">
-<div style="display: flex; align-items: center; gap: 5px;">
-<label style="margin: 0;">Luogo:</label>
-<input style="width: 100px;" type="text"/>
-<label style="margin: 0 0 0 5px;">Data:</label>
-<input style="width: 85px;" type="date"/>
-</div>
-<div>
-<canvas height="80" id="signature-pad" style="touch-action: none;" width="280"></canvas>
-</div>
-</div>
+<div class="firma-box"><div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;"><div><label>Luogo:</label><input style="width: 140px; margin-left: 5px; margin-right: 20px;" type="text"/><label style="margin-left: 10px;">Data:</label><input style="width: 100px; margin-left: 5px;" type="date"/></div><div><canvas height="80" id="signature-pad" style=" touch-action: none; width: 100%; max-width: 350px; height: 120px;" width="280"></canvas><div class="signature-buttons">
+</div></div></div><div style="margin-bottom: 8px;"></div>
 <label>Firma</label>
 </div>
 <p>Dichiara di aver preso visione dello Statuto presente sul sito internet www.simcarabinieri.com, dell'allegato "A" relativo alle competenze stipendiali per il calcolo della base della quota associativa, ricevuto ed accettato copia dell'allegata informativa sul trattamento dei dati personali.</p>
 <p>Prende atto, altresì, di quanto stabilito dall'art. 3, comma 3, del DM Difesa 26 luglio 2022, per il quale "ai sensi di quanto disposto dall'art. 1, comma 4 della Legge è ammessa un'unica delega su una singola retribuzione o trattamento pensionistico.</p>
-<div class="firma-box">
-<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3px; flex-wrap: wrap; gap: 5px;">
-<div style="display: flex; align-items: center; gap: 5px;">
-<label style="margin: 0;">Luogo:</label>
-<input style="width: 100px;" type="text"/>
-<label style="margin: 0 0 0 5px;">Data:</label>
-<input style="width: 85px;" type="date"/>
-</div>
-<div>
-<canvas height="80" id="signature-pad-2" style="touch-action: none;" width="280"></canvas>
-</div>
-</div>
+<div class="firma-box"><div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;"><div><label>Luogo:</label><input style="width: 140px; margin-left: 5px; margin-right: 20px;" type="text"/><label style="margin-left: 10px;">Data:</label><input style="width: 100px; margin-left: 5px;" type="date"/></div><div><canvas height="80" id="signature-pad-2" style=" touch-action: none; width: 100%; max-width: 350px; height: 120px;" width="280"></canvas><div class="signature-buttons">
+</div></div></div><div style="margin-bottom: 8px;"></div>
 <label>Firma</label>
 </div>
 <p>La presente delega, compilata, sottoscritta e corredata dal documento di identità, dovrà essere acquisita con lo scanner salvata in formato PDF o. TIF e trasmessa via mail all'indirizzo tesseramenti@simcarabinieri.cc</p>
-<div style="text-align: center; margin-top: 6px;">
-<button onclick="clearFormInputs()">🧹 Pulisci il modulo</button>
-<button onclick="generateAndEmailPDF()">📄 Salva PDF e Invia Email</button>
-</div>
 </div>
 <script>
+        // Inizializzazione della prima firma
         var canvas = document.getElementById('signature-pad');
         var signaturePad = new SignaturePad(canvas);
 
+        document.getElementById('clear-signature').addEventListener('click', function () {
+            signaturePad.clear();
+        });
+
+        // Inizializzazione della seconda firma
         var canvas2 = document.getElementById('signature-pad-2');
         var signaturePad2 = new SignaturePad(canvas2);
 
+        document.getElementById('clear-signature-2').addEventListener('click', function () {
+            signaturePad2.clear();
+        });
+
+        // Funzione per generare il PDF e scaricarlo
+        function generatePDF() {
+            var element = document.getElementById('document-content');
+            var opt = {
+                margin: 10,
+                filename: 'delega_firmata.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, scrollY: 0 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true, putOnlyUsedFonts:true }
+            };
+
+            html2pdf().from(element).set(opt).save();
+        }
+
+        // Funzione per generare il PDF e inviarlo via email
         function generateAndEmailPDF() {
             var element = document.getElementById('document-content');
             var opt = {
-                margin: [10, 10, 10, 10],
+                margin: 10,
                 filename: 'delega_firmata.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2, 
-                    scrollY: 0, 
-                    windowWidth: 850,
-                    x: 0,
-                    y: 0,
-                    useCORS: true,
-                    logging: false
-                },
-                jsPDF: { 
-                    unit: 'mm', 
-                    format: 'a4', 
-                    orientation: 'portrait', 
-                    compress: true, 
-                    putOnlyUsedFonts: true,
-                    hotfixes: ['px_scaling']
-                }
+                html2canvas: { scale: 2, scrollY: 0 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true, putOnlyUsedFonts:true }
             };
 
             html2pdf().from(element).set(opt).output('blob').then(function (pdfBlob) {
                 var recipient = "tesseramenti@simcarabinieri.cc";
                 var subject = "Delega di adesione - " + (document.getElementById('nome').value || "Nome") + " " + (document.getElementById('cognome').value || "Cognome");
+                var body = "In allegato la delega di adesione compilata e firmata.";
                 
                 alert("Il PDF è stato generato e scaricato. Salvalo sul tuo dispositivo e allegalo manualmente a una nuova email da inviare a " + recipient);
                 
@@ -310,17 +235,53 @@
                 link.click();
             });
         }
+    </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+    function salvaComePDF() {
+        var element = document.getElementById('document-content') || document.body;
+        var opt = {
+            margin: 5,
+            filename: 'delega_SIM_carabinieri.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, scrollY: 0 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true, putOnlyUsedFonts:true }
+        };
+        html2pdf().from(element).set(opt).save();
+    }
 
-        function clearFormInputs() {
-            const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], input[type="date"]');
-            inputs.forEach(input => input.value = "");
-
-            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            checkboxes.forEach(checkbox => checkbox.checked = false);
-
-            if (signaturePad) signaturePad.clear();
-            if (signaturePad2) signaturePad2.clear();
-        }
+    function istruzioniEmail() {
+        alert("Il PDF è stato generato. Ora allegalo manualmente a una email e invialo a: tesseramenti@simcarabinieri.cc");
+    }
 </script>
-</body>
+<div style="text-align: center; margin-top: 20px;">
+</div>
+<script>
+    var canvas2 = document.getElementById('signature-pad-2');
+    if (canvas2) {
+        var signaturePad2 = new SignaturePad(canvas2);
+        document.getElementById('clear-signature-2').addEventListener('click', function () {
+            signaturePad2.clear();
+        });
+    }
+</script>
+<script>
+function clearFormInputs() {
+    const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]');
+    inputs.forEach(input => input.value = "");
+
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => checkbox.checked = false);
+
+    const canvases = document.querySelectorAll("canvas");
+    canvases.forEach(canvas => {
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
+}
+</script>
+<div style="text-align: center; margin-top: 15px;">
+<button onclick="clearFormInputs()">🧹 Pulisci il modulo</button>
+</div>
+<div style="text-align: center; margin-top: 20px;"><button onclick="generateAndEmailPDF()">📄 Salva PDF e Invia Email</button></div></body>
 </html>
