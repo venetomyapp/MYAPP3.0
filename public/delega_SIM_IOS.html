@@ -9,7 +9,7 @@
             font-family: Arial, sans-serif; 
             font-size: 8.5px;
             line-height: 1.05;
-            padding: 3mm 2mm;
+            padding: 3mm 1mm;
             width: 210mm;
             min-height: 297mm;
             margin: 0 auto;
@@ -58,8 +58,8 @@
         }
         .form-field {
             flex: 1;
-            min-width: 250px;
-            margin-right: 20px;
+            min-width: 200px;
+            margin-right: 10px;
             max-width: 100%;
         }
         label {
@@ -236,16 +236,17 @@
         function generateAndEmailPDF() {
             var element = document.getElementById('document-content');
             var opt = {
-                margin: [8, 5, 8, 5],
+                margin: [8, 10, 8, 10],
                 filename: 'delega_firmata.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { 
                     scale: 2, 
                     scrollY: 0, 
-                    windowWidth: 800,
+                    windowWidth: 900,
                     x: 0,
                     y: 0,
-                    useCORS: true
+                    useCORS: true,
+                    logging: false
                 },
                 jsPDF: { 
                     unit: 'mm', 
