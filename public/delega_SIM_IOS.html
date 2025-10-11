@@ -14,10 +14,10 @@
             background-color: #f5f5f5;
         }
         #document-content {
-            width: 200mm;
+            width: 190mm;
             min-height: 287mm;
             margin: 5mm auto;
-            padding: 5mm;
+            padding: 4mm 6mm;
             background-color: white;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             box-sizing: border-box;
@@ -276,7 +276,7 @@
         function generateAndEmailPDF() {
             var element = document.getElementById('document-content');
             var opt = {
-                margin: [7, 7, 7, 7],
+                margin: [10, 10, 10, 10],
                 filename: 'delega_firmata.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { 
