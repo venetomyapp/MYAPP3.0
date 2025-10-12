@@ -12,8 +12,8 @@
         
         body {
             font-family: Arial, sans-serif; 
-            font-size: 10.5px;
-            line-height: 1.22;
+            font-size: 9.8px;
+            line-height: 1.18;
             padding: 4mm 4mm;
             width: 210mm;
             min-height: 297mm;
@@ -32,7 +32,7 @@
         
         .header {
             text-align: center;
-            margin-bottom: 7px;
+            margin-bottom: 4px;
         }
         
         .header p {
@@ -42,21 +42,21 @@
         h2 {
             text-align: center;
             font-size: 1.25em;
-            margin: 7px 0;
+            margin: 5px 0 4px 0;
             page-break-after: avoid;
         }
         
         hr {
-            margin: 5px 0;
+            margin: 3px 0;
         }
         
         p {
-            margin: 3px 0;
+            margin: 2px 0;
             page-break-inside: avoid;
         }
         
         ul {
-            margin: 3px 0;
+            margin: 2px 0;
             padding-left: 15px;
             page-break-inside: avoid;
         }
@@ -67,14 +67,14 @@
         }
         
         .form-section {
-            margin-top: 5px;
+            margin-top: 3px;
             page-break-inside: avoid;
         }
         
         .form-row {
             display: flex;
             flex-wrap: wrap;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
             page-break-inside: avoid;
         }
         
@@ -90,7 +90,7 @@
             font-weight: bold;
             font-size: 1.05em;
             color: #222;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
         }
         
         input[type="text"], input[type="email"], input[type="tel"], input[type="date"] {
@@ -99,7 +99,7 @@
             color: #0066cc;
             width: calc(100% - 4px);
             max-width: 100%;
-            padding: 4px 6px;
+            padding: 3px 6px;
             border: none;
             border-bottom: 2px solid #333;
             box-sizing: border-box;
@@ -118,7 +118,7 @@
         select {
             width: calc(100% - 4px);
             max-width: 100%;
-            padding: 4px 6px; 
+            padding: 3px 6px; 
             color: #0066cc; 
             font-weight: 600; 
             font-style: italic;
@@ -147,8 +147,8 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-top: 5px;
-            margin-bottom: 5px;
+            margin-top: 3px;
+            margin-bottom: 3px;
             page-break-inside: avoid;
         }
         
@@ -164,9 +164,9 @@
         
         .firma-box {
             border: 2px solid #333;
-            padding: 6px;
-            margin-top: 5px;
-            margin-bottom: 5px;
+            padding: 4px;
+            margin-top: 3px;
+            margin-bottom: 3px;
             max-width: 100%;
             page-break-inside: avoid;
             background-color: #fafafa;
@@ -174,7 +174,7 @@
         }
         
         .firma-box label {
-            margin: 2px 0;
+            margin: 1px 0;
             font-size: 1.05em;
         }
         
@@ -185,14 +185,14 @@
         }
         
         .signature-buttons {
-            margin-top: 4px;
+            margin-top: 3px;
         }
         
         button {
-            padding: 8px 16px;
+            padding: 6px 14px;
             cursor: pointer;
             margin-right: 10px;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 600;
             border: 2px solid #333;
             background-color: #f5f5f5;
@@ -334,7 +334,7 @@
 <p>Validità temporale della delega. La presente delega ha validità dal primo giorno del mese successivo a quello del rilascio fino al 31 dicembre di ogni anno e si intende tacitamente rinnovata se non è revocata dall'interessato entro il 31 ottobre, ai sensi dell'art. 7 co. 3. della Legge n. 46 del 28 aprile 2022.</p>
 <p>L'eventuale revoca della delega dovrà essere trasmessa, in forma scritta, all'amministrazione e al S.I.M Carabinieri presso la sede legale nazionale Via Magnagrecia n. 13, 00183 Roma con raccomandata A/R o con PEC. ai sensi dell'art. art. 7 co. 3 della legge n. 46 del 28 aprile 2022.</p>
 <div class="firma-box">
-<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2px;">
 <div>
 <label>Luogo:</label>
 <input id="luogo1" style="width: 110px; margin-left: 4px; margin-right: 12px;" type="text" placeholder="Es: Roma"/>
@@ -342,7 +342,7 @@
 <input id="data1" style="width: 90px; margin-left: 4px;" type="date"/>
 </div>
 <div>
-<canvas height="80" id="signature-pad" style="touch-action: none; width: 100%; max-width: 250px; height: 95px;" width="200"></canvas>
+<canvas height="70" id="signature-pad" style="touch-action: none; width: 100%; max-width: 250px; height: 70px;" width="200"></canvas>
 </div>
 </div>
 <label>Firma</label>
@@ -350,7 +350,7 @@
 <p>Dichiara di aver preso visione dello Statuto presente sul sito internet www.simcarabinieri.com, dell'allegato "A" relativo alle competenze stipendiali per il calcolo della base della quota associativa, ricevuto ed accettato copia dell'allegata informativa sul trattamento dei dati personali.</p>
 <p>Prende atto, altresì, di quanto stabilito dall'art. 3, comma 3, del DM Difesa 26 luglio 2022, per il quale "ai sensi di quanto disposto dall'art. 1, comma 4 della Legge è ammessa un'unica delega su una singola retribuzione o trattamento pensionistico.</p>
 <div class="firma-box">
-<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2px;">
 <div>
 <label>Luogo:</label>
 <input id="luogo2" style="width: 110px; margin-left: 4px; margin-right: 12px;" type="text" placeholder="Es: Roma"/>
@@ -358,7 +358,7 @@
 <input id="data2" style="width: 90px; margin-left: 4px;" type="date"/>
 </div>
 <div>
-<canvas height="80" id="signature-pad-2" style="touch-action: none; width: 100%; max-width: 250px; height: 95px;" width="200"></canvas>
+<canvas height="70" id="signature-pad-2" style="touch-action: none; width: 100%; max-width: 250px; height: 70px;" width="200"></canvas>
 </div>
 </div>
 <label>Firma</label>
@@ -437,7 +437,7 @@
             if (signaturePad2) signaturePad2.clear();
         }
 </script>
-<div style="text-align: center; margin-top: 7px;">
+<div style="text-align: center; margin-top: 5px;">
 <button onclick="clearFormInputs()">🧹 Pulisci il modulo</button>
 <button onclick="generateAndEmailPDF()">📄 Genera PDF (singola pagina A4)</button>
 </div>
