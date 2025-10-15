@@ -405,6 +405,21 @@ button {
     box-shadow: 0 10px 25px rgba(255, 165, 0, 0.5);
 }
 
+.btn-download {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    font-weight: 700;
+    padding: 12px 20px;
+    margin: 5px;
+    display: inline-block;
+}
+
+.btn-download:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(16, 185, 129, 0.4);
+}
+
 .summary {
     background: #f8fafc;
     border-radius: 8px;
@@ -512,6 +527,14 @@ small {
     100% { transform: rotate(360deg); }
 }
 
+.manual-download-section {
+    background: #f0fdf4;
+    border: 2px solid #10b981;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
 /* RESPONSIVE MOBILE */
 @media (max-width: 768px) {
     body {
@@ -610,6 +633,11 @@ small {
         width: 100%;
     }
     
+    .btn-download {
+        width: 100%;
+        margin: 5px 0;
+    }
+    
     #signature-canvas {
         width: 100%;
         height: 150px;
@@ -683,7 +711,6 @@ small {
         font-size: 14px !important;
     }
     
-    /* Box email responsive */
     .success-message > div[style*="background: #dbeafe"] {
         padding: 20px 15px !important;
         margin: 20px 0 !important;
@@ -698,7 +725,6 @@ small {
         padding: 14px !important;
     }
     
-    /* Ottimizzazioni ulteriori per mobile */
     .signature-area {
         padding: 15px 10px;
     }
@@ -744,7 +770,6 @@ small {
         margin-top: 15px;
     }
     
-    /* Miglioramenti per readability */
     ::placeholder {
         font-size: 14px;
     }
@@ -1282,7 +1307,7 @@ small {
 
         <!-- STEP 4: Firma e documenti (ex step 5) -->
         <div class="step" id="step4">
-            <div class="question">✍️ Firma e Documenti</div>
+            <div class="question">✏️ Firma e Documenti</div>
 
             <div class="form-group">
                 <label>Luogo *</label>
@@ -1340,9 +1365,18 @@ small {
             <div class="success-message">
                 <div class="checkmark">✓</div>
                 <h2>Documenti Generati!</h2>
-                <p>I tuoi documenti sono stati generati e scaricati con successo.</p>
+                <p>I tuoi documenti sono stati generati con successo.</p>
                 
                 <div id="download-list" style="margin: 20px 0; text-align: left; display: inline-block; background: #f8fafc; padding: 20px; border-radius: 8px; border: 2px solid #e5e7eb;"></div>
+                
+                <!-- SEZIONE DOWNLOAD MANUALE -->
+                <div class="manual-download-section">
+                    <h3 style="color: #065f46; margin-bottom: 15px; font-size: 18px;">📥 Download Manuale</h3>
+                    <p style="color: #047857; margin-bottom: 15px; font-size: 14px;">
+                        Se i file non si sono scaricati automaticamente, usa i pulsanti qui sotto:
+                    </p>
+                    <div id="manual-download-buttons"></div>
+                </div>
                 
                 <div style="background: #dbeafe; border: 2px solid #3b82f6; border-radius: 12px; padding: 25px; margin: 30px 0; max-width: 500px; margin-left: auto; margin-right: auto;">
                     <p style="color: #1e40af; font-weight: 600; margin-bottom: 15px; font-size: 16px;">
@@ -1376,6 +1410,35 @@ let signaturePad;
 let signatureImage = null;
 let documentoFronteImage = null;
 let documentoRetroImage = null;
+let logoImage = null;
+
+// Variabili per salvare i blob dei PDF
+let pdfBlobDelega = null;
+let pdfBlobRevoca = null;
+
+// Funzione per caricare il logo (URL AGGIORNATO)
+function loadLogo() {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            logoImage = canvas.toDataURL('image/png');
+            console.log('Logo caricato con successo');
+            resolve(logoImage);
+        };
+        img.onerror = function() {
+            console.error('Errore nel caricamento del logo');
+            reject();
+        };
+        // URL MODIFICATO
+        img.src = 'https://www.simcarabinieri.com/img/logo_small_260.webp';
+    });
+}
 
 function toggleSindacatoField() {
     const isIscritto = document.querySelector('input[name="iscritto"]:checked')?.value;
@@ -1392,7 +1455,6 @@ function toggleSindacatoField() {
 function showConditionalFields() {
     const isIscritto = formData.iscritto === 'si';
     
-    // Mostra/nascondi stato civile e residenza nello step 2
     const statoCivileField = document.getElementById('stato-civile-field');
     const residenzaFields = document.getElementById('residenza-fields');
     
@@ -1412,7 +1474,6 @@ function initSignaturePad() {
         return;
     }
     
-    // Dimensioni responsive
     const isMobile = window.innerWidth <= 768;
     if (isMobile) {
         canvas.width = Math.min(window.innerWidth - 60, 500);
@@ -1431,7 +1492,6 @@ function initSignaturePad() {
         minDistance: 0
     });
     
-    // Previene lo scroll su mobile durante la firma
     canvas.addEventListener('touchstart', function(e) {
         e.preventDefault();
     }, { passive: false });
@@ -1447,13 +1507,16 @@ window.onload = function() {
     console.log('Pagina caricata');
     initSignaturePad();
     
+    loadLogo().catch(() => {
+        console.warn('Logo non caricato, il PDF verrà generato senza logo');
+    });
+    
     const maxDate = new Date().toISOString().split('T')[0];
     document.getElementById('data-nascita').max = maxDate;
     
     console.log('jsPDF disponibile:', typeof window.jspdf !== 'undefined');
     console.log('SignaturePad disponibile:', typeof SignaturePad !== 'undefined');
     
-    // Reinizializza firma quando si ruota il dispositivo
     window.addEventListener('resize', function() {
         if (currentStep === 4 && signaturePad) {
             const wasEmpty = signaturePad.isEmpty();
@@ -1510,7 +1573,6 @@ function showStep(step) {
         setTimeout(initSignaturePad, 100);
     }
     
-    // Mostra campi condizionali quando si passa allo step 2
     if (step === 2) {
         showConditionalFields();
     }
@@ -1549,7 +1611,6 @@ function validateStep2() {
         return false;
     }
     
-    // Validazione CIP: 6 numeri + 2 lettere
     const cipRegex = /^[0-9]{6}[A-Z]{2}$/;
     if (!cipRegex.test(cip.toUpperCase())) {
         alert('⚠️ Il C.I.P. deve essere formato da 6 numeri seguiti da 2 lettere (es: 352412YH)');
@@ -1561,7 +1622,6 @@ function validateStep2() {
         return false;
     }
     
-    // Valida stato civile e residenza se iscritto=si
     if (formData.iscritto === 'si') {
         const statoCivile = document.getElementById('stato-civile').value;
         if (!statoCivile) {
@@ -1727,7 +1787,7 @@ function showSummary() {
     
     if (formData.iscritto === 'si') {
         html += `
-            <h3 style="margin-top: 20px;">🔄 Revoca delega</h3>
+            <h3 style="margin-top: 20px;">📄 Revoca delega</h3>
             <div class="summary-item">
                 <span class="summary-label">Sindacato attuale:</span>
                 <span class="summary-value">${formData.sindacatoNome}</span>
@@ -1745,6 +1805,18 @@ function formatDate(dateString) {
     if (!dateString) return '';
     const date = new Date(dateString + 'T00:00:00');
     return date.toLocaleDateString('it-IT');
+}
+
+// Funzione per download manuale
+function downloadPDFManually(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }
 
 async function generateDocuments() {
@@ -1783,7 +1855,17 @@ async function generateDocuments() {
         downloadListHTML += '</ul>';
         document.getElementById('download-list').innerHTML = downloadListHTML;
         
-        // Crea link mailto precompilato
+        // PULSANTI DOWNLOAD MANUALE
+        let manualButtonsHTML = '';
+        if (pdfBlobDelega) {
+            manualButtonsHTML += '<button class="btn-download" onclick="downloadPDFManually(pdfBlobDelega, \'Delega_Adesione_' + formData.cognome + '.pdf\')">⬇️ Scarica Delega Adesione</button>';
+        }
+        if (pdfBlobRevoca) {
+            manualButtonsHTML += '<button class="btn-download" onclick="downloadPDFManually(pdfBlobRevoca, \'Revoca_Delega_' + formData.cognome + '.pdf\')">⬇️ Scarica Revoca Delega</button>';
+        }
+        document.getElementById('manual-download-buttons').innerHTML = manualButtonsHTML;
+        
+        // Email precompilata
         const emailTo = 'tesseramenti@simcarabinieri.cc';
         const emailSubject = `Adesione SIM Carabinieri - ${formData.cognome} ${formData.nome}`;
         const emailBody = `Gentile Ufficio Tesseramenti,
@@ -1819,7 +1901,18 @@ ${formData.nome} ${formData.cognome}`;
 
 function generatePDFDelega(jsPDF) {
     const doc = new jsPDF();
-    let y = 25;
+    let y = 15;
+    
+    // LOGO IN ALTO AL CENTRO
+    if (logoImage) {
+        const logoWidth = 30;
+        const logoHeight = 30;
+        const logoX = (210 - logoWidth) / 2;
+        doc.addImage(logoImage, 'PNG', logoX, y, logoWidth, logoHeight);
+        y += logoHeight + 8;
+    } else {
+        y += 8;
+    }
     
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
@@ -1933,26 +2026,21 @@ function generatePDFDelega(jsPDF) {
     doc.text('A tal fine rilascia delega ed autorizza l\'Amministrazione dell\'Arma dei Carabinieri a:', 20, y);
     y += 6;
     
-    // 🎨 MODIFICA 1: SFONDO GRIGIO CHIARO per testo2
     doc.setFont('helvetica', 'normal');
     const testo2 = doc.splitTextToSize(
         '- trattenere mensilmente dal proprio statino paga e per le 12 mensilità, lo 0,50% della voce stipendio o del trattamento pensionistico da considerare al netto di tutte le ritenute fiscali e contributive riferita agli emolumenti fissi e continuativi così come stabilito dai competenti organi statutari in analogia alle leggi di settore vigenti, ai sensi dell\'art. 13 co. 3 della Legge n. 46 del 28 aprile 2022;',
         170
     );
     
-    // Calcola altezza del rettangolo grigio
     const testo2Height = testo2.length * 4;
     const padding = 2;
     
-    // Disegna sfondo grigio PRIMA del testo
-    doc.setFillColor(240, 240, 240); // Grigio chiaro
+    doc.setFillColor(240, 240, 240);
     doc.rect(18, y - 3, 174, testo2Height + padding, 'F');
     
-    // Poi scrivi il testo sopra lo sfondo
     doc.text(testo2, 20, y);
     y += testo2Height + 4;
     
-    // 🔴 MODIFICA 2: RETTANGOLO ROSSO attorno a testo3 + testo4
     const testo3 = doc.splitTextToSize(
         '- versare la suddetta quota sul conto corrente bancario intestato a S.I.M. Carabinieri IBAN IT66 B0878739 0900 0000 0015819 ai sensi dell\'art. 7 co. 4. della Legge n. 46 del 28 aprile 2022 e D.M. conseguente.',
         170
@@ -1963,25 +2051,21 @@ function generatePDFDelega(jsPDF) {
         170
     );
     
-    // Calcola altezza totale del contenuto per il rettangolo rosso
     const testo3Height = testo3.length * 4;
     const testo4Height = testo4.length * 4;
-    const totalRedBoxHeight = testo3Height + testo4Height + 10; // +10 per spazio tra i due testi
+    const totalRedBoxHeight = testo3Height + testo4Height + 10;
     const redPadding = 3;
     
-    // Disegna rettangolo rosso PRIMA del testo
-    doc.setDrawColor(255, 0, 0); // Rosso
+    doc.setDrawColor(255, 0, 0);
     doc.setLineWidth(0.5);
     doc.rect(17, y - 3, 176, totalRedBoxHeight + redPadding, 'S');
     
-    // Poi scrivi i testi dentro il rettangolo
     doc.text(testo3, 20, y);
     y += testo3Height + 5;
     
     doc.text(testo4, 20, y);
     y += testo4Height + 8;
     
-    // Resetta colore bordo a nero per il resto del documento
     doc.setDrawColor(0, 0, 0);
     
     const testo5 = doc.splitTextToSize(
@@ -2041,6 +2125,9 @@ function generatePDFDelega(jsPDF) {
         doc.text('RETRO:', 20, 160);
         doc.addImage(documentoRetroImage, 'JPEG', 20, 165, 170, 110);
     }
+    
+    // Salva blob per download manuale
+    pdfBlobDelega = doc.output('blob');
     
     doc.save('Delega_Adesione_' + formData.cognome + '.pdf');
     console.log('PDF Delega generato e scaricato');
@@ -2267,6 +2354,9 @@ function generatePDFRevoca(jsPDF) {
         doc.addImage(documentoRetroImage, 'JPEG', 20, 165, 170, 110);
     }
     
+    // Salva blob per download manuale
+    pdfBlobRevoca = doc.output('blob');
+    
     doc.save('Revoca_Delega_' + formData.cognome + '.pdf');
     console.log('PDF Revoca generato e scaricato');
 }
@@ -2275,4 +2365,4 @@ updateProgress();
 </script>
 
 </body>
-</html>
+</html
