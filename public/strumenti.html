@@ -248,6 +248,304 @@
             }
         }
 
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border-radius: 16px;
+            transition: all .3s cubic-bezier(.4,0,.2,1);
+            cursor: pointer;
+            min-width: 60px;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: var(--gradient-magic);
+            border-radius: 50%;
+            transition: all .4s cubic-bezier(.4,0,.2,1);
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+
+        .nav-item.active::before {
+            width: 100%;
+            height: 100%;
+        }
+
+        .nav-item.active {
+            color: white;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(233,69,96,.3);
+        }
+
+        .nav-item:not(.active) {
+            color: #666;
+        }
+
+        .nav-item:not(.active):hover {
+            background: rgba(233,69,96,.1);
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .nav-item:active {
+            transform: translateY(-1px) scale(0.95);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 2px;
+            transition: all .3s ease;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        /* ENHANCED MAIN CONTENT AREA */
+        .main-content {
+            padding: 20px 16px;
+            min-height: calc(100vh - 80px);
+            position: relative;
+        }
+
+        .section {
+            display: none;
+            animation: slideInRight 0.4s cubic-bezier(.4,0,.2,1);
+            position: relative;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section.slide-left {
+            animation: slideInLeft 0.4s cubic-bezier(.4,0,.2,1);
+        }
+
+        .section.slide-right {
+            animation: slideInRight 0.4s cubic-bezier(.4,0,.2,1);
+        }
+
+        @keyframes slideInRight {
+            from { 
+                opacity: 0; 
+                transform: translateX(100px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0); 
+            }
+        }
+
+        @keyframes slideInLeft {
+            from { 
+                opacity: 0; 
+                transform: translateX(-100px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0); 
+            }
+        }
+
+        /* PULL TO REFRESH */
+        .pull-to-refresh {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,.9);
+            border-radius: 50px;
+            padding: 10px 20px;
+            backdrop-filter: blur(10px);
+            transition: all .3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .pull-to-refresh.visible {
+            opacity: 1;
+            top: 20px;
+        }
+
+        .pull-to-refresh.loading {
+            animation: pulse 1.5s infinite;
+        }
+
+        /* ENHANCED CALENDAR */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            background: rgba(255,255,255,.1);
+            border-radius: 16px;
+            padding: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .calendar-day {
+            background: rgba(255,255,255,.9);
+            border-radius: 8px;
+            padding: 8px 4px;
+            text-align: center;
+            min-height: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .3s cubic-bezier(.4,0,.2,1);
+            border: 1px solid rgba(255,255,255,.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calendar-day::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(233,69,96,.2);
+            border-radius: 50%;
+            transition: all .3s ease;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+
+        .calendar-day:active::before {
+            width: 120%;
+            height: 120%;
+        }
+
+        .calendar-day:active {
+            transform: scale(0.95);
+            background: rgba(255,255,255,.8);
+        }
+
+        .calendar-day.header {
+            background: var(--gradient-cyber);
+            color: white;
+            font-weight: 900;
+            cursor: default;
+            min-height: 35px;
+        }
+
+        /* COLORI MIGLIORATI PER I TURNI NEL CALENDARIO */
+        .calendar-day.turno-mattina { 
+            background: var(--shift-morning);
+            color: #703800; 
+            border-left: 4px solid #E67700; 
+            font-weight: 700;
+        }
+
+        .calendar-day.turno-pomeriggio { 
+            background: var(--shift-afternoon);
+            color: #00547A; 
+            border-left: 4px solid #0099CC; 
+            font-weight: 700;
+        }
+
+        .calendar-day.turno-sera { 
+            background: var(--shift-evening);
+            color: #3D1A80; 
+            border-left: 4px solid #7733CC; 
+            font-weight: 700;
+        }
+
+        .calendar-day.turno-notte { 
+            background: var(--shift-night);
+            color: white; 
+            border-left: 4px solid #004C99; 
+            font-weight: 700;
+        }
+
+        .calendar-day.turno-riposo { 
+            background: var(--shift-rest);
+            color: #064E28; 
+            border-left: 4px solid #27A352; 
+            font-weight: 700;
+        }
+
+        .calendar-day.licenza { 
+            background: linear-gradient(135deg, #e0e7ff, #8b5cf6); 
+            color: #3730a3; 
+            border-left: 4px solid #6366f1; 
+        }
+
+        .calendar-day.oggi { 
+            background: var(--gradient-magic) !important; 
+            color: white !important; 
+            border-left: 4px solid white !important; 
+            box-shadow: 0 0 20px rgba(233,69,96,.6) !important;
+            animation: todayPulse 2s infinite;
+        }
+
+        @keyframes todayPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(233,69,96,.6); }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(233,69,96,.8); }
+        }
+
+        /* ENHANCED CARDS */
+        .stat-card {
+            background: rgba(255,255,255,.95);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,.1);
+            transition: all .3s cubic-bezier(.4,0,.2,1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent);
+            transition: left .6s ease;
+        }
+
+        .stat-card:active::before {
+            left: 100%;
+        }
+
+        .stat-card:active {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0,0,0,.15);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #e94560;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #666;
+            margin-top: 4px;
+        }
+
         /* NUOVI STILI PER I TURNI CON MAGGIORE VISIBILITÀ */
         .shift-card {
             border-radius: 12px;
@@ -318,47 +616,197 @@
             color: white;
         }
 
-        /* Stile per il testo e icone dei turni */
-        .shift-icon {
-            font-size: 24px;
-            margin-right: 10px;
-        }
-
-        .shift-time {
-            font-weight: 700;
-            font-size: 16px;
-        }
-
-        /* Miglioramenti per i bottoni di azione con focus sulla accessibilità e tap targets */
-        .action-button {
-            min-width: 44px;
-            min-height: 44px;
-            border-radius: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        /* Calendario più leggibile e responsivo */
-        .calendar-day {
-            min-height: 44px;
-            border-radius: 8px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* ENHANCED LIST ITEMS */
+        .list-item {
+            background: rgba(255,255,255,.9);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255,255,255,.3);
+            box-shadow: 0 4px 20px rgba(0,0,0,.05);
+            transition: all .3s cubic-bezier(.4,0,.2,1);
             position: relative;
+            overflow: hidden;
+            transform: translateX(0);
         }
 
-        /* Indicator per eventi sul calendario */
-        .calendar-event-indicator {
+        .list-item.swipe-left {
+            transform: translateX(-100px);
+            background: #ef4444;
+            color: white;
+        }
+
+        .list-item.swipe-right {
+            transform: translateX(100px);
+            background: #10b981;
+            color: white;
+        }
+
+        .list-item:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 10px rgba(0,0,0,.1);
+        }
+
+        .swipe-action {
             position: absolute;
-            bottom: 2px;
-            width: 6px;
-            height: 6px;
-            border-radius: 3px;
-            background-color: currentColor;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity .3s ease;
+        }
+
+        .swipe-action.left {
+            right: 20px;
+        }
+
+        .swipe-action.right {
+            left: 20px;
+        }
+
+        .list-item.swipe-left .swipe-action.left,
+        .list-item.swipe-right .swipe-action.right {
+            opacity: 1;
+        }
+
+        /* ENHANCED MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,.8);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 40px;
+            animation: modalFadeIn .3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: rgba(255,255,255,.98);
+            border-radius: 24px;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 25px 50px rgba(0,0,0,.3);
+            backdrop-filter: blur(20px);
+            transform: translateY(50px);
+            animation: modalSlideUp .4s cubic-bezier(.4,0,.2,1) forwards;
+        }
+
+        @keyframes modalSlideUp {
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        /* ENHANCED FORM ELEMENTS */
+        input, select, textarea {
+            background: rgba(255,255,255,.95) !important;
+            border: 2px solid rgba(255,255,255,.5) !important;
+            border-radius: 12px !important;
+            padding: 12px 16px !important;
+            font-size: 16px !important;
+            width: 100%;
+            transition: all .3s cubic-bezier(.4,0,.2,1);
+            min-height: 44px; /* Migliorato per accessibilità sui touch screen */
+        }
+
+        input:focus, select:focus, textarea:focus {
+            background: white !important;
+            border-color: #e94560 !important;
+            box-shadow: 0 0 20px rgba(233,69,96,.3) !important;
+            outline: none !important;
+            transform: scale(1.02);
+        }
+
+        /* FLOATING ACTION BUTTON */
+        .fab {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-magic);
+            color: white;
+            border: none;
+            font-size: 24px;
+            box-shadow: 0 8px 20px rgba(233,69,96,.4);
+            transition: all .3s cubic-bezier(.4,0,.2,1);
+            z-index: 150;
+            opacity: 0;
+            transform: scale(0);
+            min-width: 60px; /* Per area tap più grande */
+        }
+
+        .fab.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .fab:active {
+            transform: scale(0.9);
+        }
+
+        /* ENHANCED BACK BUTTON */
+        .back-btn {
+            position: fixed;
+            bottom: calc(90px + env(safe-area-inset-bottom));
+            left: 20px;
+            background: rgba(255,255,255,.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            z-index: 150;
+            transition: all .3s cubic-bezier(.4,0,.2,1);
+            text-decoration: none;
+            min-width: 50px; /* Per area tap più grande */
+        }
+
+        .back-btn:hover, .back-btn:active {
+            background: rgba(255,255,255,.3);
+            transform: scale(1.1);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 16px 12px;
+            }
+            
+            .calendar-day {
+                min-height: 45px;
+                font-size: 11px;
+                padding: 6px 2px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+                margin: 10px;
+            }
         }
 
         /* Scale UI per schermi molto piccoli */
@@ -382,27 +830,767 @@
             }
         }
 
-        /* Input fields più grandi e facili da toccare */
-        input, select, button {
+        /* ENHANCED LOADING STATES */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+            position: relative;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid #e94560;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* PROGRESS INDICATORS */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--gradient-magic);
+            z-index: 1000;
+            transition: width .3s ease;
+            opacity: 0;
+        }
+
+        .progress-bar.visible {
+            opacity: 1;
+        }
+
+        /* HAPTIC FEEDBACK INDICATOR */
+        .haptic-feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: rgba(255,255,255,.9);
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .haptic-feedback.active {
+            animation: hapticPulse .6s ease;
+        }
+
+        @keyframes hapticPulse {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+        }
+
+        /* CONTEXTUAL QUICK ACTIONS */
+        .quick-actions {
+            position: fixed;
+            bottom: 160px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            opacity: 0;
+            transform: scale(0);
+            transition: all .3s cubic-bezier(.4,0,.2,1);
+            z-index: 140;
+        }
+
+        .quick-actions.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .quick-action {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,.2);
+            transition: all .3s ease;
+            min-width: 50px; /* Per area tap più grande */
+        }
+
+        .quick-action:active {
+            transform: scale(0.9);
+        }
+
+        /* NAVIGATION BREADCRUMBS */
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: rgba(255,255,255,.8);
+        }
+
+        .breadcrumb {
+            background: rgba(255,255,255,.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .breadcrumb.active {
+            background: rgba(255,255,255,.2);
+            font-weight: bold;
+        }
+
+        /* Stile per il testo e icone dei turni */
+        .shift-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .shift-time {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        /* Miglioramenti per i bottoni di azione con focus sulla accessibilità e tap targets */
+        .action-button {
+            min-width: 44px;
             min-height: 44px;
-            font-size: 16px; /* Evita zoom automatico su iOS */
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        /* Indicator per eventi sul calendario */
+        .calendar-event-indicator {
+            position: absolute;
+            bottom: 2px;
+            width: 6px;
+            height: 6px;
+            border-radius: 3px;
+            background-color: currentColor;
         }
     </style>
-	<script>
-        // Inserisci qui il contenuto delle righe 218-3006 dal tuo file originale
+</head>
 
-        // *** AGGIUNGI QUESTE NUOVE FUNZIONI ALLA FINE DEL TUO CODICE JAVASCRIPT ESISTENTE ***
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progress-bar"></div>
 
-        // Funzione migliorata per ottenere lo stile del turno (con colori più visibili)
-        function getTurnoClass(tipo) {
-            const classes = {
-                mattina: 'shift-mattina',
-                pomeriggio: 'shift-pomeriggio', 
-                sera: 'shift-sera',
-                notte: 'shift-notte',
-                riposo: 'shift-riposo'
-            };
-            return classes[tipo] || 'shift-default';
+    <!-- Haptic Feedback Indicator -->
+    <div class="haptic-feedback" id="haptic-feedback">✨</div>
+
+    <!-- Back Button -->
+    <a href="#" onclick="navigateBack()" class="back-btn" aria-label="Torna indietro">
+        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+    </a>
+
+    <!-- Floating Action Button -->
+    <button class="fab" id="main-fab" onclick="showQuickActions()">+</button>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions" id="quick-actions">
+        <button class="quick-action btn-aurora" onclick="openModal('turno')" title="Nuovo Turno">✨</button>
+        <button class="quick-action btn-cyber" onclick="openModal('licenza')" title="Nuova Licenza">🏖️</button>
+        <button class="quick-action btn-cyan" onclick="openModal('recupero')" title="Nuovo Recupero">🔄</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Pull to Refresh Indicator -->
+        <div class="pull-to-refresh" id="pull-refresh">
+            <span>🔄 Aggiorna</span>
+        </div>
+        
+        <!-- DASHBOARD SECTION -->
+        <div id="dashboard-section" class="section active">
+            <div class="breadcrumbs">
+                <div class="breadcrumb active">🏠 Dashboard</div>
+            </div>
+
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-gradient-to-br from-aurora to-cyan rounded-full mx-auto mb-6 flex items-center justify-center">
+                    <span class="text-3xl">🛠️</span>
+                </div>
+                <h1 class="text-3xl font-black text-ultra-visible mb-4">Strumenti MyApp</h1>
+                <p class="text-lg text-ultra-visible opacity-90">Gestisci i tuoi turni e licenze</p>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="stat-card text-center" onclick="showSection('calendar')">
+                    <div class="stat-value" id="dashboard-turni-mese">0</div>
+                    <div class="stat-label">Turni Mese</div>
+                </div>
+                <div class="stat-card text-center" onclick="showSection('statistics')">
+                    <div class="stat-value" id="dashboard-ore-mese">0</div>
+                    <div class="stat-label">Ore Mese</div>
+                </div>
+                <div class="stat-card text-center" onclick="showSection('licenses')">
+                    <div class="stat-value" id="dashboard-licenze-residue">32</div>
+                    <div class="stat-label">Licenze Residue</div>
+                </div>
+                <div class="stat-card text-center" onclick="showSection('recuperi')">
+                    <div class="stat-value" id="dashboard-straordinario">0</div>
+                    <div class="stat-label">Giorni Recupero</div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="space-y-4">
+                <button onclick="openModal('turno')" class="w-full btn-aurora py-4 rounded-2xl font-bold text-lg">
+                    ✨ Aggiungi Turno
+                </button>
+                <button onclick="openModal('licenza')" class="w-full btn-cyber py-4 rounded-2xl font-bold text-lg">
+                    🏖️ Programma Licenza
+                </button>
+                <button onclick="openModal('recupero')" class="w-full btn-cyan py-4 rounded-2xl font-bold text-lg">
+                    🔄 Registra Recupero
+                </button>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="mt-8">
+                <h3 class="text-xl font-bold text-ultra-visible mb-4">📋 Attività Recente</h3>
+                <div id="recent-activity">
+                    <div class="list-item">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <div class="font-bold text-gray-800">Nessuna attività recente</div>
+                                <div class="text-sm text-gray-600">Inizia programmando i tuoi turni</div>
+                            </div>
+                            <div class="text-2xl">📝</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CALENDAR SECTION -->
+        <div id="calendar-section" class="section">
+            <div class="breadcrumbs">
+                <div class="breadcrumb" onclick="showSection('dashboard')">🏠 Dashboard</div>
+                <div class="breadcrumb active">📅 Calendario</div>
+            </div>
+
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-black text-ultra-visible" id="calendar-title">📅 Gennaio 2025</h2>
+                <div class="flex gap-2">
+                    <button onclick="previousMonth()" class="btn-cyber px-4 py-2 rounded-xl font-bold">←</button>
+                    <button onclick="nextMonth()" class="btn-cyber px-4 py-2 rounded-xl font-bold">→</button>
+                </div>
+            </div>
+
+            <div class="calendar-grid mb-6" id="calendar-container">
+                <!-- Calendar will be populated by JavaScript -->
+            </div>
+
+            <div class="flex justify-center">
+                <button onclick="openModal('turno')" class="btn-aurora px-8 py-3 rounded-xl font-bold">
+                    ➕ Nuovo Turno
+                </button>
+            </div>
+        </div>
+
+        <!-- LICENSES SECTION -->
+        <div id="licenses-section" class="section">
+            <div class="breadcrumbs">
+                <div class="breadcrumb" onclick="showSection('dashboard')">🏠 Dashboard</div>
+                <div class="breadcrumb active">🏖️ Licenze</div>
+            </div>
+
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-black text-ultra-visible">🏖️ Licenze</h2>
+                <div class="flex gap-2">
+                    <button onclick="openModal('config-licenze')" class="btn-cyber px-3 py-2 rounded-xl font-bold text-sm">⚙️</button>
+                    <button onclick="openModal('licenza')" class="btn-aurora px-4 py-2 rounded-xl font-bold">+</button>
+                </div>
+            </div>
+
+            <!-- Licenze Summary -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="stat-card text-center">
+                    <div class="stat-value text-success" id="licenze-ordinarie-residue">32</div>
+                    <div class="stat-label">Ordinarie Residue</div>
+                </div>
+                <div class="stat-card text-center">
+                    <div class="stat-value text-cyan" id="licenze-speciali-residue">15</div>
+                    <div class="stat-label">Speciali Residue</div>
+                </div>
+            </div>
+
+            <!-- Configurazione Anno -->
+            <div class="stat-card mb-4" id="config-summary">
+                <div class="text-center">
+                    <div class="text-sm font-bold text-gray-600 mb-2">Configurazione Anno <span id="anno-corrente">2025</span></div>
+                    <div class="grid grid-cols-3 gap-3 text-xs">
+                        <div>
+                            <div class="font-bold text-gray-800" id="config-ordinarie-totali">32</div>
+                            <div class="text-gray-600">Ordinarie Tot.</div>
+                        </div>
+                        <div>
+                            <div class="font-bold text-gray-800" id="config-speciali-totali">15</div>
+                            <div class="text-gray-600">Speciali Tot.</div>
+                        </div>
+                        <div>
+                            <div class="font-bold text-gray-800" id="config-residui-precedenti">0</div>
+                            <div class="text-gray-600">Residui Prec.</div>
+                        </div>
+                    </div>
+                    <button onclick="openModal('config-licenze')" class="w-full mt-3 bg-gray-100 text-gray-700 py-2 rounded-lg font-bold text-sm">
+                        ⚙️ Configura Licenze
+                    </button>
+                </div>
+            </div>
+
+            <!-- Licenze List -->
+            <div class="space-y-3" id="licenze-list">
+                <div class="list-item text-center">
+                    <div class="text-gray-500 font-semibold">Nessuna licenza programmata</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RECUPERI SECTION -->
+        <div id="recuperi-section" class="section">
+            <div class="breadcrumbs">
+                <div class="breadcrumb" onclick="showSection('dashboard')">🏠 Dashboard</div>
+                <div class="breadcrumb active">🔄 Recuperi</div>
+            </div>
+
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-black text-ultra-visible">🔄 Recuperi</h2>
+                <button onclick="openModal('recupero')" class="btn-cyan px-4 py-2 rounded-xl font-bold">+</button>
+            </div>
+
+            <!-- Recuperi Summary -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="stat-card text-center">
+                    <div class="stat-value text-cyan" id="recuperi-giorni-totali">0</div>
+                    <div class="stat-label">Giorni Totali</div>
+                </div>
+                <div class="stat-card text-center">
+                    <div class="stat-value text-gold" id="recuperi-count">0</div>
+                    <div class="stat-label">Recuperi</div>
+                </div>
+            </div>
+
+            <!-- Dettaglio Recuperi -->
+            <div class="stat-card mb-4">
+                <h3 class="text-lg font-bold text-gray-800 mb-3">📊 Dettaglio per Tipo</h3>
+                <div class="grid grid-cols-2 gap-3 text-sm">
+                    <div class="flex justify-between">
+                        <span class="font-semibold">🎄 Festività:</span>
+                        <span class="font-bold text-cyan" id="recuperi-festivita">0gg</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold">📅 Settimana:</span>
+                        <span class="font-bold text-cyan" id="recuperi-settimana">0gg</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold">⏰ Straordinario:</span>
+                        <span class="font-bold text-cyan" id="recuperi-straordinario">0gg</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold">🎯 Altro:</span>
+                        <span class="font-bold text-cyan" id="recuperi-altro">0gg</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recuperi List -->
+            <div class="space-y-3" id="recuperi-list">
+                <div class="list-item text-center">
+                    <div class="text-gray-500 font-semibold">Nessun recupero registrato</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATISTICS SECTION -->
+        <div id="statistics-section" class="section">
+            <div class="breadcrumbs">
+                <div class="breadcrumb" onclick="showSection('dashboard')">🏠 Dashboard</div>
+                <div class="breadcrumb active">📊 Statistiche</div>
+            </div>
+
+            <h2 class="text-2xl font-black text-ultra-visible mb-6">📊 Statistiche</h2>
+
+            <!-- Monthly Stats -->
+            <div class="stat-card mb-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">📋 Report Mensile</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between">
+                        <span class="font-semibold text-gray-700">Turni Effettuati:</span>
+                        <span class="font-bold text-aurora" id="stats-turni-mese">0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold text-gray-700">Ore Totali:</span>
+                        <span class="font-bold text-aurora" id="stats-ore-mese">0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold text-gray-700">Giorni Recupero:</span>
+                        <span class="font-bold text-aurora" id="stats-straordinario-mese">0gg</span>
+                    </div>
+                </div>
+                <button onclick="exportPDF()" class="w-full btn-aurora py-3 rounded-xl font-bold mt-4">
+                    📄 Esporta PDF
+                </button>
+            </div>
+
+            <!-- Chart Container -->
+            <div class="stat-card">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">📈 Distribuzione Turni</h3>
+                <div style="position: relative; height: 200px;">
+                    <canvas id="turni-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- Export Options -->
+            <div class="mt-6 space-y-3">
+                <button onclick="exportExcel('turni')" class="w-full btn-cyber py-3 rounded-xl font-bold">
+                    📊 Esporta Turni Excel
+                </button>
+                <button onclick="exportExcel('licenze')" class="w-full btn-success py-3 rounded-xl font-bold">
+                    🏖️ Esporta Licenze Excel
+                </button>
+                <button onclick="exportExcel('recuperi')" class="w-full btn-cyan py-3 rounded-xl font-bold">
+                    🔄 Esporta Recuperi Excel
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="#" onclick="showSection('dashboard')" class="nav-item active" data-section="dashboard">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label">Dashboard</div>
+        </a>
+        <a href="#" onclick="showSection('calendar')" class="nav-item" data-section="calendar">
+            <div class="nav-icon">📅</div>
+            <div class="nav-label">Calendario</div>
+        </a>
+        <a href="#" onclick="showSection('licenses')" class="nav-item" data-section="licenses">
+            <div class="nav-icon">🏖️</div>
+            <div class="nav-label">Licenze</div>
+        </a>
+        <a href="#" onclick="showSection('recuperi')" class="nav-item" data-section="recuperi">
+            <div class="nav-icon">🔄</div>
+            <div class="nav-label">Recuperi</div>
+        </a>
+        <a href="#" onclick="showSection('statistics')" class="nav-item" data-section="statistics">
+            <div class="nav-icon">📊</div>
+            <div class="nav-label">Statistiche</div>
+        </a>
+    </div>
+
+    <!-- MODAL TURNO -->
+    <div id="turno-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-black text-gray-800" id="turno-modal-title">✨ Nuovo Turno</h3>
+                <button onclick="closeModal('turno')" class="text-gray-500 text-2xl font-bold">&times;</button>
+            </div>
+            <form id="turno-form" class="space-y-4">
+                <input type="hidden" id="turno-id">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">📅 Data</label>
+                    <input type="date" id="turno-data" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">🎯 Tipo Turno</label>
+                    <select id="turno-tipo" required>
+                        <option value="">Seleziona turno...</option>
+                        <option value="mattina">🌅 Mattina</option>
+                        <option value="pomeriggio">☀️ Pomeriggio</option>
+                        <option value="sera">🌆 Sera</option>
+                        <option value="notte">🌙 Notte</option>
+                        <option value="riposo">😴 Riposo</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">📝 Note (opzionale)</label>
+                    <textarea id="turno-note" rows="3" placeholder="Eventuali note..."></textarea>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="submit" class="flex-1 btn-aurora py-3 rounded-xl font-bold">✅ Salva</button>
+                    <button type="button" onclick="closeModal('turno')" class="flex-1 bg-gray-500 text-white py-3 rounded-xl font-bold">❌ Annulla</button>
+                </div>
+                <div id="turno-delete-section" class="hidden pt-3">
+                    <button type="button" onclick="deleteTurno()" class="w-full bg-red-500 text-white py-3 rounded-xl font-bold">🗑️ Elimina</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL LICENZA -->
+    <div id="licenza-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-black text-gray-800" id="licenza-modal-title">🏖️ Nuova Licenza</h3>
+                <button onclick="closeModal('licenza')" class="text-gray-500 text-2xl font-bold">&times;</button>
+            </div>
+            <form id="licenza-form" class="space-y-4">
+                <input type="hidden" id="licenza-id">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">🎯 Tipo</label>
+                    <select id="licenza-tipo" required>
+                        <option value="">Seleziona tipo...</option>
+                        <option value="ordinaria">🏖️ Licenza Ordinaria</option>
+                        <option value="straordinaria">⭐ Licenza Straordinaria</option>
+                        <option value="speciale">🎯 Licenza Speciale</option>
+                        <option value="permesso">📋 Permesso</option>
+                        <option value="riposo_settimanale">🛏️ Riposo Settimanale</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">📅 Data Inizio</label>
+                        <input type="date" id="licenza-data-inizio" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">📅 Data Fine</label>
+                        <input type="date" id="licenza-data-fine" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">📝 Note (opzionale)</label>
+                    <textarea id="licenza-note" rows="3" placeholder="Eventuali note..."></textarea>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="submit" class="flex-1 btn-aurora py-3 rounded-xl font-bold">✅ Salva</button>
+                    <button type="button" onclick="closeModal('licenza')" class="flex-1 bg-gray-500 text-white py-3 rounded-xl font-bold">❌ Annulla</button>
+                </div>
+                <div id="licenza-delete-section" class="hidden pt-3">
+                    <button type="button" onclick="deleteLicenza()" class="w-full bg-red-500 text-white py-3 rounded-xl font-bold">🗑️ Elimina</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL CONFIGURAZIONE LICENZE -->
+    <div id="config-licenze-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-black text-gray-800">⚙️ Configurazione Licenze</h3>
+                <button onclick="closeModal('config-licenze')" class="text-gray-500 text-2xl font-bold">&times;</button>
+            </div>
+            <form id="config-licenze-form" class="space-y-4">
+                <div class="bg-blue-50 p-3 rounded-lg">
+                    <div class="text-sm font-bold text-blue-800 mb-2">Anno di Riferimento</div>
+                    <select id="config-anno" class="w-full">
+                        <option value="2024">2024</option>
+                        <option value="2025" selected>2025</option>
+                        <option value="2026">2026</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">🏖️ Giorni Licenze Ordinarie</label>
+                    <input type="number" id="config-ordinarie" value="32" min="0" max="50" required>
+                    <div class="text-xs text-gray-500 mt-1">Giorni disponibili per l'anno selezionato</div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">⭐ Giorni Licenze Speciali</label>
+                    <input type="number" id="config-speciali" value="15" min="0" max="30" required>
+                    <div class="text-xs text-gray-500 mt-1">Malattia, permessi speciali, ecc.</div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">📅 Residui Anno Precedente</label>
+                    <input type="number" id="config-residui" value="0" min="0" max="30">
+                    <div class="text-xs text-gray-500 mt-1">Giorni non utilizzati dall'anno precedente</div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">👨‍💼 Anni di Anzianità</label>
+                    <input type="number" id="config-anzianita" value="0" min="0" max="40">
+                    <div class="text-xs text-gray-500 mt-1">Per calcoli automatici futuri</div>
+                </div>
+                <div class="bg-green-50 p-3 rounded-lg">
+                    <div class="text-sm font-bold text-green-800 mb-2">📊 Riepilogo Disponibilità</div>
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div>
+                            <span class="font-bold">Ordinarie Totali:</span>
+                            <span id="riepilogo-ordinarie">32</span>
+                        </div>
+                        <div>
+                            <span class="font-bold">Speciali Totali:</span>
+                            <span id="riepilogo-speciali">15</span>
+                        </div>
+                        <div>
+                            <span class="font-bold">Utilizzate:</span>
+                            <span id="riepilogo-utilizzate">0</span>
+                        </div>
+                        <div>
+                            <span class="font-bold">Disponibili:</span>
+                            <span id="riepilogo-disponibili">47</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="submit" class="flex-1 btn-success py-3 rounded-xl font-bold">✅ Salva Configurazione</button>
+                    <button type="button" onclick="closeModal('config-licenze')" class="flex-1 bg-gray-500 text-white py-3 rounded-xl font-bold">❌ Annulla</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL RECUPERO -->
+    <div id="recupero-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-black text-gray-800" id="recupero-modal-title">🔄 Nuovo Recupero</h3>
+                <button onclick="closeModal('recupero')" class="text-gray-500 text-2xl font-bold">&times;</button>
+            </div>
+            <form id="recupero-form" class="space-y-4">
+                <input type="hidden" id="recupero-id">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">🎯 Tipo Recupero</label>
+                    <select id="recupero-tipo" required>
+                        <option value="">Seleziona tipo...</option>
+                        <option value="festivita">🎄 Festività</option>
+                        <option value="settimana_del">📅 Settimana del...</option>
+                        <option value="straordinario">⏰ Giorni Straordinario</option>
+                        <option value="altro">🎯 Altro</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">📅 Data Maturazione</label>
+                    <input type="date" id="recupero-data" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">📊 Giorni</label>
+                    <input type="number" id="recupero-giorni" min="1" max="30" step="1" value="1" required>
+                    <div class="text-xs text-gray-500 mt-1">Giorni da recuperare (max 30)</div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">📝 Descrizione</label>
+                    <textarea id="recupero-descrizione" rows="3" placeholder="Descrivi il motivo del recupero..." required></textarea>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="submit" class="flex-1 btn-cyan py-3 rounded-xl font-bold">✅ Salva</button>
+                    <button type="button" onclick="closeModal('recupero')" class="flex-1 bg-gray-500 text-white py-3 rounded-xl font-bold">❌ Annulla</button>
+                </div>
+                <div id="recupero-delete-section" class="hidden pt-3">
+                    <button type="button" onclick="deleteRecupero()" class="w-full bg-red-500 text-white py-3 rounded-xl font-bold">🗑️ Elimina</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ======================= CONFIGURAZIONE SUPABASE =======================
+        const SUPABASE_URL = "https://pvzdilkozpspsnepedqc.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2emRpbGtvenBzcHNuZXBlZHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1MDY1NDUsImV4cCI6MjA3MDA4MjU0NX0.JimqeUkyOGcOw-pt-yJUVevSP3n6ikBPDR3N8y_7YIk";
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: true, autoRefreshToken: true }
+        });
+
+        // ======================= VARIABILI GLOBALI =======================
+        let currentUser = null;
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        let turniData = [];
+        let licenzeData = [];
+        let recuperiData = [];
+        let userLicenseConfig = null;
+        let editingTurno = null;
+        let editingLicenza = null;
+        let editingRecupero = null;
+        let turniChart = null;
+        let currentSection = 'dashboard';
+        let navigationHistory = ['dashboard'];
+        let isQuickActionsVisible = false;
+        let lastDirection = 'right';
+
+        // ======================= ENHANCED NAVIGATION =======================
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let touchStartY = 0;
+        let touchEndY = 0;
+        const swipeThreshold = 80;
+        let pullStartY = 0;
+        let isPulling = false;
+
+        // ======================= INIZIALIZZAZIONE =======================
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('🚀 Inizializzazione MyApp Strumenti Mobile Enhanced...');
+            
+            await initializeUser();
+            if (currentUser) {
+                await loadAllData();
+                await loadUserLicenseConfig();
+                updateDashboard();
+                updateCalendar();
+                updateLicensesList();
+                updateRecuperiList();
+                updateStatistics();
+                initChart();
+                initEnhancedFeatures();
+            }
+
+            setupFormListeners();
+            setupEnhancedGestures();
+            
+            console.log('✅ Inizializzazione Enhanced completata');
+        });
+
+        function initEnhancedFeatures() {
+            // Show FAB after delay
+            setTimeout(() => {
+                document.getElementById('main-fab').classList.add('visible');
+            }, 1000);
+
+            // Initialize haptic feedback if supported
+            if ('vibrate' in navigator) {
+                console.log('✅ Haptic feedback disponibile');
+            }
+
+            // Initialize intersection observer for animations
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    });
+                });
+
+                // Observe stat cards for scroll animations
+                document.querySelectorAll('.stat-card').forEach(card => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.6s ease';
+                    observer.observe(card);
+                });
+            }
+
+            // Setup responsive UI
+            setupResponsiveUI();
         }
 
         // Funzione per facilitare la navigazione su schermi piccoli
@@ -435,48 +1623,1579 @@
             console.log(`📱 UI adattata: ${viewportWidth}x${viewportHeight}px`);
         }
 
-        // Renderiamo la funzione di rendering dei turni più accessibile
-        function renderTurno(turno) {
-            const turnoClass = getTurnoClass(turno.tipo);
-            const turnoName = getTurnoName(turno.tipo);
-            const turnoIcon = getTurnoIcon(turno.tipo);
-            
-            // Creiamo un elemento con colori più visibili e area di tap più grande
-            return `
-                <div class="shift-card ${turnoClass}" id="turno-${turno.id}">
-                    <span class="shift-icon">${turnoIcon}</span>
-                    <div class="flex-1">
-                        <div class="shift-time">${turnoName}</div>
-                        <div>${formatDate(turno.data)}</div>
-                    </div>
-                    ${turno.stato ? `<div class="shift-status shift-status-${turno.stato.toLowerCase()}">${turno.stato}</div>` : ''}
-                    <button class="action-button ml-2" onclick="showTurnoDetails(${turno.id})">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="1"></circle>
-                            <circle cx="19" cy="12" r="1"></circle>
-                            <circle cx="5" cy="12" r="1"></circle>
-                        </svg>
-                    </button>
-                </div>
-            `;
+        function setupEnhancedGestures() {
+            // Enhanced touch events
+            document.addEventListener('touchstart', handleTouchStart, { passive: false });
+            document.addEventListener('touchmove', handleTouchMove, { passive: false });
+            document.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+            // Pull to refresh setup
+            const mainContent = document.querySelector('.main-content');
+            mainContent.addEventListener('scroll', handleScroll, { passive: true });
+
+            // Long press detection
+            let longPressTimer;
+            document.addEventListener('touchstart', function(e) {
+                longPressTimer = setTimeout(() => {
+                    if (e.target.closest('.list-item')) {
+                        handleLongPress(e.target.closest('.list-item'));
+                    }
+                }, 500);
+            });
+
+            document.addEventListener('touchend', function() {
+                clearTimeout(longPressTimer);
+            });
+
+            // Swipe to delete for list items
+            setupSwipeToDelete();
         }
 
-        // Funzione per il feedback tattile - migliora UX
-        function triggerHapticFeedback() {
-            if (navigator.vibrate) {
-                navigator.vibrate(50);
+        function handleTouchStart(e) {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+            
+            // Pull to refresh detection
+            const mainContent = document.querySelector('.main-content');
+            if (mainContent.scrollTop === 0) {
+                pullStartY = e.changedTouches[0].screenY;
+                isPulling = true;
             }
         }
 
-        function getTurnoName(tipo) {
-            const names = {
+        function handleTouchMove(e) {
+            if (isPulling) {
+                const currentY = e.changedTouches[0].screenY;
+                const pullDistance = Math.max(0, currentY - pullStartY);
+                
+                if (pullDistance > 50) {
+                    const pullRefresh = document.getElementById('pull-refresh');
+                    pullRefresh.classList.add('visible');
+                    
+                    if (pullDistance > 100) {
+                        pullRefresh.classList.add('loading');
+                        e.preventDefault();
+                    }
+                }
+            }
+        }
+
+        function handleTouchEnd(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+            
+            // Pull to refresh
+            if (isPulling) {
+                const pullDistance = touchEndY - pullStartY;
+                const pullRefresh = document.getElementById('pull-refresh');
+                
+                if (pullDistance > 100) {
+                    triggerHapticFeedback();
+                    refreshData();
+                }
+                
+                pullRefresh.classList.remove('visible', 'loading');
+                isPulling = false;
+            }
+            
+            handleSwipe();
+        }
+
+        function handleScroll(e) {
+            const scrollTop = e.target.scrollTop;
+            
+            // Hide/show FAB based on scroll
+            const fab = document.getElementById('main-fab');
+            if (scrollTop > 100) {
+                fab.style.opacity = '0.7';
+            } else {
+                fab.style.opacity = '1';
+            }
+        }
+
+        function handleSwipe() {
+            const swipeX = touchEndX - touchStartX;
+            const swipeY = touchEndY - touchStartY;
+            
+            // Check if it's more horizontal than vertical
+            if (Math.abs(swipeX) > Math.abs(swipeY) && Math.abs(swipeX) > swipeThreshold) {
+                const sections = ['dashboard', 'calendar', 'licenses', 'recuperi', 'statistics'];
+                const currentIndex = sections.indexOf(currentSection);
+                
+                if (swipeX > 0 && currentIndex > 0) {
+                    // Swipe right - previous section
+                    lastDirection = 'left';
+                    showSection(sections[currentIndex - 1]);
+                    triggerHapticFeedback();
+                } else if (swipeX < 0 && currentIndex < sections.length - 1) {
+                    // Swipe left - next section
+                    lastDirection = 'right';
+                    showSection(sections[currentIndex + 1]);
+                    triggerHapticFeedback();
+                }
+            }
+        }
+
+        function setupSwipeToDelete() {
+            let startX = 0;
+            let currentX = 0;
+            let isDragging = false;
+            let currentItem = null;
+
+            document.addEventListener('touchstart', function(e) {
+                const listItem = e.target.closest('.list-item');
+                if (listItem && listItem.onclick) {
+                    startX = e.touches[0].clientX;
+                    currentItem = listItem;
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchmove', function(e) {
+                if (!currentItem) return;
+                
+                currentX = e.touches[0].clientX;
+                const diff = currentX - startX;
+                
+                if (Math.abs(diff) > 20) {
+                    isDragging = true;
+                    e.preventDefault();
+                    
+                    if (diff < -50) {
+                        currentItem.classList.add('swipe-left');
+                        currentItem.innerHTML += '<div class="swipe-action left">🗑️</div>';
+                    } else if (diff > 50) {
+                        currentItem.classList.add('swipe-right');
+                        currentItem.innerHTML += '<div class="swipe-action right">✏️</div>';
+                    } else {
+                        currentItem.classList.remove('swipe-left', 'swipe-right');
+                        currentItem.querySelectorAll('.swipe-action').forEach(el => el.remove());
+                    }
+                }
+            });
+
+            document.addEventListener('touchend', function(e) {
+                if (isDragging && currentItem) {
+                    const diff = currentX - startX;
+                    
+                    if (diff < -100) {
+                        // Delete action
+                        triggerHapticFeedback();
+                        handleSwipeDelete(currentItem);
+                    } else if (diff > 100) {
+                        // Edit action
+                        triggerHapticFeedback();
+                        handleSwipeEdit(currentItem);
+                    }
+                    
+                    setTimeout(() => {
+                        if (currentItem) {
+                            currentItem.classList.remove('swipe-left', 'swipe-right');
+                            currentItem.querySelectorAll('.swipe-action').forEach(el => el.remove());
+                        }
+                    }, 300);
+                }
+                
+                isDragging = false;
+                currentItem = null;
+            }, { passive: true });
+        }
+
+        function handleSwipeDelete(item) {
+            // Determina il tipo di item e chiama la funzione di delete appropriata
+            if (item.onclick && item.onclick.toString().includes('editTurno')) {
+                // È un turno
+                const turnoId = item.onclick.toString().match(/'([^']+)'/)[1];
+                const turno = turniData.find(t => t.id === turnoId);
+                if (turno && confirm('Elimina questo turno?')) {
+                    editingTurno = turno;
+                    deleteTurno();
+                }
+            } else if (item.onclick && item.onclick.toString().includes('editLicenza')) {
+                // È una licenza
+                const licenzaId = item.onclick.toString().match(/'([^']+)'/)[1];
+                const licenza = licenzeData.find(l => l.id === licenzaId);
+                if (licenza && confirm('Elimina questa licenza?')) {
+                    editingLicenza = licenza;
+                    deleteLicenza();
+                }
+            } else if (item.onclick && item.onclick.toString().includes('editRecupero')) {
+                // È un recupero
+                const recuperoId = item.onclick.toString().match(/'([^']+)'/)[1];
+                const recupero = recuperiData.find(r => r.id === recuperoId);
+                if (recupero && confirm('Elimina questo recupero?')) {
+                    editingRecupero = recupero;
+                    deleteRecupero();
+                }
+            }
+        }
+
+        function handleSwipeEdit(item) {
+            // Simula un click per aprire l'edit
+            if (item.onclick) {
+                item.onclick();
+            }
+        }
+
+        function handleLongPress(item) {
+            triggerHapticFeedback('heavy');
+            showContextMenu(item);
+        }
+
+        function showContextMenu(item) {
+            // Implementazione del menu contestuale
+            const contextMenu = document.createElement('div');
+            contextMenu.className = 'context-menu';
+            contextMenu.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                border-radius: 16px;
+                padding: 20px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                z-index: 1000;
+                min-width: 200px;
+            `;
+            
+            contextMenu.innerHTML = `
+                <div class="text-center">
+                    <button onclick="this.closest('.context-menu').remove()" class="w-full p-3 bg-blue-500 text-white rounded-lg mb-2">✏️ Modifica</button>
+                    <button onclick="this.closest('.context-menu').remove()" class="w-full p-3 bg-red-500 text-white rounded-lg mb-2">🗑️ Elimina</button>
+                    <button onclick="this.closest('.context-menu').remove()" class="w-full p-3 bg-gray-500 text-white rounded-lg">❌ Annulla</button>
+                </div>
+            `;
+            
+            document.body.appendChild(contextMenu);
+            
+            setTimeout(() => {
+                contextMenu.remove();
+            }, 3000);
+        }
+
+        async function refreshData() {
+            showProgress(true);
+            
+            try {
+                await loadAllData();
+                updateDashboard();
+                updateCalendar();
+                updateLicensesList();
+                updateRecuperiList();
+                updateStatistics();
+                updateChart();
+                
+                showNotification('Dati aggiornati!', 'success');
+            } catch (error) {
+                showNotification('Errore aggiornamento', 'error');
+            } finally {
+                showProgress(false);
+            }
+        }
+
+        function triggerHapticFeedback(type = 'light') {
+            if ('vibrate' in navigator) {
+                const patterns = {
+                    light: [10],
+                    medium: [50],
+                    heavy: [100],
+                    success: [50, 50, 100],
+                    error: [100, 50, 100, 50, 100]
+                };
+                navigator.vibrate(patterns[type] || patterns.light);
+            }
+            
+            // Visual feedback
+            const indicator = document.getElementById('haptic-feedback');
+            const icons = {
+                light: '✨',
+                medium: '⚡',
+                heavy: '💥',
+                success: '✅',
+                error: '❌'
+            };
+            
+            indicator.textContent = icons[type] || icons.light;
+            indicator.classList.add('active');
+            
+            setTimeout(() => {
+                indicator.classList.remove('active');
+            }, 600);
+        }
+
+        function showProgress(visible) {
+            const progressBar = document.getElementById('progress-bar');
+            if (visible) {
+                progressBar.style.width = '0%';
+                progressBar.classList.add('visible');
+                
+                // Animate progress
+                let width = 0;
+                const interval = setInterval(() => {
+                    width += Math.random() * 10;
+                    if (width >= 90) {
+                        clearInterval(interval);
+                        width = 90;
+                    }
+                    progressBar.style.width = width + '%';
+                }, 100);
+                
+                progressBar._interval = interval;
+            } else {
+                if (progressBar._interval) {
+                    clearInterval(progressBar._interval);
+                }
+                progressBar.style.width = '100%';
+                setTimeout(() => {
+                    progressBar.classList.remove('visible');
+                }, 300);
+            }
+        }
+
+        function showQuickActions() {
+            const quickActions = document.getElementById('quick-actions');
+            const fab = document.getElementById('main-fab');
+            
+            isQuickActionsVisible = !isQuickActionsVisible;
+            
+            if (isQuickActionsVisible) {
+                quickActions.classList.add('visible');
+                fab.style.transform = 'rotate(45deg)';
+                triggerHapticFeedback('medium');
+            } else {
+                quickActions.classList.remove('visible');
+                fab.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // ======================= ENHANCED NAVIGATION =======================
+        function showSection(sectionName) {
+            const previousSection = currentSection;
+            currentSection = sectionName;
+            
+            // Update navigation history
+            if (navigationHistory[navigationHistory.length - 1] !== sectionName) {
+                navigationHistory.push(sectionName);
+                if (navigationHistory.length > 10) {
+                    navigationHistory.shift();
+                }
+            }
+            
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-section="${sectionName}"]`).classList.add('active');
+
+            // Update sections with enhanced animations
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active', 'slide-left', 'slide-right');
+            });
+            
+            const newSection = document.getElementById(`${sectionName}-section`);
+            newSection.classList.add('active');
+            
+            // Apply slide direction based on navigation
+            if (lastDirection === 'left') {
+                newSection.classList.add('slide-left');
+            } else {
+                newSection.classList.add('slide-right');
+            }
+
+            // Load section specific data
+            if (sectionName === 'calendar') {
+                updateCalendar();
+            } else if (sectionName === 'licenses') {
+                updateLicensesList();
+            } else if (sectionName === 'recuperi') {
+                updateRecuperiList();
+            } else if (sectionName === 'statistics') {
+                updateStatistics();
+                updateChart();
+            }
+            
+            // Hide quick actions if visible
+            if (isQuickActionsVisible) {
+                showQuickActions();
+            }
+            
+            triggerHapticFeedback();
+        }
+
+        async function initializeUser() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) {
+                    window.location.href = '../login-minimal.html';
+                    return;
+                }
+                currentUser = session.user;
+                console.log('✅ Utente autenticato:', currentUser.id);
+            } catch (error) {
+                console.error('❌ Errore inizializzazione:', error);
+                showNotification('Errore nel caricamento', 'error');
+                window.location.href = '../login-minimal.html';
+            }
+        }
+
+        // ======================= CARICAMENTO DATI =======================
+        async function loadAllData() {
+            try {
+                showLoading(true);
+                await Promise.all([
+                    loadTurniFromDB(),
+                    loadLicenzeFromDB(),
+                    loadRecuperiFromDB(),
+                    loadUserLicenseConfig()
+                ]);
+            } catch (error) {
+                console.error('❌ Errore caricamento dati:', error);
+                showNotification('Errore nel caricamento dati', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function loadTurniFromDB() {
+            try {
+                const startDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`;
+                const endDate = `${currentYear}-${String(currentMonth + 2).padStart(2, '0')}-01`;
+                
+                const { data: turni, error } = await supabase
+                    .from('turni')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .gte('data_turno', startDate)
+                    .lt('data_turno', endDate)
+                    .order('data_turno', { ascending: true });
+
+                if (error) throw error;
+                turniData = turni || [];
+                console.log(`✅ Caricati ${turniData.length} turni`);
+            } catch (error) {
+                console.error('❌ Errore caricamento turni:', error);
+                turniData = [];
+            }
+        }
+
+        async function loadLicenzeFromDB() {
+            try {
+                const { data: licenze, error } = await supabase
+                    .from('licenze')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('data_inizio', { ascending: false });
+
+                if (error) throw error;
+                licenzeData = licenze || [];
+                console.log(`✅ Caricate ${licenzeData.length} licenze`);
+            } catch (error) {
+                console.error('❌ Errore caricamento licenze:', error);
+                licenzeData = [];
+            }
+        }
+
+        async function loadRecuperiFromDB() {
+            try {
+                const { data: recuperi, error } = await supabase
+                    .from('recuperi')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('data_maturazione', { ascending: false });
+
+                if (error) throw error;
+                recuperiData = recuperi || [];
+                console.log(`✅ Caricati ${recuperiData.length} recuperi`);
+            } catch (error) {
+                console.error('❌ Errore caricamento recuperi:', error);
+                recuperiData = [];
+            }
+        }
+
+        // ======================= CONFIGURAZIONE LICENZE =======================
+        async function loadUserLicenseConfig() {
+            try {
+                const annoCorrente = new Date().getFullYear();
+                
+                const { data: config, error } = await supabase
+                    .from('user_license_config')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .eq('anno', annoCorrente)
+                    .single();
+
+                if (error && error.code !== 'PGRST116') {
+                    console.error('Errore caricamento config licenze:', error);
+                    return;
+                }
+
+                if (!config) {
+                    userLicenseConfig = {
+                        anno: annoCorrente,
+                        giorni_ordinarie: 32,
+                        giorni_speciali: 15,
+                        residui_anno_precedente: 0,
+                        anzianita_servizio: 0
+                    };
+                    await saveUserLicenseConfig();
+                } else {
+                    userLicenseConfig = config;
+                }
+
+                updateLicenseConfigUI();
+                console.log('✅ Configurazione licenze caricata:', userLicenseConfig);
+            } catch (error) {
+                console.error('❌ Errore caricamento configurazione licenze:', error);
+                userLicenseConfig = {
+                    anno: new Date().getFullYear(),
+                    giorni_ordinarie: 32,
+                    giorni_speciali: 15,
+                    residui_anno_precedente: 0,
+                    anzianita_servizio: 0
+                };
+            }
+        }
+
+        async function saveUserLicenseConfig() {
+            try {
+                const { data, error } = await supabase
+                    .from('user_license_config')
+                    .upsert({
+                        user_id: currentUser.id,
+                        anno: userLicenseConfig.anno,
+                        giorni_ordinarie: userLicenseConfig.giorni_ordinarie,
+                        giorni_speciali: userLicenseConfig.giorni_speciali,
+                        residui_anno_precedente: userLicenseConfig.residui_anno_precedente,
+                        anzianita_servizio: userLicenseConfig.anzianita_servizio,
+                        updated_at: new Date().toISOString()
+                    }, { 
+                        onConflict: 'user_id,anno' 
+                    });
+
+                if (error) throw error;
+                console.log('✅ Configurazione licenze salvata');
+                return true;
+            } catch (error) {
+                console.error('❌ Errore salvataggio configurazione:', error);
+                return false;
+            }
+        }
+
+        function updateLicenseConfigUI() {
+            if (!userLicenseConfig) return;
+
+            document.getElementById('anno-corrente').textContent = userLicenseConfig.anno;
+            document.getElementById('config-ordinarie-totali').textContent = userLicenseConfig.giorni_ordinarie;
+            document.getElementById('config-speciali-totali').textContent = userLicenseConfig.giorni_speciali;
+            document.getElementById('config-residui-precedenti').textContent = userLicenseConfig.residui_anno_precedente;
+
+            document.getElementById('config-anno').value = userLicenseConfig.anno;
+            document.getElementById('config-ordinarie').value = userLicenseConfig.giorni_ordinarie;
+            document.getElementById('config-speciali').value = userLicenseConfig.giorni_speciali;
+            document.getElementById('config-residui').value = userLicenseConfig.residui_anno_precedente;
+            document.getElementById('config-anzianita').value = userLicenseConfig.anzianita_servizio;
+
+            updateLicenseCalculations();
+        }
+
+        function updateLicenseCalculations() {
+            if (!userLicenseConfig) return;
+
+            const licenzeAnno = licenzeData.filter(l => 
+                new Date(l.data_inizio).getFullYear() === userLicenseConfig.anno
+            );
+
+            const ordinariesUtilizzate = licenzeAnno
+                .filter(l => l.tipo_licenza === 'ordinaria')
+                .reduce((acc, l) => acc + (l.giorni_totali || 0), 0);
+
+            const specialiUtilizzate = licenzeAnno
+                .filter(l => ['speciale', 'straordinaria', 'permesso'].includes(l.tipo_licenza))
+                .reduce((acc, l) => acc + (l.giorni_totali || 0), 0);
+
+            const ordinarieTotali = userLicenseConfig.giorni_ordinarie + userLicenseConfig.residui_anno_precedente;
+            const specialiTotali = userLicenseConfig.giorni_speciali;
+
+            const ordinarieResidue = Math.max(0, ordinarieTotali - ordinariesUtilizzate);
+            const specialiResidue = Math.max(0, specialiTotali - specialiUtilizzate);
+
+            document.getElementById('licenze-ordinarie-residue').textContent = ordinarieResidue;
+            document.getElementById('licenze-speciali-residue').textContent = specialiResidue;
+            document.getElementById('dashboard-licenze-residue').textContent = ordinarieResidue + specialiResidue;
+
+            if (document.getElementById('riepilogo-ordinarie')) {
+                document.getElementById('riepilogo-ordinarie').textContent = ordinarieTotali;
+                document.getElementById('riepilogo-speciali').textContent = specialiTotali;
+                document.getElementById('riepilogo-utilizzate').textContent = ordinariesUtilizzate + specialiUtilizzate;
+                document.getElementById('riepilogo-disponibili').textContent = ordinarieResidue + specialiResidue;
+            }
+        }
+
+        // ======================= DASHBOARD =======================
+        function updateDashboard() {
+            const turniMese = turniData.length;
+            const oreMese = turniMese * 8;
+            const giorniRecupero = recuperiData.reduce((acc, r) => acc + (r.ore_recupero || 1), 0); // Ora in giorni
+            
+            document.getElementById('dashboard-turni-mese').textContent = turniMese;
+            document.getElementById('dashboard-ore-mese').textContent = oreMese;
+            document.getElementById('dashboard-straordinario').textContent = giorniRecupero;
+            
+            updateRecentActivity();
+        }
+
+        function updateRecentActivity() {
+            const recentContainer = document.getElementById('recent-activity');
+            
+            if (turniData.length === 0 && licenzeData.length === 0 && recuperiData.length === 0) {
+                recentContainer.innerHTML = `
+                    <div class="list-item">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <div class="font-bold text-gray-800">Nessuna attività recente</div>
+                                <div class="text-sm text-gray-600">Inizia programmando i tuoi turni</div>
+                            </div>
+                            <div class="text-2xl">📝</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const allActivities = [
+                ...turniData.map(t => ({
+                    type: 'turno',
+                    date: t.data_turno,
+                    title: `Turno ${getTurnoLabel(t.tipo_turno)}`,
+                    subtitle: formatDate(t.data_turno),
+                    icon: getTurnoIcon(t.tipo_turno)
+                })),
+                ...licenzeData.slice(0, 2).map(l => ({
+                    type: 'licenza',
+                    date: l.data_inizio,
+                    title: `${getLicenzaName(l.tipo_licenza)}`,
+                    subtitle: `${formatDate(l.data_inizio)} - ${formatDate(l.data_fine)}`,
+                    icon: getLicenzaIcon(l.tipo_licenza)
+                })),
+                ...recuperiData.slice(0, 2).map(r => ({
+                    type: 'recupero',
+                    date: r.data_maturazione,
+                    title: `Recupero ${getRecuperoName(r.tipo_recupero)}`,
+                    subtitle: `${formatDate(r.data_maturazione)} - ${r.ore_recupero || 1}gg`,
+                    icon: getRecuperoIcon(r.tipo_recupero)
+                }))
+            ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3);
+
+            recentContainer.innerHTML = allActivities.map(activity => `
+                <div class="list-item">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-gray-800">${activity.title}</div>
+                            <div class="text-sm text-gray-600">${activity.subtitle}</div>
+                        </div>
+                        <div class="text-2xl">${activity.icon}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ======================= CALENDARIO =======================
+        function updateCalendar() {
+            const monthNames = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
+                              'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+            
+            document.getElementById('calendar-title').textContent = `📅 ${monthNames[currentMonth]} ${currentYear}`;
+
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDayOfWeek = firstDay.getDay() === 0 ? 7 : firstDay.getDay();
+
+            let calendarHTML = `
+                <div class="calendar-day header">L</div>
+                <div class="calendar-day header">M</div>
+                <div class="calendar-day header">M</div>
+                <div class="calendar-day header">G</div>
+                <div class="calendar-day header">V</div>
+                <div class="calendar-day header">S</div>
+                <div class="calendar-day header">D</div>
+            `;
+
+            // Empty cells before month starts
+            for (let i = 1; i < startingDayOfWeek; i++) {
+                calendarHTML += '<div class="calendar-day"></div>';
+            }
+
+            // Days of the month
+            const today = new Date();
+            const isCurrentMonth = today.getMonth() === currentMonth && today.getFullYear() === currentYear;
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const turno = turniData.find(t => t.data_turno === dateStr);
+                const licenza = getLicenzaForDate(dateStr);
+                const isToday = isCurrentMonth && today.getDate() === day;
+
+                let dayClass = '';
+                let label = '';
+
+                if (isToday) {
+                    dayClass = 'oggi';
+                    label = 'OGGI';
+                } else if (licenza) {
+                    dayClass = 'licenza';
+                    label = getLicenzaShortName(licenza.tipo_licenza);
+                } else if (turno) {
+                    dayClass = `turno-${turno.tipo_turno}`;
+                    label = getTurnoShortLabel(turno.tipo_turno);
+                }
+
+                calendarHTML += `
+                    <div class="calendar-day ${dayClass}" onclick="openDayModal('${dateStr}', ${turno ? `'${turno.id}'` : 'null'})">
+                        <div style="font-weight: 900;">${day}</div>
+                        ${label ? `<div style="font-size: 10px; font-weight: 600; margin-top: 2px;">${label}</div>` : ''}
+                    </div>
+                `;
+            }
+
+            document.getElementById('calendar-container').innerHTML = calendarHTML;
+        }
+
+        function previousMonth() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            triggerHapticFeedback();
+            loadTurniFromDB().then(() => {
+                updateCalendar();
+                updateDashboard();
+            });
+        }
+
+        function nextMonth() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            triggerHapticFeedback();
+            loadTurniFromDB().then(() => {
+                updateCalendar();
+                updateDashboard();
+            });
+        }
+
+        function openDayModal(dateStr, turnoId) {
+            triggerHapticFeedback();
+            if (turnoId && turnoId !== 'null') {
+                editTurno(turnoId, dateStr);
+            } else {
+                document.getElementById('turno-data').value = dateStr;
+                openModal('turno');
+            }
+        }
+
+        // ======================= LICENZE =======================
+        function updateLicensesList() {
+            const container = document.getElementById('licenze-list');
+            
+            if (licenzeData.length === 0) {
+                container.innerHTML = `
+                    <div class="list-item text-center">
+                        <div class="text-gray-500 font-semibold">Nessuna licenza programmata</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = licenzeData.slice(0, 10).map(licenza => `
+                <div class="list-item" onclick="editLicenza('${licenza.id}')">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-gray-800 flex items-center">
+                                <span class="mr-2 text-lg">${getLicenzaIcon(licenza.tipo_licenza)}</span>
+                                ${getLicenzaName(licenza.tipo_licenza)}
+                            </div>
+                            <div class="text-sm text-gray-600">
+                                ${formatDate(licenza.data_inizio)} - ${formatDate(licenza.data_fine)}
+                                <span class="ml-2 font-bold">(${licenza.giorni_totali || 0} gg)</span>
+                            </div>
+                            ${licenza.note ? `<div class="text-sm text-gray-500 mt-1">${licenza.note}</div>` : ''}
+                        </div>
+                        <div class="text-xl">→</div>
+                    </div>
+                </div>
+            `).join('');
+
+            updateLicenseCalculations();
+        }
+
+        // ======================= RECUPERI =======================
+        function updateRecuperiList() {
+            const container = document.getElementById('recuperi-list');
+            
+            if (recuperiData.length === 0) {
+                container.innerHTML = `
+                    <div class="list-item text-center">
+                        <div class="text-gray-500 font-semibold">Nessun recupero registrato</div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = recuperiData.slice(0, 10).map(recupero => `
+                    <div class="list-item" onclick="editRecupero('${recupero.id}')">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <div class="font-bold text-gray-800 flex items-center">
+                                    <span class="mr-2 text-lg">${getRecuperoIcon(recupero.tipo_recupero)}</span>
+                                    ${getRecuperoName(recupero.tipo_recupero)}
+                                </div>
+                                <div class="text-sm text-gray-600">
+                                    ${formatDate(recupero.data_maturazione)} - ${recupero.ore_recupero || 1}gg
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1">${recupero.descrizione}</div>
+                            </div>
+                            <div class="text-xl">→</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            updateRecuperiCalculations();
+        }
+
+        function updateRecuperiCalculations() {
+            const giorniTotali = recuperiData.reduce((acc, r) => acc + (r.ore_recupero || 1), 0);
+            const count = recuperiData.length;
+
+            const giorniFestivita = recuperiData.filter(r => r.tipo_recupero === 'festivita')
+                                               .reduce((acc, r) => acc + (r.ore_recupero || 1), 0);
+            const giorniSettimana = recuperiData.filter(r => r.tipo_recupero === 'settimana_del')
+                                               .reduce((acc, r) => acc + (r.ore_recupero || 1), 0);
+            const giorniStraordinario = recuperiData.filter(r => r.tipo_recupero === 'straordinario')
+                                                   .reduce((acc, r) => acc + (r.ore_recupero || 1), 0);
+            const giorniAltro = recuperiData.filter(r => r.tipo_recupero === 'altro')
+                                           .reduce((acc, r) => acc + (r.ore_recupero || 1), 0);
+
+            document.getElementById('recuperi-giorni-totali').textContent = giorniTotali;
+            document.getElementById('recuperi-count').textContent = count;
+            document.getElementById('recuperi-festivita').textContent = `${giorniFestivita}gg`;
+            document.getElementById('recuperi-settimana').textContent = `${giorniSettimana}gg`;
+            document.getElementById('recuperi-straordinario').textContent = `${giorniStraordinario}gg`;
+            document.getElementById('recuperi-altro').textContent = `${giorniAltro}gg`;
+        }
+
+        // ======================= STATISTICHE =======================
+        function updateStatistics() {
+            const turniMese = turniData.length;
+            const oreMese = turniMese * 8;
+            const giorniRecupero = recuperiData.reduce((acc, r) => acc + (r.ore_recupero || 1), 0);
+            
+            document.getElementById('stats-turni-mese').textContent = turniMese;
+            document.getElementById('stats-ore-mese').textContent = oreMese;
+            document.getElementById('stats-straordinario-mese').textContent = `${giorniRecupero}gg`;
+        }
+
+        function initChart() {
+            const canvas = document.getElementById('turni-chart');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            
+            if (turniChart) {
+                turniChart.destroy();
+            }
+            
+            const turniStats = {
+                mattina: turniData.filter(t => t.tipo_turno === 'mattina').length,
+                pomeriggio: turniData.filter(t => t.tipo_turno === 'pomeriggio').length,
+                sera: turniData.filter(t => t.tipo_turno === 'sera').length,
+                notte: turniData.filter(t => t.tipo_turno === 'notte').length,
+                riposo: turniData.filter(t => t.tipo_turno === 'riposo').length
+            };
+            
+            turniChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Mattina', 'Pomeriggio', 'Sera', 'Notte', 'Riposo'],
+                    datasets: [{
+                        data: Object.values(turniStats),
+                        backgroundColor: [
+                            '#FF9500', // Nuovo colore per mattina
+                            '#00CCFF', // Nuovo colore per pomeriggio
+                            '#9966FF', // Nuovo colore per sera
+                            '#0066CC', // Nuovo colore per notte
+                            '#33CC66'  // Nuovo colore per riposo
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 10,
+                                usePointStyle: true,
+                                font: {
+                                    size: 10,
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChart() {
+            if (turniChart) {
+                const turniStats = {
+                    mattina: turniData.filter(t => t.tipo_turno === 'mattina').length,
+                    pomeriggio: turniData.filter(t => t.tipo_turno === 'pomeriggio').length,
+                    sera: turniData.filter(t => t.tipo_turno === 'sera').length,
+                    notte: turniData.filter(t => t.tipo_turno === 'notte').length,
+                    riposo: turniData.filter(t => t.tipo_turno === 'riposo').length
+                };
+                
+                turniChart.data.datasets[0].data = Object.values(turniStats);
+                turniChart.update();
+            }
+        }
+
+        // ======================= MODAL MANAGEMENT =======================
+        function openModal(type) {
+            triggerHapticFeedback();
+            document.getElementById(`${type}-modal`).classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Hide quick actions if open
+            if (isQuickActionsVisible) {
+                showQuickActions();
+            }
+        }
+
+        function closeModal(type) {
+            document.getElementById(`${type}-modal`).classList.remove('active');
+            document.body.style.overflow = '';
+            resetModalForm(type);
+        }
+
+        function resetModalForm(type) {
+            if (type === 'turno') {
+                editingTurno = null;
+                document.getElementById('turno-form').reset();
+                document.getElementById('turno-id').value = '';
+                document.getElementById('turno-modal-title').textContent = '✨ Nuovo Turno';
+                document.getElementById('turno-delete-section').classList.add('hidden');
+            } else if (type === 'licenza') {
+                editingLicenza = null;
+                document.getElementById('licenza-form').reset();
+                document.getElementById('licenza-id').value = '';
+                document.getElementById('licenza-modal-title').textContent = '🏖️ Nuova Licenza';
+                document.getElementById('licenza-delete-section').classList.add('hidden');
+            } else if (type === 'recupero') {
+                editingRecupero = null;
+                document.getElementById('recupero-form').reset();
+                document.getElementById('recupero-id').value = '';
+                document.getElementById('recupero-modal-title').textContent = '🔄 Nuovo Recupero';
+                document.getElementById('recupero-delete-section').classList.add('hidden');
+                document.getElementById('recupero-giorni').value = '1';
+            } else if (type === 'config-licenze') {
+                if (userLicenseConfig) {
+                    updateLicenseConfigUI();
+                }
+            }
+        }
+
+        // ======================= FORM HANDLING =======================
+        function setupFormListeners() {
+            document.getElementById('turno-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                await saveTurno();
+            });
+
+            document.getElementById('licenza-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                await saveLicenza();
+            });
+
+            document.getElementById('config-licenze-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                await saveConfigLicenze();
+            });
+
+            document.getElementById('recupero-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                await saveRecupero();
+            });
+
+            ['config-ordinarie', 'config-speciali', 'config-residui'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', updateRiepilogoModal);
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal')) {
+                    const modalType = e.target.id.replace('-modal', '');
+                    closeModal(modalType);
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    const activeModal = document.querySelector('.modal.active');
+                    if (activeModal) {
+                        const modalType = activeModal.id.replace('-modal', '');
+                        closeModal(modalType);
+                    }
+                }
+            });
+
+            const configAnno = document.getElementById('config-anno');
+            if (configAnno) {
+                configAnno.addEventListener('change', function() {
+                    updateRiepilogoModal();
+                });
+            }
+        }
+
+        async function saveTurno() {
+            try {
+                showLoading(true);
+                
+                const turnoData = {
+                    data: document.getElementById('turno-data').value,
+                    tipo: document.getElementById('turno-tipo').value,
+                    note: document.getElementById('turno-note').value
+                };
+
+                if (!turnoData.data || !turnoData.tipo) {
+                    showNotification('Compila tutti i campi obbligatori', 'error');
+                    return;
+                }
+
+                if (editingTurno) {
+                    const { error } = await supabase
+                        .from('turni')
+                        .update({
+                            data_turno: turnoData.data,
+                            tipo_turno: turnoData.tipo,
+                            note: turnoData.note || ''
+                        })
+                        .eq('id', editingTurno.id)
+                        .eq('user_id', currentUser.id);
+
+                    if (error) throw error;
+                    showNotification('Turno aggiornato!', 'success');
+                    triggerHapticFeedback('success');
+                } else {
+                    const { error } = await supabase
+                        .from('turni')
+                        .upsert({
+                            user_id: currentUser.id,
+                            data_turno: turnoData.data,
+                            tipo_turno: turnoData.tipo,
+                            note: turnoData.note || ''
+                        }, { onConflict: 'user_id,data_turno' });
+
+                    if (error) throw error;
+                    showNotification('Turno salvato!', 'success');
+                    triggerHapticFeedback('success');
+                }
+
+                closeModal('turno');
+                await loadTurniFromDB();
+                updateCalendar();
+                updateDashboard();
+                updateStatistics();
+                updateChart();
+                
+            } catch (error) {
+                console.error('Errore salvataggio turno:', error);
+                showNotification('Errore nel salvataggio', 'error');
+                triggerHapticFeedback('error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function saveLicenza() {
+            try {
+                showLoading(true);
+                
+                const licenzaData = {
+                    tipo: document.getElementById('licenza-tipo').value,
+                    dataInizio: document.getElementById('licenza-data-inizio').value,
+                    dataFine: document.getElementById('licenza-data-fine').value,
+                    note: document.getElementById('licenza-note').value
+                };
+
+                if (!licenzaData.tipo || !licenzaData.dataInizio || !licenzaData.dataFine) {
+                    showNotification('Compila tutti i campi obbligatori', 'error');
+                    return;
+                }
+
+                if (new Date(licenzaData.dataInizio) > new Date(licenzaData.dataFine)) {
+                    showNotification('La data di fine deve essere successiva a quella di inizio', 'error');
+                    return;
+                }
+
+                const giorni = calculateDaysBetween(licenzaData.dataInizio, licenzaData.dataFine);
+
+                if (!editingLicenza && userLicenseConfig) {
+                    const annoLicenza = new Date(licenzaData.dataInizio).getFullYear();
+                    const licenzeAnno = licenzeData.filter(l => 
+                        new Date(l.data_inizio).getFullYear() === annoLicenza
+                    );
+
+                    const giorniUtilizzati = licenzeAnno.reduce((acc, l) => acc + (l.giorni_totali || 0), 0);
+                    const giorniTotaliDisponibili = userLicenseConfig.giorni_ordinarie + 
+                                                   userLicenseConfig.giorni_speciali + 
+                                                   userLicenseConfig.residui_anno_precedente;
+
+                    if (giorniUtilizzati + giorni > giorniTotaliDisponibili) {
+                        const disponibili = giorniTotaliDisponibili - giorniUtilizzati;
+                        showNotification(`Giorni insufficienti! Disponibili: ${disponibili}, Richiesti: ${giorni}`, 'error');
+                        return;
+                    }
+                }
+
+                if (editingLicenza) {
+                    const { error } = await supabase
+                        .from('licenze')
+                        .update({
+                            tipo_licenza: licenzaData.tipo,
+                            data_inizio: licenzaData.dataInizio,
+                            data_fine: licenzaData.dataFine,
+                            giorni_totali: giorni,
+                            note: licenzaData.note || ''
+                        })
+                        .eq('id', editingLicenza.id)
+                        .eq('user_id', currentUser.id);
+
+                    if (error) throw error;
+                    showNotification('Licenza aggiornata!', 'success');
+                    triggerHapticFeedback('success');
+                } else {
+                    const { error } = await supabase
+                        .from('licenze')
+                        .insert({
+                            user_id: currentUser.id,
+                            tipo_licenza: licenzaData.tipo,
+                            data_inizio: licenzaData.dataInizio,
+                            data_fine: licenzaData.dataFine,
+                            giorni_totali: giorni,
+                            note: licenzaData.note || ''
+                        });
+
+                    if (error) throw error;
+                    showNotification('Licenza programmata!', 'success');
+                    triggerHapticFeedback('success');
+                }
+
+                closeModal('licenza');
+                await loadLicenzeFromDB();
+                updateLicensesList();
+                updateCalendar();
+                updateDashboard();
+                
+            } catch (error) {
+                console.error('Errore salvataggio licenza:', error);
+                showNotification('Errore nel salvataggio', 'error');
+                triggerHapticFeedback('error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function saveConfigLicenze() {
+            try {
+                showLoading(true);
+
+                const newConfig = {
+                    anno: parseInt(document.getElementById('config-anno').value),
+                    giorni_ordinarie: parseInt(document.getElementById('config-ordinarie').value),
+                    giorni_speciali: parseInt(document.getElementById('config-speciali').value),
+                    residui_anno_precedente: parseInt(document.getElementById('config-residui').value),
+                    anzianita_servizio: parseInt(document.getElementById('config-anzianita').value)
+                };
+
+                if (newConfig.giorni_ordinarie < 0 || newConfig.giorni_ordinarie > 50) {
+                    showNotification('Giorni ordinarie non validi (0-50)', 'error');
+                    return;
+                }
+
+                if (newConfig.giorni_speciali < 0 || newConfig.giorni_speciali > 30) {
+                    showNotification('Giorni speciali non validi (0-30)', 'error');
+                    return;
+                }
+
+                userLicenseConfig = newConfig;
+                const saved = await saveUserLicenseConfig();
+
+                if (saved) {
+                    showNotification('Configurazione salvata!', 'success');
+                    triggerHapticFeedback('success');
+                    closeModal('config-licenze');
+                    updateLicenseConfigUI();
+                    updateLicensesList();
+                    updateDashboard();
+                } else {
+                    showNotification('Errore nel salvataggio', 'error');
+                    triggerHapticFeedback('error');
+                }
+
+            } catch (error) {
+                console.error('Errore salvataggio configurazione:', error);
+                showNotification('Errore nel salvataggio', 'error');
+                triggerHapticFeedback('error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function updateRiepilogoModal() {
+            const ordinarie = parseInt(document.getElementById('config-ordinarie').value) || 0;
+            const speciali = parseInt(document.getElementById('config-speciali').value) || 0;
+            const residui = parseInt(document.getElementById('config-residui').value) || 0;
+
+            const annoSelezionato = parseInt(document.getElementById('config-anno').value);
+            const licenzeAnno = licenzeData.filter(l => 
+                new Date(l.data_inizio).getFullYear() === annoSelezionato
+            );
+
+            const utilizzate = licenzeAnno.reduce((acc, l) => acc + (l.giorni_totali || 0), 0);
+            const ordinarieTotali = ordinarie + residui;
+            const totaleDisponibile = ordinarieTotali + speciali;
+            const disponibili = Math.max(0, totaleDisponibile - utilizzate);
+
+            document.getElementById('riepilogo-ordinarie').textContent = ordinarieTotali;
+            document.getElementById('riepilogo-speciali').textContent = speciali;
+            document.getElementById('riepilogo-utilizzate').textContent = utilizzate;
+            document.getElementById('riepilogo-disponibili').textContent = disponibili;
+        }
+
+        async function saveRecupero() {
+            try {
+                showLoading(true);
+                
+                const recuperoData = {
+                    tipo: document.getElementById('recupero-tipo').value,
+                    data: document.getElementById('recupero-data').value,
+                    giorni: parseInt(document.getElementById('recupero-giorni').value),
+                    descrizione: document.getElementById('recupero-descrizione').value
+                };
+
+                if (!recuperoData.tipo || !recuperoData.data || !recuperoData.giorni || !recuperoData.descrizione) {
+                    showNotification('Compila tutti i campi obbligatori', 'error');
+                    return;
+                }
+
+                if (recuperoData.giorni <= 0 || recuperoData.giorni > 30) {
+                    showNotification('I giorni devono essere tra 1 e 30', 'error');
+                    return;
+                }
+
+                if (editingRecupero) {
+                    const { error } = await supabase
+                        .from('recuperi')
+                        .update({
+                            tipo_recupero: recuperoData.tipo,
+                            data_maturazione: recuperoData.data,
+                            ore_recupero: recuperoData.giorni, // Manteniamo il nome colonna originale
+                            descrizione: recuperoData.descrizione
+                        })
+                        .eq('id', editingRecupero.id)
+                        .eq('user_id', currentUser.id);
+
+                    if (error) throw error;
+                    showNotification('Recupero aggiornato!', 'success');
+                    triggerHapticFeedback('success');
+                } else {
+                    const { error } = await supabase
+                        .from('recuperi')
+                        .insert({
+                            user_id: currentUser.id,
+                            tipo_recupero: recuperoData.tipo,
+                            data_maturazione: recuperoData.data,
+                            ore_recupero: recuperoData.giorni, // Manteniamo il nome colonna originale
+                            descrizione: recuperoData.descrizione
+                        });
+
+                    if (error) throw error;
+                    showNotification('Recupero registrato!', 'success');
+                    triggerHapticFeedback('success');
+                }
+
+                closeModal('recupero');
+                await loadRecuperiFromDB();
+                updateRecuperiList();
+                updateDashboard();
+                
+            } catch (error) {
+                console.error('Errore salvataggio recupero:', error);
+                showNotification('Errore nel salvataggio', 'error');
+                triggerHapticFeedback('error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // ======================= EDIT FUNCTIONS =======================
+        function editTurno(turnoId, dateStr) {
+            const turno = turniData.find(t => t.id === turnoId);
+            if (!turno) return;
+
+            editingTurno = turno;
+            document.getElementById('turno-id').value = turno.id;
+            document.getElementById('turno-data').value = turno.data_turno;
+            document.getElementById('turno-tipo').value = turno.tipo_turno;
+            document.getElementById('turno-note').value = turno.note || '';
+            document.getElementById('turno-modal-title').textContent = '✏️ Modifica Turno';
+            document.getElementById('turno-delete-section').classList.remove('hidden');
+            openModal('turno');
+        }
+
+        function editLicenza(licenzaId) {
+            const licenza = licenzeData.find(l => l.id === licenzaId);
+            if (!licenza) return;
+
+            editingLicenza = licenza;
+            document.getElementById('licenza-id').value = licenza.id;
+            document.getElementById('licenza-tipo').value = licenza.tipo_licenza;
+            document.getElementById('licenza-data-inizio').value = licenza.data_inizio;
+            document.getElementById('licenza-data-fine').value = licenza.data_fine;
+            document.getElementById('licenza-note').value = licenza.note || '';
+            document.getElementById('licenza-modal-title').textContent = '✏️ Modifica Licenza';
+            document.getElementById('licenza-delete-section').classList.remove('hidden');
+            openModal('licenza');
+        }
+
+        function editRecupero(recuperoId) {
+            const recupero = recuperiData.find(r => r.id === recuperoId);
+            if (!recupero) return;
+
+            editingRecupero = recupero;
+            document.getElementById('recupero-id').value = recupero.id;
+            document.getElementById('recupero-tipo').value = recupero.tipo_recupero;
+            document.getElementById('recupero-data').value = recupero.data_maturazione;
+            document.getElementById('recupero-giorni').value = recupero.ore_recupero || 1;
+            document.getElementById('recupero-descrizione').value = recupero.descrizione || '';
+            document.getElementById('recupero-modal-title').textContent = '✏️ Modifica Recupero';
+            document.getElementById('recupero-delete-section').classList.remove('hidden');
+            openModal('recupero');
+        }
+
+        // ======================= DELETE FUNCTIONS =======================
+        async function deleteTurno() {
+            if (!editingTurno) return;
+            
+            if (!confirm('Sei sicuro di voler eliminare questo turno?')) return;
+            
+            try {
+                showLoading(true);
+                
+                const { error } = await supabase
+                    .from('turni')
+                    .delete()
+                    .eq('id', editingTurno.id)
+                    .eq('user_id', currentUser.id);
+
+                if (error) throw error;
+                
+                showNotification('Turno eliminato!', 'success');
+                triggerHapticFeedback('success');
+                closeModal('turno');
+                await loadTurniFromDB();
+                updateCalendar();
+                updateDashboard();
+                updateStatistics();
+                updateChart();
+                
+            } catch (error) {
+                console.error('Errore eliminazione turno:', error);
+                showNotification('Errore nell\'eliminazione', 'error');
+                triggerHapticFeedback('error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function deleteLicenza() {
+            if (!editingLicenza) return;
+            
+            if (!confirm('Sei sicuro di voler eliminare questa licenza?')) return;
+            
+            try {
+                showLoading(true);
+                
+                const { error } = await supabase
+                    .from('licenze')
+                    .delete()
+                    .eq('id', editingLicenza.id)
+                    .eq('user_id', currentUser.id);
+
+                if (error) throw error;
+                
+                showNotification('Licenza eliminata!', 'success');
+                triggerHapticFeedback('success');
+                closeModal('licenza');
+                await loadLicenzeFromDB();
+                updateLicensesList();
+                updateCalendar();
+                updateDashboard();
+                
+            } catch (error) {
+                console.error('Errore eliminazione licenza:', error);
+                showNotification('Errore nell\'eliminazione', 'error');
+                triggerHapticFeedback('error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function deleteRecupero() {
+            if (!editingRecupero) return;
+            
+            if (!confirm('Sei sicuro di voler eliminare questo recupero?')) return;
+            
+            try {
+                showLoading(true);
+                
+                const { error } = await supabase
+                    .from('recuperi')
+                    .delete()
+                    .eq('id', editingRecupero.id)
+                    .eq('user_id', currentUser.id);
+
+                if (error) throw error;
+                
+                showNotification('Recupero eliminato!', 'success');
+                triggerHapticFeedback('success');
+                closeModal('recupero');
+                await loadRecuperiFromDB();
+                updateRecuperiList();
+                updateDashboard();
+                
+            } catch (error) {
+                console.error('Errore eliminazione recupero:', error);
+                showNotification('Errore nell\'eliminazione', 'error');
+                triggerHapticFeedback('error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // ======================= EXPORT FUNCTIONS =======================
+        function exportPDF() {
+            if (typeof jsPDF === 'undefined') {
+                showNotification('Libreria PDF non disponibile', 'error');
+                return;
+            }
+            
+            showNotification('Generazione PDF in corso...', 'info');
+            triggerHapticFeedback();
+            
+            setTimeout(() => {
+                try {
+                    const doc = new jsPDF();
+                    const today = new Date().toLocaleDateString('it-IT');
+                    const monthNames = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
+                                      'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+                    
+                    doc.setFontSize(20);
+                    doc.text(`Report ${monthNames[currentMonth]} ${currentYear}`, 20, 30);
+                    doc.setFontSize(12);
+                    doc.text(`Generato il: ${today}`, 20, 45);
+                    doc.text(`Turni effettuati: ${turniData.length}`, 20, 65);
+                    doc.text(`Ore totali: ${turniData.length * 8}`, 20, 80);
+                    doc.text(`Giorni recupero: ${recuperiData.reduce((acc, r) => acc + (r.ore_recupero || 1), 0)}gg`, 20, 95);
+                    
+                    doc.save(`report-${monthNames[currentMonth].toLowerCase()}-${currentYear}.pdf`);
+                    showNotification('PDF generato con successo!', 'success');
+                    triggerHapticFeedback('success');
+                } catch (error) {
+                    console.error('Errore generazione PDF:', error);
+                    showNotification('Errore nella generazione PDF', 'error');
+                    triggerHapticFeedback('error');
+                }
+            }, 1000);
+        }
+
+        function exportExcel(tipo) {
+            showNotification('Export Excel in corso...', 'info');
+            triggerHapticFeedback();
+            
+            setTimeout(() => {
+                try {
+                    let csvContent = '';
+                    const today = new Date().toLocaleDateString('it-IT');
+                    
+                    if (tipo === 'turni') {
+                        csvContent = 'Data,Tipo,Note\n';
+                        turniData.forEach(turno => {
+                            csvContent += `${formatDate(turno.data_turno)},${getTurnoLabel(turno.tipo_turno)},${turno.note || ''}\n`;
+                        });
+                    } else if (tipo === 'licenze') {
+                        csvContent = 'Tipo,Data Inizio,Data Fine,Giorni,Note\n';
+                        licenzeData.forEach(licenza => {
+                            csvContent += `${getLicenzaName(licenza.tipo_licenza)},${formatDate(licenza.data_inizio)},${formatDate(licenza.data_fine)},${licenza.giorni_totali || 0},${licenza.note || ''}\n`;
+                        });
+                    } else if (tipo === 'recuperi') {
+                        csvContent = 'Tipo,Data,Giorni,Descrizione\n';
+                        recuperiData.forEach(recupero => {
+                            csvContent += `${getRecuperoName(recupero.tipo_recupero)},${formatDate(recupero.data_maturazione)},${recupero.ore_recupero || 1},${recupero.descrizione || ''}\n`;
+                        });
+                    }
+                    
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement('a');
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', `export-${tipo}-${today.replace(/\//g, '-')}.csv`);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    showNotification('Export completato!', 'success');
+                    triggerHapticFeedback('success');
+                } catch (error) {
+                    console.error('Errore export:', error);
+                    showNotification('Errore nell\'export', 'error');
+                    triggerHapticFeedback('error');
+                }
+            }, 500);
+        }
+
+        // ======================= UTILITY FUNCTIONS =======================
+        function getTurnoLabel(tipo) {
+            const labels = {
                 mattina: 'Mattina',
                 pomeriggio: 'Pomeriggio',
                 sera: 'Sera',
                 notte: 'Notte',
                 riposo: 'Riposo'
             };
-            return names[tipo] || 'Turno';
+            return labels[tipo] || tipo;
+        }
+
+        function getTurnoShortLabel(tipo) {
+            const labels = {
+                mattina: 'M',
+                pomeriggio: 'P',
+                sera: 'S',
+                notte: 'N',
+                riposo: 'R'
+            };
+            return labels[tipo] || tipo;
         }
 
         function getTurnoIcon(tipo) {
@@ -699,6 +3418,36 @@
                 }
             }, 0);
         });
+
+        // Funzione per rendere l'interfaccia adattabile agli schermi piccoli
+        function setupResponsiveUI() {
+            const viewportHeight = window.innerHeight;
+            const viewportWidth = window.innerWidth;
+            
+            // Gestione pulsanti e controls per schermi piccoli
+            if (viewportWidth < 360) {
+                document.querySelectorAll('.btn-text').forEach(el => {
+                    el.style.fontSize = '14px';
+                });
+                
+                // Riduci padding contenitori principali
+                document.querySelectorAll('.container').forEach(el => {
+                    el.classList.remove('px-6');
+                    el.classList.add('px-3');
+                });
+            }
+            
+            // Gestione altezza contenuto per evitare overflow
+            const bottomNavHeight = document.querySelector('.bottom-nav')?.offsetHeight || 70;
+            const contentContainers = document.querySelectorAll('.content-container');
+            
+            contentContainers.forEach(container => {
+                container.style.maxHeight = `${viewportHeight - bottomNavHeight - 20}px`;
+                container.style.overflowY = 'auto';
+            });
+            
+            console.log(`📱 UI adattata: ${viewportWidth}x${viewportHeight}px`);
+        }
 
         console.log('🌐 MyApp Strumenti Mobile Enhanced - Sistema caricato');
     </script>
