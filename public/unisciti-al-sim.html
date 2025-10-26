@@ -145,19 +145,20 @@ body::after {
 
 .progress-bar {
     background: rgba(255, 255, 255, 0.2);
-    height: 8px;
-    border-radius: 4px;
+    height: 30px;
+    border-radius: 15px;
     margin-top: 20px;
-    overflow: hidden;
+    overflow: visible;
     position: relative;
     z-index: 2;
 }
 
 .progress-fill {
-    background: #FFD700;
+    background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
     height: 100%;
     transition: width 0.3s ease;
     box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    border-radius: 15px;
 }
 
 .content {
@@ -577,7 +578,7 @@ small {
     
     .progress-bar {
         margin-top: 15px;
-        height: 6px;
+        height: 25px;
     }
     
     .content {
@@ -842,6 +843,425 @@ small {
         font-size: 14px;
     }
 }
+
+/* Media query per rendere i 3 pulsanti Email/WhatsApp/Telegram in verticale su mobile */
+@media (max-width: 600px) {
+    /* Box con 3 pulsanti diventa verticale */
+    div[style*="grid-template-columns: repeat(3, 1fr)"] {
+        grid-template-columns: 1fr !important;
+    }
+    
+    /* Padding ridotto per box su mobile */
+    .container {
+        padding: 10px;
+    }
+    
+    /* Row diventa verticale su mobile */
+    .row {
+        flex-direction: column;
+    }
+}
+
+/* Media query specifica per smartphone MOLTO PICCOLI (iPhone SE, Galaxy Mini, ecc.) */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    .container {
+        border-radius: 12px;
+        padding: 5px;
+    }
+    
+    .header {
+        padding: 20px 15px;
+    }
+    
+    .header h1 {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+    
+    .header p {
+        font-size: 12px;
+    }
+    
+    .logo-section {
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .logo {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .brand-name {
+        font-size: 16px;
+    }
+    
+    .brand-hashtag {
+        font-size: 9px;
+    }
+    
+    .progress-bar {
+        height: 22px;
+        margin-top: 12px;
+    }
+    
+    #progress-text {
+        font-size: 12px !important;
+    }
+    
+    .content {
+        padding: 15px 10px;
+    }
+    
+    .question {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        font-size: 14px;
+        margin-bottom: 6px;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    select {
+        font-size: 16px !important;
+        padding: 12px 10px;
+        border-radius: 8px;
+    }
+    
+    .radio-option label {
+        padding: 14px 12px;
+        font-size: 14px;
+    }
+    
+    button {
+        padding: 14px 20px;
+        font-size: 15px;
+        border-radius: 10px;
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .buttons {
+        gap: 10px;
+    }
+    
+    #signature-canvas {
+        height: 120px;
+    }
+    
+    .signature-wrapper {
+        border-radius: 8px;
+    }
+    
+    .summary {
+        padding: 12px;
+        border-radius: 10px;
+    }
+    
+    .summary-item {
+        padding: 8px 0;
+        font-size: 13px;
+    }
+    
+    .summary-label {
+        font-size: 13px;
+        font-weight: 600;
+    }
+    
+    .summary-value {
+        font-size: 13px;
+    }
+    
+    .success-message h2 {
+        font-size: 18px;
+    }
+    
+    .success-message p {
+        font-size: 13px;
+    }
+    
+    .checkmark {
+        width: 45px;
+        height: 45px;
+        font-size: 22px;
+    }
+    
+    /* Box documenti più compatti */
+    div[style*="background: #f0f9ff"] {
+        padding: 15px !important;
+        margin: 15px 0 !important;
+    }
+    
+    /* Pulsanti documenti più piccoli */
+    div[style*="background: #f0f9ff"] button {
+        padding: 12px 10px !important;
+        font-size: 14px !important;
+        min-width: 120px !important;
+    }
+    
+    /* Cornice guida più piccola */
+    div[id*="frame-guide"] {
+        max-width: 100% !important;
+        margin: 10px auto !important;
+    }
+    
+    /* Preview immagini responsive */
+    img[id*="preview-"] {
+        border-radius: 6px !important;
+    }
+    
+    /* STEP 6 - Schermata finale responsive */
+    .success-message h2 {
+        font-size: 20px !important;
+    }
+    
+    .success-message h3 {
+        font-size: 16px !important;
+    }
+    
+    /* Box benvenuto più compatto */
+    div[style*="linear-gradient(135deg, #e0f2fe"] {
+        padding: 18px !important;
+        margin: 18px auto !important;
+        font-size: 14px !important;
+    }
+    
+    div[style*="linear-gradient(135deg, #e0f2fe"] h3 {
+        font-size: 18px !important;
+    }
+    
+    div[style*="linear-gradient(135deg, #e0f2fe"] p {
+        font-size: 14px !important;
+    }
+    
+    /* Box documenti pronti */
+    div[style*="background: #f8fafc"] {
+        padding: 15px !important;
+        margin: 15px auto !important;
+    }
+    
+    div[style*="background: #f8fafc"] h3 {
+        font-size: 16px !important;
+    }
+    
+    /* Box guida rapida */
+    div[style*="linear-gradient(135deg, #fef3c7"] {
+        padding: 18px !important;
+        margin: 15px auto 20px auto !important;
+    }
+    
+    div[style*="linear-gradient(135deg, #fef3c7"] h4 {
+        font-size: 16px !important;
+    }
+    
+    /* Step numerati più piccoli */
+    div[style*="linear-gradient(135deg, #fef3c7"] span[style*="width: 28px"] {
+        width: 24px !important;
+        height: 24px !important;
+        font-size: 13px !important;
+        margin-right: 10px !important;
+    }
+    
+    div[style*="linear-gradient(135deg, #fef3c7"] p {
+        font-size: 13px !important;
+        line-height: 1.5 !important;
+    }
+    
+    /* Pulsanti Email/WhatsApp/Telegram */
+    #email-button,
+    #whatsapp-button,
+    #telegram-button {
+        padding: 14px 10px !important;
+        font-size: 13px !important;
+    }
+    
+    #email-button span,
+    #whatsapp-button span,
+    #telegram-button span {
+        font-size: 20px !important;
+    }
+    
+    /* Pulsanti download */
+    .btn-download {
+        font-size: 14px !important;
+        padding: 12px !important;
+    }
+}
+
+/* Media query EXTRA SMALL per schermi piccolissimi (320px) */
+@media (max-width: 360px) {
+    body {
+        padding: 5px;
+        font-size: 13px;
+    }
+    
+    .container {
+        padding: 0;
+        border-radius: 10px;
+    }
+    
+    .header {
+        padding: 15px 10px;
+    }
+    
+    .header h1 {
+        font-size: 16px;
+    }
+    
+    .header p {
+        font-size: 11px;
+    }
+    
+    .logo {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .brand-name {
+        font-size: 14px;
+    }
+    
+    .progress-bar {
+        height: 20px;
+    }
+    
+    #progress-text {
+        font-size: 11px !important;
+    }
+    
+    .content {
+        padding: 12px 8px;
+    }
+    
+    .question {
+        font-size: 15px;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    select {
+        font-size: 16px !important;
+        padding: 10px 8px;
+    }
+    
+    button {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+    
+    .radio-option label {
+        padding: 12px 10px;
+        font-size: 13px;
+    }
+    
+    /* STEP 6 - Schermata finale EXTRA SMALL */
+    .success-message h2 {
+        font-size: 18px !important;
+    }
+    
+    .success-message h3 {
+        font-size: 15px !important;
+    }
+    
+    /* Box benvenuto ancora più compatto */
+    div[style*="linear-gradient(135deg, #e0f2fe"] {
+        padding: 15px !important;
+        margin: 15px 5px !important;
+    }
+    
+    div[style*="linear-gradient(135deg, #e0f2fe"] h3 {
+        font-size: 16px !important;
+    }
+    
+    div[style*="linear-gradient(135deg, #e0f2fe"] p {
+        font-size: 13px !important;
+    }
+    
+    div[style*="linear-gradient(135deg, #e0f2fe"] div[style*="font-size: 32px"] {
+        font-size: 28px !important;
+    }
+    
+    /* Box documenti pronti */
+    div[style*="background: #f8fafc"] {
+        padding: 12px !important;
+        margin: 12px 5px !important;
+    }
+    
+    div[style*="background: #f8fafc"] h3 {
+        font-size: 15px !important;
+    }
+    
+    /* Box guida rapida */
+    div[style*="linear-gradient(135deg, #fef3c7"] {
+        padding: 15px !important;
+        margin: 12px 5px 15px 5px !important;
+    }
+    
+    div[style*="linear-gradient(135deg, #fef3c7"] h4 {
+        font-size: 15px !important;
+    }
+    
+    /* Step numerati ancora più piccoli */
+    div[style*="linear-gradient(135deg, #fef3c7"] span[style*="width: 28px"] {
+        width: 22px !important;
+        height: 22px !important;
+        font-size: 12px !important;
+        margin-right: 8px !important;
+    }
+    
+    div[style*="linear-gradient(135deg, #fef3c7"] p {
+        font-size: 12px !important;
+        line-height: 1.4 !important;
+    }
+    
+    div[style*="linear-gradient(135deg, #fef3c7"] div[style*="background: white"] {
+        padding: 12px !important;
+    }
+    
+    /* Pulsanti Email/WhatsApp/Telegram ultra compatti */
+    #email-button,
+    #whatsapp-button,
+    #telegram-button {
+        padding: 12px 8px !important;
+        font-size: 12px !important;
+        gap: 6px !important;
+    }
+    
+    #email-button span,
+    #whatsapp-button span,
+    #telegram-button span {
+        font-size: 18px !important;
+    }
+    
+    /* Pulsanti download */
+    .btn-download {
+        font-size: 13px !important;
+        padding: 10px !important;
+    }
+    
+    /* Checkmark più piccolo */
+    .checkmark {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 20px !important;
+    }
+}
 </style>
 </head>
 <body>
@@ -869,6 +1289,7 @@ small {
         <p>Procedura guidata per l'iscrizione</p>
         <div class="progress-bar">
             <div class="progress-fill" id="progress"></div>
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 700; font-size: 14px; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.5); z-index: 3;" id="progress-text">0%</div>
         </div>
     </div>
 
@@ -889,7 +1310,32 @@ small {
             
             <div class="form-group conditional-field" id="sindacato-field">
                 <label>Nome completo del sindacato a cui sei attualmente iscritto *</label>
-                <input type="text" id="sindacato-nome" placeholder="Es: USMIA - Unione Sindacale Militari Italiani">
+                <select id="sindacato-select" onchange="toggleAltroSindacato()">
+                    <option value="">Seleziona dalla lista...</option>
+                    <option value="NSC - Nuovo Sindacato Carabinieri">NSC - Nuovo Sindacato Carabinieri</option>
+                    <option value="USIC - Unione Sindacale Italiana Carabinieri">USIC - Unione Sindacale Italiana Carabinieri</option>
+                    <option value="PSC Assieme - Pianeta Sindacale Carabinieri Assieme">PSC Assieme - Pianeta Sindacale Carabinieri Assieme</option>
+                    <option value="UNARMA ASC - Associazione Sindacale Carabinieri UNARMA">UNARMA ASC - Associazione Sindacale Carabinieri UNARMA</option>
+                    <option value="SIUL CC - Sindacato Italiano Unitario Lavoratori Carabinieri">SIUL CC - Sindacato Italiano Unitario Lavoratori Carabinieri</option>
+                    <option value="USMIA - Unione Sindacale Militare Interforze Associati">USMIA - Unione Sindacale Militare Interforze Associati</option>
+                    <option value="FSC - Federazione Sindacale Carabinieri">FSC - Federazione Sindacale Carabinieri</option>
+                    <option value="ASSOMIL - Associazione Sindacale Militari">ASSOMIL - Associazione Sindacale Militari</option>
+                    <option value="MOSAC - Movimento Sindacale Autonomo Carabinieri">MOSAC - Movimento Sindacale Autonomo Carabinieri</option>
+                    <option value="SAC - Sindacato Autonomo Carabinieri">SAC - Sindacato Autonomo Carabinieri</option>
+                    <option value="SIAC - Sindacato Indipendente Carabinieri">SIAC - Sindacato Indipendente Carabinieri</option>
+                    <option value="SIC - Sindacato Indipendente Carabinieri">SIC - Sindacato Indipendente Carabinieri</option>
+                    <option value="SIULM CC - Sindacato Unitario Lavoratori Militari Carabinieri">SIULM CC - Sindacato Unitario Lavoratori Militari Carabinieri</option>
+                    <option value="SMAC - Sindacato Militari Autonomi Carabinieri">SMAC - Sindacato Militari Autonomi Carabinieri</option>
+                    <option value="UNAC - Unione Nazionale Arma Carabinieri">UNAC - Unione Nazionale Arma Carabinieri</option>
+                    <option value="SCUDO Carabinieri - Sindacato SCUDO Carabinieri">SCUDO Carabinieri - Sindacato SCUDO Carabinieri</option>
+                    <option value="altro">✏️ Altro (scrivi manualmente)</option>
+                </select>
+                <small>Seleziona il sindacato dalla lista</small>
+            </div>
+            
+            <div class="form-group conditional-field" id="sindacato-altro-field" style="display: none;">
+                <label>Scrivi il nome del sindacato *</label>
+                <input type="text" id="sindacato-nome" placeholder="Es: Nome completo del sindacato e indirizzo">
                 <small>Inserisci denominazione completa e indirizzo del sindacato</small>
             </div>
             
@@ -1077,7 +1523,8 @@ small {
                 </div>
                 <div class="form-group">
                     <label>Codice Fiscale *</label>
-                    <input type="text" id="codice-fiscale" maxlength="16" style="text-transform: uppercase;" required>
+                    <input type="text" id="codice-fiscale" maxlength="16" style="text-transform: uppercase;" required onchange="extractDataFromCF()">
+                    <small id="cf-status" style="display: none; margin-top: 5px;"></small>
                 </div>
             </div>
 
@@ -1265,9 +1712,125 @@ small {
 
             <div class="row">
                 <div class="form-group">
-                    <label>Città e Provincia *</label>
-                    <input type="text" id="citta" placeholder="Es: Roma (RM)" required>
+                    <label>Città *</label>
+                    <input type="text" id="citta" placeholder="Es: Roma" required>
                 </div>
+                <div class="form-group">
+                    <label>Provincia *</label>
+                    <select id="provincia" required>
+                        <option value="">Seleziona provincia</option>
+                        <option value="AG">Agrigento</option>
+                        <option value="AL">Alessandria</option>
+                        <option value="AN">Ancona</option>
+                        <option value="AO">Aosta</option>
+                        <option value="AP">Ascoli Piceno</option>
+                        <option value="AQ">L'Aquila</option>
+                        <option value="AR">Arezzo</option>
+                        <option value="AT">Asti</option>
+                        <option value="AV">Avellino</option>
+                        <option value="BA">Bari</option>
+                        <option value="BG">Bergamo</option>
+                        <option value="BI">Biella</option>
+                        <option value="BL">Belluno</option>
+                        <option value="BN">Benevento</option>
+                        <option value="BO">Bologna</option>
+                        <option value="BR">Brindisi</option>
+                        <option value="BS">Brescia</option>
+                        <option value="BT">Barletta-Andria-Trani</option>
+                        <option value="BZ">Bolzano</option>
+                        <option value="CA">Cagliari</option>
+                        <option value="CB">Campobasso</option>
+                        <option value="CE">Caserta</option>
+                        <option value="CH">Chieti</option>
+                        <option value="CL">Caltanissetta</option>
+                        <option value="CN">Cuneo</option>
+                        <option value="CO">Como</option>
+                        <option value="CR">Cremona</option>
+                        <option value="CS">Cosenza</option>
+                        <option value="CT">Catania</option>
+                        <option value="CZ">Catanzaro</option>
+                        <option value="EN">Enna</option>
+                        <option value="FC">Forlì-Cesena</option>
+                        <option value="FE">Ferrara</option>
+                        <option value="FG">Foggia</option>
+                        <option value="FI">Firenze</option>
+                        <option value="FM">Fermo</option>
+                        <option value="FR">Frosinone</option>
+                        <option value="GE">Genova</option>
+                        <option value="GO">Gorizia</option>
+                        <option value="GR">Grosseto</option>
+                        <option value="IM">Imperia</option>
+                        <option value="IS">Isernia</option>
+                        <option value="KR">Crotone</option>
+                        <option value="LC">Lecco</option>
+                        <option value="LE">Lecce</option>
+                        <option value="LI">Livorno</option>
+                        <option value="LO">Lodi</option>
+                        <option value="LT">Latina</option>
+                        <option value="LU">Lucca</option>
+                        <option value="MB">Monza e Brianza</option>
+                        <option value="MC">Macerata</option>
+                        <option value="ME">Messina</option>
+                        <option value="MI">Milano</option>
+                        <option value="MN">Mantova</option>
+                        <option value="MO">Modena</option>
+                        <option value="MS">Massa-Carrara</option>
+                        <option value="MT">Matera</option>
+                        <option value="NA">Napoli</option>
+                        <option value="NO">Novara</option>
+                        <option value="NU">Nuoro</option>
+                        <option value="OR">Oristano</option>
+                        <option value="PA">Palermo</option>
+                        <option value="PC">Piacenza</option>
+                        <option value="PD">Padova</option>
+                        <option value="PE">Pescara</option>
+                        <option value="PG">Perugia</option>
+                        <option value="PI">Pisa</option>
+                        <option value="PN">Pordenone</option>
+                        <option value="PO">Prato</option>
+                        <option value="PR">Parma</option>
+                        <option value="PT">Pistoia</option>
+                        <option value="PU">Pesaro e Urbino</option>
+                        <option value="PV">Pavia</option>
+                        <option value="PZ">Potenza</option>
+                        <option value="RA">Ravenna</option>
+                        <option value="RC">Reggio Calabria</option>
+                        <option value="RE">Reggio Emilia</option>
+                        <option value="RG">Ragusa</option>
+                        <option value="RI">Rieti</option>
+                        <option value="RM">Roma</option>
+                        <option value="RN">Rimini</option>
+                        <option value="RO">Rovigo</option>
+                        <option value="SA">Salerno</option>
+                        <option value="SI">Siena</option>
+                        <option value="SO">Sondrio</option>
+                        <option value="SP">La Spezia</option>
+                        <option value="SR">Siracusa</option>
+                        <option value="SS">Sassari</option>
+                        <option value="SU">Sud Sardegna</option>
+                        <option value="SV">Savona</option>
+                        <option value="TA">Taranto</option>
+                        <option value="TE">Teramo</option>
+                        <option value="TN">Trento</option>
+                        <option value="TO">Torino</option>
+                        <option value="TP">Trapani</option>
+                        <option value="TR">Terni</option>
+                        <option value="TS">Trieste</option>
+                        <option value="TV">Treviso</option>
+                        <option value="UD">Udine</option>
+                        <option value="VA">Varese</option>
+                        <option value="VB">Verbano-Cusio-Ossola</option>
+                        <option value="VC">Vercelli</option>
+                        <option value="VE">Venezia</option>
+                        <option value="VI">Vicenza</option>
+                        <option value="VR">Verona</option>
+                        <option value="VT">Viterbo</option>
+                        <option value="VV">Vibo Valentia</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row">
                 <div class="form-group">
                     <label>CAP *</label>
                     <input type="text" id="cap" maxlength="5" required>
@@ -1323,19 +1886,73 @@ small {
                 <button class="btn-secondary" style="margin-top: 10px;" type="button" onclick="clearSignature()">🗑️ Cancella firma</button>
             </div>
 
-            <div class="upload-area" onclick="document.getElementById('doc-fronte').click()">
-                <p><strong>📷 Documento d'identità FRONTE</strong></p>
-                <small>Scatta una foto o carica da galleria</small>
-                <input type="file" id="doc-fronte" accept="image/*" capture="environment" onchange="previewFile(this, 'preview-fronte')">
+            <!-- FRONTE DOCUMENTO -->
+            <div style="background: #f0f9ff; border: 2px solid #0ea5e9; border-radius: 12px; padding: 20px; margin: 20px 0;">
+                <p style="font-weight: 600; margin-bottom: 10px;">📷 Documento d'identità FRONTE</p>
+                <small style="color: #0369a1;">💡 Posiziona il documento all'interno della cornice</small>
+                
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 15px 0;">
+                    <button type="button" class="btn-primary" onclick="openCamera('fronte')" style="flex: 1; min-width: 140px;">
+                        📸 Scatta Foto
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="document.getElementById('doc-fronte-file').click()" style="flex: 1; min-width: 140px;">
+                        📁 Carica da Galleria
+                    </button>
+                </div>
+                
+                <input type="file" id="doc-fronte-file" accept="image/*" style="display: none;" onchange="handleFileUpload(this, 'fronte')">
+                <input type="file" id="doc-fronte-camera" accept="image/*" capture="environment" style="display: none;" onchange="handleFileUpload(this, 'fronte')">
+                
+                <!-- CORNICE GUIDA -->
+                <div id="frame-guide-fronte" style="display: none; position: relative; width: 100%; max-width: 400px; margin: 15px auto; aspect-ratio: 16/10; border: 4px dashed #0ea5e9; border-radius: 12px; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(14, 165, 233, 0.05) 10px, rgba(14, 165, 233, 0.05) 20px);">
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #0369a1; font-size: 14px; font-weight: 600;">
+                        📄 Posiziona il documento qui
+                    </div>
+                </div>
+                
+                <div id="preview-fronte" style="display:none; margin-top: 15px;">
+                    <img id="preview-fronte-img" style="max-width: 100%; border-radius: 8px; border: 2px solid #0ea5e9;">
+                    <div style="margin-top: 10px;">
+                        <button type="button" class="btn-secondary" onclick="removeDocument('fronte')" style="background: #ef4444; width: 100%;">
+                            🗑️ Rimuovi e Ricarica
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div id="preview-fronte" class="preview-box" style="display:none; margin-bottom: 20px;"></div>
 
-            <div class="upload-area" onclick="document.getElementById('doc-retro').click()">
-                <p><strong>📷 Documento d'identità RETRO</strong></p>
-                <small>Scatta una foto o carica da galleria</small>
-                <input type="file" id="doc-retro" accept="image/*" capture="environment" onchange="previewFile(this, 'preview-retro')">
+            <!-- RETRO DOCUMENTO -->
+            <div style="background: #f0f9ff; border: 2px solid #0ea5e9; border-radius: 12px; padding: 20px; margin: 20px 0;">
+                <p style="font-weight: 600; margin-bottom: 10px;">📷 Documento d'identità RETRO</p>
+                <small style="color: #0369a1;">💡 Posiziona il documento all'interno della cornice</small>
+                
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 15px 0;">
+                    <button type="button" class="btn-primary" onclick="openCamera('retro')" style="flex: 1; min-width: 140px;">
+                        📸 Scatta Foto
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="document.getElementById('doc-retro-file').click()" style="flex: 1; min-width: 140px;">
+                        📁 Carica da Galleria
+                    </button>
+                </div>
+                
+                <input type="file" id="doc-retro-file" accept="image/*" style="display: none;" onchange="handleFileUpload(this, 'retro')">
+                <input type="file" id="doc-retro-camera" accept="image/*" capture="environment" style="display: none;" onchange="handleFileUpload(this, 'retro')">
+                
+                <!-- CORNICE GUIDA -->
+                <div id="frame-guide-retro" style="display: none; position: relative; width: 100%; max-width: 400px; margin: 15px auto; aspect-ratio: 16/10; border: 4px dashed #0ea5e9; border-radius: 12px; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(14, 165, 233, 0.05) 10px, rgba(14, 165, 233, 0.05) 20px);">
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #0369a1; font-size: 14px; font-weight: 600;">
+                        📄 Posiziona il documento qui
+                    </div>
+                </div>
+                
+                <div id="preview-retro" style="display:none; margin-top: 15px;">
+                    <img id="preview-retro-img" style="max-width: 100%; border-radius: 8px; border: 2px solid #0ea5e9;">
+                    <div style="margin-top: 10px;">
+                        <button type="button" class="btn-secondary" onclick="removeDocument('retro')" style="background: #ef4444; width: 100%;">
+                            🗑️ Rimuovi e Ricarica
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div id="preview-retro" class="preview-box" style="display:none;"></div>
 
             <div class="buttons">
                 <button class="btn-secondary" onclick="prevStep()">← Indietro</button>
@@ -1365,36 +1982,92 @@ small {
             <div class="success-message">
                 <div class="checkmark">✓</div>
                 <h2>Documenti Generati!</h2>
-                <p>I tuoi documenti sono stati generati con successo.</p>
                 
-                <div id="download-list" style="margin: 20px 0; text-align: left; display: inline-block; background: #f8fafc; padding: 20px; border-radius: 8px; border: 2px solid #e5e7eb;"></div>
-                
-                <!-- SEZIONE DOWNLOAD MANUALE -->
-                <div class="manual-download-section">
-                    <h3 style="color: #065f46; margin-bottom: 15px; font-size: 18px;">📥 Download Manuale</h3>
-                    <p style="color: #047857; margin-bottom: 15px; font-size: 14px;">
-                        Se i file non si sono scaricati automaticamente, usa i pulsanti qui sotto:
+                <!-- BOX BENVENUTO -->
+                <div style="background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%); border: 3px solid #0ea5e9; border-radius: 12px; padding: 25px; margin: 25px auto; max-width: 600px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <div style="text-align: center; margin-bottom: 15px; font-size: 32px;">🎉</div>
+                    <h3 style="color: #003d82; font-size: 22px; margin-bottom: 15px; text-align: center; font-weight: 700;">
+                        Benvenuto <span id="welcome-name" style="color: #0ea5e9;"></span>!
+                    </h3>
+                    <p style="color: #0369a1; font-size: 16px; line-height: 1.6; text-align: center; margin-bottom: 10px;">
+                        Grazie per esserti iscritto al <strong>SIM Carabinieri</strong>.
                     </p>
-                    <div id="manual-download-buttons"></div>
-                </div>
-                
-                <div style="background: #dbeafe; border: 2px solid #3b82f6; border-radius: 12px; padding: 25px; margin: 30px 0; max-width: 500px; margin-left: auto; margin-right: auto;">
-                    <p style="color: #1e40af; font-weight: 600; margin-bottom: 15px; font-size: 16px;">
-                        📧 Invia i documenti via email
-                    </p>
-                    <button id="email-button" class="btn-primary" style="width: 100%; padding: 16px; font-size: 18px; margin-bottom: 15px;">
-                        📨 APRI EMAIL PRECOMPILATA
-                    </button>
-                    <p style="color: #1e40af; font-size: 14px; line-height: 1.6;">
-                        <strong>Come procedere:</strong><br>
-                        1️⃣ Clicca il pulsante sopra<br>
-                        2️⃣ Si aprirà automaticamente la tua app email<br>
-                        3️⃣ Allega i PDF scaricati<br>
-                        4️⃣ Premi Invia
+                    <p style="color: #0ea5e9; font-size: 18px; font-weight: 700; text-align: center; margin: 0;">
+                        #maipiùsoli 💪
                     </p>
                 </div>
                 
-                <button class="btn-secondary" style="margin-top: 20px;" onclick="location.reload()">🔄 Nuova Adesione</button>
+                <!-- DOCUMENTI PRONTI -->
+                <div style="background: #f8fafc; border: 2px solid #e5e7eb; border-radius: 10px; padding: 20px; margin: 20px auto; max-width: 600px;">
+                    <h3 style="color: #003d82; font-size: 18px; margin-bottom: 15px; text-align: center;">
+                        📥 I tuoi documenti:
+                    </h3>
+                    <div id="download-list" style="text-align: left; margin-bottom: 15px;"></div>
+                    <div id="manual-download-buttons" style="display: flex; flex-direction: column; gap: 10px;"></div>
+                </div>
+                
+                <!-- SEPARATORE -->
+                <div style="border-top: 3px solid #e5e7eb; margin: 30px auto; max-width: 600px;"></div>
+                
+                <!-- PROSSIMO PASSO -->
+                <h3 style="color: #003d82; font-size: 20px; margin-bottom: 20px; text-align: center; font-weight: 700;">
+                    📤 PROSSIMO PASSO: Invia i documenti
+                </h3>
+                
+                <!-- BOX GUIDA RAPIDA -->
+                <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 3px solid #f59e0b; border-radius: 12px; padding: 25px; margin: 20px auto 30px auto; max-width: 600px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <span style="font-size: 28px; margin-right: 12px;">💡</span>
+                        <h4 style="color: #92400e; font-size: 18px; margin: 0; font-weight: 700;">GUIDA RAPIDA</h4>
+                    </div>
+                    
+                    <div style="background: white; border-radius: 8px; padding: 15px; margin-bottom: 15px;">
+                        <div style="display: flex; align-items: flex-start; margin-bottom: 12px;">
+                            <span style="background: #0ea5e9; color: white; font-weight: 700; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0; margin-top: 2px;">1</span>
+                            <p style="color: #1f2937; margin: 0; line-height: 1.6; font-size: 15px; text-align: left;">
+                                Clicca sul pulsante del <strong>metodo preferito</strong> (Email/WhatsApp/Telegram)
+                            </p>
+                        </div>
+                        
+                        <div style="display: flex; align-items: flex-start; margin-bottom: 12px;">
+                            <span style="background: #0ea5e9; color: white; font-weight: 700; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0; margin-top: 2px;">2</span>
+                            <p style="color: #1f2937; margin: 0; line-height: 1.6; font-size: 15px; text-align: left;">
+                                <strong>L'app si apre automaticamente</strong> con il messaggio già precompilato
+                            </p>
+                        </div>
+                        
+                        <div style="display: flex; align-items: flex-start; margin-bottom: 12px;">
+                            <span style="background: #0ea5e9; color: white; font-weight: 700; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0; margin-top: 2px;">3</span>
+                            <p style="color: #1f2937; margin: 0; line-height: 1.6; font-size: 15px; text-align: left;">
+                                <strong>Allega i 2 PDF</strong> scaricati sopra (Delega + Revoca)
+                            </p>
+                        </div>
+                        
+                        <div style="display: flex; align-items: flex-start;">
+                            <span style="background: #0ea5e9; color: white; font-weight: 700; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0; margin-top: 2px;">4</span>
+                            <p style="color: #1f2937; margin: 0; line-height: 1.6; font-size: 15px; text-align: left;">
+                                <strong>Invia al segretario</strong> di riferimento
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                        <button id="email-button" class="btn-primary" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); padding: 16px 12px; font-size: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border: none; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s;">
+                            <span style="font-size: 24px;">📧</span>
+                            <span style="font-weight: 600;">Email</span>
+                        </button>
+                        <button id="whatsapp-button" class="btn-primary" style="background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); padding: 16px 12px; font-size: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border: none; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s;">
+                            <img id="whatsapp-icon" src="" alt="WhatsApp" style="width: 24px; height: 24px;">
+                            <span style="font-weight: 600;">WhatsApp</span>
+                        </button>
+                        <button id="telegram-button" class="btn-primary" style="background: linear-gradient(135deg, #0088cc 0%, #005f99 100%); padding: 16px 12px; font-size: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border: none; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s;">
+                            <img id="telegram-icon" src="" alt="Telegram" style="width: 24px; height: 24px;">
+                            <span style="font-weight: 600;">Telegram</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <button class="btn-secondary" style="margin-top: 30px;" onclick="location.reload()">🔄 Nuova Adesione</button>
             </div>
         </div>
     </div>
@@ -1411,6 +2084,10 @@ let signatureImage = null;
 let documentoFronteImage = null;
 let documentoRetroImage = null;
 let logoImage = null;
+
+// ICONE BASE64 - Icone WhatsApp e Telegram
+const WHATSAPP_ICON = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+PHBhdGggZD0iTTEyLjA0IDJjLTUuNDYgMC05LjkxIDQuNDUtOS45MSA5LjkxIDAgMS43NS40NiAzLjQ1IDEuMzIgNC45NUwyLjA1IDIybDUuMjUtMS4zOGMxLjQ1Ljc5IDMuMDggMS4yMSA0Ljc0IDEuMjEgNS40NiAwIDkuOTEtNC40NSA5LjkxLTkuOTEgMC0yLjY1LTEuMDMtNS4xNC0yLjktNy4wMUMxNy4xOCAzLjAzIDE0LjY5IDIgMTIuMDQgMnptNS45MyAxNS42MWMtLjI1LjctMS4yOCAxLjI4LTIuMSAxLjQ2LS41Ny4xMi0xLjMxLjIyLTMuODItLjgyLTMuMTgtMS4zMy01LjI0LTQuNTMtNS40LTQuNzQtLjE2LS4yMS0xLjI4LTEuNy0xLjI4LTMuMjQgMC0xLjU0LjgxLTIuMyAxLjEtMi42MS4yOS0uMzEuNjMtLjM5LjgzLS4zOWguNmMuMTkgMCAuNDYtLjA3LjcxLjU0LjI1LjYxLjg2IDIuMTEuOTMgMi4yNi4wNy4xNS4xMi4zMy4wMy41MS0uMDkuMTgtLjE0LjI5LS4yNy40NS0uMTQuMTYtLjMuMzUtLjQzLjQ3LS4xNC4xMy0uMjkuMjctLjEyLjU0LjE3LjI3Ljc1IDEuMjQgMS42MSAyIDEuMSAxIDIuMDIgMS4zMSAyLjMxIDEuNDYuMjkuMTUuNDYuMTIuNjMtLjA3LjE3LS4xOS43MS0uODMuOS0xLjEyLjE5LS4yOS4zOS0uMjQuNjUtLjE0LjI2LjEgMS42NS44MiAxLjkzLjk3LjI5LjE1LjQ4LjIyLjU1LjM0LjA3LjEyLjA3LjcxLS4xOCAxLjQxeiIvPjwvc3ZnPg==';
+const TELEGRAM_ICON = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTQuNjQgNi44bC0xLjYgNy41MWMtLjEyLjU1LS40My42OC0uODcuNDJsLTIuNC0xLjc3LTEuMTYgMS4xMmMtLjEzLjEzLS4yNC4yNC0uNDkuMjRsLjE3LTIuNDUgNC41My00LjFjLjItLjE4LS4wNC0uMjgtLjMtLjFsLTUuNTkgMy41Mi0yLjQxLS43NWMtLjUyLS4xNi0uNTMtLjUyLjExLS43OGw5LjQyLTMuNjNjLjQzLS4xNi44MS4xLjY2Ljc4eiIvPjwvc3ZnPg==';
 
 // Variabili per salvare i blob dei PDF
 let pdfBlobDelega = null;
@@ -1463,12 +2140,31 @@ function loadLogo() {
 function toggleSindacatoField() {
     const isIscritto = document.querySelector('input[name="iscritto"]:checked')?.value;
     const sindacatoField = document.getElementById('sindacato-field');
+    const sindacatoAltroField = document.getElementById('sindacato-altro-field');
     
     if (isIscritto === 'si') {
         sindacatoField.classList.add('show');
     } else {
         sindacatoField.classList.remove('show');
+        sindacatoAltroField.style.display = 'none';
+        document.getElementById('sindacato-select').value = '';
         document.getElementById('sindacato-nome').value = '';
+    }
+}
+
+function toggleAltroSindacato() {
+    const selectValue = document.getElementById('sindacato-select').value;
+    const sindacatoAltroField = document.getElementById('sindacato-altro-field');
+    
+    if (selectValue === 'altro') {
+        sindacatoAltroField.style.display = 'block';
+        sindacatoAltroField.classList.add('show');
+        document.getElementById('sindacato-nome').required = true;
+    } else {
+        sindacatoAltroField.style.display = 'none';
+        sindacatoAltroField.classList.remove('show');
+        document.getElementById('sindacato-nome').value = '';
+        document.getElementById('sindacato-nome').required = false;
     }
 }
 
@@ -1558,32 +2254,195 @@ function clearSignature() {
     }
 }
 
-function previewFile(input, previewId) {
-    const preview = document.getElementById(previewId);
+// Funzioni per gestire upload documenti
+function openCamera(tipo) {
+    document.getElementById(`doc-${tipo}-camera`).click();
+}
+
+function handleFileUpload(input, tipo) {
     const file = input.files[0];
+    if (!file) return;
     
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const imageData = e.target.result;
-            preview.innerHTML = `<img src="${imageData}" style="max-width: 100%; height: auto;">`;
-            preview.style.display = 'block';
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const imageData = e.target.result;
+        
+        // Crea un'immagine per controllare orientamento
+        const img = new Image();
+        img.onload = function() {
+            // Controlla se l'immagine è verticale (altezza > larghezza)
+            const isVertical = img.height > img.width;
             
-            if (previewId === 'preview-fronte') {
-                documentoFronteImage = imageData;
-                console.log('Documento fronte salvato');
-            } else if (previewId === 'preview-retro') {
-                documentoRetroImage = imageData;
-                console.log('Documento retro salvato');
+            if (isVertical) {
+                console.log('📸 Foto verticale rilevata, ruoto in orizzontale...');
+                
+                // Crea canvas per ruotare l'immagine
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Imposta dimensioni canvas (invertite per rotazione 90°)
+                canvas.width = img.height;
+                canvas.height = img.width;
+                
+                // Ruota l'immagine di 90° in senso orario
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.rotate(90 * Math.PI / 180);
+                ctx.drawImage(img, -img.width / 2, -img.height / 2);
+                
+                // Converti in base64
+                const rotatedImageData = canvas.toDataURL('image/jpeg', 0.9);
+                
+                // Mostra anteprima ruotata
+                const previewDiv = document.getElementById(`preview-${tipo}`);
+                const previewImg = document.getElementById(`preview-${tipo}-img`);
+                previewImg.src = rotatedImageData;
+                previewDiv.style.display = 'block';
+                
+                // Nascondi la cornice guida
+                const frameGuide = document.getElementById(`frame-guide-${tipo}`);
+                if (frameGuide) frameGuide.style.display = 'none';
+                
+                // Salva l'immagine ruotata
+                if (tipo === 'fronte') {
+                    documentoFronteImage = rotatedImageData;
+                    console.log('✅ Documento fronte caricato (ruotato in orizzontale)');
+                } else {
+                    documentoRetroImage = rotatedImageData;
+                    console.log('✅ Documento retro caricato (ruotato in orizzontale)');
+                }
+            } else {
+                console.log('📸 Foto già in orizzontale');
+                
+                // Mostra anteprima normale
+                const previewDiv = document.getElementById(`preview-${tipo}`);
+                const previewImg = document.getElementById(`preview-${tipo}-img`);
+                previewImg.src = imageData;
+                previewDiv.style.display = 'block';
+                
+                // Nascondi la cornice guida
+                const frameGuide = document.getElementById(`frame-guide-${tipo}`);
+                if (frameGuide) frameGuide.style.display = 'none';
+                
+                // Salva l'immagine
+                if (tipo === 'fronte') {
+                    documentoFronteImage = imageData;
+                    console.log('✅ Documento fronte caricato');
+                } else {
+                    documentoRetroImage = imageData;
+                    console.log('✅ Documento retro caricato');
+                }
             }
         };
-        reader.readAsDataURL(file);
+        
+        img.src = imageData;
+    };
+    reader.readAsDataURL(file);
+}
+
+function removeDocument(tipo) {
+    const previewDiv = document.getElementById(`preview-${tipo}`);
+    const previewImg = document.getElementById(`preview-${tipo}-img`);
+    
+    previewDiv.style.display = 'none';
+    previewImg.src = '';
+    
+    // Reset input files
+    document.getElementById(`doc-${tipo}-file`).value = '';
+    document.getElementById(`doc-${tipo}-camera`).value = '';
+    
+    if (tipo === 'fronte') {
+        documentoFronteImage = null;
+        console.log('❌ Documento fronte rimosso');
+    } else {
+        documentoRetroImage = null;
+        console.log('❌ Documento retro rimosso');
     }
+}
+
+// Funzione legacy per compatibilità
+function previewFile(input, previewId) {
+    const tipo = previewId.includes('fronte') ? 'fronte' : 'retro';
+    handleFileUpload(input, tipo);
 }
 
 function updateProgress() {
     const progress = (currentStep / totalSteps) * 100;
     document.getElementById('progress').style.width = progress + '%';
+    document.getElementById('progress-text').textContent = Math.round(progress) + '%';
+}
+
+// FUNZIONE PER ESTRARRE DATI DA CODICE FISCALE
+function extractDataFromCF() {
+    const cf = document.getElementById('codice-fiscale').value.toUpperCase().trim();
+    const statusElement = document.getElementById('cf-status');
+    
+    // Validazione lunghezza
+    if (cf.length !== 16) {
+        statusElement.style.display = 'block';
+        statusElement.style.color = '#ef4444';
+        statusElement.textContent = '⚠️ Il codice fiscale deve essere di 16 caratteri';
+        return;
+    }
+    
+    try {
+        // ESTRAZIONE DATA DI NASCITA
+        const yearChars = cf.substring(6, 8);
+        const monthChar = cf.charAt(8);
+        const dayChars = cf.substring(9, 11);
+        
+        // Mappa mesi
+        const monthMap = {
+            'A': '01', 'B': '02', 'C': '03', 'D': '04', 'E': '05', 'H': '06',
+            'L': '07', 'M': '08', 'P': '09', 'R': '10', 'S': '11', 'T': '12'
+        };
+        
+        const month = monthMap[monthChar];
+        if (!month) {
+            throw new Error('Mese non valido');
+        }
+        
+        // Giorno e sesso
+        let day = parseInt(dayChars);
+        let sesso = 'M';
+        if (day > 40) {
+            day -= 40;
+            sesso = 'F';
+        }
+        day = day.toString().padStart(2, '0');
+        
+        // Anno (assumiamo 1900-2099)
+        let year = parseInt(yearChars);
+        year = year <= 25 ? 2000 + year : 1900 + year;
+        
+        // Componi data in formato YYYY-MM-DD
+        const dataNascita = `${year}-${month}-${day}`;
+        
+        // ESTRAZIONE COMUNE (codice catastale)
+        const codiceCatastale = cf.substring(11, 15);
+        
+        // Compila automaticamente i campi SE SONO VUOTI
+        const dataNascitaField = document.getElementById('data-nascita');
+        if (dataNascitaField && !dataNascitaField.value) {
+            dataNascitaField.value = dataNascita;
+        }
+        
+        // Mostra messaggio di successo
+        statusElement.style.display = 'block';
+        statusElement.style.color = '#10b981';
+        statusElement.innerHTML = `✅ Data nascita rilevata: <strong>${day}/${month}/${year}</strong> (Sesso: ${sesso}) - <span style="color: #0369a1;">Puoi modificare i campi se necessario</span>`;
+        
+        console.log('📋 Dati estratti dal CF:', {
+            dataNascita,
+            sesso,
+            codiceCatastale
+        });
+        
+    } catch (error) {
+        statusElement.style.display = 'block';
+        statusElement.style.color = '#f59e0b';
+        statusElement.textContent = '⚠️ Codice fiscale non standard - Inserisci manualmente i dati';
+        console.error('Errore estrazione CF:', error);
+    }
 }
 
 function showStep(step) {
@@ -1608,10 +2467,19 @@ function validateStep1() {
     
     const isIscritto = document.querySelector('input[name="iscritto"]:checked').value;
     if (isIscritto === 'si') {
-        const sindacatoNome = document.getElementById('sindacato-nome').value.trim();
-        if (!sindacatoNome) {
-            alert('⚠️ Inserisci il nome completo del sindacato');
+        const sindacatoSelect = document.getElementById('sindacato-select').value;
+        
+        if (!sindacatoSelect) {
+            alert('⚠️ Seleziona un sindacato dalla lista');
             return false;
+        }
+        
+        if (sindacatoSelect === 'altro') {
+            const sindacatoNome = document.getElementById('sindacato-nome').value.trim();
+            if (!sindacatoNome) {
+                alert('⚠️ Inserisci il nome completo del sindacato');
+                return false;
+            }
         }
     }
     
@@ -1724,7 +2592,12 @@ function saveStepData() {
     if (currentStep === 1) {
         formData.iscritto = document.querySelector('input[name="iscritto"]:checked').value;
         if (formData.iscritto === 'si') {
-            formData.sindacatoNome = document.getElementById('sindacato-nome').value;
+            const selectValue = document.getElementById('sindacato-select').value;
+            if (selectValue === 'altro') {
+                formData.sindacatoNome = document.getElementById('sindacato-nome').value;
+            } else {
+                formData.sindacatoNome = selectValue;
+            }
         }
     } else if (currentStep === 2) {
         formData.nome = document.getElementById('nome').value;
@@ -1745,6 +2618,7 @@ function saveStepData() {
         formData.reparto = document.getElementById('reparto').value;
         formData.regione = document.getElementById('regione').value;
         formData.citta = document.getElementById('citta').value;
+        formData.provincia = document.getElementById('provincia').value;
         formData.cap = document.getElementById('cap').value;
         formData.cellulare = document.getElementById('cellulare').value;
         formData.email = document.getElementById('email').value;
@@ -1890,25 +2764,43 @@ async function generateDocuments() {
         // Email precompilata
         const emailTo = 'tesseramenti@simcarabinieri.cc';
         const emailSubject = `Adesione SIM Carabinieri - ${formData.cognome} ${formData.nome}`;
-        const emailBody = `Gentile Ufficio Tesseramenti,
-
-in allegato invio la documentazione per l'adesione al SIM Carabinieri.
-
-Dati del richiedente:
-- Nome: ${formData.nome} ${formData.cognome}
-- Grado: ${formData.grado}
-- CIP: ${formData.cip}
-- Reparto: ${formData.reparto}
-
-${formData.iscritto === 'si' ? 'Inclusa anche la revoca della delega sindacale precedente.' : ''}
-
-Cordiali saluti,
-${formData.nome} ${formData.cognome}`;
         
+        // Configura le icone
+        if (WHATSAPP_ICON) {
+            document.getElementById('whatsapp-icon').src = WHATSAPP_ICON;
+        }
+        if (TELEGRAM_ICON) {
+            document.getElementById('telegram-icon').src = TELEGRAM_ICON;
+        }
+        
+        // Prepara nome completo
+        const nomeCompleto = `${formData.nome} ${formData.cognome}`;
+        
+        // POPOLA IL NOME DI BENVENUTO
+        document.getElementById('welcome-name').textContent = formData.nome;
+        
+        // EMAIL con nome
+        const emailBody = `Gentile destinatario,\n\nsono ${nomeCompleto} e ti invio i documenti per la mia iscrizione al SIM Carabinieri.\n\nIn allegato troverai:\n${formData.iscritto === 'si' ? '- Delega di adesione\n- Revoca delega sindacato precedente' : '- Delega di adesione'}\n\nCordiali saluti,\n${nomeCompleto}`;
         const mailtoLink = `mailto:${emailTo}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
         
         document.getElementById('email-button').onclick = function() {
             window.location.href = mailtoLink;
+        };
+        
+        // WHATSAPP - Apre l'app nativa con protocollo whatsapp://
+        const whatsappMessage = `Ciao! Sono ${nomeCompleto}. Ecco i documenti della mia iscrizione al SIM Carabinieri 🎖️`;
+        document.getElementById('whatsapp-button').onclick = function() {
+            // Protocollo whatsapp:// apre l'app nativa installata
+            const whatsappLink = `whatsapp://send?text=${encodeURIComponent(whatsappMessage)}`;
+            window.location.href = whatsappLink;
+        };
+        
+        // TELEGRAM - Apre l'app nativa con protocollo tg://
+        const telegramMessage = `${nomeCompleto} - Documenti iscrizione SIM Carabinieri #maipiùsoli 💪`;
+        document.getElementById('telegram-button').onclick = function() {
+            // Protocollo tg:// apre l'app nativa installata
+            const telegramLink = `tg://msg?text=${encodeURIComponent(telegramMessage)}`;
+            window.location.href = telegramLink;
         };
         
         console.log('=== DOCUMENTI GENERATI CON SUCCESSO ===');
@@ -1929,8 +2821,8 @@ function generatePDFDelega(jsPDF) {
    console.log('🔍 Verifica logo disponibile:', logoImage ? 'SÌ' : 'NO');
     if (logoImage) {
         try {
-            const logoWidth = 50;  // Aumentato da 30 a 40
-            const logoHeight = 40; // Aumentato da 30 a 40
+            const logoWidth = 30;  // Aumentato da 30 a 40
+            const logoHeight = 20; // Aumentato da 30 a 40
             const logoX = (210 - logoWidth) / 2;
             doc.addImage(logoImage, 'PNG', logoX, y, logoWidth, logoHeight);
             y += logoHeight + 8;
@@ -1956,72 +2848,136 @@ function generatePDFDelega(jsPDF) {
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
     doc.text('Grado', 20, y);
+    // SFONDO PER GRADO
+    doc.setFillColor(232, 244, 248);
+    doc.rect(37, y - 4, doc.getTextWidth(formData.grado.toUpperCase()) + 4, 5, 'F');
     doc.setFont('helvetica', 'bold');
-    doc.text(formData.grado, 38, y);
+    doc.text(formData.grado.toUpperCase(), 38, y);
+    // SOTTOLINEATURA COMPLETA DA MARGINE A MARGINE
+    doc.line(20, y + 2, 190, y + 2);
     doc.setFont('helvetica', 'normal');
     y += 8;
     
     doc.text('IL/LA SOTTOSCRITTO/A NOME ', 20, y);
+    // SFONDO PER NOME
+    doc.setFillColor(232, 244, 248);
+    doc.rect(76, y - 4, doc.getTextWidth(formData.nome.toUpperCase()) + 4, 5, 'F');
     doc.setFont('helvetica', 'bold');
-    doc.text(formData.nome, 77, y);
+    doc.text(formData.nome.toUpperCase(), 77, y);
     doc.setFont('helvetica', 'normal');
     doc.text(' COGNOME ', 115, y);
+    // SFONDO PER COGNOME
+    doc.setFillColor(232, 244, 248);
+    doc.rect(139, y - 4, doc.getTextWidth(formData.cognome.toUpperCase()) + 4, 5, 'F');
     doc.setFont('helvetica', 'bold');
-    doc.text(formData.cognome, 140, y);
+    doc.text(formData.cognome.toUpperCase(), 140, y);
+    // SOTTOLINEATURA COMPLETA DA MARGINE A MARGINE
+    doc.line(20, y + 2, 190, y + 2);
     doc.setFont('helvetica', 'normal');
     y += 7;
     
     doc.text('NATO/A A ', 20, y);
+    // SFONDO PER LUOGO NASCITA
+    doc.setFillColor(232, 244, 248);
+    doc.rect(37, y - 4, doc.getTextWidth(formData.natoA.toUpperCase()) + 4, 5, 'F');
     doc.setFont('helvetica', 'bold');
-    doc.text(formData.natoA, 38, y);
+    doc.text(formData.natoA.toUpperCase(), 38, y);
     doc.setFont('helvetica', 'normal');
     doc.text(' PROV. ', 80, y);
+    // SFONDO PER PROVINCIA NASCITA
+    doc.setFillColor(232, 244, 248);
+    doc.rect(94, y - 4, doc.getTextWidth(formData.provinciaNascita.toUpperCase()) + 4, 5, 'F');
     doc.setFont('helvetica', 'bold');
-    doc.text(formData.provinciaNascita, 95, y);
+    doc.text(formData.provinciaNascita.toUpperCase(), 95, y);
     doc.setFont('helvetica', 'normal');
     doc.text(' IL ', 105, y);
+    // SFONDO PER DATA NASCITA
+    const dataNascitaFormatted = formatDate(formData.dataNascita);
+    doc.setFillColor(232, 244, 248);
+    doc.rect(114, y - 4, doc.getTextWidth(dataNascitaFormatted) + 4, 5, 'F');
     doc.setFont('helvetica', 'bold');
-    doc.text(formatDate(formData.dataNascita), 115, y);
+    doc.text(dataNascitaFormatted, 115, y);
+    // SOTTOLINEATURA COMPLETA DA MARGINE A MARGINE
+    doc.line(20, y + 2, 190, y + 2);
     doc.setFont('helvetica', 'normal');
     y += 7;
     
     doc.text('C.I.P. ', 20, y);
+    // SFONDO PER CIP
+    doc.setFillColor(232, 244, 248);
+    doc.rect(34, y - 4, doc.getTextWidth(formData.cip.toUpperCase()) + 4, 5, 'F');
     doc.setFont('helvetica', 'bold');
-    doc.text(formData.cip, 35, y);
+    doc.text(formData.cip.toUpperCase(), 35, y);
     doc.setFont('helvetica', 'normal');
     doc.text(' CODICE FISCALE ', 75, y);
+    // SFONDO PER CODICE FISCALE
+    doc.setFillColor(232, 244, 248);
+    doc.rect(109, y - 4, doc.getTextWidth(formData.codiceFiscale.toUpperCase()) + 4, 5, 'F');
     doc.setFont('helvetica', 'bold');
-    doc.text(formData.codiceFiscale, 110, y);
+    doc.text(formData.codiceFiscale.toUpperCase(), 110, y);
+    // SOTTOLINEATURA COMPLETA DA MARGINE A MARGINE
+    doc.line(20, y + 2, 190, y + 2);
     doc.setFont('helvetica', 'normal');
     y += 7;
     
     doc.text('REPARTO DI APPARTENENZA ', 20, y);
+    // SFONDO PER REPARTO
+    doc.setFillColor(232, 244, 248);
+    doc.rect(72, y - 4, doc.getTextWidth(formData.reparto.toUpperCase()) + 4, 5, 'F');
     doc.setFont('helvetica', 'bold');
-    doc.text(formData.reparto, 73, y);
+    doc.text(formData.reparto.toUpperCase(), 73, y);
     doc.setFont('helvetica', 'normal');
     doc.text(' CAP ', 145, y);
+    // SFONDO PER CAP
+    doc.setFillColor(232, 244, 248);
+    doc.rect(159, y - 4, doc.getTextWidth(formData.cap) + 4, 5, 'F');
     doc.setFont('helvetica', 'bold');
     doc.text(formData.cap, 160, y);
+    // SOTTOLINEATURA COMPLETA DA MARGINE A MARGINE
+    doc.line(20, y + 2, 190, y + 2);
     doc.setFont('helvetica', 'normal');
     y += 7;
     
     doc.text('REGIONE ', 20, y);
+    // SFONDO PER REGIONE
+    doc.setFillColor(232, 244, 248);
+    doc.rect(39, y - 4, doc.getTextWidth(formData.regione.toUpperCase()) + 4, 5, 'F');
     doc.setFont('helvetica', 'bold');
-    doc.text(formData.regione, 40, y);
+    doc.text(formData.regione.toUpperCase(), 40, y);
     doc.setFont('helvetica', 'normal');
-    doc.text(' CITTA\' e PROV. ', 85, y);
+    doc.text(' CITTA\' ', 85, y);
+    // SFONDO PER CITTÀ
+    doc.setFillColor(232, 244, 248);
+    doc.rect(101, y - 4, doc.getTextWidth(formData.citta.toUpperCase()) + 4, 5, 'F');
     doc.setFont('helvetica', 'bold');
-    doc.text(formData.citta, 115, y);
+    doc.text(formData.citta.toUpperCase(), 102, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text(' PROV. ', 145, y);
+    // SFONDO PER PROVINCIA
+    doc.setFillColor(232, 244, 248);
+    doc.rect(161, y - 4, doc.getTextWidth(formData.provincia.toUpperCase()) + 4, 5, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.text(formData.provincia.toUpperCase(), 162, y);
+    // SOTTOLINEATURA COMPLETA DA MARGINE A MARGINE
+    doc.line(20, y + 2, 190, y + 2);
     doc.setFont('helvetica', 'normal');
     y += 7;
     
     doc.text('CELL. ', 20, y);
+    // SFONDO PER CELLULARE
+    doc.setFillColor(232, 244, 248);
+    doc.rect(34, y - 4, doc.getTextWidth(formData.cellulare) + 4, 5, 'F');
     doc.setFont('helvetica', 'bold');
     doc.text(formData.cellulare, 35, y);
     doc.setFont('helvetica', 'normal');
     doc.text(' E-MAIL ', 80, y);
+    // SFONDO PER EMAIL
+    doc.setFillColor(232, 244, 248);
+    doc.rect(99, y - 4, doc.getTextWidth(formData.email) + 4, 5, 'F');
     doc.setFont('helvetica', 'bold');
     doc.text(formData.email, 100, y);
+    // SOTTOLINEATURA COMPLETA DA MARGINE A MARGINE
+    doc.line(20, y + 2, 190, y + 2);
     doc.setFont('helvetica', 'normal');
     y += 10;
     
@@ -2150,7 +3106,6 @@ function generatePDFDelega(jsPDF) {
     }
     
     if (documentoRetroImage) {
-        doc.setFontSize(10);
         doc.setFont('helvetica', 'bold');
         doc.text('RETRO:', 20, 160);
         doc.addImage(documentoRetroImage, 'JPEG', 20, 165, 170, 110);
@@ -2162,6 +3117,7 @@ function generatePDFDelega(jsPDF) {
     doc.save('Delega_Adesione_' + formData.cognome + '.pdf');
     console.log('✅ PDF Delega generato e scaricato');
 }
+
 
 function generatePDFRevoca(jsPDF) {
     const doc = new jsPDF();
