@@ -136,7 +136,6 @@
             box-shadow: 0 20px 40px rgba(0,0,0,.1); 
         }
 
-        /* Stili per i pulsanti */
         .btn-aurora { 
             background: var(--gradient-magic); 
             color: #fff; 
@@ -389,10 +388,11 @@
             font-size: 16px; /* Evita zoom automatico su iOS */
         }
     </style>
+	<script>
+        // Inserisci qui il contenuto delle righe 218-3006 dal tuo file originale
 
-    <script>
-        // --- FUNZIONI PER LA GESTIONE DEI TURNI ---
-        
+        // *** AGGIUNGI QUESTE NUOVE FUNZIONI ALLA FINE DEL TUO CODICE JAVASCRIPT ESISTENTE ***
+
         // Funzione migliorata per ottenere lo stile del turno (con colori più visibili)
         function getTurnoClass(tipo) {
             const classes = {
@@ -403,6 +403,69 @@
                 riposo: 'shift-riposo'
             };
             return classes[tipo] || 'shift-default';
+        }
+
+        // Funzione per facilitare la navigazione su schermi piccoli
+        function setupResponsiveUI() {
+            const viewportHeight = window.innerHeight;
+            const viewportWidth = window.innerWidth;
+            
+            // Gestione pulsanti e controls per schermi piccoli
+            if (viewportWidth < 360) {
+                document.querySelectorAll('.btn-text').forEach(el => {
+                    el.style.fontSize = '14px';
+                });
+                
+                // Riduci padding contenitori principali
+                document.querySelectorAll('.container').forEach(el => {
+                    el.classList.remove('px-6');
+                    el.classList.add('px-3');
+                });
+            }
+            
+            // Gestione altezza contenuto per evitare overflow
+            const bottomNavHeight = document.querySelector('.bottom-nav')?.offsetHeight || 70;
+            const contentContainers = document.querySelectorAll('.content-container');
+            
+            contentContainers.forEach(container => {
+                container.style.maxHeight = `${viewportHeight - bottomNavHeight - 20}px`;
+                container.style.overflowY = 'auto';
+            });
+            
+            console.log(`📱 UI adattata: ${viewportWidth}x${viewportHeight}px`);
+        }
+
+        // Renderiamo la funzione di rendering dei turni più accessibile
+        function renderTurno(turno) {
+            const turnoClass = getTurnoClass(turno.tipo);
+            const turnoName = getTurnoName(turno.tipo);
+            const turnoIcon = getTurnoIcon(turno.tipo);
+            
+            // Creiamo un elemento con colori più visibili e area di tap più grande
+            return `
+                <div class="shift-card ${turnoClass}" id="turno-${turno.id}">
+                    <span class="shift-icon">${turnoIcon}</span>
+                    <div class="flex-1">
+                        <div class="shift-time">${turnoName}</div>
+                        <div>${formatDate(turno.data)}</div>
+                    </div>
+                    ${turno.stato ? `<div class="shift-status shift-status-${turno.stato.toLowerCase()}">${turno.stato}</div>` : ''}
+                    <button class="action-button ml-2" onclick="showTurnoDetails(${turno.id})">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="1"></circle>
+                            <circle cx="19" cy="12" r="1"></circle>
+                            <circle cx="5" cy="12" r="1"></circle>
+                        </svg>
+                    </button>
+                </div>
+            `;
+        }
+
+        // Funzione per il feedback tattile - migliora UX
+        function triggerHapticFeedback() {
+            if (navigator.vibrate) {
+                navigator.vibrate(50);
+            }
         }
 
         function getTurnoName(tipo) {
@@ -586,62 +649,6 @@
             }, 4000);
         }
 
-        // Funzione per facilitare la navigazione su schermi piccoli
-        function setupResponsiveUI() {
-            const viewportHeight = window.innerHeight;
-            const viewportWidth = window.innerWidth;
-            
-            // Gestione pulsanti e controls per schermi piccoli
-            if (viewportWidth < 360) {
-                document.querySelectorAll('.btn-text').forEach(el => {
-                    el.style.fontSize = '14px';
-                });
-                
-                // Riduci padding contenitori principali
-                document.querySelectorAll('.container').forEach(el => {
-                    el.classList.remove('px-6');
-                    el.classList.add('px-3');
-                });
-            }
-            
-            // Gestione altezza contenuto per evitare overflow
-            const bottomNavHeight = document.querySelector('.bottom-nav')?.offsetHeight || 70;
-            const contentContainers = document.querySelectorAll('.content-container');
-            
-            contentContainers.forEach(container => {
-                container.style.maxHeight = `${viewportHeight - bottomNavHeight - 20}px`;
-                container.style.overflowY = 'auto';
-            });
-            
-            console.log(`📱 UI adattata: ${viewportWidth}x${viewportHeight}px`);
-        }
-
-        // Renderiamo la funzione di rendering dei turni più accessibile
-        function renderTurno(turno) {
-            const turnoClass = getTurnoClass(turno.tipo);
-            const turnoName = getTurnoName(turno.tipo);
-            const turnoIcon = getTurnoIcon(turno.tipo);
-            
-            // Creiamo un elemento con colori più visibili e area di tap più grande
-            return `
-                <div class="shift-card ${turnoClass}" id="turno-${turno.id}">
-                    <span class="shift-icon">${turnoIcon}</span>
-                    <div class="flex-1">
-                        <div class="shift-time">${turnoName}</div>
-                        <div>${formatDate(turno.data)}</div>
-                    </div>
-                    ${turno.stato ? `<div class="shift-status shift-status-${turno.stato.toLowerCase()}">${turno.stato}</div>` : ''}
-                    <button class="action-button ml-2" onclick="showTurnoDetails(${turno.id})">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="1"></circle>
-                            <circle cx="19" cy="12" r="1"></circle>
-                            <circle cx="5" cy="12" r="1"></circle>
-                        </svg>
-                    </button>
-                </div>
-            `;
-        }
-
         // ======================= PERFORMANCE & ACCESSIBILITY =======================
         window.addEventListener('online', function() {
             showNotification('Connessione ripristinata', 'success');
@@ -692,13 +699,6 @@
                 }
             }, 0);
         });
-
-        // Funzione per il feedback tattile - migliora UX
-        function triggerHapticFeedback() {
-            if (navigator.vibrate) {
-                navigator.vibrate(50);
-            }
-        }
 
         console.log('🌐 MyApp Strumenti Mobile Enhanced - Sistema caricato');
     </script>
