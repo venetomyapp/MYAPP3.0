@@ -1309,7 +1309,11 @@ input[type="file"].error {
         <div class="form-grid">
             <div class="form-field">
                 <label>il <span style="color:red">*</span></label>
-                <input type="date" id="dataNascita" required>
+              <input type="text" id="dataNascita" required 
+       placeholder="GG/MM/AAAA" 
+       pattern="\d{2}/\d{2}/\d{4}"
+       maxlength="10"
+       inputmode="numeric">
             </div>
             <div class="form-field">
                 <label>Codice Fiscale <span style="color:red">*</span></label>
@@ -1623,7 +1627,7 @@ input[type="file"].error {
     <p style="margin: 0; margin-bottom: 10px;">Sindacato Italiano Militare Carabinieri</p>
     <div style="border-top: 1px solid rgba(255, 215, 0, 0.3); padding-top: 15px; margin-top: 15px;">
         <p style="margin: 0;">Sviluppato per <strong>SIM Carabinieri</strong></p>
-        <p style="margin: 0; margin-top: 5px;"><strong>Antonio Grande</strong></p>
+        <p style="margin: 0; margin-top: 5px;"><strong></strong></p>
     </div>
 </div>
 
@@ -2895,6 +2899,18 @@ document.getElementById('btnReset').addEventListener('click', resetForm);
 
 // Data odierna come default
 document.getElementById('dataDocumento').valueAsDate = new Date();
+
+// Formattazione automatica data di nascita
+document.getElementById('dataNascita').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, ''); // Rimuovi tutto tranne i numeri
+    if (value.length >= 2) {
+        value = value.slice(0,2) + '/' + value.slice(2);
+    }
+    if (value.length >= 5) {
+        value = value.slice(0,5) + '/' + value.slice(5);
+    }
+    e.target.value = value;
+});
 
 // Rimuovi classe error quando l'utente inizia a digitare
 document.querySelectorAll('input, select').forEach(element => {
