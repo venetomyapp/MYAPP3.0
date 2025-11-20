@@ -1,0 +1,2969 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<title>Revoca Disdetta - SIM Carabinieri</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #003d82 0%, #4a1f5c 50%, #8b2635 100%);
+    min-height: 100vh;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+    width: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    right: -20%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    bottom: -30%;
+    left: -15%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    padding: 25px;
+    position: relative;
+    z-index: 1;
+}
+
+.header-info {
+    background: linear-gradient(135deg, #003d82 0%, #4a1f5c 50%, #8b2635 100%);
+    color: white;
+    padding: 30px 25px;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.header-info::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.header-info h1 {
+    font-size: 26px;
+    margin-bottom: 5px;
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    color: #FFD700;
+    font-weight: 700;
+}
+
+.header-info p {
+    position: relative;
+    z-index: 2;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.form-field {
+    margin-bottom: 12px;
+}
+
+.form-field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #333;
+}
+
+.form-field input,
+.form-field select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+    outline: none;
+    border-color: #FFD700;
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+/* Evidenziazione errori */
+.form-field input.error,
+.form-field select.error {
+    border-color: #dc3545;
+    border-width: 2px;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
+}
+
+.form-field input.error:focus,
+.form-field select.error:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.3);
+}
+
+.signature-canvas.error {
+    border-color: #dc3545;
+    border-width: 3px;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
+}
+
+/* Stile per il campo stato estero */
+#statoEstero {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.signature-area {
+    margin: 15px 0;
+}
+
+.signature-canvas {
+    border: 2px solid #333;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 400px;
+    height: 100px;
+    cursor: crosshair;
+    touch-action: none;
+    background: white;
+}
+
+.upload-section {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 6px;
+    margin: 15px 0;
+}
+
+.upload-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.upload-box input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px dashed #999;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.preview {
+    margin-top: 10px;
+    max-height: 150px;
+    overflow: hidden;
+    position: relative;
+}
+
+.preview img {
+    max-width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: transform 0.3s ease;
+}
+
+.rotate-buttons {
+    display: none;
+    gap: 8px;
+    margin-top: 8px;
+    justify-content: center;
+}
+
+.rotate-buttons.show {
+    display: flex;
+}
+
+.btn-rotate {
+    padding: 6px 12px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-rotate:hover {
+    background: #5a6268;
+    transform: translateY(-1px);
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #003d82 0%, #4a1f5c 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 61, 130, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 61, 130, 0.4);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(5, 150, 105, 0.4);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.status {
+    text-align: center;
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    display: none;
+}
+
+.status.show {
+    display: block;
+}
+
+.status.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.status.info {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+/* Banner di benvenuto animato */
+.welcome-banner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: white;
+    padding: 25px 45px;
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    z-index: 9999;
+    text-align: center;
+    width: 90%;
+    max-width: 500px;
+    animation: fadeInScale 0.5s ease-out, fadeOutScale 0.5s ease-in 4.5s forwards;
+}
+
+.welcome-banner h3 {
+    margin: 0 0 10px 0;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.welcome-banner p {
+    margin: 5px 0;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.welcome-banner .icon {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes fadeOutScale {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+}
+
+input.error,
+input[type="file"].error {
+    border-color: #dc3545 !important;
+    background: #ffe6e6 !important;
+}
+
+/* ============ STILI PDF ============ */
+#pdfContent {
+    position: absolute;
+    left: -99999px;
+    width: 210mm;
+    background: white;
+    padding: 12mm 12mm;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.4;
+    color: #000;
+}
+
+.pdf-logo {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.pdf-logo img {
+    max-width: 120px;
+    height: auto;
+}
+
+.pdf-title {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.pdf-title h2 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+.pdf-subtitle {
+    text-align: center;
+    font-size: 11px;
+    color: #555;
+    margin-bottom: 12px;
+}
+
+.pdf-section {
+    margin-bottom: 10px;
+}
+
+.pdf-section p {
+    margin-bottom: 5px;
+}
+
+.pdf-label {
+    font-weight: 600;
+    font-size: 10px;
+    color: #555;
+    margin-bottom: 2px;
+}
+
+.pdf-value {
+    display: inline-block;
+    padding: 3px 8px;
+    border: 1px solid #333;
+    border-radius: 3px;
+    background: white;
+    font-weight: 500;
+    min-width: 100px;
+}
+
+.pdf-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.pdf-field {
+    margin-bottom: 8px;
+}
+
+.pdf-signature {
+    border: 2px solid #333;
+    min-height: 70px;
+    border-radius: 4px;
+    padding: 8px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+}
+
+.pdf-signature img {
+    max-width: 100%;
+    max-height: 60px;
+}
+
+.pdf-allegati {
+    margin-top: 15px;
+    font-size: 10px;
+}
+
+.pdf-checkbox {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 1.5px solid #333;
+    margin-right: 6px;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 10px;
+    font-size: 9px;
+}
+
+.pdf-checkbox.checked {
+    background: #333;
+    color: white;
+}
+
+/* Stili per la sezione di condivisione */
+.share-section {
+    background: linear-gradient(135deg, #f0f9ff 0%, #f8fafc 100%);
+    border: 2px solid #003d82;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+    display: none;
+}
+
+.share-section.show {
+    display: block;
+}
+
+.share-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #003d82;
+    margin-bottom: 10px;
+}
+
+.share-subtitle {
+    font-size: 14px;
+    color: #4a5568;
+    margin-bottom: 20px;
+}
+
+.share-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-share {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: white;
+}
+
+.btn-share svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.btn-share-email {
+    background: #ea4335;
+    box-shadow: 0 4px 12px rgba(234, 67, 53, 0.3);
+}
+
+.btn-share-email:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(234, 67, 53, 0.4);
+}
+
+.btn-share-whatsapp {
+    background: #25d366;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+.btn-share-whatsapp:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
+}
+
+.btn-share-telegram {
+    background: #0088cc;
+    box-shadow: 0 4px 12px rgba(0, 136, 204, 0.3);
+}
+
+.btn-share-telegram:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 136, 204, 0.4);
+}
+
+/* Footer credits */
+.credits-footer {
+    text-align: center;
+    padding: 30px 20px;
+    color: white;
+    font-size: 14px;
+    margin-top: 40px;
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(135deg, rgba(0, 61, 130, 0.1) 0%, rgba(74, 31, 92, 0.1) 50%, rgba(139, 38, 53, 0.1) 100%);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+}
+
+.credits-footer h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 1px;
+}
+
+.credits-footer a {
+    color: #FFD700;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.credits-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Banner di ringraziamento per condivisione */
+.thank-you-banner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: linear-gradient(135deg, #003d82 0%, #4a1f5c 50%, #8b2635 100%);
+    color: white;
+    padding: 40px 60px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    z-index: 10000;
+    opacity: 0;
+    animation: thankYouAnimation 3s ease-out forwards;
+    max-width: 90%;
+    width: 500px;
+}
+
+.thank-you-banner::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.thank-you-banner .icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+    animation: iconPulse 1.5s ease-in-out;
+}
+
+.thank-you-banner h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+    color: #FFD700;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.thank-you-banner p {
+    font-size: 18px;
+    margin-bottom: 10px;
+    opacity: 0.95;
+}
+
+.thank-you-banner .share-prompt {
+    font-size: 16px;
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+}
+
+@keyframes thankYouAnimation {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    20% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.05);
+    }
+    30% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    80% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+}
+
+@keyframes iconPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .header-info {
+        padding: 20px 15px;
+    }
+    
+    .header-info img {
+        height: 60px !important;
+    }
+    
+    .header-info h1 {
+        font-size: 20px;
+    }
+    
+    .header-info p {
+        font-size: 12px;
+    }
+    
+    .form-grid,
+    .upload-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .form-field label {
+        font-size: 12px;
+    }
+    
+    .form-field input,
+    .form-field select {
+        font-size: 14px;
+        padding: 10px;
+    }
+    
+    .signature-canvas {
+        max-width: 100%;
+        height: 120px;
+    }
+    
+    .upload-section {
+        padding: 12px;
+    }
+    
+    .upload-section h3 {
+        font-size: 14px;
+    }
+    
+    .actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .share-section {
+        padding: 15px;
+        margin: 15px 0;
+    }
+    
+    .share-title {
+        font-size: 20px;
+    }
+    
+    .share-subtitle {
+        font-size: 13px;
+    }
+    
+    .share-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .btn-share {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .thank-you-banner {
+        padding: 30px 20px;
+        width: 90%;
+        max-width: 350px;
+    }
+    
+    .thank-you-banner h2 {
+        font-size: 22px;
+    }
+    
+    .thank-you-banner p {
+        font-size: 14px;
+    }
+    
+    .thank-you-banner .share-prompt {
+        font-size: 13px;
+        padding: 10px;
+    }
+    
+    .welcome-banner {
+        width: 90%;
+        max-width: 350px;
+        padding: 30px 20px;
+    }
+    
+    .welcome-banner h3 {
+        font-size: 20px;
+    }
+    
+    .welcome-banner p {
+        font-size: 12px;
+    }
+    
+    .credits-footer {
+        padding: 20px 10px;
+        margin-top: 20px;
+    }
+    
+    .credits-footer img {
+        height: 40px !important;
+    }
+    
+    .credits-footer h3 {
+        font-size: 18px;
+    }
+    
+    .credits-footer p {
+        font-size: 12px;
+    }
+    
+    /* Migliore gestione del PDF content su mobile */
+    #pdfContent {
+        transform: scale(0.7);
+        transform-origin: top left;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 5px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .container {
+        padding: 10px;
+        margin: 5px;
+    }
+    
+    .header-info {
+        padding: 15px 10px;
+        margin-bottom: 15px;
+    }
+    
+    .header-info img {
+        height: 50px !important;
+    }
+    
+    .header-info h1 {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+    
+    .form-field {
+        margin-bottom: 10px;
+    }
+    
+    .form-field label {
+        font-size: 11px;
+        margin-bottom: 3px;
+    }
+    
+    .form-field input,
+    .form-field select {
+        font-size: 13px;
+        padding: 8px;
+    }
+    
+    .signature-area {
+        margin: 10px 0;
+    }
+    
+    .signature-canvas {
+        height: 100px;
+    }
+    
+    .upload-section {
+        padding: 10px;
+        margin: 10px 0;
+    }
+    
+    .upload-box {
+        margin-bottom: 15px;
+    }
+    
+    .preview {
+        max-height: 120px;
+    }
+    
+    .btn {
+        padding: 10px;
+        font-size: 13px;
+    }
+    
+    .btn-secondary {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+    
+    .rotate-buttons {
+        gap: 5px;
+    }
+    
+    .btn-rotate {
+        padding: 5px 8px;
+        font-size: 11px;
+    }
+    
+    .status {
+        font-size: 12px;
+        padding: 10px;
+        margin-top: 10px;
+    }
+    
+    .share-section {
+        padding: 12px;
+        margin: 10px 0;
+    }
+    
+    .share-title {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+    
+    .share-subtitle {
+        font-size: 12px;
+        margin-bottom: 15px;
+    }
+    
+    .btn-share {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+    
+    .btn-share svg {
+        width: 18px;
+        height: 18px;
+    }
+    
+    /* Banner adattivi */
+    .welcome-banner,
+    .thank-you-banner {
+        width: 95%;
+        padding: 20px 15px;
+        border-radius: 15px;
+    }
+    
+    .welcome-banner .icon,
+    .thank-you-banner .icon {
+        font-size: 40px;
+        margin-bottom: 15px;
+    }
+    
+    .welcome-banner h3,
+    .thank-you-banner h2 {
+        font-size: 18px;
+    }
+    
+    .credits-footer {
+        padding: 15px 8px;
+        border-radius: 8px;
+    }
+    
+    .credits-footer img {
+        height: 35px !important;
+    }
+    
+    .credits-footer h3 {
+        font-size: 16px;
+    }
+    
+    /* Ottimizzazione landscape per mobile */
+    @media (orientation: landscape) and (max-height: 500px) {
+        .header-info {
+            padding: 10px;
+        }
+        
+        .header-info img {
+            height: 40px !important;
+        }
+        
+        .signature-canvas {
+            height: 80px;
+        }
+        
+        .preview {
+            max-height: 100px;
+        }
+    }
+}
+
+/* Stili per schermi molto piccoli (es. iPhone SE) */
+@media (max-width: 375px) {
+    .container {
+        padding: 8px;
+    }
+    
+    .header-info h1 {
+        font-size: 16px;
+    }
+    
+    .form-field input,
+    .form-field select {
+        font-size: 12px;
+        padding: 7px;
+    }
+    
+    .btn {
+        font-size: 12px;
+        padding: 9px;
+    }
+    
+    /* Select ottimizzato per mobile */
+    select {
+        background-position: right 8px center;
+        background-size: 12px;
+    }
+    
+    /* Miglioramenti per schermi molto piccoli */
+    .form-grid,
+    .upload-grid {
+        gap: 6px;
+    }
+    
+    .form-field {
+        margin-bottom: 8px;
+    }
+    
+    .signature-canvas {
+        height: 90px;
+    }
+    
+    .upload-section {
+        padding: 8px;
+    }
+    
+    .actions {
+        gap: 6px;
+    }
+    
+    .share-buttons {
+        gap: 6px;
+    }
+    
+    .btn-share {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+    
+    .status {
+        font-size: 11px;
+        padding: 8px;
+    }
+}
+
+/* Fix per viewport mobile */
+@media (max-width: 768px) {
+    html {
+        -webkit-text-size-adjust: 100%;
+    }
+    
+    /* Previeni zoom su focus iOS */
+    input, select, textarea {
+        font-size: 16px !important;
+    }
+    
+    /* Migliore touch target */
+    input[type="file"],
+    button,
+    .btn {
+        min-height: 44px;
+    }
+    
+    /* Scroll smooth su mobile */
+    * {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Print styles per PDF */
+@media print {
+    .welcome-banner,
+    .thank-you-banner,
+    .share-section,
+    .credits-footer {
+        display: none !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- Banner di benvenuto -->
+<div class="welcome-banner" id="welcomeBanner">
+    <div class="icon">🎉</div>
+    <h3>Grazie per il tuo ripensamento!</h3>
+    <p><strong>Siamo felici che tu abbia scelto di rimanere con noi.</strong></p>
+    <p style="margin-top: 12px; font-size: 13px;">
+        📋 Compila il modulo qui sotto<br>
+        📄 Genera il PDF<br>
+        📧 Condividilo con il tuo dirigente di riferimento
+    </p>
+    <p style="margin-top: 10px; font-size: 13px; opacity: 0.9;">
+        <em>#MaiPiùSoli - SIM Carabinieri</em>
+    </p>
+</div>
+
+<!-- Banner di ringraziamento (nascosto inizialmente) -->
+<div class="thank-you-banner" id="thankYouBanner" style="display: none;">
+    <div class="icon">🙏</div>
+    <h2>Grazie!</h2>
+    <p><strong>Il tuo PDF è stato generato con successo</strong></p>
+    <div class="share-prompt">
+        <p>📤 Non dimenticare di condividerlo con il tuo dirigente!</p>
+        <p style="font-size: 14px; margin-top: 8px; opacity: 0.9;">Usa i pulsanti di condivisione qui sotto</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="header-info">
+        <div style="text-align: center;">
+            <img src="https://www.simcarabinieri.com/img/logo_small.webp" alt="Logo SIM Carabinieri" 
+                 style="height: 80px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3)); margin-bottom: 15px;">
+            <h1 style="margin: 0; margin-bottom: 8px;">Revoca della Disdetta</h1>
+            <p style="font-size: 14px; margin: 0;">Sindacato Italiano Militari Carabinieri</p>
+        </div>
+    </div>
+
+    <form id="mainForm" novalidate>
+        
+        <div class="form-grid">
+            <div class="form-field">
+                <label>Nome <span style="color:red">*</span></label>
+                <input type="text" id="nome" required placeholder="Nome" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
+            </div>
+            <div class="form-field">
+                <label>Cognome <span style="color:red">*</span></label>
+                <input type="text" id="cognome" required placeholder="Cognome" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
+            </div>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-field">
+                <label>nato/a a <span style="color:red">*</span></label>
+                <input type="text" id="luogoNascita" required placeholder="Città" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
+            </div>
+            <div class="form-field">
+                <label>Provincia/Stato estero <span style="color:red">*</span></label>
+                <select id="provinciaNascita" required>
+                    <option value="">Seleziona...</option>
+                    <optgroup label="Province italiane">
+                        <option value="AG">AG - Agrigento</option>
+                        <option value="AL">AL - Alessandria</option>
+                        <option value="AN">AN - Ancona</option>
+                        <option value="AO">AO - Aosta</option>
+                        <option value="AR">AR - Arezzo</option>
+                        <option value="AP">AP - Ascoli Piceno</option>
+                        <option value="AT">AT - Asti</option>
+                        <option value="AV">AV - Avellino</option>
+                        <option value="BA">BA - Bari</option>
+                        <option value="BT">BT - Barletta-Andria-Trani</option>
+                        <option value="BL">BL - Belluno</option>
+                        <option value="BN">BN - Benevento</option>
+                        <option value="BG">BG - Bergamo</option>
+                        <option value="BI">BI - Biella</option>
+                        <option value="BO">BO - Bologna</option>
+                        <option value="BZ">BZ - Bolzano</option>
+                        <option value="BS">BS - Brescia</option>
+                        <option value="BR">BR - Brindisi</option>
+                        <option value="CA">CA - Cagliari</option>
+                        <option value="CL">CL - Caltanissetta</option>
+                        <option value="CB">CB - Campobasso</option>
+                        <option value="CI">CI - Carbonia-Iglesias</option>
+                        <option value="CE">CE - Caserta</option>
+                        <option value="CT">CT - Catania</option>
+                        <option value="CZ">CZ - Catanzaro</option>
+                        <option value="CH">CH - Chieti</option>
+                        <option value="CO">CO - Como</option>
+                        <option value="CS">CS - Cosenza</option>
+                        <option value="CR">CR - Cremona</option>
+                        <option value="KR">KR - Crotone</option>
+                        <option value="CN">CN - Cuneo</option>
+                        <option value="EN">EN - Enna</option>
+                        <option value="FM">FM - Fermo</option>
+                        <option value="FE">FE - Ferrara</option>
+                        <option value="FI">FI - Firenze</option>
+                        <option value="FG">FG - Foggia</option>
+                        <option value="FC">FC - Forlì-Cesena</option>
+                        <option value="FR">FR - Frosinone</option>
+                        <option value="GE">GE - Genova</option>
+                        <option value="GO">GO - Gorizia</option>
+                        <option value="GR">GR - Grosseto</option>
+                        <option value="IM">IM - Imperia</option>
+                        <option value="IS">IS - Isernia</option>
+                        <option value="SP">SP - La Spezia</option>
+                        <option value="AQ">AQ - L'Aquila</option>
+                        <option value="LT">LT - Latina</option>
+                        <option value="LE">LE - Lecce</option>
+                        <option value="LC">LC - Lecco</option>
+                        <option value="LI">LI - Livorno</option>
+                        <option value="LO">LO - Lodi</option>
+                        <option value="LU">LU - Lucca</option>
+                        <option value="MC">MC - Macerata</option>
+                        <option value="MN">MN - Mantova</option>
+                        <option value="MS">MS - Massa-Carrara</option>
+                        <option value="MT">MT - Matera</option>
+                        <option value="ME">ME - Messina</option>
+                        <option value="MI">MI - Milano</option>
+                        <option value="MO">MO - Modena</option>
+                        <option value="MB">MB - Monza e Brianza</option>
+                        <option value="NA">NA - Napoli</option>
+                        <option value="NO">NO - Novara</option>
+                        <option value="NU">NU - Nuoro</option>
+                        <option value="OT">OT - Olbia-Tempio</option>
+                        <option value="OR">OR - Oristano</option>
+                        <option value="PD">PD - Padova</option>
+                        <option value="PA">PA - Palermo</option>
+                        <option value="PR">PR - Parma</option>
+                        <option value="PV">PV - Pavia</option>
+                        <option value="PG">PG - Perugia</option>
+                        <option value="PU">PU - Pesaro e Urbino</option>
+                        <option value="PE">PE - Pescara</option>
+                        <option value="PC">PC - Piacenza</option>
+                        <option value="PI">PI - Pisa</option>
+                        <option value="PT">PT - Pistoia</option>
+                        <option value="PN">PN - Pordenone</option>
+                        <option value="PZ">PZ - Potenza</option>
+                        <option value="PO">PO - Prato</option>
+                        <option value="RG">RG - Ragusa</option>
+                        <option value="RA">RA - Ravenna</option>
+                        <option value="RC">RC - Reggio Calabria</option>
+                        <option value="RE">RE - Reggio Emilia</option>
+                        <option value="RI">RI - Rieti</option>
+                        <option value="RN">RN - Rimini</option>
+                        <option value="RM">RM - Roma</option>
+                        <option value="RO">RO - Rovigo</option>
+                        <option value="SA">SA - Salerno</option>
+                        <option value="VS">VS - Medio Campidano</option>
+                        <option value="SS">SS - Sassari</option>
+                        <option value="SV">SV - Savona</option>
+                        <option value="SI">SI - Siena</option>
+                        <option value="SR">SR - Siracusa</option>
+                        <option value="SO">SO - Sondrio</option>
+                        <option value="SU">SU - Sud Sardegna</option>
+                        <option value="TA">TA - Taranto</option>
+                        <option value="TE">TE - Teramo</option>
+                        <option value="TR">TR - Terni</option>
+                        <option value="TO">TO - Torino</option>
+                        <option value="OG">OG - Ogliastra</option>
+                        <option value="TP">TP - Trapani</option>
+                        <option value="TN">TN - Trento</option>
+                        <option value="TV">TV - Treviso</option>
+                        <option value="TS">TS - Trieste</option>
+                        <option value="UD">UD - Udine</option>
+                        <option value="VA">VA - Varese</option>
+                        <option value="VE">VE - Venezia</option>
+                        <option value="VB">VB - Verbano-Cusio-Ossola</option>
+                        <option value="VC">VC - Vercelli</option>
+                        <option value="VR">VR - Verona</option>
+                        <option value="VV">VV - Vibo Valentia</option>
+                        <option value="VI">VI - Vicenza</option>
+                        <option value="VT">VT - Viterbo</option>
+                    </optgroup>
+                    <optgroup label="Nascita all'estero">
+                        <option value="EE">EE - Stato Estero</option>
+                    </optgroup>
+                </select>
+                <input type="text" id="statoEstero" placeholder="Inserisci lo stato estero" style="display: none; margin-top: 8px; text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
+            </div>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-field">
+                <label>il <span style="color:red">*</span></label>
+              <input type="text" id="dataNascita" required 
+       placeholder="GG/MM/AAAA" 
+       pattern="\d{2}/\d{2}/\d{4}"
+       maxlength="10"
+       inputmode="numeric">
+            </div>
+            <div class="form-field">
+                <label>Codice Fiscale <span style="color:red">*</span></label>
+                <input type="text" id="codiceFiscale" required placeholder="Codice Fiscale" maxlength="16" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
+            </div>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-field">
+                <label>Grado <span style="color:red">*</span></label>
+                <select id="grado" required>
+                    <option value="">Seleziona...</option>
+                    <option value="CAR.">CAR. - Carabiniere</option>
+                    <option value="CAR. SC.">CAR. SC. - Carabiniere Scelto</option>
+                    <option value="APP.">APP. - Appuntato</option>
+                    <option value="APP. SC.">APP. SC. - Appuntato Scelto</option>
+                    <option value="V. BRIG.">V. BRIG. - Vice Brigadiere</option>
+                    <option value="BRIG.">BRIG. - Brigadiere</option>
+                    <option value="BRIG. CA.">BRIG. CA. - Brigadiere Capo</option>
+                    <option value="BRIG. CA. Q.S.">BRIG. CA. Q.S. - Brigadiere Capo Q.S.</option>
+                    <option value="MAR.">MAR. - Maresciallo</option>
+                    <option value="MAR. ORD.">MAR. ORD. - Maresciallo Ordinario</option>
+                    <option value="MAR. CA.">MAR. CA. - Maresciallo Capo</option>
+                    <option value="MAR. A. S.UPS">MAR. A. S.UPS - Maresciallo A. S.UPS</option>
+                    <option value="MAR. MAG.">MAR. MAG. - Maresciallo Maggiore</option>
+                    <option value="LGT.">LGT. - Luogotenente</option>
+                    <option value="LGT. C.S.">LGT. C.S. - Luogotenente C.S.</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label>CIP <span style="color:red">*</span></label>
+                <input type="text" id="cip" required placeholder="Codice" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
+            </div>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-field">
+                <label>in servizio presso <span style="color:red">*</span></label>
+                <input type="text" id="servizioPresso" required placeholder="Reparto/Ente" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
+            </div>
+            <div class="form-field">
+                <label>Recapito telefonico</label>
+                <input type="tel" id="telefono" placeholder="Telefono">
+            </div>
+        </div>
+        
+        <div class="form-grid">
+            <div class="form-field">
+                <label>Città Reparto <span style="color:red">*</span></label>
+                <input type="text" id="cittaReparto" required placeholder="Città del reparto" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
+            </div>
+            <div class="form-field">
+                <label>CAP <span style="color:red">*</span></label>
+                <input type="text" id="cap" required placeholder="CAP" maxlength="5" pattern="[0-9]{5}">
+            </div>
+        </div>
+        
+        <div class="form-grid">
+            <div class="form-field">
+                <label>Regione <span style="color:red">*</span></label>
+                <select id="regione" required>
+                    <option value="">Seleziona...</option>
+                    <option value="ABRUZZO">ABRUZZO</option>
+                    <option value="BASILICATA">BASILICATA</option>
+                    <option value="CALABRIA">CALABRIA</option>
+                    <option value="CAMPANIA">CAMPANIA</option>
+                    <option value="EMILIA-ROMAGNA">EMILIA-ROMAGNA</option>
+                    <option value="FRIULI-VENEZIA GIULIA">FRIULI-VENEZIA GIULIA</option>
+                    <option value="LAZIO">LAZIO</option>
+                    <option value="LIGURIA">LIGURIA</option>
+                    <option value="LOMBARDIA">LOMBARDIA</option>
+                    <option value="MARCHE">MARCHE</option>
+                    <option value="MOLISE">MOLISE</option>
+                    <option value="PIEMONTE">PIEMONTE</option>
+                    <option value="PUGLIA">PUGLIA</option>
+                    <option value="SARDEGNA">SARDEGNA</option>
+                    <option value="SICILIA">SICILIA</option>
+                    <option value="TOSCANA">TOSCANA</option>
+                    <option value="TRENTINO-ALTO ADIGE">TRENTINO-ALTO ADIGE</option>
+                    <option value="UMBRIA">UMBRIA</option>
+                    <option value="VALLE D'AOSTA">VALLE D'AOSTA</option>
+                    <option value="VENETO">VENETO</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label>Provincia Reparto <span style="color:red">*</span></label>
+                <select id="provinciaReparto" required>
+                    <option value="">Seleziona...</option>
+                    <optgroup label="Province italiane">
+                        <option value="AG">AG - Agrigento</option>
+                        <option value="AL">AL - Alessandria</option>
+                        <option value="AN">AN - Ancona</option>
+                        <option value="AO">AO - Aosta</option>
+                        <option value="AR">AR - Arezzo</option>
+                        <option value="AP">AP - Ascoli Piceno</option>
+                        <option value="AT">AT - Asti</option>
+                        <option value="AV">AV - Avellino</option>
+                        <option value="BA">BA - Bari</option>
+                        <option value="BT">BT - Barletta-Andria-Trani</option>
+                        <option value="BL">BL - Belluno</option>
+                        <option value="BN">BN - Benevento</option>
+                        <option value="BG">BG - Bergamo</option>
+                        <option value="BI">BI - Biella</option>
+                        <option value="BO">BO - Bologna</option>
+                        <option value="BZ">BZ - Bolzano</option>
+                        <option value="BS">BS - Brescia</option>
+                        <option value="BR">BR - Brindisi</option>
+                        <option value="CA">CA - Cagliari</option>
+                        <option value="CL">CL - Caltanissetta</option>
+                        <option value="CB">CB - Campobasso</option>
+                        <option value="CI">CI - Carbonia-Iglesias</option>
+                        <option value="CE">CE - Caserta</option>
+                        <option value="CT">CT - Catania</option>
+                        <option value="CZ">CZ - Catanzaro</option>
+                        <option value="CH">CH - Chieti</option>
+                        <option value="CO">CO - Como</option>
+                        <option value="CS">CS - Cosenza</option>
+                        <option value="CR">CR - Cremona</option>
+                        <option value="KR">KR - Crotone</option>
+                        <option value="CN">CN - Cuneo</option>
+                        <option value="EN">EN - Enna</option>
+                        <option value="FM">FM - Fermo</option>
+                        <option value="FE">FE - Ferrara</option>
+                        <option value="FI">FI - Firenze</option>
+                        <option value="FG">FG - Foggia</option>
+                        <option value="FC">FC - Forlì-Cesena</option>
+                        <option value="FR">FR - Frosinone</option>
+                        <option value="GE">GE - Genova</option>
+                        <option value="GO">GO - Gorizia</option>
+                        <option value="GR">GR - Grosseto</option>
+                        <option value="IM">IM - Imperia</option>
+                        <option value="IS">IS - Isernia</option>
+                        <option value="SP">SP - La Spezia</option>
+                        <option value="AQ">AQ - L'Aquila</option>
+                        <option value="LT">LT - Latina</option>
+                        <option value="LE">LE - Lecce</option>
+                        <option value="LC">LC - Lecco</option>
+                        <option value="LI">LI - Livorno</option>
+                        <option value="LO">LO - Lodi</option>
+                        <option value="LU">LU - Lucca</option>
+                        <option value="MC">MC - Macerata</option>
+                        <option value="MN">MN - Mantova</option>
+                        <option value="MS">MS - Massa-Carrara</option>
+                        <option value="MT">MT - Matera</option>
+                        <option value="ME">ME - Messina</option>
+                        <option value="MI">MI - Milano</option>
+                        <option value="MO">MO - Modena</option>
+                        <option value="MB">MB - Monza e Brianza</option>
+                        <option value="NA">NA - Napoli</option>
+                        <option value="NO">NO - Novara</option>
+                        <option value="NU">NU - Nuoro</option>
+                        <option value="OT">OT - Olbia-Tempio</option>
+                        <option value="OR">OR - Oristano</option>
+                        <option value="PD">PD - Padova</option>
+                        <option value="PA">PA - Palermo</option>
+                        <option value="PR">PR - Parma</option>
+                        <option value="PV">PV - Pavia</option>
+                        <option value="PG">PG - Perugia</option>
+                        <option value="PU">PU - Pesaro e Urbino</option>
+                        <option value="PE">PE - Pescara</option>
+                        <option value="PC">PC - Piacenza</option>
+                        <option value="PI">PI - Pisa</option>
+                        <option value="PT">PT - Pistoia</option>
+                        <option value="PN">PN - Pordenone</option>
+                        <option value="PZ">PZ - Potenza</option>
+                        <option value="PO">PO - Prato</option>
+                        <option value="RG">RG - Ragusa</option>
+                        <option value="RA">RA - Ravenna</option>
+                        <option value="RC">RC - Reggio Calabria</option>
+                        <option value="RE">RE - Reggio Emilia</option>
+                        <option value="RI">RI - Rieti</option>
+                        <option value="RN">RN - Rimini</option>
+                        <option value="RM">RM - Roma</option>
+                        <option value="RO">RO - Rovigo</option>
+                        <option value="SA">SA - Salerno</option>
+                        <option value="VS">VS - Medio Campidano</option>
+                        <option value="SS">SS - Sassari</option>
+                        <option value="SV">SV - Savona</option>
+                        <option value="SI">SI - Siena</option>
+                        <option value="SR">SR - Siracusa</option>
+                        <option value="SO">SO - Sondrio</option>
+                        <option value="SU">SU - Sud Sardegna</option>
+                        <option value="TA">TA - Taranto</option>
+                        <option value="TE">TE - Teramo</option>
+                        <option value="TR">TR - Terni</option>
+                        <option value="TO">TO - Torino</option>
+                        <option value="OG">OG - Ogliastra</option>
+                        <option value="TP">TP - Trapani</option>
+                        <option value="TN">TN - Trento</option>
+                        <option value="TV">TV - Treviso</option>
+                        <option value="TS">TS - Trieste</option>
+                        <option value="UD">UD - Udine</option>
+                        <option value="VA">VA - Varese</option>
+                        <option value="VE">VE - Venezia</option>
+                        <option value="VB">VB - Verbano-Cusio-Ossola</option>
+                        <option value="VC">VC - Vercelli</option>
+                        <option value="VR">VR - Verona</option>
+                        <option value="VV">VV - Vibo Valentia</option>
+                        <option value="VI">VI - Vicenza</option>
+                        <option value="VT">VT - Viterbo</option>
+                    </optgroup>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-field">
+            <label>E-mail / PEC</label>
+            <input type="email" id="emailPec" placeholder="email@esempio.it">
+        </div>
+
+        <div class="form-field">
+            <label>Data disdetta <span style="color:red">*</span></label>
+            <input type="date" id="dataDisdetta" required>
+        </div>
+
+        <div class="form-field">
+            <label>Indirizzo per conferma scritta <span style="color:red">*</span></label>
+            <input type="email" id="indirizzoConferma" required placeholder="email@esempio.it">
+        </div>
+
+        <div class="form-grid">
+            <div class="form-field">
+                <label>Luogo <span style="color:red">*</span></label>
+                <input type="text" id="luogo" required placeholder="Città" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
+            </div>
+            <div class="form-field">
+                <label>Data <span style="color:red">*</span></label>
+                <input type="date" id="dataDocumento" required>
+            </div>
+        </div>
+
+        <div class="signature-area">
+            <label style="font-weight: 600; margin-bottom: 8px; display: block;">
+                Firma <span style="color:red">*</span>
+            </label>
+            <canvas id="signatureCanvas" class="signature-canvas"></canvas>
+            <button type="button" class="btn btn-secondary" id="clearSignature" style="margin-top: 8px;">Cancella Firma</button>
+        </div>
+
+        <div class="upload-section">
+            <h3 style="margin-bottom: 12px; font-size: 15px;">📎 Documenti di Identità</h3>
+            <div class="upload-grid">
+                <div class="upload-box">
+                    <label style="font-weight: 600; margin-bottom: 6px; display: block;">
+                        Fronte <span style="color:red">*</span>
+                    </label>
+                    <input type="file" id="docFronte" accept="image/*" required>
+                    <div id="previewFronte" class="preview"></div>
+                    <div id="rotateBtnsFronte" class="rotate-buttons">
+                        <button type="button" class="btn-rotate" onclick="rotateImage('fronte', -90)">↺ Ruota Sx</button>
+                        <button type="button" class="btn-rotate" onclick="rotateImage('fronte', 90)">Ruota Dx ↻</button>
+                    </div>
+                </div>
+                <div class="upload-box">
+                    <label style="font-weight: 600; margin-bottom: 6px; display: block;">
+                        Retro <span style="color:red">*</span>
+                    </label>
+                    <input type="file" id="docRetro" accept="image/*" required>
+                    <div id="previewRetro" class="preview"></div>
+                    <div id="rotateBtnsRetro" class="rotate-buttons">
+                        <button type="button" class="btn-rotate" onclick="rotateImage('retro', -90)">↺ Ruota Sx</button>
+                        <button type="button" class="btn-rotate" onclick="rotateImage('retro', 90)">Ruota Dx ↻</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button type="button" class="btn btn-primary" id="btnGenerate">📄 Genera PDF</button>
+            <button type="button" class="btn btn-success" id="btnDownload" style="display:none;">⬇️ Scarica Revoca</button>
+            <button type="button" class="btn btn-success" id="btnDownloadDelega" style="display:none;">⬇️ Scarica Delega</button>
+            <button type="button" class="btn btn-secondary" id="btnReset">🔄 Pulisci</button>
+        </div>
+
+        <div class="status" id="statusMsg"></div>
+
+        <!-- Sezione di condivisione -->
+        <div class="share-section" id="shareSection">
+            <h3 class="share-title">🎉 PDF Generato con Successo!</h3>
+            <p class="share-subtitle">Condividi il tuo modulo di revoca della disdetta con il tuo dirigente di riferimento</p>
+            <div class="share-buttons">
+                <button type="button" class="btn-share btn-share-email" onclick="shareViaEmail()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                    </svg>
+                    Email
+                </button>
+                <button type="button" class="btn-share btn-share-whatsapp" onclick="shareViaWhatsApp()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                    WhatsApp
+                </button>
+                <button type="button" class="btn-share btn-share-telegram" onclick="shareViaTelegram()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                    </svg>
+                    Telegram
+                </button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<!-- Footer Credits -->
+<div class="credits-footer">
+    <img src="https://www.simcarabinieri.com/img/logo_small.webp" alt="Logo SIM Carabinieri" 
+         style="height: 50px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5)); margin-bottom: 10px;">
+    <h3 style="margin: 0; color: #FFD700; font-size: 20px; margin-bottom: 5px;">#MaiPiùSoli</h3>
+    <p style="margin: 0; margin-bottom: 10px;">Sindacato Italiano Militare Carabinieri</p>
+    <div style="border-top: 1px solid rgba(255, 215, 0, 0.3); padding-top: 15px; margin-top: 15px;">
+        <p style="margin: 0;">Sviluppato per <strong>SIM Carabinieri</strong></p>
+        <p style="margin: 0; margin-top: 5px;"><strong></strong></p>
+    </div>
+</div>
+
+<!-- ============ CONTENUTO PDF (NASCOSTO) ============ -->
+<div id="pdfContent">
+    
+
+    <div class="pdf-title">
+        <h2>Revoca della disdetta e conferma di adesione</h2>
+    </div>
+    <div class="pdf-subtitle">
+        Modulo per revocare la disdetta prima della sua efficacia
+    </div>
+
+    <div class="pdf-section">
+        <p style="font-size: 13px;"><strong>Oggetto:</strong> Revoca della disdetta e conferma dell'adesione prima dell'efficacia.</p>
+    </div>
+
+    <div class="pdf-section" style="font-size: 11.5px; line-height: 1.5;">
+        <p><strong>Al Comando Generale dell'Arma dei Carabinieri</strong><br>
+        Centro Nazionale Amministrativo<br>
+        Ufficio Trattamento Economico Attività<br>
+        cnateadeleghe@pec.carabinieri.it</p>
+        
+        <p style="margin-top: 10px;"><strong>Spett.le Sindacato Italiano Militare Carabinieri</strong><br>
+        segreteria@pec.simcarabinieri.it<br>
+        Via Magnagrecia 13, 00183 Roma</p>
+    </div>
+
+    <div class="pdf-section">
+        <p style="font-weight: 600; margin-bottom: 10px; font-size: 12px; color: #333;">Dati anagrafici</p>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px; border: 1px solid #999;">
+        <tr>
+            <td style="background: #f5f5f5; padding: 7px 10px; border: 1px solid #ccc; font-size: 11px; color: #555; font-weight: 600; width: 30%;">Il/La sottoscritto/a *</td>
+            <td style="padding: 7px 10px; border: 1px solid #ccc; font-weight: 600; font-size: 12px; width: 70%;" id="pdf_nomeCognome"></td>
+        </tr>
+        <tr>
+            <td style="background: #f5f5f5; padding: 7px 10px; border: 1px solid #ccc; font-size: 11px; color: #555; font-weight: 600;">nato/a a *</td>
+            <td style="padding: 7px 10px; border: 1px solid #ccc; font-weight: 600; font-size: 12px;">
+                <span id="pdf_luogoNascita"></span> (<span id="pdf_provinciaNascita"></span>)
+            </td>
+        </tr>
+        <tr>
+            <td style="background: #f5f5f5; padding: 7px 10px; border: 1px solid #ccc; font-size: 11px; color: #555; font-weight: 600;">il *</td>
+            <td style="padding: 7px 10px; border: 1px solid #ccc; font-weight: 600; font-size: 12px;" id="pdf_dataNascita"></td>
+        </tr>
+        <tr>
+            <td style="background: #f5f5f5; padding: 7px 10px; border: 1px solid #ccc; font-size: 11px; color: #555; font-weight: 600;">Codice Fiscale *</td>
+            <td style="padding: 7px 10px; border: 1px solid #ccc; font-weight: 600; font-size: 12px;" id="pdf_codiceFiscale"></td>
+        </tr>
+        <tr>
+            <td style="background: #f5f5f5; padding: 7px 10px; border: 1px solid #ccc; font-size: 11px; color: #555; font-weight: 600;">CIP *</td>
+            <td style="padding: 7px 10px; border: 1px solid #ccc; font-weight: 600; font-size: 12px;" id="pdf_cip"></td>
+        </tr>
+        <tr>
+            <td style="background: #f5f5f5; padding: 7px 10px; border: 1px solid #ccc; font-size: 11px; color: #555; font-weight: 600;">in servizio presso *</td>
+            <td style="padding: 7px 10px; border: 1px solid #ccc; font-weight: 600; font-size: 12px;" id="pdf_servizioPresso"></td>
+        </tr>
+        <tr>
+            <td style="background: #f5f5f5; padding: 7px 10px; border: 1px solid #ccc; font-size: 11px; color: #555; font-weight: 600;">Recapito telefonico</td>
+            <td style="padding: 7px 10px; border: 1px solid #ccc; font-weight: 600; font-size: 12px;" id="pdf_telefono"></td>
+        </tr>
+        <tr>
+            <td style="background: #f5f5f5; padding: 7px 10px; border: 1px solid #ccc; font-size: 11px; color: #555; font-weight: 600;">E-mail / PEC</td>
+            <td style="padding: 7px 10px; border: 1px solid #ccc; font-weight: 600; font-size: 12px;" id="pdf_emailPec"></td>
+        </tr>
+    </table>
+
+    <div class="pdf-section" style="margin-top: 12px; line-height: 1.6; font-size: 13px;">
+        <p><strong>Premesso che</strong> in data <span class="pdf-value" id="pdf_dataDisdetta" style="display:inline-block; min-width:90px; font-size: 13px;"></span> ho trasmesso comunicazione di disdetta dall'Associazione SIM Carabinieri (Sindacato Italiano Militari Carabinieri), con decorrenza prevista per legge,</p>
+    </div>
+
+    <div class="pdf-section" style="font-size: 13px;">
+        <p><strong>comunico</strong> ai sensi e per gli effetti di legge di revocare integralmente la sopra citata disdetta prima della sua efficacia.</p>
+    </div>
+
+    <div class="pdf-section" style="font-size: 13px;">
+        <p><strong>Pertanto, chiedo:</strong></p>
+        <ol style="margin-left: 18px; margin-top: 6px; line-height: 1.6; font-size: 12.5px;">
+            <li style="margin-bottom: 5px;">di mantenere senza soluzione di continuità la mia adesione all'Associazione SIM Carabinieri (Sindacato Italiano Militari Carabinieri);</li>
+            <li style="margin-bottom: 5px;">di non dar corso ad alcuna cessazione della delega contributiva e di proseguire le trattenute associative già in essere;</li>
+            <li>di ricevere conferma scritta della presente revoca all'indirizzo <span class="pdf-value" id="pdf_indirizzoConferma" style="display:inline-block; min-width:150px; font-size: 12.5px;"></span></li>
+        </ol>
+    </div>
+
+    <div class="pdf-section" style="font-size: 11.5px;">
+        <p>Resta confermato il consenso al trattamento dei dati personali limitatamente alle finalità associative, come da informativa dell'Associazione.</p>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 12px; border: 1px solid #999;">
+        <tr>
+            <td style="background: #f5f5f5; padding: 7px 10px; border: 1px solid #ccc; font-size: 11px; color: #555; font-weight: 600; width: 30%;">Luogo</td>
+            <td style="padding: 7px 10px; border: 1px solid #ccc; font-weight: 600; font-size: 12px; width: 70%;" id="pdf_luogo"></td>
+        </tr>
+        <tr>
+            <td style="background: #f5f5f5; padding: 7px 10px; border: 1px solid #ccc; font-size: 11px; color: #555; font-weight: 600;">Data</td>
+            <td style="padding: 7px 10px; border: 1px solid #ccc; font-weight: 600; font-size: 12px;" id="pdf_dataDocumento"></td>
+        </tr>
+    </table>
+
+    <div class="pdf-field" style="margin-top: 12px;">
+        <div class="pdf-label">Firma *</div>
+        <div class="pdf-signature" id="pdf_firmaBox">
+            <img id="pdf_firmaImg" src="" alt="" style="display:none;">
+        </div>
+    </div>
+
+    <div class="pdf-allegati">
+        <p style="font-weight: 600; margin-bottom: 5px; font-size: 11.5px;">Allegati:</p>
+        <p style="margin-bottom: 3px; font-size: 11px;">
+            <span class="pdf-checkbox checked">✓</span>
+            Copia documento di identità (fronte/retro)
+        </p>
+        <p style="font-size: 11px;">
+            <span class="pdf-checkbox"></span>
+            (facoltativo) Copia della precedente disdetta del 
+            <span style="display:inline-block; width:70px; border-bottom:1px solid #333; height:12px;"></span>
+        </p>
+    </div>
+
+</div>
+
+<script>
+// ============ VARIABILI GLOBALI ============
+let signatureImage = null;
+let hasSignature = false;
+let docFronteImg = null;
+let docRetroImg = null;
+let pdfBlob = null;
+let pdfBlobDelega = null; // Per la delega
+let currentRotationFronte = 0; // Traccia rotazione corrente fronte
+let currentRotationRetro = 0;  // Traccia rotazione corrente retro
+
+// Logo SIM Carabinieri in Base64 - INSERIRE QUI IL BASE64 DEL LOGO
+const logoBase64 = 'data:image/png;base64,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';
+// Placeholder per logo - verrà sovrascritto quando inserisci il vero base64
+const logoImage = new Image();
+logoImage.src = logoBase64;
+
+// ============ FIRMA ============
+const canvas = document.getElementById('signatureCanvas');
+const ctx = canvas.getContext('2d');
+let isDrawing = false;
+
+function setupCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * 2;
+    canvas.height = rect.height * 2;
+    ctx.scale(2, 2);
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+}
+
+setupCanvas();
+window.addEventListener('resize', setupCanvas);
+
+function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+        x: (e.clientX || e.touches[0].clientX) - rect.left,
+        y: (e.clientY || e.touches[0].clientY) - rect.top
+    };
+}
+
+canvas.addEventListener('mousedown', (e) => {
+    isDrawing = true;
+    const pos = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+    hasSignature = true;
+});
+
+canvas.addEventListener('mousemove', (e) => {
+    if (!isDrawing) return;
+    const pos = getPos(e);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+});
+
+canvas.addEventListener('mouseup', () => {
+    if (isDrawing) {
+        isDrawing = false;
+        ctx.closePath();
+        signatureImage = canvas.toDataURL('image/png');
+    }
+});
+
+canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    isDrawing = true;
+    const pos = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+    hasSignature = true;
+}, { passive: false });
+
+canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    if (!isDrawing) return;
+    const pos = getPos(e);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+}, { passive: false });
+
+canvas.addEventListener('touchend', () => {
+    if (isDrawing) {
+        isDrawing = false;
+        ctx.closePath();
+        signatureImage = canvas.toDataURL('image/png');
+    }
+});
+
+document.getElementById('clearSignature').addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    hasSignature = false;
+    signatureImage = null;
+});
+
+// ============ UPLOAD DOCUMENTI ============
+function setupUpload(inputId, previewId, targetVar) {
+    const input = document.getElementById(inputId);
+    const preview = document.getElementById(previewId);
+    
+    input.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                const originalWidth = img.width;
+                const originalHeight = img.height;
+                
+                // Verifica se il documento è verticale (altezza > larghezza)
+                const isVertical = originalHeight > originalWidth;
+                
+                console.log(`📐 Documento ${targetVar} - Dimensioni originali: ${originalWidth}x${originalHeight} - Orientamento: ${isVertical ? 'VERTICALE' : 'ORIZZONTALE'}`);
+                
+                let finalWidth, finalHeight;
+                
+                if (isVertical) {
+                    // RUOTA: il lato lungo deve diventare la larghezza
+                    console.log(`🔄 ROTAZIONE: Ruoto il documento ${targetVar} di 90° per renderlo orizzontale`);
+                    
+                    // Dopo la rotazione: larghezza = vecchia altezza, altezza = vecchia larghezza
+                    finalWidth = originalHeight;
+                    finalHeight = originalWidth;
+                    
+                    canvas.width = finalWidth;
+                    canvas.height = finalHeight;
+                    
+                    // Ruota di 90 gradi in senso orario
+                    ctx.save();
+                    ctx.translate(finalWidth / 2, finalHeight / 2);
+                    ctx.rotate(90 * Math.PI / 180);
+                    ctx.drawImage(img, -originalWidth / 2, -originalHeight / 2, originalWidth, originalHeight);
+                    ctx.restore();
+                } else {
+                    // Già orizzontale, nessuna rotazione
+                    console.log(`✅ Documento ${targetVar} già orizzontale - nessuna rotazione necessaria`);
+                    finalWidth = originalWidth;
+                    finalHeight = originalHeight;
+                    
+                    canvas.width = finalWidth;
+                    canvas.height = finalHeight;
+                    ctx.drawImage(img, 0, 0);
+                }
+                
+                // Ridimensiona se troppo grande (mantenendo il documento orizzontale)
+                const maxWidth = 1600;
+                const maxHeight = 1200;
+                
+                if (finalWidth > maxWidth || finalHeight > maxHeight) {
+                    const scaleW = maxWidth / finalWidth;
+                    const scaleH = maxHeight / finalHeight;
+                    const scale = Math.min(scaleW, scaleH);
+                    
+                    const scaledWidth = finalWidth * scale;
+                    const scaledHeight = finalHeight * scale;
+                    
+                    const scaledCanvas = document.createElement('canvas');
+                    scaledCanvas.width = scaledWidth;
+                    scaledCanvas.height = scaledHeight;
+                    const scaledCtx = scaledCanvas.getContext('2d');
+                    scaledCtx.drawImage(canvas, 0, 0, scaledWidth, scaledHeight);
+                    
+                    console.log(`📏 Ridimensionato da ${finalWidth}x${finalHeight} a ${scaledWidth}x${scaledHeight}`);
+                    
+                    const compressed = scaledCanvas.toDataURL('image/jpeg', 0.85);
+                    
+                    if (targetVar === 'fronte') {
+                        docFronteImg = compressed;
+                    } else {
+                        docRetroImg = compressed;
+                    }
+                    
+                    preview.innerHTML = `<img src="${compressed}" alt="Preview">`;
+                } else {
+                    const compressed = canvas.toDataURL('image/jpeg', 0.85);
+                    
+                    if (targetVar === 'fronte') {
+                        docFronteImg = compressed;
+                    } else {
+                        docRetroImg = compressed;
+                    }
+                    
+                    preview.innerHTML = `<img src="${compressed}" alt="Preview">`;
+                }
+                
+                // Mostra i pulsanti di rotazione
+                const rotateBtns = document.getElementById(`rotateBtns${targetVar.charAt(0).toUpperCase() + targetVar.slice(1)}`);
+                if (rotateBtns) {
+                    rotateBtns.classList.add('show');
+                }
+                
+                console.log(`✅ Documento ${targetVar} caricato - Orientamento finale: ORIZZONTALE (${isVertical ? 'RUOTATO' : 'ORIGINALE'})`);
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+setupUpload('docFronte', 'previewFronte', 'fronte');
+setupUpload('docRetro', 'previewRetro', 'retro');
+
+// ============ ROTAZIONE MANUALE DOCUMENTI ============
+function rotateImage(target, degrees) {
+    const imgData = target === 'fronte' ? docFronteImg : docRetroImg;
+    
+    if (!imgData) {
+        console.error('Nessuna immagine da ruotare');
+        return;
+    }
+    
+    const img = new Image();
+    img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Per rotazioni di 90 o -90 gradi, scambia larghezza e altezza
+        if (degrees === 90 || degrees === -90) {
+            canvas.width = img.height;
+            canvas.height = img.width;
+        } else {
+            canvas.width = img.width;
+            canvas.height = img.height;
+        }
+        
+        // Trasla al centro e ruota
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.rotate(degrees * Math.PI / 180);
+        ctx.drawImage(img, -img.width / 2, -img.height / 2);
+        
+        // Salva l'immagine ruotata
+        const rotatedImg = canvas.toDataURL('image/jpeg', 0.85);
+        
+        if (target === 'fronte') {
+            docFronteImg = rotatedImg;
+            currentRotationFronte = (currentRotationFronte + degrees) % 360;
+            document.getElementById('previewFronte').innerHTML = `<img src="${rotatedImg}" alt="Preview">`;
+            console.log(`🔄 Documento FRONTE ruotato di ${degrees}° - Rotazione totale: ${currentRotationFronte}°`);
+        } else {
+            docRetroImg = rotatedImg;
+            currentRotationRetro = (currentRotationRetro + degrees) % 360;
+            document.getElementById('previewRetro').innerHTML = `<img src="${rotatedImg}" alt="Preview">`;
+            console.log(`🔄 Documento RETRO ruotato di ${degrees}° - Rotazione totale: ${currentRotationRetro}°`);
+        }
+    };
+    img.src = imgData;
+}
+
+// ============ VALIDAZIONE ============
+function validate() {
+    const form = document.getElementById('mainForm');
+    const inputs = form.querySelectorAll('input[required], select[required]');
+    let valid = true;
+    let first = null;
+
+    inputs.forEach(input => {
+        input.classList.remove('error');
+        if (input.type === 'file') {
+            if (!input.files || !input.files.length) {
+                input.classList.add('error');
+                valid = false;
+                if (!first) first = input;
+            }
+        } else if (input.tagName === 'SELECT') {
+            if (!input.value) {
+                input.classList.add('error');
+                valid = false;
+                if (!first) first = input;
+            }
+        } else {
+            if (!input.value.trim()) {
+                input.classList.add('error');
+                valid = false;
+                if (!first) first = input;
+            }
+        }
+    });
+    
+    // Validazione speciale per stato estero
+    const provinciaSelect = document.getElementById('provinciaNascita');
+    const statoEsteroInput = document.getElementById('statoEstero');
+    if (provinciaSelect.value === 'EE' && !statoEsteroInput.value.trim()) {
+        statoEsteroInput.classList.add('error');
+        valid = false;
+        if (!first) first = statoEsteroInput;
+    }
+
+    // Validazione firma
+    const signatureCanvas = document.getElementById('signatureCanvas');
+    signatureCanvas.classList.remove('error');
+    if (!hasSignature) {
+        signatureCanvas.classList.add('error');
+        showStatus('⚠️ Apponi la firma nel riquadro!', 'error');
+        valid = false;
+        if (!first) first = signatureCanvas;
+    }
+
+    if (!docFronteImg || !docRetroImg) {
+        showStatus('⚠️ Carica entrambi i lati del documento!', 'error');
+        valid = false;
+    }
+
+    if (!valid && first) {
+        first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (first.focus) first.focus();
+    }
+
+    return valid;
+}
+
+// ============ GENERAZIONE PDF ============
+async function generatePDF() {
+    console.log('=== INIZIO GENERAZIONE PDF ===');
+    
+    if (!validate()) {
+        console.log('❌ Validazione fallita');
+        return;
+    }
+    
+    console.log('✅ Validazione superata');
+
+    const btn = document.getElementById('btnGenerate');
+    btn.disabled = true;
+    btn.textContent = '⏳ Generazione...';
+    showStatus('📄 Generazione PDF in corso...', 'info');
+
+    try {
+        console.log('📋 Recupero dati dal form...');
+        // Popola dati PDF
+        const cognome = document.getElementById('cognome').value;
+        const nome = document.getElementById('nome').value;
+        const nomeCognome = `${nome} ${cognome}`;
+        
+        document.getElementById('pdf_nomeCognome').textContent = nomeCognome;
+        document.getElementById('pdf_luogoNascita').textContent = document.getElementById('luogoNascita').value;
+        document.getElementById('pdf_dataNascita').textContent = formatDate(document.getElementById('dataNascita').value);
+        document.getElementById('pdf_codiceFiscale').textContent = document.getElementById('codiceFiscale').value.toUpperCase();
+        
+        // Debug elementi PDF
+        const pdfProvinciaElement = document.getElementById('pdf_provinciaNascita');
+        if (!pdfProvinciaElement) {
+            console.error('Elemento pdf_provinciaNascita non trovato nel DOM!');
+        }
+        
+        // Gestione provincia o stato estero
+        const provinciaSelect = document.getElementById('provinciaNascita');
+        const provinciaValue = provinciaSelect.value;
+        console.log('Provincia selezionata:', provinciaValue);
+        
+        if (provinciaValue === 'EE') {
+            const statoEstero = document.getElementById('statoEstero').value;
+            if (pdfProvinciaElement) {
+                pdfProvinciaElement.textContent = statoEstero;
+            }
+            console.log('Stato estero inserito:', statoEstero);
+        } else if (provinciaValue && pdfProvinciaElement) {
+            // Mostra solo la sigla della provincia (primi 2 caratteri)
+            pdfProvinciaElement.textContent = provinciaValue;
+            console.log('Provincia nel PDF:', provinciaValue);
+        } else if (pdfProvinciaElement) {
+            pdfProvinciaElement.textContent = '';
+            console.log('Nessuna provincia selezionata');
+        }
+        
+        document.getElementById('pdf_cip').textContent = document.getElementById('cip').value;
+        document.getElementById('pdf_servizioPresso').textContent = document.getElementById('servizioPresso').value;
+        document.getElementById('pdf_telefono').textContent = document.getElementById('telefono').value || '-';
+        document.getElementById('pdf_emailPec').textContent = document.getElementById('emailPec').value || '-';
+        document.getElementById('pdf_dataDisdetta').textContent = formatDate(document.getElementById('dataDisdetta').value);
+        document.getElementById('pdf_indirizzoConferma').textContent = document.getElementById('indirizzoConferma').value;
+        document.getElementById('pdf_luogo').textContent = document.getElementById('luogo').value;
+        document.getElementById('pdf_dataDocumento').textContent = formatDate(document.getElementById('dataDocumento').value);
+        
+        // Inserisci firma nel PDF
+        if (signatureImage) {
+            const img = document.getElementById('pdf_firmaImg');
+            img.src = signatureImage;
+            img.style.display = 'block';
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '60px';
+            
+            // Attendi che l'immagine sia completamente caricata
+            await new Promise((resolve) => {
+                if (img.complete) {
+                    resolve();
+                } else {
+                    img.onload = resolve;
+                }
+            });
+            console.log('✅ Firma caricata nel PDF');
+        } else {
+            console.warn('⚠️ Nessuna firma disponibile');
+        }
+
+        // Cattura con html2canvas
+        const pdfContent = document.getElementById('pdfContent');
+        const canvasCapture = await html2canvas(pdfContent, {
+            scale: 3,
+            backgroundColor: '#ffffff',
+            useCORS: true,
+            allowTaint: true,
+            logging: false,
+            windowWidth: 794,
+            windowHeight: 1123
+        });
+
+        // Crea PDF
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4');
+        
+ // Aggiungi logo CENTRATO se disponibile
+if (logoBase64 && logoBase64.length > 100) { // Controlla solo che il logo non sia vuoto
+    try {
+        const logoWidth = 30;
+        const logoHeight = 20;
+        const logoX = (210 - logoWidth) / 2; // Centra il logo
+        doc.addImage(logoBase64, 'PNG', logoX, 5, logoWidth, logoHeight);
+        console.log('✅ Logo inserito nel PDF');
+    } catch (error) {
+        console.error('❌ Errore inserimento logo:', error);
+    }
+}
+
+        // Pagina 1: Modulo
+        const imgData = canvasCapture.toDataURL('image/png');
+        const imgWidth = 210;
+        const imgHeight = (canvasCapture.height * imgWidth) / canvasCapture.width;
+        
+   // Scala per far stare tutto in una pagina, lasciando spazio per il logo
+const logoSpace = 20; // Spazio per il logo in alto
+if (imgHeight > (297 - logoSpace)) {
+    const scale = (297 - logoSpace) / imgHeight;
+    doc.addImage(imgData, 'PNG', 0, logoSpace, imgWidth * scale, 297 - logoSpace);
+} else {
+    doc.addImage(imgData, 'PNG', 0, logoSpace, imgWidth, imgHeight);
+}
+
+        // Pagina 2: Documenti alla dimensione originale
+        doc.addPage();
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text('DOCUMENTI DI IDENTITÀ', 105, 15, { align: 'center' });
+
+        if (docFronteImg) {
+            doc.setFontSize(11);
+            doc.text('FRONTE:', 15, 30);
+            
+            // Crea immagine temporanea per ottenere dimensioni originali
+            const imgFronte = new Image();
+            imgFronte.src = docFronteImg;
+            
+            // Calcola dimensioni mantenendo proporzioni originali
+            const maxWidth = 180;
+            const maxHeight = 100;
+            let width = imgFronte.width;
+            let height = imgFronte.height;
+            
+            // Converti pixel in mm (assumendo 96 DPI)
+            width = width * 0.264583;
+            height = height * 0.264583;
+            
+            // Scala solo se troppo grande, altrimenti mantieni dimensione originale
+            if (width > maxWidth || height > maxHeight) {
+                const scale = Math.min(maxWidth / width, maxHeight / height);
+                width *= scale;
+                height *= scale;
+            }
+            
+            // Centra orizzontalmente
+            const xPos = (210 - width) / 2;
+            doc.addImage(docFronteImg, 'JPEG', xPos, 35, width, height);
+        }
+
+        if (docRetroImg) {
+            doc.setFontSize(11);
+            doc.text('RETRO:', 15, 150);
+            
+            // Crea immagine temporanea per ottenere dimensioni originali
+            const imgRetro = new Image();
+            imgRetro.src = docRetroImg;
+            
+            // Calcola dimensioni mantenendo proporzioni originali
+            const maxWidth = 180;
+            const maxHeight = 100;
+            let width = imgRetro.width;
+            let height = imgRetro.height;
+            
+            // Converti pixel in mm (assumendo 96 DPI)
+            width = width * 0.264583;
+            height = height * 0.264583;
+            
+            // Scala solo se troppo grande, altrimenti mantieni dimensione originale
+            if (width > maxWidth || height > maxHeight) {
+                const scale = Math.min(maxWidth / width, maxHeight / height);
+                width *= scale;
+                height *= scale;
+            }
+            
+            // Centra orizzontalmente
+            const xPos = (210 - width) / 2;
+            doc.addImage(docRetroImg, 'JPEG', xPos, 155, width, height);
+        }
+
+        pdfBlob = doc.output('blob');
+        console.log('✅ PDF revoca generato');
+        
+        // Genera anche la delega
+        try {
+            console.log('🔄 Avvio generazione delega...');
+            await generatePDFDelega();
+            console.log('✅ Delega completata');
+        } catch (delegaError) {
+            console.error('❌ Errore durante generazione delega:', delegaError);
+            // Continua comunque, almeno la revoca è stata generata
+        }
+        
+        document.getElementById('btnDownload').style.display = 'inline-block';
+        if (pdfBlobDelega) {
+            document.getElementById('btnDownloadDelega').style.display = 'inline-block';
+        }
+        document.getElementById('shareSection').classList.add('show');
+        showStatus('✅ PDF generati! Scarica i documenti', 'success');
+        
+        // Mostra il banner di ringraziamento
+        showThankYouBanner();
+
+    } catch (error) {
+        console.error('Errore:', error);
+        showStatus('❌ Errore: ' + error.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '📄 Genera PDF';
+    }
+}
+
+// ============ DOWNLOAD ============
+function downloadPDF() {
+    if (!pdfBlob) {
+        showStatus('Genera prima il PDF!', 'error');
+        return;
+    }
+
+    const cip = document.getElementById('cip').value.toUpperCase();
+    const cognome = document.getElementById('cognome').value.toUpperCase();
+    const filename = `${cip}_Revoca_della_Disdetta_${cognome}.pdf`;
+    
+    const url = URL.createObjectURL(pdfBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showStatus('📥 PDF scaricato: ' + filename, 'success');
+}
+
+// ============ GENERAZIONE DELEGA ============
+async function generatePDFDelega() {
+    console.log('=== INIZIO GENERAZIONE DELEGA ===');
+    try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        let y = 5;
+        
+        console.log('📄 Creato nuovo documento jsPDF per delega');
+        
+   // LOGO IN ALTO AL CENTRO
+if (logoBase64 && logoBase64.length > 100) { // Controlla solo che il logo non sia vuoto
+    try {
+        const logoWidth = 30;
+        const logoHeight = 20;
+        const logoX = (210 - logoWidth) / 2; // Centra il logo
+        doc.addImage(logoBase64, 'PNG', logoX, y, logoWidth, logoHeight);
+        y += logoHeight + 8;
+        console.log('✅ Logo inserito nella delega');
+    } catch (error) {
+        console.error('❌ Errore inserimento logo nella delega:', error);
+        y += 8;
+    }
+} else {
+    y += 8;
+}
+        
+        // Titolo
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text('DELEGA DI ADESIONE AL', 105, y, { align: 'center' });
+        y += 7;
+        doc.setFontSize(13);
+        doc.text('SINDACATO ITALIANO DEI MILITARI CARABINIERI SIM', 105, y, { align: 'center' });
+        y += 6;
+        doc.setFontSize(11);
+        doc.text('CARABINIERI - Via Magnagrecia n.13, 00184 Roma', 105, y, { align: 'center' });
+        y += 8;
+        
+        // Linea separatrice
+        doc.line(15, y, 195, y);
+        y += 8;
+        
+        // Recupera i dati dal form
+        console.log('📝 Recupero dati per la delega...');
+        
+        // Controllo esistenza campi
+        const gradoField = document.getElementById('grado');
+        const grado = gradoField ? gradoField.value : 'CAR.';
+        console.log('Grado:', grado);
+        
+        const nome = document.getElementById('nome').value.toUpperCase();
+        const cognome = document.getElementById('cognome').value.toUpperCase();
+        const luogoNascita = document.getElementById('luogoNascita').value.toUpperCase();
+        const provinciaNascita = document.getElementById('provinciaNascita').value;
+        const provinciaText = provinciaNascita === 'EE' ? document.getElementById('statoEstero').value.toUpperCase() : provinciaNascita;
+        const dataNascita = formatDate(document.getElementById('dataNascita').value);
+        const cip = document.getElementById('cip').value.toUpperCase();
+        const codiceFiscale = document.getElementById('codiceFiscale').value.toUpperCase();
+        const reparto = document.getElementById('servizioPresso').value.toUpperCase();
+        const telefono = document.getElementById('telefono').value;
+        const email = document.getElementById('emailPec').value;
+        const luogo = document.getElementById('luogo').value.toUpperCase();
+        const dataOdierna = formatDate(document.getElementById('dataDocumento').value);
+        
+        // Campi nuovi con controllo esistenza
+        const cittaRepartoField = document.getElementById('cittaReparto');
+        const cittaReparto = cittaRepartoField ? cittaRepartoField.value.toUpperCase() : '';
+        console.log('Città reparto:', cittaReparto);
+        
+        const capField = document.getElementById('cap');
+        const cap = capField ? capField.value : '';
+        console.log('CAP:', cap);
+        
+        const regioneField = document.getElementById('regione');
+        const regione = regioneField ? regioneField.value.toUpperCase() : '';
+        console.log('Regione:', regione);
+        
+        const provinciaRepartoField = document.getElementById('provinciaReparto');
+        const provinciaReparto = provinciaRepartoField ? provinciaRepartoField.value : '';
+        console.log('Provincia reparto:', provinciaReparto);
+        
+        // Corpo della delega - MODIFICHE APPLICATE PER ALLINEAMENTO
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+        
+        // Prima riga: Grado - ALLINEATO A DESTRA
+        doc.text('Grado', 20, y);
+        doc.setFillColor(232, 244, 248);
+        // Campo grado centrato e spaziato
+        doc.rect(45, y - 4, 60, 6, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.text(grado, 50, y, { align: 'center' });
+        doc.setFont('helvetica', 'normal');
+        doc.line(15, y + 2, 195, y + 2);
+        y += 8;
+        
+        // Seconda riga: Nome e Cognome - ALLINEATI A DESTRA
+        doc.text('IL/LA SOTTOSCRITTO/A', 20, y);
+        doc.setFillColor(232, 244, 248);
+        // Campo nome centrato e spaziato
+        doc.rect(65, y - 4, 40, 6, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.text(nome, 85, y, { align: 'center' });
+        doc.setFont('helvetica', 'normal');
+        
+        doc.text('COGNOME', 115, y);
+        doc.setFillColor(232, 244, 248);
+        // Campo cognome centrato e spaziato
+        doc.rect(140, y - 4, 48, 6, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.text(cognome, 164, y, { align: 'center' });
+        doc.setFont('helvetica', 'normal');
+        doc.line(15, y + 2, 195, y + 2);
+        y += 8;
+        
+        // Terza riga: Luogo nascita, provincia e data - ALLINEATI A DESTRA
+        doc.text('NATO/A A', 20, y);
+        doc.setFillColor(232, 244, 248);
+        const luogoWidth = Math.min(doc.getTextWidth(luogoNascita), 50);
+        // Campo luogo nascita centrato e spaziato
+        doc.rect(50, y - 4, luogoWidth + 10, 6, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.text(luogoNascita, 55, y, { align: 'center' });
+        doc.setFont('helvetica', 'normal');
+        
+        const provX = 65 + luogoWidth;
+        doc.text('PROV', provX, y);
+        doc.setFillColor(232, 244, 248);
+        // Campo provincia centrato e spaziato
+        doc.rect(provX + 20, y - 4, 20, 6, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.text(provinciaText, provX + 30, y, { align: 'center' });
+        doc.setFont('helvetica', 'normal');
+        
+        doc.text('IL', provX + 45, y);
+        doc.setFillColor(232, 244, 248);
+        // Campo data nascita centrato e spaziato
+        doc.rect(provX + 55, y - 4, 35, 6, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.text(dataNascita, provX + 72, y, { align: 'center' });
+        doc.setFont('helvetica', 'normal');
+        doc.line(15, y + 2, 195, y + 2);
+        y += 8;
+        
+        // Quarta riga: CIP e Codice Fiscale - ALLINEATI A DESTRA
+        doc.text('C.I.P.', 20, y);
+        doc.setFillColor(232, 244, 248);
+        // Campo CIP centrato e spaziato
+        doc.rect(40, y - 4, 40, 6, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.text(cip, 60, y, { align: 'center' });
+        doc.setFont('helvetica', 'normal');
+        
+        doc.text('CODICE FISCALE', 90, y);
+        doc.setFillColor(232, 244, 248);
+        // Campo codice fiscale centrato e spaziato
+        doc.rect(130, y - 4, 77, 6, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.text(codiceFiscale, 168, y, { align: 'center' });
+        doc.setFont('helvetica', 'normal');
+        doc.line(15, y + 2, 195, y + 2);
+        y += 8;
+        
+        // Quinta riga: Reparto e CAP - ALLINEATI A DESTRA
+        doc.text('REPARTO DI APPARTENENZA', 20, y);
+        doc.setFillColor(232, 244, 248);
+        
+        // Calcola dinamicamente la larghezza del reparto per evitare sovrapposizioni
+        const repartoTextWidth = doc.getTextWidth(reparto);
+        const maxRepartoWidth = 75;
+        const actualRepartoWidth = Math.min(repartoTextWidth, maxRepartoWidth);
+        
+        // Campo reparto centrato e spaziato
+        doc.rect(75, y - 4, actualRepartoWidth + 10, 6, 'F');
+        doc.setFont('helvetica', 'bold');
+        
+        // Se il testo è troppo lungo, riduci la dimensione del font
+        if (repartoTextWidth > maxRepartoWidth) {
+            doc.setFontSize(8);
+            doc.text(reparto, 80, y, { align: 'center', maxWidth: maxRepartoWidth });
+            doc.setFontSize(10);
+        } else {
+            doc.text(reparto, 80, y, { align: 'center' });
+        }
+        
+        doc.setFont('helvetica', 'normal');
+        doc.text('CAP', 160, y);
+        doc.setFillColor(232, 244, 248);
+        // Campo CAP centrato e spaziato
+        doc.rect(175, y - 4, 15, 6, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.text(cap, 182, y, { align: 'center' });
+        doc.setFont('helvetica', 'normal');
+        doc.line(15, y + 2, 195, y + 2);
+        y += 8;
+        
+        // Sesta riga: Regione, Città e Provincia - ALLINEATI A DESTRA
+        doc.text('REGIONE', 20, y);
+        doc.setFillColor(232, 244, 248);
+        
+        // Gestione speciale per regioni lunghe
+        const regioneTextWidth = doc.getTextWidth(regione);
+        const maxRegioneWidth = 35;
+        
+        // Campo regione centrato e spaziato
+        if (regioneTextWidth > maxRegioneWidth) {
+            // Per regioni lunghe come "TRENTINO-ALTO ADIGE", riduci la dimensione del font
+            doc.setFontSize(8);
+            doc.rect(50, y - 4, maxRegioneWidth + 10, 6, 'F');
+            doc.setFont('helvetica', 'bold');
+            doc.text(regione, 55, y, { align: 'center', maxWidth: maxRegioneWidth });
+            doc.setFontSize(10);
+        } else {
+            doc.rect(50, y - 4, regioneTextWidth + 10, 6, 'F');
+            doc.setFont('helvetica', 'bold');
+            doc.text(regione, 55, y, { align: 'center' });
+        }
+        
+        doc.setFont('helvetica', 'normal');
+        doc.text("CITTA' e PROV", 95, y);
+        doc.setFillColor(232, 244, 248);
+        // Campo città centrato e spaziato
+        doc.rect(125, y - 4, 50, 6, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.text(cittaReparto, 150, y, { align: 'center', maxWidth: 48 });
+        doc.setFillColor(232, 244, 248);
+        // Campo provincia reparto centrato e spaziato
+        doc.rect(180, y - 4, 20, 6, 'F');
+        doc.text(provinciaReparto, 190, y, { align: 'center' });
+        doc.setFont('helvetica', 'normal');
+        doc.line(15, y + 2, 195, y + 2);
+        y += 8;
+        
+        // Settima riga: Cellulare ed Email - ALLINEATI A DESTRA
+        doc.text('CELL.', 20, y);
+        doc.setFillColor(232, 244, 248);
+        // Campo telefono centrato e spaziato
+        doc.rect(40, y - 4, 45, 6, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.text(telefono || '-', 62, y, { align: 'center' });
+        doc.setFont('helvetica', 'normal');
+        
+        doc.text('E-MAIL', 95, y);
+        doc.setFillColor(232, 244, 248);
+        // Campo email centrato e spaziato
+        doc.rect(115, y - 4, 90, 6, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.text(email || '-', 160, y, { align: 'center', maxWidth: 88 });
+        doc.setFont('helvetica', 'normal');
+        doc.line(15, y + 2, 195, y + 2);
+        y += 10;
+        
+        // Checkbox Ausiliaria - ALLINEATA A DESTRA
+        doc.setFontSize(9);
+        doc.text('Spuntare se in ausiliaria -', 20, y);
+        doc.text('SI', 70, y);
+        doc.rect(76, y - 3, 4, 4);
+        doc.text('NO', 84, y);
+        doc.rect(91, y - 3, 4, 4);
+        // Sempre NO di default
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.text('X', 91.5, y - 0.2);
+        doc.setFont('helvetica', 'normal');
+        y += 10;
+        
+        // Testo di adesione - ALLINEATO A DESTRA
+        doc.setFontSize(10);
+        const testo1 = doc.splitTextToSize(
+            'Con il presente atto aderisce al Sindacato Italiano Militari Carabinieri – S.I.M. Carabinieri – Via Magnagrecia n. 13, 00183 Roma',
+            175
+        );
+        doc.text(testo1, 20, y);
+        y += testo1.length * 4 + 5;
+        
+        doc.setFont('helvetica', 'bold');
+        doc.text('Codice Fiscale: 96408280582.', 20, y);
+        doc.setFont('helvetica', 'normal');
+        y += 7;
+        
+        doc.text("A tal fine rilascia delega ed autorizza l'Amministrazione dell'Arma dei Carabinieri a:", 20, y);
+        y += 8;
+        
+        // Punto 1 - trattenuta
+        doc.setFillColor(240, 240, 240);
+        const testo2 = doc.splitTextToSize(
+            "- trattenere mensilmente dal proprio statino paga e per le 12 mensilità, lo 0,50% della voce stipendio o del trattamento pensionistico da considerare al netto di tutte le ritenute fiscali e contributive riferita agli emolumenti fissi e continuativi così come stabilito dai competenti organi statutari in analogia alle leggi di settore vigentes, ai sensi dell'art. 13 co. 3 della Legge n. 46 del 28 aprile 2022;",
+            170
+        );
+        doc.rect(18, y - 3, 174, testo2.length * 4 + 2, 'F');
+        doc.text(testo2, 20, y);
+        y += testo2.length * 4 + 6;
+        
+        // Punto 2 - versamento
+        const testo3 = doc.splitTextToSize(
+            "- versare la suddetta quota sul conto corrente bancario intestato a S.I.M. Carabinieri IBAN IT66 B0878739 0900 0000 0015819 ai sensi dell'art. 7 co. 4. della Legge n. 46 del 28 aprile 2022 e D.M. conseguente.",
+            170
+        );
+        doc.text(testo3, 20, y);
+        y += testo3.length * 4 + 7;
+        
+        // Validità temporale
+        doc.setFont('helvetica', 'bold');
+        doc.text('Validità temporale della delega.', 20, y);
+        doc.setFont('helvetica', 'normal');
+        y += 5;
+        
+        const testo4 = doc.splitTextToSize(
+            "La presente delega ha validità dal primo giorno del mese successivo a quello del rilascio fino al 31 dicembre di ogni anno e si intende tacitamente rinnovata se non è revocata dall'interessato entro il 31 ottobre, ai sensi dell'art. 7 co. 3. della Legge n. 46 del 28 aprile 2022.",
+            170
+        );
+        doc.text(testo4, 20, y);
+        y += testo4.length * 4 + 6;
+        
+        const testo5 = doc.splitTextToSize(
+            "L'eventuale revoca della delega dovrà essere trasmessa, in forma scritta, all'amministrazione e al S.I.M Carabinieri presso la sede legale nazionale Via Magnagrecia n. 13, 00183 Roma con raccomandata A/R o con PEC. ai sensi dell'art. art. 7 co. 3 della legge n. 46 del 28 aprile 2022.",
+            170
+        );
+        doc.text(testo5, 20, y);
+        y += testo5.length * 4 + 10;
+        
+        // Prima firma
+        doc.text(`${luogo} lì, ${dataOdierna}`, 20, y);
+        doc.text('Firma', 140, y);
+        if (signatureImage) {
+            try {
+                doc.addImage(signatureImage, 'PNG', 155, y - 12, 35, 20);
+            } catch (error) {
+                console.error('Errore inserimento prima firma:', error);
+            }
+        }
+        y += 15;
+        
+        // Dichiarazione visione statuto
+        doc.setFontSize(9);
+        const testo6 = doc.splitTextToSize(
+            'Dichiara di aver preso visione dello Statuto presente sul sito internet www.simcarabinieri.com, dell\'allegato "A" relativo alle competenze stipendiali per il calcolo della base della quota associativa, ricevuto ed accettato copia dell\'allegata informativa sul trattamento dei dati personali. Prende atto, altresì, di quanto stabilito dall\'art. 3, comma 3, del DM Difesa 26 luglio 2022, per il quale "ai sensi di quanto disposto dall\'art. 1, comma 4 della Legge è ammessa un\'unica delega su una singola retribuzione o trattamento pensionistico.',
+            170
+        );
+        doc.text(testo6, 20, y);
+        y += testo6.length * 4 + 8;
+        
+        // Seconda firma
+        doc.setFontSize(10);
+        doc.text(`${luogo} lì, ${dataOdierna}`, 20, y);
+        doc.text('Firma', 140, y);
+        if (signatureImage) {
+            try {
+                doc.addImage(signatureImage, 'PNG', 155, y - 12, 35, 20);
+            } catch (error) {
+                console.error('Errore inserimento seconda firma:', error);
+            }
+        }
+        y += 15;
+        
+        // Istruzioni finali
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'italic');
+        const testo7 = doc.splitTextToSize(
+            'La presente delega, compilata, sottoscritta e corredata dal documento di identità, dovrà essere acquisita con lo scanner salvata in formato PDF o .TIF e trasmessa via mail all\'indirizzo tesseramenti@simcarabinieri.cc',
+            170
+        );
+        doc.text(testo7, 20, y);
+        
+        // Pagina 2: Documenti
+        doc.addPage();
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text('DOCUMENTI DI IDENTITÀ', 105, 15, { align: 'center' });
+        
+        // Inserisci documenti come nella revoca
+        if (docFronteImg) {
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'normal');
+            doc.text('FRONTE:', 15, 30);
+            
+            const imgFronte = new Image();
+            imgFronte.src = docFronteImg;
+            
+            const maxWidth = 180;
+            const maxHeight = 100;
+            let width = imgFronte.width * 0.264583;
+            let height = imgFronte.height * 0.264583;
+            
+            if (width > maxWidth || height > maxHeight) {
+                const scale = Math.min(maxWidth / width, maxHeight / height);
+                width *= scale;
+                height *= scale;
+            }
+            
+            const xPos = (210 - width) / 2;
+            doc.addImage(docFronteImg, 'JPEG', xPos, 35, width, height);
+        }
+        
+        if (docRetroImg) {
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'normal');
+            doc.text('RETRO:', 15, 150);
+            
+            const imgRetro = new Image();
+            imgRetro.src = docRetroImg;
+            
+            const maxWidth = 180;
+            const maxHeight = 100;
+            let width = imgRetro.width * 0.264583;
+            let height = imgRetro.height * 0.264583;
+            
+            if (width > maxWidth || height > maxHeight) {
+                const scale = Math.min(maxWidth / width, maxHeight / height);
+                width *= scale;
+                height *= scale;
+            }
+            
+            const xPos = (210 - width) / 2;
+            doc.addImage(docRetroImg, 'JPEG', xPos, 155, width, height);
+        }
+        
+        pdfBlobDelega = doc.output('blob');
+        console.log('✅ Delega generata con successo');
+        
+    } catch (error) {
+        console.error('❌ Errore generazione delega:', error);
+        console.error('Stack trace:', error.stack);
+        showStatus('❌ Errore nella generazione della delega: ' + error.message, 'error');
+        throw error; // Rilancia l'errore per gestirlo nel chiamante
+    }
+}
+
+// ============ DOWNLOAD DELEGA ============
+function downloadPDFDelega() {
+    if (!pdfBlobDelega) {
+        showStatus('Genera prima i PDF!', 'error');
+        return;
+    }
+    
+    const cip = document.getElementById('cip').value.toUpperCase();
+    const cognome = document.getElementById('cognome').value.toUpperCase();
+    const filename = `${cip}_${cognome}.pdf`;
+    
+    const url = URL.createObjectURL(pdfBlobDelega);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showStatus('📥 Delega scaricata: ' + filename, 'success');
+}
+
+// ============ FUNZIONI DI CONDIVISIONE ============
+function shareViaEmail() {
+    const nome = document.getElementById('nome').value.toUpperCase();
+    const cognome = document.getElementById('cognome').value.toUpperCase();
+    const cip = document.getElementById('cip').value.toUpperCase();
+    const subject = encodeURIComponent('Revoca Disdetta e Delega Adesione SIM Carabinieri');
+    const body = encodeURIComponent(`Gentile Dirigente,
+
+In allegato trova i seguenti documenti compilati da ${nome} ${cognome}:
+
+1. Modulo di revoca della disdetta dal Sindacato Italiano Militare Carabinieri
+2. Delega di adesione al SIM Carabinieri
+
+I documenti sono stati generati attraverso il sistema automatizzato SIM Carabinieri e contengono tutti i dati necessari per la conferma dell'adesione.
+
+File allegati:
+- ${cip}_Revoca_della_Disdetta_${cognome}.pdf
+- ${cip}_${cognome}.pdf
+
+Cordiali saluti,
+${nome} ${cognome}
+
+#MaiPiùSoli - SIM Carabinieri`);
+    
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    showStatus('📧 Apertura client email in corso...', 'info');
+}
+
+function shareViaWhatsApp() {
+    const nome = document.getElementById('nome').value.toUpperCase();
+    const cognome = document.getElementById('cognome').value.toUpperCase();
+    const cip = document.getElementById('cip').value.toUpperCase();
+    const text = encodeURIComponent(`Gentile Dirigente,
+
+Le invio i documenti per la mia adesione al Sindacato Italiano Militare Carabinieri.
+
+Compilato da: ${nome} ${cognome}
+
+Documenti generati:
+- ${cip}_Revoca_della_Disdetta_${cognome}.pdf
+- ${cip}_${cognome}.pdf
+
+#MaiPiùSoli - SIM Carabinieri`);
+    
+    // Rileva se siamo su mobile o desktop
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const whatsappUrl = isMobile ? `whatsapp://send?text=${text}` : `https://web.whatsapp.com/send?text=${text}`;
+    
+    window.open(whatsappUrl, '_blank');
+    showStatus('💬 Apertura WhatsApp in corso...', 'info');
+}
+
+function shareViaTelegram() {
+    const nome = document.getElementById('nome').value.toUpperCase();
+    const cognome = document.getElementById('cognome').value.toUpperCase();
+    const cip = document.getElementById('cip').value.toUpperCase();
+    const text = encodeURIComponent(`Gentile Dirigente,
+
+Le invio i documenti per la mia adesione al Sindacato Italiano Militare Carabinieri.
+
+Compilato da: ${nome} ${cognome}
+
+Documenti generati:
+- ${cip}_Revoca_della_Disdetta_${cognome}.pdf
+- ${cip}_${cognome}.pdf
+
+#MaiPiùSoli - SIM Carabinieri`);
+    
+    window.open(`https://t.me/share/url?text=${text}`, '_blank');
+    showStatus('✈️ Apertura Telegram in corso...', 'info');
+}
+
+// ============ BANNER DI RINGRAZIAMENTO ============
+function showThankYouBanner() {
+    const banner = document.getElementById('thankYouBanner');
+    banner.style.display = 'block';
+    
+    // Rimuovi il banner dopo l'animazione (3 secondi)
+    setTimeout(() => {
+        banner.style.display = 'none';
+    }, 3000);
+}
+
+// ============ RESET ============
+function resetForm() {
+    if (confirm('Vuoi cancellare tutti i dati?')) {
+        document.getElementById('mainForm').reset();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        hasSignature = false;
+        signatureImage = null;
+        docFronteImg = null;
+        docRetroImg = null;
+        pdfBlob = null;
+        pdfBlobDelega = null;
+        currentRotationFronte = 0;
+        currentRotationRetro = 0;
+        document.getElementById('previewFronte').innerHTML = '';
+        document.getElementById('previewRetro').innerHTML = '';
+        document.getElementById('rotateBtnsFronte').classList.remove('show');
+        document.getElementById('rotateBtnsRetro').classList.remove('show');
+        document.getElementById('btnDownload').style.display = 'none';
+        document.getElementById('btnDownloadDelega').style.display = 'none';
+        document.getElementById('shareSection').classList.remove('show');
+        showStatus('🔄 Modulo azzerato', 'info');
+    }
+}
+
+// ============ UTILITY ============
+function formatDate(str) {
+    if (!str) return '';
+    const [y, m, d] = str.split('-');
+    return `${d}/${m}/${y}`;
+}
+
+function showStatus(msg, type) {
+    const status = document.getElementById('statusMsg');
+    status.textContent = msg;
+    status.className = `status show ${type}`;
+    setTimeout(() => status.classList.remove('show'), 5000);
+}
+
+// ============ EVENTI ============
+document.getElementById('btnGenerate').addEventListener('click', generatePDF);
+document.getElementById('btnDownload').addEventListener('click', downloadPDF);
+document.getElementById('btnDownloadDelega').addEventListener('click', downloadPDFDelega);
+document.getElementById('btnReset').addEventListener('click', resetForm);
+
+// Data odierna come default
+document.getElementById('dataDocumento').valueAsDate = new Date();
+
+// Formattazione automatica data di nascita
+document.getElementById('dataNascita').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, ''); // Rimuovi tutto tranne i numeri
+    if (value.length >= 2) {
+        value = value.slice(0,2) + '/' + value.slice(2);
+    }
+    if (value.length >= 5) {
+        value = value.slice(0,5) + '/' + value.slice(5);
+    }
+    e.target.value = value;
+});
+
+// Rimuovi classe error quando l'utente inizia a digitare
+document.querySelectorAll('input, select').forEach(element => {
+    element.addEventListener('input', function() {
+        this.classList.remove('error');
+    });
+    element.addEventListener('change', function() {
+        this.classList.remove('error');
+    });
+});
+
+// Rimuovi classe error dal canvas quando si inizia a firmare
+canvas.addEventListener('pointerdown', function() {
+    this.classList.remove('error');
+});
+
+// Gestione provincia/stato estero
+const provinciaSelect = document.getElementById('provinciaNascita');
+const statoEsteroInput = document.getElementById('statoEstero');
+
+provinciaSelect.addEventListener('change', function() {
+    if (this.value === 'EE') {
+        statoEsteroInput.style.display = 'block';
+        statoEsteroInput.required = true;
+        statoEsteroInput.classList.remove('error');
+    } else {
+        statoEsteroInput.style.display = 'none';
+        statoEsteroInput.required = false;
+        statoEsteroInput.value = '';
+    }
+});
+
+// Rimuovi classe error quando si seleziona la provincia
+provinciaSelect.addEventListener('change', function() {
+    this.classList.remove('error');
+});
+
+// Rimuovi classe error quando si digita nello stato estero
+statoEsteroInput.addEventListener('input', function() {
+    this.classList.remove('error');
+});
+
+console.log('✅ Sistema pronto!');
+console.log('💡 Ricorda di inserire il logo base64 cercando "INSERISCI_QUI_BASE64_LOGO" nel codice HTML');
+
+// Rimuovi il banner dopo 5 secondi
+setTimeout(() => {
+    const banner = document.getElementById('welcomeBanner');
+    if (banner) {
+        banner.remove();
+    }
+}, 5000);
+</script>
+
+</body>
+</html>
